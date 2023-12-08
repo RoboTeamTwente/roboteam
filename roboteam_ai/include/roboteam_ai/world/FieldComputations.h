@@ -33,28 +33,26 @@ class FieldComputations {
 
    public:
     /**
-     * @brief Get the margin that should be used for the defense area avoidance 
+     * @brief Get the margin that should be used for the defense area avoidance
      * @return A tuple with the margin that should be used for the defense area avoidance
-    */
+     */
     static std::tuple<double, double> getDefenseAreaMargin();
 
     /**
      * @brief Get ball avoidance based on current game state
      * @return A bool indicating whether ball avoidance should be used or not
-    */
+     */
     static bool getBallAvoidance();
 
-
     /**
-     * @brief Check whether a given point is a valid position given which parts of the field should be avoided
+     * @brief Check whether a given point is a valid position given which parts of the field should be avoided (note that shouldAvoidBall is not taken into consideration)
      * @param field The field class which is used to determine the boundaries of the field.
      * @param point The point for which it is checked whether it is valid or not
      * @param avoidObjects Struct indicating which areas of the field should be avoided. Defaults to avoid entering the defense area and leaving the field
-     * @param fieldMargin The outwards margin in which the field area will get expanded/shrunk in all directions. 
-     * @param ballLocation The location of the ball.
-     * @return True if the point is not within any area that has to be avoided according to avoidObjects
+     * @param fieldMargin The outwards margin in which the field area will get expanded/shrunk in all directions.
+     * @return True if the point is not within any area that has to be avoided according to avoidObjects, note that this does not take ball avoidance into consideration
      */
-    static bool pointIsValidPosition(const rtt::Field &field, const Vector2 &point, stp::AvoidObjects avoidObjects = {}, double fieldMargin = 0.0, Vector2 ballLocation = Vector2(20,20));
+    static bool pointIsValidPosition(const rtt::Field &field, const Vector2 &point, stp::AvoidObjects avoidObjects = {}, double fieldMargin = 0.0);
 
     /**
      * @brief Project given position to within the field with a certain margin

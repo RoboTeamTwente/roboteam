@@ -15,11 +15,11 @@ Status GoToPos::onUpdate(const StpInfo &info) noexcept {
     auto avoidObj = info.getObjectsToAvoid();
     std::string roleName = info.getRoleName();
     Vector2 ballLocation = info.getBall()->get()->position;
-    if (!FieldComputations::pointIsValidPosition(info.getField().value(), targetPos, avoidObj, (0.0), ballLocation) && roleName != "ball_placer") {
+    if (!FieldComputations::pointIsValidPosition(info.getField().value(), targetPos, avoidObj) && roleName != "ball_placer") {
         targetPos = FieldComputations::projectPointToValidPosition(info.getField().value(), targetPos, avoidObj);
-        if (avoidObj.shouldAvoidBall) {
-            targetPos = PositionComputations::calculateAvoidBallPosition(targetPos, ballLocation, info.getField().value());
-        }
+    }
+    if (avoidObj.shouldAvoidBall) {
+        targetPos = PositionComputations::calculateAvoidBallPosition(targetPos, ballLocation, info.getField().value());
     }
 
     rtt::BB::CommandCollision commandCollision;

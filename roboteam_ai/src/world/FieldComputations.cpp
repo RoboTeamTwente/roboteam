@@ -2,8 +2,8 @@
 
 #include <roboteam_utils/Shadow.h>
 
-#include "world/views/WorldDataView.hpp"
 #include "utilities/GameStateManager.hpp"
+#include "world/views/WorldDataView.hpp"
 
 namespace rtt::ai {
 
@@ -20,7 +20,6 @@ std::tuple<double, double> FieldComputations::getDefenseAreaMargin() {
         theirDefenseAreaMargin += 0.2;
     }
 
-
     return std::make_tuple(theirDefenseAreaMargin, ourDefenseAreaMargin);
 }
 
@@ -35,12 +34,11 @@ bool FieldComputations::getBallAvoidance() {
     return false;
 }
 
-bool FieldComputations::pointIsValidPosition(const rtt::Field &field, const Vector2 &point, stp::AvoidObjects avoidObjects, double fieldMargin, Vector2 ballLocation) {
+bool FieldComputations::pointIsValidPosition(const rtt::Field &field, const Vector2 &point, stp::AvoidObjects avoidObjects, double fieldMargin) {
     auto [theirDefenseAreaMargin, ourDefenseAreaMargin] = getDefenseAreaMargin();
     if (avoidObjects.shouldAvoidOutOfField && !field.playArea.contains(point, fieldMargin)) return false;
     if (avoidObjects.shouldAvoidDefenseArea && (field.leftDefenseArea.contains(point, ourDefenseAreaMargin) || field.rightDefenseArea.contains(point, theirDefenseAreaMargin)))
         return false;
-    if (avoidObjects.shouldAvoidBall && ballLocation.dist(point) < avoidObjects.avoidBallDist) return false;
     return true;
 }
 

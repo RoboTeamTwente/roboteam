@@ -110,10 +110,10 @@ void BasestationManager::handleIncomingMessage(const BasestationMessage& message
     REM_PacketPayload* packetPayload = (REM_PacketPayload*)message.payloadBuffer;
     uint32_t payloadSize = REM_Packet_get_payloadSize(packetPayload);
     uint8_t packetType = REM_Packet_get_header(packetPayload);
-    uint32_t payloadREM = REM_Packet_get_remVersion(packetPayload);
+    uint32_t packetVersion = REM_Packet_get_remVersion(packetPayload);
 
-    if (payloadREM != REM_LOCAL_VERSION) {
-        RTT_ERROR("REM version is incorrect. Received: ", payloadREM, " Actual: ", REM_LOCAL_VERSION);
+    if (packetVersion != REM_LOCAL_VERSION) {
+        RTT_ERROR("REM version is incorrect. Received: ", packetVersion, " Actual: ", REM_LOCAL_VERSION);
         return;
     }
 

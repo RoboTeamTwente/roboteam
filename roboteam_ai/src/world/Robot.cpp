@@ -103,7 +103,13 @@ void Robot::updateHasBallMap(std::optional<view::BallView> &ball) {
     // TODO: this is a bit of a hacky way to avoid double touch fouls. Figuring out a better way to do this would be nice
     if (ai::GameStateManager::getCurrentGameState().getStrategyName() == "free_kick_us" || ai::GameStateManager::getCurrentGameState().getStrategyName() == "kickoff_us") {
         // auto hasBallAccordingToVision = distanceToBall < ai::Constants::HAS_BALL_DISTANCE() * 0.9 && angleDiffToBall < ai::Constants::HAS_BALL_ANGLE();
-        if (dribblerSeesBall) setHasBall(true);
+        if (dribblerSeesBall) {
+            hasBallUpdateMap[id].score = 25;
+        } else {
+            hasBallUpdateMap[id].score -= 2;
+        }
+        hasBallUpdateMap[id].score = std::clamp(hasBallUpdateMap[id].score, 0, 25);
+        setHasBall(hasBallUpdateMap[id].score > 0);
         return;
     }
 

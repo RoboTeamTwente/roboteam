@@ -20,9 +20,7 @@ struct RuleSet {
      * @param maxRobotVel Maximum allowed velocities for robots
      * @param robotsCanGoOutOfField Indicates whether the robots are allowed to go out of the field
      */
-    RuleSet(std::string title, double maxRobotVel)
-        : title(std::move(title)),
-          maxRobotVel(maxRobotVel) {}
+    RuleSet(std::string title, double maxRobotVel) : title(std::move(title)), maxRobotVel(maxRobotVel) {}
 
     std::string title;
     double maxRobotVel;

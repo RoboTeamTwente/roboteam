@@ -65,9 +65,7 @@ void StrategyManager::setCurrentRefGameState(RefCommand command, proto::SSL_Refe
 RefGameState StrategyManager::getCurrentRefGameState() { return currentRefGameState; }
 
 const RefGameState StrategyManager::getRefGameStateForRefCommand(RefCommand command) {
-    auto it = std::find_if(gameStates.begin(), gameStates.end(), [&command](const RefGameState &gameState) {
-        return gameState.commandId == command;
-    });
+    auto it = std::find_if(gameStates.begin(), gameStates.end(), [&command](const RefGameState &gameState) { return gameState.commandId == command; });
 
     if (it != gameStates.end()) {
         return *it;

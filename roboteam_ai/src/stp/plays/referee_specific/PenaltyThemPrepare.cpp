@@ -100,7 +100,6 @@ void PenaltyThemPrepare::calculateInfoForRoles() noexcept {
         auto angleToGoal = (field.leftGoalArea.rightLine().center() - position).toAngle();
         stpInfos[formationName].setAngle(angleToGoal);
     }
-
 }
 
 const char* PenaltyThemPrepare::getName() const { return "Penalty Them Prepare"; }

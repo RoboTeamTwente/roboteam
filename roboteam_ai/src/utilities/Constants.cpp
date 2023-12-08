@@ -178,7 +178,9 @@ RuleSet Constants::RULESET_STOP() { return {"stop", 1.3}; }
 
 std::vector<RuleSet> Constants::ruleSets() {
     return {
-        RULESET_DEFAULT(), RULESET_HALT(), RULESET_STOP(),
+        RULESET_DEFAULT(),
+        RULESET_HALT(),
+        RULESET_STOP(),
     };
 }
 

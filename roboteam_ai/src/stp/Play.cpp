@@ -40,9 +40,10 @@ void Play::update() noexcept {
     auto currentMaxRobots = GameStateManager::getCurrentGameState().maxAllowedRobots;
     int sizeUs = world->getWorld()->getUs().size();
 
-    // We want to redeal the roles if the amount of robots changed or the keeper id changed. Also if we get a yellow card (current max goes down) and we have more robots than allowed, or if a yellow card expires (current max goes up) and we have more robots than previously allowed on the field (some robot was still driving to the edge of the field)
-    if (currentRobotNum != previousRobotNum || currentKeeperId != previousKeeperId || 
-        (currentMaxRobots < previousMaxRobots && currentMaxRobots < sizeUs) ||
+    // We want to redeal the roles if the amount of robots changed or the keeper id changed. Also if we get a yellow card (current max goes down) and we have more robots than
+    // allowed, or if a yellow card expires (current max goes up) and we have more robots than previously allowed on the field (some robot was still driving to the edge of the
+    // field)
+    if (currentRobotNum != previousRobotNum || currentKeeperId != previousKeeperId || (currentMaxRobots < previousMaxRobots && currentMaxRobots < sizeUs) ||
         (currentMaxRobots > previousMaxRobots && sizeUs > previousMaxRobots)) {
         // RTT_INFO("Reassigning bots")
         reassignRobots();

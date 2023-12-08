@@ -18,7 +18,7 @@ std::optional<StpInfo> BallStandBack::calculateInfoForSkill(StpInfo const &info)
     StpInfo skillStpInfo = info;
 
     if (!info.getPositionToMoveTo() || !skillStpInfo.getBall() || !skillStpInfo.getRobot()) return std::nullopt;
-    
+
     Vector2 targetPos;
     if (standStillCounter > 60) {
         auto moveVector = info.getRobot()->get()->getPos() - info.getBall()->get()->position;
@@ -48,9 +48,7 @@ bool BallStandBack::isTacticFailing(const StpInfo &info) noexcept {
     return false;
 }
 
-bool BallStandBack::shouldTacticReset(const StpInfo &info) noexcept {
-    return false;
-}
+bool BallStandBack::shouldTacticReset(const StpInfo &info) noexcept { return false; }
 
 bool BallStandBack::isEndTactic() noexcept {
     // BallStandBack tactic is an end tactic

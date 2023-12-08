@@ -5,8 +5,8 @@
 #include "stp/plays/referee_specific/BallPlacementThem.h"
 
 #include "stp/roles/Keeper.h"
-#include "stp/roles/passive/Formation.h"
 #include "stp/roles/passive/BallDefender.h"
+#include "stp/roles/passive/Formation.h"
 
 namespace rtt::ai::stp::play {
 

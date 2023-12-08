@@ -130,7 +130,7 @@ void GameStateManager::updateInterfaceGameState(const char* name) {
         {"Penalty Them", {"penalty_them", Constants::RULESET_DEFAULT()}},
         {"Time Out", {"time_out", Constants::RULESET_HALT()}},
         {"Defensive Stop Formation", {"stop", Constants::RULESET_STOP()}},
-        {"Aggressive Stop Formation", {"stop", Constants::RULESET_STOP()}},        
+        {"Aggressive Stop Formation", {"stop", Constants::RULESET_STOP()}},
     };
 
     auto it = nameToGameState.find(name);

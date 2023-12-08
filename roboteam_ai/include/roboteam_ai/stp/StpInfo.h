@@ -137,7 +137,7 @@ struct StpInfo {
 
     /**
      * Speed of the target location (e.g. speed of the robot or speed of the ball)
-    */
+     */
     Vector2 targetLocationSpeed = Vector2(0, 0);
 
     /**

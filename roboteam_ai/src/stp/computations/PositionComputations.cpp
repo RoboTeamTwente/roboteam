@@ -463,6 +463,7 @@ void PositionComputations::recalculateInfoForNonPassers(std::unordered_map<std::
     // Make a tube around the pass trajectory, and make sure all robots outside of this tube
     std::unique_ptr<Shape> avoidShape = std::make_unique<Tube>(Tube(ballPosition, passLocation, control_constants::DISTANCE_TO_PASS_TRAJECTORY));
     for (auto &robot : toBeCheckedRobots) {
+        stpInfos[robot].setShouldAvoidBall(true);
         auto robotPositionToMoveTo = stpInfos[robot].getPositionToMoveTo();
         if (robotPositionToMoveTo == std::nullopt || !robotPositionToMoveTo.has_value()) {
             continue;
@@ -471,7 +472,6 @@ void PositionComputations::recalculateInfoForNonPassers(std::unordered_map<std::
             continue;
         }
         auto newRobotPositionToMoveTo = calculatePositionOutsideOfShape(ballPosition, field, avoidShape);
-        stpInfos[robot].setShouldAvoidBall(true);
         stpInfos[robot].setPositionToMoveTo(newRobotPositionToMoveTo);
     }
 }

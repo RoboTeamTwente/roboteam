@@ -9,7 +9,7 @@
 #include "roboteam_utils/Hungarian.h"
 #include "stp/roles/Keeper.h"
 #include "stp/roles/active/Harasser.h"
-#include "stp/roles/passive/BallDefender.h"
+#include "stp/roles/passive/Defender.h"
 #include "stp/roles/passive/Formation.h"
 
 namespace rtt::ai::stp::play {
@@ -29,15 +29,15 @@ DefendPass::DefendPass() : Play() {
         // Roles is we play 6v6
         std::make_unique<role::Keeper>("keeper"),
         std::make_unique<role::Harasser>("harasser"),
-        std::make_unique<role::BallDefender>("defender_0"),
-        std::make_unique<role::BallDefender>("defender_1"),
-        std::make_unique<role::BallDefender>("defender_2"),
-        std::make_unique<role::BallDefender>("defender_3"),
+        std::make_unique<role::Defender>("defender_0"),
+        std::make_unique<role::Defender>("defender_1"),
+        std::make_unique<role::Defender>("defender_2"),
+        std::make_unique<role::Defender>("defender_3"),
         // Additional roles if we play 11v11
         std::make_unique<role::Formation>("attacker_0"),
-        std::make_unique<role::BallDefender>("defender_4"),
-        std::make_unique<role::BallDefender>("defender_5"),
-        std::make_unique<role::BallDefender>("defender_6"),
+        std::make_unique<role::Defender>("defender_4"),
+        std::make_unique<role::Defender>("defender_5"),
+        std::make_unique<role::Defender>("defender_6"),
         std::make_unique<role::Formation>("attacker_1"),
     };
 }

@@ -62,7 +62,6 @@ add_library(roboteam_ai_tactics
         ${PROJECT_SOURCE_DIR}/src/stp/tactics/active/Receive.cpp
         # passive/
         ${PROJECT_SOURCE_DIR}/src/stp/tactics/passive/BlockBall.cpp
-        ${PROJECT_SOURCE_DIR}/src/stp/tactics/passive/BlockRobot.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/tactics/passive/Formation.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/tactics/passive/Halt.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/tactics/passive/BallStandBack.cpp)
@@ -93,10 +92,9 @@ add_library(roboteam_ai_roles
         ${PROJECT_SOURCE_DIR}/src/stp/roles/active/PassReceiver.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/roles/active/PenaltyTaker.cpp
         # passive
-        ${PROJECT_SOURCE_DIR}/src/stp/roles/passive/BallDefender.cpp
+        ${PROJECT_SOURCE_DIR}/src/stp/roles/passive/Defender.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/roles/passive/Formation.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/roles/passive/Halt.cpp
-        ${PROJECT_SOURCE_DIR}/src/stp/roles/passive/RobotDefender.cpp
 )
 target_include_directories(roboteam_ai_roles
         PRIVATE include/roboteam_ai

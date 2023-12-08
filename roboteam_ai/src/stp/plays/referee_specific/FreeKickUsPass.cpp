@@ -9,7 +9,7 @@
 #include "stp/roles/Keeper.h"
 #include "stp/roles/active/FreeKickTaker.h"
 #include "stp/roles/active/PassReceiver.h"
-#include "stp/roles/passive/BallDefender.h"
+#include "stp/roles/passive/Defender.h"
 #include "stp/roles/passive/Formation.h"
 
 namespace rtt::ai::stp::play {
@@ -27,13 +27,13 @@ FreeKickUsPass::FreeKickUsPass() : Play() {
         std::make_unique<role::Keeper>("keeper"),
         std::make_unique<role::FreeKickTaker>("free_kick_taker"),
         std::make_unique<role::PassReceiver>("receiver"),
-        std::make_unique<role::BallDefender>("defender_0"),
+        std::make_unique<role::Defender>("defender_0"),
         std::make_unique<role::Formation>("attacker_0"),
-        std::make_unique<role::BallDefender>("defender_1"),
+        std::make_unique<role::Defender>("defender_1"),
         // Additional roles if we play 11v11
         std::make_unique<role::Formation>("waller_0"),
         std::make_unique<role::Formation>("waller_1"),
-        std::make_unique<role::BallDefender>("defender_2"),
+        std::make_unique<role::Defender>("defender_2"),
         std::make_unique<role::Formation>("waller_2"),
         std::make_unique<role::Formation>("attacker_1"),
     };

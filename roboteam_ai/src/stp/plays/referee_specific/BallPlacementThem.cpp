@@ -5,7 +5,7 @@
 #include "stp/plays/referee_specific/BallPlacementThem.h"
 
 #include "stp/roles/Keeper.h"
-#include "stp/roles/passive/BallDefender.h"
+#include "stp/roles/passive/Defender.h"
 #include "stp/roles/passive/Formation.h"
 
 namespace rtt::ai::stp::play {
@@ -23,12 +23,12 @@ BallPlacementThem::BallPlacementThem() : Play() {
         std::make_unique<role::Formation>("harasser"),
         std::make_unique<role::Formation>("waller_0"),
         std::make_unique<role::Formation>("waller_1"),
-        std::make_unique<role::BallDefender>("defender_0"),
-        std::make_unique<role::BallDefender>("defender_1"),
+        std::make_unique<role::Defender>("defender_0"),
+        std::make_unique<role::Defender>("defender_1"),
         // Additional roles if we play 11v11
         std::make_unique<role::Formation>("waller_2"),
-        std::make_unique<role::BallDefender>("defender_2"),
-        std::make_unique<role::BallDefender>("defender_3"),
+        std::make_unique<role::Defender>("defender_2"),
+        std::make_unique<role::Defender>("defender_3"),
         std::make_unique<role::Formation>("waller_3"),
         std::make_unique<role::Formation>("attacker_0"),
     };

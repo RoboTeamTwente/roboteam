@@ -13,7 +13,7 @@
 #include "stp/roles/Keeper.h"
 #include "stp/roles/active/Chipper.h"
 #include "stp/roles/active/PassReceiver.h"
-#include "stp/roles/passive/BallDefender.h"
+#include "stp/roles/passive/Defender.h"
 #include "stp/roles/passive/Formation.h"
 #include "world/views/RobotView.hpp"
 
@@ -34,14 +34,14 @@ ChippingPass::ChippingPass() : Play() {
         std::make_unique<role::Keeper>("keeper"),
         std::make_unique<role::Chipper>("passer"),
         std::make_unique<role::PassReceiver>("receiver"),
-        std::make_unique<role::BallDefender>("defender_0"),
-        std::make_unique<role::BallDefender>("defender_1"),
+        std::make_unique<role::Defender>("defender_0"),
+        std::make_unique<role::Defender>("defender_1"),
         std::make_unique<role::Formation>("attacker_0"),
         // Additional roles if we play 11v11
         std::make_unique<role::Formation>("waller_0"),
         std::make_unique<role::Formation>("waller_1"),
         std::make_unique<role::Formation>("attacker_1"),
-        std::make_unique<role::BallDefender>("defender_2"),
+        std::make_unique<role::Defender>("defender_2"),
         std::make_unique<role::Formation>("attacker_2"),
     };
 }

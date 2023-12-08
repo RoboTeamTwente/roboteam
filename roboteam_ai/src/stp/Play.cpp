@@ -13,12 +13,12 @@ void Play::initialize() noexcept {
     for (auto &role : roles) {
         if (role != nullptr) role->reset();
     }
-    calculateInfoForRoles();
-    distributeRoles();
     for (auto &role : roles) {
         if (role == nullptr) continue;
         stpInfos[role->getName()].setShouldAvoidBall(FieldComputations::getBallAvoidance());
     }
+    calculateInfoForRoles();
+    distributeRoles();
     previousRobotNum = world->getWorld()->getRobotsNonOwning().size();
     previousKeeperId = GameStateManager::getCurrentGameState().keeperId;
     previousMaxRobots = GameStateManager::getCurrentGameState().maxAllowedRobots;

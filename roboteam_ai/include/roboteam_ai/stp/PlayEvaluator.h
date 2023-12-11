@@ -52,7 +52,9 @@ enum class GlobalEvaluation {
     WeHaveBall,
     TheyHaveBall,
     TheyDoNotHaveBall,
-    WeHaveMajority
+    WeHaveMajority,
+    WeWantToAttack,
+    WeWantToDefend,
 };
 
 /**

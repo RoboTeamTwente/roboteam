@@ -10,7 +10,7 @@ Status OrbitAngular::onUpdate(const StpInfo &info) noexcept {
     Angle currentAngle = info.getRobot().value()->getAngle();                                               // Angle the robot is currently facing
     Angle targetAngle = (info.getPositionToShootAt().value() - info.getBall()->get()->position).toAngle();  // targetAngle the robot should have
     int direction = targetAngle.rotateDirection(currentAngle) ? -1 : 1;                                     // Direction in which the robot should move
-    double speedFactor = std::clamp(currentAngle.shortestAngleDiff(targetAngle) * 2 * M_PI, 0.0, M_PI);  // Speed at which the robot should orbit
+    double speedFactor = std::clamp(currentAngle.shortestAngleDiff(targetAngle) * 2 * M_PI, 0.0, M_PI);     // Speed at which the robot should orbit
 
     double targetAngularVelocity = direction * speedFactor;  // Set the target angular velocity of the robot
 

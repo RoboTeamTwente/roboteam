@@ -28,6 +28,7 @@ struct GameState {
     RuleSet ruleSet;
     int keeperId = Constants::DEFAULT_KEEPER_ID();
     int maxAllowedRobots = stp::control_constants::MAX_ROBOT_COUNT;
+    static int cardId;
 
     /**
      * @brief Getter for the ruleset according to its name

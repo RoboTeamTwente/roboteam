@@ -128,7 +128,7 @@ void Play::distributeRoles() noexcept {
     int currentMaxRobots = GameStateManager::getCurrentGameState().maxAllowedRobots;
     int sizeUs = world->getWorld()->getUs().size();
     sizeUs = std::min(sizeUs, static_cast<int>(roles.size()));
-    static int cardId = -1;
+    int cardId = GameStateManager::getCurrentGameState().cardId;
 
     if (currentMaxRobots < sizeUs) {
         RTT_INFO("Driving robot ", roles[currentMaxRobots]->getName(), " to edge of field for substitution")
@@ -155,15 +155,15 @@ void Play::distributeRoles() noexcept {
             auto robot = distribution.find(role->getName())->second;
             stpInfos[roleName].setRobot(robot);
             if (flagMap[roleName].priority == DealerFlagPriority::CARD) {
-                cardId = robot->getId();
-                RTT_INFO("Updating cardId to: ", cardId)
+                GameStateManager::getCurrentGameState().cardId = robot->getId();
+                RTT_INFO("Updating cardId to: ", GameStateManager::getCurrentGameState().cardId)
                 cardIdAssigned = true;
             }
         }
     }
     if (!cardIdAssigned && cardId != -1) {
         RTT_INFO("No robot assigned to cardId, resetting to -1")
-        cardId = -1;
+        GameStateManager::getCurrentGameState().cardId = -1;
     }
     std::for_each(stpInfos.begin(), stpInfos.end(), [this](auto &each) { each.second.setCurrentWorld(world); });
 }

@@ -15,10 +15,13 @@ namespace rtt::ai::stp::play {
 DefendShot::DefendShot() : Play() {
     startPlayEvaluation.clear();
     startPlayEvaluation.emplace_back(eval::NormalPlayGameState);
+    startPlayEvaluation.emplace_back(eval::BallOnOurSide);
+    startPlayEvaluation.emplace_back(eval::TheyHaveBall);
     startPlayEvaluation.emplace_back(GlobalEvaluation::BallNotInOurDefenseAreaAndStill);
 
     keepPlayEvaluation.clear();
     keepPlayEvaluation.emplace_back(eval::NormalPlayGameState);
+    keepPlayEvaluation.emplace_back(eval::BallOnOurSide);
     keepPlayEvaluation.emplace_back(eval::TheyHaveBall);
     keepPlayEvaluation.emplace_back(GlobalEvaluation::BallNotInOurDefenseAreaAndStill);
 
@@ -40,9 +43,8 @@ DefendShot::DefendShot() : Play() {
 }
 
 uint8_t DefendShot::score(const rtt::Field& field) noexcept {
-    if (world->getWorld()->whichRobotHasBall(world::them) != std::nullopt) return 255;
-    if (world->getWorld()->whichRobotHasBall(world::us) != std::nullopt) return 0;
-    return 0;
+    // If this play is valid we always want to execute this play
+    return control_constants::FUZZY_TRUE;
 }
 
 Dealer::FlagMap DefendShot::decideRoleFlags() const noexcept {

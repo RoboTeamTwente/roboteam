@@ -47,11 +47,13 @@ ChippingPass::ChippingPass() : Play() {
 }
 
 uint8_t ChippingPass::score(const rtt::Field& field) noexcept {
-    passInfo = stp::computations::PassComputations::calculatePass(gen::ChippingPass, world, field);
+    // Robots can't chip yet
+    return 0;
+    // passInfo = stp::computations::PassComputations::calculatePass(gen::ChippingPass, world, field);
 
-    if (passInfo.passLocation == Vector2()) return 0;  // In case no pass is found
+    // if (passInfo.passLocation == Vector2()) return 0;  // In case no pass is found
 
-    return stp::computations::PassComputations::scorePass(passInfo, world, field);
+    // return stp::computations::PassComputations::scorePass(passInfo, world, field);
 }
 
 Dealer::FlagMap ChippingPass::decideRoleFlags() const noexcept {

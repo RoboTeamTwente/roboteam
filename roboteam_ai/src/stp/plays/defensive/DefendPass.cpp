@@ -18,11 +18,13 @@ DefendPass::DefendPass() : Play() {
     startPlayEvaluation.clear();
     startPlayEvaluation.emplace_back(eval::NormalPlayGameState);
     startPlayEvaluation.emplace_back(eval::TheyHaveBall);
+    startPlayEvaluation.emplace_back(eval::BallOnTheirSide);
     startPlayEvaluation.emplace_back(GlobalEvaluation::BallNotInOurDefenseAreaAndStill);
 
     keepPlayEvaluation.clear();
     keepPlayEvaluation.emplace_back(eval::NormalPlayGameState);
     keepPlayEvaluation.emplace_back(eval::TheyHaveBall);
+    keepPlayEvaluation.emplace_back(eval::BallOnTheirSide);
     keepPlayEvaluation.emplace_back(GlobalEvaluation::BallNotInOurDefenseAreaAndStill);
 
     roles = std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT>{
@@ -43,11 +45,8 @@ DefendPass::DefendPass() : Play() {
 }
 
 uint8_t DefendPass::score(const rtt::Field& field) noexcept {
-    auto enemyRobot = world->getWorld()->getRobotClosestToBall(world::them);
-    auto position = distanceFromPointToLine(field.playArea.bottomLeft(), field.playArea.topLeft(), enemyRobot->get()->getPos());
-    auto goalVisibility =
-        FieldComputations::getPercentageOfGoalVisibleFromPoint(field, true, enemyRobot->get()->getPos(), world->getWorld().value(), enemyRobot->get()->getId(), false);
-    return 255 * (position / field.playArea.width()) * (100 - goalVisibility) / 100;
+    // If this play is valid we always want to execute this play
+    return control_constants::FUZZY_TRUE;
 }
 
 Dealer::FlagMap DefendPass::decideRoleFlags() const noexcept {

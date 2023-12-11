@@ -10,11 +10,11 @@ namespace rtt::ai::stp::play {
 
 KickOffThemPrepare::KickOffThemPrepare() : Play() {
     /// Evaluations that have to be true to be considered when changing plays.
-    startPlayEvaluation.clear();  // DONT TOUCH.
+    startPlayEvaluation.clear();
     startPlayEvaluation.emplace_back(eval::KickOffThemPrepareGameState);
 
     /// Evaluations that have to be true to allow the play to continue, otherwise the play will change. Plays can also end using the shouldEndPlay().
-    keepPlayEvaluation.clear();  // DONT TOUCH.
+    keepPlayEvaluation.clear();
     keepPlayEvaluation.emplace_back(eval::KickOffThemPrepareGameState);
 
     roles = std::array<std::unique_ptr<Role>, rtt::ai::Constants::ROBOT_COUNT()>{
@@ -35,9 +35,8 @@ KickOffThemPrepare::KickOffThemPrepare() : Play() {
 }
 
 uint8_t KickOffThemPrepare::score(const rtt::Field& field) noexcept {
-    /// List of all factors that combined results in an evaluation how good the play is.
-    scoring = {{PlayEvaluator::getGlobalEvaluation(eval::KickOffThemPrepareGameState, world), 1.0}};
-    return (lastScore = PlayEvaluator::calculateScore(scoring)).value();
+    // If this play is valid we always want to execute this play
+    return control_constants::FUZZY_TRUE;
 }
 
 Dealer::FlagMap KickOffThemPrepare::decideRoleFlags() const noexcept {

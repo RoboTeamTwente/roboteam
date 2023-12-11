@@ -44,7 +44,7 @@ uint8_t FreeKickUsPass::score(const rtt::Field& field) noexcept {
 
     if (passInfo.passLocation == Vector2()) return 0;  // In case no pass is found
 
-    return stp::computations::PassComputations::scorePass(passInfo, world, field);
+    return passInfo.passScore;
 }
 
 Dealer::FlagMap FreeKickUsPass::decideRoleFlags() const noexcept {

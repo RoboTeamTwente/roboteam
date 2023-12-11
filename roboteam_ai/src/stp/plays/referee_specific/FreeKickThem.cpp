@@ -14,11 +14,11 @@ namespace rtt::ai::stp::play {
 
 FreeKickThem::FreeKickThem() : Play() {
     /// Evaluations that have to be true to be considered when changing plays.
-    startPlayEvaluation.clear();  // DONT TOUCH.
+    startPlayEvaluation.clear();
     startPlayEvaluation.emplace_back(eval::FreeKickThemGameState);
 
     /// Evaluations that have to be true to allow the play to continue, otherwise the play will change. Plays can also end using the shouldEndPlay().
-    keepPlayEvaluation.clear();  // DONT TOUCH.
+    keepPlayEvaluation.clear();
     keepPlayEvaluation.emplace_back(eval::FreeKickThemGameState);
 
     roles = std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT>{
@@ -39,9 +39,8 @@ FreeKickThem::FreeKickThem() : Play() {
 }
 
 uint8_t FreeKickThem::score(const rtt::Field& field) noexcept {
-    /// List of all factors that combined results in an evaluation how good the play is.
-    scoring = {{PlayEvaluator::getGlobalEvaluation(eval::FreeKickThemGameState, world), 1.0}};
-    return (lastScore = PlayEvaluator::calculateScore(scoring)).value();  // DONT TOUCH.
+    // If this play is valid we always want to execute this play
+    return control_constants::FUZZY_TRUE;
 }
 
 Dealer::FlagMap FreeKickThem::decideRoleFlags() const noexcept {

@@ -10,12 +10,12 @@ namespace rtt::ai::stp::play {
 
 DefensiveStopFormation::DefensiveStopFormation() : Play() {
     /// Evaluations that have to be true to be considered when changing plays.
-    startPlayEvaluation.clear();  // DONT TOUCH.
+    startPlayEvaluation.clear();
     startPlayEvaluation.emplace_back(eval::StopGameState);
     startPlayEvaluation.emplace_back(eval::BallOnOurSide);
 
     /// Evaluations that have to be true to allow the play to continue, otherwise the play will change. Plays can also end using the shouldEndPlay().
-    keepPlayEvaluation.clear();  // DONT TOUCH.
+    keepPlayEvaluation.clear();
     keepPlayEvaluation.emplace_back(eval::StopGameState);
 
     roles = std::array<std::unique_ptr<Role>, rtt::ai::Constants::ROBOT_COUNT()>{
@@ -36,9 +36,8 @@ DefensiveStopFormation::DefensiveStopFormation() : Play() {
 }
 
 uint8_t DefensiveStopFormation::score(const rtt::Field& field) noexcept {
-    /// List of all factors that combined results in an evaluation how good the play is.
-    scoring = {{PlayEvaluator::getGlobalEvaluation(eval::BallOnOurSide, world), 1.0}};
-    return (lastScore = PlayEvaluator::calculateScore(scoring)).value();  // DONT TOUCH.
+    // If this play is valid we always want to execute this play
+    return control_constants::FUZZY_TRUE;
 }
 
 Dealer::FlagMap DefensiveStopFormation::decideRoleFlags() const noexcept {

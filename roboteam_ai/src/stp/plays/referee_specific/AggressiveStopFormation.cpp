@@ -36,9 +36,8 @@ AggressiveStopFormation::AggressiveStopFormation() : Play() {
 }
 
 uint8_t AggressiveStopFormation::score(const rtt::Field& field) noexcept {
-    /// List of all factors that combined results in an evaluation how good the play is.
-    scoring = {{PlayEvaluator::getGlobalEvaluation(eval::BallOnTheirSide, world), 1.0}};
-    return (lastScore = PlayEvaluator::calculateScore(scoring)).value();
+    // If this play is valid we always want to execute this play
+    return control_constants::FUZZY_TRUE;
 }
 
 Dealer::FlagMap AggressiveStopFormation::decideRoleFlags() const noexcept {

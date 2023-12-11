@@ -71,6 +71,8 @@ void FreeKickUsAtGoal::calculateInfoForRoles() noexcept {
 
     // FreeKickTaker
     auto goalTarget = computations::GoalComputations::calculateGoalTarget(world, field);
+    // print goal target score
+    RTT_INFO("Goal target score: {}", PositionScoring::scorePosition(goalTarget, gen::GoalShot, field, world).score);
     stpInfos["free_kick_taker"].setPositionToShootAt(goalTarget);
     stpInfos["free_kick_taker"].setKickOrChip(KickOrChip::KICK);
     stpInfos["free_kick_taker"].setShotType(ShotType::MAX);

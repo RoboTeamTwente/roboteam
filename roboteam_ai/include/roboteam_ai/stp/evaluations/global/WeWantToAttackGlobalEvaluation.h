@@ -9,7 +9,7 @@
 
 namespace rtt::ai::stp::evaluation {
 /**
- * @brief Class that evaluates if we want to attack
+ * @brief Class that evaluates if we want to attack, based on ball position and closest robots
  */
 class WeWantToAttackGlobalEvaluation : public BaseEvaluation {
    public:

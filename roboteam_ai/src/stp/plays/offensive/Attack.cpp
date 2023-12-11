@@ -20,6 +20,7 @@ Attack::Attack() : Play() {
     startPlayEvaluation.clear();
     startPlayEvaluation.emplace_back(eval::NormalPlayGameState);
     startPlayEvaluation.emplace_back(eval::TheyDoNotHaveBall);
+    startPlayEvaluation.emplace_back(eval::WeWantToAttack);
     startPlayEvaluation.emplace_back(GlobalEvaluation::BallNotInOurDefenseAreaAndStill);
 
     keepPlayEvaluation.clear();

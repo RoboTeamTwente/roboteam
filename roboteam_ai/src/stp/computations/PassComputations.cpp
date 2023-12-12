@@ -26,6 +26,10 @@ PassInfo PassComputations::calculatePass(gen::ScoreProfile profile, const rtt::w
     passInfo.keeperId = getKeeperId(us, world, field);
     if (!keeperCanPass) std::erase_if(us, [passInfo](auto& bot) { return bot->getId() == passInfo.keeperId; });
 
+    // Remove cardId from us
+    auto cardId = GameStateManager::getCurrentGameState().cardId;
+    std::erase_if(us, [cardId](auto& bot) { return bot->getId() == cardId; });
+
     // Find which robot should be the passer, store its id and location, and erase from us
     passInfo.passerId = getPasserId(ballLocation, us, world);
     auto passerIt = std::find_if(us.begin(), us.end(), [passInfo](auto& bot) { return bot->getId() == passInfo.passerId; });

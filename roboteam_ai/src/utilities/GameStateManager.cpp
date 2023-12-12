@@ -9,6 +9,7 @@
 #include "world/World.hpp"
 
 namespace rtt::ai {
+int GameState::cardId = -1;
 
 proto::SSL_Referee GameStateManager::refMsg;
 StrategyManager GameStateManager::strategymanager;

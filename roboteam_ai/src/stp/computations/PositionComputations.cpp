@@ -455,7 +455,7 @@ void PositionComputations::recalculateInfoForNonPassers(std::unordered_map<std::
         if (role.second.getRobot().has_value()) {
             auto robotId = role.second.getRobot()->get()->getId();
             auto robotName = role.first;
-            if (robotName != "keeper" && robotName != "passer" && robotName != "receiver" && robotName != "striker") {
+            if (robotName != "keeper" && robotName != "passer" && robotName != "receiver" && robotName != "striker" && robotName != "free_kick_taker") {
                 toBeCheckedRobots.emplace_back(role.first);
             }
         }

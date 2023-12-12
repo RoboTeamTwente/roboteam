@@ -28,36 +28,36 @@ uint8_t WeWantToAttackGlobalEvaluation::metricCheck(const world::World* world, c
         return stp::control_constants::FUZZY_FALSE;
     }
 
-    int bestBotThemDistance = 0;
-    int bestBotUsDistance = 0;
+    // int bestBotThemDistance = 0;
+    // int bestBotUsDistance = 0;
 
-    //Magic numbers to tune
-    auto ballVelocityFactor = 0.5;
-    auto robotVelocityFactor = 0.5;
-    int score_threshold = 160;
-    auto distanceToGoalWeight = 0.6;
-    auto distanceTheirBotWeight = 0.9;
-    auto distanceOurBotWeight = 0.85;
+    // //Magic numbers to tune
+    // auto ballVelocityFactor = 0.5;
+    // auto robotVelocityFactor = 0.5;
+    // int score_threshold = 160;
+    // auto distanceToGoalWeight = 0.6;
+    // auto distanceTheirBotWeight = 0.9;
+    // auto distanceOurBotWeight = 0.85;
 
-    auto ballToOurGoalScore = distanceFromPointToLine(field.leftGoalArea.bottomLeft() field.leftGoalArea.topLeft(), ballPosition + ballVelocity);
+    // auto ballToOurGoalScore = distanceFromPointToLine(field.leftGoalArea.bottomLeft() field.leftGoalArea.topLeft(), ballPosition + ballVelocity);
 
-    for (const auto &theirRobot : theirRobots) {
-        auto distanceBotToBall = (theirRobot->getPos() + theirRobot->getVel().length() * robotVelocityFactor - ballPosition + ballVelocity * ballVelocityFactor).length;
-        if (distanceBotToBall < bestBotThemDistance) {
-            auto bestBotThemDistance = distanceBotToBall;
-        }
-    }
-    for (const auto &ourRobot : ourRobots) {
-        auto distanceBotToBall = (ourRobot->getPos() + ourRobot->getVel().length() * robotVelocityFactor - ballPosition + ballVelocity * ballVelocityFactor).length;
-        if (distanceBotToBall < bestBotUsDistance) {
-            auto bestBotUsDistance = distanceBotToBall;
-        }
-    }
-    std::cout<<ballToOurGoalScore<<bestBotThemDistance<<bestBotUsDistance<<std::endl;
+    // for (const auto &theirRobot : theirRobots) {
+    //     auto distanceBotToBall = (theirRobot->getPos() + theirRobot->getVel().length() * robotVelocityFactor - ballPosition + ballVelocity * ballVelocityFactor).length;
+    //     if (distanceBotToBall < bestBotThemDistance) {
+    //         auto bestBotThemDistance = distanceBotToBall;
+    //     }
+    // }
+    // for (const auto &ourRobot : ourRobots) {
+    //     auto distanceBotToBall = (ourRobot->getPos() + ourRobot->getVel().length() * robotVelocityFactor - ballPosition + ballVelocity * ballVelocityFactor).length;
+    //     if (distanceBotToBall < bestBotUsDistance) {
+    //         auto bestBotUsDistance = distanceBotToBall;
+    //     }
+    // }
+    // std::cout<<ballToOurGoalScore<<bestBotThemDistance<<bestBotUsDistance<<std::endl;
 
-    totalScore = distanceOurBotWeight * bestBotUsDistance - distanceTheirBotWeight * bestBotThemDistance - distanceToGoalWeight * ballToOurGoalsScore;
-    if (totalScore < score_threshold) return stp::control_constants::FUZZY_FALSE;
-    return stp::control_constants::FUZZY_TRUE;
+    // totalScore = distanceOurBotWeight * bestBotUsDistance - distanceTheirBotWeight * bestBotThemDistance - distanceToGoalWeight * ballToOurGoalsScore;
+    // if (totalScore < score_threshold) return stp::control_constants::FUZZY_FALSE;
+    // return stp::control_constants::FUZZY_TRUE;
 }
 }
    // namespace rtt::ai::stp::evaluation

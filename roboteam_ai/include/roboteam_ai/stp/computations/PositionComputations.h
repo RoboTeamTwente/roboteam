@@ -110,10 +110,11 @@ class PositionComputations {
      * @param roles The current roles
      * @param field The current field
      * @param world The current world
+     * @param mustStayOnOurSide Whether the defenders should always stay on our side of the field, for example to prevent interference during our own attack
      */
     static void calculateInfoForDefendersAndWallers(std::unordered_map<std::string, StpInfo> &stpInfos,
-                                                    std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT> &roles, const Field &field,
-                                                    world::World *world) noexcept;
+                                                    std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT> &roles, const Field &field, world::World *world,
+                                                    bool mustStayOnOurSide) noexcept;
 
     /**
      * @brief Calculates info for the attackers

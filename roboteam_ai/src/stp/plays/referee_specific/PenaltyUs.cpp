@@ -14,15 +14,15 @@ namespace rtt::ai::stp::play {
 const char* PenaltyUs::getName() const { return "Penalty Us"; }
 
 PenaltyUs::PenaltyUs() : Play() {
-    /// Evaluations that have to be true to be considered when changing plays.
+    // Evaluations that have to be true in order for this play to be considered valid.
     startPlayEvaluation.clear();
-    startPlayEvaluation.emplace_back(eval::PenaltyUsGameState);
+    startPlayEvaluation.emplace_back(GlobalEvaluation::PenaltyUsGameState);
 
-    /// Evaluations that have to be true to allow the play to continue, otherwise the play will change. Plays can also end using the shouldEndPlay().
+    // Evaluations that have to be true to allow the play to continue, otherwise the play will change. Plays can also end using the shouldEndPlay().
     keepPlayEvaluation.clear();
-    keepPlayEvaluation.emplace_back(eval::PenaltyUsGameState);
+    keepPlayEvaluation.emplace_back(GlobalEvaluation::PenaltyUsGameState);
 
-    /// Role creation, the names should be unique. The names are used in the stpInfos-map.
+    // Role creation, the names should be unique. The names are used in the stpInfos-map.
     roles = std::array<std::unique_ptr<Role>, rtt::ai::Constants::ROBOT_COUNT()>{
         // Roles is we play 6v6
         std::make_unique<role::Keeper>("keeper"), std::make_unique<role::PenaltyTaker>("kicker"), std::make_unique<role::Halt>("halt_0"), std::make_unique<role::Halt>("halt_1"),

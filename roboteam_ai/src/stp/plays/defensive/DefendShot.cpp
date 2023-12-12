@@ -13,19 +13,21 @@
 namespace rtt::ai::stp::play {
 
 DefendShot::DefendShot() : Play() {
+    // Evaluations that have to be true in order for this play to be considered valid.
     startPlayEvaluation.clear();
-    startPlayEvaluation.emplace_back(eval::NormalPlayGameState);
-    startPlayEvaluation.emplace_back(eval::BallOnOurSide);
-    startPlayEvaluation.emplace_back(eval::TheyHaveBall);
+    startPlayEvaluation.emplace_back(GlobalEvaluation::NormalPlayGameState);
+    startPlayEvaluation.emplace_back(GlobalEvaluation::WeDoNotHaveBall);
+    startPlayEvaluation.emplace_back(GlobalEvaluation::BallOnOurSide);
     startPlayEvaluation.emplace_back(GlobalEvaluation::BallNotInOurDefenseAreaAndStill);
 
+    // Evaluations that have to be true to allow the play to continue, otherwise the play will change. Plays can also end using the shouldEndPlay().
     keepPlayEvaluation.clear();
-    keepPlayEvaluation.emplace_back(eval::NormalPlayGameState);
-    keepPlayEvaluation.emplace_back(eval::BallOnOurSide);
-    keepPlayEvaluation.emplace_back(eval::TheyHaveBall);
+    keepPlayEvaluation.emplace_back(GlobalEvaluation::NormalPlayGameState);
+    keepPlayEvaluation.emplace_back(GlobalEvaluation::TheyHaveBall);
     keepPlayEvaluation.emplace_back(GlobalEvaluation::BallNotInOurDefenseAreaAndStill);
 
-    roles = std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT>{
+    // Role creation, the names should be unique. The names are used in the stpInfos-map.
+    roles = std::array<std::unique_ptr<Role>, rtt::ai::Constants::ROBOT_COUNT()>{
         // Roles is we play 6v6
         std::make_unique<role::Keeper>("keeper"),
         std::make_unique<role::Harasser>("harasser"),

@@ -151,27 +151,15 @@ target_compile_options(roboteam_ai_plays PRIVATE "${COMPILER_FLAGS}")
 ###### EVALUATION #######
 add_library(roboteam_ai_evaluation
         ${PROJECT_SOURCE_DIR}/src/stp/evaluations/global/WeHaveBallGlobalEvaluation.cpp
+        ${PROJECT_SOURCE_DIR}/src/stp/evaluations/global/WeDoNotHaveBallGlobalEvaluation.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/evaluations/global/TheyHaveBallGlobalEvaluation.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/evaluations/global/TheyDoNotHaveBallGlobalEvaluation.cpp
-        ${PROJECT_SOURCE_DIR}/src/stp/evaluations/global/BallGotShotGlobalEvaluation.cpp
-        ${PROJECT_SOURCE_DIR}/src/stp/evaluations/global/BallMovesSlowGlobalEvaluation.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/evaluations/global/BallOnOurSideGlobalEvaluation.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/evaluations/global/BallOnTheirSideGlobalEvaluation.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/evaluations/global/BallInOurDefenseAreaAndStillGlobalEvaluation.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/evaluations/global/BallNotInOurDefenseAreaAndStillGlobalEvaluation.cpp
-        ${PROJECT_SOURCE_DIR}/src/stp/evaluations/global/FreedomOfRobotsGlobalEvaluation.cpp
-        ${PROJECT_SOURCE_DIR}/src/stp/evaluations/global/BallCloseToUsGlobalEvaluation.cpp
-        ${PROJECT_SOURCE_DIR}/src/stp/evaluations/global/BallCloseToThemGlobalEvaluation.cpp
-        ${PROJECT_SOURCE_DIR}/src/stp/evaluations/global/DistanceFromBallGlobalEvaluation.cpp
-        ${PROJECT_SOURCE_DIR}/src/stp/evaluations/global/WeHaveMajorityGlobalEvaluation.cpp
-        ${PROJECT_SOURCE_DIR}/src/stp/evaluations/global/GoalVisionGlobalEvaluation.cpp
-        ${PROJECT_SOURCE_DIR}/src/stp/evaluations/global/GoalVisionFromBallGlobalEvaluation.cpp
-        ${PROJECT_SOURCE_DIR}/src/stp/evaluations/global/BallIsFreeGlobalEvaluation.cpp
-        ${PROJECT_SOURCE_DIR}/src/stp/evaluations/global/TheyHaveBallGlobalEvaluation.cpp
-        ${PROJECT_SOURCE_DIR}/src/stp/evaluations/global/TheyDoNotHaveBallGlobalEvaluation.cpp
-        ${PROJECT_SOURCE_DIR}/src/stp/evaluations/global/NoGoalVisionFromBallGlobalEvaluation.cpp
-        ${PROJECT_SOURCE_DIR}/src/stp/evaluations/global/BallClosestToUsGlobalEvaluation.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/evaluations/global/WeWantToAttackGlobalEvaluation.cpp
+        ${PROJECT_SOURCE_DIR}/src/stp/evaluations/global/WeWantToDefendGlobalEvaluation.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/evaluations/game_states/BallPlacementUsGameStateEvaluation.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/evaluations/game_states/BallPlacementThemGameStateEvaluation.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/evaluations/game_states/HaltGameStateEvaluation.cpp

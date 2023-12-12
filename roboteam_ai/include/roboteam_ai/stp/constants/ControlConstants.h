@@ -68,7 +68,8 @@ constexpr double DISTANCE_TO_ROBOT_FAR = 5 * ROBOT_RADIUS;    /**< Distance from
 constexpr double ROBOT_CLOSE_TO_POINT = 0.2;                  /**< Distance from the robot to a position at which the robot is considered close to that position */
 constexpr double DISTANCE_TO_ROBOT_NEAR = 2.2 * ROBOT_RADIUS; /**< Distance from the robot to another robot at which the robot is considered near that other robot */
 constexpr double DEFENSE_AREA_AVOIDANCE_MARGIN = 0.1;         /**< Distance error for avoiding the defense area */
-constexpr double DISTANCE_TO_PASS_TRAJECTORY = 0.5; /**< Distance from the robot to the pass trajectory at which the robot is considered too close to the pass trajectory */
+constexpr double DISTANCE_TO_PASS_TRAJECTORY = 0.5;           /**< Distance from the robot to the pass trajectory at which the robot is considered too close to the pass trajectory */
+constexpr double WE_WANT_TO_ATTACK_THRESHOLD = 0.3;           /**<Distance the ball has to be from our defense area for us to start an attacking play*/
 
 /// Keeper constants
 constexpr double DISTANCE_FROM_GOAL_CLOSE = 2 * ROBOT_RADIUS; /**< Distance from the keeper to the goal at which the keeper is considered close to that goal */

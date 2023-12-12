@@ -20,17 +20,20 @@
 
 namespace rtt::ai::stp::play {
 AttackingPass::AttackingPass() : Play() {
+    // Evaluations that have to be true in order for this play to be considered valid.
     startPlayEvaluation.clear();
     startPlayEvaluation.emplace_back(GlobalEvaluation::NormalPlayGameState);
-    startPlayEvaluation.emplace_back(GlobalEvaluation::TheyDoNotHaveBall);
+    startPlayEvaluation.emplace_back(GlobalEvaluation::WeHaveBall);
     startPlayEvaluation.emplace_back(GlobalEvaluation::BallNotInOurDefenseAreaAndStill);
 
+    // Evaluations that have to be true to allow the play to continue, otherwise the play will change. Plays can also end using the shouldEndPlay().
     keepPlayEvaluation.clear();
     keepPlayEvaluation.emplace_back(GlobalEvaluation::NormalPlayGameState);
     keepPlayEvaluation.emplace_back(GlobalEvaluation::TheyDoNotHaveBall);
     keepPlayEvaluation.emplace_back(GlobalEvaluation::BallNotInOurDefenseAreaAndStill);
 
-    roles = std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT>{
+    // Role creation, the names should be unique. The names are used in the stpInfos-map.
+    roles = std::array<std::unique_ptr<Role>, rtt::ai::Constants::ROBOT_COUNT()>{
         // Roles is we play 6v6
         std::make_unique<role::Keeper>("keeper"),
         std::make_unique<role::Passer>("passer"),
@@ -80,10 +83,10 @@ void AttackingPass::calculateInfoForRoles() noexcept {
     PositionComputations::recalculateInfoForNonPassers(stpInfos, roles, field, world, passInfo.passLocation);
 
     if (!ballKicked()) {
-        stpInfos["receiver"].setPositionToMoveTo(passInfo.passLocation);
         stpInfos["passer"].setPositionToShootAt(passInfo.passLocation);
         stpInfos["passer"].setShotType(ShotType::PASS);
         stpInfos["passer"].setKickOrChip(KickOrChip::KICK);
+        stpInfos["receiver"].setPositionToMoveTo(passInfo.passLocation);
     } else {
         // Receiver goes to the passLocation projected on the trajectory of the ball
         auto ball = world->getWorld()->getBall()->get();

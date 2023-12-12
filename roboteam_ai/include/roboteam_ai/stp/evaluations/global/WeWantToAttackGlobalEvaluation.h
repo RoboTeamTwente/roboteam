@@ -9,15 +9,15 @@
 
 namespace rtt::ai::stp::evaluation {
 /**
- * @brief Class that evaluates if we want to attack, based on ball position and closest robots
+ * @brief Class that evaluates if we want to attack, based on ball position with regards to our goal
  */
 class WeWantToAttackGlobalEvaluation : public BaseEvaluation {
    public:
     /**
-     * @brief Calculates the score for they do not have ball
+     * @brief Calculates the score for whether we want to attack
      * @param world The current world
      * @param field The current field
-     * @return The score of they do not have ball
+     * @return The score of we want to attack
      */
     [[nodiscard]] uint8_t metricCheck(const world::World* world, const Field* field) const noexcept override;
 

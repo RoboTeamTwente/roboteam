@@ -11,12 +11,15 @@
 namespace rtt::ai::stp::play {
 
 BallPlacementUs::BallPlacementUs() : Play() {
+    // Evaluations that have to be true in order for this play to be considered valid.
     startPlayEvaluation.clear();
-    startPlayEvaluation.emplace_back(eval::BallPlacementUsGameState);
+    startPlayEvaluation.emplace_back(GlobalEvaluation::BallPlacementUsGameState);
 
+    // Evaluations that have to be true to allow the play to continue, otherwise the play will change. Plays can also end using the shouldEndPlay().
     keepPlayEvaluation.clear();
-    keepPlayEvaluation.emplace_back(eval::BallPlacementUsGameState);
+    keepPlayEvaluation.emplace_back(GlobalEvaluation::BallPlacementUsGameState);
 
+    // Role creation, the names should be unique. The names are used in the stpInfos-map.
     roles = std::array<std::unique_ptr<Role>, rtt::ai::Constants::ROBOT_COUNT()>{
         // Roles is we play 6v6
         std::make_unique<role::Formation>("keeper"), std::make_unique<role::BallPlacer>("ball_placer"), std::make_unique<role::Formation>("formation_back_0"),

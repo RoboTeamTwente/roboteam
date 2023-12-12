@@ -50,6 +50,7 @@ enum class GlobalEvaluation {
     GoalVision,
     NoGoalVisionFromBall,
     WeHaveBall,
+    WeDoNotHaveBall,
     TheyHaveBall,
     TheyDoNotHaveBall,
     WeHaveMajority,

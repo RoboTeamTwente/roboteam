@@ -8,12 +8,15 @@ namespace rtt::ai::stp::play {
 constexpr double PENALTY_MARK_US_X = -2.0;
 
 PenaltyUsPrepare::PenaltyUsPrepare() : Play() {
+    // Evaluations that have to be true in order for this play to be considered valid.
     startPlayEvaluation.clear();
-    startPlayEvaluation.emplace_back(eval::PenaltyUsPrepareGameState);
+    startPlayEvaluation.emplace_back(GlobalEvaluation::PenaltyUsPrepareGameState);
 
+    // Evaluations that have to be true to allow the play to continue, otherwise the play will change. Plays can also end using the shouldEndPlay().
     keepPlayEvaluation.clear();
-    keepPlayEvaluation.emplace_back(eval::PenaltyUsPrepareGameState);
+    keepPlayEvaluation.emplace_back(GlobalEvaluation::PenaltyUsPrepareGameState);
 
+    // Role creation, the names should be unique. The names are used in the stpInfos-map.
     roles = std::array<std::unique_ptr<Role>, rtt::ai::Constants::ROBOT_COUNT()>{
         // Roles is we play 6v6
         std::make_unique<role::Formation>("keeper"),

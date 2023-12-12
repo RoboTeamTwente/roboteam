@@ -22,10 +22,17 @@ KickOffUs::KickOffUs() : Play() {
 
     roles = std::array<std::unique_ptr<Role>, rtt::ai::Constants::ROBOT_COUNT()>{
         // Roles is we play 6v6
-        std::make_unique<role::Keeper>("keeper"), std::make_unique<role::FreeKickTaker>("kick_off_taker"), std::make_unique<role::PassReceiver>("receiver"),
-        std::make_unique<role::Halt>("halt_0"), std::make_unique<role::Halt>("halt_1"), std::make_unique<role::Halt>("halt_2"),
+        std::make_unique<role::Keeper>("keeper"), 
+        std::make_unique<role::FreeKickTaker>("kick_off_taker"),
+        std::make_unique<role::PassReceiver>("receiver"),
+        std::make_unique<role::Halt>("halt_0"), 
+        std::make_unique<role::Halt>("halt_1"), 
+        std::make_unique<role::Halt>("halt_2"),
         // Additional roles if we play 11v11
-        std::make_unique<role::Halt>("halt_3"), std::make_unique<role::Halt>("halt_4"), std::make_unique<role::Halt>("halt_5"), std::make_unique<role::Halt>("halt_6"),
+        std::make_unique<role::Halt>("halt_3"), 
+        std::make_unique<role::Halt>("halt_4"), 
+        std::make_unique<role::Halt>("halt_5"), 
+        std::make_unique<role::Halt>("halt_6"),
         std::make_unique<role::Halt>("halt_7")};
 }
 
@@ -82,7 +89,7 @@ void KickOffUs::calculateInfoForRoles() noexcept {
             receiverLocation = ball->position;
         }
         stpInfos["receiver"].setPositionToMoveTo(receiverLocation);
-        if (ball->velocity.length() > control_constants::BALL_IS_MOVING_SLOW_LIMIT) stpInfos["receiver"].setPidType(PIDType::INTERCEPT);
+        stpInfos["receiver"].setPidType(ball->velocity.length() > control_constants::BALL_IS_MOVING_SLOW_LIMIT ? PIDType::RECEIVE : PIDType::DEFAULT);
     }
 }
 

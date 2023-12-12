@@ -67,7 +67,7 @@ Dealer::FlagMap KeeperKickBall::decideRoleFlags() const noexcept {
 }
 
 void KeeperKickBall::calculateInfoForRoles() noexcept {
-    PositionComputations::calculateInfoForDefendersAndWallers(stpInfos, roles, field, world);
+    PositionComputations::calculateInfoForDefendersAndWallers(stpInfos, roles, field, world, true);
     PositionComputations::calculateInfoForAttackers(stpInfos, roles, field, world);
     PositionComputations::recalculateInfoForNonPassers(stpInfos, roles, field, world, passInfo.passLocation);
 

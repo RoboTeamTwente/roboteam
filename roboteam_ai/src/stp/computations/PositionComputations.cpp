@@ -14,6 +14,7 @@
 #include "stp/computations/PassComputations.h"
 #include "stp/computations/PositionScoring.h"
 #include "world/World.hpp"
+#include "stp/Play.hpp"
 
 namespace rtt::ai::stp {
 
@@ -243,7 +244,7 @@ void PositionComputations::calculateInfoForHarasser(std::unordered_map<std::stri
 
 void PositionComputations::calculateInfoForDefendersAndWallers(std::unordered_map<std::string, StpInfo> &stpInfos,
                                                                std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT> &roles, const Field &field,
-                                                               world::World *world) noexcept {
+                                                               world::World *world, bool mustStayOnOurSide) noexcept {
     // List of all active defender and waller names
     auto defenderNames = std::vector<std::string>{};
     auto wallerNames = std::vector<std::string>{};
@@ -282,7 +283,7 @@ void PositionComputations::calculateInfoForDefendersAndWallers(std::unordered_ma
         for (int i = 0; i < loopSize; i++) {
             Vector2 defendPostion = enemyMap.begin()->second.position;
             Vector2 defendSpeed = enemyMap.begin()->second.velocity;
-            if (defendPostion.x > 0) {
+            if (mustStayOnOurSide && defendPostion.x > 0) {
                 defendPostion.x = 0;
                 defendSpeed.x = 0;
             }
@@ -303,14 +304,12 @@ void PositionComputations::calculateInfoForDefendersAndWallers(std::unordered_ma
             cost_matrix[i].resize(row_length);
             // Check if there are still enemies left
             if (enemyMap.empty()) continue;
-            enemies.emplace_back(enemyMap.begin()->second.position);
+            enemies.emplace_back((mustStayOnOurSide && (enemyMap.begin()->second.position.x > 0)) ? Vector2{0, enemyMap.begin()->second.position.y} : enemyMap.begin()->second.position);
             ComputationManager::calculatedEnemyMapIds.emplace_back(enemyMap.begin()->second.id);
-            enemyMap.erase(enemyMap.begin());
-        }
-        for (int i = 0; i < activeDefenderNames.size(); i++) {
             for (int j = 0; j < row_length; j++) {
-                cost_matrix[i][j] = stpInfos[activeDefenderNames[i]].getRobot()->get()->getPos().dist(enemies[j]);
+                cost_matrix[i][j] = (stpInfos[activeDefenderNames[i]].getRobot()->get()->getPos() + stpInfos[activeDefenderNames[i]].getRobot()->get()->getVel() *  control_constants::DEALER_SPEED_FACTOR).dist(enemies[j] + (mustStayOnOurSide && (enemyMap.begin()->second.position.x > 0) ? Vector2{0, enemyMap.begin()->second.velocity.y} : enemyMap.begin()->second.velocity) * control_constants::DEALER_SPEED_FACTOR);
             }
+            enemyMap.erase(enemyMap.begin());
         }
         // Calculate the optimal assignment of enemies to pass_defenders using the hungarian algorithm and set the position to defend for each
         // active pass defender

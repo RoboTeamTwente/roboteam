@@ -24,7 +24,7 @@ std::optional<StpInfo> BlockBall::calculateInfoForSkill(StpInfo const &info) noe
 
         // Make sure this position is valid
         targetPosition = FieldComputations::projectPointToValidPositionOnLine(info.getField().value(), targetPosition, defendPos, info.getBall()->get()->position);
-        targetPosition.x = std::min(0.0, targetPosition.x);
+        // targetPosition.x = std::min(0.0, targetPosition.x);
 
         skillStpInfo.setPositionToMoveTo(targetPosition);
 

@@ -66,7 +66,7 @@ Dealer::FlagMap FreeKickUsAtGoal::decideRoleFlags() const noexcept {
 
 void FreeKickUsAtGoal::calculateInfoForRoles() noexcept {
     PositionComputations::calculateInfoForKeeper(stpInfos, field, world);
-    PositionComputations::calculateInfoForDefendersAndWallers(stpInfos, roles, field, world);
+    PositionComputations::calculateInfoForDefendersAndWallers(stpInfos, roles, field, world, true);
     PositionComputations::calculateInfoForAttackers(stpInfos, roles, field, world);
 
     // FreeKickTaker

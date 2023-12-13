@@ -10,4 +10,4 @@
 	branch = main
 [submodule "roboteam_robothub/roboteam_embedded_messages"]
 	path = roboteam_robothub/roboteam_embedded_messages
-	url = git@github.com:RoboTeamTwente/roboteam_embedded_messages.git
+	url = https://github.com/RoboTeamTwente/roboteam_embedded_messages.git

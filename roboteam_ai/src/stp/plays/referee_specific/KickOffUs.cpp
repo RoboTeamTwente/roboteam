@@ -63,19 +63,14 @@ Dealer::FlagMap KickOffUs::decideRoleFlags() const noexcept {
 void KickOffUs::calculateInfoForRoles() noexcept {
     PositionComputations::calculateInfoForKeeper(stpInfos, field, world);
     // Kicker
-    // TODO: set good position to shoot at (compute pass location)- possibly do this in the kick_off_taker role
     Vector2 passLocation = Vector2(-1.0, 1.0);
     stpInfos["kick_off_taker"].setPositionToShootAt(passLocation);
     stpInfos["kick_off_taker"].setShotType(ShotType::PASS);
     stpInfos["kick_off_taker"].setKickOrChip(KickOrChip::KICK);
-    // TODO: set good position to move to after pass
-    stpInfos["kick_off_taker"].setPositionToMoveTo(Vector2(0, 0));
-
-    // Receiver
-    // TODO: set receiving position based on pass computation
     if (!ballKicked()) {
         stpInfos["receiver"].setPositionToMoveTo(passLocation);
     } else {
+        stpInfos["kick_off_taker"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.middleRightGrid, gen::AttackingPass, field, world));
         auto ball = world->getWorld()->getBall()->get();
         auto ballTrajectory = LineSegment(ball->position, ball->position + ball->velocity.stretchToLength(field.playArea.width()));
         Vector2 receiverLocation;

@@ -43,6 +43,19 @@ const visionData = useVisionDataStore()
     <div>
       Average average speed: {{ average_team_speed }}
     </div>
+    <div>
+
+      <p style="font-size: 20px; font-weight: bold; margin-top: 10px;">Heatmap:</p>
+    </div>
+
+    <div>
+      Plotting counter: {{plotting_counter}}
+      Plotting value: {{ plotting_value }}
+    </div>
+
+    <div>
+      <canvas id="myChart" width="800" height="400"></canvas>
+    </div>
 
 </template>
 
@@ -50,12 +63,14 @@ const visionData = useVisionDataStore()
 
 import { defineComponent, ref, watch } from 'vue';
 import { proto } from '../../../generated/proto';
-
+//import Chart from '../../../../../node_modules/chart.js/auto/auto.mjs'
+import Chart from 'chart.js/auto';
 export default defineComponent({
   data() {
     return {
       stpData: useSTPDataStore(),
       visionData: useVisionDataStore(),
+      heatmapData: [],
 
       match_started: false, 
 
@@ -79,7 +94,25 @@ export default defineComponent({
 
       keeper_kick_counter: 0,
       average_team_speed: 0, 
-      instant_team_speed: 0
+      instant_team_speed: 0,
+      plotting_counter: 0,
+      plotting_value: 0,
+
+      data_to_plot: {
+        datasets: [{
+          label: 'Datos de ejemplo',
+          data: [
+            { x: 10, y: 2 },
+            { x: 15, y: 1 },
+            { x: 25, y: 1.5 },
+            { x: 30, y: 0.5 },
+            { x: 5, y: 0 }
+          ],
+          backgroundColor: 'rgba(54, 162, 235, 0.5)', // Color de los puntos
+          borderColor: 'rgba(54, 162, 235, 1)', // Color del borde de los puntos
+          borderWidth: 1
+        }]
+      }
     };
   },
   methods: {
@@ -143,6 +176,84 @@ export default defineComponent({
           clearInterval(is_started_interval)
         }},
         100);
+    },
+
+    update_data_to_plot() {
+      // Simula un cambio de valor dinámico cada 3 segundos (solo para demostración)
+      const interval_to_update_plot = setInterval(() => {
+        /*if (this.plotting_counter !== 0) {
+          scatterChart.destroy()
+        }*/
+        this.data_to_plot = {
+          datasets: [{
+            label: 'Datos de ejemplo',
+            data: [
+              { x: 10, y: this.average_team_speed },
+              { x: 15, y: 1 },
+              { x: 25, y: 1.5 },
+              { x: 30, y: 0.5 },
+              { x: 5, y: 0 }
+            ],
+            backgroundColor: 'rgba(54, 162, 235, 0.5)', // Color de los puntos
+            borderColor: 'rgba(54, 162, 235, 1)', // Color del borde de los puntos
+            borderWidth: 1
+          }]
+        }
+        this.plotting_value = this.data_to_plot.datasets[0].data[0].y
+        this.plotting_counter = this.plotting_counter + 1
+
+        const options = {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            x: {
+              type: 'linear',
+              position: 'bottom'
+            },
+            y: {
+              type: 'linear',
+              position: 'left'
+            }
+          }
+        };
+
+        let scatterChart = new Chart("myChart", {
+          type: 'bar',
+          data: this.data_to_plot, 
+          options: options // Ignore this error
+        });
+
+        //scatterChart.data = this.data_to_plot;
+        //scatterChart.update()
+  
+      }, 1000); // Actualizar cada 3 segundos (solo para demostración)
+    },
+
+    generateHeatmap() {
+      var ctx = document.getElementById('myChart')
+
+      var data = this.data_to_plot
+
+      const options = {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          x: {
+            type: 'linear',
+            position: 'bottom'
+          },
+          y: {
+            type: 'linear',
+            position: 'left'
+          }
+        }
+      };
+
+      const scatterChart = new Chart("myChart", {
+        type: 'bar',
+        data: this.data_to_plot, 
+        options: options // Ignore this error
+      });
     }
 
   },
@@ -150,11 +261,13 @@ export default defineComponent({
   created() {
     this.define_event(); // Init when the script is run
     this.is_started();
+    this.update_data_to_plot();
   },
 
   mounted() {
     this.possession_counters();
     this.keeper_actions_counter();
+    //this.generateHeatmap();
   },
 
   watch: {
@@ -173,6 +286,7 @@ export default defineComponent({
       }
       this.possession_counters();
       this.keeper_actions_counter();
+      //this.generateHeatmap();
     }
   }
 });

@@ -89,7 +89,7 @@ void KeeperKickBall::calculateInfoForRoles() noexcept {
             receiverLocation = ball->position;
         }
         stpInfos["receiver"].setPositionToMoveTo(receiverLocation);
-        if (ball->velocity.length() > control_constants::BALL_IS_MOVING_SLOW_LIMIT) stpInfos["receiver"].setPidType(PIDType::INTERCEPT);
+        stpInfos["receiver"].setPidType(ball->velocity.length() > control_constants::BALL_IS_MOVING_SLOW_LIMIT ? PIDType::RECEIVE : PIDType::DEFAULT);
     }
 }
 

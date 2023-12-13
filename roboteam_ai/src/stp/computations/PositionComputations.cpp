@@ -10,11 +10,11 @@
 #include <roboteam_utils/Field.hpp>
 
 #include "roboteam_utils/Hungarian.h"
+#include "stp/Play.hpp"
 #include "stp/computations/ComputationManager.h"
 #include "stp/computations/PassComputations.h"
 #include "stp/computations/PositionScoring.h"
 #include "world/World.hpp"
-#include "stp/Play.hpp"
 
 namespace rtt::ai::stp {
 
@@ -304,10 +304,15 @@ void PositionComputations::calculateInfoForDefendersAndWallers(std::unordered_ma
             cost_matrix[i].resize(row_length);
             // Check if there are still enemies left
             if (enemyMap.empty()) continue;
-            enemies.emplace_back((mustStayOnOurSide && (enemyMap.begin()->second.position.x > 0)) ? Vector2{0, enemyMap.begin()->second.position.y} : enemyMap.begin()->second.position);
+            enemies.emplace_back((mustStayOnOurSide && (enemyMap.begin()->second.position.x > 0)) ? Vector2{0, enemyMap.begin()->second.position.y}
+                                                                                                  : enemyMap.begin()->second.position);
             ComputationManager::calculatedEnemyMapIds.emplace_back(enemyMap.begin()->second.id);
             for (int j = 0; j < row_length; j++) {
-                cost_matrix[i][j] = (stpInfos[activeDefenderNames[i]].getRobot()->get()->getPos() + stpInfos[activeDefenderNames[i]].getRobot()->get()->getVel() *  control_constants::DEALER_SPEED_FACTOR).dist(enemies[j] + (mustStayOnOurSide && (enemyMap.begin()->second.position.x > 0) ? Vector2{0, enemyMap.begin()->second.velocity.y} : enemyMap.begin()->second.velocity) * control_constants::DEALER_SPEED_FACTOR);
+                cost_matrix[i][j] = (stpInfos[activeDefenderNames[i]].getRobot()->get()->getPos() +
+                                     stpInfos[activeDefenderNames[i]].getRobot()->get()->getVel() * control_constants::DEALER_SPEED_FACTOR)
+                                        .dist(enemies[j] + (mustStayOnOurSide && (enemyMap.begin()->second.position.x > 0) ? Vector2{0, enemyMap.begin()->second.velocity.y}
+                                                                                                                           : enemyMap.begin()->second.velocity) *
+                                                               control_constants::DEALER_SPEED_FACTOR);
             }
             enemyMap.erase(enemyMap.begin());
         }

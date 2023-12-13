@@ -28,8 +28,8 @@
 #include <stp/evaluations/global/BallOnTheirSideGlobalEvaluation.h>
 #include <stp/evaluations/global/TheyDoNotHaveBallGlobalEvaluation.h>
 #include <stp/evaluations/global/TheyHaveBallGlobalEvaluation.h>
-#include <stp/evaluations/global/WeHaveBallGlobalEvaluation.h>
 #include <stp/evaluations/global/WeDoNotHaveBallGlobalEvaluation.h>
+#include <stp/evaluations/global/WeHaveBallGlobalEvaluation.h>
 
 namespace rtt::ai::stp {
 

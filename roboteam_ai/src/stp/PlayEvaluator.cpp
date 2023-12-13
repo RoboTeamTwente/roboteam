@@ -30,8 +30,6 @@
 #include <stp/evaluations/global/TheyHaveBallGlobalEvaluation.h>
 #include <stp/evaluations/global/WeHaveBallGlobalEvaluation.h>
 #include <stp/evaluations/global/WeDoNotHaveBallGlobalEvaluation.h>
-#include <stp/evaluations/global/WeWantToAttackGlobalEvaluation.h>
-#include <stp/evaluations/global/WeWantToDefendGlobalEvaluation.h>
 
 namespace rtt::ai::stp {
 
@@ -94,10 +92,6 @@ uint8_t PlayEvaluator::updateGlobalEvaluation(GlobalEvaluation& evaluation, cons
             return evaluation::TheyHaveBallGlobalEvaluation().metricCheck(world, &field);
         case GlobalEvaluation::TheyDoNotHaveBall:
             return evaluation::TheyDoNotHaveBallGlobalEvaluation().metricCheck(world, &field);
-        case GlobalEvaluation::WeWantToAttack:
-            return evaluation::WeWantToAttackGlobalEvaluation().metricCheck(world, &field);
-        case GlobalEvaluation::WeWantToDefend:
-            return evaluation::WeWantToDefendGlobalEvaluation().metricCheck(world, &field);
         default:
             RTT_WARNING("Unhandled ScoreEvaluation!");
             return 0;

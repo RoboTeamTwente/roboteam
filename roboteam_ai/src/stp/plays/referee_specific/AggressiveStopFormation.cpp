@@ -11,7 +11,7 @@ AggressiveStopFormation::AggressiveStopFormation() : Play() {
     // Evaluations that have to be true in order for this play to be considered valid.
     startPlayEvaluation.clear();
     startPlayEvaluation.emplace_back(GlobalEvaluation::StopGameState);
-    startPlayEvaluation.emplace_back(GlobalEvaluation::WeWantToAttack);
+    startPlayEvaluation.emplace_back(GlobalEvaluation::BallOnTheirSide);
 
     // Evaluations that have to be true to allow the play to continue, otherwise the play will change. Plays can also end using the shouldEndPlay().
     keepPlayEvaluation.clear();

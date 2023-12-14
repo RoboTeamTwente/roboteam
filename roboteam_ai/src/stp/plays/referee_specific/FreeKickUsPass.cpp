@@ -83,12 +83,7 @@ void FreeKickUsPass::calculateInfoForRoles() noexcept {
         // Receiver goes to the passLocation projected on the trajectory of the ball
         auto ball = world->getWorld()->getBall()->get();
         auto ballTrajectory = LineSegment(ball->position, ball->position + ball->velocity.stretchToLength(field.playArea.width()));
-        Vector2 receiverLocation;
-        if (ball->velocity.length() > control_constants::BALL_IS_MOVING_SLOW_LIMIT) {
-            receiverLocation = FieldComputations::projectPointToValidPositionOnLine(field, passInfo.passLocation, ballTrajectory.start, ballTrajectory.end);
-        } else {
-            receiverLocation = ball->position;
-        }
+        Vector2 receiverLocation = FieldComputations::projectPointToValidPositionOnLine(field, passInfo.passLocation, ballTrajectory.start, ballTrajectory.end);
         stpInfos["receiver"].setPositionToMoveTo(receiverLocation);
         stpInfos["receiver"].setPidType(ball->velocity.length() > control_constants::BALL_IS_MOVING_SLOW_LIMIT ? PIDType::RECEIVE : PIDType::DEFAULT);
 
@@ -115,8 +110,8 @@ bool FreeKickUsPass::shouldEndPlay() noexcept {
     // True if receiver has ball
     if (stpInfos["receiver"].getRobot() && stpInfos["receiver"].getRobot().value()->hasBall()) return true;
 
-    // True if the free_kick_taker has shot the ball, but it is now almost stationary (pass was too soft, was reflected, etc.)
-    if (ballKicked() && world->getWorld()->getBall()->get()->velocity.length() < control_constants::BALL_STILL_VEL) return true;
+    // If the ball is moving too slow after we have kicked it, we should stop the play to get the ball
+    if (ballKicked() && world->getWorld()->getBall()->get()->velocity.length() < control_constants::BALL_IS_MOVING_SLOW_LIMIT) return true;
 
     // True if a different pass has a higher score than the current pass (by some margin)- only if the passer is not already close to the ball (since we don't want to adjust our
     // target when we're in the process of shooting

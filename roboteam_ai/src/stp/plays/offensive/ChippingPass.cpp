@@ -92,12 +92,7 @@ void ChippingPass::calculateInfoForRoles() noexcept {
         // Receiver goes to the passLocation projected on the trajectory of the ball
         auto ball = world->getWorld()->getBall()->get();
         auto ballTrajectory = LineSegment(ball->position, ball->position + ball->velocity.stretchToLength(field.playArea.width()));
-        Vector2 receiverLocation;
-        if (ball->velocity.length() > control_constants::BALL_IS_MOVING_SLOW_LIMIT) {
-            receiverLocation = FieldComputations::projectPointToValidPositionOnLine(field, passInfo.passLocation, ballTrajectory.start, ballTrajectory.end);
-        } else {
-            receiverLocation = ball->position;
-        }
+        Vector2 receiverLocation = FieldComputations::projectPointToValidPositionOnLine(field, passInfo.passLocation, ballTrajectory.start, ballTrajectory.end);
         stpInfos["receiver"].setPositionToMoveTo(receiverLocation);
 
         // Passer now goes to a front grid, where the receiver is not
@@ -122,6 +117,9 @@ bool ChippingPass::ballKicked() {  // Also for ball chipped
 bool ChippingPass::shouldEndPlay() noexcept {
     // If the receiver has the ball, the play finished successfully
     if (stpInfos["receiver"].getRobot() && stpInfos["receiver"].getRobot().value()->hasBall()) return true;
+
+    // If the ball is moving too slow after we have kicked it, we should stop the play to get the ball
+    if (ballKicked() && world->getWorld()->getBall()->get()->velocity.length() < control_constants::BALL_IS_MOVING_SLOW_LIMIT) return true;
 
     // If the passer doesn't have the ball yet and there is a better pass available, we should stop the play
     if (!ballKicked() && stpInfos["passer"].getRobot() && !stpInfos["passer"].getRobot().value()->hasBall() &&

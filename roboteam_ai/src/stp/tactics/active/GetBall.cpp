@@ -22,9 +22,9 @@ std::optional<StpInfo> GetBall::calculateInfoForSkill(StpInfo const &info) noexc
 
     Vector2 robotPosition = skillStpInfo.getRobot().value()->getPos();
     Vector2 ballPosition = skillStpInfo.getBall().value()->position;
-    double ballDistance = (ballPosition - robotPosition).length();
+    double ballDistance = (ballPosition - robotPosition).length() - control_constants::BALL_RADIUS - control_constants::ROBOT_RADIUS + control_constants::GO_TO_POS_ERROR_MARGIN;
 
-    if (skillStpInfo.getRobot()->get()->getAngleDiffToBall() > Constants::HAS_BALL_ANGLE() && ballDistance < control_constants::AVOID_BALL_DISTANCE) {
+    if (skillStpInfo.getRobot()->get()->getAngleDiffToBall() > Constants::HAS_BALL_ANGLE() && ballDistance < control_constants::ROBOT_CLOSE_TO_POINT) {
         // don't move too close to the ball until the angle to the ball is (roughly) correct
         skillStpInfo.setPositionToMoveTo(
             FieldComputations::projectPointToValidPosition(info.getField().value(), skillStpInfo.getRobot()->get()->getPos(), info.getObjectsToAvoid()));

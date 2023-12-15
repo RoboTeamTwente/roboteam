@@ -1,6 +1,6 @@
+#include <REM_BaseTypes.h>
 #include <basestation/LibusbUtilities.h>
 #include <roboteam_utils/Print.h>
-#include <REM_BaseTypes.h>
 
 #include <basestation/Basestation.hpp>
 #include <chrono>

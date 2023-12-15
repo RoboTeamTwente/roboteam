@@ -55,7 +55,7 @@ uint8_t AttackingPass::score(const rtt::Field& field) noexcept {
 
     if (passInfo.passLocation == Vector2()) return 0;  // In case no pass is found
 
-    return stp::computations::PassComputations::scorePass(passInfo, world, field);
+    return passInfo.passScore;
 }
 
 Dealer::FlagMap AttackingPass::decideRoleFlags() const noexcept {

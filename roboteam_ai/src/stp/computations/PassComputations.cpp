@@ -153,14 +153,4 @@ double PassComputations::calculateBallTravelTime(Vector2 ballPosition, Vector2 p
     return travelTime + rotateTime + ballTime;
 }
 
-uint8_t PassComputations::scorePass(PassInfo passInfo, const world::World* world, const Field& field) {
-    constexpr double passPenaltyFactor = 0.9;  // Factor to reduce the score by to account for the inherent risk of passing (stuff going wrong, unexpected events etc)
-
-    // Score of pass is the goalshotscore, adjusted based on the LoS and openness scores. The worse the LoS/Openness, the more the score is reduced
-    auto goalShotScore = static_cast<int>(PositionScoring::scorePosition(passInfo.passLocation, gen::GoalShot, field, world).score);
-    auto lineOfSightScore = static_cast<int>(PositionScoring::scorePosition(passInfo.passLocation, gen::LineOfSight, field, world).score);
-    auto openScore = static_cast<int>(PositionScoring::scorePosition(passInfo.passLocation, gen::Open, field, world).score);
-    return std::clamp(static_cast<int>(goalShotScore * (lineOfSightScore / 255.0) * (openScore / 255.0) * passPenaltyFactor), 0, 255);
-}
-
 }  // namespace rtt::ai::stp::computations

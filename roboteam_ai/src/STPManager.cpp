@@ -194,7 +194,7 @@ void STPManager::decidePlay(world::World *_world, bool ignoreWorldAge) {
         }
     }
 
-    if (!currentPlay || !currentPlay->isValidPlayToKeep() || rtt::ai::RuntimeConfig::ignoreInvariants || ai::stp::PlayDecider::didLockPlay()) {
+    if (!currentPlay || !currentPlay->isValidPlayToKeep() || ai::stp::PlayDecider::didLockPlay()) {
         // Decide the best play (ignoring the interface play value)
         currentPlay = ai::stp::PlayDecider::decideBestPlay(_world, plays);
         currentPlay->updateField(_world->getField().value());

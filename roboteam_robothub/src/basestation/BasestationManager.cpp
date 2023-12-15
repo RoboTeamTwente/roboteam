@@ -110,6 +110,12 @@ void BasestationManager::handleIncomingMessage(const BasestationMessage& message
     REM_PacketPayload* packetPayload = (REM_PacketPayload*)message.payloadBuffer;
     uint32_t payloadSize = REM_Packet_get_payloadSize(packetPayload);
     uint8_t packetType = REM_Packet_get_header(packetPayload);
+    uint32_t packetVersion = REM_Packet_get_remVersion(packetPayload);
+
+    if (packetVersion != REM_LOCAL_VERSION) {
+        RTT_ERROR("REM version is incorrect. Received: ", packetVersion, " Actual: ", REM_LOCAL_VERSION);
+        return;
+    }
 
     if (message.payloadSize != payloadSize) {
         RTT_ERROR("Payload size of message does not match the size specified in the packet header. Received size: ", message.payloadSize, ", indicated size: ", payloadSize);

@@ -78,7 +78,7 @@ std::vector<Vector2> PositionComputations::determineWallPositions(const rtt::Fie
     auto defenseAreaTheir = FieldComputations::getDefenseArea(field, false, 0, 0);
 
     // Determine the wall line based on the ball's position
-    if (ballPos.x < field.leftDefenseArea.right()) {
+    if (ballPos.x < field.leftDefenseArea.right() + spaceBetweenDefenseArea) {
         // Case when the projected position is below or above our defense area
         if (ballPos.y < 0) {
             wallLine = LineSegment(defenseAreaOur[0], defenseAreaTheir[0]);
@@ -116,6 +116,13 @@ std::vector<Vector2> PositionComputations::determineWallPositions(const rtt::Fie
             // Then limit this side of the wall line until this intersection
             wallLine.end = intersectionOther.value();
         }
+    }
+    if (wallLine.length() == 0) {
+        RTT_WARNING("Wall line length is 0");
+        double lineX = field.leftDefenseArea.right() + spaceBetweenDefenseArea;
+        double lineYTop = field.playArea.top();
+        double lineYBottom = field.playArea.bottom();
+        wallLine = LineSegment({lineX, lineYBottom}, {lineX, lineYTop});
     }
 
     size_t defendersCount = static_cast<size_t>(amountDefenders);

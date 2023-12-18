@@ -78,7 +78,14 @@ std::vector<Vector2> PositionComputations::determineWallPositions(const rtt::Fie
     auto defenseAreaTheir = FieldComputations::getDefenseArea(field, false, 0, 0);
 
     // Determine the wall line based on the ball's position
-    if (ballPos.x < field.leftDefenseArea.right() + spaceBetweenDefenseArea) {
+
+    if (ballPos.y < field.leftDefenseArea.top() && ballPos.y > field.leftDefenseArea.bottom()) {
+        // Case when it is to the right of our defense area
+        double lineX = field.leftDefenseArea.right() + spaceBetweenDefenseArea;
+        double lineYTop = field.playArea.top();
+        double lineYBottom = field.playArea.bottom();
+        wallLine = LineSegment({lineX, lineYBottom}, {lineX, lineYTop});
+    } else if (ballPos.x < field.leftDefenseArea.right() + spaceBetweenDefenseArea) {
         // Case when the projected position is below or above our defense area
         if (ballPos.y < 0) {
             wallLine = LineSegment(defenseAreaOur[0], defenseAreaTheir[0]);
@@ -87,12 +94,6 @@ std::vector<Vector2> PositionComputations::determineWallPositions(const rtt::Fie
             wallLine = LineSegment(defenseAreaOur[3], defenseAreaTheir[3]);
             wallLine.move({0, spaceBetweenDefenseArea});
         }
-    } else if (ballPos.y < field.leftDefenseArea.top() && ballPos.y > field.leftDefenseArea.bottom()) {
-        // Case when it is to the right of our defense area
-        double lineX = field.leftDefenseArea.right() + spaceBetweenDefenseArea;
-        double lineYTop = field.playArea.top();
-        double lineYBottom = field.playArea.bottom();
-        wallLine = LineSegment({lineX, lineYBottom}, {lineX, lineYTop});
     } else {
         // We put the wall line perpendicular to the ball-goal line
         wallLine = LineSegment(ballPos, field.leftGoalArea.rightLine().center());

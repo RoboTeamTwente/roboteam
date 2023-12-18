@@ -42,8 +42,9 @@ uint8_t AggressiveStopFormation::score(const rtt::Field& field) noexcept {
 
 Dealer::FlagMap AggressiveStopFormation::decideRoleFlags() const noexcept {
     Dealer::FlagMap flagMap;
+    Dealer::DealerFlag keeperFlag(DealerFlagTitle::KEEPER);
 
-    flagMap.insert({"keeper", {DealerFlagPriority::KEEPER, {}}});
+    flagMap.insert({"keeper", {DealerFlagPriority::KEEPER, {keeperFlag}}});
     flagMap.insert({"formation_back_0", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
     flagMap.insert({"formation_back_1", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
     flagMap.insert({"formation_back_2", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});

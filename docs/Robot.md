@@ -17,8 +17,6 @@ The enum Team in [team.hpp](https://github.com/RoboTeamTwente/roboteam_ai/blob/d
 
 `angle` -> Current angle of the robot
 
-`pidPreviousVel` -> The previous pid velocity.
-
 `distanceToBall` -> Distance from the robot to the ball
 
 `angleDiffToBall` -> Angle offset between the kicker and the ball.
@@ -27,19 +25,13 @@ The enum Team in [team.hpp](https://github.com/RoboTeamTwente/roboteam_ai/blob/d
 
 `batteryLow` -> Flag that indicates whether the battery of the robot is low.
 
-`dribblerState` -> State of the dribbler, essentially the number indicates how fast it goes.
-
-`previousDribblerState` -> State of dribbler in the previous tick, dito.
-
-`timeDribblerChanged` -> The time at which the state of the dribbler changed.
-
-`timeToChangeOneDribblerLevel` -> The time which it takes to change from for example 0 to 1 for the dribbler.
-
 `workingDribbler` -> True if dribbler works, false if not.
 
 `workingBallSensor` -> Dito but for sensor.
 
-`seesBall` -> True if the ball sensor picks up the ball, false if not.
+`BallSensorSeesBall` -> True if the ball sensor picks up the ball, false if not.
+
+`DribblerSeesBall` -> True if the dribbler picks up the ball, false if not.
 
 `ballPos` -> Position of the ball (if seesBall == true)
 

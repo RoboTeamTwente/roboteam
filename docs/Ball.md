@@ -13,15 +13,11 @@ serves the purpose of representing the ball. Things like position and velocity a
 
 `expectedEndPosition` -> End position that we _think_ the ball will lay at when it comes to a stop.
 
-`filteredVelocity` -> Velocity but adjusted to match up with physics n stuff, it's used to determine a more realistic end position.
-
 ## Functions ## 
 
 `initializeCalculations` -> Calls the 4 calculation methods.
 
 `initBallAtRobotPosition` -> If there is no position for the ball we look at the robot ball sensors for this.
-
-`filterBallVelocity` -> Sets `filteredVelocity`
 
 `updateExpectedBallEndPosition` -> Sets `expectedEndPosition`.
 
@@ -34,8 +30,6 @@ serves the purpose of representing the ball. Things like position and velocity a
 `isVisibleBall` -> Returns `visible`
 
 `getExpectedEndPositionBall` -> Returns `expectedEndPosition` 
-
-`getFilteredVelocity` -> Returns `filteredVelocity`
 
 `Ball(proto::WorldBall, World*)` -> Constructs a ball from a proto message + the world data.
 

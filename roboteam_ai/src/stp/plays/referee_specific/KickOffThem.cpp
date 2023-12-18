@@ -44,8 +44,9 @@ uint8_t KickOffThem::score(const rtt::Field& field) noexcept {
 
 Dealer::FlagMap KickOffThem::decideRoleFlags() const noexcept {
     Dealer::FlagMap flagMap;
-
-    flagMap.insert({"keeper", {DealerFlagPriority::KEEPER, {}}});
+    Dealer::DealerFlag keeperFlag(DealerFlagTitle::KEEPER);
+   
+    flagMap.insert({"keeper", {DealerFlagPriority::KEEPER, {keeperFlag}}});
     flagMap.insert({"halt_0", {DealerFlagPriority::LOW_PRIORITY, {}}});
     flagMap.insert({"halt_1", {DealerFlagPriority::LOW_PRIORITY, {}}});
     flagMap.insert({"halt_2", {DealerFlagPriority::LOW_PRIORITY, {}}});

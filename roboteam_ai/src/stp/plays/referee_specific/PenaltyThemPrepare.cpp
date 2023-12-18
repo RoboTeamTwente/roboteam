@@ -41,8 +41,9 @@ uint8_t PenaltyThemPrepare::score(const rtt::Field& field) noexcept {
 
 Dealer::FlagMap PenaltyThemPrepare::decideRoleFlags() const noexcept {
     Dealer::FlagMap flagMap;
-
-    flagMap.insert({"keeper", {DealerFlagPriority::KEEPER, {}}});
+    Dealer::DealerFlag keeperFlag(DealerFlagTitle::KEEPER);
+   
+    flagMap.insert({"keeper", {DealerFlagPriority::KEEPER, {keeperFlag}}});
     flagMap.insert({"formation_0", {DealerFlagPriority::LOW_PRIORITY, {}}});
     flagMap.insert({"formation_1", {DealerFlagPriority::LOW_PRIORITY, {}}});
     flagMap.insert({"formation_2", {DealerFlagPriority::LOW_PRIORITY, {}}});

@@ -63,7 +63,7 @@ void PenaltyUs::calculateInfoForRoles() noexcept {
     // Function where are roles get their information, make sure not to compute roles twice.
     PositionComputations::calculateInfoForKeeper(stpInfos, field, world);
 
-    auto positionTarget = PositionComputations::getPosition(std::nullopt, field.middleRightGrid, gen::OffensivePosition, field, world);
+    auto positionTarget = PositionComputations::getPosition(std::nullopt, field.middleRightGrid, gen::GoalShot, field, world);
     stpInfos["kicker"].setPositionToMoveTo(positionTarget);
     auto goalTarget = computations::GoalComputations::calculateGoalTarget(world, field);
     stpInfos["kicker"].setPositionToShootAt(goalTarget);

@@ -20,13 +20,11 @@ namespace rtt::ai::stp::gen {
  * @memberof scoreOpen : uint8_t score for the Openness of a position -> evaluations/position/OpennessEvaluation
  * @memberof scoreLineOfSight : uint8_t score for the LineOfSight to a position from a position -> ../LineOfSightEvaluation
  * @memberof scoreGoalShot : uint8_t score for the Goal Shot opportunity for a position -> ../GoalShotEvaluation
- * @memberof scoreBlocking : uint8_t score for the potential to block from a position -> ../BlockingEvaluation
  */
 struct PositionScores {
     std::optional<double> scoreOpen;
     std::optional<double> scoreLineOfSight;
     std::optional<double> scoreGoalShot;
-    std::optional<double> scoreBlocking;
 };
 
 /**
@@ -41,7 +39,6 @@ struct ScoreProfile {
     double weightOpen;
     double weightLineOfSight;
     double weightGoalShot;
-    double weightBlocking;
 };
 
 /**
@@ -59,47 +56,11 @@ struct ScoredPosition {
  * They consist of a generalized weight combination.
  */
 
-// never used
-constexpr ScoreProfile SafePosition = {1, 1, 0, 0.5}; /**< Scoring weights for Safe Position */
-// A position for attackers
-constexpr ScoreProfile OffensivePosition = {1, 0.5, 0.5, 0}; /**< Scoring weights for Offensive Position */
-// A position where enemies can't intercept the pass
-constexpr ScoreProfile BlockingPosition = {0, 0.5, 0, 1}; /**< Scoring weights for Blocking Positions */
-// A position for attackers where we can create danger and potentially score
-constexpr ScoreProfile AttackingPass = {0.5, 1, 1, 0}; /**< Scoring weights for Attacking Pass */
-// A position that is very safe to pass to
-constexpr ScoreProfile SafePass = {1, 1, 0.5, 0}; /**< Scoring weights for Safe Pass */
-// A position where we have good line of sight
-constexpr ScoreProfile LineOfSight = {0, 1, 0, 0}; /**< Scoring weights for Line of Sight score */
-// A position that is open, so no enemies are nearby
-constexpr ScoreProfile Open = {1, 0, 0, 0}; /**< Scoring weights for Open score */
-// A position from where we can shoot at the goal
-constexpr ScoreProfile GoalShot = {0, 0, 1, 0}; /**< Scoring weights for Goal Shot Score */
-// A positoon for a good chippingpass. Should be same as open score?? Robots are not able to intercept a chipping pass anyway?
-constexpr ScoreProfile ChippingPass = {0, 0, 0, 1}; /**< Scoring weights for ChippingPass score */
-
-/**
- * @brief Generalized Keys for passing information form the old play to the new.
- * Usage in the storePlayInfo where KeyInfo is the key for the elements in the map.
- */
-enum class KeyInfo {
-    hasBall /**< Robot that had the ball last play */
-};
-
-/**
- * @brief Generalized information structure for the map of storePlayInfo.
- * Allows for saving specific information from the old play to the new.
- */
-struct StoreInfo {
-    std::optional<int> robotID;             /**< ID of the robot */
-    std::optional<Vector2> robotPosition;   /**< Current position of the robot */
-    std::optional<Vector2> moveToPosition;  /**< Position the robot should move to */
-    std::optional<Vector2> defendPosition;  /**< Position the robot should defend */
-    std::optional<Vector2> shootAtPosition; /**< Position the robot should shoot at */
-    std::optional<Vector2> passToRobot;     /**< Position of a robot the robot should pass to */
-};
-
-using PlayInfos = std::unordered_map<KeyInfo, StoreInfo>; /**< Place to store info in that is needed between Plays. Used in storePlayInfo. */
+constexpr ScoreProfile AttackingPass = {0.5, 1, 1}; /**< Scoring weights for Attacking Pass */
+constexpr ScoreProfile SafePass = {1, 1, 0}; /**< Scoring weights for Safe Pass, used by the keeper */
+constexpr ScoreProfile LineOfSight = {0, 1, 0}; /**< Scoring weights for Line of Sight score, only used for testing minimum line of sight */
+constexpr ScoreProfile GoalShot = {0, 0, 1}; /**< Scoring weights for Goal Shot Score, a position where we can shoot at goal */
+constexpr ScoreProfile ChippingPass = {1, 0, 1}; /**< Scoring weights for ChippingPass score */
 
 }  // namespace rtt::ai::stp::gen
 #endif  // RTT_GENERALIZATIONCONSTANTS_H

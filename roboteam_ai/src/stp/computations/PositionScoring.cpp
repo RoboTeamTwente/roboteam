@@ -5,7 +5,6 @@
 #include "stp/computations/PositionScoring.h"
 
 #include "stp/computations/ComputationManager.h"
-#include "stp/evaluations/position/BlockingEvaluation.h"
 #include "stp/evaluations/position/GoalShotEvaluation.h"
 #include "stp/evaluations/position/LineOfSightEvaluation.h"
 #include "stp/evaluations/position/OpennessEvaluation.h"
@@ -33,10 +32,6 @@ uint8_t PositionScoring::getScoreOfPosition(const gen::ScoreProfile &profile, Ve
     if (profile.weightOpen > 0) {
         scoreTotal += scores.scoreOpen.value_or(determineOpenScore(position, field, world, scores)) * profile.weightOpen;
         weightTotal += profile.weightOpen;
-    }
-    if (profile.weightBlocking > 0) {
-        scoreTotal += scores.scoreBlocking.value_or(determineBlockingScore(position, world, scores)) * profile.weightBlocking;
-        weightTotal += profile.weightBlocking;
     }
     return static_cast<uint8_t>(scoreTotal / weightTotal);
 }
@@ -72,22 +67,7 @@ double PositionScoring::determineGoalShotScore(Vector2 &point, const rtt::Field 
     double goalAngle = FieldComputations::getTotalGoalAngle(field, false, point);
 
     // The goal angle from right in front of their defense area- i.e. the "best" goal angle
-    double maxGoalAngle = FieldComputations::getTotalGoalAngle(field, false, field.rightPenaltyPoint);
+    double maxGoalAngle = FieldComputations::getTotalGoalAngle(field, false, field.rightDefenseArea.leftLine().center());
     return (scores.scoreGoalShot = stp::evaluation::GoalShotEvaluation::metricCheck(visibility, goalAngle / maxGoalAngle)).value();
-}
-
-double PositionScoring::determineBlockingScore(Vector2 &point, const rtt::world::World *world, gen::PositionScores &scores) {
-    Vector2 ballPos = world->getWorld().value()->getBall()->get()->position;
-    double pointDistance = ballPos.dist(point);
-    std::vector<double> enemyDistancesToBall;
-    std::vector<double> enemyAnglesToBallvsPoint;
-    auto &them = world->getWorld()->getThem();
-    enemyDistancesToBall.reserve(them.size());
-    enemyAnglesToBallvsPoint.reserve(them.size());
-    for (auto &enemyRobot : them) {
-        enemyDistancesToBall.push_back(ballPos.dist(enemyRobot->getPos()));
-        enemyAnglesToBallvsPoint.push_back((point - ballPos).toAngle().shortestAngleDiff((enemyRobot->getPos() - ballPos)));
-    }
-    return (scores.scoreBlocking = stp::evaluation::BlockingEvaluation::metricCheck(pointDistance, enemyDistancesToBall, enemyAnglesToBallvsPoint)).value();
 }
 }  // namespace rtt::ai::stp

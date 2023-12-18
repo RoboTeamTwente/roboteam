@@ -138,7 +138,6 @@ class Play {
      */
     virtual bool shouldEndPlay() noexcept;
 
-    std::optional<gen::PlayInfos> previousPlayInfos; /**< Map that holds info from the previous play */
 
    private:
     /**

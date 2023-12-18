@@ -78,28 +78,5 @@ constexpr ScoreProfile GoalShot = {0, 0, 1, 0}; /**< Scoring weights for Goal Sh
 // A positoon for a good chippingpass. Should be same as open score?? Robots are not able to intercept a chipping pass anyway?
 constexpr ScoreProfile ChippingPass = {0, 0, 0, 1}; /**< Scoring weights for ChippingPass score */
 
-/**
- * @brief Generalized Keys for passing information form the old play to the new.
- * Usage in the storePlayInfo where KeyInfo is the key for the elements in the map.
- */
-enum class KeyInfo {
-    hasBall /**< Robot that had the ball last play */
-};
-
-/**
- * @brief Generalized information structure for the map of storePlayInfo.
- * Allows for saving specific information from the old play to the new.
- */
-struct StoreInfo {
-    std::optional<int> robotID;             /**< ID of the robot */
-    std::optional<Vector2> robotPosition;   /**< Current position of the robot */
-    std::optional<Vector2> moveToPosition;  /**< Position the robot should move to */
-    std::optional<Vector2> defendPosition;  /**< Position the robot should defend */
-    std::optional<Vector2> shootAtPosition; /**< Position the robot should shoot at */
-    std::optional<Vector2> passToRobot;     /**< Position of a robot the robot should pass to */
-};
-
-using PlayInfos = std::unordered_map<KeyInfo, StoreInfo>; /**< Place to store info in that is needed between Plays. Used in storePlayInfo. */
-
 }  // namespace rtt::ai::stp::gen
 #endif  // RTT_GENERALIZATIONCONSTANTS_H

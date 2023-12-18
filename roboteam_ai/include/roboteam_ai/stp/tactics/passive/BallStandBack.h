@@ -45,7 +45,7 @@ class BallStandBack : public Tactic {
     bool shouldTacticReset(const StpInfo &info) noexcept override;
 
     /**
-     * @brief Checks whether this is a passive tactic (formerly called endTactic)
+     * @brief Checks whether this is an end tactic, meaning it should keep looping this tactic if all skills are finished
      * @return This will always return true, since it is an endTactic
      */
     bool isEndTactic() noexcept override;

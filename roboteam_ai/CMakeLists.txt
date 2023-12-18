@@ -179,7 +179,6 @@ add_library(roboteam_ai_evaluation
         ${PROJECT_SOURCE_DIR}/src/stp/evaluations/position/OpennessEvaluation.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/evaluations/position/LineOfSightEvaluation.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/evaluations/position/GoalShotEvaluation.cpp
-        ${PROJECT_SOURCE_DIR}/src/stp/evaluations/position/BlockingEvaluation.cpp
 )
 target_include_directories(roboteam_ai_evaluation
         PRIVATE include/roboteam_ai

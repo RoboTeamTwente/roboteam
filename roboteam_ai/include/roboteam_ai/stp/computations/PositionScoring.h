@@ -47,15 +47,6 @@ class PositionScoring {
     static double determineGoalShotScore(Vector2 &point, const Field &field, const world::World *world, gen::PositionScores &scores);
 
     /**
-     * @brief Determine score for blocking potential of a position
-     * @param point Position to calculate from
-     * @param world The current world
-     * @param scores ref to struct linked to that pos
-     * @return Blocking score value
-     */
-    static double determineBlockingScore(Vector2 &point, const world::World *world, gen::PositionScores &scores);
-
-    /**
      * @brief Score a position using the given weights weights for a profile.
      * Will check if the position already has a pre-calculated score (from this tick) then throws the weight over it
      * and sums the scores, resulting in a position scored a particular set of weights.

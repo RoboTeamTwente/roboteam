@@ -72,13 +72,13 @@ void FreeKickThem::calculateInfoForRoles() noexcept {
 }
 
 void FreeKickThem::calculateInfoForHarasser() noexcept {
-    auto placementPos = rtt::ai::GameStateManager::getRefereeDesignatedPosition();
+    auto ballPos = world->getWorld()->getBall()->get()->position;
     auto enemyClosestToBallOpt = world->getWorld()->getRobotClosestToBall(world::Team::them);
     if (!enemyClosestToBallOpt) return;
     auto enemyClosestToBall = enemyClosestToBallOpt.value();
 
-    auto enemyToBall = (world->getWorld()->getBall()->get()->position - enemyClosestToBall->getPos());
-    auto targetPos = placementPos + (enemyToBall).stretchToLength(control_constants::AVOID_BALL_DISTANCE);
+    auto enemyToBall = (ballPos - enemyClosestToBall->getPos());
+    auto targetPos = ballPos + (enemyToBall).stretchToLength(control_constants::AVOID_BALL_DISTANCE);
     stpInfos["harasser"].setPositionToMoveTo(targetPos);
     stpInfos["harasser"].setAngle(enemyToBall.angle() + M_PI);
 }

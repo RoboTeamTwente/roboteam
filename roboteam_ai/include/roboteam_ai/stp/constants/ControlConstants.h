@@ -74,7 +74,7 @@ constexpr double DISTANCE_TO_PASS_TRAJECTORY = 0.5; /**< Distance from the robot
 constexpr double DISTANCE_FROM_GOAL_CLOSE = 2 * ROBOT_RADIUS; /**< Distance from the keeper to the goal at which the keeper is considered close to that goal */
 
 /// GameState constants
-constexpr double AVOID_BALL_DISTANCE = 0.5 + ROBOT_RADIUS + GO_TO_POS_ERROR_MARGIN; /**< Minimum distance all robots should keep when avoiding the ball */
+constexpr double AVOID_BALL_DISTANCE = 0.5 + ROBOT_RADIUS + GO_TO_POS_ERROR_MARGIN + BALL_RADIUS; /**< Minimum distance all robots should keep when avoiding the ball */
 
 }  // namespace rtt::ai::stp::control_constants
 

@@ -182,25 +182,25 @@ Vector2 PositionComputations::calculateAvoidBallPosition(Vector2 targetPosition,
         if (FieldComputations::pointIsValidPosition(field, projectedPos))
             targetPosition = projectedPos;
         else {
-            targetPosition = calculatePositionOutsideOfShape(ballPosition, field, avoidShape);
+            targetPosition = calculatePositionOutsideOfShape(targetPosition, field, avoidShape);
         }
     }
     return targetPosition;
 }
 
-Vector2 PositionComputations::calculatePositionOutsideOfShape(Vector2 ballPos, const rtt::Field &field, const std::unique_ptr<Shape> &avoidShape) {
-    Vector2 newTarget = ballPos;  // The new position to go to
+Vector2 PositionComputations::calculatePositionOutsideOfShape(Vector2 targetPosition, const rtt::Field &field, const std::unique_ptr<Shape> &avoidShape) {
+    Vector2 newTarget = targetPosition;  // The new position to go to
     bool pointFound = false;
     for (int distanceSteps = 0; distanceSteps < 5; ++distanceSteps) {
         // Use a larger grid each iteration in case no valid point is found
         auto distance = 3 * control_constants::AVOID_BALL_DISTANCE + distanceSteps * control_constants::AVOID_BALL_DISTANCE / 2.0;
-        auto possiblePoints = Grid(ballPos.x - distance / 2.0, ballPos.y - distance / 2.0, distance, distance, 3, 3).getPoints();
+        auto possiblePoints = Grid(targetPosition.x - distance / 2.0, targetPosition.y - distance / 2.0, distance, distance, 3, 3).getPoints();
         double dist = 1e3;
         for (auto &pointVector : possiblePoints) {
             for (auto &point : pointVector) {
                 if (FieldComputations::pointIsValidPosition(field, point) && !avoidShape->contains(point)) {
-                    if (ballPos.dist(point) < dist) {
-                        dist = ballPos.dist(point);
+                    if (targetPosition.dist(point) < dist) {
+                        dist = targetPosition.dist(point);
                         newTarget = point;
                         pointFound = true;
                     }
@@ -209,7 +209,7 @@ Vector2 PositionComputations::calculatePositionOutsideOfShape(Vector2 ballPos, c
         }
         if (pointFound) break;  // As soon as a valid point is found, don't look at more points further away
     }
-    if (newTarget == ballPos) RTT_WARNING("Could not find good position to avoid ball");
+    if (newTarget == targetPosition) RTT_WARNING("Could not find good position to avoid ball");
     return newTarget;
 }
 
@@ -483,7 +483,7 @@ void PositionComputations::recalculateInfoForNonPassers(std::unordered_map<std::
         if (!avoidShape->contains(robotPositionToMoveTo.value())) {
             continue;
         }
-        auto newRobotPositionToMoveTo = calculatePositionOutsideOfShape(ballPosition, field, avoidShape);
+        auto newRobotPositionToMoveTo = calculatePositionOutsideOfShape(robotPositionToMoveTo.value(), field, avoidShape);
         stpInfos[robot].setPositionToMoveTo(newRobotPositionToMoveTo);
     }
 }

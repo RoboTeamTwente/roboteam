@@ -160,12 +160,12 @@ class PositionComputations {
    private:
     /**
      * @brief Calculates a position outside of a given shape
-     * @param ballPos The position of the ball
+     * @param targetPosition The position where the robot wants to go
      * @param field The current field
      * @param avoidShape The shape to avoid
      * @return A position that is outside the given shape
      */
-    static Vector2 calculatePositionOutsideOfShape(Vector2 ballPos, const Field &field, const std::unique_ptr<Shape> &avoidShape);
+    static Vector2 calculatePositionOutsideOfShape(Vector2 targetPosition, const Field &field, const std::unique_ptr<Shape> &avoidShape);
 };
 }  // namespace rtt::ai::stp
 #endif  // RTT_POSITIONCOMPUTATIONS_H

@@ -53,19 +53,15 @@ rtt::BB::CommandCollision PositionControl::computeAndTrackTrajectory(const rtt::
         firstCollision = worldObjects.getFirstCollision(world, field, computedTrajectories[robotId], computedPaths, robotId, avoidObjects);
 
         if (firstCollision.has_value()) {
-            if (computedTrajectories[robotId].getTotalTime() - firstCollision->collisionTime > 0.2) {
-                //            RTT_DEBUG(firstCollision->collisionName);
-                // Create intermediate points, return a collision-free trajectory originating from the best option of these points
-                auto newTrajectory =
-                    findNewTrajectory(world, field, robotId, currentPosition, currentVelocity, firstCollision, targetPosition, maxRobotVelocity, timeStep, avoidObjects);
-                if (newTrajectory.has_value()) {
-                    computedTrajectories[robotId] = newTrajectory.value();
-                } else {
-                    commandCollision.collisionData = firstCollision;
-                    //                RTT_DEBUG("Could not find a collision-free path");
-                }
+            //            RTT_DEBUG(firstCollision->collisionName);
+            // Create intermediate points, return a collision-free trajectory originating from the best option of these points
+            auto newTrajectory =
+                findNewTrajectory(world, field, robotId, currentPosition, currentVelocity, firstCollision, targetPosition, maxRobotVelocity, timeStep, avoidObjects);
+            if (newTrajectory.has_value()) {
+                computedTrajectories[robotId] = newTrajectory.value();
             } else {
                 commandCollision.collisionData = firstCollision;
+                // RTT_DEBUG("Could not find a collision-free path");
             }
         }
 
@@ -148,7 +144,6 @@ std::optional<Trajectory2D> PositionControl::calculateTrajectoryAroundCollision(
                                                                                 std::optional<BB::CollisionData> &intermediatePathCollision,
                                                                                 Trajectory2D trajectoryToIntermediatePoint, Vector2 &targetPosition, int robotId,
                                                                                 double maxRobotVelocity, double timeStep, stp::AvoidObjects avoidObjects) {
-    Trajectory2D intermediateToTarget;
     if (!intermediatePathCollision.has_value()) {
         timeStep *= 2;
         int numberOfTimeSteps = floor(trajectoryToIntermediatePoint.getTotalTime() / timeStep);
@@ -156,13 +151,11 @@ std::optional<Trajectory2D> PositionControl::calculateTrajectoryAroundCollision(
             Vector2 newStart = trajectoryToIntermediatePoint.getPosition(i * timeStep);
             Vector2 newVelocity = trajectoryToIntermediatePoint.getVelocity(i * timeStep);
 
-            intermediateToTarget = Trajectory2D(newStart, newVelocity, targetPosition, maxRobotVelocity, ai::Constants::MAX_ACC_UPPER());
+            Trajectory2D intermediateToTarget(newStart, newVelocity, targetPosition, maxRobotVelocity, ai::Constants::MAX_ACC_UPPER());
 
             auto newStartCollisions = worldObjects.getFirstCollision(world, field, intermediateToTarget, computedPaths, robotId, avoidObjects);
 
-            if (newStartCollisions.has_value()) {
-                continue;
-            } else {
+            if (!newStartCollisions.has_value()) {
                 // Add the second part of the trajectory to a part of the trajectory to the intermediate point
                 trajectoryToIntermediatePoint.addTrajectory(intermediateToTarget, i * timeStep);
                 return trajectoryToIntermediatePoint;  // This is now the whole path

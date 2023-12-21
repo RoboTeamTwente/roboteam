@@ -118,32 +118,43 @@ rtt::BB::CommandCollision PositionControl::computeAndTrackTrajectory(const rtt::
 
     return commandCollision;
 }
-
 std::optional<Trajectory2D> PositionControl::findNewTrajectory(const rtt::world::World *world, const rtt::Field &field, int robotId, Vector2 &currentPosition,
                                                                Vector2 &currentVelocity, std::optional<BB::CollisionData> &firstCollision, Vector2 &targetPosition,
                                                                double maxRobotVelocity, double timeStep, stp::AvoidObjects avoidObjects) {
     auto intermediatePoints = createIntermediatePoints(field, robotId, firstCollision, targetPosition);
     auto intermediatePointsSorted = scoreIntermediatePoints(intermediatePoints, firstCollision);
 
-    Trajectory2D trajectoryToIntermediatePoint;
+    double longestTimeTillCollision = 0;
+    std::optional<Trajectory2D> bestTrajectory = std::nullopt;
+
     while (!intermediatePointsSorted.empty()) {
-        trajectoryToIntermediatePoint = Trajectory2D(currentPosition, currentVelocity, intermediatePointsSorted.top().second, maxRobotVelocity, ai::Constants::MAX_ACC_UPPER());
+        Trajectory2D trajectoryToIntermediatePoint(currentPosition, currentVelocity, intermediatePointsSorted.top().second, maxRobotVelocity, ai::Constants::MAX_ACC_UPPER());
 
         auto intermediatePathCollision = worldObjects.getFirstCollision(world, field, trajectoryToIntermediatePoint, computedPaths, robotId, avoidObjects);
         auto trajectoryAroundCollision = calculateTrajectoryAroundCollision(world, field, intermediatePathCollision, trajectoryToIntermediatePoint, targetPosition, robotId,
                                                                             maxRobotVelocity, timeStep, avoidObjects);
         if (trajectoryAroundCollision.has_value()) {
-            return trajectoryAroundCollision.value();
+            auto firstCollision = worldObjects.getFirstCollision(world, field, trajectoryAroundCollision.value(), computedPaths, robotId, avoidObjects);
+            double timeTillCollision = firstCollision.has_value() ? firstCollision.value().collisionTime : trajectoryAroundCollision.value().getTotalTime();
+            if (timeTillCollision > longestTimeTillCollision) {
+                longestTimeTillCollision = timeTillCollision;
+                bestTrajectory = trajectoryAroundCollision.value();
+            }
         }
         intermediatePointsSorted.pop();
-    }
-    return std::nullopt;
+    }   
+    return bestTrajectory;
 }
 
 std::optional<Trajectory2D> PositionControl::calculateTrajectoryAroundCollision(const rtt::world::World *world, const rtt::Field &field,
                                                                                 std::optional<BB::CollisionData> &intermediatePathCollision,
                                                                                 Trajectory2D trajectoryToIntermediatePoint, Vector2 &targetPosition, int robotId,
                                                                                 double maxRobotVelocity, double timeStep, stp::AvoidObjects avoidObjects) {
+    double longestTimeTillCollision = 0;
+    std::optional<Trajectory2D> longestTrajectory = std::nullopt;
+    std::optional<Trajectory2D> longestIntermediateToTarget = std::nullopt;
+    double longestTime = 0;
+
     if (!intermediatePathCollision.has_value()) {
         timeStep *= 2;
         int numberOfTimeSteps = floor(trajectoryToIntermediatePoint.getTotalTime() / timeStep);
@@ -155,14 +166,26 @@ std::optional<Trajectory2D> PositionControl::calculateTrajectoryAroundCollision(
 
             auto newStartCollisions = worldObjects.getFirstCollision(world, field, intermediateToTarget, computedPaths, robotId, avoidObjects);
 
-            if (!newStartCollisions.has_value()) {
-                // Add the second part of the trajectory to a part of the trajectory to the intermediate point
+            if (newStartCollisions.has_value()) {
+                double timeTillCollision = newStartCollisions.value().collisionTime;
+
+                if (timeTillCollision > longestTimeTillCollision) {
+                    longestTimeTillCollision = timeTillCollision;
+                    longestTrajectory = trajectoryToIntermediatePoint;
+                    longestIntermediateToTarget = intermediateToTarget;
+                    longestTime = i * timeStep;
+                }
+            } else {
                 trajectoryToIntermediatePoint.addTrajectory(intermediateToTarget, i * timeStep);
                 return trajectoryToIntermediatePoint;  // This is now the whole path
             }
         }
     }
-    return std::nullopt;
+    // If there was a collision in all intermediate path, return the longest collision free trajectory
+    if (longestTrajectory.has_value()) {
+        longestTrajectory.value().addTrajectory(longestIntermediateToTarget.value(), longestTime);
+    }
+    return longestTrajectory;
 }
 
 std::vector<Vector2> PositionControl::createIntermediatePoints(const rtt::Field &field, int robotId, std::optional<BB::CollisionData> &firstCollision, Vector2 &targetPosition) {
@@ -185,18 +208,10 @@ std::vector<Vector2> PositionControl::createIntermediatePoints(const rtt::Field 
             Vector2 pointToRotate = pointToDrawFrom + (targetPosition - firstCollision->obstaclePosition).normalize() * intermediatePointRadius;
             Vector2 intermediatePoint = pointToRotate.rotateAroundPoint(i * angleBetweenIntermediatePoints, pointToDrawFrom);
 
-            /*//If not in a defense area (only checked if robot is not allowed in defense area)
-            if (worldObjects.canEnterDefenseArea(robotId) ||
-                (!rtt::ai::FieldComputations::pointIsInDefenseArea(field, intermediatePoint, true, 0) &&
-                 !rtt::ai::FieldComputations::pointIsInDefenseArea(field, intermediatePoint, false,
-                                                                   0.2 + rtt::ai::Constants::ROBOT_RADIUS()))) {
-                //.. and inside the field (only checked if the robot is not allowed outside the field), add this cross to the list
-                if (worldObjects.canMoveOutsideField(robotId) ||
-                    field.playArea.contains(intermediatePoint,
-                                                               rtt::ai::Constants::ROBOT_RADIUS())) {*/
+            if (!field.playArea.contains(intermediatePoint)) {
+                continue;
+            }
             intermediatePoints.emplace_back(intermediatePoint);
-            /*}
-        }*/
         }
     }
     return intermediatePoints;

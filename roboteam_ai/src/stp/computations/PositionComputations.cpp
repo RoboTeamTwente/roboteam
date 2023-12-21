@@ -336,6 +336,12 @@ void PositionComputations::calculateInfoForDefendersAndWallers(std::unordered_ma
             } else {
                 stpInfos[activeDefenderNames[i]].setPositionToDefend(enemies[assignments[i]]);
                 stpInfos[activeDefenderNames[i]].setBlockDistance(BlockDistance::ROBOTRADIUS);
+                constexpr double IGNORE_COLLISIONS_DISTANCE = 1.5;
+                if (stpInfos[activeDefenderNames[i]].getRobot() &&
+                    (stpInfos[activeDefenderNames[i]].getRobot()->get()->getPos() - enemies[assignments[i]]).length() < IGNORE_COLLISIONS_DISTANCE) {
+                    stpInfos[activeDefenderNames[i]].setShouldAvoidOurRobots(false);
+                    stpInfos[activeDefenderNames[i]].setShouldAvoidTheirRobots(false);
+                }
             }
         }
     }
@@ -359,6 +365,7 @@ void PositionComputations::calculateInfoForDefendersAndWallers(std::unordered_ma
         constexpr double IGNORE_COLLISIONS_DISTANCE = 1.0;
         if (wallerStpInfo.getRobot() && (wallerStpInfo.getRobot()->get()->getPos() - positionToMoveTo).length() < IGNORE_COLLISIONS_DISTANCE) {
             wallerStpInfo.setShouldAvoidOurRobots(false);
+            wallerStpInfo.setShouldAvoidTheirRobots(false);
         }
     }
 }

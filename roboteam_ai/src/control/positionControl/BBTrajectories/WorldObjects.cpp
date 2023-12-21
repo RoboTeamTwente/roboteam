@@ -112,7 +112,7 @@ void WorldObjects::calculateBallCollisions(const rtt::world::World *world, std::
 void WorldObjects::calculateEnemyRobotCollisions(const rtt::world::World *world, std::vector<CollisionData> &collisionDatas, const std::vector<Vector2> &pathPoints,
                                                  double timeStep, size_t completedTimeSteps) {
     const std::vector<world::view::RobotView> theirRobots = world->getWorld()->getThem();
-    const double maxCollisionCheckTime = 1.0;                                // Maximum time to check for collisions
+    const double maxCollisionCheckTime = 1.0;                                  // Maximum time to check for collisions
     const double avoidanceDistance = 2.5 * ai::Constants::ROBOT_RADIUS_MAX();  // Distance to avoid enemy robots
 
     for (size_t i = completedTimeSteps + 1; i < pathPoints.size() - 1; i++) {
@@ -142,12 +142,12 @@ void WorldObjects::calculateEnemyRobotCollisions(const rtt::world::World *world,
 void WorldObjects::calculateOurRobotCollisions(const rtt::world::World *world, std::vector<CollisionData> &collisionDatas, const std::vector<Vector2> &pathPoints,
                                                const std::unordered_map<int, std::vector<Vector2>> &computedPaths, int robotId, double timeStep, size_t completedTimeSteps) {
     auto ourRobots = world->getWorld()->getUs();
-    const double maxCollisionCheckTime = 1.0;                            // Maximum time to check for collisions
+    const double maxCollisionCheckTime = 1.0;                              // Maximum time to check for collisions
     const double avoidanceDistance = 2.0 * ai::Constants::ROBOT_RADIUS();  // Distance to avoid our robots
     // Because wallers are irritating and colide with each other, we ignore first 10 timesteps
     // Otherwise, we get collisions in every direction and we just yoink through our own defense are
     // TODO: Maybe fix this in a better way if we get a lot of collisions.
-    for (size_t i = completedTimeSteps + 10 ; i < pathPoints.size() - 1; i++) {
+    for (size_t i = completedTimeSteps + 10; i < pathPoints.size() - 1; i++) {
         double currentTime = i * timeStep;
         if (currentTime - completedTimeSteps * timeStep >= maxCollisionCheckTime) break;
 

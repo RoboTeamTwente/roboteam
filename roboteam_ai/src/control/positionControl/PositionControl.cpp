@@ -142,7 +142,7 @@ std::optional<Trajectory2D> PositionControl::findNewTrajectory(const rtt::world:
             }
         }
         intermediatePointsSorted.pop();
-    }   
+    }
     return bestTrajectory;
 }
 

@@ -51,7 +51,7 @@ Status GoToPos::onUpdate(const StpInfo &info) noexcept {
     // This also avoids driving into the defense area when robots are moving just allong the edge of the defense area.
     if ((info.getRobot().value()->getPos() - targetPos).length() <= 0.5) {
         command.targetAngle = info.getAngle();
-    } else  {
+    } else {
         command.targetAngle = info.getRobot().value()->getAngle();
     }
 

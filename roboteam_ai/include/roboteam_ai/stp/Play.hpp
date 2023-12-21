@@ -138,7 +138,6 @@ class Play {
      */
     virtual bool shouldEndPlay() noexcept;
 
-
    private:
     /**
      * @brief This function refreshes the RobotViews, BallViews, and Fields for all StpInfo's. This also sets the maxRobotVelocity.

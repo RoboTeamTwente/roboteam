@@ -44,7 +44,7 @@ uint8_t DefensiveStopFormation::score(const rtt::Field& field) noexcept {
 Dealer::FlagMap DefensiveStopFormation::decideRoleFlags() const noexcept {
     Dealer::FlagMap flagMap;
     Dealer::DealerFlag keeperFlag(DealerFlagTitle::KEEPER);
-   
+
     flagMap.insert({"keeper", {DealerFlagPriority::KEEPER, {keeperFlag}}});
     flagMap.insert({"formation_back_0", {DealerFlagPriority::HIGH_PRIORITY, {}}});
     flagMap.insert({"formation_back_1", {DealerFlagPriority::HIGH_PRIORITY, {}}});

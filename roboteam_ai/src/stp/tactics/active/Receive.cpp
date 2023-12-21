@@ -1,6 +1,5 @@
 //
 // Created by jordi on 13-03-20.
-/// TODO-Max compare to getBall
 
 /// ACTIVE
 //

@@ -1,6 +1,5 @@
 //
 // Created by jessevw on 17.03.20.
-/// TODO-Max change to fowardPass
 //
 
 #include "stp/plays/offensive/AttackingPass.h"

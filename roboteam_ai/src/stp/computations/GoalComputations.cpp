@@ -23,7 +23,6 @@ Vector2 GoalComputations::calculateGoalTarget(rtt::world::World *world, const rt
     std::vector<LineSegment> openSegments = FieldComputations::getVisiblePartsOfGoal(field, false, sourcePoint, allRobotsVec);
 
     // If there is no empty location to shoot at, just shoot at the center of the goal
-    /// TODO-Max communicate this to the play
     if (openSegments.empty()) return field.rightGoalArea.leftLine().center();
 
     // The longest open segment of the goal will be the best to shoot at

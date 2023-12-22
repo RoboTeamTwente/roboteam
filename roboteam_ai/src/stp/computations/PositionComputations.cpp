@@ -50,9 +50,17 @@ std::vector<Vector2> PositionComputations::determineWallPositions(const rtt::Fie
     const double radius = control_constants::ROBOT_RADIUS;
     const double spacingRobots = radius * 0.5;
     const double spaceBetweenDefenseArea = 2 * radius;
+    auto currentGameState = GameStateManager::getCurrentGameState().getStrategyName();
+
+    Vector2 ballPos;
 
     // Calculate the position of the ball, projected onto the field
-    Vector2 ballPos = FieldComputations::projectPointInField(field, world->getWorld().value().getBall()->get()->position);
+    if (currentGameState == "ball_placement_them" || currentGameState == "ball_placement_us") {
+        ballPos = rtt::ai::GameStateManager::getRefereeDesignatedPosition();
+    }
+    else {
+        ballPos = FieldComputations::projectPointInField(field, world->getWorld().value().getBall()->get()->position);
+    }
 
     std::vector<Vector2> positions = {};
     Vector2 projectedPosition = {};

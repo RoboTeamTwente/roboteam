@@ -39,7 +39,7 @@ Dealer::FlagMap BallPlacementUs::decideRoleFlags() const noexcept {
     Dealer::DealerFlag detectionFlag(DealerFlagTitle::CAN_DETECT_BALL);
     Dealer::DealerFlag dribblerFlag(DealerFlagTitle::WITH_WORKING_DRIBBLER);
     Dealer::DealerFlag keeperFlag(DealerFlagTitle::KEEPER);
-   
+
     flagMap.insert({"keeper", {DealerFlagPriority::KEEPER, {keeperFlag}}});
     flagMap.insert({"ball_placer", {DealerFlagPriority::REQUIRED, {dribblerFlag, detectionFlag}}});
     flagMap.insert({"formation_back_0", {DealerFlagPriority::LOW_PRIORITY, {}}});

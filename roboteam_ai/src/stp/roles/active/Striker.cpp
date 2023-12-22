@@ -1,6 +1,5 @@
 //
 // Created by jordi on 17-03-20.
-/// TODO-Max change to ShooterGoal
 //
 
 #include "stp/roles/active/Striker.h"

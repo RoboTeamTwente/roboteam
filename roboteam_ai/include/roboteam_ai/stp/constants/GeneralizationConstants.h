@@ -57,10 +57,10 @@ struct ScoredPosition {
  */
 
 constexpr ScoreProfile AttackingPass = {0.5, 1, 1}; /**< Scoring weights for Attacking Pass */
-constexpr ScoreProfile SafePass = {1, 1, 0}; /**< Scoring weights for Safe Pass, used by the keeper */
-constexpr ScoreProfile LineOfSight = {0, 1, 0}; /**< Scoring weights for Line of Sight score, only used for testing minimum line of sight */
-constexpr ScoreProfile GoalShot = {0, 0, 1}; /**< Scoring weights for Goal Shot Score, a position where we can shoot at goal */
-constexpr ScoreProfile ChippingPass = {1, 0, 1}; /**< Scoring weights for ChippingPass score */
+constexpr ScoreProfile SafePass = {1, 1, 0};        /**< Scoring weights for Safe Pass, used by the keeper */
+constexpr ScoreProfile LineOfSight = {0, 1, 0};     /**< Scoring weights for Line of Sight score, only used for testing minimum line of sight */
+constexpr ScoreProfile GoalShot = {0, 0, 1};        /**< Scoring weights for Goal Shot Score, a position where we can shoot at goal */
+constexpr ScoreProfile ChippingPass = {1, 0, 1};    /**< Scoring weights for ChippingPass score */
 
 }  // namespace rtt::ai::stp::gen
 #endif  // RTT_GENERALIZATIONCONSTANTS_H

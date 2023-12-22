@@ -70,10 +70,11 @@ class WorldObjects {
      * @param field Used for information about the field
      * @param collisionDatas std::vector which rtt::BB::CollisionData can be added to
      * @param pathPoints std::vector with path points
-     * @param robotId ID of the robot
      * @param timeStep Time between pathpoints
+     * @param completedTimeSteps Number of completed time steps
      */
-    void calculateFieldCollisions(const rtt::Field &field, std::vector<CollisionData> &collisionDatas, const std::vector<Vector2> &pathPoints, int robotId, double timeStep);
+    void calculateFieldCollisions(const rtt::Field &field, std::vector<CollisionData> &collisionDatas, const std::vector<Vector2> &pathPoints, double timeStep,
+                                  size_t completedTimeSteps);
 
     /**
      * @brief Takes a calculated path and checks points along the path if they are inside the defensearea if
@@ -83,8 +84,10 @@ class WorldObjects {
      * @param pathPoints std::vector with path points
      * @param robotId ID of the robot
      * @param timeStep Time between pathpoints
+     * @param completedTimeSteps Number of completed time steps
      */
-    void calculateDefenseAreaCollisions(const rtt::Field &field, std::vector<CollisionData> &collisionDatas, const std::vector<Vector2> &pathPoints, int robotId, double timeStep);
+    void calculateDefenseAreaCollisions(const rtt::Field &field, std::vector<CollisionData> &collisionDatas, const std::vector<Vector2> &pathPoints, int robotId, double timeStep,
+                                        size_t completedTimeSteps);
 
     /**
      * @brief Takes a calculated path of a robot and checks points along the path if they are too close to an
@@ -94,22 +97,24 @@ class WorldObjects {
      * @param collisionDatas std::vector which rtt::BB::CollisionData can be added to
      * @param pathPoints std::vector with path points
      * @param timeStep Time between pathpoints
+     * @param dist Distance to the ball
+     * @param completedTimeSteps Number of completed time steps
      */
-    void calculateBallCollisions(const rtt::world::World *world, std::vector<CollisionData> &collisionDatas, std::vector<Vector2> pathPoints, double timeStep, double dist);
+    void calculateBallCollisions(const rtt::world::World *world, std::vector<CollisionData> &collisionDatas, std::vector<Vector2> pathPoints, double timeStep, double dist,
+                                 size_t completedTimeSteps);
 
     /**
      * @brief Takes a calculated path of a robot and checks points along the path if they are too close to an
      * approximation of the enemy robot paths. Adds these points and the time to collisionDatas and collisionTimes if
      * the difference in velocity between the two robots is more than 1.5 ms/s and we are driving faster
      * @param world Used for information about the enemy robots
-     * @param BBTrajectory BBTrajectory which is used for getting the velocity of the robot
      * @param collisionDatas std::vector which rtt::BB::CollisionData can be added to
      * @param pathPoints std::vector with path points
      * @param timeStep Time between pathpoints
-     * @param timeStepsDone Amount of seconds of the trajectory already completed by the robot
+     * @param completedTimeSteps Amount of seconds of the trajectory already completed by the robot
      */
-    void calculateEnemyRobotCollisions(const rtt::world::World *world, rtt::Trajectory2D Trajectory, std::vector<CollisionData> &collisionDatas,
-                                       const std::vector<Vector2> &pathPoints, double timeStep, size_t timeStepsDone);
+    void calculateEnemyRobotCollisions(const rtt::world::World *world, std::vector<CollisionData> &collisionDatas, const std::vector<Vector2> &pathPoints, double timeStep,
+                                       size_t completedTimeSteps);
 
     /**
      * @brief Takes a path from the array of stored paths and checks points along the path if they are too close to
@@ -121,10 +126,10 @@ class WorldObjects {
      * @param computedPaths The paths of our own robots
      * @param robotId ID of the robot
      * @param timeStep Time between pathpoints
-     * @param timeStepsDone how many seconds of the trajectory is already completed by the robot
+     * @param completedTimeSteps how many seconds of the trajectory is already completed by the robot
      */
     void calculateOurRobotCollisions(const rtt::world::World *world, std::vector<CollisionData> &collisionDatas, const std::vector<Vector2> &pathPoints,
-                                     const std::unordered_map<int, std::vector<Vector2>> &computedPaths, int robotId, double timeStep, size_t timeStepsDone);
+                                     const std::unordered_map<int, std::vector<Vector2>> &computedPaths, int robotId, double timeStep, size_t completedTimeSteps);
 
     /**
      * @brief Inserts collisionData in the vector collisionDatas such that they are ordered from lowest collisionTime to highest

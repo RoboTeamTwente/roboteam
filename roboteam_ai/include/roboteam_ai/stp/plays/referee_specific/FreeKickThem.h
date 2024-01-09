@@ -44,29 +44,9 @@ class FreeKickThem : public Play {
 
    protected:
     /**
-     * @brief Calculates info for the wallers
-     */
-    void calculateInfoForWallers() noexcept;
-
-    /**
-     * @brief Calculates info for the defenders
-     */
-    void calculateInfoForDefenders() noexcept;
-
-    /**
-     * @brief Calculates info for the ballBlocker
-     */
-    void calculateInfoForBlocker() noexcept;
-
-    /**
      * @brief Calculates info for the harasser
      */
     void calculateInfoForHarasser() noexcept;
-
-    /**
-     * @brief Calculates info for the keeper
-     */
-    void calculateInfoForKeeper() noexcept;
 };
 }  // namespace rtt::ai::stp::play
 

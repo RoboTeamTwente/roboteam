@@ -2,12 +2,40 @@
 
 #include <roboteam_utils/Shadow.h>
 
+#include "utilities/GameStateManager.hpp"
 #include "world/views/WorldDataView.hpp"
 
 namespace rtt::ai {
 
-bool FieldComputations::pointIsValidPosition(const rtt::Field &field, const Vector2 &point, stp::AvoidObjects avoidObjects, double fieldMargin, double ourDefenseAreaMargin,
-                                             double theirDefenseAreaMargin) {
+std::tuple<double, double> FieldComputations::getDefenseAreaMargin() {
+    double theirDefenseAreaMargin = stp::control_constants::ROBOT_RADIUS + stp::control_constants::GO_TO_POS_ERROR_MARGIN;
+    double ourDefenseAreaMargin = stp::control_constants::ROBOT_RADIUS + stp::control_constants::GO_TO_POS_ERROR_MARGIN;
+
+    std::string ruleSetTitle = GameStateManager::getCurrentGameState().getRuleSet().title;
+    std::string currentGameState = GameStateManager::getCurrentGameState().getStrategyName();
+
+    if (ruleSetTitle == "stop" || currentGameState == "free_kick_them" || currentGameState == "kickoff_them") {
+        theirDefenseAreaMargin += 0.2;
+    } else if (currentGameState == "free_kick_us") {
+        theirDefenseAreaMargin += 0.2;
+    }
+
+    return std::make_tuple(theirDefenseAreaMargin, ourDefenseAreaMargin);
+}
+
+bool FieldComputations::getBallAvoidance() {
+    std::string ruleSetTitle = GameStateManager::getCurrentGameState().getRuleSet().title;
+    std::string currentGameState = GameStateManager::getCurrentGameState().getStrategyName();
+
+    if (ruleSetTitle == "stop" || currentGameState == "free_kick_them" || currentGameState == "kickoff_them") {
+        return true;
+    }
+
+    return false;
+}
+
+bool FieldComputations::pointIsValidPosition(const rtt::Field &field, const Vector2 &point, stp::AvoidObjects avoidObjects, double fieldMargin) {
+    auto [theirDefenseAreaMargin, ourDefenseAreaMargin] = getDefenseAreaMargin();
     if (avoidObjects.shouldAvoidOutOfField && !field.playArea.contains(point, fieldMargin)) return false;
     if (avoidObjects.shouldAvoidDefenseArea && (field.leftDefenseArea.contains(point, ourDefenseAreaMargin) || field.rightDefenseArea.contains(point, theirDefenseAreaMargin)))
         return false;
@@ -225,7 +253,8 @@ Vector2 FieldComputations::projectPointInField(const Field &field, Vector2 point
     return projectedPoint;
 }
 
-Vector2 FieldComputations::projectPointOutOfDefenseArea(const Field &field, Vector2 point, double ourDefenseAreaMargin, double theirDefenseAreaMargin) {
+Vector2 FieldComputations::projectPointOutOfDefenseArea(const Field &field, Vector2 point) {
+    auto [theirDefenseAreaMargin, ourDefenseAreaMargin] = getDefenseAreaMargin();
     if (field.playArea.contains(point) && !field.rightDefenseArea.contains(point, theirDefenseAreaMargin) && !field.leftDefenseArea.contains(point, ourDefenseAreaMargin))
         return point;
 
@@ -252,11 +281,10 @@ Vector2 FieldComputations::projectPointOutOfDefenseArea(const Field &field, Vect
     return {point.x, point.y + yDiff};
 }
 
-Vector2 FieldComputations::projectPointToValidPosition(const Field &field, Vector2 point, stp::AvoidObjects avoidObjects, double fieldMargin, double ourDefenseAreaMargin,
-                                                       double theirDefenseAreaMargin) {
+Vector2 FieldComputations::projectPointToValidPosition(const Field &field, Vector2 point, stp::AvoidObjects avoidObjects, double fieldMargin) {
     Vector2 projectedPos = point;
     if (avoidObjects.shouldAvoidOutOfField) projectedPos = projectPointInField(field, projectedPos);
-    if (avoidObjects.shouldAvoidDefenseArea) projectedPos = projectPointOutOfDefenseArea(field, projectedPos, ourDefenseAreaMargin, theirDefenseAreaMargin);
+    if (avoidObjects.shouldAvoidDefenseArea) projectedPos = projectPointOutOfDefenseArea(field, projectedPos);
     return projectedPos;
 }
 
@@ -274,8 +302,8 @@ Vector2 FieldComputations::projectPointIntoFieldOnLine(const Field &field, Vecto
     return (dist_lhs < dist_rhs ? *intersection_lhs : *intersection_rhs);  // return the intersection closest to the point
 }
 
-Vector2 FieldComputations::projectPointToValidPositionOnLine(const Field &field, Vector2 point, Vector2 p1, Vector2 p2, stp::AvoidObjects avoidObjects, double fieldMargin,
-                                                             double ourDefenseAreaMargin, double theirDefenseAreaMargin) {
+Vector2 FieldComputations::projectPointToValidPositionOnLine(const Field &field, Vector2 point, Vector2 p1, Vector2 p2, stp::AvoidObjects avoidObjects, double fieldMargin) {
+    auto [theirDefenseAreaMargin, ourDefenseAreaMargin] = getDefenseAreaMargin();
     // Subtract PROJECTION_MARGIN to avoid the situation where the point is between the left field line and our goal line (-6.0 < x < -5.9)
     auto pointProjectedInField = projectPointIntoFieldOnLine(field, point, p1, p2, fieldMargin - PROJECTION_MARGIN);
 
@@ -300,7 +328,7 @@ Vector2 FieldComputations::projectPointToValidPositionOnLine(const Field &field,
     }
 
     // If there is no point  on this line outside the defense area, project the position out of the defense area and return it
-    if (intersections.empty()) return projectPointOutOfDefenseArea(field, pointProjectedInField, margin);
+    if (intersections.empty()) return projectPointOutOfDefenseArea(field, pointProjectedInField);
 
     // Return the intersection closest to the given point
     return *std::min_element(intersections.begin(), intersections.end(), [&point](auto lhs, auto rhs) { return point.dist(lhs) < point.dist(rhs); });

@@ -1,23 +1,23 @@
 //
-// Created by roboteam on 23/6/20.
+// Created by ratoone on 27-03-20.
 //
 
-#ifndef RTT_BALLCLOSESTTOUSGLOBALEVALUATION_H
-#define RTT_BALLCLOSESTTOUSGLOBALEVALUATION_H
+#ifndef RTT_WEDONOTHAVEBALLGLOBALEVALUATION_H
+#define RTT_WEDONOTHAVEBALLGLOBALEVALUATION_H
 
 #include "stp/evaluations/BaseEvaluation.h"
 
 namespace rtt::ai::stp::evaluation {
 /**
- * @brief Class that evaluates ball closest to us
+ * @brief Class that evaluates we don't have ball
  */
-class BallClosestToUsGlobalEvaluation : public BaseEvaluation {
+class WeDoNotHaveBallGlobalEvaluation : public BaseEvaluation {
    public:
     /**
-     * @brief Calculates the score for ball closest to us
+     * @brief Calculates the score for we don't have ball
      * @param world The current world
      * @param field The current field
-     * @return The score of ball closest to us
+     * @return The score of we don't have ball
      */
     [[nodiscard]] uint8_t metricCheck(const world::World* world, const Field* field) const noexcept override;
 
@@ -25,8 +25,8 @@ class BallClosestToUsGlobalEvaluation : public BaseEvaluation {
      * @brief Retrieves the name of the evaluation
      * @return A string containing the name of the evaluation
      */
-    const char* getName() override { return "BallClosestToUs"; }
+    const char* getName() override { return "WeDoNotHaveBall"; }
 };
 }  // namespace rtt::ai::stp::evaluation
 
-#endif  // RTT_BALLCLOSESTTOUSGLOBALEVALUATION_H
+#endif  // RTT_WEDONOTHAVEBALLGLOBALEVALUATION_H

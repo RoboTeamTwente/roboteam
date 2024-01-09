@@ -138,8 +138,6 @@ class Play {
      */
     virtual bool shouldEndPlay() noexcept;
 
-    std::optional<gen::PlayInfos> previousPlayInfos; /**< Map that holds info from the previous play */
-
    private:
     /**
      * @brief This function refreshes the RobotViews, BallViews, and Fields for all StpInfo's. This also sets the maxRobotVelocity.
@@ -160,7 +158,8 @@ class Play {
 
     size_t previousRobotNum{}; /**< The previous amount of robots. This is used to check if we need to re-deal (if a robot disappears for example) */
 
-    int previousKeeperId = -1; /**< The previous keeperId. This is used to check if we need to re-deal (if keeper id was changed from UI or GameController) */
+    int previousKeeperId = -1;  /**< The previous keeperId. This is used to check if we need to re-deal (if keeper id was changed from UI or GameController) */
+    int previousMaxRobots = -1; /**< The previous maxRobots. This is used to check if we need to re-deal */
 };
 }  // namespace rtt::ai::stp
 

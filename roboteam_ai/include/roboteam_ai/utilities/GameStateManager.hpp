@@ -24,6 +24,13 @@ class GameStateManager {
      */
     static proto::SSL_Referee getRefereeData();
     /**
+     * @brief Converts the referee command to a RefCommand
+     * @param command The command received from the referee
+     * @param isYellow Whether our team is the yellow team
+     * @return RefCommand The corresponding RefCommand for the received referee command
+     */
+    static RefCommand getCommandFromRefMsg(proto::SSL_Referee_Command command, bool isYellow);
+    /**
      * @brief Getter for the current game state
      * @return The current game state
      */
@@ -31,9 +38,8 @@ class GameStateManager {
     /**
      * @brief Force a new game state. This overrules the referee
      * @param cmd The game state we want
-     * @param ball The current ball data
      */
-    static void forceNewGameState(RefCommand cmd, std::optional<rtt::world::view::BallView> ball);
+    static void forceNewGameState(RefCommand cmd);
     /**
      * @brief Getter for a designated position from the referee. For example: ball placement position
      * @return Designated position from the referee

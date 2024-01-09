@@ -65,16 +65,16 @@ void StrategyManager::setCurrentRefGameState(RefCommand command, proto::SSL_Refe
 RefGameState StrategyManager::getCurrentRefGameState() { return currentRefGameState; }
 
 const RefGameState StrategyManager::getRefGameStateForRefCommand(RefCommand command) {
-    for (auto gameState : this->gameStates) {
-        if (gameState.commandId == command) {
-            return gameState;
-        }
+    auto it = std::find_if(gameStates.begin(), gameStates.end(), [&command](const RefGameState &gameState) { return gameState.commandId == command; });
+
+    if (it != gameStates.end()) {
+        return *it;
     }
     std::cerr << "Returning an undefined refstate! This should never happen!" << std::endl;
     return gameStates[0];
 }
 
-void StrategyManager::forceCurrentRefGameState(RefCommand command, std::optional<world::view::BallView> ballOpt) {
+void StrategyManager::forceCurrentRefGameState(RefCommand command) {
     // we need to change refgamestate here
     RefGameState newState = getRefGameStateForRefCommand(command);
 

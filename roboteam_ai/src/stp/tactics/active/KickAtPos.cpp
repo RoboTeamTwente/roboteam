@@ -1,8 +1,6 @@
 //
 // Created by timovdk on 3/12/20.
 /// Rotates (with dribbler) the robot if needed to target angle then calculates the power to KICK the BALL with.
-// TODO-Max compare to ChipAtPos
-
 /// ACTIVE
 //
 
@@ -44,19 +42,12 @@ bool KickAtPos::isEndTactic() noexcept {
 }
 
 bool KickAtPos::isTacticFailing(const StpInfo &info) noexcept {
-    // Fail tactic if:
-    // robot doesn't have the ball or if there is no shootTarget
-    return !info.getRobot().value()->hasBall() || !info.getPositionToShootAt();
-}
-
-bool KickAtPos::shouldTacticReset(const StpInfo &info) noexcept {
-    // Reset when angle is wrong outside of the rotate skill, reset to rotate again
-    if (skills.current_num() != 0) {
-        double errorMargin = stp::control_constants::GO_TO_POS_ANGLE_ERROR_MARGIN * M_PI;
-        return info.getRobot().value()->getAngle().shortestAngleDiff(info.getAngle()) > errorMargin;
-    }
+    // Fail tactic if there is no shootTarget or we don't have the ball
+    if (!info.getPositionToShootAt() || !info.getRobot()->get()->hasBall()) return true;
     return false;
 }
+
+bool KickAtPos::shouldTacticReset(const StpInfo &info) noexcept { return false; }
 
 const char *KickAtPos::getName() { return "Kick At Pos"; }
 

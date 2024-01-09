@@ -9,67 +9,59 @@
 namespace rtt::ai::stp::play {
 
 KickOffThemPrepare::KickOffThemPrepare() : Play() {
-    /// Evaluations that have to be true to be considered when changing plays.
-    startPlayEvaluation.clear();  // DONT TOUCH.
-    startPlayEvaluation.emplace_back(eval::KickOffThemPrepareGameState);
+    // Evaluations that have to be true in order for this play to be considered valid.
+    startPlayEvaluation.clear();
+    startPlayEvaluation.emplace_back(GlobalEvaluation::KickOffThemPrepareGameState);
 
-    /// Evaluations that have to be true to allow the play to continue, otherwise the play will change. Plays can also end using the shouldEndPlay().
-    keepPlayEvaluation.clear();  // DONT TOUCH.
-    keepPlayEvaluation.emplace_back(eval::KickOffThemPrepareGameState);
+    // Evaluations that have to be true to allow the play to continue, otherwise the play will change. Plays can also end using the shouldEndPlay().
+    keepPlayEvaluation.clear();
+    keepPlayEvaluation.emplace_back(GlobalEvaluation::KickOffThemPrepareGameState);
 
+    // Role creation, the names should be unique. The names are used in the stpInfos-map.
     roles = std::array<std::unique_ptr<Role>, rtt::ai::Constants::ROBOT_COUNT()>{
-        std::make_unique<role::Formation>(role::Formation("keeper")),      std::make_unique<role::Formation>(role::Formation("formation_0")),
-        std::make_unique<role::Formation>(role::Formation("formation_1")), std::make_unique<role::Formation>(role::Formation("formation_2")),
-        std::make_unique<role::Formation>(role::Formation("formation_3")), std::make_unique<role::Formation>(role::Formation("formation_4")),
-        std::make_unique<role::Formation>(role::Formation("formation_5")), std::make_unique<role::Formation>(role::Formation("formation_6")),
-        std::make_unique<role::Formation>(role::Formation("formation_7")), std::make_unique<role::Formation>(role::Formation("formation_8")),
-        std::make_unique<role::Formation>(role::Formation("formation_9"))};
+        // Roles is we play 6v6
+        std::make_unique<role::Formation>("keeper"),
+        std::make_unique<role::Formation>("formation_back_0"),
+        std::make_unique<role::Formation>("formation_mid_0"),
+        std::make_unique<role::Formation>("formation_front_0"),
+        std::make_unique<role::Formation>("formation_back_1"),
+        std::make_unique<role::Formation>("formation_mid_1"),
+        // Additional roles if we play 11v11
+        std::make_unique<role::Formation>("formation_front_1"),
+        std::make_unique<role::Formation>("formation_back_2"),
+        std::make_unique<role::Formation>("formation_mid_2"),
+        std::make_unique<role::Formation>("formation_front_2"),
+        std::make_unique<role::Formation>("formation_mid_3"),
+    };
 }
 
 uint8_t KickOffThemPrepare::score(const rtt::Field& field) noexcept {
-    /// List of all factors that combined results in an evaluation how good the play is.
-    scoring = {{PlayEvaluator::getGlobalEvaluation(eval::KickOffThemPrepareGameState, world), 1.0}};
-    return (lastScore = PlayEvaluator::calculateScore(scoring)).value();  // DONT TOUCH.
-}
-
-void KickOffThemPrepare::calculateInfoForRoles() noexcept {
-    auto height = field.playArea.height();
-    auto width = field.playArea.width();
-
-    // Keeper
-    stpInfos["keeper"].setPositionToMoveTo(Vector2(field.leftGoalArea.rightLine().center() + Vector2(0.5, 0.0)));
-    stpInfos["keeper"].setEnemyRobot(world->getWorld()->getRobotClosestToBall(world::them));
-
-    double defense_line_x = field.leftDefenseArea.right() + control_constants::DEFENSE_AREA_AVOIDANCE_MARGIN;
-    // regular bots
-    stpInfos["formation_0"].setPositionToMoveTo(Vector2(-width / 4, height / 8));
-    stpInfos["formation_1"].setPositionToMoveTo(Vector2(-width / 4, -height / 8));
-    stpInfos["formation_2"].setPositionToMoveTo(Vector2(-width / 8, height / 4));
-    stpInfos["formation_3"].setPositionToMoveTo(Vector2(-width / 8, -height / 4));
-    stpInfos["formation_4"].setPositionToMoveTo(Vector2(defense_line_x, 0.0));
-    stpInfos["formation_5"].setPositionToMoveTo(Vector2(defense_line_x, height / 5));
-    stpInfos["formation_6"].setPositionToMoveTo(Vector2(defense_line_x, -height / 5));
-    stpInfos["formation_7"].setPositionToMoveTo(Vector2(-width / 4, height / 3));
-    stpInfos["formation_8"].setPositionToMoveTo(Vector2(-width / 4, -height / 3));
-    stpInfos["formation_9"].setPositionToMoveTo(Vector2(-width * 3.0 / 16.0, 0.0));
+    // If this play is valid we always want to execute this play
+    return control_constants::FUZZY_TRUE;
 }
 
 Dealer::FlagMap KickOffThemPrepare::decideRoleFlags() const noexcept {
     Dealer::FlagMap flagMap;
+    Dealer::DealerFlag keeperFlag(DealerFlagTitle::KEEPER);
 
-    flagMap.insert({"keeper", {DealerFlagPriority::KEEPER, {}}});
-    flagMap.insert({"formation_0", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"formation_1", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"formation_2", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"formation_3", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"formation_4", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"formation_5", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"formation_6", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"formation_7", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"formation_8", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"formation_9", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"keeper", {DealerFlagPriority::KEEPER, {keeperFlag}}});
+    flagMap.insert({"formation_back_0", {DealerFlagPriority::HIGH_PRIORITY, {}}});
+    flagMap.insert({"formation_back_1", {DealerFlagPriority::HIGH_PRIORITY, {}}});
+    flagMap.insert({"formation_back_2", {DealerFlagPriority::HIGH_PRIORITY, {}}});
+    flagMap.insert({"formation_mid_0", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"formation_mid_1", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"formation_mid_2", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"formation_mid_3", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"formation_front_0", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
+    flagMap.insert({"formation_front_1", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
+    flagMap.insert({"formation_front_2", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
 
     return flagMap;
+}
+
+void KickOffThemPrepare::calculateInfoForRoles() noexcept {
+    PositionComputations::calculateInfoForKeeper(stpInfos, field, world);
+    PositionComputations::calculateInfoForFormationOurSide(stpInfos, roles, field, world);
 }
 
 const char* KickOffThemPrepare::getName() const { return "Kick Off Them Prepare"; }

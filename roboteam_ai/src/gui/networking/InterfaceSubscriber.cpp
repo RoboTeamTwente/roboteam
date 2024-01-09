@@ -23,7 +23,7 @@ void InterfaceSubscriber::onMessage(const proto::MsgFromInterface&& message) {
             GameStateManager::updateInterfaceGameState(data.play_name().c_str());
 
             interface::Output::setKeeperId(data.keeper_id());
-            interface::Output::setRuleSetName(data.ruleset_name());
+            // interface::Output::setRuleSetName(data.ruleset_name());
             stp::PlayDecider::lockPlay(data.play_name());
         } break;
 

@@ -13,10 +13,15 @@ void Play::initialize() noexcept {
     for (auto &role : roles) {
         if (role != nullptr) role->reset();
     }
+    for (auto &role : roles) {
+        if (role == nullptr) continue;
+        stpInfos[role->getName()].setShouldAvoidBall(FieldComputations::getBallAvoidance());
+    }
     calculateInfoForRoles();
     distributeRoles();
     previousRobotNum = world->getWorld()->getRobotsNonOwning().size();
     previousKeeperId = GameStateManager::getCurrentGameState().keeperId;
+    previousMaxRobots = GameStateManager::getCurrentGameState().maxAllowedRobots;
 }
 
 void Play::setWorld(world::World *world) noexcept { this->world = world; }
@@ -32,19 +37,34 @@ void Play::update() noexcept {
     // If so, we will re deal the roles
     auto currentRobotNum{world->getWorld()->getRobotsNonOwning().size()};
     auto currentKeeperId = GameStateManager::getCurrentGameState().keeperId;
+    auto currentMaxRobots = GameStateManager::getCurrentGameState().maxAllowedRobots;
+    int sizeUs = world->getWorld()->getUs().size();
 
-    if (currentRobotNum != previousRobotNum || currentKeeperId != previousKeeperId) {
-        //        RTT_INFO("Reassigning bots")
+    // We want to redeal the roles if the amount of robots changed or the keeper id changed. Also if we get a yellow card (current max goes down) and we have more robots than
+    // allowed, or if a yellow card expires (current max goes up) and we have more robots than previously allowed on the field (some robot was still driving to the edge of the
+    // field)
+    if (currentRobotNum != previousRobotNum || currentKeeperId != previousKeeperId || (currentMaxRobots < previousMaxRobots && currentMaxRobots < sizeUs) ||
+        (currentMaxRobots > previousMaxRobots && sizeUs > previousMaxRobots)) {
+        // RTT_INFO("Reassigning bots")
         reassignRobots();
         previousRobotNum = currentRobotNum;
         previousKeeperId = currentKeeperId;
     }
+    previousMaxRobots = currentMaxRobots;
 
     // Refresh the RobotViews, BallViews and fields
     refreshData();
 
     // derived class method call
     calculateInfoForRoles();
+
+    sizeUs = std::min(sizeUs, static_cast<int>(roles.size()));
+
+    // If we have more robots than allowed, one drives to the edge of the field
+    if (currentMaxRobots < sizeUs) {
+        stpInfos[roles[currentMaxRobots]->getName()].setShouldAvoidBall(true);
+        stpInfos[roles[currentMaxRobots]->getName()].setPositionToMoveTo(Vector2(0, -field.playArea.width() / 2));
+    }
 
     // Loop through roles and update them if they are assigned to a robot
     for (auto &role : roles) {
@@ -59,14 +79,6 @@ void Play::update() noexcept {
 }
 
 void Play::reassignRobots() noexcept {
-    // Make sure we don't reassign when there are more robots than MAX_ROBOT_COUNT
-    if (world->getWorld()->getUs().size() > stp::control_constants::MAX_ROBOT_COUNT) {
-        RTT_ERROR("More robots than ROBOT_COUNT(), aborting update on Play")
-        // Make sure the stpInfos is cleared to trigger a reassign whenever
-        // the robots don't exceed ROBOT_COUNT anymore
-        stpInfos.clear();
-        return;
-    }
     stpInfos.clear();
     calculateInfoForRoles();
     distributeRoles();
@@ -112,10 +124,29 @@ void Play::distributeRoles() noexcept {
     }
 
     auto flagMap = decideRoleFlags();
+
+    int currentMaxRobots = GameStateManager::getCurrentGameState().maxAllowedRobots;
+    int sizeUs = world->getWorld()->getUs().size();
+    sizeUs = std::min(sizeUs, static_cast<int>(roles.size()));
+    int cardId = GameStateManager::getCurrentGameState().cardId;
+
+    if (currentMaxRobots < sizeUs) {
+        RTT_INFO("Driving robot ", roles[currentMaxRobots]->getName(), " to edge of field for substitution")
+        flagMap[roles[currentMaxRobots]->getName()].priority = DealerFlagPriority::CARD;
+        flagMap[roles[currentMaxRobots]->getName()].forcedID = cardId;
+        stpInfos[roles[currentMaxRobots]->getName()].setShouldAvoidBall(true);
+        stpInfos[roles[currentMaxRobots]->getName()].setPositionToMoveTo(Vector2(0, -field.playArea.width() / 2));
+    }
+    // Only keep the first n roles, where n is the amount of robots we have
+    // This order is based on the order of the roles array
+    for (int i = sizeUs; i < roles.size(); i++) {
+        flagMap.erase(roles[i]->getName());
+    }
     auto distribution = dealer.distribute(world->getWorld()->getUs(), flagMap, stpInfos);
 
     // TODO-Max if role exists in oldStpInfos then copy those.
     // Clear the stpInfos for the new role assignment
+    bool cardIdAssigned = false;
     for (auto &role : roles) {
         if (role == nullptr) continue;
         role->reset();
@@ -123,7 +154,16 @@ void Play::distributeRoles() noexcept {
         if (distribution.find(roleName) != distribution.end()) {
             auto robot = distribution.find(role->getName())->second;
             stpInfos[roleName].setRobot(robot);
+            if (flagMap[roleName].priority == DealerFlagPriority::CARD) {
+                GameStateManager::getCurrentGameState().cardId = robot->getId();
+                RTT_INFO("Updating cardId to: ", GameStateManager::getCurrentGameState().cardId)
+                cardIdAssigned = true;
+            }
         }
+    }
+    if (!cardIdAssigned && cardId != -1) {
+        RTT_INFO("No robot assigned to cardId, resetting to -1")
+        GameStateManager::getCurrentGameState().cardId = -1;
     }
     std::for_each(stpInfos.begin(), stpInfos.end(), [this](auto &each) { each.second.setCurrentWorld(world); });
 }

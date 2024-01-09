@@ -99,52 +99,15 @@ void Robot::updateFromFeedback(const proto::RobotProcessedFeedback &feedback) no
 void Robot::updateHasBallMap(std::optional<view::BallView> &ball) {
     if (!ball) return;
 
-    // When doing free kicks, we have to immediately kick the ball, hence, we only check for 1 tick
-    // TODO: this is a bit of a hacky way to avoid double touch fouls. Figuring out a better way to do this would be nice
-    if (ai::GameStateManager::getCurrentGameState().getStrategyName() == "free_kick_us" || ai::GameStateManager::getCurrentGameState().getStrategyName() == "kickoff_us") {
-        auto hasBallAccordingToVision = distanceToBall < ai::Constants::HAS_BALL_DISTANCE() * 0.9 && angleDiffToBall < ai::Constants::HAS_BALL_ANGLE();
-        if (hasBallAccordingToVision || dribblerSeesBall) setHasBall(true);
-        return;
-    }
-
-    // On the field, use data from the dribbler and vision to determine if we have the ball
-    if (GameSettings::getRobotHubMode() == net::RobotHubMode::BASESTATION) {
-        // If the ball is not visible, we should go closer to the ball before thinking we have it, for safety (since we can't actually see if we have the ball or not)
-        auto hasBallDist = ball->get()->visible ? ai::Constants::HAS_BALL_DISTANCE() : ai::Constants::HAS_BALL_DISTANCE() * 0.75;
-        auto hasBallAccordingToVision = distanceToBall < hasBallDist && angleDiffToBall < ai::Constants::HAS_BALL_ANGLE();
-
-        // Increase the hasBall score depending on how sure we are that we have the ball
-        if (hasBallAccordingToVision && dribblerSeesBall)
-            hasBallUpdateMap[id].score += 2;
-        else if (hasBallAccordingToVision && !dribblerSeesBall)
-            hasBallUpdateMap[id].score += 1;
-        else if (!hasBallAccordingToVision && dribblerSeesBall && distanceToBall < ai::Constants::HAS_BALL_DISTANCE() * 1.5 &&
-                 angleDiffToBall < ai::Constants::HAS_BALL_ANGLE() * 1.5)
-            hasBallUpdateMap[id].score += 1;
-        else
-            hasBallUpdateMap[id].score -= 2;
-
-        // TODO when we have working ballsensors: Use the ballsensor as well to determine if we have the ball
-        // if (workingBallSensor) hasBallUpdateMap[id].score += (ballSensorSeesBall ? 1 : -1);
+    auto hasBallAccordingToVision = distanceToBall < ai::Constants::HAS_BALL_DISTANCE() && angleDiffToBall < ai::Constants::HAS_BALL_ANGLE();
+    auto hasBallAccordingToDribblerOrBallSensor = (GameSettings::getRobotHubMode() == net::RobotHubMode::BASESTATION) ? ballSensorSeesBall : dribblerSeesBall;
+    if (hasBallAccordingToDribblerOrBallSensor && hasBallAccordingToVision) {
+        hasBallUpdateMap[id].score = 25;
     } else {
-        // In the sim, for our team, we only use the ballsensor (since its very accurate)
-        hasBallUpdateMap[id].score += (ballSensorSeesBall ? 2 : -2);
+        hasBallUpdateMap[id].score -= 2;
     }
-
     // Make sure the value does not get too large/small
     hasBallUpdateMap[id].score = std::clamp(hasBallUpdateMap[id].score, 0, 25);
-
-    // If we previously had the ball, we do not have the ball if the score gets below 4
-    if (hasBallUpdateMap[id].hasBall && hasBallUpdateMap[id].score < 4) hasBallUpdateMap[id].hasBall = false;
-    // If we did not have the ball yet, we have the ball if the score gets over 20
-
-    // Temporary fix increasing sensitivity to hasBall scoring during testing. Needs to be extracted and fine tuned.
-    else if (hasBallUpdateMap[id].score > 0)
-        hasBallUpdateMap[id].hasBall = true;
-
-    setHasBall(hasBallUpdateMap[id].hasBall);
-
-    /// TODO: There's some magic numbers here: the max value at which we clamped could be higher/lower, and the cutoff for saying we have the ball could be different
-    /// These values should be tuned further to balance speed and reliability
+    setHasBall(hasBallUpdateMap[id].score > 0);
 }
 }  // namespace rtt::world::robot

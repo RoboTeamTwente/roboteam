@@ -26,6 +26,10 @@ PassInfo PassComputations::calculatePass(gen::ScoreProfile profile, const rtt::w
     passInfo.keeperId = getKeeperId(us, world, field);
     if (!keeperCanPass) std::erase_if(us, [passInfo](auto& bot) { return bot->getId() == passInfo.keeperId; });
 
+    // Remove cardId from us
+    auto cardId = GameStateManager::getCurrentGameState().cardId;
+    std::erase_if(us, [cardId](auto& bot) { return bot->getId() == cardId; });
+
     // Find which robot should be the passer, store its id and location, and erase from us
     passInfo.passerId = getPasserId(ballLocation, us, world);
     auto passerIt = std::find_if(us.begin(), us.end(), [passInfo](auto& bot) { return bot->getId() == passInfo.passerId; });
@@ -92,8 +96,7 @@ bool PassComputations::pointIsValidPassLocation(Vector2 point, Vector2 ballLocat
     if (point.dist(ballLocation) < MINIMUM_PASS_DISTANCE) return false;
     constexpr double MINIMUM_LINE_OF_SIGHT = 10.0;  // The minimum LoS to be a valid pass, otherwise, the pass will go into an enemy robot
     if (PositionScoring::scorePosition(point, gen::LineOfSight, field, world).score < MINIMUM_LINE_OF_SIGHT) return false;
-    constexpr double DEFENSE_AREA_AVOID_DIST = 0.5;
-    if (!FieldComputations::pointIsValidPosition(field, point, AvoidObjects{}, 0, DEFENSE_AREA_AVOID_DIST, DEFENSE_AREA_AVOID_DIST)) return false;
+    if (!FieldComputations::pointIsValidPosition(field, point)) return false;
     // Pass is valid if the above conditions are met and there is a robot whose travel time is smaller than the balls travel time (i.e. the robot can actually receive the ball)
     auto ballTravelTime = calculateBallTravelTime(ballLocation, passerLocation, point);
     return std::any_of(possibleReceiverLocations.begin(), possibleReceiverLocations.end(),
@@ -148,16 +151,6 @@ double PassComputations::calculateBallTravelTime(Vector2 ballPosition, Vector2 p
     double ballSpeed = control::ControlUtils::determineKickForce(ballPosition.dist(targetPosition), ShotType::PASS);
     auto ballTime = ballPosition.dist(targetPosition) / ballSpeed;
     return travelTime + rotateTime + ballTime;
-}
-
-uint8_t PassComputations::scorePass(PassInfo passInfo, const world::World* world, const Field& field) {
-    constexpr double passPenaltyFactor = 0.9;  // Factor to reduce the score by to account for the inherent risk of passing (stuff going wrong, unexpected events etc)
-
-    // Score of pass is the goalshotscore, adjusted based on the LoS and openness scores. The worse the LoS/Openness, the more the score is reduced
-    auto goalShotScore = static_cast<int>(PositionScoring::scorePosition(passInfo.passLocation, gen::GoalShot, field, world).score);
-    auto lineOfSightScore = static_cast<int>(PositionScoring::scorePosition(passInfo.passLocation, gen::LineOfSight, field, world).score);
-    auto openScore = static_cast<int>(PositionScoring::scorePosition(passInfo.passLocation, gen::Open, field, world).score);
-    return std::clamp(static_cast<int>(goalShotScore * (lineOfSightScore / 255.0) * (openScore / 255.0) * passPenaltyFactor), 0, 255);
 }
 
 }  // namespace rtt::ai::stp::computations

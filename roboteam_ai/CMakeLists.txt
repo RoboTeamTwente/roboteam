@@ -61,9 +61,7 @@ add_library(roboteam_ai_tactics
         ${PROJECT_SOURCE_DIR}/src/stp/tactics/active/OrbitKick.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/tactics/active/Receive.cpp
         # passive/
-        ${PROJECT_SOURCE_DIR}/src/stp/tactics/passive/AvoidBall.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/tactics/passive/BlockBall.cpp
-        ${PROJECT_SOURCE_DIR}/src/stp/tactics/passive/BlockRobot.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/tactics/passive/Formation.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/tactics/passive/Halt.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/tactics/passive/BallStandBack.cpp)
@@ -84,7 +82,7 @@ add_library(roboteam_ai_roles
         ${PROJECT_SOURCE_DIR}/src/stp/roles/Keeper.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/roles/PenaltyKeeper.cpp
         # active
-        ${PROJECT_SOURCE_DIR}/src/stp/roles/active/Attacker.cpp
+        ${PROJECT_SOURCE_DIR}/src/stp/roles/active/Striker.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/roles/active/Harasser.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/roles/active/BallPlacer.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/roles/active/FreeKickTaker.cpp
@@ -94,11 +92,9 @@ add_library(roboteam_ai_roles
         ${PROJECT_SOURCE_DIR}/src/stp/roles/active/PassReceiver.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/roles/active/PenaltyTaker.cpp
         # passive
-        ${PROJECT_SOURCE_DIR}/src/stp/roles/passive/BallAvoider.cpp
-        ${PROJECT_SOURCE_DIR}/src/stp/roles/passive/BallDefender.cpp
+        ${PROJECT_SOURCE_DIR}/src/stp/roles/passive/Defender.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/roles/passive/Formation.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/roles/passive/Halt.cpp
-        ${PROJECT_SOURCE_DIR}/src/stp/roles/passive/RobotDefender.cpp
 )
 target_include_directories(roboteam_ai_roles
         PRIVATE include/roboteam_ai
@@ -139,7 +135,6 @@ add_library(roboteam_ai_plays
         ${PROJECT_SOURCE_DIR}/src/stp/plays/referee_specific/PenaltyThemPrepare.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/plays/referee_specific/PenaltyUs.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/plays/referee_specific/PenaltyUsPrepare.cpp
-        ${PROJECT_SOURCE_DIR}/src/stp/plays/referee_specific/FormationPreHalf.cpp
 )
 target_include_directories(roboteam_ai_plays
         PRIVATE include/roboteam_ai
@@ -156,26 +151,13 @@ target_compile_options(roboteam_ai_plays PRIVATE "${COMPILER_FLAGS}")
 ###### EVALUATION #######
 add_library(roboteam_ai_evaluation
         ${PROJECT_SOURCE_DIR}/src/stp/evaluations/global/WeHaveBallGlobalEvaluation.cpp
+        ${PROJECT_SOURCE_DIR}/src/stp/evaluations/global/WeDoNotHaveBallGlobalEvaluation.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/evaluations/global/TheyHaveBallGlobalEvaluation.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/evaluations/global/TheyDoNotHaveBallGlobalEvaluation.cpp
-        ${PROJECT_SOURCE_DIR}/src/stp/evaluations/global/BallGotShotGlobalEvaluation.cpp
-        ${PROJECT_SOURCE_DIR}/src/stp/evaluations/global/BallMovesSlowGlobalEvaluation.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/evaluations/global/BallOnOurSideGlobalEvaluation.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/evaluations/global/BallOnTheirSideGlobalEvaluation.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/evaluations/global/BallInOurDefenseAreaAndStillGlobalEvaluation.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/evaluations/global/BallNotInOurDefenseAreaAndStillGlobalEvaluation.cpp
-        ${PROJECT_SOURCE_DIR}/src/stp/evaluations/global/FreedomOfRobotsGlobalEvaluation.cpp
-        ${PROJECT_SOURCE_DIR}/src/stp/evaluations/global/BallCloseToUsGlobalEvaluation.cpp
-        ${PROJECT_SOURCE_DIR}/src/stp/evaluations/global/BallCloseToThemGlobalEvaluation.cpp
-        ${PROJECT_SOURCE_DIR}/src/stp/evaluations/global/DistanceFromBallGlobalEvaluation.cpp
-        ${PROJECT_SOURCE_DIR}/src/stp/evaluations/global/WeHaveMajorityGlobalEvaluation.cpp
-        ${PROJECT_SOURCE_DIR}/src/stp/evaluations/global/GoalVisionGlobalEvaluation.cpp
-        ${PROJECT_SOURCE_DIR}/src/stp/evaluations/global/GoalVisionFromBallGlobalEvaluation.cpp
-        ${PROJECT_SOURCE_DIR}/src/stp/evaluations/global/BallIsFreeGlobalEvaluation.cpp
-        ${PROJECT_SOURCE_DIR}/src/stp/evaluations/global/TheyHaveBallGlobalEvaluation.cpp
-        ${PROJECT_SOURCE_DIR}/src/stp/evaluations/global/TheyDoNotHaveBallGlobalEvaluation.cpp
-        ${PROJECT_SOURCE_DIR}/src/stp/evaluations/global/NoGoalVisionFromBallGlobalEvaluation.cpp
-        ${PROJECT_SOURCE_DIR}/src/stp/evaluations/global/BallClosestToUsGlobalEvaluation.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/evaluations/game_states/BallPlacementUsGameStateEvaluation.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/evaluations/game_states/BallPlacementThemGameStateEvaluation.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/evaluations/game_states/HaltGameStateEvaluation.cpp
@@ -197,7 +179,6 @@ add_library(roboteam_ai_evaluation
         ${PROJECT_SOURCE_DIR}/src/stp/evaluations/position/OpennessEvaluation.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/evaluations/position/LineOfSightEvaluation.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/evaluations/position/GoalShotEvaluation.cpp
-        ${PROJECT_SOURCE_DIR}/src/stp/evaluations/position/BlockingEvaluation.cpp
 )
 target_include_directories(roboteam_ai_evaluation
         PRIVATE include/roboteam_ai

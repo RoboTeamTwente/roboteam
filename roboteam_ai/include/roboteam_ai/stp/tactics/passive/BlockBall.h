@@ -19,6 +19,15 @@ class BlockBall : public Tactic {
      */
     BlockBall();
 
+    /**
+     * @brief Calculates the position for the blocker
+     * @param ball Ball
+     * @param field Field
+     * @param enemyRobot Enemy robot closest to ball
+     * @return Target position for the blocker
+     */
+    static Vector2 calculateTargetPosition(const world::view::BallView &ball, Vector2 defendPos, BlockDistance blockDistance) noexcept;
+
    private:
     /**
      * @brief Calculate the info for skills from the StpInfo struct parameter
@@ -44,7 +53,7 @@ class BlockBall : public Tactic {
     bool shouldTacticReset(const StpInfo &info) noexcept override;
 
     /**
-     * @brief Checks whether this is a passive tactic (formerly called endTactic)
+     * @brief Checks whether this is an end tactic, meaning it should keep looping this tactic if all skills are finished
      * @return This will always return true, since it is an endTactic
      */
     bool isEndTactic() noexcept override;
@@ -54,15 +63,6 @@ class BlockBall : public Tactic {
      * @return The name of this tactic
      */
     const char *getName() override;
-
-    /**
-     * @brief Calculates the position for the blocker
-     * @param ball Ball
-     * @param field Field
-     * @param enemyRobot Enemy robot closest to ball
-     * @return Target position for the blocker
-     */
-    static Vector2 calculateTargetPosition(const world::view::BallView &ball, Vector2 defendPos, BlockDistance blockDistance) noexcept;
 };
 }  // namespace rtt::ai::stp::tactic
 

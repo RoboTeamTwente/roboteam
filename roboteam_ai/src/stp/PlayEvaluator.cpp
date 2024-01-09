@@ -22,25 +22,14 @@
 #include <stp/evaluations/game_states/PenaltyUsPrepareGameStateEvaluation.h>
 #include <stp/evaluations/game_states/StopGameStateEvaluation.h>
 #include <stp/evaluations/game_states/TimeOutGameStateEvaluation.h>
-#include <stp/evaluations/global/BallCloseToThemGlobalEvaluation.h>
-#include <stp/evaluations/global/BallCloseToUsGlobalEvaluation.h>
-#include <stp/evaluations/global/BallClosestToUsGlobalEvaluation.h>
-#include <stp/evaluations/global/BallGotShotGlobalEvaluation.h>
 #include <stp/evaluations/global/BallInOurDefenseAreaAndStillGlobalEvaluation.h>
-#include <stp/evaluations/global/BallIsFreeGlobalEvaluation.h>
-#include <stp/evaluations/global/BallMovesSlowGlobalEvaluation.h>
 #include <stp/evaluations/global/BallNotInOurDefenseAreaAndStillGlobalEvaluation.h>
 #include <stp/evaluations/global/BallOnOurSideGlobalEvaluation.h>
 #include <stp/evaluations/global/BallOnTheirSideGlobalEvaluation.h>
-#include <stp/evaluations/global/DistanceFromBallGlobalEvaluation.h>
-#include <stp/evaluations/global/FreedomOfRobotsGlobalEvaluation.h>
-#include <stp/evaluations/global/GoalVisionFromBallGlobalEvaluation.h>
-#include <stp/evaluations/global/GoalVisionGlobalEvaluation.h>
-#include <stp/evaluations/global/NoGoalVisionFromBallGlobalEvaluation.h>
 #include <stp/evaluations/global/TheyDoNotHaveBallGlobalEvaluation.h>
 #include <stp/evaluations/global/TheyHaveBallGlobalEvaluation.h>
+#include <stp/evaluations/global/WeDoNotHaveBallGlobalEvaluation.h>
 #include <stp/evaluations/global/WeHaveBallGlobalEvaluation.h>
-#include <stp/evaluations/global/WeHaveMajorityGlobalEvaluation.h>
 
 namespace rtt::ai::stp {
 
@@ -87,18 +76,6 @@ uint8_t PlayEvaluator::updateGlobalEvaluation(GlobalEvaluation& evaluation, cons
             return evaluation::PenaltyUsPrepareGameStateEvaluation().metricCheck(world, &field);
         case GlobalEvaluation::StopGameState:
             return evaluation::StopGameStateEvaluation().metricCheck(world, &field);
-        case GlobalEvaluation::BallCloseToThem:
-            return evaluation::BallCloseToThemGlobalEvaluation().metricCheck(world, &field);
-        case GlobalEvaluation::BallCloseToUs:
-            return evaluation::BallCloseToUsGlobalEvaluation().metricCheck(world, &field);
-        case GlobalEvaluation::BallClosestToUs:
-            return evaluation::BallClosestToUsGlobalEvaluation().metricCheck(world, &field);
-        case GlobalEvaluation::BallGotShot:
-            return evaluation::BallGotShotGlobalEvaluation().metricCheck(world, &field);
-        case GlobalEvaluation::BallIsFree:
-            return evaluation::BallIsFreeGlobalEvaluation().metricCheck(world, &field);
-        case GlobalEvaluation::BallMovesSlow:
-            return evaluation::BallMovesSlowGlobalEvaluation().metricCheck(world, &field);
         case GlobalEvaluation::BallOnOurSide:
             return evaluation::BallOnOurSideGlobalEvaluation().metricCheck(world, &field);
         case GlobalEvaluation::BallOnTheirSide:
@@ -107,26 +84,14 @@ uint8_t PlayEvaluator::updateGlobalEvaluation(GlobalEvaluation& evaluation, cons
             return evaluation::BallInOurDefenseAreaAndStillGlobalEvaluation().metricCheck(world, &field);
         case GlobalEvaluation::BallNotInOurDefenseAreaAndStill:
             return evaluation::BallNotInOurDefenseAreaAndStillGlobalEvaluation().metricCheck(world, &field);
-        case GlobalEvaluation::DistanceFromBall:
-            return evaluation::DistanceFromBallGlobalEvaluation().metricCheck(world, &field);
-        case GlobalEvaluation::FreedomOfRobots:
-            return evaluation::FreedomOfRobotsGlobalEvaluation().metricCheck(world, &field);
-        case GlobalEvaluation::GoalVisionFromBall:
-            return evaluation::GoalVisionFromBallGlobalEvaluation().metricCheck(world, &field);
-        case GlobalEvaluation::GoalVision:
-            return evaluation::GoalVisionGlobalEvaluation().metricCheck(world, &field);
-        case GlobalEvaluation::NoGoalVisionFromBall:
-            return evaluation::NoGoalVisionFromBallGlobalEvaluation().metricCheck(world, &field);
         case GlobalEvaluation::WeHaveBall:
             return evaluation::WeHaveBallGlobalEvaluation().metricCheck(world, &field);
+        case GlobalEvaluation::WeDoNotHaveBall:
+            return evaluation::WeDoNotHaveBallGlobalEvaluation().metricCheck(world, &field);
         case GlobalEvaluation::TheyHaveBall:
             return evaluation::TheyHaveBallGlobalEvaluation().metricCheck(world, &field);
         case GlobalEvaluation::TheyDoNotHaveBall:
             return evaluation::TheyDoNotHaveBallGlobalEvaluation().metricCheck(world, &field);
-        case GlobalEvaluation::WeHaveMajority:
-            return evaluation::WeHaveMajorityGlobalEvaluation().metricCheck(world, &field);
-        case GlobalEvaluation::PreHalfGameState:
-            return GameStateManager::getCurrentGameState().getStrategyName() == "formation_pre_half" ? stp::control_constants::FUZZY_TRUE : stp::control_constants::FUZZY_FALSE;
         default:
             RTT_WARNING("Unhandled ScoreEvaluation!");
             return 0;

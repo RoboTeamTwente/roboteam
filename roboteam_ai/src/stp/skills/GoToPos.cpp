@@ -12,17 +12,14 @@ namespace rtt::ai::stp::skill {
 
 Status GoToPos::onUpdate(const StpInfo &info) noexcept {
     Vector2 targetPos = info.getPositionToMoveTo().value();
-
-    if (!FieldComputations::pointIsValidPosition(info.getField().value(), targetPos, info.getObjectsToAvoid())) {
-        targetPos = FieldComputations::projectPointToValidPosition(info.getField().value(), targetPos, info.getObjectsToAvoid());
-    }
-
     auto avoidObj = info.getObjectsToAvoid();
-
-    if (GameStateManager::getCurrentGameState().getRuleSet().title == "stop") {
-        targetPos = PositionComputations::calculateAvoidBallPosition(targetPos, info.getBall()->get()->position, info.getField().value());
-        avoidObj.avoidBallDist = control_constants::AVOID_BALL_DISTANCE;
-        avoidObj.shouldAvoidBall = true;
+    std::string roleName = info.getRoleName();
+    Vector2 ballLocation = info.getBall()->get()->position;
+    if (!FieldComputations::pointIsValidPosition(info.getField().value(), targetPos, avoidObj) && roleName != "ball_placer") {
+        targetPos = FieldComputations::projectPointToValidPosition(info.getField().value(), targetPos, avoidObj);
+    }
+    if (avoidObj.shouldAvoidBall) {
+        targetPos = PositionComputations::calculateAvoidBallPosition(targetPos, ballLocation, info.getField().value());
     }
 
     rtt::BB::CommandCollision commandCollision;
@@ -49,7 +46,14 @@ Status GoToPos::onUpdate(const StpInfo &info) noexcept {
     // Set velocity and angle commands
     command.velocity = targetVelocity;
 
-    command.targetAngle = info.getAngle();
+    // TODO: Test with control peeps to see what angle works best when driving.
+    // Driving and turning do not work well together, so we only turn when we are close to the target position.
+    // This also avoids driving into the defense area when robots are moving just allong the edge of the defense area.
+    if ((info.getRobot().value()->getPos() - targetPos).length() <= 0.5) {
+        command.targetAngle = info.getAngle();
+    } else {
+        command.targetAngle = info.getRobot().value()->getAngle();
+    }
 
     // Clamp and set dribbler speed
     int targetDribblerPercentage = std::clamp(info.getDribblerSpeed(), 0, 100);

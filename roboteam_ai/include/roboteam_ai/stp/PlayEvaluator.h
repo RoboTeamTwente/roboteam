@@ -33,27 +33,15 @@ enum class GlobalEvaluation {
     PenaltyUsGameState,
     PenaltyUsPrepareGameState,
     StopGameState,
-    PreHalfGameState,
     /// Global Evaluations
-    BallCloseToThem,
-    BallCloseToUs,
-    BallClosestToUs,
-    BallGotShot,
-    BallIsFree,
-    BallMovesSlow,
     BallOnOurSide,
     BallOnTheirSide,
     BallInOurDefenseAreaAndStill,
     BallNotInOurDefenseAreaAndStill,
-    DistanceFromBall,
-    FreedomOfRobots,
-    GoalVisionFromBall,
-    GoalVision,
-    NoGoalVisionFromBall,
     WeHaveBall,
+    WeDoNotHaveBall,
     TheyHaveBall,
     TheyDoNotHaveBall,
-    WeHaveMajority
 };
 
 /**

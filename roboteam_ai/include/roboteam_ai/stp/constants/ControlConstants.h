@@ -31,7 +31,7 @@ constexpr uint8_t MAX_ROBOT_COUNT = 11; /**< Maximum allowed number of robots */
 /// Ball constants
 constexpr double BALL_STILL_VEL = 0.1;                              /**< Velocity of the ball at which it is considered still */
 constexpr double BALL_STILL_VEL2 = BALL_STILL_VEL * BALL_STILL_VEL; /**< Squared velocity of the ball at which it is considered still */
-constexpr double BALL_GOT_SHOT_LIMIT = 1.3;                         /**< Velocity of the ball at which it is considered shot */
+constexpr double BALL_GOT_SHOT_LIMIT = 0.6;                         /**< Velocity of the ball at which it is considered shot */
 constexpr double BALL_IS_MOVING_SLOW_LIMIT = 1;                     /**< Velocity of the ball at which it is considered moving slow */
 constexpr double BALL_IS_CLOSE = 0.5;                               /**< Distance from the ball to a robot at which the ball is considered close */
 constexpr double BALL_RADIUS = 0.0215;                              /**< Radius of the ball */
@@ -48,11 +48,13 @@ constexpr double MAX_VEL_WHEN_HAS_BALL = 3.0; /**< Maximum allowed velocity that
 
 /// GoToPos Constants
 // Distance margin for 'goToPos'. If the robot is within this margin, goToPos is successful
-constexpr double GO_TO_POS_ERROR_MARGIN = 0.06; /**< Distance error for a robot to be considered to have reached a position */
+constexpr double GO_TO_POS_ERROR_MARGIN = 0.01; /**< Distance error for a robot to be considered to have reached a position */
 // Angle margin for 'goToPos'. If the robot is within this margin, goToPos is successful
 constexpr double GO_TO_POS_ANGLE_ERROR_MARGIN = 0.04; /**< Angle error for a robot to be considered to have reached a position */
 // Maximum inaccuracy during ballplacement
-constexpr double BALL_PLACEMENT_MARGIN = 0.15; /**< Distance error for the ball to be considered to have reached the ball placement position*/
+constexpr double BALL_PLACEMENT_MARGIN = 0.15;            /**< Distance error for the ball to be considered to have reached the ball placement position*/
+constexpr double DEALER_SPEED_FACTOR = 0.5;               /**< Multiplication factor of speed used by the dealer */
+constexpr double ENEMY_ALREADY_ASSIGNED_MULTIPLIER = 0.9; /**< Multiplication factor for the distance to goal used by the dealer when the enemy is already assigned */
 
 /// Invariant constants
 constexpr uint8_t FUZZY_TRUE = 255;          /**< Value at which the fuzzy logic is considered 100% true */
@@ -66,12 +68,13 @@ constexpr double DISTANCE_TO_ROBOT_FAR = 5 * ROBOT_RADIUS;    /**< Distance from
 constexpr double ROBOT_CLOSE_TO_POINT = 0.2;                  /**< Distance from the robot to a position at which the robot is considered close to that position */
 constexpr double DISTANCE_TO_ROBOT_NEAR = 2.2 * ROBOT_RADIUS; /**< Distance from the robot to another robot at which the robot is considered near that other robot */
 constexpr double DEFENSE_AREA_AVOIDANCE_MARGIN = 0.1;         /**< Distance error for avoiding the defense area */
+constexpr double DISTANCE_TO_PASS_TRAJECTORY = 0.5; /**< Distance from the robot to the pass trajectory at which the robot is considered too close to the pass trajectory */
 
 /// Keeper constants
 constexpr double DISTANCE_FROM_GOAL_CLOSE = 2 * ROBOT_RADIUS; /**< Distance from the keeper to the goal at which the keeper is considered close to that goal */
 
 /// GameState constants
-constexpr double AVOID_BALL_DISTANCE = 0.8; /**< Minimum distance all robots should keep when avoiding the ball */
+constexpr double AVOID_BALL_DISTANCE = 0.5 + ROBOT_RADIUS + GO_TO_POS_ERROR_MARGIN + BALL_RADIUS; /**< Minimum distance all robots should keep when avoiding the ball */
 
 }  // namespace rtt::ai::stp::control_constants
 

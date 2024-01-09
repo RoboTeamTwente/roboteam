@@ -16,13 +16,11 @@ namespace rtt::BB {
 
 /**
  * @brief Struct that stores data about a collision
- * @memberof obstaclePosition position of the obstacle
  * @memberof collisionPosition position robot shouldn't come
  * @memberof collisionTime number of seconds from now that the collision will occur
  * @memberof collisionName the name of what causes the collision
  */
 struct CollisionData {
-    Vector2 obstaclePosition;
     Vector2 collisionPosition;
     double collisionTime;
     std::string collisionName;
@@ -63,6 +61,17 @@ class WorldObjects {
      */
     std::optional<CollisionData> getFirstCollision(const rtt::world::World *world, const rtt::Field &field, const rtt::Trajectory2D &Trajectory,
                                                    const std::unordered_map<int, std::vector<Vector2>> &computedPaths, int robotId, ai::stp::AvoidObjects avoidObjects);
+
+    /**
+     * @brief Calculates the position of the first collision with the defense area
+     * @param field used for checking collisions with the field
+     * @param BBTrajectory the trajectory to check for collisions
+     * @param computedPaths the paths of our robots
+     * @param robotId Id of the robot
+     * @return optional with rtt::BB::CollisionData
+     */
+    std::optional<CollisionData> getFirstDefenseAreaCollision(const rtt::Field &field, const rtt::Trajectory2D &Trajectory,
+                                                              const std::unordered_map<int, std::vector<Vector2>> &computedPaths, int robotId);
 
     /**
      * @brief Takes a calculated path of a robot and checks points along the path if they are outside the
@@ -130,6 +139,19 @@ class WorldObjects {
      */
     void calculateOurRobotCollisions(const rtt::world::World *world, std::vector<CollisionData> &collisionDatas, const std::vector<Vector2> &pathPoints,
                                      const std::unordered_map<int, std::vector<Vector2>> &computedPaths, int robotId, double timeStep, size_t completedTimeSteps);
+
+    /**
+     * @brief Takes a calculated path of a robot and checks points along the path if they are too close to an
+     * approximation of the ball trajactory. If the play is "ball_placement_them" also checks for the path
+     * being inside the balltube. Adds these points and the time to collisionDatas and collisionTimes
+     * @param world Used for information about the ball
+     * @param collisionDatas std::vector which rtt::BB::CollisionData can be added to
+     * @param pathPoints std::vector with path points
+     * @param timeStep Time between pathpoints
+     * @param completedTimeSteps Number of completed time steps
+     */
+    void calculateBallPlacementCollision(const rtt::world::World *world, std::vector<CollisionData> &collisionDatas, const std::vector<Vector2> &pathPoints, double timeStep,
+                                         size_t completedTimeSteps);
 
     /**
      * @brief Inserts collisionData in the vector collisionDatas such that they are ordered from lowest collisionTime to highest

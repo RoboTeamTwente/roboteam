@@ -150,15 +150,6 @@ class PositionControl {
      * @return A vector with coordinates of the intermediate points
      */
     std::vector<Vector2> createIntermediatePoints(const rtt::Field &field, int robotId, std::optional<BB::CollisionData> &firstCollision, Vector2 &targetPosition);
-
-    /**
-     * @brief Gives each intermediate point a score for how close the point is to the collisionPosition
-     * @param intermediatePoints the intermediate points for trying to find a new path
-     * @param firstCollision used for scoring the points
-     * @return A priority_queue to sort the points
-     */
-    std::priority_queue<std::pair<double, Vector2>, std::vector<std::pair<double, Vector2>>, std::greater<>> scoreIntermediatePoints(
-        std::vector<Vector2> &intermediatePoints, std::optional<BB::CollisionData> &firstCollision);
 };
 
 }  // namespace rtt::ai::control

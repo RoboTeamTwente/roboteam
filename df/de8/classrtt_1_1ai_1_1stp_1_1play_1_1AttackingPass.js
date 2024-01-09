@@ -2,9 +2,6 @@ var classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass =
 [
     [ "AttackingPass", "df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass.html#a9926b38bf3af64fb7e657fcaa5be29d9", null ],
     [ "ballKicked", "df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass.html#a79c96620d8b394a6682729b43e06f63f", null ],
-    [ "calculateInfoForAttackers", "df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass.html#ab09a7a9b90d0e03a0049f44713875fd8", null ],
-    [ "calculateInfoForBlocker", "df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass.html#a446f556f10ad348bbcdfaa1fd3b47af7", null ],
-    [ "calculateInfoForDefenders", "df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass.html#a686cde5d11b28bbfc45a7a227b12d278", null ],
     [ "calculateInfoForRoles", "df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass.html#ae10d1449ebe904bb0274e352727d1226", null ],
     [ "decideRoleFlags", "df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass.html#a238a4a849d60ed017555553c9f34bbf8", null ],
     [ "distributeRoles", "df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass.html#a977b3063d4d26bee4be08d71c2ab7ccc", null ],
@@ -26,7 +23,7 @@ var classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass =
     [ "lastScore", "df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass.html#a81d204e55bab023d2937c1420abd04ad", null ],
     [ "passInfo", "df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass.html#a811a29f3adf24138908bbea183e2430b", null ],
     [ "previousKeeperId", "df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass.html#a7164f241b13b1aa59b6e6b5c30a3094b", null ],
-    [ "previousPlayInfos", "df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass.html#ae0c6ce7335a11d00664df9351a446551", null ],
+    [ "previousMaxRobots", "df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass.html#a067c0013eb3e4d70eedd32a504dee10d", null ],
     [ "previousRobotNum", "df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass.html#afc2268677ee563a2f0a7efa4acff465e", null ],
     [ "roles", "df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass.html#a0329d2814e2651902bb05f23659e0084", null ],
     [ "roleStatuses", "df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass.html#a8750ea230c633dcf6a0f09e28e4f47b1", null ],

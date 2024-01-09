@@ -1,9 +1,6 @@
 var classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsAtGoal =
 [
     [ "FreeKickUsAtGoal", "dd/dc8/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsAtGoal.html#ad615d8c016ad2b14e3b7a1545513072b", null ],
-    [ "calculateInfoForAttackers", "dd/dc8/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsAtGoal.html#a935a8487b6dd26435293da43d3aa1d63", null ],
-    [ "calculateInfoForDefenders", "dd/dc8/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsAtGoal.html#a98cce28e8055be538bd08b4dfbfc88b3", null ],
-    [ "calculateInfoForMidfielders", "dd/dc8/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsAtGoal.html#a8298ef81a4a73f05fe61d374394e798b", null ],
     [ "calculateInfoForRoles", "dd/dc8/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsAtGoal.html#a121d8d942cf7cb4361d30f99cfff0106", null ],
     [ "decideRoleFlags", "dd/dc8/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsAtGoal.html#a611c35236972258e984b741512bca186", null ],
     [ "distributeRoles", "dd/dc8/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsAtGoal.html#a977b3063d4d26bee4be08d71c2ab7ccc", null ],
@@ -24,7 +21,7 @@ var classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsAtGoal =
     [ "keepPlayEvaluation", "dd/dc8/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsAtGoal.html#a17fc7a716064d918aa29c072832c2ef8", null ],
     [ "lastScore", "dd/dc8/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsAtGoal.html#a81d204e55bab023d2937c1420abd04ad", null ],
     [ "previousKeeperId", "dd/dc8/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsAtGoal.html#a7164f241b13b1aa59b6e6b5c30a3094b", null ],
-    [ "previousPlayInfos", "dd/dc8/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsAtGoal.html#ae0c6ce7335a11d00664df9351a446551", null ],
+    [ "previousMaxRobots", "dd/dc8/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsAtGoal.html#a067c0013eb3e4d70eedd32a504dee10d", null ],
     [ "previousRobotNum", "dd/dc8/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsAtGoal.html#afc2268677ee563a2f0a7efa4acff465e", null ],
     [ "roles", "dd/dc8/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsAtGoal.html#a0329d2814e2651902bb05f23659e0084", null ],
     [ "roleStatuses", "dd/dc8/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsAtGoal.html#a8750ea230c633dcf6a0f09e28e4f47b1", null ],

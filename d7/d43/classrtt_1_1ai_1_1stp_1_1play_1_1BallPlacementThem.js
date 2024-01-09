@@ -2,9 +2,7 @@ var classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementThem =
 [
     [ "BallPlacementThem", "d7/d43/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementThem.html#a3810640cae06c46862b58487c086c62b", null ],
     [ "calculateInfoForHarasser", "d7/d43/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementThem.html#a42f59c2fa0d340e0a82add351b53a61a", null ],
-    [ "calculateInfoForKeeper", "d7/d43/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementThem.html#a1f8b17c38e151ee7613cbd1f01c547c9", null ],
     [ "calculateInfoForRoles", "d7/d43/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementThem.html#a1a7728baca152be0955937a1c4ecf322", null ],
-    [ "calculateInfoForWallers", "d7/d43/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementThem.html#ac8d51a62f614a3c20be543d0075486ed", null ],
     [ "decideRoleFlags", "d7/d43/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementThem.html#ab268b99ef196efd790c42706bd220071", null ],
     [ "distributeRoles", "d7/d43/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementThem.html#a977b3063d4d26bee4be08d71c2ab7ccc", null ],
     [ "getLastScore", "d7/d43/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementThem.html#a7439c6149abbc461640c9ecdad2ba8d6", null ],
@@ -24,7 +22,7 @@ var classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementThem =
     [ "keepPlayEvaluation", "d7/d43/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementThem.html#a17fc7a716064d918aa29c072832c2ef8", null ],
     [ "lastScore", "d7/d43/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementThem.html#a81d204e55bab023d2937c1420abd04ad", null ],
     [ "previousKeeperId", "d7/d43/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementThem.html#a7164f241b13b1aa59b6e6b5c30a3094b", null ],
-    [ "previousPlayInfos", "d7/d43/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementThem.html#ae0c6ce7335a11d00664df9351a446551", null ],
+    [ "previousMaxRobots", "d7/d43/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementThem.html#a067c0013eb3e4d70eedd32a504dee10d", null ],
     [ "previousRobotNum", "d7/d43/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementThem.html#afc2268677ee563a2f0a7efa4acff465e", null ],
     [ "roles", "d7/d43/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementThem.html#a0329d2814e2651902bb05f23659e0084", null ],
     [ "roleStatuses", "d7/d43/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementThem.html#a8750ea230c633dcf6a0f09e28e4f47b1", null ],

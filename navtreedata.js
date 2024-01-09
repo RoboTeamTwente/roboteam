@@ -75,20 +75,19 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"d1/d54/classrtt_1_1ai_1_1stp_1_1PlayDecider.html",
-"d2/de6/classrtt_1_1ai_1_1gui_1_1Out.html#abd602bb368b7f3e1cff43a5be7381ea9",
-"d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot.html#a4598ba530d29d7f4f53bcec0c9845100",
-"d4/dfe/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThemPrepare.html#a96d8bb2b51915d8e495f358c10ef26f4",
-"d5/d8d/RuleSet_8h_source.html",
-"d6/db5/classrtt_1_1ai_1_1stp_1_1Tactic.html#a0dd3439d999970125264ce7fccadff49",
-"d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#aec45346e5c63f48e60fa5fa523f3570f",
-"d8/dd4/RefCommand_8h.html#ac458fd2464c54331a04fc2fd54d82843a43cad1b6fd7d5153cb60f7d88d9f0f31",
-"d9/df5/classrtt_1_1ai_1_1stp_1_1tactic_1_1AvoidBall.html#a35be8571412d041bfe1e54ac337ebea8",
-"db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#a2065e692775cf964b93006329a1b0b15",
-"dc/d16/structnativeformat_1_1param_1_1DummyEvent.html#a92c2c99faa56f75a0278925e5b62cbb1",
-"dd/d2c/classrtt_1_1ai_1_1stp_1_1PositionComputations.html",
-"de/d16/Param_8h_source.html",
-"df/de3/classrtt_1_1ai_1_1stp_1_1play_1_1DefensiveStopFormation.html#a5be299fd1dab79b7f656ca37631d6ef6"
+"d1/d64/DefendShot_8cpp.html",
+"d3/d66/OrbitKick_8cpp.html",
+"d4/d99/classrtt_1_1world_1_1robot_1_1Robot.html#a1ec9d36fd194d05b6c15cb12a48a3c2f",
+"d5/d14/namespacertt_1_1ai_1_1stp.html#ac154a8e7620c1e24b70f641afcf2c5eba5b39c8b553c821e7cddc6da64b5bd2ee",
+"d5/df1/ControlUtils_8h.html",
+"d7/d54/classrtt_1_1ai_1_1BallPossession.html#aec5f5a8033768c727ab02f8d7d6cfaac",
+"d8/d58/classrtt_1_1ai_1_1control_1_1PathPlanningAlgorithm.html#a772f693e1291979d48a593ace2bc4aea",
+"d9/dd3/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThem.html#ad7b71d56f8b8d8d62b7ec945847a2bec",
+"db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#a059d6b0747d1e01aac3683af5f91822e",
+"dc/d16/structnativeformat_1_1param_1_1DummyEvent.html#ab581ad71c0e5ed73441ba3328705235e",
+"dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#a1ab4101ca15eb7d11b34ff06c499e982",
+"de/d4c/classrtt_1_1BB_1_1BBTrajectory1D.html#a1ba9366f7f3b0598af0a3084904234e2",
+"dir_23441ac33ac62df2454b6ae1e78ba788.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

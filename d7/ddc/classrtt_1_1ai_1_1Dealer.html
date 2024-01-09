@@ -111,9 +111,6 @@ Classes</h2></td></tr>
 <tr class="memitem:d2/daa/structrtt_1_1ai_1_1Dealer_1_1FlagScore"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/ddc/classrtt_1_1ai_1_1Dealer.html#d2/daa/structrtt_1_1ai_1_1Dealer_1_1FlagScore">FlagScore</a></td></tr>
 <tr class="memdesc:d2/daa/structrtt_1_1ai_1_1Dealer_1_1FlagScore"><td class="mdescLeft">&#160;</td><td class="mdescRight">Score of a certain flag (/factor) with its weight that it was multiplied with (to be used in normalization)  <a href="../../d7/ddc/classrtt_1_1ai_1_1Dealer.html#d2/daa/structrtt_1_1ai_1_1Dealer_1_1FlagScore">More...</a><br /></td></tr>
 <tr class="separator:d2/daa/structrtt_1_1ai_1_1Dealer_1_1FlagScore"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:df/d29/structrtt_1_1ai_1_1Dealer_1_1RobotRoleScore"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/ddc/classrtt_1_1ai_1_1Dealer.html#df/d29/structrtt_1_1ai_1_1Dealer_1_1RobotRoleScore">RobotRoleScore</a></td></tr>
-<tr class="memdesc:df/d29/structrtt_1_1ai_1_1Dealer_1_1RobotRoleScore"><td class="mdescLeft">&#160;</td><td class="mdescRight">Final score a specific robot with its sum of score and sum of weights (to be used in normalization)  <a href="../../d7/ddc/classrtt_1_1ai_1_1Dealer.html#df/d29/structrtt_1_1ai_1_1Dealer_1_1RobotRoleScore">More...</a><br /></td></tr>
-<tr class="separator:df/d29/structrtt_1_1ai_1_1Dealer_1_1RobotRoleScore"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:d4/ded/structrtt_1_1ai_1_1Dealer_1_1RoleInfo"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/ddc/classrtt_1_1ai_1_1Dealer.html#d4/ded/structrtt_1_1ai_1_1Dealer_1_1RoleInfo">RoleInfo</a></td></tr>
 <tr class="memdesc:d4/ded/structrtt_1_1ai_1_1Dealer_1_1RoleInfo"><td class="mdescLeft">&#160;</td><td class="mdescRight">The priority of the role with the falgs that need to be considered.  <a href="../../d7/ddc/classrtt_1_1ai_1_1Dealer.html#d4/ded/structrtt_1_1ai_1_1Dealer_1_1RoleInfo">More...</a><br /></td></tr>
 <tr class="separator:d4/ded/structrtt_1_1ai_1_1Dealer_1_1RoleInfo"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -147,18 +144,15 @@ Private Member Functions</h2></td></tr>
 <tr class="separator:ac65212d347ada31e2c26b74f60a0a651"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a90805940266cd515d46522ac6a12884d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/ddc/classrtt_1_1ai_1_1Dealer.html#a90805940266cd515d46522ac6a12884d">FRIEND_TEST</a> (DealerTest, the_score_factor_increases_with_priority)</td></tr>
 <tr class="separator:a90805940266cd515d46522ac6a12884d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adc68070e0e6a74bdda7bc8fc5d31fcaf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d7/ddc/classrtt_1_1ai_1_1Dealer.html#d2/daa/structrtt_1_1ai_1_1Dealer_1_1FlagScore">FlagScore</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/ddc/classrtt_1_1ai_1_1Dealer.html#adc68070e0e6a74bdda7bc8fc5d31fcaf">getRobotScoreForFlag</a> (<a class="el" href="../../d3/de7/classrtt_1_1world_1_1view_1_1RobotView.html">v::RobotView</a> robot, <a class="el" href="../../dd/d25/structrtt_1_1ai_1_1Dealer_1_1DealerFlag.html">DealerFlag</a> flag)</td></tr>
-<tr class="memdesc:adc68070e0e6a74bdda7bc8fc5d31fcaf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates the score for a flag by multiplying the factor and score The factor is based on the priority and the score is based on the trueness of a property.  <a href="../../d7/ddc/classrtt_1_1ai_1_1Dealer.html#adc68070e0e6a74bdda7bc8fc5d31fcaf">More...</a><br /></td></tr>
-<tr class="separator:adc68070e0e6a74bdda7bc8fc5d31fcaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0d5123c8592eed2fef1de6b80f4922ce"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/ddc/classrtt_1_1ai_1_1Dealer.html#a0d5123c8592eed2fef1de6b80f4922ce">getRobotScoreForDistance</a> (const <a class="el" href="../../d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html">stp::StpInfo</a> &amp;stpInfo, const <a class="el" href="../../d3/de7/classrtt_1_1world_1_1view_1_1RobotView.html">v::RobotView</a> &amp;robot)</td></tr>
 <tr class="memdesc:a0d5123c8592eed2fef1de6b80f4922ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates the score for a distance between a point and a robot.  <a href="../../d7/ddc/classrtt_1_1ai_1_1Dealer.html#a0d5123c8592eed2fef1de6b80f4922ce">More...</a><br /></td></tr>
 <tr class="separator:a0d5123c8592eed2fef1de6b80f4922ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac12d70a58bd77b035de627742eca229e"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::vector&lt; double &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/ddc/classrtt_1_1ai_1_1Dealer.html#ac12d70a58bd77b035de627742eca229e">getScoreMatrix</a> (const std::vector&lt; <a class="el" href="../../d3/de7/classrtt_1_1world_1_1view_1_1RobotView.html">v::RobotView</a> &gt; &amp;allRobots, const <a class="el" href="../../d7/ddc/classrtt_1_1ai_1_1Dealer.html#a239709eb792970c058e595f1340b397d">FlagMap</a> &amp;flagMap, const std::unordered_map&lt; std::string, <a class="el" href="../../d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html">stp::StpInfo</a> &gt; &amp;stpInfoMap)</td></tr>
 <tr class="memdesc:ac12d70a58bd77b035de627742eca229e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Populates the matrix of robots and roles with scores based on flags and distance.  <a href="../../d7/ddc/classrtt_1_1ai_1_1Dealer.html#ac12d70a58bd77b035de627742eca229e">More...</a><br /></td></tr>
 <tr class="separator:ac12d70a58bd77b035de627742eca229e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a48f8a83a81876b4ce07afeaa65cb2e3b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d7/ddc/classrtt_1_1ai_1_1Dealer.html#df/d29/structrtt_1_1ai_1_1Dealer_1_1RobotRoleScore">RobotRoleScore</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/ddc/classrtt_1_1ai_1_1Dealer.html#a48f8a83a81876b4ce07afeaa65cb2e3b">getRobotScoreForRole</a> (const std::vector&lt; <a class="el" href="../../dd/d25/structrtt_1_1ai_1_1Dealer_1_1DealerFlag.html">Dealer::DealerFlag</a> &gt; &amp;dealerFlags, const <a class="el" href="../../d3/de7/classrtt_1_1world_1_1view_1_1RobotView.html">v::RobotView</a> &amp;robot)</td></tr>
-<tr class="memdesc:a48f8a83a81876b4ce07afeaa65cb2e3b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates the score for all flags for a role, for one robot (so will be called 11 times for each role)  <a href="../../d7/ddc/classrtt_1_1ai_1_1Dealer.html#a48f8a83a81876b4ce07afeaa65cb2e3b">More...</a><br /></td></tr>
-<tr class="separator:a48f8a83a81876b4ce07afeaa65cb2e3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a19728e8bc666c22d342d91521cab7650"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/ddc/classrtt_1_1ai_1_1Dealer.html#a19728e8bc666c22d342d91521cab7650">getRobotScoreForRole</a> (const std::vector&lt; <a class="el" href="../../dd/d25/structrtt_1_1ai_1_1Dealer_1_1DealerFlag.html">Dealer::DealerFlag</a> &gt; &amp;dealerFlags, const <a class="el" href="../../d3/de7/classrtt_1_1world_1_1view_1_1RobotView.html">v::RobotView</a> &amp;robot)</td></tr>
+<tr class="memdesc:a19728e8bc666c22d342d91521cab7650"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates the score for all flags for a role, for one robot (so will be called 11 times for each role)  <a href="../../d7/ddc/classrtt_1_1ai_1_1Dealer.html#a19728e8bc666c22d342d91521cab7650">More...</a><br /></td></tr>
+<tr class="separator:a19728e8bc666c22d342d91521cab7650"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a03a176cf1ad988aa9439cf26f78f99f9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/ddc/classrtt_1_1ai_1_1Dealer.html#a03a176cf1ad988aa9439cf26f78f99f9">distributeFixedIds</a> (std::vector&lt; <a class="el" href="../../d3/de7/classrtt_1_1world_1_1view_1_1RobotView.html">v::RobotView</a> &gt; &amp;robots, <a class="el" href="../../d7/ddc/classrtt_1_1ai_1_1Dealer.html#a239709eb792970c058e595f1340b397d">FlagMap</a> &amp;flagMap, std::unordered_map&lt; std::string, <a class="el" href="../../d3/de7/classrtt_1_1world_1_1view_1_1RobotView.html">v::RobotView</a> &gt; &amp;assignments)</td></tr>
 <tr class="memdesc:a03a176cf1ad988aa9439cf26f78f99f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Distributes the forced roles first, so that other rest of the function does not need to compute extra information.  <a href="../../d7/ddc/classrtt_1_1ai_1_1Dealer.html#a03a176cf1ad988aa9439cf26f78f99f9">More...</a><br /></td></tr>
 <tr class="separator:a03a176cf1ad988aa9439cf26f78f99f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -168,9 +162,9 @@ Private Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-static-methods"></a>
 Static Private Member Functions</h2></td></tr>
-<tr class="memitem:a762b4d101aad1fb00a37c33990dc6fe9"><td class="memItemLeft" align="right" valign="top">static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/ddc/classrtt_1_1ai_1_1Dealer.html#a762b4d101aad1fb00a37c33990dc6fe9">getWeightForPriority</a> (const <a class="el" href="../../d4/dcc/namespacertt_1_1ai.html#a749f4888e489115d32ef0cf1417cd617">DealerFlagPriority</a> &amp;flagPriority)</td></tr>
-<tr class="memdesc:a762b4d101aad1fb00a37c33990dc6fe9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Translates a priority into a double.  <a href="../../d7/ddc/classrtt_1_1ai_1_1Dealer.html#a762b4d101aad1fb00a37c33990dc6fe9">More...</a><br /></td></tr>
-<tr class="separator:a762b4d101aad1fb00a37c33990dc6fe9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9c3ea880f0bfdd05727d3d0a661d2ceb"><td class="memItemLeft" align="right" valign="top">static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/ddc/classrtt_1_1ai_1_1Dealer.html#a9c3ea880f0bfdd05727d3d0a661d2ceb">getWeightForPriority</a> (const <a class="el" href="../../d4/dcc/namespacertt_1_1ai.html#a749f4888e489115d32ef0cf1417cd617">DealerFlagPriority</a> &amp;flagPriority)</td></tr>
+<tr class="memdesc:a9c3ea880f0bfdd05727d3d0a661d2ceb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Translates a priority into a double.  <a href="../../d7/ddc/classrtt_1_1ai_1_1Dealer.html#a9c3ea880f0bfdd05727d3d0a661d2ceb">More...</a><br /></td></tr>
+<tr class="separator:a9c3ea880f0bfdd05727d3d0a661d2ceb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1ba03074fbebf79d492694b6d304fb0c"><td class="memItemLeft" align="right" valign="top">static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/ddc/classrtt_1_1ai_1_1Dealer.html#a1ba03074fbebf79d492694b6d304fb0c">costForDistance</a> (double distance, double fieldWidth, double fieldHeight)</td></tr>
 <tr class="memdesc:a1ba03074fbebf79d492694b6d304fb0c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates the cost of travelling a certain distance.  <a href="../../d7/ddc/classrtt_1_1ai_1_1Dealer.html#a1ba03074fbebf79d492694b6d304fb0c">More...</a><br /></td></tr>
 <tr class="separator:a1ba03074fbebf79d492694b6d304fb0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -215,38 +209,6 @@ score</td>
 weight</td>
 <td class="fielddoc">
 <p>Weight of the score </p>
-</td></tr>
-</table>
-
-</div>
-</div>
-<a name="df/d29/structrtt_1_1ai_1_1Dealer_1_1RobotRoleScore" id="df/d29/structrtt_1_1ai_1_1Dealer_1_1RobotRoleScore"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#df/d29/structrtt_1_1ai_1_1Dealer_1_1RobotRoleScore">&#9670;&nbsp;</a></span>rtt::ai::Dealer::RobotRoleScore</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">struct rtt::ai::Dealer::RobotRoleScore</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<div class="textblock"><p>Final score a specific robot with its sum of score and sum of weights (to be used in normalization) </p>
-</div><table class="fieldtable">
-<tr><th colspan="3">Class Members</th></tr>
-<tr><td class="fieldtype">
-<a id="a3bbf524d6fc7b7f8ac7516bed9219d2d"></a>double</td>
-<td class="fieldname">
-sumScore</td>
-<td class="fielddoc">
-<p>Score of the role for this robot </p>
-</td></tr>
-<tr><td class="fieldtype">
-<a id="aa5f6e5e7bca9ca5c98b3784d220b8621"></a>double</td>
-<td class="fieldname">
-sumWeights</td>
-<td class="fielddoc">
-<p>weight of the score </p>
 </td></tr>
 </table>
 
@@ -732,8 +694,8 @@ priority</td>
 
 </div>
 </div>
-<a id="adc68070e0e6a74bdda7bc8fc5d31fcaf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adc68070e0e6a74bdda7bc8fc5d31fcaf">&#9670;&nbsp;</a></span>getRobotScoreForFlag()</h2>
+<a id="a19728e8bc666c22d342d91521cab7650"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a19728e8bc666c22d342d91521cab7650">&#9670;&nbsp;</a></span>getRobotScoreForRole()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -742,53 +704,7 @@ priority</td>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="../../d7/ddc/classrtt_1_1ai_1_1Dealer.html#d2/daa/structrtt_1_1ai_1_1Dealer_1_1FlagScore">Dealer::FlagScore</a> rtt::ai::Dealer::getRobotScoreForFlag </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="../../d3/de7/classrtt_1_1world_1_1view_1_1RobotView.html">v::RobotView</a>&#160;</td>
-          <td class="paramname"><em>robot</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="../../dd/d25/structrtt_1_1ai_1_1Dealer_1_1DealerFlag.html">Dealer::DealerFlag</a>&#160;</td>
-          <td class="paramname"><em>flag</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Calculates the score for a flag by multiplying the factor and score The factor is based on the priority and the score is based on the trueness of a property. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">robot</td><td>The robot that the flag is based on </td></tr>
-    <tr><td class="paramname">flag</td><td>The flag for which the score should be calculated </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Score for a flag. First is score, second is weight (for normalization) </dd></dl>
-
-</div>
-</div>
-<a id="a48f8a83a81876b4ce07afeaa65cb2e3b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a48f8a83a81876b4ce07afeaa65cb2e3b">&#9670;&nbsp;</a></span>getRobotScoreForRole()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="../../d7/ddc/classrtt_1_1ai_1_1Dealer.html#df/d29/structrtt_1_1ai_1_1Dealer_1_1RobotRoleScore">Dealer::RobotRoleScore</a> rtt::ai::Dealer::getRobotScoreForRole </td>
+          <td class="memname">double rtt::ai::Dealer::getRobotScoreForRole </td>
           <td>(</td>
           <td class="paramtype">const std::vector&lt; <a class="el" href="../../dd/d25/structrtt_1_1ai_1_1Dealer_1_1DealerFlag.html">Dealer::DealerFlag</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>dealerFlags</em>, </td>
@@ -820,7 +736,7 @@ priority</td>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>The score of all flags combined and the weight for how much they should be taken into account </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>The score of all flags combined </dd></dl>
 
 </div>
 </div>
@@ -877,8 +793,8 @@ priority</td>
 
 </div>
 </div>
-<a id="a762b4d101aad1fb00a37c33990dc6fe9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a762b4d101aad1fb00a37c33990dc6fe9">&#9670;&nbsp;</a></span>getWeightForPriority()</h2>
+<a id="a9c3ea880f0bfdd05727d3d0a661d2ceb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9c3ea880f0bfdd05727d3d0a661d2ceb">&#9670;&nbsp;</a></span>getWeightForPriority()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -887,7 +803,7 @@ priority</td>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">double rtt::ai::Dealer::getWeightForPriority </td>
+          <td class="memname">static double rtt::ai::Dealer::getWeightForPriority </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="../../d4/dcc/namespacertt_1_1ai.html#a749f4888e489115d32ef0cf1417cd617">DealerFlagPriority</a> &amp;&#160;</td>
           <td class="paramname"><em>flagPriority</em></td><td>)</td>

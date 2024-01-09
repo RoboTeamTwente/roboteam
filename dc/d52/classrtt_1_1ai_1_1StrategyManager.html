@@ -109,9 +109,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a9827acb107fcc04991c68a72915cd738"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d52/classrtt_1_1ai_1_1StrategyManager.html#a9827acb107fcc04991c68a72915cd738">setCurrentRefGameState</a> (<a class="el" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843">RefCommand</a> command, proto::SSL_Referee_Stage stage, std::optional&lt; <a class="el" href="../../d8/d17/classrtt_1_1world_1_1view_1_1BallView.html">rtt::world::view::BallView</a> &gt; ballOpt)</td></tr>
 <tr class="memdesc:a9827acb107fcc04991c68a72915cd738"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the current game state from the referee.  <a href="../../dc/d52/classrtt_1_1ai_1_1StrategyManager.html#a9827acb107fcc04991c68a72915cd738">More...</a><br /></td></tr>
 <tr class="separator:a9827acb107fcc04991c68a72915cd738"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5de1a858070c602ab11b7feeae53f7cc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d52/classrtt_1_1ai_1_1StrategyManager.html#a5de1a858070c602ab11b7feeae53f7cc">forceCurrentRefGameState</a> (<a class="el" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843">RefCommand</a> command, std::optional&lt; <a class="el" href="../../d8/d17/classrtt_1_1world_1_1view_1_1BallView.html">rtt::world::view::BallView</a> &gt; ballOpt)</td></tr>
-<tr class="memdesc:a5de1a858070c602ab11b7feeae53f7cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Forces the AI into a given game state.  <a href="../../dc/d52/classrtt_1_1ai_1_1StrategyManager.html#a5de1a858070c602ab11b7feeae53f7cc">More...</a><br /></td></tr>
-<tr class="separator:a5de1a858070c602ab11b7feeae53f7cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a46a6b6e4869e223d4cc834823267b8b4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d52/classrtt_1_1ai_1_1StrategyManager.html#a46a6b6e4869e223d4cc834823267b8b4">forceCurrentRefGameState</a> (<a class="el" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843">RefCommand</a> command)</td></tr>
+<tr class="memdesc:a46a6b6e4869e223d4cc834823267b8b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Forces the AI into a given game state.  <a href="../../dc/d52/classrtt_1_1ai_1_1StrategyManager.html#a46a6b6e4869e223d4cc834823267b8b4">More...</a><br /></td></tr>
+<tr class="separator:a46a6b6e4869e223d4cc834823267b8b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ade3b6c98ec12f1d960d4651fa8314f19"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="../../d0/d56/structrtt_1_1ai_1_1RefGameState.html">RefGameState</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d52/classrtt_1_1ai_1_1StrategyManager.html#ade3b6c98ec12f1d960d4651fa8314f19">getRefGameStateForRefCommand</a> (<a class="el" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843">RefCommand</a> command)</td></tr>
 <tr class="memdesc:ade3b6c98ec12f1d960d4651fa8314f19"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the game state that belongs to the given command.  <a href="../../dc/d52/classrtt_1_1ai_1_1StrategyManager.html#ade3b6c98ec12f1d960d4651fa8314f19">More...</a><br /></td></tr>
 <tr class="separator:ade3b6c98ec12f1d960d4651fa8314f19"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -157,8 +157,8 @@ Private Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a5de1a858070c602ab11b7feeae53f7cc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5de1a858070c602ab11b7feeae53f7cc">&#9670;&nbsp;</a></span>forceCurrentRefGameState()</h2>
+<a id="a46a6b6e4869e223d4cc834823267b8b4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a46a6b6e4869e223d4cc834823267b8b4">&#9670;&nbsp;</a></span>forceCurrentRefGameState()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -167,18 +167,8 @@ Private Attributes</h2></td></tr>
           <td class="memname">void rtt::ai::StrategyManager::forceCurrentRefGameState </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843">RefCommand</a>&#160;</td>
-          <td class="paramname"><em>command</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramname"><em>command</em></td><td>)</td>
           <td></td>
-          <td class="paramtype">std::optional&lt; <a class="el" href="../../d8/d17/classrtt_1_1world_1_1view_1_1BallView.html">rtt::world::view::BallView</a> &gt;&#160;</td>
-          <td class="paramname"><em>ballOpt</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -187,7 +177,6 @@ Private Attributes</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">command</td><td>The game state that should be considered </td></tr>
-    <tr><td class="paramname">ballOpt</td><td>Data about the ball </td></tr>
   </table>
   </dd>
 </dl>

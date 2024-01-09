@@ -1,7 +1,11 @@
 var searchData=
 [
-  ['halt_1564',['Halt',['../d2/dc0/classrtt_1_1ai_1_1stp_1_1play_1_1Halt.html',1,'rtt::ai::stp::play::Halt'],['../d8/dd5/classrtt_1_1ai_1_1stp_1_1role_1_1Halt.html',1,'rtt::ai::stp::role::Halt'],['../d5/dc3/classrtt_1_1ai_1_1stp_1_1tactic_1_1Halt.html',1,'rtt::ai::stp::tactic::Halt']]],
-  ['haltgamestateevaluation_1565',['HaltGameStateEvaluation',['../db/d55/classrtt_1_1ai_1_1stp_1_1evaluation_1_1HaltGameStateEvaluation.html',1,'rtt::ai::stp::evaluation']]],
-  ['harasser_1566',['Harasser',['../df/d87/classrtt_1_1ai_1_1stp_1_1role_1_1Harasser.html',1,'rtt::ai::stp::role']]],
-  ['hasballinfo_1567',['hasBallInfo',['../de/d2f/namespacertt_1_1world_1_1robot.html#d1/d9d/structrtt_1_1world_1_1robot_1_1hasBallInfo',1,'rtt::world::robot']]]
+  ['gamesettings_1441',['GameSettings',['../df/db4/classrtt_1_1GameSettings.html',1,'rtt']]],
+  ['gamestate_1442',['GameState',['../d6/dc7/structrtt_1_1ai_1_1GameState.html',1,'rtt::ai']]],
+  ['gamestatemanager_1443',['GameStateManager',['../db/de9/classrtt_1_1ai_1_1GameStateManager.html',1,'rtt::ai']]],
+  ['getball_1444',['GetBall',['../d8/d8e/classrtt_1_1ai_1_1stp_1_1tactic_1_1GetBall.html',1,'rtt::ai::stp::tactic']]],
+  ['getbehindballindirection_1445',['GetBehindBallInDirection',['../d9/d65/classrtt_1_1ai_1_1stp_1_1tactic_1_1GetBehindBallInDirection.html',1,'rtt::ai::stp::tactic']]],
+  ['goalcomputations_1446',['GoalComputations',['../de/dd2/classrtt_1_1ai_1_1stp_1_1computations_1_1GoalComputations.html',1,'rtt::ai::stp::computations']]],
+  ['goalshotevaluation_1447',['GoalShotEvaluation',['../d3/df8/classrtt_1_1ai_1_1stp_1_1evaluation_1_1GoalShotEvaluation.html',1,'rtt::ai::stp::evaluation']]],
+  ['gotopos_1448',['GoToPos',['../de/d21/classrtt_1_1ai_1_1stp_1_1skill_1_1GoToPos.html',1,'rtt::ai::stp::skill']]]
 ];

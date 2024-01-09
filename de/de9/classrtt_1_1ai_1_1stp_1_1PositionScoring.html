@@ -115,9 +115,6 @@ Static Private Member Functions</h2></td></tr>
 <tr class="memitem:ac32a80c1c364ecad5f2cbc1480a90709"><td class="memItemLeft" align="right" valign="top">static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/de9/classrtt_1_1ai_1_1stp_1_1PositionScoring.html#ac32a80c1c364ecad5f2cbc1480a90709">determineGoalShotScore</a> (<a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;point, const Field &amp;field, const <a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">world::World</a> *world, <a class="el" href="../../d7/d73/namespacertt_1_1ai_1_1stp_1_1gen.html#da/d40/structrtt_1_1ai_1_1stp_1_1gen_1_1PositionScores">gen::PositionScores</a> &amp;scores)</td></tr>
 <tr class="memdesc:ac32a80c1c364ecad5f2cbc1480a90709"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine score for the Visibility of the goal at given position.  <a href="../../de/de9/classrtt_1_1ai_1_1stp_1_1PositionScoring.html#ac32a80c1c364ecad5f2cbc1480a90709">More...</a><br /></td></tr>
 <tr class="separator:ac32a80c1c364ecad5f2cbc1480a90709"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a365690d6ed3f16d0449e922835dd1d51"><td class="memItemLeft" align="right" valign="top">static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/de9/classrtt_1_1ai_1_1stp_1_1PositionScoring.html#a365690d6ed3f16d0449e922835dd1d51">determineBlockingScore</a> (<a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;point, const <a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">world::World</a> *world, <a class="el" href="../../d7/d73/namespacertt_1_1ai_1_1stp_1_1gen.html#da/d40/structrtt_1_1ai_1_1stp_1_1gen_1_1PositionScores">gen::PositionScores</a> &amp;scores)</td></tr>
-<tr class="memdesc:a365690d6ed3f16d0449e922835dd1d51"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine score for blocking potential of a position.  <a href="../../de/de9/classrtt_1_1ai_1_1stp_1_1PositionScoring.html#a365690d6ed3f16d0449e922835dd1d51">More...</a><br /></td></tr>
-<tr class="separator:a365690d6ed3f16d0449e922835dd1d51"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a91cc9045de71a96c8ab289ce63d99057"><td class="memItemLeft" align="right" valign="top">static uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/de9/classrtt_1_1ai_1_1stp_1_1PositionScoring.html#a91cc9045de71a96c8ab289ce63d99057">getScoreOfPosition</a> (const <a class="el" href="../../d7/d73/namespacertt_1_1ai_1_1stp_1_1gen.html#de/d7c/structrtt_1_1ai_1_1stp_1_1gen_1_1ScoreProfile">gen::ScoreProfile</a> &amp;profile, <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> position, <a class="el" href="../../d7/d73/namespacertt_1_1ai_1_1stp_1_1gen.html#da/d40/structrtt_1_1ai_1_1stp_1_1gen_1_1PositionScores">gen::PositionScores</a> &amp;scores, const Field &amp;field, const <a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">world::World</a> *world)</td></tr>
 <tr class="memdesc:a91cc9045de71a96c8ab289ce63d99057"><td class="mdescLeft">&#160;</td><td class="mdescRight">Score a position using the given weights weights for a profile. Will check if the position already has a pre-calculated score (from this tick) then throws the weight over it and sums the scores, resulting in a position scored a particular set of weights.  <a href="../../de/de9/classrtt_1_1ai_1_1stp_1_1PositionScoring.html#a91cc9045de71a96c8ab289ce63d99057">More...</a><br /></td></tr>
 <tr class="separator:a91cc9045de71a96c8ab289ce63d99057"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -125,59 +122,6 @@ Static Private Member Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class that manages the scoring for a position. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a365690d6ed3f16d0449e922835dd1d51"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a365690d6ed3f16d0449e922835dd1d51">&#9670;&nbsp;</a></span>determineBlockingScore()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">double rtt::ai::stp::PositionScoring::determineBlockingScore </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;&#160;</td>
-          <td class="paramname"><em>point</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">world::World</a> *&#160;</td>
-          <td class="paramname"><em>world</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="../../d7/d73/namespacertt_1_1ai_1_1stp_1_1gen.html#da/d40/structrtt_1_1ai_1_1stp_1_1gen_1_1PositionScores">gen::PositionScores</a> &amp;&#160;</td>
-          <td class="paramname"><em>scores</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Determine score for blocking potential of a position. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">point</td><td>Position to calculate from </td></tr>
-    <tr><td class="paramname">world</td><td>The current world </td></tr>
-    <tr><td class="paramname">scores</td><td>ref to struct linked to that pos </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Blocking score value </dd></dl>
-
-</div>
-</div>
 <a id="ac32a80c1c364ecad5f2cbc1480a90709"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac32a80c1c364ecad5f2cbc1480a90709">&#9670;&nbsp;</a></span>determineGoalShotScore()</h2>
 

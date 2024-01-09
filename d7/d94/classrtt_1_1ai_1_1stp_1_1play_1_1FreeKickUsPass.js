@@ -2,9 +2,6 @@ var classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass =
 [
     [ "FreeKickUsPass", "d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#a6377fe9ad829b2fdc3981fc06392c9d0", null ],
     [ "ballKicked", "d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#a500519890f025d508b9fa129f1b737ac", null ],
-    [ "calculateInfoForAttackers", "d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#ac746bfb27b36bfd6e05fccd0ff040027", null ],
-    [ "calculateInfoForDefenders", "d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#ab7f52ea6776a54c170f4abd8bcf1be99", null ],
-    [ "calculateInfoForMidfielders", "d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#a2d89ad0a7210fc1abc253b66182ba345", null ],
     [ "calculateInfoForRoles", "d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#aa31000f09d20031b1b2f24d509527208", null ],
     [ "decideRoleFlags", "d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#aec45346e5c63f48e60fa5fa523f3570f", null ],
     [ "distributeRoles", "d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#a977b3063d4d26bee4be08d71c2ab7ccc", null ],
@@ -26,7 +23,7 @@ var classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass =
     [ "lastScore", "d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#a81d204e55bab023d2937c1420abd04ad", null ],
     [ "passInfo", "d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#a447b46dba282ae0e1452f52744b382e1", null ],
     [ "previousKeeperId", "d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#a7164f241b13b1aa59b6e6b5c30a3094b", null ],
-    [ "previousPlayInfos", "d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#ae0c6ce7335a11d00664df9351a446551", null ],
+    [ "previousMaxRobots", "d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#a067c0013eb3e4d70eedd32a504dee10d", null ],
     [ "previousRobotNum", "d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#afc2268677ee563a2f0a7efa4acff465e", null ],
     [ "roles", "d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#a0329d2814e2651902bb05f23659e0084", null ],
     [ "roleStatuses", "d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#a8750ea230c633dcf6a0f09e28e4f47b1", null ],

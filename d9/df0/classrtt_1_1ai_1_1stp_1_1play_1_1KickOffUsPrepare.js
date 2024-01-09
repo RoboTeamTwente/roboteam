@@ -21,7 +21,7 @@ var classrtt_1_1ai_1_1stp_1_1play_1_1KickOffUsPrepare =
     [ "keepPlayEvaluation", "d9/df0/classrtt_1_1ai_1_1stp_1_1play_1_1KickOffUsPrepare.html#a17fc7a716064d918aa29c072832c2ef8", null ],
     [ "lastScore", "d9/df0/classrtt_1_1ai_1_1stp_1_1play_1_1KickOffUsPrepare.html#a81d204e55bab023d2937c1420abd04ad", null ],
     [ "previousKeeperId", "d9/df0/classrtt_1_1ai_1_1stp_1_1play_1_1KickOffUsPrepare.html#a7164f241b13b1aa59b6e6b5c30a3094b", null ],
-    [ "previousPlayInfos", "d9/df0/classrtt_1_1ai_1_1stp_1_1play_1_1KickOffUsPrepare.html#ae0c6ce7335a11d00664df9351a446551", null ],
+    [ "previousMaxRobots", "d9/df0/classrtt_1_1ai_1_1stp_1_1play_1_1KickOffUsPrepare.html#a067c0013eb3e4d70eedd32a504dee10d", null ],
     [ "previousRobotNum", "d9/df0/classrtt_1_1ai_1_1stp_1_1play_1_1KickOffUsPrepare.html#afc2268677ee563a2f0a7efa4acff465e", null ],
     [ "roles", "d9/df0/classrtt_1_1ai_1_1stp_1_1play_1_1KickOffUsPrepare.html#a0329d2814e2651902bb05f23659e0084", null ],
     [ "roleStatuses", "d9/df0/classrtt_1_1ai_1_1stp_1_1play_1_1KickOffUsPrepare.html#a8750ea230c633dcf6a0f09e28e4f47b1", null ],

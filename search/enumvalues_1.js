@@ -1,13 +1,9 @@
 var searchData=
 [
-  ['can_5fdetect_5fball_2965',['CAN_DETECT_BALL',['../d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67a55ce2fe53a7b2039f6acfcac2eed55e9',1,'rtt::ai']]],
-  ['can_5fkick_5fball_2966',['CAN_KICK_BALL',['../d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67af7d59f4e29c18dc164f77922c6c0145b',1,'rtt::ai']]],
-  ['chip_2967',['CHIP',['../d5/d14/namespacertt_1_1ai_1_1stp.html#a8a168b78725926f5901d2f6370784113aed8e8497a6a4c2315790d3d56b7c5065',1,'rtt::ai::stp']]],
-  ['close_2968',['CLOSE',['../d5/d14/namespacertt_1_1ai_1_1stp.html#ab40410d00349ef6102ce3d0fd36a58d3a7286293c9125ac7d7bace94c190bc16d',1,'rtt::ai::stp']]],
-  ['close_5fto_5fball_2969',['CLOSE_TO_BALL',['../d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67a3b716737d3658eb261862decc379cf29',1,'rtt::ai']]],
-  ['close_5fto_5four_5fgoal_2970',['CLOSE_TO_OUR_GOAL',['../d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67abc15041bb7ad24c5d5ce6c55a9d50f8e',1,'rtt::ai']]],
-  ['close_5fto_5fpositioning_2971',['CLOSE_TO_POSITIONING',['../d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67a3b371a4c0494163839361432478cc11b',1,'rtt::ai']]],
-  ['close_5fto_5ftheir_5fgoal_2972',['CLOSE_TO_THEIR_GOAL',['../d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67a9d6d6e074c36a06bc5e2b1aa9c2776b8',1,'rtt::ai']]],
-  ['closest_5fto_5fball_2973',['CLOSEST_TO_BALL',['../d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67ad703e95162a94e739a09ef2040db5d9d',1,'rtt::ai']]],
-  ['contendedball_2974',['CONTENDEDBALL',['../d7/d54/classrtt_1_1ai_1_1BallPossession.html#aac3b04b1d08a6333049eba6c02d5ebc9aed01a837adcdd64c9d0104980153d2ab',1,'rtt::ai::BallPossession']]]
+  ['can_5fdetect_5fball_2769',['CAN_DETECT_BALL',['../d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67a55ce2fe53a7b2039f6acfcac2eed55e9',1,'rtt::ai']]],
+  ['can_5fkick_5fball_2770',['CAN_KICK_BALL',['../d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67af7d59f4e29c18dc164f77922c6c0145b',1,'rtt::ai']]],
+  ['card_2771',['CARD',['../d4/dcc/namespacertt_1_1ai.html#a749f4888e489115d32ef0cf1417cd617a5a81822ea736ae6bf53dc995d87203df',1,'rtt::ai']]],
+  ['chip_2772',['CHIP',['../d5/d14/namespacertt_1_1ai_1_1stp.html#a8a168b78725926f5901d2f6370784113aed8e8497a6a4c2315790d3d56b7c5065',1,'rtt::ai::stp']]],
+  ['close_2773',['CLOSE',['../d5/d14/namespacertt_1_1ai_1_1stp.html#ab40410d00349ef6102ce3d0fd36a58d3a7286293c9125ac7d7bace94c190bc16d',1,'rtt::ai::stp']]],
+  ['contendedball_2774',['CONTENDEDBALL',['../d7/d54/classrtt_1_1ai_1_1BallPossession.html#aac3b04b1d08a6333049eba6c02d5ebc9aed01a837adcdd64c9d0104980153d2ab',1,'rtt::ai::BallPossession']]]
 ];

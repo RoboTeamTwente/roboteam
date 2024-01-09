@@ -24,25 +24,13 @@ var PlayEvaluator_8h =
       [ "PenaltyUsGameState", "da/dc6/PlayEvaluator_8h.html#a9b1a79ba58c1300d9f6f0e073f9d7db2a56c8f055459577051738d1f33b55cbcc", null ],
       [ "PenaltyUsPrepareGameState", "da/dc6/PlayEvaluator_8h.html#a9b1a79ba58c1300d9f6f0e073f9d7db2a76a5a44992d1a994ce5a918098042b91", null ],
       [ "StopGameState", "da/dc6/PlayEvaluator_8h.html#a9b1a79ba58c1300d9f6f0e073f9d7db2a34b187ec4398cc49370ff40f4bd5931e", null ],
-      [ "PreHalfGameState", "da/dc6/PlayEvaluator_8h.html#a9b1a79ba58c1300d9f6f0e073f9d7db2a698caeb6b4058c2a72299a4714ea4f85", null ],
-      [ "BallCloseToThem", "da/dc6/PlayEvaluator_8h.html#a9b1a79ba58c1300d9f6f0e073f9d7db2acd8caf0460e547b781ced6f8f4e63b0e", null ],
-      [ "BallCloseToUs", "da/dc6/PlayEvaluator_8h.html#a9b1a79ba58c1300d9f6f0e073f9d7db2ad5306fa7938c37c34288cf7b62a2a2e3", null ],
-      [ "BallClosestToUs", "da/dc6/PlayEvaluator_8h.html#a9b1a79ba58c1300d9f6f0e073f9d7db2ae986a8686e48610eac00ec3ce6c64eb3", null ],
-      [ "BallGotShot", "da/dc6/PlayEvaluator_8h.html#a9b1a79ba58c1300d9f6f0e073f9d7db2afca55423bb8eb46fe0fee5ca4372c3ae", null ],
-      [ "BallIsFree", "da/dc6/PlayEvaluator_8h.html#a9b1a79ba58c1300d9f6f0e073f9d7db2a6a8c42460cab7e6f947a327aa00dbec3", null ],
-      [ "BallMovesSlow", "da/dc6/PlayEvaluator_8h.html#a9b1a79ba58c1300d9f6f0e073f9d7db2a92a649dbcfbf97f49c3700ef0c3deb44", null ],
       [ "BallOnOurSide", "da/dc6/PlayEvaluator_8h.html#a9b1a79ba58c1300d9f6f0e073f9d7db2a0da9db34d6df52ddc7b31add5894a621", null ],
       [ "BallOnTheirSide", "da/dc6/PlayEvaluator_8h.html#a9b1a79ba58c1300d9f6f0e073f9d7db2a52e638a2d35b495523933ae29854444b", null ],
       [ "BallInOurDefenseAreaAndStill", "da/dc6/PlayEvaluator_8h.html#a9b1a79ba58c1300d9f6f0e073f9d7db2a310169b790806221862dfaac167191b8", null ],
       [ "BallNotInOurDefenseAreaAndStill", "da/dc6/PlayEvaluator_8h.html#a9b1a79ba58c1300d9f6f0e073f9d7db2a5fb2385fbd0166e0c9d58c7921526f34", null ],
-      [ "DistanceFromBall", "da/dc6/PlayEvaluator_8h.html#a9b1a79ba58c1300d9f6f0e073f9d7db2ad51ff90a12d29afbe00c85d2af387945", null ],
-      [ "FreedomOfRobots", "da/dc6/PlayEvaluator_8h.html#a9b1a79ba58c1300d9f6f0e073f9d7db2abe8f556061f5ee5c3439ebd5e9707216", null ],
-      [ "GoalVisionFromBall", "da/dc6/PlayEvaluator_8h.html#a9b1a79ba58c1300d9f6f0e073f9d7db2a6fba6016b854c0c8ab1899f15bf9a6de", null ],
-      [ "GoalVision", "da/dc6/PlayEvaluator_8h.html#a9b1a79ba58c1300d9f6f0e073f9d7db2a7f70d3b478205253812373ab9fdc85d3", null ],
-      [ "NoGoalVisionFromBall", "da/dc6/PlayEvaluator_8h.html#a9b1a79ba58c1300d9f6f0e073f9d7db2a1b04ba41304eb2e7c212d993d6332e05", null ],
       [ "WeHaveBall", "da/dc6/PlayEvaluator_8h.html#a9b1a79ba58c1300d9f6f0e073f9d7db2af2ba8afcb2e9eabf67f47533279d16b7", null ],
+      [ "WeDoNotHaveBall", "da/dc6/PlayEvaluator_8h.html#a9b1a79ba58c1300d9f6f0e073f9d7db2ae54d5994e23cda247812baa3271866d7", null ],
       [ "TheyHaveBall", "da/dc6/PlayEvaluator_8h.html#a9b1a79ba58c1300d9f6f0e073f9d7db2ab814ca078159c72443842e27c00f6430", null ],
-      [ "TheyDoNotHaveBall", "da/dc6/PlayEvaluator_8h.html#a9b1a79ba58c1300d9f6f0e073f9d7db2a254d9501b13270c01374c0a3161c4580", null ],
-      [ "WeHaveMajority", "da/dc6/PlayEvaluator_8h.html#a9b1a79ba58c1300d9f6f0e073f9d7db2afd33f2e0c22effb59e2feba180201955", null ]
+      [ "TheyDoNotHaveBall", "da/dc6/PlayEvaluator_8h.html#a9b1a79ba58c1300d9f6f0e073f9d7db2a254d9501b13270c01374c0a3161c4580", null ]
     ] ]
 ];

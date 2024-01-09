@@ -21,7 +21,7 @@ var classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThemPrepare =
     [ "keepPlayEvaluation", "d4/dfe/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThemPrepare.html#a17fc7a716064d918aa29c072832c2ef8", null ],
     [ "lastScore", "d4/dfe/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThemPrepare.html#a81d204e55bab023d2937c1420abd04ad", null ],
     [ "previousKeeperId", "d4/dfe/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThemPrepare.html#a7164f241b13b1aa59b6e6b5c30a3094b", null ],
-    [ "previousPlayInfos", "d4/dfe/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThemPrepare.html#ae0c6ce7335a11d00664df9351a446551", null ],
+    [ "previousMaxRobots", "d4/dfe/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThemPrepare.html#a067c0013eb3e4d70eedd32a504dee10d", null ],
     [ "previousRobotNum", "d4/dfe/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThemPrepare.html#afc2268677ee563a2f0a7efa4acff465e", null ],
     [ "roles", "d4/dfe/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThemPrepare.html#a0329d2814e2651902bb05f23659e0084", null ],
     [ "roleStatuses", "d4/dfe/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThemPrepare.html#a8750ea230c633dcf6a0f09e28e4f47b1", null ],

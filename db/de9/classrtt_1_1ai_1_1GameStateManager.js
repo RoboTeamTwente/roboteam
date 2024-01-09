@@ -1,6 +1,7 @@
 var classrtt_1_1ai_1_1GameStateManager =
 [
-    [ "forceNewGameState", "db/de9/classrtt_1_1ai_1_1GameStateManager.html#aa37f1dbea08a127c3965d2f39d3ac475", null ],
+    [ "forceNewGameState", "db/de9/classrtt_1_1ai_1_1GameStateManager.html#a824d48d8453f4765821d656810eb0115", null ],
+    [ "getCommandFromRefMsg", "db/de9/classrtt_1_1ai_1_1GameStateManager.html#a785aedd40d5503dfaf85b38ac6f246c3", null ],
     [ "getCurrentGameState", "db/de9/classrtt_1_1ai_1_1GameStateManager.html#adc403506e6cf24a6c8c60b0545099f6a", null ],
     [ "getRefereeData", "db/de9/classrtt_1_1ai_1_1GameStateManager.html#a5748de7bec33e3e323632e2b46f483d5", null ],
     [ "getRefereeDesignatedPosition", "db/de9/classrtt_1_1ai_1_1GameStateManager.html#a3e4c49fd7aff3554bc992b407bd5912f", null ],

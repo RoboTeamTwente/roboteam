@@ -118,9 +118,6 @@ Classes</h2></td></tr>
 <tr class="memitem:d2/daa/structrtt_1_1ai_1_1Dealer_1_1FlagScore"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/ddc/classrtt_1_1ai_1_1Dealer.html#d2/daa/structrtt_1_1ai_1_1Dealer_1_1FlagScore">rtt::ai::Dealer::FlagScore</a></td></tr>
 <tr class="memdesc:d2/daa/structrtt_1_1ai_1_1Dealer_1_1FlagScore"><td class="mdescLeft">&#160;</td><td class="mdescRight">Score of a certain flag (/factor) with its weight that it was multiplied with (to be used in normalization)  <a href="../../d7/ddc/classrtt_1_1ai_1_1Dealer.html#d2/daa/structrtt_1_1ai_1_1Dealer_1_1FlagScore">More...</a><br /></td></tr>
 <tr class="separator:d2/daa/structrtt_1_1ai_1_1Dealer_1_1FlagScore"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:df/d29/structrtt_1_1ai_1_1Dealer_1_1RobotRoleScore"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/ddc/classrtt_1_1ai_1_1Dealer.html#df/d29/structrtt_1_1ai_1_1Dealer_1_1RobotRoleScore">rtt::ai::Dealer::RobotRoleScore</a></td></tr>
-<tr class="memdesc:df/d29/structrtt_1_1ai_1_1Dealer_1_1RobotRoleScore"><td class="mdescLeft">&#160;</td><td class="mdescRight">Final score a specific robot with its sum of score and sum of weights (to be used in normalization)  <a href="../../d7/ddc/classrtt_1_1ai_1_1Dealer.html#df/d29/structrtt_1_1ai_1_1Dealer_1_1RobotRoleScore">More...</a><br /></td></tr>
-<tr class="separator:df/d29/structrtt_1_1ai_1_1Dealer_1_1RobotRoleScore"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
 Namespaces</h2></td></tr>
@@ -132,31 +129,25 @@ Namespaces</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
 <tr class="memitem:af94a343fb77dcbf6d2e2d24393ab4c67"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67">rtt::ai::DealerFlagTitle</a> { <br />
-&#160;&#160;<a class="el" href="../../d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67a9d6d6e074c36a06bc5e2b1aa9c2776b8">rtt::ai::CLOSE_TO_THEIR_GOAL</a>
-, <a class="el" href="../../d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67abc15041bb7ad24c5d5ce6c55a9d50f8e">rtt::ai::CLOSE_TO_OUR_GOAL</a>
-, <a class="el" href="../../d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67a3b716737d3658eb261862decc379cf29">rtt::ai::CLOSE_TO_BALL</a>
-, <a class="el" href="../../d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67a3b371a4c0494163839361432478cc11b">rtt::ai::CLOSE_TO_POSITIONING</a>
-, <br />
 &#160;&#160;<a class="el" href="../../d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67aac0e2e4aa6cbbee20fe1379efba0836c">rtt::ai::WITH_WORKING_BALL_SENSOR</a>
 , <a class="el" href="../../d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67a2b4671aba77bf173ab74c6d65817a114">rtt::ai::WITH_WORKING_DRIBBLER</a>
-, <a class="el" href="../../d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67a133dc98cd132e86d4117b396c8b4eee9">rtt::ai::NOT_IMPORTANT</a>
 , <a class="el" href="../../d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67abfc3039b758d22d1b5f75a7451d6d44b">rtt::ai::READY_TO_INTERCEPT_GOAL_SHOT</a>
+, <a class="el" href="../../d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67a0ed045ed8cb14e824a1e372dd5398682">rtt::ai::KEEPER</a>
 , <br />
-&#160;&#160;<a class="el" href="../../d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67a0ed045ed8cb14e824a1e372dd5398682">rtt::ai::KEEPER</a>
-, <a class="el" href="../../d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67ad703e95162a94e739a09ef2040db5d9d">rtt::ai::CLOSEST_TO_BALL</a>
-, <a class="el" href="../../d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67a55ce2fe53a7b2039f6acfcac2eed55e9">rtt::ai::CAN_DETECT_BALL</a>
+&#160;&#160;<a class="el" href="../../d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67a55ce2fe53a7b2039f6acfcac2eed55e9">rtt::ai::CAN_DETECT_BALL</a>
 , <a class="el" href="../../d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67af7d59f4e29c18dc164f77922c6c0145b">rtt::ai::CAN_KICK_BALL</a>
 <br />
  }</td></tr>
 <tr class="memdesc:af94a343fb77dcbf6d2e2d24393ab4c67"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enumerator that defines the name of the dealerFlags.  <a href="../../d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67">More...</a><br /></td></tr>
 <tr class="separator:af94a343fb77dcbf6d2e2d24393ab4c67"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a749f4888e489115d32ef0cf1417cd617"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/dcc/namespacertt_1_1ai.html#a749f4888e489115d32ef0cf1417cd617">rtt::ai::DealerFlagPriority</a> { <br />
-&#160;&#160;<a class="el" href="../../d4/dcc/namespacertt_1_1ai.html#a749f4888e489115d32ef0cf1417cd617a22fdb5e22079d83faa87d80ea2165e0e">rtt::ai::LOW_PRIORITY</a>
+&#160;&#160;<a class="el" href="../../d4/dcc/namespacertt_1_1ai.html#a749f4888e489115d32ef0cf1417cd617a5a81822ea736ae6bf53dc995d87203df">rtt::ai::CARD</a>
+, <a class="el" href="../../d4/dcc/namespacertt_1_1ai.html#a749f4888e489115d32ef0cf1417cd617a22fdb5e22079d83faa87d80ea2165e0e">rtt::ai::LOW_PRIORITY</a>
 , <a class="el" href="../../d4/dcc/namespacertt_1_1ai.html#a749f4888e489115d32ef0cf1417cd617a307477ed458f1be90c98bc864d361f88">rtt::ai::MEDIUM_PRIORITY</a>
 , <a class="el" href="../../d4/dcc/namespacertt_1_1ai.html#a749f4888e489115d32ef0cf1417cd617a3871b7c0f6c5b83aeb99d88cfe8a0984">rtt::ai::HIGH_PRIORITY</a>
-, <a class="el" href="../../d4/dcc/namespacertt_1_1ai.html#a749f4888e489115d32ef0cf1417cd617aebdf9721be38d1fc1cd6db8c737d1be0">rtt::ai::REQUIRED</a>
 , <br />
-&#160;&#160;<a class="el" href="../../d4/dcc/namespacertt_1_1ai.html#a749f4888e489115d32ef0cf1417cd617a0ed045ed8cb14e824a1e372dd5398682">rtt::ai::KEEPER</a>
+&#160;&#160;<a class="el" href="../../d4/dcc/namespacertt_1_1ai.html#a749f4888e489115d32ef0cf1417cd617aebdf9721be38d1fc1cd6db8c737d1be0">rtt::ai::REQUIRED</a>
+, <a class="el" href="../../d4/dcc/namespacertt_1_1ai.html#a749f4888e489115d32ef0cf1417cd617a0ed045ed8cb14e824a1e372dd5398682">rtt::ai::KEEPER</a>
 <br />
  }</td></tr>
 <tr class="memdesc:a749f4888e489115d32ef0cf1417cd617"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enumerator that defines the priority of the dealerFlags.  <a href="../../d4/dcc/namespacertt_1_1ai.html#a749f4888e489115d32ef0cf1417cd617">More...</a><br /></td></tr>
@@ -236,38 +227,6 @@ score</td>
 weight</td>
 <td class="fielddoc">
 <p>Weight of the score </p>
-</td></tr>
-</table>
-
-</div>
-</div>
-<a name="df/d29/structrtt_1_1ai_1_1Dealer_1_1RobotRoleScore" id="df/d29/structrtt_1_1ai_1_1Dealer_1_1RobotRoleScore"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#df/d29/structrtt_1_1ai_1_1Dealer_1_1RobotRoleScore">&#9670;&nbsp;</a></span>rtt::ai::Dealer::RobotRoleScore</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">struct rtt::ai::Dealer::RobotRoleScore</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<div class="textblock"><p>Final score a specific robot with its sum of score and sum of weights (to be used in normalization) </p>
-</div><table class="fieldtable">
-<tr><th colspan="3">Class Members</th></tr>
-<tr><td class="fieldtype">
-<a id="a3bbf524d6fc7b7f8ac7516bed9219d2d"></a>double</td>
-<td class="fieldname">
-sumScore</td>
-<td class="fielddoc">
-<p>Score of the role for this robot </p>
-</td></tr>
-<tr><td class="fieldtype">
-<a id="aa5f6e5e7bca9ca5c98b3784d220b8621"></a>double</td>
-<td class="fieldname">
-sumWeights</td>
-<td class="fielddoc">
-<p>weight of the score </p>
 </td></tr>
 </table>
 

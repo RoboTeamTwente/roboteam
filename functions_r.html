@@ -90,6 +90,9 @@ $(document).ready(function(){initNavTree('functions_r.html',''); initResizable()
 <li>reassignRobots()
 : <a class="el" href="d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#aa20291b5cee34414dfb81aa0fd33713f">rtt::ai::stp::Play</a>
 </li>
+<li>recalculateInfoForNonPassers()
+: <a class="el" href="dd/d2c/classrtt_1_1ai_1_1stp_1_1PositionComputations.html#a2f045f64215dfe3e0b0b93542ca59131">rtt::ai::stp::PositionComputations</a>
+</li>
 <li>Receive()
 : <a class="el" href="d3/d66/classrtt_1_1ai_1_1stp_1_1tactic_1_1Receive.html#a5da4cb4324bd3bbd9587fdeb3f7e515a">rtt::ai::stp::tactic::Receive</a>
 </li>
@@ -135,7 +138,7 @@ $(document).ready(function(){initNavTree('functions_r.html',''); initResizable()
 , <a class="el" href="d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#a27a4f9995826e2126aae6935b77e9213">rtt::ai::stp::StpInfo</a>
 </li>
 <li>Robot()
-: <a class="el" href="d4/d99/classrtt_1_1world_1_1robot_1_1Robot.html#a1406b017329e1f25c9c44c0bb7f47468">rtt::world::robot::Robot</a>
+: <a class="el" href="d4/d99/classrtt_1_1world_1_1robot_1_1Robot.html#abd8e0c88d11f5953c7a22eaf10dbd882">rtt::world::robot::Robot</a>
 </li>
 <li>ROBOT_COUNT()
 : <a class="el" href="d9/dc5/classrtt_1_1ai_1_1Constants.html#adc7ae2389351fedb59863e4d75397a9c">rtt::ai::Constants</a>
@@ -176,20 +179,11 @@ $(document).ready(function(){initNavTree('functions_r.html',''); initResizable()
 <li>robotCommandsYellowPublisher
 : <a class="el" href="d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#af5af3d63f79ed376e7ed842bff1efe6e">rtt::ai::io::IOManager</a>
 </li>
-<li>RobotDefender()
-: <a class="el" href="d9/d2c/classrtt_1_1ai_1_1stp_1_1role_1_1RobotDefender.html#af1b0700403b9dc8eb62bdfffd585a7c4">rtt::ai::stp::role::RobotDefender</a>
-</li>
 <li>robotHasBall
 : <a class="el" href="d4/d99/classrtt_1_1world_1_1robot_1_1Robot.html#a8aeb56889e7c35ddf29ece162d7bd332">rtt::world::robot::Robot</a>
 </li>
 <li>robotHubMode
 : <a class="el" href="df/db4/classrtt_1_1GameSettings.html#a2c25f1e074ca66014f8d0bc775da5c97">rtt::GameSettings</a>
-</li>
-<li>robotID
-: <a class="el" href="d7/d73/namespacertt_1_1ai_1_1stp_1_1gen.html#ab34b69de06a18ca9370cdb6cda5ad729">rtt::ai::stp::gen::StoreInfo</a>
-</li>
-<li>robotPosition
-: <a class="el" href="d7/d73/namespacertt_1_1ai_1_1stp_1_1gen.html#adb1e485aae7d2e818e87c74ae10cf497">rtt::ai::stp::gen::StoreInfo</a>
 </li>
 <li>robotPositions
 : <a class="el" href="df/dcf/classrtt_1_1ai_1_1control_1_1CollisionDetector.html#a9868c9172109e6ade667231037f882b9">rtt::ai::control::CollisionDetector</a>
@@ -214,12 +208,6 @@ $(document).ready(function(){initNavTree('functions_r.html',''); initResizable()
 </li>
 <li>ROBOTS_WITH_WORKING_DRIBBLER_ENCODER()
 : <a class="el" href="d9/dc5/classrtt_1_1ai_1_1Constants.html#a87acedd7415ff6d80ab6b905671f81cf">rtt::ai::Constants</a>
-</li>
-<li>robotsCanEnterDefenseArea()
-: <a class="el" href="dd/d26/structrtt_1_1ai_1_1RuleSet.html#afe5f1802a777b5327ab7d2eb6ab91f8f">rtt::ai::RuleSet</a>
-</li>
-<li>robotsCanGoOutOfField
-: <a class="el" href="dd/d26/structrtt_1_1ai_1_1RuleSet.html#a9b00765bcf36489dc9c3be65b6117c30">rtt::ai::RuleSet</a>
 </li>
 <li>robotsInitialized
 : <a class="el" href="da/de3/classrtt_1_1STPManager.html#a8795d7364c8c7ec513ea11eaaed859a2">rtt::STPManager</a>
@@ -261,20 +249,11 @@ $(document).ready(function(){initNavTree('functions_r.html',''); initResizable()
 <li>ruleset
 : <a class="el" href="de/d06/classrtt_1_1BB_1_1WorldObjects.html#ae98a8a550db667aebb5fd030c429661d">rtt::BB::WorldObjects</a>
 </li>
-<li>RULESET_BALLPLACEMENT_THEM()
-: <a class="el" href="d9/dc5/classrtt_1_1ai_1_1Constants.html#af2c911e8b4bfca408cb364db7acf5281">rtt::ai::Constants</a>
-</li>
-<li>RULESET_BALLPLACEMENT_US()
-: <a class="el" href="d9/dc5/classrtt_1_1ai_1_1Constants.html#a9bfb96e43b7ff41b5bd05f4547ed5ff4">rtt::ai::Constants</a>
-</li>
 <li>RULESET_DEFAULT()
 : <a class="el" href="d9/dc5/classrtt_1_1ai_1_1Constants.html#ac6852a1028d7a846f9a60a2488db70c7">rtt::ai::Constants</a>
 </li>
 <li>RULESET_HALT()
 : <a class="el" href="d9/dc5/classrtt_1_1ai_1_1Constants.html#ab478e35eb9902278872fbc601b2ba935">rtt::ai::Constants</a>
-</li>
-<li>RULESET_KICKOFF()
-: <a class="el" href="d9/dc5/classrtt_1_1ai_1_1Constants.html#a2cb3e0e892aecc3cac7c0d6f6260dd94">rtt::ai::Constants</a>
 </li>
 <li>RULESET_STOP()
 : <a class="el" href="d9/dc5/classrtt_1_1ai_1_1Constants.html#aa76e5f1ec7a37f711249285abfc1c089">rtt::ai::Constants</a>

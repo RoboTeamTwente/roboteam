@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['interfacegateway_1568',['InterfaceGateway',['../d5/db9/classrtt_1_1ai_1_1gui_1_1net_1_1InterfaceGateway.html',1,'rtt::ai::gui::net']]],
-  ['interfacepublisher_1569',['InterfacePublisher',['../d1/d71/classrtt_1_1ai_1_1gui_1_1net_1_1InterfacePublisher.html',1,'rtt::ai::gui::net']]],
-  ['interfacesubscriber_1570',['InterfaceSubscriber',['../d0/d5c/classrtt_1_1ai_1_1gui_1_1net_1_1InterfaceSubscriber.html',1,'rtt::ai::gui::net']]],
-  ['iomanager_1571',['IOManager',['../d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html',1,'rtt::ai::io']]]
+  ['halt_1449',['Halt',['../d2/dc0/classrtt_1_1ai_1_1stp_1_1play_1_1Halt.html',1,'rtt::ai::stp::play::Halt'],['../d8/dd5/classrtt_1_1ai_1_1stp_1_1role_1_1Halt.html',1,'rtt::ai::stp::role::Halt'],['../d5/dc3/classrtt_1_1ai_1_1stp_1_1tactic_1_1Halt.html',1,'rtt::ai::stp::tactic::Halt']]],
+  ['haltgamestateevaluation_1450',['HaltGameStateEvaluation',['../db/d55/classrtt_1_1ai_1_1stp_1_1evaluation_1_1HaltGameStateEvaluation.html',1,'rtt::ai::stp::evaluation']]],
+  ['harasser_1451',['Harasser',['../df/d87/classrtt_1_1ai_1_1stp_1_1role_1_1Harasser.html',1,'rtt::ai::stp::role']]],
+  ['hasballinfo_1452',['hasBallInfo',['../de/d2f/namespacertt_1_1world_1_1robot.html#d1/d9d/structrtt_1_1world_1_1robot_1_1hasBallInfo',1,'rtt::world::robot']]]
 ];

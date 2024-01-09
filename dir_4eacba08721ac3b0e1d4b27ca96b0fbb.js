@@ -12,9 +12,6 @@ var dir_4eacba08721ac3b0e1d4b27ca96b0fbb =
     [ "DefensiveStopFormation.h", "d2/d2a/DefensiveStopFormation_8h.html", [
       [ "DefensiveStopFormation", "df/de3/classrtt_1_1ai_1_1stp_1_1play_1_1DefensiveStopFormation.html", "df/de3/classrtt_1_1ai_1_1stp_1_1play_1_1DefensiveStopFormation" ]
     ] ],
-    [ "FormationPreHalf.h", "d1/de9/FormationPreHalf_8h.html", [
-      [ "FormationPreHalf", "d5/d7c/classrtt_1_1ai_1_1stp_1_1play_1_1FormationPreHalf.html", "d5/d7c/classrtt_1_1ai_1_1stp_1_1play_1_1FormationPreHalf" ]
-    ] ],
     [ "FreeKickThem.h", "df/d23/FreeKickThem_8h.html", [
       [ "FreeKickThem", "dc/d7b/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickThem.html", "dc/d7b/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickThem" ]
     ] ],

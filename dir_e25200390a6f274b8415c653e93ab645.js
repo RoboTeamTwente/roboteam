@@ -1,8 +1,5 @@
 var dir_e25200390a6f274b8415c653e93ab645 =
 [
-    [ "Attacker.h", "dd/dfc/Attacker_8h.html", [
-      [ "Attacker", "d2/d39/classrtt_1_1ai_1_1stp_1_1role_1_1Attacker.html", "d2/d39/classrtt_1_1ai_1_1stp_1_1role_1_1Attacker" ]
-    ] ],
     [ "BallPlacer.h", "d3/d88/BallPlacer_8h.html", [
       [ "BallPlacer", "dc/d18/classrtt_1_1ai_1_1stp_1_1role_1_1BallPlacer.html", "dc/d18/classrtt_1_1ai_1_1stp_1_1role_1_1BallPlacer" ]
     ] ],
@@ -26,5 +23,8 @@ var dir_e25200390a6f274b8415c653e93ab645 =
     ] ],
     [ "PenaltyTaker.h", "dd/d0a/PenaltyTaker_8h.html", [
       [ "PenaltyTaker", "d0/d03/classrtt_1_1ai_1_1stp_1_1role_1_1PenaltyTaker.html", "d0/d03/classrtt_1_1ai_1_1stp_1_1role_1_1PenaltyTaker" ]
+    ] ],
+    [ "Striker.h", "db/d1b/Striker_8h.html", [
+      [ "Striker", "d3/de1/classrtt_1_1ai_1_1stp_1_1role_1_1Striker.html", "d3/de1/classrtt_1_1ai_1_1stp_1_1role_1_1Striker" ]
     ] ]
 ];

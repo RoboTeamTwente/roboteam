@@ -1,11 +1,6 @@
 var classrtt_1_1ai_1_1stp_1_1play_1_1DefendPass =
 [
     [ "DefendPass", "dd/daf/classrtt_1_1ai_1_1stp_1_1play_1_1DefendPass.html#a95dd98a290bc0ff26868478462986969", null ],
-    [ "calculateInfoForDefenders", "dd/daf/classrtt_1_1ai_1_1stp_1_1play_1_1DefendPass.html#a776a0b349e6846dee3cc013695026ae2", null ],
-    [ "calculateInfoForHarasser", "dd/daf/classrtt_1_1ai_1_1stp_1_1play_1_1DefendPass.html#ad46fb8978e903255a833f0067ed17846", null ],
-    [ "calculateInfoForKeeper", "dd/daf/classrtt_1_1ai_1_1stp_1_1play_1_1DefendPass.html#a452d5192c9b5118f2a4f287aab240eda", null ],
-    [ "calculateInfoForOffenders", "dd/daf/classrtt_1_1ai_1_1stp_1_1play_1_1DefendPass.html#ab8d226d9ffd9fb4f45b6de940beb4a3e", null ],
-    [ "calculateInfoForRobotDefenders", "dd/daf/classrtt_1_1ai_1_1stp_1_1play_1_1DefendPass.html#a1ebf1ecd3da2d3d9a34cd90fda3071ab", null ],
     [ "calculateInfoForRoles", "dd/daf/classrtt_1_1ai_1_1stp_1_1play_1_1DefendPass.html#afbeacb21e074691116d12e2ecd9f83ce", null ],
     [ "decideRoleFlags", "dd/daf/classrtt_1_1ai_1_1stp_1_1play_1_1DefendPass.html#ab06e52ac2b80f853f7793e67e2e7b46e", null ],
     [ "distributeRoles", "dd/daf/classrtt_1_1ai_1_1stp_1_1play_1_1DefendPass.html#a977b3063d4d26bee4be08d71c2ab7ccc", null ],
@@ -26,7 +21,7 @@ var classrtt_1_1ai_1_1stp_1_1play_1_1DefendPass =
     [ "keepPlayEvaluation", "dd/daf/classrtt_1_1ai_1_1stp_1_1play_1_1DefendPass.html#a17fc7a716064d918aa29c072832c2ef8", null ],
     [ "lastScore", "dd/daf/classrtt_1_1ai_1_1stp_1_1play_1_1DefendPass.html#a81d204e55bab023d2937c1420abd04ad", null ],
     [ "previousKeeperId", "dd/daf/classrtt_1_1ai_1_1stp_1_1play_1_1DefendPass.html#a7164f241b13b1aa59b6e6b5c30a3094b", null ],
-    [ "previousPlayInfos", "dd/daf/classrtt_1_1ai_1_1stp_1_1play_1_1DefendPass.html#ae0c6ce7335a11d00664df9351a446551", null ],
+    [ "previousMaxRobots", "dd/daf/classrtt_1_1ai_1_1stp_1_1play_1_1DefendPass.html#a067c0013eb3e4d70eedd32a504dee10d", null ],
     [ "previousRobotNum", "dd/daf/classrtt_1_1ai_1_1stp_1_1play_1_1DefendPass.html#afc2268677ee563a2f0a7efa4acff465e", null ],
     [ "roles", "dd/daf/classrtt_1_1ai_1_1stp_1_1play_1_1DefendPass.html#a0329d2814e2651902bb05f23659e0084", null ],
     [ "roleStatuses", "dd/daf/classrtt_1_1ai_1_1stp_1_1play_1_1DefendPass.html#a8750ea230c633dcf6a0f09e28e4f47b1", null ],

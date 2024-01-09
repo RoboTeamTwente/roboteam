@@ -17,6 +17,11 @@ var dir_4b23724cfd3a8c462d5cc0820f5237c7 =
       [ "PassComputations", "d3/db6/classrtt_1_1ai_1_1stp_1_1computations_1_1PassComputations.html", "d3/db6/classrtt_1_1ai_1_1stp_1_1computations_1_1PassComputations" ]
     ] ],
     [ "PositionComputations.h", "d5/de0/PositionComputations_8h.html", [
+      [ "EnemyInfo", "d5/d14/namespacertt_1_1ai_1_1stp.html#d9/db1/structrtt_1_1ai_1_1stp_1_1EnemyInfo", [
+        [ "id", "d5/d14/namespacertt_1_1ai_1_1stp.html#a509d53414d5b4ec253e2156689c4cfd4", null ],
+        [ "position", "d5/d14/namespacertt_1_1ai_1_1stp.html#ae2103cf7192b58b17a262338286d186b", null ],
+        [ "velocity", "d5/d14/namespacertt_1_1ai_1_1stp.html#ade9fd3e730cedcea632a7e5a800b8400", null ]
+      ] ],
       [ "PositionComputations", "dd/d2c/classrtt_1_1ai_1_1stp_1_1PositionComputations.html", "dd/d2c/classrtt_1_1ai_1_1stp_1_1PositionComputations" ]
     ] ],
     [ "PositionScoring.h", "db/d9a/PositionScoring_8h.html", [

@@ -154,7 +154,7 @@ Private Member Functions</h2></td></tr>
 <tr class="memdesc:ad7351e407d20f421f0501d3c02477d2c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should this tactic be reset (go back to the first skill of this tactic) This tactic never resets, so false.  <a href="../../d9/d65/classrtt_1_1ai_1_1stp_1_1tactic_1_1GetBehindBallInDirection.html#ad7351e407d20f421f0501d3c02477d2c">More...</a><br /></td></tr>
 <tr class="separator:ad7351e407d20f421f0501d3c02477d2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6a261ed3ad4cb67d5d30674aa98246ae"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d65/classrtt_1_1ai_1_1stp_1_1tactic_1_1GetBehindBallInDirection.html#a6a261ed3ad4cb67d5d30674aa98246ae">isEndTactic</a> () noexcept override</td></tr>
-<tr class="memdesc:a6a261ed3ad4cb67d5d30674aa98246ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns whether this is a passive tactic (formerly called endTactic)  <a href="../../d9/d65/classrtt_1_1ai_1_1stp_1_1tactic_1_1GetBehindBallInDirection.html#a6a261ed3ad4cb67d5d30674aa98246ae">More...</a><br /></td></tr>
+<tr class="memdesc:a6a261ed3ad4cb67d5d30674aa98246ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns whether this is an end tactic, meaning it should keep looping this tactic if all skills are finished.  <a href="../../d9/d65/classrtt_1_1ai_1_1stp_1_1tactic_1_1GetBehindBallInDirection.html#a6a261ed3ad4cb67d5d30674aa98246ae">More...</a><br /></td></tr>
 <tr class="separator:a6a261ed3ad4cb67d5d30674aa98246ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abcac7a65df91d8ea9dee07613c607291"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d65/classrtt_1_1ai_1_1stp_1_1tactic_1_1GetBehindBallInDirection.html#abcac7a65df91d8ea9dee07613c607291">getName</a> () override</td></tr>
 <tr class="memdesc:abcac7a65df91d8ea9dee07613c607291"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the tactic name.  <a href="../../d9/d65/classrtt_1_1ai_1_1stp_1_1tactic_1_1GetBehindBallInDirection.html#abcac7a65df91d8ea9dee07613c607291">More...</a><br /></td></tr>
@@ -409,7 +409,7 @@ Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Returns whether this is a passive tactic (formerly called endTactic) </p>
+<p>Returns whether this is an end tactic, meaning it should keep looping this tactic if all skills are finished. </p>
 <dl class="section return"><dt>Returns</dt><dd>This will always return false, since it is NOT an endTactic </dd></dl>
 
 <p>Implements <a class="el" href="../../d6/db5/classrtt_1_1ai_1_1stp_1_1Tactic.html#a101cb2bd5764e2ea2f1678ca1361911f">rtt::ai::stp::Tactic</a>.</p>

@@ -2,9 +2,6 @@ var classrtt_1_1ai_1_1stp_1_1play_1_1KeeperKickBall =
 [
     [ "KeeperKickBall", "d5/dc4/classrtt_1_1ai_1_1stp_1_1play_1_1KeeperKickBall.html#adf40ab90d6253afdd83c24480c9ff182", null ],
     [ "ballKicked", "d5/dc4/classrtt_1_1ai_1_1stp_1_1play_1_1KeeperKickBall.html#a27b85bd78c2729c47421a5e485d268a7", null ],
-    [ "calculateInfoForAttackers", "d5/dc4/classrtt_1_1ai_1_1stp_1_1play_1_1KeeperKickBall.html#a78237becd714666db1c6d00ab4ebffa0", null ],
-    [ "calculateInfoForDefenders", "d5/dc4/classrtt_1_1ai_1_1stp_1_1play_1_1KeeperKickBall.html#a61cd63fd9a6dda339ebb344f027e5235", null ],
-    [ "calculateInfoForMidfielders", "d5/dc4/classrtt_1_1ai_1_1stp_1_1play_1_1KeeperKickBall.html#ac698d6edd64b1aad5a187688fc841e8a", null ],
     [ "calculateInfoForRoles", "d5/dc4/classrtt_1_1ai_1_1stp_1_1play_1_1KeeperKickBall.html#a5f8c091e19a138dbf20722713472d468", null ],
     [ "decideRoleFlags", "d5/dc4/classrtt_1_1ai_1_1stp_1_1play_1_1KeeperKickBall.html#a9ac7ac1dfabba0707048bb2dbcaefe38", null ],
     [ "distributeRoles", "d5/dc4/classrtt_1_1ai_1_1stp_1_1play_1_1KeeperKickBall.html#a977b3063d4d26bee4be08d71c2ab7ccc", null ],
@@ -26,7 +23,7 @@ var classrtt_1_1ai_1_1stp_1_1play_1_1KeeperKickBall =
     [ "lastScore", "d5/dc4/classrtt_1_1ai_1_1stp_1_1play_1_1KeeperKickBall.html#a81d204e55bab023d2937c1420abd04ad", null ],
     [ "passInfo", "d5/dc4/classrtt_1_1ai_1_1stp_1_1play_1_1KeeperKickBall.html#a74cff66a5dc049edd34d87772e160c89", null ],
     [ "previousKeeperId", "d5/dc4/classrtt_1_1ai_1_1stp_1_1play_1_1KeeperKickBall.html#a7164f241b13b1aa59b6e6b5c30a3094b", null ],
-    [ "previousPlayInfos", "d5/dc4/classrtt_1_1ai_1_1stp_1_1play_1_1KeeperKickBall.html#ae0c6ce7335a11d00664df9351a446551", null ],
+    [ "previousMaxRobots", "d5/dc4/classrtt_1_1ai_1_1stp_1_1play_1_1KeeperKickBall.html#a067c0013eb3e4d70eedd32a504dee10d", null ],
     [ "previousRobotNum", "d5/dc4/classrtt_1_1ai_1_1stp_1_1play_1_1KeeperKickBall.html#afc2268677ee563a2f0a7efa4acff465e", null ],
     [ "roles", "d5/dc4/classrtt_1_1ai_1_1stp_1_1play_1_1KeeperKickBall.html#a0329d2814e2651902bb05f23659e0084", null ],
     [ "roleStatuses", "d5/dc4/classrtt_1_1ai_1_1stp_1_1play_1_1KeeperKickBall.html#a8750ea230c633dcf6a0f09e28e4f47b1", null ],

@@ -98,24 +98,30 @@ $(document).ready(function(){initNavTree('d2/d21/classrtt_1_1ai_1_1FieldComputat
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:ae1c90717bedfee87aee68f39eeccdd8f"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d21/classrtt_1_1ai_1_1FieldComputations.html#ae1c90717bedfee87aee68f39eeccdd8f">pointIsValidPosition</a> (const rtt::Field &amp;field, const <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;point, <a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#d8/dcb/structrtt_1_1ai_1_1stp_1_1AvoidObjects">stp::AvoidObjects</a> avoidObjects={}, double fieldMargin=0.0, double ourDefenseAreaMargin=0.0, double theirDefenseAreaMargin=<a class="el" href="../../db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#a6f520dc4302ed5a08e93b676c8dbf20d">stp::control_constants::DEFENSE_AREA_AVOIDANCE_MARGIN</a>)</td></tr>
-<tr class="memdesc:ae1c90717bedfee87aee68f39eeccdd8f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check whether a given point is a valid position given which parts of the field should be avoided (note that shouldAvoidBall is not taken into consideration)  <a href="../../d2/d21/classrtt_1_1ai_1_1FieldComputations.html#ae1c90717bedfee87aee68f39eeccdd8f">More...</a><br /></td></tr>
-<tr class="separator:ae1c90717bedfee87aee68f39eeccdd8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b91936d7a902cafabaec8aa5e9709c9"><td class="memItemLeft" align="right" valign="top">static std::tuple&lt; double, double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d21/classrtt_1_1ai_1_1FieldComputations.html#a2b91936d7a902cafabaec8aa5e9709c9">getDefenseAreaMargin</a> ()</td></tr>
+<tr class="memdesc:a2b91936d7a902cafabaec8aa5e9709c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the margin that should be used for the defense area avoidance.  <a href="../../d2/d21/classrtt_1_1ai_1_1FieldComputations.html#a2b91936d7a902cafabaec8aa5e9709c9">More...</a><br /></td></tr>
+<tr class="separator:a2b91936d7a902cafabaec8aa5e9709c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a956e75cd5b56896215f2fa117882ca68"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d21/classrtt_1_1ai_1_1FieldComputations.html#a956e75cd5b56896215f2fa117882ca68">getBallAvoidance</a> ()</td></tr>
+<tr class="memdesc:a956e75cd5b56896215f2fa117882ca68"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get ball avoidance based on current game state.  <a href="../../d2/d21/classrtt_1_1ai_1_1FieldComputations.html#a956e75cd5b56896215f2fa117882ca68">More...</a><br /></td></tr>
+<tr class="separator:a956e75cd5b56896215f2fa117882ca68"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abbbe5c1834f2376283ab30952150c3d1"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d21/classrtt_1_1ai_1_1FieldComputations.html#abbbe5c1834f2376283ab30952150c3d1">pointIsValidPosition</a> (const rtt::Field &amp;field, const <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;point, <a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#d8/dcb/structrtt_1_1ai_1_1stp_1_1AvoidObjects">stp::AvoidObjects</a> avoidObjects={}, double fieldMargin=0.0)</td></tr>
+<tr class="memdesc:abbbe5c1834f2376283ab30952150c3d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check whether a given point is a valid position given which parts of the field should be avoided (note that shouldAvoidBall is not taken into consideration)  <a href="../../d2/d21/classrtt_1_1ai_1_1FieldComputations.html#abbbe5c1834f2376283ab30952150c3d1">More...</a><br /></td></tr>
+<tr class="separator:abbbe5c1834f2376283ab30952150c3d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac6ac44afce2362338e2881d0c729a9d8"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d21/classrtt_1_1ai_1_1FieldComputations.html#ac6ac44afce2362338e2881d0c729a9d8">projectPointInField</a> (const rtt::Field &amp;field, <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> point, double margin=0)</td></tr>
 <tr class="memdesc:ac6ac44afce2362338e2881d0c729a9d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Project given position to within the field with a certain margin.  <a href="../../d2/d21/classrtt_1_1ai_1_1FieldComputations.html#ac6ac44afce2362338e2881d0c729a9d8">More...</a><br /></td></tr>
 <tr class="separator:ac6ac44afce2362338e2881d0c729a9d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9fb37ee0e2aaf1e1e75a63f9094d2aab"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d21/classrtt_1_1ai_1_1FieldComputations.html#a9fb37ee0e2aaf1e1e75a63f9094d2aab">projectPointOutOfDefenseArea</a> (const rtt::Field &amp;field, <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> point, double ourDefenseAreaMargin=0.0, double theirDefenseAreaMargin=<a class="el" href="../../db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#a6f520dc4302ed5a08e93b676c8dbf20d">stp::control_constants::DEFENSE_AREA_AVOIDANCE_MARGIN</a>)</td></tr>
-<tr class="memdesc:a9fb37ee0e2aaf1e1e75a63f9094d2aab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Project given position to outside the defense areas with a certain margin.  <a href="../../d2/d21/classrtt_1_1ai_1_1FieldComputations.html#a9fb37ee0e2aaf1e1e75a63f9094d2aab">More...</a><br /></td></tr>
-<tr class="separator:a9fb37ee0e2aaf1e1e75a63f9094d2aab"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa41a6d63fdb25b906a5de14974832fe8"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d21/classrtt_1_1ai_1_1FieldComputations.html#aa41a6d63fdb25b906a5de14974832fe8">projectPointToValidPosition</a> (const rtt::Field &amp;field, <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> point, <a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#d8/dcb/structrtt_1_1ai_1_1stp_1_1AvoidObjects">stp::AvoidObjects</a> avoidObjects={}, double fieldMargin=0.0, double ourDefenseAreaMargin=0.0, double theirDefenseAreaMargin=<a class="el" href="../../db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#a6f520dc4302ed5a08e93b676c8dbf20d">stp::control_constants::DEFENSE_AREA_AVOIDANCE_MARGIN</a>)</td></tr>
-<tr class="memdesc:aa41a6d63fdb25b906a5de14974832fe8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Project given position to a valid position given which parts of the field should be avoided (note that shouldAvoidBall is not taken into consideration)  <a href="../../d2/d21/classrtt_1_1ai_1_1FieldComputations.html#aa41a6d63fdb25b906a5de14974832fe8">More...</a><br /></td></tr>
-<tr class="separator:aa41a6d63fdb25b906a5de14974832fe8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acf272ead928f66a149f405724e4ad13c"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d21/classrtt_1_1ai_1_1FieldComputations.html#acf272ead928f66a149f405724e4ad13c">projectPointOutOfDefenseArea</a> (const rtt::Field &amp;field, <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> point)</td></tr>
+<tr class="memdesc:acf272ead928f66a149f405724e4ad13c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Project given position to outside the defense areas with a certain margin.  <a href="../../d2/d21/classrtt_1_1ai_1_1FieldComputations.html#acf272ead928f66a149f405724e4ad13c">More...</a><br /></td></tr>
+<tr class="separator:acf272ead928f66a149f405724e4ad13c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa1853085f0152b206d66e5582cc26e4a"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d21/classrtt_1_1ai_1_1FieldComputations.html#aa1853085f0152b206d66e5582cc26e4a">projectPointToValidPosition</a> (const rtt::Field &amp;field, <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> point, <a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#d8/dcb/structrtt_1_1ai_1_1stp_1_1AvoidObjects">stp::AvoidObjects</a> avoidObjects={}, double fieldMargin=0.0)</td></tr>
+<tr class="memdesc:aa1853085f0152b206d66e5582cc26e4a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Project given position to a valid position given which parts of the field should be avoided (note that shouldAvoidBall is not taken into consideration)  <a href="../../d2/d21/classrtt_1_1ai_1_1FieldComputations.html#aa1853085f0152b206d66e5582cc26e4a">More...</a><br /></td></tr>
+<tr class="separator:aa1853085f0152b206d66e5582cc26e4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1b17e8ab50d4a97f646dbfec38ad6047"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d21/classrtt_1_1ai_1_1FieldComputations.html#a1b17e8ab50d4a97f646dbfec38ad6047">projectPointIntoFieldOnLine</a> (const Field &amp;field, <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> point, <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> p1, <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> p2, double fieldMargin=0.0)</td></tr>
 <tr class="memdesc:a1b17e8ab50d4a97f646dbfec38ad6047"><td class="mdescLeft">&#160;</td><td class="mdescRight">Projects the given point into the field on a line between two given points.  <a href="../../d2/d21/classrtt_1_1ai_1_1FieldComputations.html#a1b17e8ab50d4a97f646dbfec38ad6047">More...</a><br /></td></tr>
 <tr class="separator:a1b17e8ab50d4a97f646dbfec38ad6047"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a01995e9a5a311313e8b2b297a9d60c76"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d21/classrtt_1_1ai_1_1FieldComputations.html#a01995e9a5a311313e8b2b297a9d60c76">projectPointToValidPositionOnLine</a> (const Field &amp;field, <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> point, <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> p1, <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> p2, <a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#d8/dcb/structrtt_1_1ai_1_1stp_1_1AvoidObjects">stp::AvoidObjects</a> avoidObjects={}, double fieldMargin=0, double ourDefenseAreaMargin=0, double theirDefenseAreaMargin=<a class="el" href="../../db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#a6f520dc4302ed5a08e93b676c8dbf20d">stp::control_constants::DEFENSE_AREA_AVOIDANCE_MARGIN</a>)</td></tr>
-<tr class="memdesc:a01995e9a5a311313e8b2b297a9d60c76"><td class="mdescLeft">&#160;</td><td class="mdescRight">Projects the given point to a valid position, as defined by avoidObjects, on a line between two given points.  <a href="../../d2/d21/classrtt_1_1ai_1_1FieldComputations.html#a01995e9a5a311313e8b2b297a9d60c76">More...</a><br /></td></tr>
-<tr class="separator:a01995e9a5a311313e8b2b297a9d60c76"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a248a0b73063b45cfce18ac02b2b726fb"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d21/classrtt_1_1ai_1_1FieldComputations.html#a248a0b73063b45cfce18ac02b2b726fb">projectPointToValidPositionOnLine</a> (const Field &amp;field, <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> point, <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> p1, <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> p2, <a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#d8/dcb/structrtt_1_1ai_1_1stp_1_1AvoidObjects">stp::AvoidObjects</a> avoidObjects={}, double fieldMargin=0)</td></tr>
+<tr class="memdesc:a248a0b73063b45cfce18ac02b2b726fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Projects the given point to a valid position, as defined by avoidObjects, on a line between two given points.  <a href="../../d2/d21/classrtt_1_1ai_1_1FieldComputations.html#a248a0b73063b45cfce18ac02b2b726fb">More...</a><br /></td></tr>
+<tr class="separator:a248a0b73063b45cfce18ac02b2b726fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a682e3e6d8eb25eeb8b66ccd167438f01"><td class="memItemLeft" align="right" valign="top">static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d21/classrtt_1_1ai_1_1FieldComputations.html#a682e3e6d8eb25eeb8b66ccd167438f01">getPercentageOfGoalVisibleFromPoint</a> (const rtt::Field &amp;field, bool ourGoal, const <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;point, <a class="el" href="../../d6/d08/classrtt_1_1world_1_1view_1_1WorldDataView.html">rtt::world::view::WorldDataView</a> world, int id=-1, bool ourTeam=false)</td></tr>
 <tr class="memdesc:a682e3e6d8eb25eeb8b66ccd167438f01"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the percentage of goal visible from a given point, i.e. how much of the goal can be reached by directly shooting a ball over the ground from a given point without hitting any robot from a given team.  <a href="../../d2/d21/classrtt_1_1ai_1_1FieldComputations.html#a682e3e6d8eb25eeb8b66ccd167438f01">More...</a><br /></td></tr>
 <tr class="separator:a682e3e6d8eb25eeb8b66ccd167438f01"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -168,6 +174,34 @@ Static Private Attributes</h2></td></tr>
  Documented and refactored by: Haico Dorenbos </dd></dl>
 <dl class="section since"><dt>Since</dt><dd>2019-08-30 </dd></dl>
 </div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="a956e75cd5b56896215f2fa117882ca68"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a956e75cd5b56896215f2fa117882ca68">&#9670;&nbsp;</a></span>getBallAvoidance()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool rtt::ai::FieldComputations::getBallAvoidance </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get ball avoidance based on current game state. </p>
+<dl class="section return"><dt>Returns</dt><dd>A bool indicating whether ball avoidance should be used or not </dd></dl>
+
+</div>
+</div>
 <a id="ac983ba299fa63555dc2edc12cae3634f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac983ba299fa63555dc2edc12cae3634f">&#9670;&nbsp;</a></span>getBlockadesMappedToGoal()</h2>
 
@@ -299,6 +333,34 @@ Static Private Attributes</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The area (Polygon) which represents the defense area. </dd></dl>
+
+</div>
+</div>
+<a id="a2b91936d7a902cafabaec8aa5e9709c9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2b91936d7a902cafabaec8aa5e9709c9">&#9670;&nbsp;</a></span>getDefenseAreaMargin()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::tuple&lt; double, double &gt; rtt::ai::FieldComputations::getDefenseAreaMargin </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the margin that should be used for the defense area avoidance. </p>
+<dl class="section return"><dt>Returns</dt><dd>A tuple with the margin that should be used for the defense area avoidance </dd></dl>
 
 </div>
 </div>
@@ -817,8 +879,8 @@ Static Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ae1c90717bedfee87aee68f39eeccdd8f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae1c90717bedfee87aee68f39eeccdd8f">&#9670;&nbsp;</a></span>pointIsValidPosition()</h2>
+<a id="abbbe5c1834f2376283ab30952150c3d1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abbbe5c1834f2376283ab30952150c3d1">&#9670;&nbsp;</a></span>pointIsValidPosition()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -848,19 +910,7 @@ Static Private Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>fieldMargin</em> = <code>0.0</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>ourDefenseAreaMargin</em> = <code>0.0</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>theirDefenseAreaMargin</em> = <code><a class="el" href="../../db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#a6f520dc4302ed5a08e93b676c8dbf20d">stp::control_constants::DEFENSE_AREA_AVOIDANCE_MARGIN</a></code>&#160;</td>
+          <td class="paramname"><em>fieldMargin</em> = <code>0.0</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -881,10 +931,11 @@ Static Private Attributes</h2></td></tr>
     <tr><td class="paramname">field</td><td>The field class which is used to determine the boundaries of the field. </td></tr>
     <tr><td class="paramname">point</td><td>The point for which it is checked whether it is valid or not </td></tr>
     <tr><td class="paramname">avoidObjects</td><td>Struct indicating which areas of the field should be avoided. Defaults to avoid entering the defense area and leaving the field </td></tr>
+    <tr><td class="paramname">fieldMargin</td><td>The outwards margin in which the field area will get expanded/shrunk in all directions. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>True if the point is not within any area that has to be avoided according to avoidObjects (note that shouldAvoidBall is not taken into consideration) </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>True if the point is not within any area that has to be avoided according to avoidObjects, note that this does not take ball avoidance into consideration </dd></dl>
 
 </div>
 </div>
@@ -1008,8 +1059,8 @@ Static Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a9fb37ee0e2aaf1e1e75a63f9094d2aab"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9fb37ee0e2aaf1e1e75a63f9094d2aab">&#9670;&nbsp;</a></span>projectPointOutOfDefenseArea()</h2>
+<a id="acf272ead928f66a149f405724e4ad13c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acf272ead928f66a149f405724e4ad13c">&#9670;&nbsp;</a></span>projectPointOutOfDefenseArea()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1027,19 +1078,7 @@ Static Private Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a>&#160;</td>
-          <td class="paramname"><em>point</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>ourDefenseAreaMargin</em> = <code>0.0</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>theirDefenseAreaMargin</em> = <code><a class="el" href="../../db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#a6f520dc4302ed5a08e93b676c8dbf20d">stp::control_constants::DEFENSE_AREA_AVOIDANCE_MARGIN</a></code>&#160;</td>
+          <td class="paramname"><em>point</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1059,7 +1098,6 @@ Static Private Attributes</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">field</td><td>The field class used to determine where the defense area is </td></tr>
     <tr><td class="paramname">point</td><td>The position to be projected to outside of the defense area </td></tr>
-    <tr><td class="paramname">margin</td><td>The margin that should be used when calculating the new position. The position will have a minimum of this distance to the defense area </td></tr>
   </table>
   </dd>
 </dl>
@@ -1067,8 +1105,8 @@ Static Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="aa41a6d63fdb25b906a5de14974832fe8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa41a6d63fdb25b906a5de14974832fe8">&#9670;&nbsp;</a></span>projectPointToValidPosition()</h2>
+<a id="aa1853085f0152b206d66e5582cc26e4a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa1853085f0152b206d66e5582cc26e4a">&#9670;&nbsp;</a></span>projectPointToValidPosition()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1098,19 +1136,7 @@ Static Private Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>fieldMargin</em> = <code>0.0</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>ourDefenseAreaMargin</em> = <code>0.0</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>theirDefenseAreaMargin</em> = <code><a class="el" href="../../db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#a6f520dc4302ed5a08e93b676c8dbf20d">stp::control_constants::DEFENSE_AREA_AVOIDANCE_MARGIN</a></code>&#160;</td>
+          <td class="paramname"><em>fieldMargin</em> = <code>0.0</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1132,8 +1158,6 @@ Static Private Attributes</h2></td></tr>
     <tr><td class="paramname">point</td><td>The point to be projected to a valid position </td></tr>
     <tr><td class="paramname">avoidObjects</td><td>Struct indicating which areas of the field should be avoided. Defaults to avoid entering the defense area and leaving the field </td></tr>
     <tr><td class="paramname">fieldMargin</td><td>The outwards margin in which the field area will get expanded/shrunk in all directions. A positive value means that the field area will be expanded, a negative value means that the field area will be shrunk. </td></tr>
-    <tr><td class="paramname">ourDefenseAreaMargin</td><td>The outwards margin in which our defense area will get expanded/shrunk (except behind the goal). A positive value means that the defense area will be expanded, a negative value means that the defense area will be shrunk. </td></tr>
-    <tr><td class="paramname">theirDefenseAreaMargin</td><td>The outwards margin in which their defense area will get expanded/shrunk </td></tr>
   </table>
   </dd>
 </dl>
@@ -1141,8 +1165,8 @@ Static Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a01995e9a5a311313e8b2b297a9d60c76"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a01995e9a5a311313e8b2b297a9d60c76">&#9670;&nbsp;</a></span>projectPointToValidPositionOnLine()</h2>
+<a id="a248a0b73063b45cfce18ac02b2b726fb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a248a0b73063b45cfce18ac02b2b726fb">&#9670;&nbsp;</a></span>projectPointToValidPositionOnLine()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1184,19 +1208,7 @@ Static Private Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>fieldMargin</em> = <code>0</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>ourDefenseAreaMargin</em> = <code>0</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>theirDefenseAreaMargin</em> = <code><a class="el" href="../../db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#a6f520dc4302ed5a08e93b676c8dbf20d">stp::control_constants::DEFENSE_AREA_AVOIDANCE_MARGIN</a></code>&#160;</td>
+          <td class="paramname"><em>fieldMargin</em> = <code>0</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1220,8 +1232,6 @@ Static Private Attributes</h2></td></tr>
     <tr><td class="paramname">p2</td><td>Second point on the line </td></tr>
     <tr><td class="paramname">avoidObjects</td><td>Struct indicating which areas of the field should be avoided. Defaults to avoid entering the defense area and leaving the field </td></tr>
     <tr><td class="paramname">fieldMargin</td><td>The outwards margin in which the field area will get expanded/shrunk in all directions. A positive value means that the field area will be expanded, a negative value means that the field area will be shrunk. </td></tr>
-    <tr><td class="paramname">ourDefenseAreaMargin</td><td>The outwards margin in which our defense area will get expanded/shrunk (except behind the goal). A positive value means that the defense area will be expanded, a negative value means that the defense area will be shrunk. </td></tr>
-    <tr><td class="paramname">theirDefenseAreaMargin</td><td>The outwards margin in which their defense area will get expanded/shrunk </td></tr>
   </table>
   </dd>
 </dl>

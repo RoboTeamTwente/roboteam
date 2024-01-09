@@ -128,9 +128,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:af8495d8ff9e59726b4744fb0cef93207"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot.html#af8495d8ff9e59726b4744fb0cef93207">getName</a> () const override</td></tr>
 <tr class="memdesc:af8495d8ff9e59726b4744fb0cef93207"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the play name.  <a href="../../d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot.html#af8495d8ff9e59726b4744fb0cef93207">More...</a><br /></td></tr>
 <tr class="separator:af8495d8ff9e59726b4744fb0cef93207"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af0cb111981992bdf48c51fcca26e8408"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot.html#af0cb111981992bdf48c51fcca26e8408">shouldEndPlay</a> () noexcept override</td></tr>
-<tr class="memdesc:af0cb111981992bdf48c51fcca26e8408"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if play should end.  <a href="../../d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot.html#af0cb111981992bdf48c51fcca26e8408">More...</a><br /></td></tr>
-<tr class="separator:af0cb111981992bdf48c51fcca26e8408"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa0405b45c69fc25464bec621fbcbe0cc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#aa0405b45c69fc25464bec621fbcbe0cc">initialize</a> () noexcept</td></tr>
 <tr class="memdesc:aa0405b45c69fc25464bec621fbcbe0cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes stpInfos struct, distributes roles, sets the previousRobotNum variable and calls onInitialize()  <a href="../../d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#aa0405b45c69fc25464bec621fbcbe0cc">More...</a><br /></td></tr>
 <tr class="separator:aa0405b45c69fc25464bec621fbcbe0cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -167,24 +164,9 @@ Public Attributes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
-<tr class="memitem:a3c6b8a613e6363f2d28b8e7b4a691802"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot.html#a3c6b8a613e6363f2d28b8e7b4a691802">calculateInfoForWallers</a> (bool shouldIncludeBallBlocker) noexcept</td></tr>
-<tr class="memdesc:a3c6b8a613e6363f2d28b8e7b4a691802"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates info for the wallers.  <a href="../../d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot.html#a3c6b8a613e6363f2d28b8e7b4a691802">More...</a><br /></td></tr>
-<tr class="separator:a3c6b8a613e6363f2d28b8e7b4a691802"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a839ea12d5f2c53aa556fd63a82f1dbf7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot.html#a839ea12d5f2c53aa556fd63a82f1dbf7">calculateInfoForDefenders</a> () noexcept</td></tr>
-<tr class="memdesc:a839ea12d5f2c53aa556fd63a82f1dbf7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates info for the defenders.  <a href="../../d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot.html#a839ea12d5f2c53aa556fd63a82f1dbf7">More...</a><br /></td></tr>
-<tr class="separator:a839ea12d5f2c53aa556fd63a82f1dbf7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a27d7042b60a14b41580c6d2baf6f7514"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot.html#a27d7042b60a14b41580c6d2baf6f7514">calculateInfoForBlocker</a> () noexcept</td></tr>
-<tr class="memdesc:a27d7042b60a14b41580c6d2baf6f7514"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates info for the ballBlocker.  <a href="../../d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot.html#a27d7042b60a14b41580c6d2baf6f7514">More...</a><br /></td></tr>
-<tr class="separator:a27d7042b60a14b41580c6d2baf6f7514"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a35355c03997edfb4f96c89030dcf5abe"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot.html#a35355c03997edfb4f96c89030dcf5abe">calculateInfoForHarasser</a> () noexcept</td></tr>
-<tr class="memdesc:a35355c03997edfb4f96c89030dcf5abe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates info for the harasser.  <a href="../../d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot.html#a35355c03997edfb4f96c89030dcf5abe">More...</a><br /></td></tr>
-<tr class="separator:a35355c03997edfb4f96c89030dcf5abe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa78f25bef5f0c55b81515a17d1d55560"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot.html#aa78f25bef5f0c55b81515a17d1d55560">calculateInfoForKeeper</a> () noexcept</td></tr>
-<tr class="memdesc:aa78f25bef5f0c55b81515a17d1d55560"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates info for the keeper.  <a href="../../d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot.html#aa78f25bef5f0c55b81515a17d1d55560">More...</a><br /></td></tr>
-<tr class="separator:aa78f25bef5f0c55b81515a17d1d55560"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4b76a6ca68d2c3f55f72d37062ae57f5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot.html#a4b76a6ca68d2c3f55f72d37062ae57f5">calculateInfoForOffenders</a> () noexcept</td></tr>
-<tr class="memdesc:a4b76a6ca68d2c3f55f72d37062ae57f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates info for the offenders.  <a href="../../d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot.html#a4b76a6ca68d2c3f55f72d37062ae57f5">More...</a><br /></td></tr>
-<tr class="separator:a4b76a6ca68d2c3f55f72d37062ae57f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8726a464fdb9e614c5cca8c7cd183155"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#a8726a464fdb9e614c5cca8c7cd183155">shouldEndPlay</a> () noexcept</td></tr>
+<tr class="memdesc:a8726a464fdb9e614c5cca8c7cd183155"><td class="mdescLeft">&#160;</td><td class="mdescRight">Optional function to force end plays.  <a href="../../d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#a8726a464fdb9e614c5cca8c7cd183155">More...</a><br /></td></tr>
+<tr class="separator:a8726a464fdb9e614c5cca8c7cd183155"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -200,8 +182,6 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:a0c13cbd482099fa139f3a5f08d964efe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1dc216d51c90eb0e6ddb0298e1ad034e"><td class="memItemLeft" align="right" valign="top">rtt::Field&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#a1dc216d51c90eb0e6ddb0298e1ad034e">field</a></td></tr>
 <tr class="separator:a1dc216d51c90eb0e6ddb0298e1ad034e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae0c6ce7335a11d00664df9351a446551"><td class="memItemLeft" align="right" valign="top">std::optional&lt; <a class="el" href="../../d7/d73/namespacertt_1_1ai_1_1stp_1_1gen.html#afc45c97a42c443e6884bd95502426d0d">gen::PlayInfos</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#ae0c6ce7335a11d00664df9351a446551">previousPlayInfos</a></td></tr>
-<tr class="separator:ae0c6ce7335a11d00664df9351a446551"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
@@ -221,6 +201,8 @@ Private Attributes</h2></td></tr>
 <tr class="separator:afc2268677ee563a2f0a7efa4acff465e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7164f241b13b1aa59b6e6b5c30a3094b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#a7164f241b13b1aa59b6e6b5c30a3094b">previousKeeperId</a> = -1</td></tr>
 <tr class="separator:a7164f241b13b1aa59b6e6b5c30a3094b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a067c0013eb3e4d70eedd32a504dee10d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#a067c0013eb3e4d70eedd32a504dee10d">previousMaxRobots</a> = -1</td></tr>
+<tr class="separator:a067c0013eb3e4d70eedd32a504dee10d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p><a class="el" href="../../d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot.html" title="DefendShot Play is executed when the opponent has or is close to the ball and on our side of the fiel...">DefendShot</a> <a class="el" href="../../d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html" title="Play class that&#39;s used in the STP model on update traverses every Role, and updates it.">Play</a> is executed when the opponent has or is close to the ball and on our side of the field. In this case they most likely will try to score. Some defenders defend the goal by blocking the path between enemy robots and the goal. Other defenders block other enemy robots to avoid passes to them. </p>
@@ -245,141 +227,6 @@ Private Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a27d7042b60a14b41580c6d2baf6f7514"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a27d7042b60a14b41580c6d2baf6f7514">&#9670;&nbsp;</a></span>calculateInfoForBlocker()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void rtt::ai::stp::play::DefendShot::calculateInfoForBlocker </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Calculates info for the ballBlocker. </p>
-
-</div>
-</div>
-<a id="a839ea12d5f2c53aa556fd63a82f1dbf7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a839ea12d5f2c53aa556fd63a82f1dbf7">&#9670;&nbsp;</a></span>calculateInfoForDefenders()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void rtt::ai::stp::play::DefendShot::calculateInfoForDefenders </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Calculates info for the defenders. </p>
-
-</div>
-</div>
-<a id="a35355c03997edfb4f96c89030dcf5abe"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a35355c03997edfb4f96c89030dcf5abe">&#9670;&nbsp;</a></span>calculateInfoForHarasser()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void rtt::ai::stp::play::DefendShot::calculateInfoForHarasser </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Calculates info for the harasser. </p>
-
-</div>
-</div>
-<a id="aa78f25bef5f0c55b81515a17d1d55560"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa78f25bef5f0c55b81515a17d1d55560">&#9670;&nbsp;</a></span>calculateInfoForKeeper()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void rtt::ai::stp::play::DefendShot::calculateInfoForKeeper </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Calculates info for the keeper. </p>
-
-</div>
-</div>
-<a id="a4b76a6ca68d2c3f55f72d37062ae57f5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4b76a6ca68d2c3f55f72d37062ae57f5">&#9670;&nbsp;</a></span>calculateInfoForOffenders()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void rtt::ai::stp::play::DefendShot::calculateInfoForOffenders </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Calculates info for the offenders. </p>
-
-</div>
-</div>
 <a id="aa4f72c0cc4fce12be8dfbc56d6074cac"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa4f72c0cc4fce12be8dfbc56d6074cac">&#9670;&nbsp;</a></span>calculateInfoForRoles()</h2>
 
@@ -406,34 +253,6 @@ Private Attributes</h2></td></tr>
 <p>Calculates info for the roles. </p>
 
 <p>Implements <a class="el" href="../../d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#a1bff3910044942d4910c9551a7fc3ce1">rtt::ai::stp::Play</a>.</p>
-
-</div>
-</div>
-<a id="a3c6b8a613e6363f2d28b8e7b4a691802"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3c6b8a613e6363f2d28b8e7b4a691802">&#9670;&nbsp;</a></span>calculateInfoForWallers()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void rtt::ai::stp::play::DefendShot::calculateInfoForWallers </td>
-          <td>(</td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>shouldIncludeBallBlocker</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Calculates info for the wallers. </p>
 
 </div>
 </div>
@@ -787,8 +606,8 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="af0cb111981992bdf48c51fcca26e8408"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af0cb111981992bdf48c51fcca26e8408">&#9670;&nbsp;</a></span>shouldEndPlay()</h2>
+<a id="a8726a464fdb9e614c5cca8c7cd183155"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8726a464fdb9e614c5cca8c7cd183155">&#9670;&nbsp;</a></span>shouldEndPlay()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -797,7 +616,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">bool rtt::ai::stp::play::DefendShot::shouldEndPlay </td>
+          <td class="memname">bool rtt::ai::stp::Play::shouldEndPlay </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -805,14 +624,15 @@ Private Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span><span class="mlabel">noexcept</span></span>  </td>
+<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">virtual</span><span class="mlabel">noexcept</span><span class="mlabel">inherited</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p>Check if play should end. </p>
+<p>Optional function to force end plays. </p>
+<dl class="section return"><dt>Returns</dt><dd>True if play should end this tick </dd></dl>
 
-<p>Reimplemented from <a class="el" href="../../d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#a8726a464fdb9e614c5cca8c7cd183155">rtt::ai::stp::Play</a>.</p>
+<p>Reimplemented in <a class="el" href="../../d2/d47/classrtt_1_1ai_1_1stp_1_1play_1_1KickOffUs.html#a363c1051fb133b677a6a61f587184f51">rtt::ai::stp::play::KickOffUs</a>, <a class="el" href="../../d0/dc2/classrtt_1_1ai_1_1stp_1_1play_1_1KickOffThem.html#a749d12680c303e95b8446b68dc2ba288">rtt::ai::stp::play::KickOffThem</a>, <a class="el" href="../../d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#af9b2205d1663fcd57360215aff23c4e2">rtt::ai::stp::play::FreeKickUsPass</a>, <a class="el" href="../../dd/dc8/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsAtGoal.html#a37398798ad20c2a95f9d51b35bdd58bd">rtt::ai::stp::play::FreeKickUsAtGoal</a>, <a class="el" href="../../dc/d26/classrtt_1_1ai_1_1stp_1_1play_1_1ChippingPass.html#af287374ebee423c2829620d0df398012">rtt::ai::stp::play::ChippingPass</a>, <a class="el" href="../../df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass.html#a69c151bdcb58496794b8ef9fa46a2286">rtt::ai::stp::play::AttackingPass</a>, <a class="el" href="../../db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html#a649407297dee6638920185ca497148cb">rtt::ai::stp::play::Attack</a>, and <a class="el" href="../../d5/dc4/classrtt_1_1ai_1_1stp_1_1play_1_1KeeperKickBall.html#a75285f5ba087c4fec511022d614f1d0a">rtt::ai::stp::play::KeeperKickBall</a>.</p>
 
 </div>
 </div>
@@ -970,8 +790,8 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ae0c6ce7335a11d00664df9351a446551"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae0c6ce7335a11d00664df9351a446551">&#9670;&nbsp;</a></span>previousPlayInfos</h2>
+<a id="a067c0013eb3e4d70eedd32a504dee10d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a067c0013eb3e4d70eedd32a504dee10d">&#9670;&nbsp;</a></span>previousMaxRobots</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -980,16 +800,16 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::optional&lt;<a class="el" href="../../d7/d73/namespacertt_1_1ai_1_1stp_1_1gen.html#afc45c97a42c443e6884bd95502426d0d">gen::PlayInfos</a>&gt; rtt::ai::stp::Play::previousPlayInfos</td>
+          <td class="memname">int rtt::ai::stp::Play::previousMaxRobots = -1</td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">inherited</span></span>  </td>
+<span class="mlabels"><span class="mlabel">private</span><span class="mlabel">inherited</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Map that holds info from the previous play </p>
+<p>The previous maxRobots. This is used to check if we need to re-deal </p>
 
 </div>
 </div>

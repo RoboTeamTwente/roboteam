@@ -1,12 +1,11 @@
 var searchData=
 [
-  ['tactic_1652',['Tactic',['../d6/db5/classrtt_1_1ai_1_1stp_1_1Tactic.html',1,'rtt::ai::stp']]],
-  ['testrole_1653',['TestRole',['../da/d79/classrtt_1_1ai_1_1stp_1_1TestRole.html',1,'rtt::ai::stp']]],
-  ['testskill_1654',['TestSkill',['../d8/d57/classrtt_1_1ai_1_1stp_1_1skill_1_1TestSkill.html',1,'rtt::ai::stp::skill::TestSkill'],['../d4/ded/classTestSkill.html',1,'TestSkill']]],
-  ['testtactic_1655',['TestTactic',['../de/d0f/classrtt_1_1ai_1_1stp_1_1TestTactic.html',1,'rtt::ai::stp']]],
-  ['theydonothaveballglobalevaluation_1656',['TheyDoNotHaveBallGlobalEvaluation',['../db/dbe/classrtt_1_1ai_1_1stp_1_1evaluation_1_1TheyDoNotHaveBallGlobalEvaluation.html',1,'rtt::ai::stp::evaluation']]],
-  ['theyhaveballglobalevaluation_1657',['TheyHaveBallGlobalEvaluation',['../da/d0e/classrtt_1_1ai_1_1stp_1_1evaluation_1_1TheyHaveBallGlobalEvaluation.html',1,'rtt::ai::stp::evaluation']]],
-  ['timeoutgamestateevaluation_1658',['TimeOutGameStateEvaluation',['../d9/d4d/classrtt_1_1ai_1_1stp_1_1evaluation_1_1TimeOutGameStateEvaluation.html',1,'rtt::ai::stp::evaluation']]],
-  ['trajectory1d_1659',['Trajectory1D',['../d0/d62/classrtt_1_1Trajectory1D.html',1,'rtt']]],
-  ['trajectory2d_1660',['Trajectory2D',['../d9/da4/classrtt_1_1Trajectory2D.html',1,'rtt']]]
+  ['scoredposition_1525',['ScoredPosition',['../d7/d73/namespacertt_1_1ai_1_1stp_1_1gen.html#d3/d07/structrtt_1_1ai_1_1stp_1_1gen_1_1ScoredPosition',1,'rtt::ai::stp::gen']]],
+  ['scoreprofile_1526',['ScoreProfile',['../d7/d73/namespacertt_1_1ai_1_1stp_1_1gen.html#de/d7c/structrtt_1_1ai_1_1stp_1_1gen_1_1ScoreProfile',1,'rtt::ai::stp::gen']]],
+  ['skill_1527',['Skill',['../da/da2/classrtt_1_1ai_1_1stp_1_1Skill.html',1,'rtt::ai::stp']]],
+  ['stopgamestateevaluation_1528',['StopGameStateEvaluation',['../dd/d4b/classrtt_1_1ai_1_1stp_1_1evaluation_1_1StopGameStateEvaluation.html',1,'rtt::ai::stp::evaluation']]],
+  ['stpinfo_1529',['StpInfo',['../d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html',1,'rtt::ai::stp']]],
+  ['stpmanager_1530',['STPManager',['../da/de3/classrtt_1_1STPManager.html',1,'rtt']]],
+  ['strategymanager_1531',['StrategyManager',['../dc/d52/classrtt_1_1ai_1_1StrategyManager.html',1,'rtt::ai']]],
+  ['striker_1532',['Striker',['../d3/de1/classrtt_1_1ai_1_1stp_1_1role_1_1Striker.html',1,'rtt::ai::stp::role']]]
 ];

@@ -1,8 +1,5 @@
 var dir_c90b4a7e78f58cb89be23d4b6bf13879 =
 [
-    [ "BlockingEvaluation.h", "d5/d6c/BlockingEvaluation_8h.html", [
-      [ "BlockingEvaluation", "db/d9f/classrtt_1_1ai_1_1stp_1_1evaluation_1_1BlockingEvaluation.html", "db/d9f/classrtt_1_1ai_1_1stp_1_1evaluation_1_1BlockingEvaluation" ]
-    ] ],
     [ "GoalShotEvaluation.h", "d1/d9a/GoalShotEvaluation_8h.html", [
       [ "GoalShotEvaluation", "d3/df8/classrtt_1_1ai_1_1stp_1_1evaluation_1_1GoalShotEvaluation.html", "d3/df8/classrtt_1_1ai_1_1stp_1_1evaluation_1_1GoalShotEvaluation" ]
     ] ],

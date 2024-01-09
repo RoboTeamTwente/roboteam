@@ -151,7 +151,7 @@ Private Member Functions</h2></td></tr>
 <tr class="memdesc:af3a3bbd4e47241eb6382ea48643287ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should this tactic be reset (go back to the first skill of this tactic) This tactic can never reset, so always returns false.  <a href="../../d5/dc3/classrtt_1_1ai_1_1stp_1_1tactic_1_1Halt.html#af3a3bbd4e47241eb6382ea48643287ba">More...</a><br /></td></tr>
 <tr class="separator:af3a3bbd4e47241eb6382ea48643287ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0107104c2a6d3bd8234784c3b2f500a2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/dc3/classrtt_1_1ai_1_1stp_1_1tactic_1_1Halt.html#a0107104c2a6d3bd8234784c3b2f500a2">isEndTactic</a> () noexcept override</td></tr>
-<tr class="memdesc:a0107104c2a6d3bd8234784c3b2f500a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether this is a passive tactic (formerly called endTactic)  <a href="../../d5/dc3/classrtt_1_1ai_1_1stp_1_1tactic_1_1Halt.html#a0107104c2a6d3bd8234784c3b2f500a2">More...</a><br /></td></tr>
+<tr class="memdesc:a0107104c2a6d3bd8234784c3b2f500a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether this is an end tactic, meaning it should keep looping this tactic if all skills are finished.  <a href="../../d5/dc3/classrtt_1_1ai_1_1stp_1_1tactic_1_1Halt.html#a0107104c2a6d3bd8234784c3b2f500a2">More...</a><br /></td></tr>
 <tr class="separator:a0107104c2a6d3bd8234784c3b2f500a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1120c6c59b0d0cbf8a8c3f0de5b3cbfd"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/dc3/classrtt_1_1ai_1_1stp_1_1tactic_1_1Halt.html#a1120c6c59b0d0cbf8a8c3f0de5b3cbfd">getName</a> () override</td></tr>
 <tr class="memdesc:a1120c6c59b0d0cbf8a8c3f0de5b3cbfd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the tactic name.  <a href="../../d5/dc3/classrtt_1_1ai_1_1stp_1_1tactic_1_1Halt.html#a1120c6c59b0d0cbf8a8c3f0de5b3cbfd">More...</a><br /></td></tr>
@@ -353,7 +353,7 @@ Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Checks whether this is a passive tactic (formerly called endTactic) </p>
+<p>Checks whether this is an end tactic, meaning it should keep looping this tactic if all skills are finished. </p>
 <dl class="section return"><dt>Returns</dt><dd>This will always return true, since it is an endTactic </dd></dl>
 
 <p>Implements <a class="el" href="../../d6/db5/classrtt_1_1ai_1_1stp_1_1Tactic.html#a101cb2bd5764e2ea2f1678ca1361911f">rtt::ai::stp::Tactic</a>.</p>

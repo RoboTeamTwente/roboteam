@@ -1,10 +1,6 @@
 var classrtt_1_1ai_1_1stp_1_1play_1_1Attack =
 [
     [ "Attack", "db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html#ae97b7333b51d0a0d07f4f56561baa652", null ],
-    [ "calculateInfoForAttackers", "db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html#ac31dde1a488c065bbde80e49e4319ef6", null ],
-    [ "calculateInfoForBlocker", "db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html#af8fab1c6a79e6c62bb0bdea609cc0ada", null ],
-    [ "calculateInfoForDefenders", "db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html#a727b25db22e291fc07fda823cc469f90", null ],
-    [ "calculateInfoForMidfielders", "db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html#aae1ea8ecf869a67e12f40f0a83954043", null ],
     [ "calculateInfoForRoles", "db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html#addf737d170c5e01d48694435670d7b12", null ],
     [ "decideRoleFlags", "db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html#a89f90b210807d2d69e62a5244b3d6881", null ],
     [ "distributeRoles", "db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html#a977b3063d4d26bee4be08d71c2ab7ccc", null ],
@@ -25,7 +21,7 @@ var classrtt_1_1ai_1_1stp_1_1play_1_1Attack =
     [ "keepPlayEvaluation", "db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html#a17fc7a716064d918aa29c072832c2ef8", null ],
     [ "lastScore", "db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html#a81d204e55bab023d2937c1420abd04ad", null ],
     [ "previousKeeperId", "db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html#a7164f241b13b1aa59b6e6b5c30a3094b", null ],
-    [ "previousPlayInfos", "db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html#ae0c6ce7335a11d00664df9351a446551", null ],
+    [ "previousMaxRobots", "db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html#a067c0013eb3e4d70eedd32a504dee10d", null ],
     [ "previousRobotNum", "db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html#afc2268677ee563a2f0a7efa4acff465e", null ],
     [ "roles", "db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html#a0329d2814e2651902bb05f23659e0084", null ],
     [ "roleStatuses", "db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html#a8750ea230c633dcf6a0f09e28e4f47b1", null ],

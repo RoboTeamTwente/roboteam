@@ -5,10 +5,6 @@ var classrtt_1_1ai_1_1Dealer =
       [ "score", "d7/ddc/classrtt_1_1ai_1_1Dealer.html#a89e3f7131deb54621ec7fb8261ca543a", null ],
       [ "weight", "d7/ddc/classrtt_1_1ai_1_1Dealer.html#a94358830841e86be15709f16a5a71aa5", null ]
     ] ],
-    [ "RobotRoleScore", "d7/ddc/classrtt_1_1ai_1_1Dealer.html#df/d29/structrtt_1_1ai_1_1Dealer_1_1RobotRoleScore", [
-      [ "sumScore", "d7/ddc/classrtt_1_1ai_1_1Dealer.html#a3bbf524d6fc7b7f8ac7516bed9219d2d", null ],
-      [ "sumWeights", "d7/ddc/classrtt_1_1ai_1_1Dealer.html#aa5f6e5e7bca9ca5c98b3784d220b8621", null ]
-    ] ],
     [ "RoleInfo", "d7/ddc/classrtt_1_1ai_1_1Dealer.html#d4/ded/structrtt_1_1ai_1_1Dealer_1_1RoleInfo", [
       [ "flags", "d7/ddc/classrtt_1_1ai_1_1Dealer.html#abffef721813b1e58bf8754f963c29abb", null ],
       [ "forcedID", "d7/ddc/classrtt_1_1ai_1_1Dealer.html#aa55cf5612995a0d899e7c185e6e46c4e", null ],
@@ -25,10 +21,9 @@ var classrtt_1_1ai_1_1Dealer =
     [ "FRIEND_TEST", "d7/ddc/classrtt_1_1ai_1_1Dealer.html#a90805940266cd515d46522ac6a12884d", null ],
     [ "getDefaultFlagScores", "d7/ddc/classrtt_1_1ai_1_1Dealer.html#accad1a84e4899ec6a0d78b3607db4d64", null ],
     [ "getRobotScoreForDistance", "d7/ddc/classrtt_1_1ai_1_1Dealer.html#a0d5123c8592eed2fef1de6b80f4922ce", null ],
-    [ "getRobotScoreForFlag", "d7/ddc/classrtt_1_1ai_1_1Dealer.html#adc68070e0e6a74bdda7bc8fc5d31fcaf", null ],
-    [ "getRobotScoreForRole", "d7/ddc/classrtt_1_1ai_1_1Dealer.html#a48f8a83a81876b4ce07afeaa65cb2e3b", null ],
+    [ "getRobotScoreForRole", "d7/ddc/classrtt_1_1ai_1_1Dealer.html#a19728e8bc666c22d342d91521cab7650", null ],
     [ "getScoreMatrix", "d7/ddc/classrtt_1_1ai_1_1Dealer.html#ac12d70a58bd77b035de627742eca229e", null ],
-    [ "getWeightForPriority", "d7/ddc/classrtt_1_1ai_1_1Dealer.html#a762b4d101aad1fb00a37c33990dc6fe9", null ],
+    [ "getWeightForPriority", "d7/ddc/classrtt_1_1ai_1_1Dealer.html#a9c3ea880f0bfdd05727d3d0a661d2ceb", null ],
     [ "setGameStateRoleIds", "d7/ddc/classrtt_1_1ai_1_1Dealer.html#a18c5060ec7b4d6baa7f4b19b71579ea8", null ],
     [ "field", "d7/ddc/classrtt_1_1ai_1_1Dealer.html#ab3d3176a7d6bee6d573b23f5140fdbea", null ],
     [ "world", "d7/ddc/classrtt_1_1ai_1_1Dealer.html#a10b762714097d7afe3ad688f418538fd", null ]

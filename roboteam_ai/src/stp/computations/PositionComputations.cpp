@@ -57,8 +57,7 @@ std::vector<Vector2> PositionComputations::determineWallPositions(const rtt::Fie
     // Calculate the position of the ball, projected onto the field
     if (currentGameState == "ball_placement_them" || currentGameState == "ball_placement_us") {
         ballPos = rtt::ai::GameStateManager::getRefereeDesignatedPosition();
-    }
-    else {
+    } else {
         ballPos = FieldComputations::projectPointInField(field, world->getWorld().value().getBall()->get()->position);
     }
 

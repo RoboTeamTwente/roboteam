@@ -2,6 +2,7 @@
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { useSTPDataStore } from '../../stores/data-stores/stp-data-store'
 import { useVisionDataStore } from '../../stores/data-stores/vision-data-store'
+import CanvasJS from '@canvasjs/charts';
 
 const stpData = useSTPDataStore()
 const visionData = useVisionDataStore()
@@ -55,7 +56,7 @@ const visionData = useVisionDataStore()
 
     <div>
       <canvas id="myChart" width="800" height="400"></canvas>
-    </div>
+    </div>                        
 
 </template>
 
@@ -104,6 +105,7 @@ export default defineComponent({
           data: [
             { x: 10, y: 2 },
             { x: 15, y: 1 },
+            { x: 20, y: 2},
             { x: 25, y: 1.5 },
             { x: 30, y: 0.5 },
             { x: 5, y: 0 }
@@ -113,6 +115,7 @@ export default defineComponent({
           borderWidth: 1
         }]
       }
+
     };
   },
   methods: {
@@ -190,6 +193,7 @@ export default defineComponent({
             data: [
               { x: 10, y: this.average_team_speed },
               { x: 15, y: 1 },
+              { x: 20, y: 2},
               { x: 25, y: 1.5 },
               { x: 30, y: 0.5 },
               { x: 5, y: 0 }
@@ -199,6 +203,13 @@ export default defineComponent({
             borderWidth: 1
           }]
         }
+
+        /*const newData = { ...this.data_to_plot.datasets[0].data[0] };
+        newData.x = 10;
+        newData.y = this.average_team_speed;
+        this.data_to_plot.datasets[0].data[0] = newData;*/
+
+
         this.plotting_value = this.data_to_plot.datasets[0].data[0].y
         this.plotting_counter = this.plotting_counter + 1
 
@@ -222,6 +233,8 @@ export default defineComponent({
           data: this.data_to_plot, 
           options: options // Ignore this error
         });
+
+        scatterChart.render();
 
         //scatterChart.data = this.data_to_plot;
         //scatterChart.update()
@@ -249,7 +262,7 @@ export default defineComponent({
         }
       };
 
-      const scatterChart = new Chart("myChart", {
+      let scatterChart = new Chart("myChart", {
         type: 'bar',
         data: this.data_to_plot, 
         options: options // Ignore this error
@@ -261,13 +274,14 @@ export default defineComponent({
   created() {
     this.define_event(); // Init when the script is run
     this.is_started();
-    this.update_data_to_plot();
+    //this.update_data_to_plot();
   },
 
   mounted() {
     this.possession_counters();
     this.keeper_actions_counter();
-    //this.generateHeatmap();
+    this.generateHeatmap();
+    this.update_data_to_plot();
   },
 
   watch: {
@@ -286,7 +300,6 @@ export default defineComponent({
       }
       this.possession_counters();
       this.keeper_actions_counter();
-      //this.generateHeatmap();
     }
   }
 });

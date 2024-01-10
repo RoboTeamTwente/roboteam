@@ -70,6 +70,7 @@ RUN apk add --no-cache \
     sudo nodejs npm
 RUN npm install -g yarn
 RUN npm install chart.js
+RUN npm install @canvasjs/charts
 
 COPY --from=development --chown=root:root /usr/local/lib/libprotobuf.so.31 /usr/local/lib/libprotobuf.so.31
 COPY --from=development --chown=root:root /usr/local/bin/protoc /usr/local/bin/protoc

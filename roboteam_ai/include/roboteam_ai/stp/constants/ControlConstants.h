@@ -75,6 +75,7 @@ constexpr double DISTANCE_FROM_GOAL_CLOSE = 2 * ROBOT_RADIUS; /**< Distance from
 
 /// GameState constants
 constexpr double AVOID_BALL_DISTANCE = 0.5 + ROBOT_RADIUS + GO_TO_POS_ERROR_MARGIN + BALL_RADIUS; /**< Minimum distance all robots should keep when avoiding the ball */
+constexpr double MINIMUM_DISTANCE_BETWEEN_GOAL_AND_PLACEMENT = AVOID_BALL_DISTANCE + 2 * ROBOT_RADIUS + 0.4; /**< Minimum distance between the defense area and the ball placement position to be able to pass */
 
 }  // namespace rtt::ai::stp::control_constants
 

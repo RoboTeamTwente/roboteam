@@ -46,12 +46,8 @@ bool Line::arePointsOnOppositeSides(const Vector2 &point1, const Vector2 &point2
     Vector2 vectorFromLineStartToPoint1 = point1 - v1;  // vector from line start to point 1
     Vector2 vectorFromLineStartToPoint2 = point2 - v1;  // vector from line start to point 2
 
-    // cross product of lineVector and vectorFromLineStartToPoint1, and lineVector and vectorFromLineStartToPoint2
-    double crossProduct1 = lineVector.x * vectorFromLineStartToPoint1.y - lineVector.y * vectorFromLineStartToPoint1.x;
-    double crossProduct2 = lineVector.x * vectorFromLineStartToPoint2.y - lineVector.y * vectorFromLineStartToPoint2.x;
-
     // if the cross products have different signs, the points are on opposite sides of the line
-    return crossProduct1 * crossProduct2 < 0;
+    return lineVector.cross(vectorFromLineStartToPoint1) * lineVector.cross(vectorFromLineStartToPoint2) < 0;
 }
 
 std::optional<Vector2> Line::intersect(const Line &line) const {
@@ -64,12 +60,6 @@ std::optional<Vector2> Line::intersect(const Line &line) const {
         return std::nullopt;
     }
 }
-
-// // Move to be function of line class
-// // Some dark mathemagic to check if two points are on opposite sides of a line
-// bool arePointsOnOppositeSides(const Line &line, const Vector2 &p1, const Vector2 &p2) {
-
-// }
 
 std::optional<Vector2> Line::intersect(const Vector2 p1, const Vector2 p2, const Vector2 q1, const Vector2 q2) {
     Vector2 A = p1 - p2;

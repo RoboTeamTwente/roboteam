@@ -216,7 +216,7 @@ void WorldObjects::calculateBallPlacementCollision(const rtt::world::World *worl
     double time = completedTimeSteps * timeStep;
 
     for (size_t i = completedTimeSteps; i < pathPoints.size(); i++) {
-        if (ballPlacementLine.distanceToLine(pathPoints[i]) < 0.4) {
+        if (ballPlacementLine.distanceToLine(pathPoints[i]) < ai::stp::control_constants::AVOID_BALL_DISTANCE) {
             insertCollisionData(collisionDatas, CollisionData{pathPoints[i], i * timeStep, "BallPlacementCollision"});
             return;
         }

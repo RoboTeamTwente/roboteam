@@ -123,17 +123,17 @@ std::optional<Trajectory2D> PositionControl::findNewTrajectory(const rtt::world:
                                                                Vector2 &currentVelocity, std::optional<BB::CollisionData> &firstCollision, Vector2 &targetPosition,
                                                                double maxRobotVelocity, double timeStep, stp::AvoidObjects avoidObjects) {
     auto intermediatePoints = createIntermediatePoints(field, robotId, firstCollision, targetPosition);
-    // draw intermediate points on the field for debugging
-    rtt::ai::gui::Out::draw(
-        {
-            .label = "intermediate_points" + std::to_string(robotId),
-            .color = proto::Drawing::YELLOW,
-            .method = proto::Drawing::DOTS,
-            .category = proto::Drawing::PATH_PLANNING,
-            .forRobotId = robotId,
-            .size = 2,
-        },
-        intermediatePoints);
+    // draw intermediate points on the field, uncomment for debugging
+    // rtt::ai::gui::Out::draw(
+    //     {
+    //         .label = "intermediate_points" + std::to_string(robotId),
+    //         .color = proto::Drawing::YELLOW,
+    //         .method = proto::Drawing::DOTS,
+    //         .category = proto::Drawing::PATH_PLANNING,
+    //         .forRobotId = robotId,
+    //         .size = 2,
+    //     },
+    //     intermediatePoints);
 
     double bestScore = 999;
     std::optional<Trajectory2D> bestTrajectory = std::nullopt;
@@ -152,15 +152,12 @@ std::optional<Trajectory2D> PositionControl::findNewTrajectory(const rtt::world:
                 score += 5;
                 double timeTillFirstCollision = firstCollision.value().collisionTime;
                 score += std::max(0.0, 3 - timeTillFirstCollision);
-                // if the collision is with the defense area and within 1 seconds, add 5 to the score
-                // if the collision is with the defense area and within 1 seconds, add 5 to the score
                 if (avoidObjects.shouldAvoidDefenseArea) {
                     auto defenseAreaCollision = worldObjects.getFirstDefenseAreaCollision(field, trajectoryAroundCollision.value(), computedPaths, robotId);
-                    if (defenseAreaCollision.has_value() && defenseAreaCollision.value().collisionTime < 1) {
-                        score += 5;
+                    if (defenseAreaCollision.has_value()) {
+                        score += std::max(0.0, 1 - defenseAreaCollision.value().collisionTime);
                     }
                 }
-
                 if (rtt::ai::GameStateManager::getCurrentGameState().getStrategyName() == "ball_placement_them") {
                     auto ballPlacementPos = rtt::ai::GameStateManager::getRefereeDesignatedPosition();
                     auto startPositionBall = world->getWorld()->getBall()->get()->position;
@@ -170,10 +167,12 @@ std::optional<Trajectory2D> PositionControl::findNewTrajectory(const rtt::world:
                     if (ballPlacementLine.arePointsOnOppositeSides(p1, p2)) {
                         double d1 = (p1 - ballPlacementPos).length() + (p2 - ballPlacementPos).length();
                         double d2 = (p1 - startPositionBall).length() + (p2 - startPositionBall).length();
-                        if (field.leftDefenseArea.contains(ballPlacementPos, 1.5) || field.rightDefenseArea.contains(ballPlacementPos, 1.5)) {
+                        if (field.leftDefenseArea.contains(ballPlacementPos, stp::control_constants::MINIMUM_DISTANCE_BETWEEN_GOAL_AND_PLACEMENT) ||
+                            field.rightDefenseArea.contains(ballPlacementPos, stp::control_constants::MINIMUM_DISTANCE_BETWEEN_GOAL_AND_PLACEMENT)) {
                             d1 += 999;
                         }
-                        if (field.leftDefenseArea.contains(startPositionBall, 1.5) || field.rightDefenseArea.contains(startPositionBall, 1.5)) {
+                        if (field.leftDefenseArea.contains(startPositionBall, stp::control_constants::MINIMUM_DISTANCE_BETWEEN_GOAL_AND_PLACEMENT) ||
+                            field.rightDefenseArea.contains(startPositionBall, stp::control_constants::MINIMUM_DISTANCE_BETWEEN_GOAL_AND_PLACEMENT)) {
                             d2 += 999;
                         }
                         score += std::min(d1, d2) * 10;
@@ -181,6 +180,34 @@ std::optional<Trajectory2D> PositionControl::findNewTrajectory(const rtt::world:
                     }
                 }
             }
+            // plot the trajectory, uncomment for debugging
+            // double max_score = 50;
+            // double min_score = 0;
+            // score = (score - min_score) / (max_score - min_score);
+            // // if score is below 0.1, color is green, if score is above 0.5, color is red, else color is yellow
+            // auto color = score < 0.1 ? proto::Drawing::GREEN : score > 0.5 ? proto::Drawing::RED : proto::Drawing::YELLOW;
+
+            // std::vector<Vector2> plotableTrajectory = trajectoryAroundCollision.value().getPathApproach(timeStep);
+            // rtt::ai::gui::Out::draw(
+            //     {
+            //         .label = "intermediate_trajectory" + std::to_string(robotId) + "_" + std::to_string(intermediatePoint.x) + "_" + std::to_string(intermediatePoint.y),
+            //         .color = color,
+            //         .method = proto::Drawing::LINES_CONNECTED,
+            //         .category = proto::Drawing::PATH_PLANNING,
+            //         .forRobotId = robotId,
+            //         .thickness = std::max(int(1/score - 9), 0),
+            //     },
+            //     plotableTrajectory);
+            // rtt::ai::gui::Out::draw(
+            //     {
+            //         .label = "intermediate_trajectory_dots" + std::to_string(robotId) + "_" + std::to_string(intermediatePoint.x) + "_" + std::to_string(intermediatePoint.y),
+            //         .color = color,
+            //         .method = proto::Drawing::DOTS,
+            //         .category = proto::Drawing::PATH_PLANNING,
+            //         .forRobotId = robotId,
+            //         .size = 2,
+            //     },
+            //     plotableTrajectory);
             if (score < bestScore) {
                 bestScore = score;
                 bestTrajectory = trajectoryAroundCollision.value();
@@ -214,11 +241,10 @@ std::optional<Trajectory2D> PositionControl::calculateTrajectoryAroundCollision(
                 double totalTime = i * timeStep + intermediateToTarget.getTotalTime();
                 double timeTillFirstCollision = newStartCollisions.value().collisionTime;
                 double score = totalTime + 5 + std::max(0.0, 3 - timeTillFirstCollision);
-                // if the collision is with the defense area and within 1 seconds, add 5 to the score
                 if (avoidObjects.shouldAvoidDefenseArea) {
                     auto defenseAreaCollision = worldObjects.getFirstDefenseAreaCollision(field, intermediateToTarget, computedPaths, robotId);
-                    if (defenseAreaCollision.has_value() && defenseAreaCollision.value().collisionTime < 1) {
-                        score += 5;
+                    if (defenseAreaCollision.has_value()) {
+                        score += std::max(0.0, 1 - defenseAreaCollision.value().collisionTime);
                     }
                 }
 
@@ -231,10 +257,12 @@ std::optional<Trajectory2D> PositionControl::calculateTrajectoryAroundCollision(
                     if (ballPlacementLine.arePointsOnOppositeSides(p1, p2)) {
                         double d1 = (p1 - ballPlacementPos).length() + (p2 - ballPlacementPos).length();
                         double d2 = (p1 - startPositionBall).length() + (p2 - startPositionBall).length();
-                        if (field.leftDefenseArea.contains(ballPlacementPos, 1.5) || field.rightDefenseArea.contains(ballPlacementPos, 1.5)) {
+                        if (field.leftDefenseArea.contains(ballPlacementPos, stp::control_constants::MINIMUM_DISTANCE_BETWEEN_GOAL_AND_PLACEMENT) ||
+                            field.rightDefenseArea.contains(ballPlacementPos, stp::control_constants::MINIMUM_DISTANCE_BETWEEN_GOAL_AND_PLACEMENT)) {
                             d1 += 999;
                         }
-                        if (field.leftDefenseArea.contains(startPositionBall, 1.5) || field.rightDefenseArea.contains(startPositionBall, 1.5)) {
+                        if (field.leftDefenseArea.contains(startPositionBall, stp::control_constants::MINIMUM_DISTANCE_BETWEEN_GOAL_AND_PLACEMENT) ||
+                            field.rightDefenseArea.contains(startPositionBall, stp::control_constants::MINIMUM_DISTANCE_BETWEEN_GOAL_AND_PLACEMENT)) {
                             d2 += 999;
                         }
                         d2 += 999;

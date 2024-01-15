@@ -178,7 +178,7 @@ Vector2 PositionComputations::calculateAvoidBallPosition(Vector2 targetPosition,
 
     // During ball placement, we need to avoid the area between the ball and the target position by a certain margin
     if (currentGameState == "ball_placement_us" || currentGameState == "ball_placement_them") {
-        avoidShape = std::make_unique<Tube>(Tube(ballPosition, GameStateManager::getRefereeDesignatedPosition(), control_constants::AVOID_BALL_DISTANCE));
+        avoidShape = std::make_unique<Tube>(Tube(ballPosition, GameStateManager::getRefereeDesignatedPosition(), control_constants::AVOID_BALL_DISTANCE + 0.1));
     } else {
         // During stop gamestate, we need to avoid the area directly around the ball.
         avoidShape = std::make_unique<Circle>(Circle(ballPosition, control_constants::AVOID_BALL_DISTANCE));

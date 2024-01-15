@@ -66,6 +66,9 @@ void BallPlacementThem::calculateInfoForRoles() noexcept {
     PositionComputations::calculateInfoForDefendersAndWallers(stpInfos, roles, field, world, false);
     PositionComputations::calculateInfoForAttackers(stpInfos, roles, field, world);
     calculateInfoForHarasser();
+    for (auto &stpInfo : stpInfos) {
+        stpInfo.second.setShouldAvoidDefenseArea(false);
+    }
 }
 
 void BallPlacementThem::calculateInfoForHarasser() noexcept {

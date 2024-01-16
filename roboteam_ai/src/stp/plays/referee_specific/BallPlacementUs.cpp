@@ -75,7 +75,7 @@ void BallPlacementUs::calculateInfoForRoles() noexcept {
     stpInfos["ball_placer"].setPositionToMoveTo(ballTarget);
     stpInfos["ball_placer"].setShouldAvoidOutOfField(false);
     stpInfos["ball_placer"].setShouldAvoidBall(false);
-    for (auto &stpInfo : stpInfos) {
+    for (auto& stpInfo : stpInfos) {
         stpInfo.second.setShouldAvoidDefenseArea(false);
     }
 

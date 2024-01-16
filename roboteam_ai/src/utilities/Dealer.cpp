@@ -262,8 +262,8 @@ double Dealer::getRobotScoreForDistance(const stp::StpInfo &stpInfo, const v::Ro
         return 0;
     }
     double dealer_speed_factor = stp::control_constants::DEALER_SPEED_FACTOR;
-    if ((robot->getPos()-target_position.value()).length() < robot->getVel().length() * dealer_speed_factor) {
-        dealer_speed_factor = (robot->getPos()-target_position.value()).length() / robot->getVel().length();
+    if ((robot->getPos() - target_position.value()).length() < robot->getVel().length() * dealer_speed_factor) {
+        dealer_speed_factor = (robot->getPos() - target_position.value()).length() / robot->getVel().length();
     }
     target_position = target_position.value() + stpInfo.getTargetLocationSpeed() * dealer_speed_factor;
     distance = (robot->getPos() + robot->getVel() * dealer_speed_factor).dist(*target_position);

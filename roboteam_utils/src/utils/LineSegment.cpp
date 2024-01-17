@@ -266,4 +266,16 @@ std::optional<Vector2> LineSegment::getClosestPointToLine(const Line &other) con
     return std::nullopt;
 }
 
+bool LineSegment::isWithinDistance(const LineSegment &line, double distance) const {
+    if (this->doesIntersect(line)) {
+        return true;
+    }
+    double dist1 = this->distanceToLine(line.start);
+    double dist2 = this->distanceToLine(line.end);
+    double dist3 = line.distanceToLine(this->start);
+    double dist4 = line.distanceToLine(this->end);
+
+    return dist1 <= distance || dist2 <= distance || dist3 <= distance || dist4 <= distance;
+}
+
 }  // namespace rtt

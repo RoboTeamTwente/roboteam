@@ -121,9 +121,10 @@ class WorldObjects {
      * @param pathPoints std::vector with path points
      * @param timeStep Time between pathpoints
      * @param completedTimeSteps Amount of seconds of the trajectory already completed by the robot
+     * @param avoidId ID of the robot to ignore collisions with
      */
     void calculateEnemyRobotCollisions(const rtt::world::World *world, std::vector<CollisionData> &collisionDatas, const std::vector<Vector2> &pathPoints, double timeStep,
-                                       size_t completedTimeSteps);
+                                       size_t completedTimeSteps, int avoidId);
 
     /**
      * @brief Takes a path from the array of stored paths and checks points along the path if they are too close to

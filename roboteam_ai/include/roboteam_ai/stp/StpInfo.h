@@ -94,6 +94,8 @@ struct StpInfo {
 
     void setShouldAvoidTheirRobots(bool shouldAvoidTheirRobots) { avoidObjects.shouldAvoidTheirRobots = shouldAvoidTheirRobots; }
 
+    void setNotAvoidTheirRobotId(int notAvoidTheirRobotId) { avoidObjects.notAvoidTheirRobotId = notAvoidTheirRobotId; }
+
    private:
     /**
      * Current world pointer

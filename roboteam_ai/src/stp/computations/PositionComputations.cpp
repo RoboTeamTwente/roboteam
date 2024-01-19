@@ -249,8 +249,12 @@ void PositionComputations::calculateInfoForHarasser(std::unordered_map<std::stri
         stpInfos["harasser"].setAngle((ballPos - targetPos).angle());
         // Maybe reset such that we go to formation tactic?
     } else {
-        // Allow the harasser to get close to the enemy robot by not caring about collisions with enemy robots and go to getBall tactic
-        stpInfos["harasser"].setShouldAvoidTheirRobots(false);
+        if (enemyClosestToBall->get()->getPos().dist(field.leftGoalArea.rightLine().center()) >
+            stpInfos["harasser"].getRobot()->get()->getPos().dist(field.leftGoalArea.rightLine().center())) {
+            stpInfos["harasser"].setNotAvoidTheirRobotId(enemyClosestToBall->get()->getId());
+        } else {
+            stpInfos["harasser"].setNotAvoidTheirRobotId(-1);
+        }
         auto harasser = std::find_if(roles->begin(), roles->end(), [](const std::unique_ptr<Role> &role) { return role != nullptr && role->getName() == "harasser"; });
         if (harasser != roles->end() && !harasser->get()->finished() && strcmp(harasser->get()->getCurrentTactic()->getName(), "Formation") == 0)
             harasser->get()->forceNextTactic();
@@ -281,6 +285,7 @@ void PositionComputations::calculateInfoForDefendersAndWallers(std::unordered_ma
     erase_if(enemyRobots, [&](const auto enemyRobot) -> bool { return enemyClosestToBall && enemyRobot->getId() == enemyClosestToBall.value()->getId(); });
     std::map<double, EnemyInfo> enemyMap;
     std::vector<Vector2> enemies;
+    std::vector<int> ids;
     for (auto enemy : enemyRobots) {
         if (enemy->hasBall()) continue;
         double score = FieldComputations::getDistanceToGoal(field, true, enemy->getPos());
@@ -290,6 +295,7 @@ void PositionComputations::calculateInfoForDefendersAndWallers(std::unordered_ma
         }
         EnemyInfo info = {enemy->getPos(), enemy->getVel(), enemy->getId()};
         enemyMap.insert({score, info});
+        ids.emplace_back(enemy->getId());
     }
     ComputationManager::calculatedEnemyMapIds.clear();
     // If defenders do not have a position yet, don't do hungarian algorithm
@@ -343,11 +349,14 @@ void PositionComputations::calculateInfoForDefendersAndWallers(std::unordered_ma
             } else {
                 stpInfos[activeDefenderNames[i]].setPositionToDefend(enemies[assignments[i]]);
                 stpInfos[activeDefenderNames[i]].setBlockDistance(BlockDistance::ROBOTRADIUS);
-                constexpr double IGNORE_COLLISIONS_DISTANCE = 1.5;
+                constexpr double IGNORE_COLLISIONS_DISTANCE = 0.4;
                 if (stpInfos[activeDefenderNames[i]].getRobot() &&
-                    (stpInfos[activeDefenderNames[i]].getRobot()->get()->getPos() - enemies[assignments[i]]).length() < IGNORE_COLLISIONS_DISTANCE) {
-                    stpInfos[activeDefenderNames[i]].setShouldAvoidOurRobots(false);
-                    stpInfos[activeDefenderNames[i]].setShouldAvoidTheirRobots(false);
+                    (stpInfos[activeDefenderNames[i]].getRobot()->get()->getPos() - enemies[assignments[i]]).length() < IGNORE_COLLISIONS_DISTANCE &&
+                    stpInfos[activeDefenderNames[i]].getRobot()->get()->getPos().dist(field.leftGoalArea.rightLine().center()) <
+                        enemies[assignments[i]].dist(field.leftGoalArea.rightLine().center())) {
+                    stpInfos[activeDefenderNames[i]].setNotAvoidTheirRobotId(ids[assignments[i]]);
+                } else {
+                    stpInfos[activeDefenderNames[i]].setNotAvoidTheirRobotId(-1);
                 }
             }
         }
@@ -369,9 +378,8 @@ void PositionComputations::calculateInfoForDefendersAndWallers(std::unordered_ma
         wallerStpInfo.setAngle((world->getWorld()->getBall()->get()->position - field.leftGoalArea.rightLine().center()).angle());
 
         // If the waller is close to its target, ignore collisions
-        constexpr double IGNORE_COLLISIONS_DISTANCE = 1.0;
+        constexpr double IGNORE_COLLISIONS_DISTANCE = 0.4;
         if (wallerStpInfo.getRobot() && (wallerStpInfo.getRobot()->get()->getPos() - positionToMoveTo).length() < IGNORE_COLLISIONS_DISTANCE) {
-            wallerStpInfo.setShouldAvoidOurRobots(false);
             wallerStpInfo.setShouldAvoidTheirRobots(false);
         }
     }

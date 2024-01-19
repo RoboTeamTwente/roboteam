@@ -24,37 +24,31 @@ bool LineSegment::doesIntersect(const LineSegment &line) const { return intersec
 std::optional<Vector2> LineSegment::intersects(const LineSegment &line) const {
     auto result = Line::intersect(start, end, line.start, line.end);
     if (result.has_value()) {
-        float t = Line::relativePosition(start, end, result.value());
-        float u = Line::relativePosition(line.start, line.end, result.value());
+        Vector2 intersectionPoint = result.value();
+        float t = Line::relativePosition(start, end, intersectionPoint);
+        float u = Line::relativePosition(line.start, line.end, intersectionPoint);
         if (t >= 0 && t <= 1 && u >= 0 && u <= 1) {
             return result;
-        } else {
-            return std::nullopt;
         }
     } else {
-        /* The only possible cases are that one/both of the LineSegments are actually points, the LineSegments have a shared LineSegment part or the LineSegments are distinct and
-         * parallel. */
         if (isPoint()) {
             return line.isOnLine(start) ? std::optional<Vector2>(start) : std::nullopt;
         } else if (line.isPoint()) {
             return isOnLine(line.start) ? std::optional<Vector2>(line.start) : std::nullopt;
         }
 
-        // Check if both LineSegments are on the same infinite line.
         Line checkLine = Line(*this);
-        if (!checkLine.isOnLine(line.start)) {
-            return std::nullopt;
-        }
-        if (line.isOnFiniteLine(start)) {
-            return start;
-        } else if (line.isOnFiniteLine(end)) {
-            return end;
-        } else if (isOnFiniteLine(line.start)) {
-            return line.start;
-        } else {
-            return std::nullopt;
+        if (checkLine.isOnLine(line.start)) {
+            if (line.isOnFiniteLine(start)) {
+                return start;
+            } else if (line.isOnFiniteLine(end)) {
+                return end;
+            } else if (isOnFiniteLine(line.start)) {
+                return line.start;
+            }
         }
     }
+    return std::nullopt;
 }
 
 double LineSegment::distanceToLine(const Vector2 &point) const { return (project(point) - point).length(); }
@@ -265,17 +259,4 @@ std::optional<Vector2> LineSegment::getClosestPointToLine(const Line &other) con
 
     return std::nullopt;
 }
-
-bool LineSegment::isWithinDistance(const LineSegment &line, double distance) const {
-    if (this->doesIntersect(line)) {
-        return true;
-    }
-    double dist1 = this->distanceToLine(line.start);
-    double dist2 = this->distanceToLine(line.end);
-    double dist3 = line.distanceToLine(this->start);
-    double dist4 = line.distanceToLine(this->end);
-
-    return dist1 <= distance || dist2 <= distance || dist3 <= distance || dist4 <= distance;
-}
-
 }  // namespace rtt

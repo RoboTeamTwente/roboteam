@@ -38,11 +38,12 @@ enum class Status { Waiting, Success, Failure, Running };
  */
 struct AvoidObjects {
     bool shouldAvoidBall = false;                                  /***< Indicates whether the robot should avoid the ball */
+    double avoidBallDist = control_constants::AVOID_BALL_DISTANCE; /***< The minimum distance a robot should keep to the ball when avoiding the ball */
     bool shouldAvoidDefenseArea = true;                            /***< Indicates whether the robot should avoid the defense area */
     bool shouldAvoidOutOfField = true;                             /***< Indicates whether the robot should avoid going out of the field */
     bool shouldAvoidOurRobots = true;                              /***< Indicates whether the robot should avoid allied robots */
     bool shouldAvoidTheirRobots = true;                            /***< Indicates whether the robot should avoid the enemy robots */
-    double avoidBallDist = control_constants::AVOID_BALL_DISTANCE; /***< The minimum distance a robot should keep to the ball when avoiding the ball */
+    int notAvoidTheirRobotId = -1;                                 /***< Indicates which robot of the enemy team should not be avoided, -1 means all robots should be avoided */
 };
 }  // namespace rtt::ai::stp
 #endif  // RTT_STPINFOENUMS_H

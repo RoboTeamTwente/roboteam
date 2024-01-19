@@ -175,14 +175,6 @@ class LineSegment {
      */
     [[nodiscard]] std::optional<Vector2> getClosestPointToLine(const Line &) const;
 
-    /**
-     * Check whether two lineSegments are within a given distance of each other.
-     * @param line The other lineSegment.
-     * @param distance The distance => 0.0.
-     * @return True if the lineSegments are within the given distance of each other, false otherwise.
-     */
-    [[nodiscard]] bool isWithinDistance(const LineSegment &line, double distance) const;
-
    private:
     /**
      * Check whether a given point lies on this LineSegment, given that this LineSegment has length > 0 and that the given point lies on the infinite Line expansion of this

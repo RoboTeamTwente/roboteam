@@ -42,8 +42,8 @@ std::optional<CollisionData> WorldObjects::getFirstCollision(const rtt::world::W
     if (avoidObjects.shouldAvoidBall) {
         calculateBallCollisions(world, collisionDatas, pathPoints, timeStep, avoidObjects.avoidBallDist, completedTimeSteps);
     }
-    if (avoidObjects.shouldAvoidTheirRobots) {
-        calculateEnemyRobotCollisions(world, collisionDatas, pathPoints, timeStep, completedTimeSteps);
+    if (avoidObjects.shouldAvoidTheirRobots || avoidObjects.notAvoidTheirRobotId != -1) {
+        calculateEnemyRobotCollisions(world, collisionDatas, pathPoints, timeStep, completedTimeSteps, avoidObjects.notAvoidTheirRobotId);
     }
     if (avoidObjects.shouldAvoidOurRobots) {
         calculateOurRobotCollisions(world, collisionDatas, pathPoints, computedPaths, robotId, timeStep, completedTimeSteps);
@@ -123,16 +123,43 @@ void WorldObjects::calculateBallCollisions(const rtt::world::World *world, std::
 
     auto startPositionBall = world->getWorld()->getBall()->get()->position;
     auto VelocityBall = world->getWorld()->getBall()->get()->velocity;
-    Vector2 oldBallPos = startPositionBall;
-    Vector2 newBallPos = startPositionBall;
 
     for (double loopTime = 0; loopTime < ballAvoidanceTime; loopTime += timeStep, completedTimeSteps++) {
-        oldBallPos = newBallPos;
-        newBallPos += VelocityBall * timeStep;
         if (completedTimeSteps + 1 >= pathPoints.size()) {
             return;
         }
-        if (LineSegment(pathPoints[completedTimeSteps], pathPoints[completedTimeSteps + 1]).isWithinDistance(LineSegment(oldBallPos, newBallPos), dist)) {
+        if ((pathPoints[completedTimeSteps] - (startPositionBall + VelocityBall * loopTime)).length() > 1) {
+            continue;
+        }
+        double startPointX_R1 = pathPoints[completedTimeSteps].x;
+        double startPointY_R1 = pathPoints[completedTimeSteps].y;
+        double startPointX_ball = startPositionBall.x;
+        double startPointY_ball = startPositionBall.y;
+
+        double velocityX_R1 = (pathPoints[completedTimeSteps + 1].x - startPointX_R1) / timeStep;
+        double velocityY_R1 = (pathPoints[completedTimeSteps + 1].y - startPointY_R1) / timeStep;
+        double velocityX_ball = VelocityBall.x;
+        double velocityY_ball = VelocityBall.y;
+
+        double velocityX_diff = velocityX_R1 - velocityX_ball;
+        double velocityY_diff = velocityY_R1 - velocityY_ball;
+
+        double minTime = (startPointX_R1 * velocityX_diff + velocityX_R1 * startPointX_ball - startPointX_ball * velocityX_ball - startPointY_R1 * velocityY_R1 +
+                          startPointY_R1 * velocityY_ball + velocityY_R1 * startPointY_ball - startPointY_ball * velocityY_ball) /
+                         (velocityX_R1 * velocityX_R1 - 2 * velocityX_R1 * velocityX_ball + velocityX_ball * velocityX_ball + velocityY_diff * velocityY_diff);
+        if (minTime < 0) {
+            minTime = 0;
+        }
+        if (minTime > timeStep) {
+            minTime = timeStep;
+        }
+
+        // check distance at minTime
+        Vector2 ourLocationAtMinTime = Vector2(startPointX_R1, startPointY_R1) + Vector2(velocityX_R1, velocityY_R1) * minTime;
+        Vector2 theirLocationAtMinTime = Vector2(startPointX_ball, startPointY_ball) + Vector2(velocityX_ball, velocityY_ball) * minTime;
+        double distance = (ourLocationAtMinTime - theirLocationAtMinTime).length();
+
+        if (distance < dist) {
             insertCollisionData(collisionDatas, CollisionData{pathPoints[completedTimeSteps], loopTime, "BallCollision"});
             return;
         }
@@ -140,20 +167,53 @@ void WorldObjects::calculateBallCollisions(const rtt::world::World *world, std::
 }
 
 void WorldObjects::calculateEnemyRobotCollisions(const rtt::world::World *world, std::vector<CollisionData> &collisionDatas, const std::vector<Vector2> &pathPoints,
-                                                 double timeStep, size_t completedTimeSteps) {
+                                                 double timeStep, size_t completedTimeSteps, int avoidId) {
     const std::vector<world::view::RobotView> theirRobots = world->getWorld()->getThem();
-    const double maxCollisionCheckTime = 1;                                  // Maximum time to check for collisions
+    const double maxCollisionCheckTime = 0.5;                                                                                           // Maximum time to check for collisions
     const double avoidanceDistance = 2.5 * ai::Constants::ROBOT_RADIUS_MAX() + 2 * ai::stp::control_constants::GO_TO_POS_ERROR_MARGIN;  // Distance to avoid enemy robots
 
     for (double loopTime = 0; loopTime < maxCollisionCheckTime; loopTime += timeStep, completedTimeSteps++) {
         if (completedTimeSteps + 1 >= pathPoints.size()) {
             return;
         }
-        for (const auto &theirRobot : theirRobots) {
-            if (LineSegment(pathPoints[completedTimeSteps], pathPoints[completedTimeSteps + 1])
-                    .isWithinDistance(LineSegment(theirRobot->getPos() + theirRobot->getVel() * loopTime, theirRobot->getPos() + theirRobot->getVel() * (loopTime + timeStep)),
-                                      avoidanceDistance)) {
-                insertCollisionData(collisionDatas, CollisionData{pathPoints[completedTimeSteps], loopTime, "TheirRobotCollision"});
+        for (const auto &opponentRobot : theirRobots) {
+            if ((pathPoints[completedTimeSteps] + (pathPoints[completedTimeSteps + 1] - pathPoints[completedTimeSteps]) / timeStep * loopTime -
+                 (opponentRobot->getPos() + opponentRobot->getVel() * loopTime))
+                    .length() > 1) {
+                continue;
+            }
+
+            double startPointX_OurRobot = pathPoints[completedTimeSteps].x;
+            double startPointY_OurRobot = pathPoints[completedTimeSteps].y;
+            double startPointX_OpponentRobot = opponentRobot->getPos().x + opponentRobot->getVel().x * loopTime;
+            double startPointY_OpponentRobot = opponentRobot->getPos().y + opponentRobot->getVel().y * loopTime;
+
+            double velocityX_OurRobot = (pathPoints[completedTimeSteps + 1].x - startPointX_OurRobot) / timeStep;
+            double velocityY_OurRobot = (pathPoints[completedTimeSteps + 1].y - startPointY_OurRobot) / timeStep;
+            double velocityX_OpponentRobot = opponentRobot->getVel().x;
+            double velocityY_OpponentRobot = opponentRobot->getVel().y;
+
+            double velocityX_diff = velocityX_OurRobot - velocityX_OpponentRobot;
+            double velocityY_diff = velocityY_OurRobot - velocityY_OpponentRobot;
+
+            double minTime = (startPointX_OurRobot * velocityX_diff + velocityX_OurRobot * startPointX_OpponentRobot - startPointX_OpponentRobot * velocityX_OpponentRobot -
+                              startPointY_OurRobot * velocityY_OurRobot + startPointY_OurRobot * velocityY_OpponentRobot + velocityY_OurRobot * startPointY_OpponentRobot -
+                              startPointY_OpponentRobot * velocityY_OpponentRobot) /
+                             (velocityX_OurRobot * velocityX_OurRobot - 2 * velocityX_OurRobot * velocityX_OpponentRobot + velocityX_OpponentRobot * velocityX_OpponentRobot +
+                              velocityY_diff * velocityY_diff);
+            if (minTime < 0) {
+                minTime = 0;
+            }
+            if (minTime > timeStep) {
+                minTime = timeStep;
+            }
+
+            // check distance at minTime
+            Vector2 ourLocationAtMinTime = Vector2(startPointX_OurRobot, startPointY_OurRobot) + Vector2(velocityX_OurRobot, velocityY_OurRobot) * minTime;
+            Vector2 theirLocationAtMinTime = Vector2(startPointX_OpponentRobot, startPointY_OpponentRobot) + Vector2(velocityX_OpponentRobot, velocityY_OpponentRobot) * minTime;
+            double distance = (ourLocationAtMinTime - theirLocationAtMinTime).length();
+            if (distance < avoidanceDistance) {
+                insertCollisionData(collisionDatas, CollisionData{ourLocationAtMinTime, loopTime, "TheirRobotCollision"});
                 return;
             }
         }
@@ -163,7 +223,7 @@ void WorldObjects::calculateEnemyRobotCollisions(const rtt::world::World *world,
 void WorldObjects::calculateOurRobotCollisions(const rtt::world::World *world, std::vector<CollisionData> &collisionDatas, const std::vector<Vector2> &pathPoints,
                                                const std::unordered_map<int, std::vector<Vector2>> &computedPaths, int robotId, double timeStep, size_t completedTimeSteps) {
     auto ourRobots = world->getWorld()->getUs();
-    const double maxCollisionCheckTime = 1;                              // Maximum time to check for collisions
+    const double maxCollisionCheckTime = 0.5;                                                                                       // Maximum time to check for collisions
     const double avoidanceDistance = 2.5 * ai::Constants::ROBOT_RADIUS() + 2 * ai::stp::control_constants::GO_TO_POS_ERROR_MARGIN;  // Distance to avoid our robots
 
     for (double loopTime = 0; loopTime < maxCollisionCheckTime; loopTime += timeStep, completedTimeSteps++) {
@@ -172,10 +232,40 @@ void WorldObjects::calculateOurRobotCollisions(const rtt::world::World *world, s
         }
         for (const auto &ourRobot : ourRobots) {
             if (ourRobot->getId() == robotId) continue;
-            if (LineSegment(pathPoints[completedTimeSteps], pathPoints[completedTimeSteps + 1])
-                    .isWithinDistance(LineSegment(ourRobot->getPos() + ourRobot->getVel() * loopTime, ourRobot->getPos() + ourRobot->getVel() * (loopTime + timeStep)),
-                                      avoidanceDistance)) {
-                insertCollisionData(collisionDatas, CollisionData{pathPoints[completedTimeSteps], loopTime, "OurRobotCollision"});
+            if ((pathPoints[completedTimeSteps] - (ourRobot->getPos() + ourRobot->getVel() * loopTime)).length() > 1) {
+                continue;
+            }
+
+            double startPointX_OurRobot = pathPoints[completedTimeSteps].x;
+            double startPointY_OurRobot = pathPoints[completedTimeSteps].y;
+            double startPointX_OtherRobot = ourRobot->getPos().x + ourRobot->getVel().x * loopTime;
+            double startPointY_OtherRobot = ourRobot->getPos().y + ourRobot->getVel().y * loopTime;
+
+            double velocityX_OurRobot = (pathPoints[completedTimeSteps + 1].x - startPointX_OurRobot) / timeStep;
+            double velocityY_OurRobot = (pathPoints[completedTimeSteps + 1].y - startPointY_OurRobot) / timeStep;
+            double velocityX_OtherRobot = ourRobot->getVel().x;
+            double velocityY_OtherRobot = ourRobot->getVel().y;
+
+            double velocityX_diff = velocityX_OurRobot - velocityX_OtherRobot;
+            double velocityY_diff = velocityY_OurRobot - velocityY_OtherRobot;
+
+            double minTime = (startPointX_OurRobot * velocityX_diff + velocityX_OurRobot * startPointX_OtherRobot - startPointX_OtherRobot * velocityX_OtherRobot -
+                              startPointY_OurRobot * velocityY_OurRobot + startPointY_OurRobot * velocityY_OtherRobot + velocityY_OurRobot * startPointY_OtherRobot -
+                              startPointY_OtherRobot * velocityY_OtherRobot) /
+                             (velocityX_OurRobot * velocityX_OurRobot - 2 * velocityX_OurRobot * velocityX_OtherRobot + velocityX_OtherRobot * velocityX_OtherRobot +
+                              velocityY_diff * velocityY_diff);
+            if (minTime < 0) {
+                minTime = 0;
+            }
+            if (minTime > timeStep) {
+                minTime = timeStep;
+            }
+
+            Vector2 ourLocationAtMinTime = Vector2(startPointX_OurRobot, startPointY_OurRobot) + Vector2(velocityX_OurRobot, velocityY_OurRobot) * minTime;
+            Vector2 otherRobotLocationAtMinTime = Vector2(startPointX_OtherRobot, startPointY_OtherRobot) + Vector2(velocityX_OtherRobot, velocityY_OtherRobot) * minTime;
+            double distance = (ourLocationAtMinTime - otherRobotLocationAtMinTime).length();
+            if (distance < avoidanceDistance) {
+                insertCollisionData(collisionDatas, CollisionData{ourLocationAtMinTime, loopTime, "OurRobotCollision"});
                 return;
             }
         }

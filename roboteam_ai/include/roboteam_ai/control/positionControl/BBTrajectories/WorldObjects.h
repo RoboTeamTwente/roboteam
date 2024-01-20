@@ -57,13 +57,16 @@ class WorldObjects {
      * @param computedPaths the paths of our robots
      * @param robotId Id of the robot
      * @param avoidObjects a struct with if it should avoid certain objects
+     * @param completedTimeSteps Number of completed time steps
      * @return optional with rtt::BB::CollisionData
      */
     std::optional<CollisionData> getFirstCollision(const rtt::world::World *world, const rtt::Field &field, const rtt::Trajectory2D &Trajectory,
-                                                   const std::unordered_map<int, std::vector<Vector2>> &computedPaths, int robotId, ai::stp::AvoidObjects avoidObjects);
+                                                   const std::unordered_map<int, std::vector<Vector2>> &computedPaths, int robotId, ai::stp::AvoidObjects avoidObjects,
+                                                   std::unordered_map<int, int> completedTimeSteps);
 
     /**
-     * @brief Calculates the position of the first collision with the defense area
+     * @brief Calculates the position of the first collision with the defense area, note that this functions assumes the entire trajectory,
+     * including the part that might already be completed. Only call this function for a new trajectory
      * @param field used for checking collisions with the field
      * @param BBTrajectory the trajectory to check for collisions
      * @param computedPaths the paths of our robots
@@ -109,7 +112,7 @@ class WorldObjects {
      * @param dist Distance to the ball
      * @param completedTimeSteps Number of completed time steps
      */
-    void calculateBallCollisions(const rtt::world::World *world, std::vector<CollisionData> &collisionDatas, std::vector<Vector2> pathPoints, double timeStep, double dist,
+    void calculateBallCollisions(const rtt::world::World *world, std::vector<CollisionData> &collisionDatas, const std::vector<Vector2> &pathPoints, double timeStep, double dist,
                                  size_t completedTimeSteps);
 
     /**
@@ -139,7 +142,8 @@ class WorldObjects {
      * @param completedTimeSteps how many seconds of the trajectory is already completed by the robot
      */
     void calculateOurRobotCollisions(const rtt::world::World *world, std::vector<CollisionData> &collisionDatas, const std::vector<Vector2> &pathPoints,
-                                     const std::unordered_map<int, std::vector<Vector2>> &computedPaths, int robotId, double timeStep, size_t completedTimeSteps);
+                                     const std::unordered_map<int, std::vector<Vector2>> &computedPaths, int robotId, double timeStep,
+                                     std::unordered_map<int, int> completedTimeSteps);
 
     /**
      * @brief Takes a calculated path of a robot and checks points along the path if they are too close to an

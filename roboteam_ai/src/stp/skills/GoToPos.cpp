@@ -28,10 +28,6 @@ Status GoToPos::onUpdate(const StpInfo &info) noexcept {
         info.getCurrentWorld(), info.getField().value(), info.getRobot().value()->getId(), info.getRobot().value()->getPos(), info.getRobot().value()->getVel(), targetPos,
         info.getMaxRobotVelocity(), info.getPidType().value(), avoidObj);
 
-    if (commandCollision.collisionData.has_value()) {
-        // return Status::Failure;
-    }
-
     double targetVelocityLength;
     if (info.getPidType() == stp::PIDType::KEEPER && (info.getRobot()->get()->getPos() - targetPos).length() > 2.0 * control_constants::ROBOT_RADIUS) {
         targetVelocityLength = std::max(std::clamp(commandCollision.robotCommand.velocity.length(), 0.0, info.getMaxRobotVelocity()), 1.5);  // TODO: Tune this value better

@@ -15,15 +15,20 @@
 namespace rtt::BB {
 
 /**
+ * @brief Enum that stores the different types of collisions
+ */
+enum class CollisionType { FIELD, DEFENSEAREA, BALL, ENEMYROBOT, OWNROBOT, BALLPLACEMENT };
+
+/**
  * @brief Struct that stores data about a collision
  * @memberof collisionPosition position robot shouldn't come
  * @memberof collisionTime number of seconds from now that the collision will occur
- * @memberof collisionName the name of what causes the collision
+ * @memberof collisionType type of collision
  */
 struct CollisionData {
     Vector2 collisionPosition;
     double collisionTime;
-    std::string collisionName;
+    CollisionType collisionType;
 };
 
 /**

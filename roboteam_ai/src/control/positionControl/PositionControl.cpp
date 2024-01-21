@@ -105,8 +105,8 @@ rtt::BB::CommandCollision PositionControl::computeAndTrackTrajectory(const rtt::
     Vector2 trackingVelocityVector = {trackingVelocity.x, trackingVelocity.y};
 
     // Break if all paths result in collision and we will collide with a robot
-    if (commandCollision.collisionData.has_value() &&
-        (commandCollision.collisionData.value().collisionName == "TheirRobotCollision" || commandCollision.collisionData.value().collisionName == "OurRobotCollision")) {
+    if (commandCollision.collisionData.has_value() && (commandCollision.collisionData.value().collisionType == BB::CollisionType::ENEMYROBOT ||
+                                                       commandCollision.collisionData.value().collisionType == BB::CollisionType::OWNROBOT)) {
         if (trackingVelocityVector.length() > 0.1) trackingVelocityVector = trackingVelocityVector.stretchToLength(0.1);
     }
 

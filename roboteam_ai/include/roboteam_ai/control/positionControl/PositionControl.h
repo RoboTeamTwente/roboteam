@@ -138,22 +138,6 @@ class PositionControl {
                                                   stp::AvoidObjects AvoidObjects);
 
     /**
-     * @brief Calculates a path to the targetPosition from a point on the path to an intermediate path and
-     * return it if there are no collisions
-     * @param world the world object
-     * @param field the field object, used onwards by the collision detector
-     * @param intermediatePathCollision if intermediatePathCollision has no value, return {}
-     * @param pathToIntermediatePoint used for getting new start points of the BBT to the targetPosition
-     * @param targetPosition the desired position that the robot has to reach
-     * @param robotId the ID of the robot for which the path is calculated
-     * @param timeStep time in seconds between new start points on the BBT to the intermediatePoint
-     * @return optional Trajectory if a new path was found
-     */
-    std::optional<Trajectory2D> calculateTrajectoryAroundCollision(const rtt::world::World *world, const rtt::Field &field,
-                                                                   std::optional<BB::CollisionData> &intermediatePathCollision, Trajectory2D trajectoryToIntermediatePoint,
-                                                                   Vector2 &targetPosition, int robotId, double maxRobotVelocity, double timeStep, stp::AvoidObjects avoidObjects);
-
-    /**
      * @brief Creates intermediate points to make a path to. These points all have equal distance to the
      * collision point
      * @param field the field object, used onwards by the collision detector

@@ -32,8 +32,8 @@ struct CollisionData {
  * @memberof collisionData Data about the collision
  */
 struct CommandCollision {
-    RobotCommand robotCommand;
-    std::optional<CollisionData> collisionData;
+    RobotCommand robotCommand = {};
+    std::optional<CollisionData> collisionData = std::nullopt;
 };
 
 class WorldObjects {

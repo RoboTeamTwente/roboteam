@@ -141,7 +141,7 @@ void WorldObjects::calculateEnemyRobotCollisions(const rtt::world::World *world,
                                                  double timeStep, size_t completedTimeSteps, int avoidId) {
     const std::vector<world::view::RobotView> &theirRobots = world->getWorld()->getThem();
     const double maxCollisionCheckTime = 0.7;
-    const double avoidanceDistance = 2.5 * ai::Constants::ROBOT_RADIUS_MAX() + ai::stp::control_constants::GO_TO_POS_ERROR_MARGIN;
+    const double avoidanceDistance = 4 * ai::Constants::ROBOT_RADIUS_MAX();
 
     for (double loopTime = 0; loopTime < maxCollisionCheckTime; loopTime += timeStep, completedTimeSteps++) {
         if (completedTimeSteps + 1 >= pathPoints.size()) {
@@ -163,6 +163,9 @@ void WorldObjects::calculateEnemyRobotCollisions(const rtt::world::World *world,
 
             const double velocityX_diff = velocityX_OurRobot - velocityX_OpponentRobot;
             const double velocityY_diff = velocityY_OurRobot - velocityY_OpponentRobot;
+            if (velocityX_diff * velocityX_diff + velocityY_diff * velocityY_diff < 1) {
+                continue;
+            }
 
             double minTime = (startPointX_OurRobot * velocityX_diff + velocityX_OurRobot * startPointX_OpponentRobot - startPointX_OpponentRobot * velocityX_OpponentRobot -
                               startPointY_OurRobot * velocityY_OurRobot + startPointY_OurRobot * velocityY_OpponentRobot + velocityY_OurRobot * startPointY_OpponentRobot -
@@ -230,6 +233,9 @@ void WorldObjects::calculateOurRobotCollisions(const rtt::world::World *world, s
             }
             const double velocityX_diff = velocityX_OurRobot - velocityX_OtherRobot;
             const double velocityY_diff = velocityY_OurRobot - velocityY_OtherRobot;
+            if (velocityX_diff * velocityX_diff + velocityY_diff * velocityY_diff < 1) {
+                continue;
+            }
 
             double minTime = (startPointX_OurRobot * velocityX_diff + velocityX_OurRobot * startPointX_OtherRobot - startPointX_OtherRobot * velocityX_OtherRobot -
                               startPointY_OurRobot * velocityY_OurRobot + startPointY_OurRobot * velocityY_OtherRobot + velocityY_OurRobot * startPointY_OtherRobot -

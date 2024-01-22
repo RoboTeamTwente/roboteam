@@ -62,12 +62,13 @@ class WorldObjects {
      * @param computedPaths the paths of our robots
      * @param robotId Id of the robot
      * @param avoidObjects a struct with if it should avoid certain objects
-     * @param completedTimeSteps Number of completed time steps
+     * @param completedTimeSteps Number of completed time steps of the trajectory
+     * @param startTime Start time of the current trajectory part that is being checked. This is the time that it takes for the robot to reach the first point of the trajectory
      * @return optional with rtt::BB::CollisionData
      */
     std::optional<CollisionData> getFirstCollision(const rtt::world::World *world, const rtt::Field &field, const rtt::Trajectory2D &Trajectory,
                                                    const std::unordered_map<int, std::vector<Vector2>> &computedPaths, int robotId, ai::stp::AvoidObjects avoidObjects,
-                                                   std::unordered_map<int, int> completedTimeSteps);
+                                                   std::unordered_map<int, int> completedTimeSteps, double startTime = 0);
 
     /**
      * @brief Calculates the position of the first collision with the defense area, note that this functions assumes the entire trajectory,
@@ -116,9 +117,10 @@ class WorldObjects {
      * @param timeStep Time between pathpoints
      * @param dist Distance to the ball
      * @param completedTimeSteps Number of completed time steps
+     * @param startTime Start time of the current trajectory part that is being checked. This is the time that it takes for the robot to reach the first point of the trajectory
      */
     void calculateBallCollisions(const rtt::world::World *world, std::vector<CollisionData> &collisionDatas, const std::vector<Vector2> &pathPoints, double timeStep, double dist,
-                                 size_t completedTimeSteps);
+                                 size_t completedTimeSteps, double startTime);
 
     /**
      * @brief Takes a calculated path of a robot and checks points along the path if they are too close to an
@@ -130,9 +132,10 @@ class WorldObjects {
      * @param timeStep Time between pathpoints
      * @param completedTimeSteps Amount of seconds of the trajectory already completed by the robot
      * @param avoidId ID of the robot to ignore collisions with
+     * @param startTime Start time of the current trajectory part that is being checked. This is the time that it takes for the robot to reach the first point of the trajectory
      */
     void calculateEnemyRobotCollisions(const rtt::world::World *world, std::vector<CollisionData> &collisionDatas, const std::vector<Vector2> &pathPoints, double timeStep,
-                                       size_t completedTimeSteps, int avoidId);
+                                       size_t completedTimeSteps, int avoidId, double startTime);
 
     /**
      * @brief Takes a path from the array of stored paths and checks points along the path if they are too close to
@@ -145,10 +148,11 @@ class WorldObjects {
      * @param robotId ID of the robot
      * @param timeStep Time between pathpoints
      * @param completedTimeSteps how many seconds of the trajectory is already completed by the robot
+     * @param startTime Start time of the current trajectory part that is being checked. This is the time that it takes for the robot to reach the first point of the trajectory
      */
     void calculateOurRobotCollisions(const rtt::world::World *world, std::vector<CollisionData> &collisionDatas, const std::vector<Vector2> &pathPoints,
                                      const std::unordered_map<int, std::vector<Vector2>> &computedPaths, int robotId, double timeStep,
-                                     std::unordered_map<int, int> completedTimeSteps);
+                                     std::unordered_map<int, int> completedTimeSteps, double startTime);
 
     /**
      * @brief Takes a calculated path of a robot and checks points along the path if they are too close to an

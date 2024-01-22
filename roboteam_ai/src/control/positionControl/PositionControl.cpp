@@ -117,21 +117,20 @@ rtt::BB::CommandCollision PositionControl::computeAndTrackTrajectory(const rtt::
 }
 
 double PositionControl::calculateScore(const rtt::world::World *world, const rtt::Field &field, int robotId, std::optional<BB::CollisionData> &firstCollision,
-                                       Trajectory2D &trajectoryAroundCollision, stp::AvoidObjects avoidObjects) {
+                                       Trajectory2D &trajectoryAroundCollision, stp::AvoidObjects avoidObjects, double startTime) {
     double totalTime = trajectoryAroundCollision.getTotalTime();
-    double score = totalTime;
+    double score = totalTime + startTime;
     if (!firstCollision.has_value()) {
         return score;
     }
 
     score += 5;
-    double timeTillFirstCollision = firstCollision.value().collisionTime;
-    score += std::max(0.0, 3 - timeTillFirstCollision);
+    score += std::max(0.0, 3 - firstCollision.value().collisionTime - startTime);
 
     if (avoidObjects.shouldAvoidDefenseArea) {
         auto defenseAreaCollision = worldObjects.getFirstDefenseAreaCollision(field, trajectoryAroundCollision, computedPaths, robotId);
         if (defenseAreaCollision.has_value()) {
-            score += std::max(0.0, 1 - defenseAreaCollision.value().collisionTime) * 10;
+            score += std::max(0.0, 1 - defenseAreaCollision.value().collisionTime - startTime) * 10;
             score += 5;
         }
     }
@@ -174,12 +173,12 @@ std::optional<Trajectory2D> PositionControl::findNewTrajectory(const rtt::world:
             Vector2 newStartPosition = trajectoryToIntermediatePoint.getPosition(loopTime);
             Vector2 newStartVelocity = trajectoryToIntermediatePoint.getVelocity(loopTime);
             Trajectory2D trajectoryAroundCollision(newStartPosition, newStartVelocity, targetPosition, maxRobotVelocity, ai::Constants::MAX_ACC_UPPER());
-            auto firstCollision = worldObjects.getFirstCollision(world, field, trajectoryAroundCollision, computedPaths, robotId, avoidObjects, completedTimeSteps);
+            auto firstCollision = worldObjects.getFirstCollision(world, field, trajectoryAroundCollision, computedPaths, robotId, avoidObjects, completedTimeSteps, loopTime);
             if (!firstCollision.has_value()) {
                 trajectoryToIntermediatePoint.addTrajectory(trajectoryAroundCollision, loopTime);
                 return trajectoryToIntermediatePoint;
             } else {
-                double score = calculateScore(world, field, robotId, firstCollision, trajectoryAroundCollision, avoidObjects);
+                double score = calculateScore(world, field, robotId, firstCollision, trajectoryAroundCollision, avoidObjects, loopTime);
                 if (score < bestScore) {
                     bestScore = score;
                     bestTrajectory = trajectoryToIntermediatePoint;

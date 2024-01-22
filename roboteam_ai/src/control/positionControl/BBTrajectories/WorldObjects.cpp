@@ -15,7 +15,7 @@ WorldObjects::WorldObjects() = default;
 
 std::optional<CollisionData> WorldObjects::getFirstCollision(const rtt::world::World *world, const rtt::Field &field, const Trajectory2D &Trajectory,
                                                              const std::unordered_map<int, std::vector<Vector2>> &computedPaths, int robotId, ai::stp::AvoidObjects avoidObjects,
-                                                             std::unordered_map<int, int> completedTimeSteps) {
+                                                             std::unordered_map<int, int> completedTimeSteps, double startTime) {
     double timeStep = 0.1;
     auto pathPoints = Trajectory.getPathApproach(timeStep);
 
@@ -28,13 +28,13 @@ std::optional<CollisionData> WorldObjects::getFirstCollision(const rtt::world::W
         calculateDefenseAreaCollisions(field, collisionDatas, pathPoints, robotId, timeStep, completedTimeSteps[robotId]);
     }
     if (avoidObjects.shouldAvoidBall) {
-        calculateBallCollisions(world, collisionDatas, pathPoints, timeStep, avoidObjects.avoidBallDist, completedTimeSteps[robotId]);
+        calculateBallCollisions(world, collisionDatas, pathPoints, timeStep, avoidObjects.avoidBallDist, completedTimeSteps[robotId], startTime);
     }
     if (avoidObjects.shouldAvoidTheirRobots || avoidObjects.notAvoidTheirRobotId != -1) {
-        calculateEnemyRobotCollisions(world, collisionDatas, pathPoints, timeStep, completedTimeSteps[robotId], avoidObjects.notAvoidTheirRobotId);
+        calculateEnemyRobotCollisions(world, collisionDatas, pathPoints, timeStep, completedTimeSteps[robotId], avoidObjects.notAvoidTheirRobotId, startTime);
     }
     if (avoidObjects.shouldAvoidOurRobots) {
-        calculateOurRobotCollisions(world, collisionDatas, pathPoints, computedPaths, robotId, timeStep, completedTimeSteps);
+        calculateOurRobotCollisions(world, collisionDatas, pathPoints, computedPaths, robotId, timeStep, completedTimeSteps, startTime);
     }
     if (rtt::ai::GameStateManager::getCurrentGameState().getStrategyName() == "ball_placement_them") {
         calculateBallPlacementCollision(world, collisionDatas, pathPoints, timeStep, completedTimeSteps[robotId]);
@@ -93,11 +93,11 @@ void WorldObjects::calculateDefenseAreaCollisions(const rtt::Field &field, std::
 }
 
 void WorldObjects::calculateBallCollisions(const rtt::world::World *world, std::vector<CollisionData> &collisionDatas, const std::vector<Vector2> &pathPoints, double timeStep,
-                                           double dist, size_t completedTimeSteps) {
-    double ballAvoidanceTime = 0.7;
+                                           double dist, size_t completedTimeSteps, double startTime) {
+    double ballAvoidanceTime = 0.7 - startTime;
 
-    const Vector2 &startPositionBall = world->getWorld()->getBall()->get()->position;
     const Vector2 &VelocityBall = world->getWorld()->getBall()->get()->velocity;
+    const Vector2 &startPositionBall = world->getWorld()->getBall()->get()->position + VelocityBall * startTime;
 
     for (double loopTime = 0; loopTime < ballAvoidanceTime; loopTime += timeStep, completedTimeSteps++) {
         if (completedTimeSteps + 1 >= pathPoints.size()) {
@@ -138,9 +138,9 @@ void WorldObjects::calculateBallCollisions(const rtt::world::World *world, std::
 }
 
 void WorldObjects::calculateEnemyRobotCollisions(const rtt::world::World *world, std::vector<CollisionData> &collisionDatas, const std::vector<Vector2> &pathPoints,
-                                                 double timeStep, size_t completedTimeSteps, int avoidId) {
+                                                 double timeStep, size_t completedTimeSteps, int avoidId, double startTime) {
     const std::vector<world::view::RobotView> &theirRobots = world->getWorld()->getThem();
-    const double maxCollisionCheckTime = 0.7;
+    const double maxCollisionCheckTime = 0.7 - startTime;
     const double avoidanceDistance = 4 * ai::Constants::ROBOT_RADIUS_MAX();
 
     for (double loopTime = 0; loopTime < maxCollisionCheckTime; loopTime += timeStep, completedTimeSteps++) {
@@ -156,10 +156,10 @@ void WorldObjects::calculateEnemyRobotCollisions(const rtt::world::World *world,
         const double velocityY_OurRobot = (nextPoint.y - startPointY_OurRobot) / timeStep;
 
         for (const auto &opponentRobot : theirRobots) {
-            const double startPointX_OpponentRobot = opponentRobot->getPos().x + opponentRobot->getVel().x * loopTime;
-            const double startPointY_OpponentRobot = opponentRobot->getPos().y + opponentRobot->getVel().y * loopTime;
             const double velocityX_OpponentRobot = opponentRobot->getVel().x;
             const double velocityY_OpponentRobot = opponentRobot->getVel().y;
+            const double startPointX_OpponentRobot = opponentRobot->getPos().x + velocityX_OpponentRobot * (loopTime + startTime);
+            const double startPointY_OpponentRobot = opponentRobot->getPos().y + velocityY_OpponentRobot * (loopTime + startTime);
 
             const double velocityX_diff = velocityX_OurRobot - velocityX_OpponentRobot;
             const double velocityY_diff = velocityY_OurRobot - velocityY_OpponentRobot;
@@ -188,9 +188,9 @@ void WorldObjects::calculateEnemyRobotCollisions(const rtt::world::World *world,
 
 void WorldObjects::calculateOurRobotCollisions(const rtt::world::World *world, std::vector<CollisionData> &collisionDatas, const std::vector<Vector2> &pathPoints,
                                                const std::unordered_map<int, std::vector<Vector2>> &computedPaths, int robotId, double timeStep,
-                                               std::unordered_map<int, int> completedTimeSteps) {
+                                               std::unordered_map<int, int> completedTimeSteps, double startTime) {
     const auto ourRobots = world->getWorld()->getUs();
-    const double maxCollisionCheckTime = 0.7;
+    const double maxCollisionCheckTime = 0.7 - startTime;
     const double avoidanceDistance = 2 * ai::Constants::ROBOT_RADIUS() + 2 * ai::stp::control_constants::GO_TO_POS_ERROR_MARGIN;
 
     for (double loopTime = 0; loopTime < maxCollisionCheckTime; loopTime += timeStep, completedTimeSteps[robotId]++) {
@@ -206,11 +206,14 @@ void WorldObjects::calculateOurRobotCollisions(const rtt::world::World *world, s
             const int otherRobotId = ourRobot->getId();
 
             if (otherRobotId == robotId) continue;
-            if ((pathPoints[completedTimeSteps[robotId]] - (ourRobot->getPos() + ourRobot->getVel() * loopTime)).length() > 1) {
+            if ((pathPoints[completedTimeSteps[robotId]] - (ourRobot->getPos() + ourRobot->getVel() * (loopTime + startTime))).length() > 1) {
                 continue;
             }
 
             const auto completedTimeStepsIt = completedTimeSteps.find(otherRobotId);
+            if (completedTimeStepsIt != completedTimeSteps.end()) {
+                completedTimeStepsIt->second += static_cast<int>(std::round(startTime / timeStep));
+            }
             const auto computedPathsIt = computedPaths.find(otherRobotId);
 
             double startPointX_OtherRobot, startPointY_OtherRobot, velocityX_OtherRobot, velocityY_OtherRobot;

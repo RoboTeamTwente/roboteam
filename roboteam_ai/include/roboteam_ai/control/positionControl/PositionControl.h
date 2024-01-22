@@ -113,10 +113,12 @@ class PositionControl {
      * @param robotId the ID of the robot for which the path is calculated
      * @param firstCollision location of the first collision on the current path
      * @param trajectoryAroundCollision the trajectory to the intermediate point
+     * @param avoidObjects whether or not to avoid objects
+     * @param startTime the time at which the trajectory starts
      * @return A score for the trajectory
      */
     double calculateScore(const rtt::world::World *world, const rtt::Field &field, int robotId, std::optional<BB::CollisionData> &firstCollision,
-                          Trajectory2D &trajectoryAroundCollision, stp::AvoidObjects avoidObjects);
+                          Trajectory2D &trajectoryAroundCollision, stp::AvoidObjects avoidObjects, double startTime = 0);
 
     /**
      * @brief Tries to find a new trajectory when the current path has a collision on it. It tries this by

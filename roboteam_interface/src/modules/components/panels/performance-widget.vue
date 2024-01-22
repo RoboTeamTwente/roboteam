@@ -2,7 +2,6 @@
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { useSTPDataStore } from '../../stores/data-stores/stp-data-store'
 import { useVisionDataStore } from '../../stores/data-stores/vision-data-store'
-import CanvasJS from '@canvasjs/charts';
 
 const stpData = useSTPDataStore()
 const visionData = useVisionDataStore()
@@ -42,23 +41,75 @@ const visionData = useVisionDataStore()
       Instant average speed: {{ instant_team_speed }}
     </div>
     <div>
-      Average average speed: {{ average_team_speed }}
+      Average speed: {{ average_team_speed }}
     </div>
     <div>
 
-      <p style="font-size: 20px; font-weight: bold; margin-top: 10px;">Heatmap:</p>
+      <p style="font-size: 20px; font-weight: bold; margin-top: 10px;">HEATMAP:</p>
     </div>
 
-    <div>
-      Plotting counter: {{plotting_counter}}
-      Plotting value: {{ plotting_value }}
+    <div class="table-container">
+    <table class="custom-table">
+      <tbody>
+        <tr v-for="(row, rowIndex) in x_y_positions_freq" :key="rowIndex">
+          <td v-for="(cell, cellIndex) in row" :key="cellIndex">{{ cell }}</td>
+        </tr>
+      </tbody>
+    </table>
     </div>
 
-    <div>
-      <canvas id="myChart" width="800" height="400"></canvas>
-    </div>                        
+    <div class="centered">
+      <button @click="downloadCSV" class="my-boton">Download metrics</button>
+    </div>
+                                                 
 
 </template>
+
+<style scoped>
+
+  .centered {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  .table-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; 
+  }
+  .custom-table {
+    border-collapse: collapse;
+    width: 60%;
+    height: 80%;
+  }
+
+  .custom-table th, .custom-table td {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+  }
+
+  .custom-table th {
+    background-color: #f2f2f2;
+  }
+
+  .my-boton {
+  background-color: #3498db; /* Color de fondo */
+  color: #fff; /* Color del texto */
+  padding: 10px 20px; /* Espaciado interno */
+  border: none; /* Sin borde */
+  border-radius: 5px; /* Bordes redondeados */
+  cursor: pointer; /* Cambia el cursor al pasar por encima */
+  font-size: 16px; /* Tamaño de fuente */
+  transition: background-color 0.3s; /* Transición suave del color de fondo */
+}
+
+.my-boton:hover {
+  background-color: #2980b9; /* Cambia el color de fondo al pasar por encima */
+}
+</style>
 
 <script lang="ts">
 
@@ -71,7 +122,6 @@ export default defineComponent({
     return {
       stpData: useSTPDataStore(),
       visionData: useVisionDataStore(),
-      heatmapData: [],
 
       match_started: false, 
 
@@ -94,29 +144,30 @@ export default defineComponent({
       timer_switch: 0, 
 
       keeper_kick_counter: 0,
+      robots_x_coord: [0,0,0,0,0,0,0,0,0,0,0],
+      robots_y_coord: [0,0,0,0,0,0,0,0,0,0,0],
+      x_y_positions_freq: [
+        [0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0]
+      ],
+      players_on_plus_6_field: 0,
       average_team_speed: 0, 
-      instant_team_speed: 0,
-      plotting_counter: 0,
-      plotting_value: 0,
-
-      data_to_plot: {
-        datasets: [{
-          label: 'Datos de ejemplo',
-          data: [
-            { x: 10, y: 2 },
-            { x: 15, y: 1 },
-            { x: 20, y: 2},
-            { x: 25, y: 1.5 },
-            { x: 30, y: 0.5 },
-            { x: 5, y: 0 }
-          ],
-          backgroundColor: 'rgba(54, 162, 235, 0.5)', // Color de los puntos
-          borderColor: 'rgba(54, 162, 235, 1)', // Color del borde de los puntos
-          borderWidth: 1
-        }]
-      }
+      instant_team_speed: 0
 
     };
+  },
+  beforeDestroy() {
+    this.downloadCSV();
   },
   methods: {
     possession_counters() {
@@ -142,6 +193,58 @@ export default defineComponent({
       }
     },
 
+    instant_position_calculator() {
+      let robots = this.visionData.ourRobots || []
+      let condition_plus_6 = []
+      let x_coord_in_grid_sys = 0
+      let y_coord_in_grid_sys = 0
+
+      this.robots_x_coord = []
+      this.robots_y_coord = []
+
+        for (let robot of robots) {
+          // Convertion from field coordinates to grid coordinates
+          x_coord_in_grid_sys = Math.floor((Math.ceil(robot.pos?.x! + 6)+Math.floor(robot.pos?.x! + 6))/2) // Something .5
+          y_coord_in_grid_sys = Math.floor((Math.ceil(robot.pos?.y! + 5)+Math.floor(robot.pos?.y! + 5))/2) // Something .5
+          this.robots_x_coord.push(x_coord_in_grid_sys)
+          this.robots_y_coord.push(y_coord_in_grid_sys)
+        }
+      condition_plus_6 = this.robots_x_coord.filter(item => item >= 5)
+      this.players_on_plus_6_field = condition_plus_6.length
+
+      // Add a number to the frequency on the position (index are the positions on the grid, values are the counts)
+      // It does not necessarily has to add one each time, cause multiple robots can be in the same position of the grid...
+
+      for (let i = 0; i < this.robots_x_coord.length; i++) { //Array of x and y coordinates have same coordinates
+          this.x_y_positions_freq[this.robots_x_coord[i]][this.robots_y_coord[i]] += 1
+        }
+      
+    },
+
+    downloadCSV() {
+      for (let i = 0; i < this.robots_x_coord.length; i++) { //Array of x and y coordinates have same coordinates
+          this.x_y_positions_freq[this.robots_x_coord[i]][this.robots_y_coord[i]] += 1
+        }
+    
+      const csv = this.to_csv(this.x_y_positions_freq);
+
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'heatmap.csv';
+      document.body.appendChild(a);
+      a.click();
+
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    },
+
+    to_csv(array: number[][]) {
+      return array.map(row => row.join(',')).join('\n');
+    },
+
     instant_speed_calculator() {
       let robots = this.visionData.ourRobots || []
       let vel_module = 0
@@ -163,7 +266,7 @@ export default defineComponent({
         this.average_team_speed = (this.average_team_speed*this.timer_switch + this.instant_team_speed*0.1) / (this.timer_switch + 0.1)
         this.timer_switch = this.timer_switch + 0.1;
         this.instant_speed_calculator();
-
+        this.instant_position_calculator();
         }
       }, 100);
       
@@ -179,109 +282,18 @@ export default defineComponent({
           clearInterval(is_started_interval)
         }},
         100);
-    },
-
-    update_data_to_plot() {
-      // Simula un cambio de valor dinámico cada 3 segundos (solo para demostración)
-      const interval_to_update_plot = setInterval(() => {
-        /*if (this.plotting_counter !== 0) {
-          scatterChart.destroy()
-        }*/
-        this.data_to_plot = {
-          datasets: [{
-            label: 'Datos de ejemplo',
-            data: [
-              { x: 10, y: this.average_team_speed },
-              { x: 15, y: 1 },
-              { x: 20, y: 2},
-              { x: 25, y: 1.5 },
-              { x: 30, y: 0.5 },
-              { x: 5, y: 0 }
-            ],
-            backgroundColor: 'rgba(54, 162, 235, 0.5)', // Color de los puntos
-            borderColor: 'rgba(54, 162, 235, 1)', // Color del borde de los puntos
-            borderWidth: 1
-          }]
-        }
-
-        /*const newData = { ...this.data_to_plot.datasets[0].data[0] };
-        newData.x = 10;
-        newData.y = this.average_team_speed;
-        this.data_to_plot.datasets[0].data[0] = newData;*/
-
-
-        this.plotting_value = this.data_to_plot.datasets[0].data[0].y
-        this.plotting_counter = this.plotting_counter + 1
-
-        const options = {
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-            x: {
-              type: 'linear',
-              position: 'bottom'
-            },
-            y: {
-              type: 'linear',
-              position: 'left'
-            }
-          }
-        };
-
-        let scatterChart = new Chart("myChart", {
-          type: 'bar',
-          data: this.data_to_plot, 
-          options: options // Ignore this error
-        });
-
-        scatterChart.render();
-
-        //scatterChart.data = this.data_to_plot;
-        //scatterChart.update()
-  
-      }, 1000); // Actualizar cada 3 segundos (solo para demostración)
-    },
-
-    generateHeatmap() {
-      var ctx = document.getElementById('myChart')
-
-      var data = this.data_to_plot
-
-      const options = {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-          x: {
-            type: 'linear',
-            position: 'bottom'
-          },
-          y: {
-            type: 'linear',
-            position: 'left'
-          }
-        }
-      };
-
-      let scatterChart = new Chart("myChart", {
-        type: 'bar',
-        data: this.data_to_plot, 
-        options: options // Ignore this error
-      });
-    }
+    }, 
 
   },
 
   created() {
     this.define_event(); // Init when the script is run
     this.is_started();
-    //this.update_data_to_plot();
   },
 
   mounted() {
     this.possession_counters();
     this.keeper_actions_counter();
-    this.generateHeatmap();
-    this.update_data_to_plot();
   },
 
   watch: {

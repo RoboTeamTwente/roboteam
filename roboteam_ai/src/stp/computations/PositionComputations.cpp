@@ -285,7 +285,6 @@ void PositionComputations::calculateInfoForDefendersAndWallers(std::unordered_ma
     erase_if(enemyRobots, [&](const auto enemyRobot) -> bool { return enemyClosestToBall && enemyRobot->getId() == enemyClosestToBall.value()->getId(); });
     std::map<double, EnemyInfo> enemyMap;
     std::vector<Vector2> enemies;
-    std::vector<int> ids;
     for (auto enemy : enemyRobots) {
         if (enemy->hasBall()) continue;
         double score = FieldComputations::getDistanceToGoal(field, true, enemy->getPos());
@@ -295,7 +294,6 @@ void PositionComputations::calculateInfoForDefendersAndWallers(std::unordered_ma
         }
         EnemyInfo info = {enemy->getPos(), enemy->getVel(), enemy->getId()};
         enemyMap.insert({score, info});
-        ids.emplace_back(enemy->getId());
     }
     ComputationManager::calculatedEnemyMapIds.clear();
     // If defenders do not have a position yet, don't do hungarian algorithm
@@ -354,7 +352,7 @@ void PositionComputations::calculateInfoForDefendersAndWallers(std::unordered_ma
                     (stpInfos[activeDefenderNames[i]].getRobot()->get()->getPos() - enemies[assignments[i]]).length() < IGNORE_COLLISIONS_DISTANCE &&
                     stpInfos[activeDefenderNames[i]].getRobot()->get()->getPos().dist(field.leftGoalArea.rightLine().center()) <
                         enemies[assignments[i]].dist(field.leftGoalArea.rightLine().center())) {
-                    stpInfos[activeDefenderNames[i]].setNotAvoidTheirRobotId(ids[assignments[i]]);
+                    stpInfos[activeDefenderNames[i]].setNotAvoidTheirRobotId(ComputationManager::calculatedEnemyMapIds[assignments[i]]);
                 } else {
                     stpInfos[activeDefenderNames[i]].setNotAvoidTheirRobotId(-1);
                 }

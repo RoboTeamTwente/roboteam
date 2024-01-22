@@ -139,6 +139,9 @@ double PositionControl::calculateScore(const rtt::world::World *world, const rtt
     if (currentStrategyName == "ball_placement_them") {
         auto ballPlacementPos = rtt::ai::GameStateManager::getRefereeDesignatedPosition();
         auto startPositionBall = world->getWorld()->getBall()->get()->position;
+        if ((startPositionBall - ballPlacementPos).length() < stp::control_constants::BALL_PLACEMENT_ALMOST_DONE_DISTANCE) {
+            return score;
+        }
         Line ballPlacementLine(startPositionBall, ballPlacementPos);
         Vector2 p1 = firstCollision.value().collisionPosition;
         Vector2 p2 = trajectoryAroundCollision.getPosition(totalTime);

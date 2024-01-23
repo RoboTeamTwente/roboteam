@@ -242,12 +242,9 @@ void PositionComputations::calculateInfoForHarasser(std::unordered_map<std::stri
     // If enemy is not facing our goal AND does have the ball, stand between the enemy and our goal
     if (enemyClosestToBall->get()->hasBall() && enemyAngle.shortestAngleDiff(enemyToGoalAngle) > M_PI / 2) {
         auto enemyPos = enemyClosestToBall->get()->getPos();
-        auto targetPos = FieldComputations::projectPointToValidPositionOnLine(
-            field, enemyPos - (field.leftGoalArea.leftLine().center() - enemyPos).stretchToLength(control_constants::ROBOT_RADIUS), enemyPos,
-            enemyPos - (field.leftGoalArea.leftLine().center() - enemyPos).stretchToLength(10), AvoidObjects{});
+        auto targetPos = enemyPos + (field.leftGoalArea.leftLine().center() - enemyPos).stretchToLength(control_constants::ROBOT_RADIUS * 4);
         stpInfos["harasser"].setPositionToMoveTo(targetPos);
         stpInfos["harasser"].setAngle((ballPos - targetPos).angle());
-        // Maybe reset such that we go to formation tactic?
     } else {
         if (enemyClosestToBall->get()->getPos().dist(field.leftGoalArea.rightLine().center()) >
             stpInfos["harasser"].getRobot()->get()->getPos().dist(field.leftGoalArea.rightLine().center())) {
@@ -347,15 +344,6 @@ void PositionComputations::calculateInfoForDefendersAndWallers(std::unordered_ma
             } else {
                 stpInfos[activeDefenderNames[i]].setPositionToDefend(enemies[assignments[i]]);
                 stpInfos[activeDefenderNames[i]].setBlockDistance(BlockDistance::ROBOTRADIUS);
-                constexpr double IGNORE_COLLISIONS_DISTANCE = 0.4;
-                if (stpInfos[activeDefenderNames[i]].getRobot() &&
-                    (stpInfos[activeDefenderNames[i]].getRobot()->get()->getPos() - enemies[assignments[i]]).length() < IGNORE_COLLISIONS_DISTANCE &&
-                    stpInfos[activeDefenderNames[i]].getRobot()->get()->getPos().dist(field.leftGoalArea.rightLine().center()) <
-                        enemies[assignments[i]].dist(field.leftGoalArea.rightLine().center())) {
-                    stpInfos[activeDefenderNames[i]].setNotAvoidTheirRobotId(ComputationManager::calculatedEnemyMapIds[assignments[i]]);
-                } else {
-                    stpInfos[activeDefenderNames[i]].setNotAvoidTheirRobotId(-1);
-                }
             }
         }
     }

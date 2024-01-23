@@ -156,6 +156,9 @@ void WorldObjects::calculateEnemyRobotCollisions(const rtt::world::World *world,
         const double velocityY_OurRobot = (nextPoint.y - startPointY_OurRobot) / timeStep;
 
         for (const auto &opponentRobot : theirRobots) {
+            if (avoidId != -1 && opponentRobot->getId() == avoidId) {
+                continue;
+            }
             const double velocityX_OpponentRobot = opponentRobot->getVel().x;
             const double velocityY_OpponentRobot = opponentRobot->getVel().y;
             const double startPointX_OpponentRobot = opponentRobot->getPos().x + velocityX_OpponentRobot * (loopTime + startTime);

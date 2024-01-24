@@ -63,9 +63,8 @@ std::optional<CollisionData> WorldObjects::getFirstDefenseAreaCollision(const rt
 
 void WorldObjects::calculateFieldCollisions(const rtt::Field &field, std::vector<CollisionData> &collisionDatas, const std::vector<Vector2> &pathPoints, double timeStep,
                                             size_t completedTimeSteps) {
-    double robotRadius = rtt::ai::Constants::ROBOT_RADIUS();
     for (size_t i = completedTimeSteps; i < pathPoints.size(); i++) {
-        if (!field.playArea.contains(pathPoints[i], robotRadius)) {
+        if (!field.playArea.contains(pathPoints[i], rtt::ai::stp::control_constants::OUT_OF_FIELD_MARGIN)) {
             // Don't care about the field if the robot is already outside the field (i == 0 is the first point of the robot's path, so almost the currentPosition).
             if (i == 0) return;
 

@@ -71,6 +71,7 @@ constexpr double DEFENSE_AREA_AVOIDANCE_MARGIN = 0.1;         /**< Distance erro
 constexpr double DISTANCE_TO_PASS_TRAJECTORY = 0.5; /**< Distance from the robot to the pass trajectory at which the robot is considered too close to the pass trajectory */
 constexpr double BALL_PLACEMENT_ALMOST_DONE_DISTANCE =
     0.5; /**< Distance between ball and placement location at which we no longer include the distance to the edges of the placement location in scoring the trajectory */
+constexpr double OUT_OF_FIELD_MARGIN = 0.17; /**< Distance that the center of the robot is allowed to go out of the field during play (not for end location, only for paths) */
 
 /// Keeper constants
 constexpr double DISTANCE_FROM_GOAL_CLOSE = 2 * ROBOT_RADIUS; /**< Distance from the keeper to the goal at which the keeper is considered close to that goal */

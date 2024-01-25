@@ -24,16 +24,15 @@ KickOffUsPrepare::KickOffUsPrepare() : Play() {
         std::make_unique<role::Formation>("keeper"),
         std::make_unique<role::Formation>("kicker"),
         std::make_unique<role::Formation>("formation_mid_0"),
-        std::make_unique<role::Formation>("formation_back_0"),
         std::make_unique<role::Formation>("formation_front_0"),
-        std::make_unique<role::Formation>("formation_mid_1"),
-        // Additional roles if we play 11v11
         std::make_unique<role::Formation>("formation_front_1"),
-        std::make_unique<role::Formation>("formation_back_1"),
-        std::make_unique<role::Formation>("formation_mid_2"),
         std::make_unique<role::Formation>("formation_front_2"),
-        std::make_unique<role::Formation>("formation_back_2"),
-
+        // Additional roles if we play 11v11
+        std::make_unique<role::Formation>("formation_back_0"),
+        std::make_unique<role::Formation>("formation_back_1"),
+        std::make_unique<role::Formation>("formation_front_3"),
+        std::make_unique<role::Formation>("formation_front_4"),
+        std::make_unique<role::Formation>("formation_front_5"),
     };
 }
 
@@ -53,13 +52,13 @@ Dealer::FlagMap KickOffUsPrepare::decideRoleFlags() const noexcept {
     flagMap.insert({"kicker", {DealerFlagPriority::REQUIRED, {kickerFlag, detectionFlag}}});
     flagMap.insert({"formation_back_0", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
     flagMap.insert({"formation_back_1", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
-    flagMap.insert({"formation_back_2", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
     flagMap.insert({"formation_mid_0", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"formation_mid_1", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"formation_mid_2", {DealerFlagPriority::LOW_PRIORITY, {}}});
     flagMap.insert({"formation_front_0", {DealerFlagPriority::HIGH_PRIORITY, {}}});
     flagMap.insert({"formation_front_1", {DealerFlagPriority::HIGH_PRIORITY, {}}});
     flagMap.insert({"formation_front_2", {DealerFlagPriority::HIGH_PRIORITY, {}}});
+    flagMap.insert({"formation_front_3", {DealerFlagPriority::HIGH_PRIORITY, {}}});
+    flagMap.insert({"formation_front_4", {DealerFlagPriority::HIGH_PRIORITY, {}}});
+    flagMap.insert({"formation_front_5", {DealerFlagPriority::HIGH_PRIORITY, {}}});
 
     return flagMap;
 }

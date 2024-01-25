@@ -449,7 +449,7 @@ void PositionComputations::calculateInfoForFormationOurSide(std::unordered_map<s
     auto height = field.playArea.height();
 
     for (int i = 0; i < formationBackNames.size(); i++) {
-        stpInfos[formationBackNames[i]].setPositionToMoveTo(Vector2{-width / 3, -height / 2 + height / (formationBackNames.size() + 1) * (i + 1)});
+        stpInfos[formationBackNames[i]].setPositionToMoveTo(Vector2{-width / 3, -height / 8 + height / (formationBackNames.size() + 1) * (i + 1) / 4});
     }
     for (int i = 0; i < formationMidNames.size(); i++) {
         stpInfos[formationMidNames[i]].setPositionToMoveTo(Vector2{-width / 5, -height / 2 + height / (formationMidNames.size() + 1) * (i + 1)});

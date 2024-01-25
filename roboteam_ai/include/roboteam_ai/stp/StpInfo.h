@@ -47,9 +47,6 @@ struct StpInfo {
     const std::optional<Vector2>& getPositionToDefend() const { return positionToDefend; }
     void setPositionToDefend(const std::optional<Vector2>& position) { this->positionToDefend = position; }
 
-    const Vector2& getTargetLocationSpeed() const { return targetLocationSpeed; }
-    void setTargetLocationSpeed(const Vector2& speed) { this->targetLocationSpeed = speed; }
-
     double getKickChipVelocity() const { return kickChipVelocity; }
     void setKickChipVelocity(double kickChipVelocity) { this->kickChipVelocity = kickChipVelocity; }
 
@@ -136,11 +133,6 @@ struct StpInfo {
      * Position to defend
      */
     std::optional<Vector2> positionToDefend;
-
-    /**
-     * Speed of the target location (e.g. speed of the robot or speed of the ball)
-     */
-    Vector2 targetLocationSpeed = Vector2(0, 0);
 
     /**
      * Velocity of the kick/chip

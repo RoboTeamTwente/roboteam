@@ -229,7 +229,6 @@ void PositionComputations::calculateInfoForHarasser(std::unordered_map<std::stri
                                                     std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT> *roles, const Field &field,
                                                     world::World *world) noexcept {
     auto enemyClosestToBall = world->getWorld()->getRobotClosestToBall(world::them);
-    stpInfos["harasser"].setTargetLocationSpeed(world->getWorld()->getBall()->get()->velocity);
     // If there is no enemy or we don't have a harasser yet, estimate the position to move to
     if (!stpInfos["harasser"].getRobot() || !enemyClosestToBall) {
         stpInfos["harasser"].setPositionToMoveTo(world->getWorld()->getBall()->get()->position);
@@ -304,7 +303,6 @@ void PositionComputations::calculateInfoForDefendersAndWallers(std::unordered_ma
                 defendSpeed.x = 0;
             }
             stpInfos["defender_" + std::to_string(i)].setPositionToDefend(defendPostion);
-            stpInfos["defender_" + std::to_string(i)].setTargetLocationSpeed(defendSpeed);
             ComputationManager::calculatedEnemyMapIds.emplace_back(enemyMap.begin()->second.id);
             enemyMap.erase(enemyMap.begin());
         }
@@ -324,11 +322,7 @@ void PositionComputations::calculateInfoForDefendersAndWallers(std::unordered_ma
                                                                                                   : enemyMap.begin()->second.position);
             ComputationManager::calculatedEnemyMapIds.emplace_back(enemyMap.begin()->second.id);
             for (int j = 0; j < row_length; j++) {
-                cost_matrix[i][j] = (stpInfos[activeDefenderNames[i]].getRobot()->get()->getPos() +
-                                     stpInfos[activeDefenderNames[i]].getRobot()->get()->getVel() * control_constants::DEALER_SPEED_FACTOR)
-                                        .dist(enemies[j] + (mustStayOnOurSide && (enemyMap.begin()->second.position.x > 0) ? Vector2{0, enemyMap.begin()->second.velocity.y}
-                                                                                                                           : enemyMap.begin()->second.velocity) *
-                                                               control_constants::DEALER_SPEED_FACTOR);
+                cost_matrix[i][j] = stpInfos[activeDefenderNames[i]].getRobot()->get()->getPos().dist(enemies[j]);
             }
             enemyMap.erase(enemyMap.begin());
         }

@@ -39,9 +39,9 @@ std::optional<StpInfo> BlockBall::calculateInfoForSkill(StpInfo const &info) noe
 
 bool BlockBall::isEndTactic() noexcept { return true; }
 
-bool BlockBall::isTacticFailing(const StpInfo &info) noexcept { return false; }
+bool BlockBall::isTacticFailing(const StpInfo &) noexcept { return false; }
 
-bool BlockBall::shouldTacticReset(const StpInfo &info) noexcept { return false; }
+bool BlockBall::shouldTacticReset(const StpInfo &) noexcept { return false; }
 
 const char *BlockBall::getName() { return "Block Ball"; }
 

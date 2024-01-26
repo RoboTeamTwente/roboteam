@@ -8,7 +8,7 @@
 
 namespace rtt::ai::stp::evaluation {
 
-uint8_t NormalPlayGameStateEvaluation::metricCheck(const world::World* world, const Field* field) const noexcept {
+uint8_t NormalPlayGameStateEvaluation::metricCheck(const world::World*, const Field*) const noexcept {
     return GameStateManager::getCurrentGameState().getStrategyName() == "normal_play" ? stp::control_constants::FUZZY_TRUE : stp::control_constants::FUZZY_FALSE;
 }
 }  // namespace rtt::ai::stp::evaluation

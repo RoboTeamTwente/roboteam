@@ -79,7 +79,7 @@ void AttackingPass::calculateInfoForRoles() noexcept {
     PositionComputations::calculateInfoForKeeper(stpInfos, field, world);
     PositionComputations::calculateInfoForDefendersAndWallers(stpInfos, roles, field, world, true);
     PositionComputations::calculateInfoForAttackers(stpInfos, roles, field, world);
-    PositionComputations::recalculateInfoForNonPassers(stpInfos, roles, field, world, passInfo.passLocation);
+    PositionComputations::recalculateInfoForNonPassers(stpInfos, field, world, passInfo.passLocation);
 
     if (!ballKicked()) {
         stpInfos["passer"].setPositionToShootAt(passInfo.passLocation);

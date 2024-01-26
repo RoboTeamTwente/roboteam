@@ -270,13 +270,11 @@ double Dealer::getRobotScoreForDistance(const stp::StpInfo &stpInfo, const v::Ro
         distance = robot->getPos().dist(*target_position);
     }
 
-    return costForDistance(distance, field->playArea.width(), field->playArea.height());
+    return costForDistance(distance, field->playArea.height());
 }
 
 // TODO these values need to be tuned.
 double Dealer::getDefaultFlagScores(const v::RobotView &robot, const Dealer::DealerFlag &flag) {
-    auto fieldHeight = field->playArea.height();
-    auto fieldWidth = field->playArea.width();
     switch (flag.title) {
         // case DealerFlagTitle::WITH_WORKING_BALL_SENSOR:
         // return costForProperty(robot->isWorkingBallSensor());
@@ -310,13 +308,10 @@ void Dealer::setGameStateRoleIds(std::unordered_map<std::string, v::RobotView> o
     if (output.find("keeper") != output.end()) {
         interface::Output::setKeeperId(output.find("keeper")->second->getId());
     }
-    if (output.find("ball_placer") != output.end()) {
-        interface::Output::setBallPlacerId(output.find("ball_placer")->second->getId());
-    }
 }
 
 // Calculate the cost for distance. The further away the target, the higher the cost for that distance.
-double Dealer::costForDistance(double distance, double fieldWidth, double fieldHeight) {
+double Dealer::costForDistance(double distance, double fieldHeight) {
     auto fieldDiagonalLength = sqrt(pow(fieldHeight, 2.0) + pow(fieldHeight, 2.0));
     return distance / fieldDiagonalLength;
 }

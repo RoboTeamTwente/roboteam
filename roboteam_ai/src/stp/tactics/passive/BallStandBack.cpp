@@ -46,7 +46,7 @@ bool BallStandBack::isTacticFailing(const StpInfo &info) noexcept {
     return false;
 }
 
-bool BallStandBack::shouldTacticReset(const StpInfo &info) noexcept { return false; }
+bool BallStandBack::shouldTacticReset(const StpInfo &) noexcept { return false; }
 
 bool BallStandBack::isEndTactic() noexcept {
     // BallStandBack tactic is an end tactic

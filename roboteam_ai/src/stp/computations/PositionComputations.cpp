@@ -264,7 +264,7 @@ void PositionComputations::calculateInfoForDefendersAndWallers(std::unordered_ma
     auto defenderNames = std::vector<std::string>{};
     auto wallerNames = std::vector<std::string>{};
     auto additionalWallerNames = std::vector<std::string>{};
-    for (int i = 0; i < world->getWorld()->getUs().size(); i++) {
+    for (size_t i = 0; i < world->getWorld()->getUs().size(); i++) {
         if (roles[i]->getName().find("waller") != std::string::npos) {
             wallerNames.emplace_back(roles[i]->getName());
         } else if (roles[i]->getName().find("defender") != std::string::npos) {
@@ -294,19 +294,17 @@ void PositionComputations::calculateInfoForDefendersAndWallers(std::unordered_ma
     ComputationManager::calculatedEnemyMapIds.clear();
     // If defenders do not have a position yet, don't do hungarian algorithm
     if (activeDefenderNames.empty()) {
-        auto loopSize = std::min(defenderNames.size(), enemyMap.size());
-        for (int i = 0; i < loopSize; i++) {
+        size_t loopSize = std::min(defenderNames.size(), enemyMap.size());
+        for (size_t i = 0; i < loopSize; i++) {
             Vector2 defendPostion = enemyMap.begin()->second.position;
-            Vector2 defendSpeed = enemyMap.begin()->second.velocity;
             if (mustStayOnOurSide && defendPostion.x > 0) {
                 defendPostion.x = 0;
-                defendSpeed.x = 0;
             }
             stpInfos["defender_" + std::to_string(i)].setPositionToDefend(defendPostion);
             ComputationManager::calculatedEnemyMapIds.emplace_back(enemyMap.begin()->second.id);
             enemyMap.erase(enemyMap.begin());
         }
-        for (int i = loopSize; i < defenderNames.size(); i++) {
+        for (size_t i = loopSize; i < defenderNames.size(); i++) {
             additionalWallerNames.emplace_back("defender_" + std::to_string(i));
         }
     } else {
@@ -314,7 +312,7 @@ void PositionComputations::calculateInfoForDefendersAndWallers(std::unordered_ma
         std::vector<std::vector<double>> cost_matrix;
         cost_matrix.resize(activeDefenderNames.size());
         int row_length = std::min(activeDefenderNames.size(), enemyMap.size());
-        for (int i = 0; i < activeDefenderNames.size(); i++) {
+        for (size_t i = 0; i < activeDefenderNames.size(); i++) {
             cost_matrix[i].resize(row_length);
             // Check if there are still enemies left
             if (enemyMap.empty()) continue;
@@ -330,8 +328,7 @@ void PositionComputations::calculateInfoForDefendersAndWallers(std::unordered_ma
         // active pass defender
         std::vector<int> assignments;
         rtt::Hungarian::Solve(cost_matrix, assignments);
-        int currentWallerIndex = 0;
-        for (int i = 0; i < activeDefenderNames.size(); i++) {
+        for (size_t i = 0; i < activeDefenderNames.size(); i++) {
             // If assignments is -1, it means the pass defender does not get an enemy assigned to it, because there are more pass defenders than enemies
             if (assignments[i] == -1) {
                 additionalWallerNames.emplace_back(activeDefenderNames[i]);
@@ -341,7 +338,7 @@ void PositionComputations::calculateInfoForDefendersAndWallers(std::unordered_ma
             }
         }
     }
-    for (int i = 0; i < wallerNames.size() + additionalWallerNames.size(); ++i) {
+    for (size_t i = 0; i < wallerNames.size() + additionalWallerNames.size(); ++i) {
         // For each waller, stand in the right wall position and look at the ball
         auto positionToMoveTo = PositionComputations::getWallPosition(i, wallerNames.size() + additionalWallerNames.size(), field, world);
         std::string currentWallerName;
@@ -370,7 +367,7 @@ void PositionComputations::calculateInfoForAttackers(std::unordered_map<std::str
                                                      world::World *world) noexcept {
     // List of all active attackers
     auto attackerNames = std::vector<std::string>{};
-    for (int i = 0; i < world->getWorld()->getUs().size(); i++) {
+    for (size_t i = 0; i < world->getWorld()->getUs().size(); i++) {
         if (roles[i]->getName().find("attacker") != std::string::npos) {
             attackerNames.emplace_back(roles[i]->getName());
         }
@@ -405,7 +402,7 @@ void PositionComputations::calculateInfoForFormation(std::unordered_map<std::str
     auto formationBackNames = std::vector<std::string>{};
     auto formationMidNames = std::vector<std::string>{};
     auto formationFrontNames = std::vector<std::string>{};
-    for (int i = 0; i < world->getWorld()->getUs().size(); i++) {
+    for (size_t i = 0; i < world->getWorld()->getUs().size(); i++) {
         if (roles[i]->getName().find("formation_back") != std::string::npos) {
             formationBackNames.emplace_back(roles[i]->getName());
         } else if (roles[i]->getName().find("formation_mid") != std::string::npos) {
@@ -418,13 +415,13 @@ void PositionComputations::calculateInfoForFormation(std::unordered_map<std::str
     auto width = field.playArea.width();
     auto height = field.playArea.height();
 
-    for (int i = 0; i < formationBackNames.size(); i++) {
+    for (size_t i = 0; i < formationBackNames.size(); i++) {
         stpInfos[formationBackNames[i]].setPositionToMoveTo(Vector2{-width / 3.5, -height / 2 + height / (formationBackNames.size() + 1) * (i + 1)});
     }
-    for (int i = 0; i < formationMidNames.size(); i++) {
+    for (size_t i = 0; i < formationMidNames.size(); i++) {
         stpInfos[formationMidNames[i]].setPositionToMoveTo(Vector2{-width / 10, -height / 2 + height / (formationMidNames.size() + 1) * (i + 1)});
     }
-    for (int i = 0; i < formationFrontNames.size(); i++) {
+    for (size_t i = 0; i < formationFrontNames.size(); i++) {
         stpInfos[formationFrontNames[i]].setPositionToMoveTo(Vector2{width / 8, -height / 2 + height / (formationFrontNames.size() + 1) * (i + 1)});
     }
 }
@@ -435,7 +432,7 @@ void PositionComputations::calculateInfoForFormationOurSide(std::unordered_map<s
     auto formationBackNames = std::vector<std::string>{};
     auto formationMidNames = std::vector<std::string>{};
     auto formationFrontNames = std::vector<std::string>{};
-    for (int i = 0; i < world->getWorld()->getUs().size(); i++) {
+    for (size_t i = 0; i < world->getWorld()->getUs().size(); i++) {
         if (roles[i]->getName().find("formation_back") != std::string::npos) {
             formationBackNames.emplace_back(roles[i]->getName());
         } else if (roles[i]->getName().find("formation_mid") != std::string::npos) {
@@ -448,26 +445,24 @@ void PositionComputations::calculateInfoForFormationOurSide(std::unordered_map<s
     auto width = field.playArea.width();
     auto height = field.playArea.height();
 
-    for (int i = 0; i < formationBackNames.size(); i++) {
+    for (size_t i = 0; i < formationBackNames.size(); i++) {
         stpInfos[formationBackNames[i]].setPositionToMoveTo(Vector2{-width / 3, -height / 8 + height / (formationBackNames.size() + 1) * (i + 1) / 4});
     }
-    for (int i = 0; i < formationMidNames.size(); i++) {
+    for (size_t i = 0; i < formationMidNames.size(); i++) {
         stpInfos[formationMidNames[i]].setPositionToMoveTo(Vector2{-width / 5, -height / 2 + height / (formationMidNames.size() + 1) * (i + 1)});
     }
-    for (int i = 0; i < formationFrontNames.size(); i++) {
+    for (size_t i = 0; i < formationFrontNames.size(); i++) {
         stpInfos[formationFrontNames[i]].setPositionToMoveTo(Vector2{-width / 15, -height / 2 + height / (formationFrontNames.size() + 1) * (i + 1)});
     }
 }
 
-void PositionComputations::recalculateInfoForNonPassers(std::unordered_map<std::string, StpInfo> &stpInfos,
-                                                        std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT> &roles, const Field &field, world::World *world,
+void PositionComputations::recalculateInfoForNonPassers(std::unordered_map<std::string, StpInfo> &stpInfos, const Field &field, world::World *world,
                                                         Vector2 passLocation) noexcept {
     auto ballPosition = world->getWorld()->getBall()->get()->position;
     // Make a list of all robots that are not the passer, receiver or keeper, which need to make sure they are not in the way of the pass
     auto toBeCheckedRobots = std::vector<std::string>{};
     for (auto &role : stpInfos) {
         if (role.second.getRobot().has_value()) {
-            auto robotId = role.second.getRobot()->get()->getId();
             auto robotName = role.first;
             if (robotName != "keeper" && robotName != "passer" && robotName != "receiver" && robotName != "striker" && robotName != "free_kick_taker") {
                 toBeCheckedRobots.emplace_back(role.first);

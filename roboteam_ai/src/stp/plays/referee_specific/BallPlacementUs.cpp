@@ -29,7 +29,7 @@ BallPlacementUs::BallPlacementUs() : Play() {
         std::make_unique<role::Formation>("formation_mid_2"), std::make_unique<role::Formation>("formation_front_2")};
 }
 
-uint8_t BallPlacementUs::score(const rtt::Field& field) noexcept {
+uint8_t BallPlacementUs::score(const rtt::Field&) noexcept {
     // If this play is valid we always want to execute this play
     return control_constants::FUZZY_TRUE;
 }

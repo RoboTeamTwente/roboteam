@@ -75,12 +75,9 @@ class WorldObjects {
      * including the part that might already be completed. Only call this function for a new trajectory
      * @param field used for checking collisions with the field
      * @param BBTrajectory the trajectory to check for collisions
-     * @param computedPaths the paths of our robots
-     * @param robotId Id of the robot
      * @return optional with rtt::BB::CollisionData
      */
-    std::optional<CollisionData> getFirstDefenseAreaCollision(const rtt::Field &field, const rtt::Trajectory2D &Trajectory,
-                                                              const std::unordered_map<int, std::vector<Vector2>> &computedPaths, int robotId);
+    std::optional<CollisionData> getFirstDefenseAreaCollision(const rtt::Field &field, const rtt::Trajectory2D &Trajectory);
 
     /**
      * @brief Takes a calculated path of a robot and checks points along the path if they are outside the
@@ -100,11 +97,10 @@ class WorldObjects {
      * @param field Used for information about the field
      * @param collisionDatas std::vector which rtt::BB::CollisionData can be added to
      * @param pathPoints std::vector with path points
-     * @param robotId ID of the robot
      * @param timeStep Time between pathpoints
      * @param completedTimeSteps Number of completed time steps
      */
-    void calculateDefenseAreaCollisions(const rtt::Field &field, std::vector<CollisionData> &collisionDatas, const std::vector<Vector2> &pathPoints, int robotId, double timeStep,
+    void calculateDefenseAreaCollisions(const rtt::Field &field, std::vector<CollisionData> &collisionDatas, const std::vector<Vector2> &pathPoints, double timeStep,
                                         size_t completedTimeSteps);
 
     /**

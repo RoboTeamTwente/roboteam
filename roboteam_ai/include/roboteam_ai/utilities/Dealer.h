@@ -143,11 +143,10 @@ class Dealer {
     /**
      * @brief Calculates the cost of travelling a certain distance
      * @param distance  The distance to travel
-     * @param fieldWidth The width of the field
      * @param fieldHeight The height of the field
      * @return Cost of travelling that distance
      */
-    static double costForDistance(double distance, double fieldWidth, double fieldHeight);
+    static double costForDistance(double distance, double fieldHeight);
 
     /**
      * @brief Calculates the cost of a property of a robot

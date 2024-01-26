@@ -82,10 +82,9 @@ class ControlUtils {
     /**
      * @brief Determines the chip force based on the distance and the type of chip
      * @param distance distance to the target
-     * @param shotType type of the chip
      * @return a chip speed between min and max chip speed
      */
-    static double determineChipForce(const double distance, stp::ShotType shotType) noexcept;
+    static double determineChipForce(const double distance) noexcept;
 
     /**
      * @brief Determine the max allowed velocity considering the game state and whether the robot has the ball

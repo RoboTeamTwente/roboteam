@@ -32,7 +32,7 @@ PenaltyUs::PenaltyUs() : Play() {
         std::make_unique<role::Halt>("halt_8")};
 }
 
-uint8_t PenaltyUs::score(const rtt::Field& field) noexcept {
+uint8_t PenaltyUs::score(const rtt::Field&) noexcept {
     // If this play is valid we always want to execute this play
     return control_constants::FUZZY_TRUE;
 }

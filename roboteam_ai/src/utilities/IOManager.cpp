@@ -6,6 +6,7 @@
 #include <roboteam_utils/RobotCommands.hpp>
 
 #include "RobotHubMode.h"
+#include "gui/Out.h"
 #include "proto/GameSettings.pb.h"
 #include "proto/ssl_simulation_config.pb.h"
 #include "utilities/GameSettings.h"
@@ -69,6 +70,11 @@ void IOManager::handleState(const proto::State& stateMsg) {
         }
         if (!GameSettings::isLeft()) roboteam_utils::rotate(state.mutable_referee());
         auto const& [_, data] = World::instance();
+
+        auto currentCmd = ai::GameStateManager::getRefereeData();
+        if (currentCmd.command_counter() != state.referee().command_counter()) {
+            gui::Out::refereeData(state.referee());
+        }
 
         ai::GameStateManager::setRefereeData(state.referee(), data);
 

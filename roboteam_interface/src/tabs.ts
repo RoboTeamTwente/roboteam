@@ -1,18 +1,19 @@
 import { markRaw } from 'vue'
-import GameSettings   from './modules/components/game-settings.vue'
-import Simulator      from './modules/components/panels/simulator-widget.vue'
-import StpStatus      from './modules/components/panels/stp-panel/stp-widget.vue'
-import Feedback       from './modules/components/panels/feedback-widget.vue'
+import GameSettings from './modules/components/game-settings.vue'
+import Simulator from './modules/components/panels/simulator-widget.vue'
+import StpStatus from './modules/components/panels/stp-panel/stp-widget.vue'
+import Feedback from './modules/components/panels/feedback-widget.vue'
 import PlayEvaluation from './modules/components/panels/play-evaluation-widget.vue'
-import Metrics        from './modules/components/panels/metrics-widget.vue'
-import UiSettings     from './modules/components/ui-settings/ui-settings.vue'
+import Metrics from './modules/components/panels/metrics-widget.vue'
+import UiSettings from './modules/components/ui-settings/ui-settings.vue'
+import RefereeWidget from './modules/components/panels/referee-widget.vue'
 
 export const TABS_DEFINITION = {
   'Game Settings': {
     icon: 'fa-gear',
     component: markRaw(GameSettings)
   },
-  'Simulator': {
+  Simulator: {
     icon: 'fa-gamepad',
     component: markRaw(Simulator)
   },
@@ -31,6 +32,10 @@ export const TABS_DEFINITION = {
   Metrics: {
     icon: 'fa-gauge',
     component: markRaw(Metrics)
+  },
+  Referee: {
+    icon: 'fa-flag-checkered',
+    component: markRaw(RefereeWidget)
   },
   'UI Settings': {
     icon: 'fa-gear',

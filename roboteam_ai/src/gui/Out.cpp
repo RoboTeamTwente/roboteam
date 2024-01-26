@@ -9,7 +9,7 @@
 namespace rtt::ai::gui {
 
 google::protobuf::Arena Out::arena;
-proto::MsgToInterface::VisualizationBuffer* Out::visualizations = google::protobuf::Arena::CreateMessage<proto::MsgToInterface::VisualizationBuffer>(&arena);
+proto::MsgToInterface::DataBuffer * Out::data = google::protobuf::Arena::CreateMessage<proto::MsgToInterface::DataBuffer>(&arena);
 
 void Out::draw(const DrawArgs& args, std::span<Vector2> points) {
     const double orientation = GameSettings::isLeft() ? -1 : 1;
@@ -22,14 +22,14 @@ void Out::draw(const DrawArgs& args, std::span<Vector2> points) {
 }
 
 void Out::decimal(std::basic_string<char> label, double value, std::basic_string<char> unit) {
-    auto metric = visualizations->add_metrics();
+    auto metric = data->add_metrics();
     metric->set_label(label);
     metric->mutable_decimal()->set_value(value);
     metric->mutable_decimal()->set_unit(unit);
 }
 
 void Out::bounded(std::basic_string<char> label, double value, double min, double max, std::basic_string<char> unit) {
-    auto metric = visualizations->add_metrics();
+    auto metric = data->add_metrics();
     metric->set_label(label);
     metric->mutable_bounded_value()->set_value(value);
     metric->mutable_bounded_value()->set_min(min);
@@ -37,8 +37,12 @@ void Out::bounded(std::basic_string<char> label, double value, double min, doubl
     metric->mutable_bounded_value()->set_unit(unit);
 }
 
+void Out::refereeData(const proto::SSL_Referee& refereeData) {
+    data->add_referee()->CopyFrom(refereeData);
+}
+
 proto::Drawing* Out::initDrawing(const DrawArgs& args) {
-    const auto drawing = visualizations->add_drawings();
+    const auto drawing = data->add_drawings();
     drawing->set_label(args.label);
     drawing->set_color(args.color);
     drawing->set_method(args.method);
@@ -50,10 +54,11 @@ proto::Drawing* Out::initDrawing(const DrawArgs& args) {
     return drawing;
 }
 
-void Out::consumeVisualizations(std::function<void(const proto::MsgToInterface::VisualizationBuffer&)> consumer) {
-    consumer(*visualizations);
-    visualizations->mutable_drawings()->Clear();
-    visualizations->mutable_metrics()->Clear();
+void Out::consumeData(std::function<void(const proto::MsgToInterface::DataBuffer&)> consumer) {
+    consumer(*data);
+    data->mutable_drawings()->Clear();
+    data->mutable_metrics()->Clear();
+    data->mutable_referee()->Clear();
 }
 
 }  // namespace rtt::ai::gui

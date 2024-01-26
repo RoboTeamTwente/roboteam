@@ -3,6 +3,7 @@ import "GameSettings.proto";
 import "State.proto";
 import "Vector2f.proto";
 import "ssl_simulation_control.proto";
+import "messages_robocup_ssl_referee.proto";
 
 package proto;
 
@@ -128,17 +129,17 @@ message PlayInfo {
 }
 
 message MsgToInterface {
-    message VisualizationBuffer {
+    message DataBuffer {
         repeated Drawing drawings = 1;
         repeated Metric metrics = 2;
+        repeated SSL_Referee referee = 3;
     }
 
     oneof kind {
         STPStatus stp_status = 1;
         AIState ai_state = 2;
         State state = 3;
-        VisualizationBuffer visualizations = 4;
-
+        DataBuffer data = 4;
     }
 }
 

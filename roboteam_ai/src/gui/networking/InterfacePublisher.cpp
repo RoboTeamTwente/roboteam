@@ -80,9 +80,9 @@ InterfacePublisher& InterfacePublisher::publishWorld() {
 }
 
 InterfacePublisher& InterfacePublisher::publishVisuals() {
-    rtt::ai::gui::Out::consumeVisualizations([&](const proto::MsgToInterface::VisualizationBuffer& visuals) {
+    rtt::ai::gui::Out::consumeData([&](const proto::MsgToInterface::DataBuffer& data) {
         auto envelope = proto::MsgToInterface();
-        envelope.mutable_visualizations()->CopyFrom(visuals);
+        envelope.mutable_data()->CopyFrom(data);
         publishProtoMessage(envelope);
     });
 

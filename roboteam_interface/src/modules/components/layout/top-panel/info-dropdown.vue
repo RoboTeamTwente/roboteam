@@ -1,8 +1,8 @@
 <script setup lang="ts">
 const props = defineProps<{
-    currentTick: number,
-    tickDuration: number,
-    avgTickDuration: number,
+    currentTick: number
+    tickDuration: number
+    avgTickDuration: number
   }>(),
   emit = defineEmits<{
     (event: 'disconnect-from-ai'): void
@@ -24,9 +24,17 @@ const props = defineProps<{
         </button>
         <h2 class="card-title">Stats</h2>
         <ul>
-          <li class='mb-2'><font-awesome-icon icon='hashtag' /> Tick number: {{ props.currentTick }}</li>
-          <li class='mb-2'><font-awesome-icon icon='stopwatch' /> Tick duration: <span class='font-mono'>{{ props.tickDuration.toFixed(2) }}ms</span></li>
-          <li class='mb-2'><font-awesome-icon icon='angle-double-right' /> Avg. duration: <span class='font-mono'>{{ props.avgTickDuration.toFixed(2) }}ms</span></li>
+          <li class="mb-2">
+            <font-awesome-icon icon="hashtag" /> Tick number: {{ props.currentTick }}
+          </li>
+          <li class="mb-2">
+            <font-awesome-icon icon="stopwatch" /> Tick duration:
+            <span class="font-mono">{{ props.tickDuration.toFixed(2) }}ms</span>
+          </li>
+          <li class="mb-2">
+            <font-awesome-icon icon="angle-double-right" /> Avg. duration:
+            <span class="font-mono">{{ props.avgTickDuration.toFixed(2) }}ms</span>
+          </li>
         </ul>
 
         <h2 class="card-title">Shortcuts</h2>

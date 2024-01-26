@@ -1,5 +1,4 @@
-<script setup lang='ts'>
-
+<script setup lang="ts">
 import { inject, onBeforeUnmount, shallowRef, ShallowRef, watch } from 'vue'
 import { useVisionDataStore } from '../../stores/data-stores/vision-data-store'
 import { OUT_OF_CANVAS_COORDINATES } from '../../../utils'
@@ -8,9 +7,7 @@ import { useUIStore } from '../../stores/ui-store'
 import { appSymbol, stageSymbol, useMoveBall } from './utils'
 import { BallDrawing } from './field-objects'
 
-
-const
-  app = inject(appSymbol)!,
+const app = inject(appSymbol)!,
   stage = inject(stageSymbol)!,
   ball: ShallowRef<BallDrawing | null> = shallowRef(null),
   visionData = useVisionDataStore(),
@@ -45,7 +42,8 @@ watch(
       ball.value?.destroy({ children: true })
       app.value?.ticker.remove(onPixiTick)
     })
-  }, { immediate: true }
+  },
+  { immediate: true }
 )
 
 onBeforeUnmount(() => {
@@ -53,8 +51,10 @@ onBeforeUnmount(() => {
   app.value?.ticker.remove(onPixiTick)
 })
 
-watch(() => uiStore.scaling.ball, () => ball.value?.scale.set(uiStore.scaling.ball))
-
+watch(
+  () => uiStore.scaling.ball,
+  () => ball.value?.scale.set(uiStore.scaling.ball)
+)
 </script>
 
 <template>

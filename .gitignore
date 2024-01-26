@@ -37,3 +37,6 @@ ENV/
 env.bak/
 venv.bak/
 __pycache__/
+
+out/
+.vite

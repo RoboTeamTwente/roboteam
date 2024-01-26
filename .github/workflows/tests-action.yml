@@ -45,6 +45,9 @@ jobs:
               cd protobuf
               sudo make install
               sudo ldconfig
+
+      - name: Set LD_LIBRARY_PATH
+        run: echo "LD_LIBRARY_PATH=$(pwd)/build/libusb/lib:$LD_LIBRARY_PATH" >> $GITHUB_ENV
             
       - name: Build tests
         if: steps.cache-build-restore.outputs.cache-hit != 'true'

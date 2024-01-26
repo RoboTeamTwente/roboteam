@@ -80,7 +80,7 @@ bool CameraRobotFilter::acceptObservation(const RobotObservation &observation) c
     return posDifSq < 0.4 * 0.4 && angleDif < M_PI_2;  // TODO: remove hardcoded constants
 }
 
-RobotVel CameraRobotFilter::velocityEstimate(const Time &time) const {
+RobotVel CameraRobotFilter::velocityEstimate() const {
     Eigen::Vector2d vel = positionFilter.getVelocity();
     double angVel = angleFilter.getVelocity();
     return RobotVel(vel, angVel);

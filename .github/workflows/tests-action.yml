@@ -27,24 +27,24 @@ jobs:
               sudo apt-get upgrade -y
               sudo apt-get install -y cmake g++ qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools libqt5charts5-dev libsdl2-dev libzmq3-dev libeigen3-dev libgtest-dev ninja-build ccache
         
-      # - name: Build Protobuf
-      #   if: steps.cache-build-restore.outputs.cache-hit != 'true'
-      #   run: |
-      #         git clone https://github.com/protocolbuffers/protobuf.git protobuf
-      #         cd protobuf
-      #         git checkout 3.19.x
-      #         git submodule update --init --recursive
-      #         ./autogen.sh
-      #         ./autogen.sh
-      #         ./configure
-      #         make
-      #         make check
+      - name: Build Protobuf
+        if: steps.cache-build-restore.outputs.cache-hit != 'true'
+        run: |
+              git clone https://github.com/protocolbuffers/protobuf.git protobuf
+              cd protobuf
+              git checkout 3.19.x
+              git submodule update --init --recursive
+              ./autogen.sh
+              ./autogen.sh
+              ./configure
+              make
+              make check
               
-      # - name: Install Protobuf
-      #   run: |
-      #         cd protobuf
-      #         sudo make install
-      #         sudo ldconfig
+      - name: Install Protobuf
+        run: |
+              cd protobuf
+              sudo make install
+              sudo ldconfig
 
       - name: Build tests
         if: steps.cache-build-restore.outputs.cache-hit != 'true'

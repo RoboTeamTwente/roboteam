@@ -16,7 +16,6 @@ if (UNIX AND NOT APPLE)
             BUILD_COMMAND ${libusb_src_dir}/configure --prefix=${libusb_build_dir} --with-libudev=${UDEV_LIBRARY}
             INSTALL_COMMAND make -j3 install
             BUILD_BYPRODUCTS ${LIBUSB_LIB_DIR}/libusb-1.0.a
-            DOWNLOAD_EXTRACT_TIMESTAMP true
             )
 else()
     # No UDEV on macOS

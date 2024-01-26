@@ -7,6 +7,7 @@ var namespacertt_1_1ai_1_1stp =
       [ "BALL_GOT_SHOT_LIMIT", "db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#aa8b98c67e91a1bbd0830a58216211d13", null ],
       [ "BALL_IS_CLOSE", "db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#a698051354245c440ac40068a61237b48", null ],
       [ "BALL_IS_MOVING_SLOW_LIMIT", "db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#a296817cdf1a97b2ebd3ccff76d2dcf5b", null ],
+      [ "BALL_PLACEMENT_ALMOST_DONE_DISTANCE", "db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#aa4c32cdd96a9a882b23cd1ef76c93766", null ],
       [ "BALL_PLACEMENT_MARGIN", "db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#ab9a25435f59d30d9fbed119582370ff6", null ],
       [ "BALL_RADIUS", "db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#a8fbe72118c5a9251e3a531ce4b7ce257", null ],
       [ "BALL_STILL_VEL", "db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#a5baaa7b811964a3a0afdf32840b9cd42", null ],
@@ -41,6 +42,7 @@ var namespacertt_1_1ai_1_1stp =
       [ "MAX_VEL_WHEN_HAS_BALL", "db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#a483fcf986510cab97d8dd861f38ecdcd", null ],
       [ "MIN_CHIP_POWER", "db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#aacd087121e51233fb24c4dcb4c00161a", null ],
       [ "MIN_KICK_POWER", "db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#a6255d0c226e7cce6f321bb35463b4e23", null ],
+      [ "OUT_OF_FIELD_MARGIN", "db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#a25699ade5273eb118a5a6572f5b684f7", null ],
       [ "ROBOT_CLOSE_TO_POINT", "db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#a2065e692775cf964b93006329a1b0b15", null ],
       [ "ROBOT_RADIUS", "db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#a6571c4e8f14e7dc072d17dc431f18e48", null ],
       [ "TURN_ON_DRIBBLER_DISTANCE", "db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#acd30b6326a0e8f8a387db14972abac0d", null ]

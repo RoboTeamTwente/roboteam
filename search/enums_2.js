@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['dealerflagpriority_2750',['DealerFlagPriority',['../d4/dcc/namespacertt_1_1ai.html#a749f4888e489115d32ef0cf1417cd617',1,'rtt::ai']]],
-  ['dealerflagtitle_2751',['DealerFlagTitle',['../d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67',1,'rtt::ai']]]
+  ['collisiontype_2761',['CollisionType',['../d0/dde/namespacertt_1_1BB.html#a90ddec283fc8250879e878c985a14524',1,'rtt::BB']]]
 ];

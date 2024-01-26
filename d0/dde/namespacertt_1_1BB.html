@@ -86,6 +86,7 @@ $(document).ready(function(){initNavTree('d0/dde/namespacertt_1_1BB.html','../..
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
+<a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">rtt::BB Namespace Reference</div>  </div>
@@ -107,13 +108,28 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class that computes and stores 2 dimensional bang-bang trajectories. These can compute close to time-optimal trajectories in 2 dimensions.  <a href="../../d7/dbe/classrtt_1_1BB_1_1BBTrajectory2D.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:de/d62/structrtt_1_1BB_1_1CollisionData"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/dde/namespacertt_1_1BB.html#de/d62/structrtt_1_1BB_1_1CollisionData">CollisionData</a></td></tr>
-<tr class="memdesc:de/d62/structrtt_1_1BB_1_1CollisionData"><td class="mdescLeft">&#160;</td><td class="mdescRight">Struct that stores data about a collision position of the obstacle position robot shouldn't come number of seconds from now that the collision will occur the name of what causes the collision.  <a href="../../d0/dde/namespacertt_1_1BB.html#de/d62/structrtt_1_1BB_1_1CollisionData">More...</a><br /></td></tr>
+<tr class="memdesc:de/d62/structrtt_1_1BB_1_1CollisionData"><td class="mdescLeft">&#160;</td><td class="mdescRight">Struct that stores data about a collision position robot shouldn't come number of seconds from now that the collision will occur type of collision.  <a href="../../d0/dde/namespacertt_1_1BB.html#de/d62/structrtt_1_1BB_1_1CollisionData">More...</a><br /></td></tr>
 <tr class="separator:de/d62/structrtt_1_1BB_1_1CollisionData"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:d0/d57/structrtt_1_1BB_1_1CommandCollision"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/dde/namespacertt_1_1BB.html#d0/d57/structrtt_1_1BB_1_1CommandCollision">CommandCollision</a></td></tr>
 <tr class="memdesc:d0/d57/structrtt_1_1BB_1_1CommandCollision"><td class="mdescLeft">&#160;</td><td class="mdescRight">struct used for returning a command for pathtracking and information about a collision which can be used in STP Command that is sent to the robot Data about the collision  <a href="../../d0/dde/namespacertt_1_1BB.html#d0/d57/structrtt_1_1BB_1_1CommandCollision">More...</a><br /></td></tr>
 <tr class="separator:d0/d57/structrtt_1_1BB_1_1CommandCollision"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d06/classrtt_1_1BB_1_1WorldObjects.html">WorldObjects</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:a90ddec283fc8250879e878c985a14524"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/dde/namespacertt_1_1BB.html#a90ddec283fc8250879e878c985a14524">CollisionType</a> { <br />
+&#160;&#160;<a class="el" href="../../d0/dde/namespacertt_1_1BB.html#a90ddec283fc8250879e878c985a14524a552a541802e89c9f535247f725bd1c0d">FIELD</a>
+, <a class="el" href="../../d0/dde/namespacertt_1_1BB.html#a90ddec283fc8250879e878c985a14524a6b9023bffcc328a155725440bb19683c">DEFENSEAREA</a>
+, <a class="el" href="../../d0/dde/namespacertt_1_1BB.html#a90ddec283fc8250879e878c985a14524a0fedd49e896d7082cf3c230b40371ae3">BALL</a>
+, <a class="el" href="../../d0/dde/namespacertt_1_1BB.html#a90ddec283fc8250879e878c985a14524a327a502c2662ad532924cdaa55239e51">ENEMYROBOT</a>
+, <br />
+&#160;&#160;<a class="el" href="../../d0/dde/namespacertt_1_1BB.html#a90ddec283fc8250879e878c985a14524a0bbf35af9740d687f436ae353842751e">OWNROBOT</a>
+, <a class="el" href="../../d0/dde/namespacertt_1_1BB.html#a90ddec283fc8250879e878c985a14524a5436ed5d8a911de551e915a11724e86c">BALLPLACEMENT</a>
+<br />
+ }</td></tr>
+<tr class="memdesc:a90ddec283fc8250879e878c985a14524"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enum that stores the different types of collisions.  <a href="../../d0/dde/namespacertt_1_1BB.html#a90ddec283fc8250879e878c985a14524">More...</a><br /></td></tr>
+<tr class="separator:a90ddec283fc8250879e878c985a14524"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
@@ -180,15 +196,9 @@ tEnd</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<div class="textblock"><p>Struct that stores data about a collision position of the obstacle position robot shouldn't come number of seconds from now that the collision will occur the name of what causes the collision. </p>
+<div class="textblock"><p>Struct that stores data about a collision position robot shouldn't come number of seconds from now that the collision will occur type of collision. </p>
 </div><table class="fieldtable">
 <tr><th colspan="3">Class Members</th></tr>
-<tr><td class="fieldtype">
-<a id="a8ae7fce9a99d8e8449e806d5d7c1427b"></a>string</td>
-<td class="fieldname">
-collisionName</td>
-<td class="fielddoc">
-</td></tr>
 <tr><td class="fieldtype">
 <a id="a2b13a15488b2e38d41330562a804003f"></a><a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a></td>
 <td class="fieldname">
@@ -202,9 +212,9 @@ collisionTime</td>
 <td class="fielddoc">
 </td></tr>
 <tr><td class="fieldtype">
-<a id="a15b57dbcf85e12fcc1f7888c0c5ea856"></a><a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a></td>
+<a id="a4d20eebfa98b7369b409680101516ecc"></a><a class="el" href="../../d0/dde/namespacertt_1_1BB.html#a90ddec283fc8250879e878c985a14524">CollisionType</a></td>
 <td class="fieldname">
-obstaclePosition</td>
+collisionType</td>
 <td class="fielddoc">
 </td></tr>
 </table>
@@ -237,6 +247,39 @@ collisionData</td>
 robotCommand</td>
 <td class="fielddoc">
 </td></tr>
+</table>
+
+</div>
+</div>
+<h2 class="groupheader">Enumeration Type Documentation</h2>
+<a id="a90ddec283fc8250879e878c985a14524"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a90ddec283fc8250879e878c985a14524">&#9670;&nbsp;</a></span>CollisionType</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="../../d0/dde/namespacertt_1_1BB.html#a90ddec283fc8250879e878c985a14524">rtt::BB::CollisionType</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Enum that stores the different types of collisions. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a90ddec283fc8250879e878c985a14524a552a541802e89c9f535247f725bd1c0d"></a>FIELD&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a90ddec283fc8250879e878c985a14524a6b9023bffcc328a155725440bb19683c"></a>DEFENSEAREA&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a90ddec283fc8250879e878c985a14524a0fedd49e896d7082cf3c230b40371ae3"></a>BALL&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a90ddec283fc8250879e878c985a14524a327a502c2662ad532924cdaa55239e51"></a>ENEMYROBOT&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a90ddec283fc8250879e878c985a14524a0bbf35af9740d687f436ae353842751e"></a>OWNROBOT&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a90ddec283fc8250879e878c985a14524a5436ed5d8a911de551e915a11724e86c"></a>BALLPLACEMENT&#160;</td><td class="fielddoc"></td></tr>
 </table>
 
 </div>

@@ -100,24 +100,30 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a9464deea328dab65431edab4e16d0737"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d06/classrtt_1_1BB_1_1WorldObjects.html#a9464deea328dab65431edab4e16d0737">WorldObjects</a> ()</td></tr>
 <tr class="memdesc:a9464deea328dab65431edab4e16d0737"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor of the <a class="el" href="../../de/d06/classrtt_1_1BB_1_1WorldObjects.html">WorldObjects</a> class.  <a href="../../de/d06/classrtt_1_1BB_1_1WorldObjects.html#a9464deea328dab65431edab4e16d0737">More...</a><br /></td></tr>
 <tr class="separator:a9464deea328dab65431edab4e16d0737"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acf01492c123e3f24ea595de33ea1beeb"><td class="memItemLeft" align="right" valign="top">std::optional&lt; <a class="el" href="../../d0/dde/namespacertt_1_1BB.html#de/d62/structrtt_1_1BB_1_1CollisionData">CollisionData</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d06/classrtt_1_1BB_1_1WorldObjects.html#acf01492c123e3f24ea595de33ea1beeb">getFirstCollision</a> (const <a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">rtt::world::World</a> *world, const rtt::Field &amp;field, const <a class="el" href="../../d9/da4/classrtt_1_1Trajectory2D.html">rtt::Trajectory2D</a> &amp;Trajectory, const std::unordered_map&lt; int, std::vector&lt; <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &gt;&gt; &amp;computedPaths, int robotId, <a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#d8/dcb/structrtt_1_1ai_1_1stp_1_1AvoidObjects">ai::stp::AvoidObjects</a> avoidObjects)</td></tr>
-<tr class="memdesc:acf01492c123e3f24ea595de33ea1beeb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates the position of the first collision and the obstacle position on a BangBangTrajectory.  <a href="../../de/d06/classrtt_1_1BB_1_1WorldObjects.html#acf01492c123e3f24ea595de33ea1beeb">More...</a><br /></td></tr>
-<tr class="separator:acf01492c123e3f24ea595de33ea1beeb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a06c1a5530dc04cd23a0b01cd7801b188"><td class="memItemLeft" align="right" valign="top">std::optional&lt; <a class="el" href="../../d0/dde/namespacertt_1_1BB.html#de/d62/structrtt_1_1BB_1_1CollisionData">CollisionData</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d06/classrtt_1_1BB_1_1WorldObjects.html#a06c1a5530dc04cd23a0b01cd7801b188">getFirstCollision</a> (const <a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">rtt::world::World</a> *world, const rtt::Field &amp;field, const <a class="el" href="../../d9/da4/classrtt_1_1Trajectory2D.html">rtt::Trajectory2D</a> &amp;Trajectory, const std::unordered_map&lt; int, std::vector&lt; <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &gt;&gt; &amp;computedPaths, int robotId, <a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#d8/dcb/structrtt_1_1ai_1_1stp_1_1AvoidObjects">ai::stp::AvoidObjects</a> avoidObjects, std::unordered_map&lt; int, int &gt; completedTimeSteps, double startTime=0)</td></tr>
+<tr class="memdesc:a06c1a5530dc04cd23a0b01cd7801b188"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates the position of the first collision and the obstacle position on a BangBangTrajectory.  <a href="../../de/d06/classrtt_1_1BB_1_1WorldObjects.html#a06c1a5530dc04cd23a0b01cd7801b188">More...</a><br /></td></tr>
+<tr class="separator:a06c1a5530dc04cd23a0b01cd7801b188"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a82b00590f5d915d2597cb267e0ccc4f4"><td class="memItemLeft" align="right" valign="top">std::optional&lt; <a class="el" href="../../d0/dde/namespacertt_1_1BB.html#de/d62/structrtt_1_1BB_1_1CollisionData">CollisionData</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d06/classrtt_1_1BB_1_1WorldObjects.html#a82b00590f5d915d2597cb267e0ccc4f4">getFirstDefenseAreaCollision</a> (const rtt::Field &amp;field, const <a class="el" href="../../d9/da4/classrtt_1_1Trajectory2D.html">rtt::Trajectory2D</a> &amp;Trajectory, const std::unordered_map&lt; int, std::vector&lt; <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &gt;&gt; &amp;computedPaths, int robotId)</td></tr>
+<tr class="memdesc:a82b00590f5d915d2597cb267e0ccc4f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates the position of the first collision with the defense area, note that this functions assumes the entire trajectory, including the part that might already be completed. Only call this function for a new trajectory.  <a href="../../de/d06/classrtt_1_1BB_1_1WorldObjects.html#a82b00590f5d915d2597cb267e0ccc4f4">More...</a><br /></td></tr>
+<tr class="separator:a82b00590f5d915d2597cb267e0ccc4f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a43811b3f424da4d990fe53bab1c0389d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d06/classrtt_1_1BB_1_1WorldObjects.html#a43811b3f424da4d990fe53bab1c0389d">calculateFieldCollisions</a> (const rtt::Field &amp;field, std::vector&lt; <a class="el" href="../../d0/dde/namespacertt_1_1BB.html#de/d62/structrtt_1_1BB_1_1CollisionData">CollisionData</a> &gt; &amp;collisionDatas, const std::vector&lt; <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &gt; &amp;pathPoints, double timeStep, size_t completedTimeSteps)</td></tr>
 <tr class="memdesc:a43811b3f424da4d990fe53bab1c0389d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Takes a calculated path of a robot and checks points along the path if they are outside the fieldlines if not allowed there. Adds these points and the time to collisionDatas and collisionTimes.  <a href="../../de/d06/classrtt_1_1BB_1_1WorldObjects.html#a43811b3f424da4d990fe53bab1c0389d">More...</a><br /></td></tr>
 <tr class="separator:a43811b3f424da4d990fe53bab1c0389d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9b441c9274fa53fa74e7e7c1cd77df13"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d06/classrtt_1_1BB_1_1WorldObjects.html#a9b441c9274fa53fa74e7e7c1cd77df13">calculateDefenseAreaCollisions</a> (const rtt::Field &amp;field, std::vector&lt; <a class="el" href="../../d0/dde/namespacertt_1_1BB.html#de/d62/structrtt_1_1BB_1_1CollisionData">CollisionData</a> &gt; &amp;collisionDatas, const std::vector&lt; <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &gt; &amp;pathPoints, int robotId, double timeStep, size_t completedTimeSteps)</td></tr>
 <tr class="memdesc:a9b441c9274fa53fa74e7e7c1cd77df13"><td class="mdescLeft">&#160;</td><td class="mdescRight">Takes a calculated path and checks points along the path if they are inside the defensearea if the robot is not allowed to be there. Adds these points and the time to collisionDatas and collisionTimes.  <a href="../../de/d06/classrtt_1_1BB_1_1WorldObjects.html#a9b441c9274fa53fa74e7e7c1cd77df13">More...</a><br /></td></tr>
 <tr class="separator:a9b441c9274fa53fa74e7e7c1cd77df13"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aabbd0c389e0c1bac51d9c7c24c042228"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d06/classrtt_1_1BB_1_1WorldObjects.html#aabbd0c389e0c1bac51d9c7c24c042228">calculateBallCollisions</a> (const <a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">rtt::world::World</a> *world, std::vector&lt; <a class="el" href="../../d0/dde/namespacertt_1_1BB.html#de/d62/structrtt_1_1BB_1_1CollisionData">CollisionData</a> &gt; &amp;collisionDatas, std::vector&lt; <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &gt; pathPoints, double timeStep, double dist, size_t completedTimeSteps)</td></tr>
-<tr class="memdesc:aabbd0c389e0c1bac51d9c7c24c042228"><td class="mdescLeft">&#160;</td><td class="mdescRight">Takes a calculated path of a robot and checks points along the path if they are too close to an approximation of the ball trajactory. If the play is "ball_placement_them" also checks for the path being inside the balltube. Adds these points and the time to collisionDatas and collisionTimes.  <a href="../../de/d06/classrtt_1_1BB_1_1WorldObjects.html#aabbd0c389e0c1bac51d9c7c24c042228">More...</a><br /></td></tr>
-<tr class="separator:aabbd0c389e0c1bac51d9c7c24c042228"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abf103135848c98242b48ccadf6988f03"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d06/classrtt_1_1BB_1_1WorldObjects.html#abf103135848c98242b48ccadf6988f03">calculateEnemyRobotCollisions</a> (const <a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">rtt::world::World</a> *world, std::vector&lt; <a class="el" href="../../d0/dde/namespacertt_1_1BB.html#de/d62/structrtt_1_1BB_1_1CollisionData">CollisionData</a> &gt; &amp;collisionDatas, const std::vector&lt; <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &gt; &amp;pathPoints, double timeStep, size_t completedTimeSteps)</td></tr>
-<tr class="memdesc:abf103135848c98242b48ccadf6988f03"><td class="mdescLeft">&#160;</td><td class="mdescRight">Takes a calculated path of a robot and checks points along the path if they are too close to an approximation of the enemy robot paths. Adds these points and the time to collisionDatas and collisionTimes if the difference in velocity between the two robots is more than 1.5 ms/s and we are driving faster.  <a href="../../de/d06/classrtt_1_1BB_1_1WorldObjects.html#abf103135848c98242b48ccadf6988f03">More...</a><br /></td></tr>
-<tr class="separator:abf103135848c98242b48ccadf6988f03"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a08af8e5654eb475b6c388da2420cfc64"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d06/classrtt_1_1BB_1_1WorldObjects.html#a08af8e5654eb475b6c388da2420cfc64">calculateOurRobotCollisions</a> (const <a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">rtt::world::World</a> *world, std::vector&lt; <a class="el" href="../../d0/dde/namespacertt_1_1BB.html#de/d62/structrtt_1_1BB_1_1CollisionData">CollisionData</a> &gt; &amp;collisionDatas, const std::vector&lt; <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &gt; &amp;pathPoints, const std::unordered_map&lt; int, std::vector&lt; <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &gt;&gt; &amp;computedPaths, int robotId, double timeStep, size_t completedTimeSteps)</td></tr>
-<tr class="memdesc:a08af8e5654eb475b6c388da2420cfc64"><td class="mdescLeft">&#160;</td><td class="mdescRight">Takes a path from the array of stored paths and checks points along the path if they are too close to where our robots are calculated to be at that point in time. Adds these points and the time to collisionDatas and collisionTimes.  <a href="../../de/d06/classrtt_1_1BB_1_1WorldObjects.html#a08af8e5654eb475b6c388da2420cfc64">More...</a><br /></td></tr>
-<tr class="separator:a08af8e5654eb475b6c388da2420cfc64"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9e83560af113c4ca0deabc19f234c6fc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d06/classrtt_1_1BB_1_1WorldObjects.html#a9e83560af113c4ca0deabc19f234c6fc">calculateBallCollisions</a> (const <a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">rtt::world::World</a> *world, std::vector&lt; <a class="el" href="../../d0/dde/namespacertt_1_1BB.html#de/d62/structrtt_1_1BB_1_1CollisionData">CollisionData</a> &gt; &amp;collisionDatas, const std::vector&lt; <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &gt; &amp;pathPoints, double timeStep, double dist, size_t completedTimeSteps, double startTime)</td></tr>
+<tr class="memdesc:a9e83560af113c4ca0deabc19f234c6fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Takes a calculated path of a robot and checks points along the path if they are too close to an approximation of the ball trajactory. If the play is "ball_placement_them" also checks for the path being inside the balltube. Adds these points and the time to collisionDatas and collisionTimes.  <a href="../../de/d06/classrtt_1_1BB_1_1WorldObjects.html#a9e83560af113c4ca0deabc19f234c6fc">More...</a><br /></td></tr>
+<tr class="separator:a9e83560af113c4ca0deabc19f234c6fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a556c78d62ec6e0a8b3567d4fb6e2af89"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d06/classrtt_1_1BB_1_1WorldObjects.html#a556c78d62ec6e0a8b3567d4fb6e2af89">calculateEnemyRobotCollisions</a> (const <a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">rtt::world::World</a> *world, std::vector&lt; <a class="el" href="../../d0/dde/namespacertt_1_1BB.html#de/d62/structrtt_1_1BB_1_1CollisionData">CollisionData</a> &gt; &amp;collisionDatas, const std::vector&lt; <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &gt; &amp;pathPoints, double timeStep, size_t completedTimeSteps, int avoidId, double startTime)</td></tr>
+<tr class="memdesc:a556c78d62ec6e0a8b3567d4fb6e2af89"><td class="mdescLeft">&#160;</td><td class="mdescRight">Takes a calculated path of a robot and checks points along the path if they are too close to an approximation of the enemy robot paths. Adds these points and the time to collisionDatas and collisionTimes if the difference in velocity between the two robots is more than 1.5 ms/s and we are driving faster.  <a href="../../de/d06/classrtt_1_1BB_1_1WorldObjects.html#a556c78d62ec6e0a8b3567d4fb6e2af89">More...</a><br /></td></tr>
+<tr class="separator:a556c78d62ec6e0a8b3567d4fb6e2af89"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab811207ac02787b395bce62613cfae13"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d06/classrtt_1_1BB_1_1WorldObjects.html#ab811207ac02787b395bce62613cfae13">calculateOurRobotCollisions</a> (const <a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">rtt::world::World</a> *world, std::vector&lt; <a class="el" href="../../d0/dde/namespacertt_1_1BB.html#de/d62/structrtt_1_1BB_1_1CollisionData">CollisionData</a> &gt; &amp;collisionDatas, const std::vector&lt; <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &gt; &amp;pathPoints, const std::unordered_map&lt; int, std::vector&lt; <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &gt;&gt; &amp;computedPaths, int robotId, double timeStep, std::unordered_map&lt; int, int &gt; completedTimeSteps, double startTime)</td></tr>
+<tr class="memdesc:ab811207ac02787b395bce62613cfae13"><td class="mdescLeft">&#160;</td><td class="mdescRight">Takes a path from the array of stored paths and checks points along the path if they are too close to where our robots are calculated to be at that point in time. Adds these points and the time to collisionDatas and collisionTimes.  <a href="../../de/d06/classrtt_1_1BB_1_1WorldObjects.html#ab811207ac02787b395bce62613cfae13">More...</a><br /></td></tr>
+<tr class="separator:ab811207ac02787b395bce62613cfae13"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a73bc27ce6178f891c0e257697ce1f13a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d06/classrtt_1_1BB_1_1WorldObjects.html#a73bc27ce6178f891c0e257697ce1f13a">calculateBallPlacementCollision</a> (const <a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">rtt::world::World</a> *world, std::vector&lt; <a class="el" href="../../d0/dde/namespacertt_1_1BB.html#de/d62/structrtt_1_1BB_1_1CollisionData">CollisionData</a> &gt; &amp;collisionDatas, const std::vector&lt; <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &gt; &amp;pathPoints, double timeStep, size_t completedTimeSteps)</td></tr>
+<tr class="memdesc:a73bc27ce6178f891c0e257697ce1f13a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Takes a calculated path of a robot and checks points along the path if they are too close to an approximation of the ball trajactory. If the play is "ball_placement_them" also checks for the path being inside the balltube. Adds these points and the time to collisionDatas and collisionTimes.  <a href="../../de/d06/classrtt_1_1BB_1_1WorldObjects.html#a73bc27ce6178f891c0e257697ce1f13a">More...</a><br /></td></tr>
+<tr class="separator:a73bc27ce6178f891c0e257697ce1f13a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3fa9177b94de829a8a7cce0b5d7ff4f3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d06/classrtt_1_1BB_1_1WorldObjects.html#a3fa9177b94de829a8a7cce0b5d7ff4f3">insertCollisionData</a> (std::vector&lt; <a class="el" href="../../d0/dde/namespacertt_1_1BB.html#de/d62/structrtt_1_1BB_1_1CollisionData">CollisionData</a> &gt; &amp;collisionDatas, const <a class="el" href="../../d0/dde/namespacertt_1_1BB.html#de/d62/structrtt_1_1BB_1_1CollisionData">CollisionData</a> &amp;collisionData)</td></tr>
 <tr class="memdesc:a3fa9177b94de829a8a7cce0b5d7ff4f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inserts collisionData in the vector collisionDatas such that they are ordered from lowest collisionTime to highest.  <a href="../../de/d06/classrtt_1_1BB_1_1WorldObjects.html#a3fa9177b94de829a8a7cce0b5d7ff4f3">More...</a><br /></td></tr>
 <tr class="separator:a3fa9177b94de829a8a7cce0b5d7ff4f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -160,8 +166,8 @@ Private Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="aabbd0c389e0c1bac51d9c7c24c042228"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aabbd0c389e0c1bac51d9c7c24c042228">&#9670;&nbsp;</a></span>calculateBallCollisions()</h2>
+<a id="a9e83560af113c4ca0deabc19f234c6fc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9e83560af113c4ca0deabc19f234c6fc">&#9670;&nbsp;</a></span>calculateBallCollisions()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -181,7 +187,7 @@ Private Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::vector&lt; <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &gt;&#160;</td>
+          <td class="paramtype">const std::vector&lt; <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>pathPoints</em>, </td>
         </tr>
         <tr>
@@ -195,6 +201,72 @@ Private Attributes</h2></td></tr>
           <td></td>
           <td class="paramtype">double&#160;</td>
           <td class="paramname"><em>dist</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>completedTimeSteps</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>startTime</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Takes a calculated path of a robot and checks points along the path if they are too close to an approximation of the ball trajactory. If the play is "ball_placement_them" also checks for the path being inside the balltube. Adds these points and the time to collisionDatas and collisionTimes. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">world</td><td>Used for information about the ball </td></tr>
+    <tr><td class="paramname">collisionDatas</td><td>std::vector which <a class="el" href="../../d0/dde/namespacertt_1_1BB.html#de/d62/structrtt_1_1BB_1_1CollisionData" title="Struct that stores data about a collision position robot shouldn&#39;t come number of seconds from now th...">rtt::BB::CollisionData</a> can be added to </td></tr>
+    <tr><td class="paramname">pathPoints</td><td>std::vector with path points </td></tr>
+    <tr><td class="paramname">timeStep</td><td>Time between pathpoints </td></tr>
+    <tr><td class="paramname">dist</td><td>Distance to the ball </td></tr>
+    <tr><td class="paramname">completedTimeSteps</td><td>Number of completed time steps </td></tr>
+    <tr><td class="paramname">startTime</td><td>Start time of the current trajectory part that is being checked. This is the time that it takes for the robot to reach the first point of the trajectory </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a73bc27ce6178f891c0e257697ce1f13a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a73bc27ce6178f891c0e257697ce1f13a">&#9670;&nbsp;</a></span>calculateBallPlacementCollision()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void rtt::BB::WorldObjects::calculateBallPlacementCollision </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">rtt::world::World</a> *&#160;</td>
+          <td class="paramname"><em>world</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="../../d0/dde/namespacertt_1_1BB.html#de/d62/structrtt_1_1BB_1_1CollisionData">CollisionData</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>collisionDatas</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>pathPoints</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>timeStep</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -214,10 +286,9 @@ Private Attributes</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">world</td><td>Used for information about the ball </td></tr>
-    <tr><td class="paramname">collisionDatas</td><td>std::vector which <a class="el" href="../../d0/dde/namespacertt_1_1BB.html#de/d62/structrtt_1_1BB_1_1CollisionData" title="Struct that stores data about a collision position of the obstacle position robot shouldn&#39;t come numb...">rtt::BB::CollisionData</a> can be added to </td></tr>
+    <tr><td class="paramname">collisionDatas</td><td>std::vector which <a class="el" href="../../d0/dde/namespacertt_1_1BB.html#de/d62/structrtt_1_1BB_1_1CollisionData" title="Struct that stores data about a collision position robot shouldn&#39;t come number of seconds from now th...">rtt::BB::CollisionData</a> can be added to </td></tr>
     <tr><td class="paramname">pathPoints</td><td>std::vector with path points </td></tr>
     <tr><td class="paramname">timeStep</td><td>Time between pathpoints </td></tr>
-    <tr><td class="paramname">dist</td><td>Distance to the ball </td></tr>
     <tr><td class="paramname">completedTimeSteps</td><td>Number of completed time steps </td></tr>
   </table>
   </dd>
@@ -279,7 +350,7 @@ Private Attributes</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">field</td><td>Used for information about the field </td></tr>
-    <tr><td class="paramname">collisionDatas</td><td>std::vector which <a class="el" href="../../d0/dde/namespacertt_1_1BB.html#de/d62/structrtt_1_1BB_1_1CollisionData" title="Struct that stores data about a collision position of the obstacle position robot shouldn&#39;t come numb...">rtt::BB::CollisionData</a> can be added to </td></tr>
+    <tr><td class="paramname">collisionDatas</td><td>std::vector which <a class="el" href="../../d0/dde/namespacertt_1_1BB.html#de/d62/structrtt_1_1BB_1_1CollisionData" title="Struct that stores data about a collision position robot shouldn&#39;t come number of seconds from now th...">rtt::BB::CollisionData</a> can be added to </td></tr>
     <tr><td class="paramname">pathPoints</td><td>std::vector with path points </td></tr>
     <tr><td class="paramname">robotId</td><td>ID of the robot </td></tr>
     <tr><td class="paramname">timeStep</td><td>Time between pathpoints </td></tr>
@@ -290,8 +361,8 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="abf103135848c98242b48ccadf6988f03"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abf103135848c98242b48ccadf6988f03">&#9670;&nbsp;</a></span>calculateEnemyRobotCollisions()</h2>
+<a id="a556c78d62ec6e0a8b3567d4fb6e2af89"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a556c78d62ec6e0a8b3567d4fb6e2af89">&#9670;&nbsp;</a></span>calculateEnemyRobotCollisions()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -324,7 +395,19 @@ Private Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">size_t&#160;</td>
-          <td class="paramname"><em>completedTimeSteps</em>&#160;</td>
+          <td class="paramname"><em>completedTimeSteps</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>avoidId</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>startTime</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -338,10 +421,12 @@ Private Attributes</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">world</td><td>Used for information about the enemy robots </td></tr>
-    <tr><td class="paramname">collisionDatas</td><td>std::vector which <a class="el" href="../../d0/dde/namespacertt_1_1BB.html#de/d62/structrtt_1_1BB_1_1CollisionData" title="Struct that stores data about a collision position of the obstacle position robot shouldn&#39;t come numb...">rtt::BB::CollisionData</a> can be added to </td></tr>
+    <tr><td class="paramname">collisionDatas</td><td>std::vector which <a class="el" href="../../d0/dde/namespacertt_1_1BB.html#de/d62/structrtt_1_1BB_1_1CollisionData" title="Struct that stores data about a collision position robot shouldn&#39;t come number of seconds from now th...">rtt::BB::CollisionData</a> can be added to </td></tr>
     <tr><td class="paramname">pathPoints</td><td>std::vector with path points </td></tr>
     <tr><td class="paramname">timeStep</td><td>Time between pathpoints </td></tr>
     <tr><td class="paramname">completedTimeSteps</td><td>Amount of seconds of the trajectory already completed by the robot </td></tr>
+    <tr><td class="paramname">avoidId</td><td>ID of the robot to ignore collisions with </td></tr>
+    <tr><td class="paramname">startTime</td><td>Start time of the current trajectory part that is being checked. This is the time that it takes for the robot to reach the first point of the trajectory </td></tr>
   </table>
   </dd>
 </dl>
@@ -396,7 +481,7 @@ Private Attributes</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">field</td><td>Used for information about the field </td></tr>
-    <tr><td class="paramname">collisionDatas</td><td>std::vector which <a class="el" href="../../d0/dde/namespacertt_1_1BB.html#de/d62/structrtt_1_1BB_1_1CollisionData" title="Struct that stores data about a collision position of the obstacle position robot shouldn&#39;t come numb...">rtt::BB::CollisionData</a> can be added to </td></tr>
+    <tr><td class="paramname">collisionDatas</td><td>std::vector which <a class="el" href="../../d0/dde/namespacertt_1_1BB.html#de/d62/structrtt_1_1BB_1_1CollisionData" title="Struct that stores data about a collision position robot shouldn&#39;t come number of seconds from now th...">rtt::BB::CollisionData</a> can be added to </td></tr>
     <tr><td class="paramname">pathPoints</td><td>std::vector with path points </td></tr>
     <tr><td class="paramname">timeStep</td><td>Time between pathpoints </td></tr>
     <tr><td class="paramname">completedTimeSteps</td><td>Number of completed time steps </td></tr>
@@ -406,8 +491,8 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a08af8e5654eb475b6c388da2420cfc64"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a08af8e5654eb475b6c388da2420cfc64">&#9670;&nbsp;</a></span>calculateOurRobotCollisions()</h2>
+<a id="ab811207ac02787b395bce62613cfae13"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab811207ac02787b395bce62613cfae13">&#9670;&nbsp;</a></span>calculateOurRobotCollisions()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -451,8 +536,14 @@ Private Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">size_t&#160;</td>
-          <td class="paramname"><em>completedTimeSteps</em>&#160;</td>
+          <td class="paramtype">std::unordered_map&lt; int, int &gt;&#160;</td>
+          <td class="paramname"><em>completedTimeSteps</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>startTime</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -466,20 +557,21 @@ Private Attributes</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">world</td><td>Used for information about our robots </td></tr>
-    <tr><td class="paramname">collisionDatas</td><td>std::vector which <a class="el" href="../../d0/dde/namespacertt_1_1BB.html#de/d62/structrtt_1_1BB_1_1CollisionData" title="Struct that stores data about a collision position of the obstacle position robot shouldn&#39;t come numb...">rtt::BB::CollisionData</a> can be added to </td></tr>
+    <tr><td class="paramname">collisionDatas</td><td>std::vector which <a class="el" href="../../d0/dde/namespacertt_1_1BB.html#de/d62/structrtt_1_1BB_1_1CollisionData" title="Struct that stores data about a collision position robot shouldn&#39;t come number of seconds from now th...">rtt::BB::CollisionData</a> can be added to </td></tr>
     <tr><td class="paramname">pathPoints</td><td>std::vector with path points </td></tr>
     <tr><td class="paramname">computedPaths</td><td>The paths of our own robots </td></tr>
     <tr><td class="paramname">robotId</td><td>ID of the robot </td></tr>
     <tr><td class="paramname">timeStep</td><td>Time between pathpoints </td></tr>
     <tr><td class="paramname">completedTimeSteps</td><td>how many seconds of the trajectory is already completed by the robot </td></tr>
+    <tr><td class="paramname">startTime</td><td>Start time of the current trajectory part that is being checked. This is the time that it takes for the robot to reach the first point of the trajectory </td></tr>
   </table>
   </dd>
 </dl>
 
 </div>
 </div>
-<a id="acf01492c123e3f24ea595de33ea1beeb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acf01492c123e3f24ea595de33ea1beeb">&#9670;&nbsp;</a></span>getFirstCollision()</h2>
+<a id="a06c1a5530dc04cd23a0b01cd7801b188"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a06c1a5530dc04cd23a0b01cd7801b188">&#9670;&nbsp;</a></span>getFirstCollision()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -518,7 +610,19 @@ Private Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#d8/dcb/structrtt_1_1ai_1_1stp_1_1AvoidObjects">ai::stp::AvoidObjects</a>&#160;</td>
-          <td class="paramname"><em>avoidObjects</em>&#160;</td>
+          <td class="paramname"><em>avoidObjects</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::unordered_map&lt; int, int &gt;&#160;</td>
+          <td class="paramname"><em>completedTimeSteps</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>startTime</em> = <code>0</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -537,10 +641,64 @@ Private Attributes</h2></td></tr>
     <tr><td class="paramname">computedPaths</td><td>the paths of our robots </td></tr>
     <tr><td class="paramname">robotId</td><td>Id of the robot </td></tr>
     <tr><td class="paramname">avoidObjects</td><td>a struct with if it should avoid certain objects </td></tr>
+    <tr><td class="paramname">completedTimeSteps</td><td>Number of completed time steps of the trajectory </td></tr>
+    <tr><td class="paramname">startTime</td><td>Start time of the current trajectory part that is being checked. This is the time that it takes for the robot to reach the first point of the trajectory </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>optional with <a class="el" href="../../d0/dde/namespacertt_1_1BB.html#de/d62/structrtt_1_1BB_1_1CollisionData" title="Struct that stores data about a collision position of the obstacle position robot shouldn&#39;t come numb...">rtt::BB::CollisionData</a> </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>optional with <a class="el" href="../../d0/dde/namespacertt_1_1BB.html#de/d62/structrtt_1_1BB_1_1CollisionData" title="Struct that stores data about a collision position robot shouldn&#39;t come number of seconds from now th...">rtt::BB::CollisionData</a> </dd></dl>
+
+</div>
+</div>
+<a id="a82b00590f5d915d2597cb267e0ccc4f4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a82b00590f5d915d2597cb267e0ccc4f4">&#9670;&nbsp;</a></span>getFirstDefenseAreaCollision()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt; <a class="el" href="../../d0/dde/namespacertt_1_1BB.html#de/d62/structrtt_1_1BB_1_1CollisionData">CollisionData</a> &gt; rtt::BB::WorldObjects::getFirstDefenseAreaCollision </td>
+          <td>(</td>
+          <td class="paramtype">const rtt::Field &amp;&#160;</td>
+          <td class="paramname"><em>field</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="../../d9/da4/classrtt_1_1Trajectory2D.html">rtt::Trajectory2D</a> &amp;&#160;</td>
+          <td class="paramname"><em>Trajectory</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::unordered_map&lt; int, std::vector&lt; <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &gt;&gt; &amp;&#160;</td>
+          <td class="paramname"><em>computedPaths</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>robotId</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Calculates the position of the first collision with the defense area, note that this functions assumes the entire trajectory, including the part that might already be completed. Only call this function for a new trajectory. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">field</td><td>used for checking collisions with the field </td></tr>
+    <tr><td class="paramname">BBTrajectory</td><td>the trajectory to check for collisions </td></tr>
+    <tr><td class="paramname">computedPaths</td><td>the paths of our robots </td></tr>
+    <tr><td class="paramname">robotId</td><td>Id of the robot </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>optional with <a class="el" href="../../d0/dde/namespacertt_1_1BB.html#de/d62/structrtt_1_1BB_1_1CollisionData" title="Struct that stores data about a collision position robot shouldn&#39;t come number of seconds from now th...">rtt::BB::CollisionData</a> </dd></dl>
 
 </div>
 </div>

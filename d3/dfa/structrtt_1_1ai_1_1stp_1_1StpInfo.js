@@ -17,7 +17,6 @@ var structrtt_1_1ai_1_1stp_1_1StpInfo =
     [ "getRobot", "d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#a727fe280b49d1fb0d5dd42aa1657c098", null ],
     [ "getRoleName", "d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#a1f87348d274da02c9200ef7b3d529aec", null ],
     [ "getShotType", "d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#a12448dd09ecc0fe6a5cafdc08acedc99", null ],
-    [ "getTargetLocationSpeed", "d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#ad99ab2eff1d35fe8377406f1c26330e4", null ],
     [ "setAngle", "d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#ab6f10263acdebd346d34ee624414ea7a", null ],
     [ "setBall", "d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#a1a81bedd78c2bdb9e89a8bfb968147fb", null ],
     [ "setBlockDistance", "d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#a2ab5274fddf81c116192db5120ac44f2", null ],
@@ -28,6 +27,7 @@ var structrtt_1_1ai_1_1stp_1_1StpInfo =
     [ "setKickChipVelocity", "d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#af3eb785277f9b02ecebd597d3e1cd31b", null ],
     [ "setKickOrChip", "d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#a5f45976c3e9bd95cf5800776287350c1", null ],
     [ "setMaxRobotVelocity", "d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#ac4f0191be550edf701259b9677e58f35", null ],
+    [ "setNotAvoidTheirRobotId", "d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#a9ad3b663cba35db74255d562e315a436", null ],
     [ "setPidType", "d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#ae8482808ab4fb66b8a4ba8040fb47bf0", null ],
     [ "setPositionToDefend", "d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#a5c07f6c23679d1e5be078813d49746d6", null ],
     [ "setPositionToMoveTo", "d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#ad1c1a5848c3c23785f9af9aa64a27b18", null ],
@@ -42,7 +42,6 @@ var structrtt_1_1ai_1_1stp_1_1StpInfo =
     [ "setShouldAvoidOurRobots", "d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#a350c6ae83489de7b2599037bd47eb027", null ],
     [ "setShouldAvoidOutOfField", "d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#a7080301b1f4e9650f0599e87ef71fde6", null ],
     [ "setShouldAvoidTheirRobots", "d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#a108de017dcb9f43ec30cc7a86f7440c8", null ],
-    [ "setTargetLocationSpeed", "d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#acd75bd73a95b2e3e22dad70dd5823bf3", null ],
     [ "angle", "d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#a251c3ea06ae994224d288bac151f23e9", null ],
     [ "avoidObjects", "d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#a410c71825d572f4fc63f0df9ba8f7b35", null ],
     [ "ball", "d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#a071fed8ba48c9358ee71c230bc9b8f8b", null ],
@@ -61,6 +60,5 @@ var structrtt_1_1ai_1_1stp_1_1StpInfo =
     [ "robot", "d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#a27a4f9995826e2126aae6935b77e9213", null ],
     [ "roleName", "d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#a85b040068008db82349f2a7a38659301", null ],
     [ "roleScore", "d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#adebb7ef171fec064c5fe99f3db334e72", null ],
-    [ "shotType", "d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#a46c27add1a6e70188efdb2edd2f5f9d0", null ],
-    [ "targetLocationSpeed", "d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#a6efe89666e0bb3704009bfa192c5e4f5", null ]
+    [ "shotType", "d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#a46c27add1a6e70188efdb2edd2f5f9d0", null ]
 ];

@@ -2,6 +2,7 @@ var StpInfoEnums_8h =
 [
     [ "AvoidObjects", "d5/d14/namespacertt_1_1ai_1_1stp.html#d8/dcb/structrtt_1_1ai_1_1stp_1_1AvoidObjects", [
       [ "avoidBallDist", "d5/d14/namespacertt_1_1ai_1_1stp.html#a6577b099f78be27629402214f0ba3c35", null ],
+      [ "notAvoidTheirRobotId", "d5/d14/namespacertt_1_1ai_1_1stp.html#ae925a1b8a6ad79c9fe4572ace6b68430", null ],
       [ "shouldAvoidBall", "d5/d14/namespacertt_1_1ai_1_1stp.html#ade390346237ed980f3b50fa3cb0a0b14", null ],
       [ "shouldAvoidDefenseArea", "d5/d14/namespacertt_1_1ai_1_1stp.html#a46fdc772a97d5bb81ebd1691f64178e1", null ],
       [ "shouldAvoidOurRobots", "d5/d14/namespacertt_1_1ai_1_1stp.html#a0f52cc1075f298d6afdc1feeb2fde5b5", null ],

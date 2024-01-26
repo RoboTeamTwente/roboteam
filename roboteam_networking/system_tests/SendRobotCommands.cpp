@@ -38,6 +38,8 @@ void onFeedback(const rtt::RobotsFeedback& robotsFeedback) {
         bool hasBall = feedback.dribblerSeesBall;
 
         std::cout << " - Robot " << id << " has " << (hasBall ? "" : "not ") << "the ball" << std::endl;
+        std::cout << " - Robot " << id << "'s Xsens is " << (xSensCalibrated ? "calibrated" : "not calibrated") << std::endl;
+        std::cout << " - Robot " << id << "'s ball sensor is " << (ballsensorworking ? "working" : "not working") << std::endl;
     }
 }
 
@@ -55,11 +57,6 @@ int main() {
     auto settingsPub = std::make_unique<SettingsPublisher>();
     auto commandsBluePub = std::make_unique<RobotCommandsBluePublisher>();
     auto commandsYellowPub = std::make_unique<RobotCommandsYellowPublisher>();
-
-    auto feedbackSub = std::make_unique<RobotFeedbackSubscriber>(onFeedback);
-    auto worldSub = std::make_unique<WorldSubscriber>(onWorld);
-
-    auto teamCommand = getEmptyRobotCommandToAllRobots();
 
     // First, send settings message to robothub that it needs to forward messages to the basestation
     std::cout << "Started test..." << std::endl;

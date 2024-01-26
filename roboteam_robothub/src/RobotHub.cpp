@@ -35,8 +35,8 @@ RobotHub::RobotHub(bool shouldLog, bool logInMarpleFormat) {
 
     this->basestationManager = std::make_unique<basestation::BasestationManager>();
     this->basestationManager->setFeedbackCallback([&](const REM_RobotFeedback &feedback, rtt::Team color) { this->handleRobotFeedbackFromBasestation(feedback, color); });
-    this->basestationManager->setRobotStateInfoCallback([&](const REM_RobotStateInfo &robotStateInfo, rtt::Team color) { this->handleRobotStateInfo(robotStateInfo, color); });
-    this->basestationManager->setBasestationLogCallback([&](const std::string &log, rtt::Team color) { this->handleBasestationLog(log, color); });
+    // this->basestationManager->setRobotStateInfoCallback([&](const REM_RobotStateInfo &robotStateInfo, rtt::Team color) { this->handleRobotStateInfo(robotStateInfo, color); });
+    // this->basestationManager->setBasestationLogCallback([&](const std::string &log, rtt::Team color) { this->handleBasestationLog(log, color); });
 
     // if (shouldLog) { this->logger = RobotHubLogger(logInMarpleFormat); }
 }
@@ -79,8 +79,6 @@ void RobotHub::sendCommandsToSimulator(const rtt::RobotCommands &commands, rtt::
         auto kickSpeed = static_cast<float>(robotCommand.kickSpeed);
         float kickAngle = robotCommand.kickType == rtt::KickType::CHIP ? SIM_CHIPPER_ANGLE_DEGREES : 0.0f;
         float dribblerSpeed = static_cast<float>(robotCommand.dribblerSpeed) * SIM_MAX_DRIBBLER_SPEED_RPM;  // dribblerSpeed is range of 0 to 1
-        auto xVelocity = static_cast<float>(robotCommand.velocity.x);
-        auto yVelocity = static_cast<float>(robotCommand.velocity.y);
         auto angularVelocity = static_cast<float>(robotCommand.targetAngularVelocity);
 
         if (!robotCommand.useAngularVelocity) {
@@ -267,14 +265,14 @@ bool RobotHub::sendRobotFeedback(const rtt::RobotsFeedback &feedback) {
     return bytesSent > 0;
 }
 
-void RobotHub::handleRobotStateInfo(const REM_RobotStateInfo &info, rtt::Team team) {
-    // if (this->logger.has_value()) { this->logger->logRobotStateInfo(info, team); }
-}
+// void RobotHub::handleRobotStateInfo(const REM_RobotStateInfo &info, rtt::Team team) {
+//    // if (this->logger.has_value()) { this->logger->logRobotStateInfo(info, team); }
+// }
 
-void RobotHub::handleBasestationLog(const std::string &basestationLogMessage, rtt::Team team) {
-    // if (this->logger.has_value()) { this->logger->logInfo("[" + teamToString(team) + "] " + basestationLogMessage); }
-    // RTT_INFO("Basestation ", teamToString(team), ": ", basestationLogMessage)
-}
+// void RobotHub::handleBasestationLog(const std::string &basestationLogMessage, rtt::Team team) {
+//     // if (this->logger.has_value()) { this->logger->logInfo("[" + teamToString(team) + "] " + basestationLogMessage); }
+//     // RTT_INFO("Basestation ", teamToString(team), ": ", basestationLogMessage)
+// }
 
 void RobotHub::handleSimulationErrors(const std::vector<simulation::SimulationError> &errors) {
     for (const auto &error : errors) {
@@ -298,11 +296,11 @@ const char *FailedToInitializeNetworkersException::what() const noexcept { retur
 }  // namespace rtt::robothub
 
 int main(int argc, char *argv[]) {
-    auto itLog = std::find(argv, argv + argc, std::string("-log"));
+    // auto itLog = std::find(argv, argv + argc, std::string("-log"));
     // bool shouldLog = itLog != argv + argc;
 
-    auto itMarple = std::find(argv, argv + argc, std::string("-marple"));
-    bool logForMarple = itMarple != argv + argc;
+    // auto itMarple = std::find(argv, argv + argc, std::string("-marple"));
+    // bool logForMarple = itMarple != argv + argc;
 
     // if (logForMarple) shouldLog = true; // Log for marple means to log
 

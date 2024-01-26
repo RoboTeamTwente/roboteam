@@ -197,8 +197,8 @@ TEST(VectorTests, lerp) {
 
     EXPECT_DOUBLE_EQ(origin.x, 0);
     EXPECT_DOUBLE_EQ(origin.y, 0);
-    EXPECT_DOUBLE_EQ(origin.x, 0);
-    EXPECT_DOUBLE_EQ(origin.y, 0);
+    EXPECT_DOUBLE_EQ(origin2.x, 0);
+    EXPECT_DOUBLE_EQ(origin2.y, 0);
 }
 
 TEST(VectorTests, nan) {

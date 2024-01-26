@@ -199,7 +199,7 @@ void WorldObjects::calculateOurRobotCollisions(const rtt::world::World *world, s
     int numSteps = static_cast<int>(maxCollisionCheckTime / timeStep);
     for (int i = 0; i <= numSteps; ++i, completedTimeSteps[robotId]++) {
         double loopTime = i * timeStep;
-        if (static_cast<size_t>(completedTimeSteps[robotId] + 1) >= pathPoints.size()) {        
+        if (static_cast<size_t>(completedTimeSteps[robotId] + 1) >= pathPoints.size()) {
             return;
         }
         const double startPointX_OurRobot = pathPoints[completedTimeSteps[robotId]].x;
@@ -223,7 +223,8 @@ void WorldObjects::calculateOurRobotCollisions(const rtt::world::World *world, s
 
             double startPointX_OtherRobot, startPointY_OtherRobot, velocityX_OtherRobot, velocityY_OtherRobot;
 
-            if (completedTimeStepsIt != completedTimeSteps.end() && computedPathsIt != computedPaths.end() && static_cast<size_t>(completedTimeStepsIt->second + 1) < computedPathsIt->second.size()) {
+            if (completedTimeStepsIt != completedTimeSteps.end() && computedPathsIt != computedPaths.end() &&
+                static_cast<size_t>(completedTimeStepsIt->second + 1) < computedPathsIt->second.size()) {
                 startPointX_OtherRobot = computedPathsIt->second[completedTimeStepsIt->second].x;
                 startPointY_OtherRobot = computedPathsIt->second[completedTimeStepsIt->second].y;
                 velocityX_OtherRobot = (computedPathsIt->second[completedTimeStepsIt->second + 1].x - startPointX_OtherRobot) / timeStep;

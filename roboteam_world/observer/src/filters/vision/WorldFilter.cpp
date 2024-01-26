@@ -7,7 +7,6 @@
 #include "filters/vision/ball/BallAssigner.h"
 WorldFilter::WorldFilter() {}
 
-
 proto::World WorldFilter::getWorldPrediction(const Time &time) const {
     proto::World world;
     addRobotPredictionsToMessage(world, time);

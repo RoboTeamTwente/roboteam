@@ -116,8 +116,8 @@ class PositionControl {
      * @param startTime the time at which the trajectory starts
      * @return A score for the trajectory
      */
-    double calculateScore(const rtt::world::World *world, const rtt::Field &field, std::optional<BB::CollisionData> &firstCollision,
-                          Trajectory2D &trajectoryAroundCollision, stp::AvoidObjects avoidObjects, double startTime = 0);
+    double calculateScore(const rtt::world::World *world, const rtt::Field &field, std::optional<BB::CollisionData> &firstCollision, Trajectory2D &trajectoryAroundCollision,
+                          stp::AvoidObjects avoidObjects, double startTime = 0);
 
     /**
      * @brief Tries to find a new trajectory when the current path has a collision on it. It tries this by

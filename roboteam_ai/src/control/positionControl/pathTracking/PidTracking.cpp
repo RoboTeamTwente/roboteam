@@ -2,7 +2,7 @@
 
 namespace rtt::ai::control {
 
-Position PidTracking::trackPath(const Vector2 &currentPosition, const Vector2&, std::vector<Vector2> &pathPoints, int robotId, double angle, stp::PIDType pidType) {
+Position PidTracking::trackPath(const Vector2 &currentPosition, const Vector2 &, std::vector<Vector2> &pathPoints, int robotId, double angle, stp::PIDType pidType) {
     PositionControlUtils::removeFirstIfReached(pathPoints, currentPosition);
     if (pidMapping.find(robotId) == pidMapping.end()) {
         pidMapping[robotId] = std::make_pair(PID(), PID());

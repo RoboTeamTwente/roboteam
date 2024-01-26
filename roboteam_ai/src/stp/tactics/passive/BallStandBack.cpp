@@ -23,13 +23,11 @@ std::optional<StpInfo> BallStandBack::calculateInfoForSkill(StpInfo const &info)
     if (standStillCounter > 60) {
         auto moveVector = info.getRobot()->get()->getPos() - info.getBall()->get()->position;
         targetPos = info.getBall()->get()->position + moveVector.stretchToLength(0.80);
-        skillStpInfo.setShouldAvoidBall(true);
     } else {
         standStillCounter++;
         targetPos = info.getRobot()->get()->getPos();
-        skillStpInfo.setShouldAvoidBall(false);
     }
-
+    skillStpInfo.setShouldAvoidBall(false);
     double angle = (info.getBall()->get()->position - targetPos).angle();
     skillStpInfo.setPositionToMoveTo(targetPos);
     skillStpInfo.setAngle(angle);

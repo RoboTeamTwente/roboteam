@@ -69,12 +69,15 @@ constexpr double ROBOT_CLOSE_TO_POINT = 0.2;                  /**< Distance from
 constexpr double DISTANCE_TO_ROBOT_NEAR = 2.2 * ROBOT_RADIUS; /**< Distance from the robot to another robot at which the robot is considered near that other robot */
 constexpr double DEFENSE_AREA_AVOIDANCE_MARGIN = 0.1;         /**< Distance error for avoiding the defense area */
 constexpr double DISTANCE_TO_PASS_TRAJECTORY = 0.5; /**< Distance from the robot to the pass trajectory at which the robot is considered too close to the pass trajectory */
+constexpr double BALL_PLACEMENT_ALMOST_DONE_DISTANCE =
+    0.5; /**< Distance between ball and placement location at which we no longer include the distance to the edges of the placement location in scoring the trajectory */
+constexpr double OUT_OF_FIELD_MARGIN = 0.17; /**< Distance that the center of the robot is allowed to go out of the field during play (not for end location, only for paths) */
 
 /// Keeper constants
 constexpr double DISTANCE_FROM_GOAL_CLOSE = 2 * ROBOT_RADIUS; /**< Distance from the keeper to the goal at which the keeper is considered close to that goal */
 
 /// GameState constants
-constexpr double AVOID_BALL_DISTANCE = 0.5 + ROBOT_RADIUS + GO_TO_POS_ERROR_MARGIN + BALL_RADIUS; /**< Minimum distance all robots should keep when avoiding the ball */
+constexpr double AVOID_BALL_DISTANCE = 0.5 + ROBOT_RADIUS + GO_TO_POS_ERROR_MARGIN + BALL_RADIUS + 0.1; /**< Minimum distance all robots should keep when avoiding the ball */
 
 }  // namespace rtt::ai::stp::control_constants
 

@@ -261,10 +261,14 @@ double Dealer::getRobotScoreForDistance(const stp::StpInfo &stpInfo, const v::Ro
             RTT_WARNING("No target position found for role " + stpInfo.getRoleName() + " for robot " + std::to_string(robot->getId()))
         return 0;
     }
-    target_position = target_position.value() + stpInfo.getTargetLocationSpeed() * stp::control_constants::DEALER_SPEED_FACTOR;
-
-    // Target found. Calculate distance
-    distance = (robot->getPos() + robot->getVel() * stp::control_constants::DEALER_SPEED_FACTOR).dist(*target_position);
+    double dealer_speed_factor = stp::control_constants::DEALER_SPEED_FACTOR;
+    // if role is harasher
+    if (stpInfo.getRoleName() == "harasser") {
+        target_position = target_position.value() + world.getBall()->get()->velocity * dealer_speed_factor;
+        distance = (robot->getPos() + robot->getVel() * dealer_speed_factor).dist(*target_position);
+    } else {
+        distance = robot->getPos().dist(*target_position);
+    }
 
     return costForDistance(distance, field->playArea.width(), field->playArea.height());
 }

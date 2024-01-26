@@ -73,9 +73,11 @@ void BallPlacementUs::calculateInfoForRoles() noexcept {
 
     stpInfos["ball_placer"].setPositionToShootAt(ballTarget);
     stpInfos["ball_placer"].setPositionToMoveTo(ballTarget);
-    stpInfos["ball_placer"].setShouldAvoidDefenseArea(false);
     stpInfos["ball_placer"].setShouldAvoidOutOfField(false);
     stpInfos["ball_placer"].setShouldAvoidBall(false);
+    for (auto& stpInfo : stpInfos) {
+        stpInfo.second.setShouldAvoidDefenseArea(false);
+    }
 
     if (stpInfos["ball_placer"].getRobot() && stpInfos["ball_placer"].getRobot()->get()->getDistanceToBall() < 1.0) stpInfos["ball_placer"].setMaxRobotVelocity(0.75);
     if (stpInfos["ball_placer"].getRobot() && stpInfos["ball_placer"].getRobot()->get()->getDistanceToBall() < control_constants::TURN_ON_DRIBBLER_DISTANCE) {

@@ -72,7 +72,7 @@ Vector2 BlockBall::calculateTargetPosition(const world::view::BallView &ball, Ve
     }
 
     // Do not get closer than 4 robot radii (to avoid collisions)
-    distance = std::max(4 * control_constants::ROBOT_RADIUS, distance);
+    distance = std::max(4 * control_constants::ROBOT_RADIUS + control_constants::GO_TO_POS_ERROR_MARGIN, distance);
 
     return defendPos + targetToBall.stretchToLength(distance);
 }

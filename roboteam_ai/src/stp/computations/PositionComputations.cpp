@@ -178,7 +178,7 @@ Vector2 PositionComputations::calculateAvoidBallPosition(Vector2 targetPosition,
 
     // During ball placement, we need to avoid the area between the ball and the target position by a certain margin
     if (currentGameState == "ball_placement_us" || currentGameState == "ball_placement_them") {
-        avoidShape = std::make_unique<Tube>(Tube(ballPosition, GameStateManager::getRefereeDesignatedPosition(), control_constants::AVOID_BALL_DISTANCE));
+        avoidShape = std::make_unique<Tube>(Tube(ballPosition, GameStateManager::getRefereeDesignatedPosition(), control_constants::AVOID_BALL_DISTANCE + 0.1));
     } else {
         // During stop gamestate, we need to avoid the area directly around the ball.
         avoidShape = std::make_unique<Circle>(Circle(ballPosition, control_constants::AVOID_BALL_DISTANCE));
@@ -229,7 +229,6 @@ void PositionComputations::calculateInfoForHarasser(std::unordered_map<std::stri
                                                     std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT> *roles, const Field &field,
                                                     world::World *world) noexcept {
     auto enemyClosestToBall = world->getWorld()->getRobotClosestToBall(world::them);
-    stpInfos["harasser"].setTargetLocationSpeed(world->getWorld()->getBall()->get()->velocity);
     // If there is no enemy or we don't have a harasser yet, estimate the position to move to
     if (!stpInfos["harasser"].getRobot() || !enemyClosestToBall) {
         stpInfos["harasser"].setPositionToMoveTo(world->getWorld()->getBall()->get()->position);
@@ -242,15 +241,16 @@ void PositionComputations::calculateInfoForHarasser(std::unordered_map<std::stri
     // If enemy is not facing our goal AND does have the ball, stand between the enemy and our goal
     if (enemyClosestToBall->get()->hasBall() && enemyAngle.shortestAngleDiff(enemyToGoalAngle) > M_PI / 2) {
         auto enemyPos = enemyClosestToBall->get()->getPos();
-        auto targetPos = FieldComputations::projectPointToValidPositionOnLine(
-            field, enemyPos - (field.leftGoalArea.leftLine().center() - enemyPos).stretchToLength(control_constants::ROBOT_RADIUS), enemyPos,
-            enemyPos - (field.leftGoalArea.leftLine().center() - enemyPos).stretchToLength(10), AvoidObjects{});
+        auto targetPos = enemyPos + (field.leftGoalArea.leftLine().center() - enemyPos).stretchToLength(control_constants::ROBOT_RADIUS * 4);
         stpInfos["harasser"].setPositionToMoveTo(targetPos);
         stpInfos["harasser"].setAngle((ballPos - targetPos).angle());
-        // Maybe reset such that we go to formation tactic?
     } else {
-        // Allow the harasser to get close to the enemy robot by not caring about collisions with enemy robots and go to getBall tactic
-        stpInfos["harasser"].setShouldAvoidTheirRobots(false);
+        if (enemyClosestToBall->get()->getPos().dist(field.leftGoalArea.rightLine().center()) >
+            stpInfos["harasser"].getRobot()->get()->getPos().dist(field.leftGoalArea.rightLine().center())) {
+            stpInfos["harasser"].setNotAvoidTheirRobotId(enemyClosestToBall->get()->getId());
+        } else {
+            stpInfos["harasser"].setNotAvoidTheirRobotId(-1);
+        }
         auto harasser = std::find_if(roles->begin(), roles->end(), [](const std::unique_ptr<Role> &role) { return role != nullptr && role->getName() == "harasser"; });
         if (harasser != roles->end() && !harasser->get()->finished() && strcmp(harasser->get()->getCurrentTactic()->getName(), "Formation") == 0)
             harasser->get()->forceNextTactic();
@@ -303,7 +303,6 @@ void PositionComputations::calculateInfoForDefendersAndWallers(std::unordered_ma
                 defendSpeed.x = 0;
             }
             stpInfos["defender_" + std::to_string(i)].setPositionToDefend(defendPostion);
-            stpInfos["defender_" + std::to_string(i)].setTargetLocationSpeed(defendSpeed);
             ComputationManager::calculatedEnemyMapIds.emplace_back(enemyMap.begin()->second.id);
             enemyMap.erase(enemyMap.begin());
         }
@@ -323,11 +322,7 @@ void PositionComputations::calculateInfoForDefendersAndWallers(std::unordered_ma
                                                                                                   : enemyMap.begin()->second.position);
             ComputationManager::calculatedEnemyMapIds.emplace_back(enemyMap.begin()->second.id);
             for (int j = 0; j < row_length; j++) {
-                cost_matrix[i][j] = (stpInfos[activeDefenderNames[i]].getRobot()->get()->getPos() +
-                                     stpInfos[activeDefenderNames[i]].getRobot()->get()->getVel() * control_constants::DEALER_SPEED_FACTOR)
-                                        .dist(enemies[j] + (mustStayOnOurSide && (enemyMap.begin()->second.position.x > 0) ? Vector2{0, enemyMap.begin()->second.velocity.y}
-                                                                                                                           : enemyMap.begin()->second.velocity) *
-                                                               control_constants::DEALER_SPEED_FACTOR);
+                cost_matrix[i][j] = stpInfos[activeDefenderNames[i]].getRobot()->get()->getPos().dist(enemies[j]);
             }
             enemyMap.erase(enemyMap.begin());
         }
@@ -343,12 +338,6 @@ void PositionComputations::calculateInfoForDefendersAndWallers(std::unordered_ma
             } else {
                 stpInfos[activeDefenderNames[i]].setPositionToDefend(enemies[assignments[i]]);
                 stpInfos[activeDefenderNames[i]].setBlockDistance(BlockDistance::ROBOTRADIUS);
-                constexpr double IGNORE_COLLISIONS_DISTANCE = 1.5;
-                if (stpInfos[activeDefenderNames[i]].getRobot() &&
-                    (stpInfos[activeDefenderNames[i]].getRobot()->get()->getPos() - enemies[assignments[i]]).length() < IGNORE_COLLISIONS_DISTANCE) {
-                    stpInfos[activeDefenderNames[i]].setShouldAvoidOurRobots(false);
-                    stpInfos[activeDefenderNames[i]].setShouldAvoidTheirRobots(false);
-                }
             }
         }
     }
@@ -369,9 +358,8 @@ void PositionComputations::calculateInfoForDefendersAndWallers(std::unordered_ma
         wallerStpInfo.setAngle((world->getWorld()->getBall()->get()->position - field.leftGoalArea.rightLine().center()).angle());
 
         // If the waller is close to its target, ignore collisions
-        constexpr double IGNORE_COLLISIONS_DISTANCE = 1.0;
+        constexpr double IGNORE_COLLISIONS_DISTANCE = 0.4;
         if (wallerStpInfo.getRobot() && (wallerStpInfo.getRobot()->get()->getPos() - positionToMoveTo).length() < IGNORE_COLLISIONS_DISTANCE) {
-            wallerStpInfo.setShouldAvoidOurRobots(false);
             wallerStpInfo.setShouldAvoidTheirRobots(false);
         }
     }
@@ -461,7 +449,7 @@ void PositionComputations::calculateInfoForFormationOurSide(std::unordered_map<s
     auto height = field.playArea.height();
 
     for (int i = 0; i < formationBackNames.size(); i++) {
-        stpInfos[formationBackNames[i]].setPositionToMoveTo(Vector2{-width / 3, -height / 2 + height / (formationBackNames.size() + 1) * (i + 1)});
+        stpInfos[formationBackNames[i]].setPositionToMoveTo(Vector2{-width / 3, -height / 8 + height / (formationBackNames.size() + 1) * (i + 1) / 4});
     }
     for (int i = 0; i < formationMidNames.size(); i++) {
         stpInfos[formationMidNames[i]].setPositionToMoveTo(Vector2{-width / 5, -height / 2 + height / (formationMidNames.size() + 1) * (i + 1)});

@@ -31,14 +31,14 @@ FreeKickUsPass::FreeKickUsPass() : Play() {
         std::make_unique<role::FreeKickTaker>("free_kick_taker"),
         std::make_unique<role::PassReceiver>("receiver"),
         std::make_unique<role::Defender>("defender_0"),
-        std::make_unique<role::Formation>("attacker_0"),
         std::make_unique<role::Defender>("defender_1"),
+        std::make_unique<role::Formation>("attacker_0"),
         // Additional roles if we play 11v11
         std::make_unique<role::Formation>("waller_0"),
         std::make_unique<role::Formation>("waller_1"),
-        std::make_unique<role::Defender>("defender_2"),
-        std::make_unique<role::Formation>("waller_2"),
         std::make_unique<role::Formation>("attacker_1"),
+        std::make_unique<role::Defender>("defender_2"),
+        std::make_unique<role::Formation>("attacker_2"),
     };
 }
 
@@ -56,14 +56,14 @@ Dealer::FlagMap FreeKickUsPass::decideRoleFlags() const noexcept {
     flagMap.insert({"keeper", {DealerFlagPriority::KEEPER, {}, passInfo.keeperId}});
     flagMap.insert({"free_kick_taker", {DealerFlagPriority::REQUIRED, {}, passInfo.passerId}});
     flagMap.insert({"receiver", {DealerFlagPriority::REQUIRED, {}, passInfo.receiverId}});
-    flagMap.insert({"waller_0", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
-    flagMap.insert({"waller_1", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
-    flagMap.insert({"waller_2", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
-    flagMap.insert({"defender_0", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"defender_1", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"defender_2", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"waller_0", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"waller_1", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"defender_0", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
+    flagMap.insert({"defender_1", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
+    flagMap.insert({"defender_2", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
     flagMap.insert({"attacker_0", {DealerFlagPriority::HIGH_PRIORITY, {}}});
     flagMap.insert({"attacker_1", {DealerFlagPriority::HIGH_PRIORITY, {}}});
+    flagMap.insert({"attacker_2", {DealerFlagPriority::HIGH_PRIORITY, {}}});
 
     return flagMap;
 }

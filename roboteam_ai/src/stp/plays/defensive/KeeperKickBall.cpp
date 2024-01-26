@@ -73,6 +73,8 @@ void KeeperKickBall::calculateInfoForRoles() noexcept {
     PositionComputations::calculateInfoForDefendersAndWallers(stpInfos, roles, field, world, true);
     PositionComputations::calculateInfoForAttackers(stpInfos, roles, field, world);
     PositionComputations::recalculateInfoForNonPassers(stpInfos, roles, field, world, passInfo.passLocation);
+    stpInfos["keeper"].setShouldAvoidTheirRobots(false);
+    stpInfos["keeper"].setShouldAvoidOurRobots(false);
 
     if (!ballKicked()) {
         stpInfos["receiver"].setPositionToMoveTo(passInfo.passLocation);

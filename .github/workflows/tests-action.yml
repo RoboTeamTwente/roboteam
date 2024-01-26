@@ -47,8 +47,8 @@ jobs:
       #         sudo ldconfig
 
       - name: List libusb directory
-        run: ls ${CMAKE_CURRENT_BINARY_DIR}/libusb/lib/
-            
+        run: ls ${{ github.workspace }}/build/libusb/lib/
+       
       - name: Build tests
         if: steps.cache-build-restore.outputs.cache-hit != 'true'
         run: mkdir build && cd build && cmake ..

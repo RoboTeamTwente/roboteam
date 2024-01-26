@@ -17,26 +17,15 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${RTT_BUILD_FOLDER}/lib)
 
 # Get the targets of the dependencies
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules)
-include(ccache) # For faster compiling
-include(GetZmqpp) # For networking between AI, RobotHub and World
 include(BuildLibusb) # USB library for RobotHub
-include(CheckCXXCompilerFlag) # For testing compiler cxx standard support
-include(LocateQt5) # For GUI and some networking
-include(GetGoogleTest) # For testing
-include(GetTracy) # For profiling
-include(GetIXWebSocket) # For networking between AI and Interface
-
-# Recommended by official docs: https://google.github.io/googletest/quickstart-cmake.html
-include(GoogleTest)
-enable_testing()
 
 # Enable C++ Modules support for Cmake
 set(CMAKE_EXPERIMENTAL_CXX_MODULE_CMAKE_API 2182bf5c-ef0d-489a-91da-49dbc3090d2a)
 set(CMAKE_EXPERIMENTAL_CXX_MODULE_DYNDEP 1)
 
 # Testing compiler cxx support
-check_cxx_compiler_flag(-std=c++20 COMPILER_SUPPORTS_CXX_20)
-check_cxx_compiler_flag(-std=c++2a COMPILER_SUPPORTS_CXX_2a)
+# check_cxx_compiler_flag(-std=c++20 COMPILER_SUPPORTS_CXX_20)
+# check_cxx_compiler_flag(-std=c++2a COMPILER_SUPPORTS_CXX_2a)
 
 if (COMPILER_SUPPORTS_CXX_20)
     set(CPP_STANDARD_FLAG "-std=c++20")
@@ -71,37 +60,7 @@ message("Compile flags: " "${COMPILER_FLAGS}")
 # This will create a file in the build folder that contains the commands used for compiling, useful for debugging
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-if (DEFINED TRACY_ENABLE)
-    message("Tracy Profiler is enabled")
-else()
-    message("Tracy Profiler is disabled")
-endif()
-
 if (APPLE)
     include_directories("/usr/local/include")     # macOS x86 bottles (includes rosette2)
     include_directories("/opt/homebrew/include")  # Apple silicon bottles
 endif()
-
-
-
-# for MacOS X or iOS, watchOS, tvOS (since 3.10.3)
-if(APPLE)
-    set(Qt5Network_DIR "/usr/local/opt/qt/lib/cmake/Qt5Network")
-endif()
-
-# for Linux, BSD, Solaris, Minix
-if(UNIX AND NOT APPLE)
-    SET(Qt5Network_DIR "/usr/include/x86_64-linux-gnu/qt5/Qt5Network")
-endif()
-
-find_package(Qt5Network REQUIRED)
-
-
-
-# internal projects
-add_subdirectory(roboteam_networking)
-add_subdirectory(roboteam_utils)
-add_subdirectory(roboteam_logging)
-add_subdirectory(roboteam_ai)
-add_subdirectory(roboteam_robothub)
-add_subdirectory(roboteam_world)

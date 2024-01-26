@@ -47,7 +47,7 @@ jobs:
       #         sudo ldconfig
 
       - name: List libusb directory
-        run: ls ${{ github.workspace }}/build/libusb/lib/
+        run: ls ${{ github.workspace }}
        
       - name: Build tests
         if: steps.cache-build-restore.outputs.cache-hit != 'true'

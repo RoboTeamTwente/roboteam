@@ -32,7 +32,7 @@ class Observer {
      * @param refereePackets All of the packets which were received from the referee.
      *@return The entire known/predicted state of the game at this point in time.
      */
-    proto::State process(const std::vector<proto::SSL_WrapperPacket>& visionPackets, const std::vector<proto::SSL_Referee>& refereePackets,
+    proto::State process(const std::vector<proto::SSL_WrapperPacket>& visionPackets, const std::vector<proto::Referee>& refereePackets,
                          const std::vector<rtt::RobotsFeedback>& robotData);
 
    private:
@@ -40,9 +40,9 @@ class Observer {
     VisionFilter visionFilter;
     RefereeFilter refereeFilter;
 
-    void updateRobotParams(std::vector<proto::SSL_Referee> refereePackets);
+    void updateRobotParams(std::vector<proto::Referee> refereePackets);
 
-    void updateReferee(const std::vector<proto::SSL_Referee>& refereePackets);
+    void updateReferee(const std::vector<proto::Referee>& refereePackets);
 };
 
 #endif  // RTT_OBSERVER_H

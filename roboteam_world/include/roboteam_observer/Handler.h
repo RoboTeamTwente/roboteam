@@ -21,7 +21,7 @@ class Handler {
     std::unique_ptr<rtt::net::WorldPublisher> worldPublisher;
 
     std::unique_ptr<RobocupReceiver<proto::SSL_WrapperPacket>> vision_client;
-    std::unique_ptr<RobocupReceiver<proto::SSL_Referee>> referee_client;
+    std::unique_ptr<RobocupReceiver<proto::Referee>> referee_client;
 
     Observer observer;
     std::vector<rtt::RobotsFeedback> receivedRobotData;
@@ -41,7 +41,7 @@ class Handler {
     void startReplay(rtt::LogFileReader& reader);
     void start(std::string visionip, std::string refereeip, int visionport, int refereeport, bool shouldLog = false);
     std::vector<proto::SSL_WrapperPacket> receiveVisionPackets();
-    std::vector<proto::SSL_Referee> receiveRefereePackets();
+    std::vector<proto::Referee> receiveRefereePackets();
     void onRobotFeedback(const rtt::RobotsFeedback& feedback);
 };
 

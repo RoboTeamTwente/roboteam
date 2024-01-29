@@ -17,7 +17,7 @@ struct TwoTeamRobotParameters {
 };
 class RobotParameterDatabase {
    public:
-    TwoTeamRobotParameters update(const proto::SSL_Referee& refMessage);
+    TwoTeamRobotParameters update(const proto::Referee& refMessage);
     [[nodiscard]] TwoTeamRobotParameters getParams() const;
 
     static RobotParameters getTeamParameters(const std::string& teamName);

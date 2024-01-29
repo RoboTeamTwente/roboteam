@@ -39,7 +39,7 @@ void rotate(proto::World *world) {
 
 // rotate the designated position given by the referee
 // this position is used for example for ball placement.
-void rotate(proto::SSL_Referee *refereeData) {
+void rotate(proto::Referee *refereeData) {
     assert(refereeData && "Invalid pointer for referee");
     refereeData->mutable_designated_position()->set_x(refereeData->designated_position().x() * -1);
     refereeData->mutable_designated_position()->set_y(refereeData->designated_position().y() * -1);

@@ -142,7 +142,7 @@ bool Handler::setupSSLClients(std::string visionip, std::string refereeip, int v
     if (refereeAddress.isNull()) std::cout << "Error! Invalid referee ip-address: " << refereeip << std::endl;
 
     this->vision_client = std::make_unique<RobocupReceiver<proto::SSL_WrapperPacket>>(visionAddress, visionport);
-    this->referee_client = std::make_unique<RobocupReceiver<proto::SSL_Referee>>(refereeAddress, refereeport);
+    this->referee_client = std::make_unique<RobocupReceiver<proto::Referee>>(refereeAddress, refereeport);
 
     success &= vision_client != nullptr && referee_client != nullptr;
 
@@ -161,8 +161,8 @@ std::vector<proto::SSL_WrapperPacket> Handler::receiveVisionPackets() {
     }
     return receivedPackets;
 }
-std::vector<proto::SSL_Referee> Handler::receiveRefereePackets() {
-    std::vector<proto::SSL_Referee> receivedPackets;
+std::vector<proto::Referee> Handler::receiveRefereePackets() {
+    std::vector<proto::Referee> receivedPackets;
     bool ok = referee_client->receive(receivedPackets);
     if (!ok) {
         std::cout << "error receiving referee messages" << std::endl;
@@ -188,7 +188,7 @@ void Handler::startReplay(rtt::LogFileReader& reader) {
         }
 
         std::vector<proto::SSL_WrapperPacket> visionPackets(state.processed_vision_packets().begin(), state.processed_vision_packets().end());
-        std::vector<proto::SSL_Referee> refereePackets(state.processed_referee_packets().begin(), state.processed_referee_packets().end());
+        std::vector<proto::Referee> refereePackets(state.processed_referee_packets().begin(), state.processed_referee_packets().end());
         std::vector<rtt::RobotsFeedback> feedbackPackets;
         for (const auto& feedback : state.processed_feedback_packets()) {
             feedbackPackets.push_back(rtt::net::protoFeedbackToRobotsFeedback(feedback));

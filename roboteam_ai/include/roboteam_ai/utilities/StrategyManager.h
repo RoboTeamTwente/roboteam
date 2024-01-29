@@ -38,7 +38,7 @@ class StrategyManager {
      * @param stage Stage of the game
      * @param ballOpt Data about the ball
      */
-    void setCurrentRefGameState(RefCommand command, proto::SSL_Referee_Stage stage, std::optional<rtt::world::view::BallView> ballOpt);
+    void setCurrentRefGameState(RefCommand command, proto::Referee_Stage stage, std::optional<rtt::world::view::BallView> ballOpt);
 
     /**
      * @brief Forces the AI into a given game state
@@ -77,11 +77,9 @@ class StrategyManager {
         RefGameState(RefCommand::PREPARE_SHOOTOUT_THEM, "penalty_them_prepare", Constants::RULESET_STOP(), false, RefCommand::DEFEND_SHOOTOUT),
 
         RefGameState(RefCommand::DIRECT_FREE_THEM, "free_kick_them", Constants::RULESET_DEFAULT()),
-        RefGameState(RefCommand::INDIRECT_FREE_THEM, "free_kick_them", Constants::RULESET_DEFAULT()),
         RefGameState(RefCommand::NORMAL_START, "normal_play", Constants::RULESET_DEFAULT()),
         RefGameState(RefCommand::FORCED_START, "normal_play", Constants::RULESET_DEFAULT()),
         RefGameState(RefCommand::DIRECT_FREE_US, "free_kick_us", Constants::RULESET_DEFAULT()),
-        RefGameState(RefCommand::INDIRECT_FREE_US, "free_kick_us", Constants::RULESET_DEFAULT()),
         RefGameState(RefCommand::DO_KICKOFF, "kickoff_us", Constants::RULESET_DEFAULT(), true),
         RefGameState(RefCommand::DEFEND_KICKOFF, "kickoff_them", Constants::RULESET_DEFAULT(), true),
         RefGameState(RefCommand::DO_PENALTY, "penalty_us", Constants::RULESET_DEFAULT(), true),

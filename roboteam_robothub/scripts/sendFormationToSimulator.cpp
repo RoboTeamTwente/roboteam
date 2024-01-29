@@ -15,7 +15,7 @@ int main() {
 
     try {
         manager = std::make_unique<SimulatorManager>(config);
-    } catch (FailedToBindPortException e) {
+    } catch (const FailedToBindPortException& e) {
         std::cout << "Error: " << e.what() << std::endl;
         return -1;
     }

@@ -18,9 +18,9 @@ std::optional<StpInfo> Halt::calculateInfoForSkill(StpInfo const &info) noexcept
     return skillInfo;
 }
 
-bool Halt::isTacticFailing(const StpInfo &info) noexcept { return false; }
+bool Halt::isTacticFailing(const StpInfo &) noexcept { return false; }
 
-bool Halt::shouldTacticReset(const StpInfo &info) noexcept { return false; }
+bool Halt::shouldTacticReset(const StpInfo &) noexcept { return false; }
 
 bool Halt::isEndTactic() noexcept {
     // This is an end tactic

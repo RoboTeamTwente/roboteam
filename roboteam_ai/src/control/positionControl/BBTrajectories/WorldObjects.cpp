@@ -25,7 +25,7 @@ std::optional<CollisionData> WorldObjects::getFirstCollision(const rtt::world::W
         calculateFieldCollisions(field, collisionDatas, pathPoints, timeStep, completedTimeSteps[robotId]);
     }
     if (avoidObjects.shouldAvoidDefenseArea) {
-        calculateDefenseAreaCollisions(field, collisionDatas, pathPoints, robotId, timeStep, completedTimeSteps[robotId]);
+        calculateDefenseAreaCollisions(field, collisionDatas, pathPoints, timeStep, completedTimeSteps[robotId]);
     }
     if (avoidObjects.shouldAvoidBall) {
         calculateBallCollisions(world, collisionDatas, pathPoints, timeStep, avoidObjects.avoidBallDist, completedTimeSteps[robotId], startTime);
@@ -46,13 +46,12 @@ std::optional<CollisionData> WorldObjects::getFirstCollision(const rtt::world::W
     }
 }
 
-std::optional<CollisionData> WorldObjects::getFirstDefenseAreaCollision(const rtt::Field &field, const Trajectory2D &Trajectory,
-                                                                        const std::unordered_map<int, std::vector<Vector2>> &computedPaths, int robotId) {
+std::optional<CollisionData> WorldObjects::getFirstDefenseAreaCollision(const rtt::Field &field, const Trajectory2D &Trajectory) {
     double timeStep = 0.1;
     auto pathPoints = Trajectory.getPathApproach(timeStep);
 
     std::vector<CollisionData> collisionDatas;
-    calculateDefenseAreaCollisions(field, collisionDatas, pathPoints, robotId, timeStep, 0);
+    calculateDefenseAreaCollisions(field, collisionDatas, pathPoints, timeStep, 0);
 
     if (!collisionDatas.empty()) {
         return collisionDatas[0];
@@ -74,8 +73,8 @@ void WorldObjects::calculateFieldCollisions(const rtt::Field &field, std::vector
     }
 }
 
-void WorldObjects::calculateDefenseAreaCollisions(const rtt::Field &field, std::vector<CollisionData> &collisionDatas, const std::vector<Vector2> &pathPoints, int robotId,
-                                                  double timeStep, size_t completedTimeSteps) {
+void WorldObjects::calculateDefenseAreaCollisions(const rtt::Field &field, std::vector<CollisionData> &collisionDatas, const std::vector<Vector2> &pathPoints, double timeStep,
+                                                  size_t completedTimeSteps) {
     auto [theirDefenseAreaMargin, ourDefenseAreaMargin] = rtt::ai::FieldComputations::getDefenseAreaMargin();
     const auto &ourDefenseArea = rtt::ai::FieldComputations::getDefenseArea(field, true, ourDefenseAreaMargin, 1);
     const auto &theirDefenseArea = rtt::ai::FieldComputations::getDefenseArea(field, false, theirDefenseAreaMargin, 1);
@@ -97,8 +96,9 @@ void WorldObjects::calculateBallCollisions(const rtt::world::World *world, std::
 
     const Vector2 &VelocityBall = world->getWorld()->getBall()->get()->velocity;
     const Vector2 &startPositionBall = world->getWorld()->getBall()->get()->position + VelocityBall * startTime;
-
-    for (double loopTime = 0; loopTime < ballAvoidanceTime; loopTime += timeStep, completedTimeSteps++) {
+    int numSteps = static_cast<int>(ballAvoidanceTime / timeStep);
+    for (int i = 0; i <= numSteps; ++i, completedTimeSteps++) {
+        double loopTime = i * timeStep;
         if (completedTimeSteps + 1 >= pathPoints.size()) {
             return;
         }
@@ -141,8 +141,9 @@ void WorldObjects::calculateEnemyRobotCollisions(const rtt::world::World *world,
     const std::vector<world::view::RobotView> &theirRobots = world->getWorld()->getThem();
     const double maxCollisionCheckTime = 0.7 - startTime;
     const double avoidanceDistance = 4 * ai::Constants::ROBOT_RADIUS_MAX();
-
-    for (double loopTime = 0; loopTime < maxCollisionCheckTime; loopTime += timeStep, completedTimeSteps++) {
+    int numSteps = static_cast<int>(maxCollisionCheckTime / timeStep);
+    for (int i = 0; i <= numSteps; ++i, completedTimeSteps++) {
+        double loopTime = i * timeStep;
         if (completedTimeSteps + 1 >= pathPoints.size()) {
             return;
         }
@@ -195,8 +196,10 @@ void WorldObjects::calculateOurRobotCollisions(const rtt::world::World *world, s
     const double maxCollisionCheckTime = 0.7 - startTime;
     const double avoidanceDistance = 2 * ai::Constants::ROBOT_RADIUS() + 2 * ai::stp::control_constants::GO_TO_POS_ERROR_MARGIN;
 
-    for (double loopTime = 0; loopTime < maxCollisionCheckTime; loopTime += timeStep, completedTimeSteps[robotId]++) {
-        if (completedTimeSteps[robotId] + 1 >= pathPoints.size()) {
+    int numSteps = static_cast<int>(maxCollisionCheckTime / timeStep);
+    for (int i = 0; i <= numSteps; ++i, completedTimeSteps[robotId]++) {
+        double loopTime = i * timeStep;
+        if (static_cast<size_t>(completedTimeSteps[robotId] + 1) >= pathPoints.size()) {
             return;
         }
         const double startPointX_OurRobot = pathPoints[completedTimeSteps[robotId]].x;
@@ -220,7 +223,8 @@ void WorldObjects::calculateOurRobotCollisions(const rtt::world::World *world, s
 
             double startPointX_OtherRobot, startPointY_OtherRobot, velocityX_OtherRobot, velocityY_OtherRobot;
 
-            if (completedTimeStepsIt != completedTimeSteps.end() && computedPathsIt != computedPaths.end() && completedTimeStepsIt->second + 1 < computedPathsIt->second.size()) {
+            if (completedTimeStepsIt != completedTimeSteps.end() && computedPathsIt != computedPaths.end() &&
+                static_cast<size_t>(completedTimeStepsIt->second + 1) < computedPathsIt->second.size()) {
                 startPointX_OtherRobot = computedPathsIt->second[completedTimeStepsIt->second].x;
                 startPointY_OtherRobot = computedPathsIt->second[completedTimeStepsIt->second].y;
                 velocityX_OtherRobot = (computedPathsIt->second[completedTimeStepsIt->second + 1].x - startPointX_OtherRobot) / timeStep;
@@ -265,7 +269,6 @@ void WorldObjects::calculateBallPlacementCollision(const rtt::world::World *worl
     auto ballPlacementPos = rtt::ai::GameStateManager::getRefereeDesignatedPosition();
     auto startPositionBall = world->getWorld()->getBall()->get()->position;
     LineSegment ballPlacementLine(startPositionBall, ballPlacementPos);
-    double time = completedTimeSteps * timeStep;
 
     for (size_t i = completedTimeSteps; i < pathPoints.size(); i++) {
         if (ballPlacementLine.distanceToLine(pathPoints[i]) < ai::stp::control_constants::AVOID_BALL_DISTANCE) {

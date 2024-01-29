@@ -78,11 +78,9 @@ class FieldComputations {
      * @param field The field class which is used to determine the boundaries of the field.
      * @param point The point to be projected to a valid position
      * @param avoidObjects Struct indicating which areas of the field should be avoided. Defaults to avoid entering the defense area and leaving the field
-     * @param fieldMargin The outwards margin in which the field area will get expanded/shrunk in all directions. A positive value means that the field area will be
-     * expanded, a negative value means that the field area will be shrunk.
      * @return The position closest to the given point that fulfills the criteria set in avoidObjects (except ball avoidance)
      */
-    static Vector2 projectPointToValidPosition(const rtt::Field &field, Vector2 point, stp::AvoidObjects avoidObjects = {}, double fieldMargin = 0.0);
+    static Vector2 projectPointToValidPosition(const rtt::Field &field, Vector2 point, stp::AvoidObjects avoidObjects = {});
 
     /**
      * @brief Projects the given point into the field on a line between two given points.
@@ -103,13 +101,12 @@ class FieldComputations {
      * @param point The point to be projected to a valid position
      * @param p1 First point on the line
      * @param p2 Second point on the line
-     * @param avoidObjects Struct indicating which areas of the field should be avoided. Defaults to avoid entering the defense area and leaving the field
      * @param fieldMargin The outwards margin in which the field area will get expanded/shrunk in all directions. A positive value means that the field area will be
      * expanded, a negative value means that the field area will be shrunk.
      * @return The closest valid position to the given point on the line between p1 and p2.
      * If no such position can be found, return the closest valid position to the given point (but not on the given line).
      */
-    static Vector2 projectPointToValidPositionOnLine(const Field &field, Vector2 point, Vector2 p1, Vector2 p2, stp::AvoidObjects avoidObjects = {}, double fieldMargin = 0);
+    static Vector2 projectPointToValidPositionOnLine(const Field &field, Vector2 point, Vector2 p1, Vector2 p2, double fieldMargin = 0);
 
     /**
      * @brief Get the percentage of goal visible from a given point, i.e. how much of the goal can be reached by directly shooting a ball over the ground from a given point without

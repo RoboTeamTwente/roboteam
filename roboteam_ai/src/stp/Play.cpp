@@ -139,7 +139,7 @@ void Play::distributeRoles() noexcept {
     }
     // Only keep the first n roles, where n is the amount of robots we have
     // This order is based on the order of the roles array
-    for (int i = sizeUs; i < roles.size(); i++) {
+    for (size_t i = sizeUs; i < roles.size(); i++) {
         flagMap.erase(roles[i]->getName());
     }
     auto distribution = dealer.distribute(world->getWorld()->getUs(), flagMap, stpInfos);

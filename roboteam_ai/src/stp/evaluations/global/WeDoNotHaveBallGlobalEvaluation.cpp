@@ -5,7 +5,7 @@
 #include "stp/evaluations/global/WeDoNotHaveBallGlobalEvaluation.h"
 
 namespace rtt::ai::stp::evaluation {
-uint8_t WeDoNotHaveBallGlobalEvaluation::metricCheck(const world::World* world, const Field* field) const noexcept {
+uint8_t WeDoNotHaveBallGlobalEvaluation::metricCheck(const world::World* world, const Field*) const noexcept {
     auto& us = world->getWorld()->getUs();
 
     // If there are no bots, we don't have ball

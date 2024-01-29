@@ -47,7 +47,7 @@ bool KickAtPos::isTacticFailing(const StpInfo &info) noexcept {
     return false;
 }
 
-bool KickAtPos::shouldTacticReset(const StpInfo &info) noexcept { return false; }
+bool KickAtPos::shouldTacticReset(const StpInfo &) noexcept { return false; }
 
 const char *KickAtPos::getName() { return "Kick At Pos"; }
 

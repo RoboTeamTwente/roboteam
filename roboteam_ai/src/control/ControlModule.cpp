@@ -20,12 +20,13 @@ void ControlModule::rotateRobotCommand(rtt::RobotCommand& command) {
 }
 
 void ControlModule::limitRobotCommand(rtt::RobotCommand& command, std::optional<rtt::world::view::RobotView> robot) {
-    limitVel(command, robot);
+    limitVel(command);
     limitAngularVel(command, robot);
 }
 
-void ControlModule::limitVel(rtt::RobotCommand& command, std::optional<rtt::world::view::RobotView> robot) {
+void ControlModule::limitVel(rtt::RobotCommand& command) {
     // The robot can currently not reach very low speeds- if we want it to move a non-trivial amount, we need to send a higher velocity than the path-planning outputs
+    // TODO: Look at the correct value for this with control
     if (command.velocity.length() > 0.03 && command.velocity.length() < 0.25) command.velocity = command.velocity.stretchToLength(0.25);
     command.velocity = command.velocity.stretchToLength(std::clamp(command.velocity.length(), 0.0, Constants::MAX_VEL_CMD()));
 }
@@ -53,13 +54,8 @@ void ControlModule::limitAngularVel(rtt::RobotCommand& command, std::optional<rt
     // TODO: Well, then also limit the target angular velocity just like target angle!
 }
 
-void ControlModule::addRobotCommand(std::optional<::rtt::world::view::RobotView> robot, const rtt::RobotCommand& command, const rtt::world::World* data) noexcept {
+void ControlModule::addRobotCommand(std::optional<::rtt::world::view::RobotView> robot, const rtt::RobotCommand& command) noexcept {
     rtt::RobotCommand robot_command = command;  // TODO: Why make a copy of the command? It will be copied anyway when we put it in the vector
-
-    if (robot && robot->get()) {
-        // TODO: Fix this visualisation
-        Angle target = command.targetAngle;
-    }
     // If we are not left, commands should be rotated (because we play as right)
     if (!GameSettings::isLeft()) {
         rotateRobotCommand(robot_command);

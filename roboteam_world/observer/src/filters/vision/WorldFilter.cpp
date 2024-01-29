@@ -7,10 +7,6 @@
 #include "filters/vision/ball/BallAssigner.h"
 WorldFilter::WorldFilter() {}
 
-void WorldFilter::updateGeometry(const proto::SSL_GeometryData &geometry) {
-    // TODO: fix
-}
-
 proto::World WorldFilter::getWorldPrediction(const Time &time) const {
     proto::World world;
     addRobotPredictionsToMessage(world, time);

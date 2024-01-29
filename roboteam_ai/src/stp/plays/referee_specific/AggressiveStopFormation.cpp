@@ -35,7 +35,7 @@ AggressiveStopFormation::AggressiveStopFormation() : Play() {
     };
 }
 
-uint8_t AggressiveStopFormation::score(const rtt::Field& field) noexcept {
+uint8_t AggressiveStopFormation::score(const rtt::Field&) noexcept {
     // If this play is valid we always want to execute this play
     return control_constants::FUZZY_TRUE;
 }

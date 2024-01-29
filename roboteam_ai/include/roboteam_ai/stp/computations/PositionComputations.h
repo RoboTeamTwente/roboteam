@@ -149,13 +149,11 @@ class PositionComputations {
     /**
      * @brief Recalculates info for the position of our robots to not interfere with passing
      * @param stpInfos The current stpInfos
-     * @param roles The current roles
      * @param field The current field
      * @param world The current world
      * @param passInfo The current passInfo
      */
-    static void recalculateInfoForNonPassers(std::unordered_map<std::string, StpInfo> &stpInfos, std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT> &roles,
-                                             const Field &field, world::World *world, Vector2 passLocation) noexcept;
+    static void recalculateInfoForNonPassers(std::unordered_map<std::string, StpInfo> &stpInfos, const Field &field, world::World *world, Vector2 passLocation) noexcept;
 
    private:
     /**

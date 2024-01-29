@@ -45,14 +45,13 @@ class VisionFilter {
     /**
      * processes any geometry data and passes it to the
      * @param packets the packets to check for geometry changes
-     * @return True if the geometry was somehow changed/updated and different
+     * @return void
      */
-    bool processGeometry(const std::vector<proto::SSL_WrapperPacket>& packets);
+    void processGeometry(const std::vector<proto::SSL_WrapperPacket>& packets);
     /**
      * @param packets the relevant detection frames from SSL-vision
-     * @param update_geometry Set this to true to update the Geometry used by the world filter
      */
-    void processDetections(const std::vector<proto::SSL_WrapperPacket>& packets, bool update_geometry, const std::vector<rtt::RobotsFeedback>& robotData);
+    void processDetections(const std::vector<proto::SSL_WrapperPacket>& packets, const std::vector<rtt::RobotsFeedback>& robotData);
 
     GeometryFilter geomFilter;
     WorldFilter worldFilter;

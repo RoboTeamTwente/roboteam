@@ -117,7 +117,7 @@ void BasestationManager::handleIncomingMessage(const BasestationMessage& message
         return;
     }
 
-    if (message.payloadSize != payloadSize) {
+    if (static_cast<uint32_t>(message.payloadSize) != payloadSize) {
         RTT_ERROR("Payload size of message does not match the size specified in the packet header. Received size: ", message.payloadSize, ", indicated size: ", payloadSize);
         return;
     }

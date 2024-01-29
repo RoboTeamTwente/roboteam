@@ -27,7 +27,7 @@ Status OrbitAngular::onUpdate(const StpInfo &info) noexcept {
     command.targetAngle = targetAngle;
     command.dribblerSpeed = stp::control_constants::MAX_DRIBBLER_CMD;
 
-    forwardRobotCommand(info.getCurrentWorld());  // Send the robot command
+    forwardRobotCommand();  // Send the robot command
 
     // Return success if the angle difference is within the margin
     if (currentAngle.shortestAngleDiff(targetAngle) < stp::control_constants::GO_TO_POS_ANGLE_ERROR_MARGIN * M_PI) {

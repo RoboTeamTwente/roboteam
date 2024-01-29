@@ -104,7 +104,8 @@ bool PlayEvaluator::checkEvaluation(GlobalEvaluation globalEvaluation, const rtt
 }
 
 uint8_t PlayEvaluator::calculateScore(std::vector<PlayScoring>& scoring) {
-    double scoreTotal, weightTotal = 0;
+    double scoreTotal = 0;
+    double weightTotal = 0;
     for (auto& factor : scoring) {
         scoreTotal += factor.evaluationScore;
         weightTotal += factor.weight;

@@ -281,7 +281,7 @@ Vector2 FieldComputations::projectPointOutOfDefenseArea(const Field &field, Vect
     return {point.x, point.y + yDiff};
 }
 
-Vector2 FieldComputations::projectPointToValidPosition(const Field &field, Vector2 point, stp::AvoidObjects avoidObjects, double fieldMargin) {
+Vector2 FieldComputations::projectPointToValidPosition(const Field &field, Vector2 point, stp::AvoidObjects avoidObjects) {
     Vector2 projectedPos = point;
     if (avoidObjects.shouldAvoidOutOfField) projectedPos = projectPointInField(field, projectedPos);
     if (avoidObjects.shouldAvoidDefenseArea) projectedPos = projectPointOutOfDefenseArea(field, projectedPos);
@@ -302,7 +302,7 @@ Vector2 FieldComputations::projectPointIntoFieldOnLine(const Field &field, Vecto
     return (dist_lhs < dist_rhs ? *intersection_lhs : *intersection_rhs);  // return the intersection closest to the point
 }
 
-Vector2 FieldComputations::projectPointToValidPositionOnLine(const Field &field, Vector2 point, Vector2 p1, Vector2 p2, stp::AvoidObjects avoidObjects, double fieldMargin) {
+Vector2 FieldComputations::projectPointToValidPositionOnLine(const Field &field, Vector2 point, Vector2 p1, Vector2 p2, double fieldMargin) {
     auto [theirDefenseAreaMargin, ourDefenseAreaMargin] = getDefenseAreaMargin();
     // Subtract PROJECTION_MARGIN to avoid the situation where the point is between the left field line and our goal line (-6.0 < x < -5.9)
     auto pointProjectedInField = projectPointIntoFieldOnLine(field, point, p1, p2, fieldMargin - PROJECTION_MARGIN);

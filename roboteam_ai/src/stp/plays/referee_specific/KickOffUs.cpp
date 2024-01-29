@@ -32,7 +32,7 @@ KickOffUs::KickOffUs() : Play() {
         std::make_unique<role::Halt>("halt_7")};
 }
 
-uint8_t KickOffUs::score(const rtt::Field &field) noexcept {
+uint8_t KickOffUs::score(const rtt::Field &) noexcept {
     // If this play is valid we always want to execute this play
     return control_constants::FUZZY_TRUE;
 }

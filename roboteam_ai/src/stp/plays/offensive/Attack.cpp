@@ -83,7 +83,7 @@ void Attack::calculateInfoForRoles() noexcept {
     stpInfos["striker"].setPositionToShootAt(goalTarget);
     stpInfos["striker"].setKickOrChip(KickOrChip::KICK);
     stpInfos["striker"].setShotType(ShotType::MAX);
-    PositionComputations::recalculateInfoForNonPassers(stpInfos, roles, field, world, goalTarget);
+    PositionComputations::recalculateInfoForNonPassers(stpInfos, field, world, goalTarget);
 }
 
 bool Attack::shouldEndPlay() noexcept {

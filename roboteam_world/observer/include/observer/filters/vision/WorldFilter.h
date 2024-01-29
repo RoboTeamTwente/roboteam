@@ -28,13 +28,6 @@ class WorldFilter {
 
     [[nodiscard]] proto::World getWorldPrediction(const Time& time) const;
 
-    /**
-     * Updates the cameras which the worldFilter uses for calculations, and the field geometry which is used for detecting
-     * wall collisions.
-     * @param geometry to grab the cameras from
-     */
-    void updateGeometry(const proto::SSL_GeometryData& geometry);
-
     void updateRobotParameters(const TwoTeamRobotParameters& robotInfo);
 
    private:

@@ -43,7 +43,7 @@ std::optional<StpInfo> KeeperBlockBall::calculateInfoForSkill(StpInfo const &inf
 
 bool KeeperBlockBall::isEndTactic() noexcept { return true; }
 
-bool KeeperBlockBall::isTacticFailing(const StpInfo &info) noexcept { return false; }
+bool KeeperBlockBall::isTacticFailing(const StpInfo &) noexcept { return false; }
 
 bool KeeperBlockBall::shouldTacticReset(const StpInfo &info) noexcept {
     double errorMargin = control_constants::GO_TO_POS_ERROR_MARGIN;

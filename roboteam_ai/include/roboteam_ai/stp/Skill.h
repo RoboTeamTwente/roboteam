@@ -25,9 +25,8 @@ class Skill {
 
     /**
      * @brief Forwards the current robot command to the ControlModule and refreshes it
-     * @param data const pointer to world
      */
-    virtual void forwardRobotCommand(world::World const* data) noexcept;
+    virtual void forwardRobotCommand() noexcept;
 
     /**
      * @brief Resets the internal robot command

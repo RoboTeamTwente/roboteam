@@ -49,7 +49,7 @@ ChippingPass::ChippingPass() : Play() {
     };
 }
 
-uint8_t ChippingPass::score(const rtt::Field& field) noexcept {
+uint8_t ChippingPass::score(const rtt::Field&) noexcept {
     // Robots can't chip yet
     return 0;
     // passInfo = stp::computations::PassComputations::calculatePass(gen::ChippingPass, world, field);
@@ -81,7 +81,7 @@ void ChippingPass::calculateInfoForRoles() noexcept {
     PositionComputations::calculateInfoForKeeper(stpInfos, field, world);
     PositionComputations::calculateInfoForDefendersAndWallers(stpInfos, roles, field, world, true);
     PositionComputations::calculateInfoForAttackers(stpInfos, roles, field, world);
-    PositionComputations::recalculateInfoForNonPassers(stpInfos, roles, field, world, passInfo.passLocation);
+    PositionComputations::recalculateInfoForNonPassers(stpInfos, field, world, passInfo.passLocation);
 
     if (!ballKicked()) {
         stpInfos["receiver"].setPositionToMoveTo(passInfo.passLocation);

@@ -38,7 +38,7 @@ Status Chip::onUpdate(const StpInfo &info) noexcept {
     command.id = info.getRobot().value()->getId();
 
     // forward the generated command to the ControlModule, for checking and limiting
-    forwardRobotCommand(info.getCurrentWorld());
+    forwardRobotCommand();
 
     if (info.getBall()->get()->velocity.length() > stp::control_constants::HAS_CHIPPED_ERROR_MARGIN) {
         chipAttempts = 0;

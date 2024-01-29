@@ -49,7 +49,7 @@ TEST(logging_writing, open) {
     stream.read(reinterpret_cast<char*>(&testHeader), sizeof(TestHeader));
     ASSERT_TRUE(stream.good());
     ASSERT_TRUE(testHeader.version == rtt::LOGFILE_VERSION);
-    for (int i = 0; i < rtt::LOGFILE_HEADER_NAME_SIZE; ++i) {
+    for (size_t i = 0; i < rtt::LOGFILE_HEADER_NAME_SIZE; ++i) {
         ASSERT_TRUE(testHeader.name[i] == rtt::DEFAULT_LOGFILE_HEADER_NAME[i]);
     }
     ASSERT_TRUE(removeFile(file_name));

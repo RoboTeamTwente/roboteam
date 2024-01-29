@@ -62,7 +62,7 @@ Status GoToPos::onUpdate(const StpInfo &info) noexcept {
     command.id = info.getRobot().value()->getId();
 
     // forward the generated command to the ControlModule, for checking and limiting
-    forwardRobotCommand(info.getCurrentWorld());
+    forwardRobotCommand();
 
     // Check if successful
     if ((info.getRobot().value()->getPos() - targetPos).length() <= stp::control_constants::GO_TO_POS_ERROR_MARGIN ||

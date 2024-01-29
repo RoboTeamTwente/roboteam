@@ -74,9 +74,6 @@ const STPManager::PlaysVec STPManager::plays = ([] {
     plays.emplace_back(std::make_unique<plays::FreeKickUsPass>());
     plays.emplace_back(std::make_unique<plays::KickOffUs>());
     plays.emplace_back(std::make_unique<plays::KickOffThem>());
-    // plays.emplace_back(std::make_unique<rtt::ai::stp::play::GetBallRisky>());
-    // plays.emplace_back(std::make_unique<rtt::ai::stp::play::ReflectKick>());
-    // plays.emplace_back(std::make_unique<rtt::ai::stp::play::GenericPass>());
     return plays;
 })();
 

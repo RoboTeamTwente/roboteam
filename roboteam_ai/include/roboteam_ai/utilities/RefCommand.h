@@ -28,21 +28,14 @@ enum class RefCommand {
     DIRECT_FREE_THEM = 9,
     TIMEOUT_US = 12,
     TIMEOUT_THEM = 13,
-    GOAL_US = 14,
-    GOAL_THEM = 15,
     BALL_PLACEMENT_US = 16,
     BALL_PLACEMENT_THEM = 17,
-    PRE_HALF = 26,
 
     /// CUSTOM GAME STATES ///
-    DO_KICKOFF = 18,
-    DEFEND_KICKOFF = 19,
-    DO_PENALTY = 20,
-    DEFEND_PENALTY = 21,
-    PREPARE_SHOOTOUT_US = 22,
-    PREPARE_SHOOTOUT_THEM = 23,
-    DO_SHOOTOUT = 24,
-    DEFEND_SHOOTOUT = 25,
+    KICKOFF_US = 18,
+    KICKOFF_THEM = 19,
+    PENALTY_US = 20,
+    PENALTY_THEM = 21,
 
     UNDEFINED = -1
 };
@@ -93,9 +86,9 @@ inline RefCommand sslRefCmdToRefCmd(proto::Referee_Command sslRefCmd, bool isYel
     return RefCommand::HALT;
 }
 
-std::string refCommandToString(RefCommand command);
-std::string protoRefCommandToString(proto::Referee_Command command);
-std::string protoRefStageToString(proto::Referee_Stage stage);
+// std::string refCommandToString(RefCommand command);
+// std::string protoRefCommandToString(proto::Referee_Command command);
+// std::string protoRefStageToString(proto::Referee_Stage stage);
 
 }  // namespace rtt
 

@@ -32,32 +32,18 @@ std::string refCommandToString(RefCommand command) {
             return "TIMEOUT_US";
         case RefCommand::TIMEOUT_THEM:
             return "TIMEOUT_THEM";
-        case RefCommand::GOAL_US:
-            return "GOAL_US";
-        case RefCommand::GOAL_THEM:
-            return "GOAL_THEM";
         case RefCommand::BALL_PLACEMENT_US:
             return "BALL_PLACEMENT_US";
         case RefCommand::BALL_PLACEMENT_THEM:
             return "BALL_PLACEMENT_THEM";
-        case RefCommand::PRE_HALF:
-            return "PRE_HALF";
-        case RefCommand::DO_KICKOFF:
-            return "DO_KICKOFF";
-        case RefCommand::DEFEND_KICKOFF:
-            return "DEFEND_KICKOFF";
-        case RefCommand::DO_PENALTY:
-            return "DO_PENALTY";
-        case RefCommand::DEFEND_PENALTY:
-            return "DEFEND_PENALTY";
-        case RefCommand::PREPARE_SHOOTOUT_US:
-            return "PREPARE_SHOOTOUT_US";
-        case RefCommand::PREPARE_SHOOTOUT_THEM:
-            return "PREPARE_SHOOTOUT_THEM";
-        case RefCommand::DO_SHOOTOUT:
-            return "DO_SHOOTOUT";
-        case RefCommand::DEFEND_SHOOTOUT:
-            return "DEFEND_SHOOTOUT";
+        case RefCommand::KICKOFF_US:
+            return "KICKOFF_US";
+        case RefCommand::KICKOFF_THEM:
+            return "KICKOFF_THEM";
+        case RefCommand::PENALTY_US:
+            return "PENALTY_US";
+        case RefCommand::PENALTY_THEM:
+            return "PENALTY_THEM";
         case RefCommand::UNDEFINED:
             return "UNDEFINED";
         default:

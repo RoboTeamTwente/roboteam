@@ -1,7 +1,7 @@
 var classMockTactic =
 [
     [ "MockTactic", "d4/d01/classMockTactic.html#aded507eae7db43bab5fa5b8e331d336a", null ],
-    [ "calculateInfoForSkill", "d4/d01/classMockTactic.html#a82d49e1fc25787bc4eadd8ba7ff42eb2", null ],
+    [ "calculateInfoForSkill", "d4/d01/classMockTactic.html#a782ea6591ddcdbcfd97ef4d894979ce8", null ],
     [ "getCurrentSkill", "d4/d01/classMockTactic.html#a483d158a091f8347c3c25983b22d015f", null ],
     [ "getName", "d4/d01/classMockTactic.html#a8d51114edbe65fb016e8964f1d78d4f2", null ],
     [ "getStatus", "d4/d01/classMockTactic.html#ab7650037eb092459aca7247ea77f2ad4", null ],

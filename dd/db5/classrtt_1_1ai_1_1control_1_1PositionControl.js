@@ -1,6 +1,6 @@
 var classrtt_1_1ai_1_1control_1_1PositionControl =
 [
-    [ "calculateScore", "dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#ae94651c6173782351d306020f7e84377", null ],
+    [ "calculateScore", "dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#ad87d3b2a2c7882f45c8a0ee21effd8e7", null ],
     [ "computeAndTrackPath", "dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#a9d2a27bd0f710250eb75312c5e851a2c", null ],
     [ "computeAndTrackTrajectory", "dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#a664e1d190e12c59dc7ff985f6e481e6f", null ],
     [ "createIntermediatePoints", "dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#aab4649868f0db44769263f1896c485f4", null ],

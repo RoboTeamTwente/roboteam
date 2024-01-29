@@ -12,7 +12,7 @@ var classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall =
     [ "initialize", "d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#a2406ddec88191f369b72206849a1d9a4", null ],
     [ "isBallHeadingTowardsOurGoal", "d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#adf2d88cf5c448bdd7badea70cf0faf69", null ],
     [ "isEndTactic", "d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#a6dc0c726aec38ff40033ae84014847aa", null ],
-    [ "isTacticFailing", "d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#aa45576b3b8898b5b5996d220ae008a46", null ],
+    [ "isTacticFailing", "d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#a01fefb6157aa529288d27781343554c3", null ],
     [ "reset", "d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#af4a9f63577d36c0cf178aae99fb0fd00", null ],
     [ "shouldTacticReset", "d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#a9fb6658075f837e796e3e26cb794dc7b", null ],
     [ "terminate", "d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#ac7dba7916b5fc648439cb51181d01358", null ],

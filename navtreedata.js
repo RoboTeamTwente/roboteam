@@ -81,13 +81,13 @@ var NAVTREEINDEX =
 "d5/d14/namespacertt_1_1ai_1_1stp.html#ac1022c629183d4661ea68235d22a651e",
 "d5/dd8/ParamImplementation_8h.html",
 "d7/d54/classrtt_1_1ai_1_1BallPossession.html#aac3b04b1d08a6333049eba6c02d5ebc9a1af2a51f03727e6cdfda6777f8083f0c",
-"d8/d57/classrtt_1_1ai_1_1stp_1_1skill_1_1TestSkill.html",
-"d9/dd3/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThem.html#a7439c6149abbc461640c9ecdad2ba8d6",
-"db/d03/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUs.html#a859e8c8abae48115eab588736926368f",
-"dc/d0b/classrtt_1_1AnglePID.html#abbb8cd0afbaa91e5ec00eb92c4709493",
-"dd/d2c/classrtt_1_1ai_1_1stp_1_1PositionComputations.html#aa2f878898f3137390e52452e59eea498",
-"de/d2f/namespacertt_1_1world_1_1robot.html#d1/d9d/structrtt_1_1world_1_1robot_1_1hasBallInfo",
-"df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass.html#ab23ad33458ed975661cdc593bdf40968"
+"d8/d57/classrtt_1_1ai_1_1stp_1_1skill_1_1TestSkill.html#a0f136c2ac131c1b44b65cb9eeba823fe",
+"d9/dd3/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThem.html#a7f851d4dcedf21a9b7f14021d3d7600a",
+"db/d03/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUs.html#a8726a464fdb9e614c5cca8c7cd183155",
+"dc/d0b/classrtt_1_1AnglePID.html#acb743c208b47ff2be1e6ed2e0ef2f206",
+"dd/d2c/classrtt_1_1ai_1_1stp_1_1PositionComputations.html#aa8e79cd21d39872e80214736fd5606d0",
+"de/d3e/classrtt_1_1ai_1_1stp_1_1role_1_1Chipper.html",
+"df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass.html#ab5f09cfa9cd1ddb2a6990cb3c1b4d691"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

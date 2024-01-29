@@ -12,5 +12,5 @@ var classrtt_1_1ai_1_1stp_1_1PositionComputations =
     [ "getBallBlockPosition", "dd/d2c/classrtt_1_1ai_1_1stp_1_1PositionComputations.html#af25973a46636e1484d163aedd83e6737", null ],
     [ "getPosition", "dd/d2c/classrtt_1_1ai_1_1stp_1_1PositionComputations.html#af6df7a52892df1c947be8f684ba14d90", null ],
     [ "getWallPosition", "dd/d2c/classrtt_1_1ai_1_1stp_1_1PositionComputations.html#aa2f878898f3137390e52452e59eea498", null ],
-    [ "recalculateInfoForNonPassers", "dd/d2c/classrtt_1_1ai_1_1stp_1_1PositionComputations.html#a2f045f64215dfe3e0b0b93542ca59131", null ]
+    [ "recalculateInfoForNonPassers", "dd/d2c/classrtt_1_1ai_1_1stp_1_1PositionComputations.html#a014894aeded444e7942e8b6c8df538d9", null ]
 ];

@@ -1,6 +1,5 @@
 var NAVTREEINDEX8 =
 {
-"d9/dd3/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThem.html#a7439c6149abbc461640c9ecdad2ba8d6":[3,0,1,0,4,3,18,4],
 "d9/dd3/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThem.html#a7f851d4dcedf21a9b7f14021d3d7600a":[3,0,1,0,4,3,18,0],
 "d9/dd3/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThem.html#a805621fd748e3dfd6399ff69570f7e56":[3,0,1,0,4,3,18,16],
 "d9/dd3/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThem.html#a81d204e55bab023d2937c1420abd04ad":[3,0,1,0,4,3,18,19],
@@ -51,8 +50,8 @@ var NAVTREEINDEX8 =
 "d9/df0/classrtt_1_1ai_1_1stp_1_1play_1_1KickOffUsPrepare.html#afc2268677ee563a2f0a7efa4acff465e":[3,0,1,0,4,3,17,22],
 "d9/df4/roles_2passive_2Halt_8cpp.html":[4,0,0,1,4,3,1,2],
 "da/d0e/classrtt_1_1ai_1_1stp_1_1evaluation_1_1TheyHaveBallGlobalEvaluation.html":[3,0,1,0,4,1,24],
-"da/d0e/classrtt_1_1ai_1_1stp_1_1evaluation_1_1TheyHaveBallGlobalEvaluation.html#a880dc393ab923c56184fa67b0ad67311":[3,0,1,0,4,1,24,1],
 "da/d0e/classrtt_1_1ai_1_1stp_1_1evaluation_1_1TheyHaveBallGlobalEvaluation.html#acd695ec5aaa9b304188f3fce1326c14d":[3,0,1,0,4,1,24,0],
+"da/d0e/classrtt_1_1ai_1_1stp_1_1evaluation_1_1TheyHaveBallGlobalEvaluation.html#aced34bbd66a124a6032a4a443b03d3e8":[3,0,1,0,4,1,24,1],
 "da/d28/PassComputations_8cpp.html":[4,0,0,1,4,0,1],
 "da/d2b/OrbitKick_8h.html":[4,0,0,0,0,3,6,0,5],
 "da/d2b/OrbitKick_8h_source.html":[4,0,0,0,0,3,6,0,5],
@@ -139,7 +138,7 @@ var NAVTREEINDEX8 =
 "da/d80/classnativeformat_1_1param_1_1ParamImplementation.html#aeb934e706ccd260bbe1803a3d15763a3":[3,0,0,0,2,18],
 "da/d80/classnativeformat_1_1param_1_1ParamImplementation.html#af329884fff7d86c55783f750a4a948a8":[3,0,0,0,2,20],
 "da/d8e/classrtt_1_1ai_1_1stp_1_1evaluation_1_1WeDoNotHaveBallGlobalEvaluation.html":[3,0,1,0,4,1,25],
-"da/d8e/classrtt_1_1ai_1_1stp_1_1evaluation_1_1WeDoNotHaveBallGlobalEvaluation.html#a7e3be7c32e638cbb7e62942d40d52dd0":[3,0,1,0,4,1,25,1],
+"da/d8e/classrtt_1_1ai_1_1stp_1_1evaluation_1_1WeDoNotHaveBallGlobalEvaluation.html#a554084ad2a7abb07a8c1187eb047e73d":[3,0,1,0,4,1,25,1],
 "da/d8e/classrtt_1_1ai_1_1stp_1_1evaluation_1_1WeDoNotHaveBallGlobalEvaluation.html#a84ae4a1b9cecc904973c17565249e89e":[3,0,1,0,4,1,25,0],
 "da/da2/classrtt_1_1ai_1_1stp_1_1Skill.html":[3,0,1,0,4,18],
 "da/da2/classrtt_1_1ai_1_1stp_1_1Skill.html#a0f136c2ac131c1b44b65cb9eeba823fe":[3,0,1,0,4,18,7],
@@ -148,8 +147,8 @@ var NAVTREEINDEX8 =
 "da/da2/classrtt_1_1ai_1_1stp_1_1Skill.html#a62d571b925906855b84dfc185a0b5ee8":[3,0,1,0,4,18,10],
 "da/da2/classrtt_1_1ai_1_1stp_1_1Skill.html#a8625bf35b1b36ec18fd8ff68926ec0d4":[3,0,1,0,4,18,11],
 "da/da2/classrtt_1_1ai_1_1stp_1_1Skill.html#a8efad4f44b27d9d2a8cf2983d9b59d88":[3,0,1,0,4,18,2],
-"da/da2/classrtt_1_1ai_1_1stp_1_1Skill.html#a8ff0319d5018d2f697c38494d0568991":[3,0,1,0,4,18,1],
 "da/da2/classrtt_1_1ai_1_1stp_1_1Skill.html#a97aca306adb701181c5726a09cac208c":[3,0,1,0,4,18,4],
+"da/da2/classrtt_1_1ai_1_1stp_1_1Skill.html#aa20f026f0c4b0a4c303c4b1ac65c6650":[3,0,1,0,4,18,1],
 "da/da2/classrtt_1_1ai_1_1stp_1_1Skill.html#aab9578d86a91f8a16f5c02200ca3b5e8":[3,0,1,0,4,18,8],
 "da/da2/classrtt_1_1ai_1_1stp_1_1Skill.html#ad3658a079876be8f0d93f987596ec18f":[3,0,1,0,4,18,5],
 "da/da2/classrtt_1_1ai_1_1stp_1_1Skill.html#ae3db983eda1761d7ccd3f68a0ef731dd":[3,0,1,0,4,18,9],
@@ -249,5 +248,6 @@ var NAVTREEINDEX8 =
 "db/d03/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUs.html#a805621fd748e3dfd6399ff69570f7e56":[3,0,1,0,4,3,20,16],
 "db/d03/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUs.html#a807cfbf7efa495679d6f2d64e16703ee":[3,0,1,0,4,3,20,12],
 "db/d03/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUs.html#a81d204e55bab023d2937c1420abd04ad":[3,0,1,0,4,3,20,19],
-"db/d03/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUs.html#a83a5e46e76cca35acfc4fb1547673ff9":[3,0,1,0,4,3,20,0]
+"db/d03/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUs.html#a83a5e46e76cca35acfc4fb1547673ff9":[3,0,1,0,4,3,20,0],
+"db/d03/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUs.html#a859e8c8abae48115eab588736926368f":[3,0,1,0,4,3,20,26]
 };

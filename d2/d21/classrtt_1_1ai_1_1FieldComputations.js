@@ -17,8 +17,8 @@ var classrtt_1_1ai_1_1FieldComputations =
     [ "projectPointInField", "d2/d21/classrtt_1_1ai_1_1FieldComputations.html#ac6ac44afce2362338e2881d0c729a9d8", null ],
     [ "projectPointIntoFieldOnLine", "d2/d21/classrtt_1_1ai_1_1FieldComputations.html#a1b17e8ab50d4a97f646dbfec38ad6047", null ],
     [ "projectPointOutOfDefenseArea", "d2/d21/classrtt_1_1ai_1_1FieldComputations.html#acf272ead928f66a149f405724e4ad13c", null ],
-    [ "projectPointToValidPosition", "d2/d21/classrtt_1_1ai_1_1FieldComputations.html#aa1853085f0152b206d66e5582cc26e4a", null ],
-    [ "projectPointToValidPositionOnLine", "d2/d21/classrtt_1_1ai_1_1FieldComputations.html#a248a0b73063b45cfce18ac02b2b726fb", null ],
+    [ "projectPointToValidPosition", "d2/d21/classrtt_1_1ai_1_1FieldComputations.html#ae6d292f855e7dadb89b1303a51b2a71f", null ],
+    [ "projectPointToValidPositionOnLine", "d2/d21/classrtt_1_1ai_1_1FieldComputations.html#a14bd2f5407afdeaecf7fe1d2d43f7916", null ],
     [ "robotBlockade", "d2/d21/classrtt_1_1ai_1_1FieldComputations.html#a041c2ff7840d89ec3c588ce2101e723f", null ],
     [ "NEGLIGIBLE_LENGTH", "d2/d21/classrtt_1_1ai_1_1FieldComputations.html#a3580ec8ed627658402f4fd08c236d7fd", null ],
     [ "PROJECTION_MARGIN", "d2/d21/classrtt_1_1ai_1_1FieldComputations.html#a5671a7a348121ee5e1d4a57ba9c8d1aa", null ]

@@ -1,9 +1,5 @@
 var NAVTREEINDEX11 =
 {
-"dd/d2c/classrtt_1_1ai_1_1stp_1_1PositionComputations.html#aa8e79cd21d39872e80214736fd5606d0":[3,0,1,0,4,10,5],
-"dd/d2c/classrtt_1_1ai_1_1stp_1_1PositionComputations.html#adc1c4ad8ba5bed740333dffdaa31d0f4":[3,0,1,0,4,10,0],
-"dd/d2c/classrtt_1_1ai_1_1stp_1_1PositionComputations.html#ae67e0df89c1dc54f4c35d4d0687f55d1":[3,0,1,0,4,10,4],
-"dd/d2c/classrtt_1_1ai_1_1stp_1_1PositionComputations.html#aee1793aa893c78194a99b296e5f521f6":[3,0,1,0,4,10,2],
 "dd/d2c/classrtt_1_1ai_1_1stp_1_1PositionComputations.html#af25973a46636e1484d163aedd83e6737":[3,0,1,0,4,10,9],
 "dd/d2c/classrtt_1_1ai_1_1stp_1_1PositionComputations.html#af57af0b26a914274931e679f5146ff2e":[3,0,1,0,4,10,7],
 "dd/d2c/classrtt_1_1ai_1_1stp_1_1PositionComputations.html#af6df7a52892df1c947be8f684ba14d90":[3,0,1,0,4,10,10],
@@ -25,8 +21,8 @@ var NAVTREEINDEX11 =
 "dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#ac0ae5e8a81a8d7a94e5927977b638422":[3,0,1,0,4,15,0,0],
 "dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#ac0ae5e8a81a8d7a94e5927977b638422":[4,0,0,0,0,3,9,1,0],
 "dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#afdcb1e9041507c8a71b63521041203b2":[3,0,1,0,4,15,4],
-"dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#d9/dd7/structrtt_1_1ai_1_1stp_1_1PlayEvaluator_1_1PlayScoring":[3,0,1,0,4,15,0],
 "dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#d9/dd7/structrtt_1_1ai_1_1stp_1_1PlayEvaluator_1_1PlayScoring":[4,0,0,0,0,3,9,1],
+"dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#d9/dd7/structrtt_1_1ai_1_1stp_1_1PlayEvaluator_1_1PlayScoring":[3,0,1,0,4,15,0],
 "dd/d4b/classrtt_1_1ai_1_1stp_1_1evaluation_1_1StopGameStateEvaluation.html":[3,0,1,0,4,1,17],
 "dd/d4b/classrtt_1_1ai_1_1stp_1_1evaluation_1_1StopGameStateEvaluation.html#a293504db20d6b1a7e6d40c5060b60a89":[3,0,1,0,4,1,17,1],
 "dd/d4b/classrtt_1_1ai_1_1stp_1_1evaluation_1_1StopGameStateEvaluation.html#a9f8cc42698553fc84df4ce7e4b1a68b9":[3,0,1,0,4,1,17,0],
@@ -249,5 +245,9 @@ var NAVTREEINDEX11 =
 "de/d2f/namespacertt_1_1world_1_1robot.html#a6a176dae355c34efaed193f2ddb19aac":[4,0,0,0,0,5,4,0,1],
 "de/d2f/namespacertt_1_1world_1_1robot.html#a75d226ba50394734ba8f580ed2cbd5b2":[2,0,10,2,1,3],
 "de/d2f/namespacertt_1_1world_1_1robot.html#ad3a2aa101c17301df26d294d1cb0b4d3":[2,0,10,2,1,2],
-"de/d2f/namespacertt_1_1world_1_1robot.html#d1/d9d/structrtt_1_1world_1_1robot_1_1hasBallInfo":[4,0,0,0,0,5,4,0]
+"de/d2f/namespacertt_1_1world_1_1robot.html#d1/d9d/structrtt_1_1world_1_1robot_1_1hasBallInfo":[4,0,0,0,0,5,4,0],
+"de/d3e/classrtt_1_1ai_1_1stp_1_1role_1_1Chipper.html":[3,0,1,0,4,4,1],
+"de/d3e/classrtt_1_1ai_1_1stp_1_1role_1_1Chipper.html#a0575952e375783fee4350fcb97be888c":[3,0,1,0,4,4,1,10],
+"de/d3e/classrtt_1_1ai_1_1stp_1_1role_1_1Chipper.html#a183fb936976c2c6640c90f5273cca74d":[3,0,1,0,4,4,1,0],
+"de/d3e/classrtt_1_1ai_1_1stp_1_1role_1_1Chipper.html#a319de4e261a9194b2c8c6859b63f2f0d":[3,0,1,0,4,4,1,2]
 };

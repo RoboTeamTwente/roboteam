@@ -11,8 +11,6 @@ var RefCommand_8h =
       [ "PREPARE_PENALTY_THEM", "d8/dd4/RefCommand_8h.html#ac458fd2464c54331a04fc2fd54d82843aa582f62ddc20516e733b0ce09acc219a", null ],
       [ "DIRECT_FREE_US", "d8/dd4/RefCommand_8h.html#ac458fd2464c54331a04fc2fd54d82843a7d4f8613628e265b6bf9c674bedad46d", null ],
       [ "DIRECT_FREE_THEM", "d8/dd4/RefCommand_8h.html#ac458fd2464c54331a04fc2fd54d82843a43cad1b6fd7d5153cb60f7d88d9f0f31", null ],
-      [ "INDIRECT_FREE_US", "d8/dd4/RefCommand_8h.html#ac458fd2464c54331a04fc2fd54d82843a34c4eae181fc0ccdff9a99b78334eb53", null ],
-      [ "INDIRECT_FREE_THEM", "d8/dd4/RefCommand_8h.html#ac458fd2464c54331a04fc2fd54d82843ab726702787fdb2dfa9760971d49cd723", null ],
       [ "TIMEOUT_US", "d8/dd4/RefCommand_8h.html#ac458fd2464c54331a04fc2fd54d82843abafba8df79d3bc511dadfaf088ca4382", null ],
       [ "TIMEOUT_THEM", "d8/dd4/RefCommand_8h.html#ac458fd2464c54331a04fc2fd54d82843a4ed2eef26cd6b0c52acf3cca0480c4cd", null ],
       [ "GOAL_US", "d8/dd4/RefCommand_8h.html#ac458fd2464c54331a04fc2fd54d82843a39ccdc256c297b083c1c27e0b8966e1d", null ],
@@ -30,8 +28,8 @@ var RefCommand_8h =
       [ "DEFEND_SHOOTOUT", "d8/dd4/RefCommand_8h.html#ac458fd2464c54331a04fc2fd54d82843ac0714ce4a9e5ab35c97fdd18065f81a5", null ],
       [ "UNDEFINED", "d8/dd4/RefCommand_8h.html#ac458fd2464c54331a04fc2fd54d82843a0db45d2a4141101bdfe48e3314cfbca3", null ]
     ] ],
-    [ "protoRefCommandToString", "d8/dd4/RefCommand_8h.html#a7e8f65a38263e01e77c81f756469438d", null ],
-    [ "protoRefStageToString", "d8/dd4/RefCommand_8h.html#abdc2a487fd9f466c21c58910160c4e4e", null ],
+    [ "protoRefCommandToString", "d8/dd4/RefCommand_8h.html#aa753c2a203088d8d6e3778cb8ebeee89", null ],
+    [ "protoRefStageToString", "d8/dd4/RefCommand_8h.html#ad4ea7dcb64b0c8e09f9e755f06eea7e9", null ],
     [ "refCommandToString", "d8/dd4/RefCommand_8h.html#a67b8dcc3285025260f8505a53d8a1ffc", null ],
-    [ "sslRefCmdToRefCmd", "d8/dd4/RefCommand_8h.html#a3c11569b8eb84d7b10a7c3a11dad11e6", null ]
+    [ "sslRefCmdToRefCmd", "d8/dd4/RefCommand_8h.html#ae5bbaaf45e9a5e03ae2a4ef009799b98", null ]
 ];

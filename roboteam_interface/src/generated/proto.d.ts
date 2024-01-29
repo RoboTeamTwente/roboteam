@@ -4768,8 +4768,6 @@ export namespace proto {
             PREPARE_PENALTY_BLUE = 7,
             DIRECT_FREE_YELLOW = 8,
             DIRECT_FREE_BLUE = 9,
-            INDIRECT_FREE_YELLOW = 10,
-            INDIRECT_FREE_BLUE = 11,
             TIMEOUT_YELLOW = 12,
             TIMEOUT_BLUE = 13,
             BALL_PLACEMENT_YELLOW = 16,

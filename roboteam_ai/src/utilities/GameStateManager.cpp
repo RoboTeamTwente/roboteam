@@ -11,48 +11,44 @@
 namespace rtt::ai {
 int GameState::cardId = -1;
 
-proto::SSL_Referee GameStateManager::refMsg;
+proto::Referee GameStateManager::refMsg;
 StrategyManager GameStateManager::strategymanager;
 std::mutex GameStateManager::refMsgLock;
 
-proto::SSL_Referee GameStateManager::getRefereeData() {
+proto::Referee GameStateManager::getRefereeData() {
     std::lock_guard<std::mutex> lock(refMsgLock);
     return GameStateManager::refMsg;
 }
 
-RefCommand GameStateManager::getCommandFromRefMsg(proto::SSL_Referee_Command command, bool isYellow) {
+RefCommand GameStateManager::getCommandFromRefMsg(proto::Referee_Command command, bool isYellow) {
     switch (command) {
-        case proto::SSL_Referee_Command_HALT:
+        case proto::Referee_Command_HALT:
             return RefCommand::HALT;
-        case proto::SSL_Referee_Command_STOP:
+        case proto::Referee_Command_STOP:
             return RefCommand::STOP;
-        case proto::SSL_Referee_Command_NORMAL_START:
+        case proto::Referee_Command_NORMAL_START:
             return RefCommand::NORMAL_START;
-        case proto::SSL_Referee_Command_FORCE_START:
+        case proto::Referee_Command_FORCE_START:
             return RefCommand::FORCED_START;
-        case proto::SSL_Referee_Command_PREPARE_KICKOFF_YELLOW:
+        case proto::Referee_Command_PREPARE_KICKOFF_YELLOW:
             return isYellow ? RefCommand::PREPARE_KICKOFF_US : RefCommand::PREPARE_KICKOFF_THEM;
-        case proto::SSL_Referee_Command_PREPARE_KICKOFF_BLUE:
+        case proto::Referee_Command_PREPARE_KICKOFF_BLUE:
             return isYellow ? RefCommand::PREPARE_KICKOFF_THEM : RefCommand::PREPARE_KICKOFF_US;
-        case proto::SSL_Referee_Command_PREPARE_PENALTY_YELLOW:
+        case proto::Referee_Command_PREPARE_PENALTY_YELLOW:
             return isYellow ? RefCommand::PREPARE_PENALTY_US : RefCommand::PREPARE_PENALTY_THEM;
-        case proto::SSL_Referee_Command_PREPARE_PENALTY_BLUE:
+        case proto::Referee_Command_PREPARE_PENALTY_BLUE:
             return isYellow ? RefCommand::PREPARE_PENALTY_THEM : RefCommand::PREPARE_PENALTY_US;
-        case proto::SSL_Referee_Command_DIRECT_FREE_YELLOW:
+        case proto::Referee_Command_DIRECT_FREE_YELLOW:
             return isYellow ? RefCommand::DIRECT_FREE_US : RefCommand::DIRECT_FREE_THEM;
-        case proto::SSL_Referee_Command_DIRECT_FREE_BLUE:
+        case proto::Referee_Command_DIRECT_FREE_BLUE:
             return isYellow ? RefCommand::DIRECT_FREE_THEM : RefCommand::DIRECT_FREE_US;
-        case proto::SSL_Referee_Command_INDIRECT_FREE_YELLOW:
-            return isYellow ? RefCommand::INDIRECT_FREE_US : RefCommand::INDIRECT_FREE_THEM;
-        case proto::SSL_Referee_Command_INDIRECT_FREE_BLUE:
-            return isYellow ? RefCommand::INDIRECT_FREE_THEM : RefCommand::INDIRECT_FREE_US;
-        case proto::SSL_Referee_Command_TIMEOUT_YELLOW:
+        case proto::Referee_Command_TIMEOUT_YELLOW:
             return isYellow ? RefCommand::TIMEOUT_US : RefCommand::TIMEOUT_THEM;
-        case proto::SSL_Referee_Command_TIMEOUT_BLUE:
+        case proto::Referee_Command_TIMEOUT_BLUE:
             return isYellow ? RefCommand::TIMEOUT_THEM : RefCommand::TIMEOUT_US;
-        case proto::SSL_Referee_Command_BALL_PLACEMENT_YELLOW:
+        case proto::Referee_Command_BALL_PLACEMENT_YELLOW:
             return isYellow ? RefCommand::BALL_PLACEMENT_US : RefCommand::BALL_PLACEMENT_THEM;
-        case proto::SSL_Referee_Command_BALL_PLACEMENT_BLUE:
+        case proto::Referee_Command_BALL_PLACEMENT_BLUE:
             return isYellow ? RefCommand::BALL_PLACEMENT_THEM : RefCommand::BALL_PLACEMENT_US;
         default:
             RTT_ERROR("Unknown refstate, halting all robots for safety!")
@@ -60,7 +56,7 @@ RefCommand GameStateManager::getCommandFromRefMsg(proto::SSL_Referee_Command com
     }
 }
 
-void GameStateManager::setRefereeData(proto::SSL_Referee refMsg, const rtt::world::World* data) {
+void GameStateManager::setRefereeData(proto::Referee refMsg, const rtt::world::World* data) {
     std::lock_guard<std::mutex> lock(refMsgLock);
     GameStateManager::refMsg = refMsg;
     bool isYellow = GameSettings::isYellow();

@@ -19,15 +19,15 @@ class RefereeFilter {
     /**
      * @param refereePackets packets to update the filter with
      */
-    void process(const std::vector<proto::SSL_Referee> &refereePackets);
+    void process(const std::vector<proto::Referee> &refereePackets);
     /**
      * Returns the latest referee message if it exists.
      */
-    std::optional<proto::SSL_Referee> getLastRefereeMessage() const;
+    std::optional<proto::Referee> getLastRefereeMessage() const;
 
    private:
     bool firstMessageReceived = false;
-    proto::SSL_Referee latestMessage;
+    proto::Referee latestMessage;
 };
 
 #endif  // RTT_REFEREEFILTER_H

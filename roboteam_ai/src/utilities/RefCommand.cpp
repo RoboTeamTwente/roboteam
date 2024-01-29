@@ -28,10 +28,6 @@ std::string refCommandToString(RefCommand command) {
             return "DIRECT_FREE_US";
         case RefCommand::DIRECT_FREE_THEM:
             return "DIRECT_FREE_THEM";
-        case RefCommand::INDIRECT_FREE_US:
-            return "INDIRECT_FREE_US";
-        case RefCommand::INDIRECT_FREE_THEM:
-            return "INDIRECT_FREE_THEM";
         case RefCommand::TIMEOUT_US:
             return "TIMEOUT_US";
         case RefCommand::TIMEOUT_THEM:
@@ -69,77 +65,73 @@ std::string refCommandToString(RefCommand command) {
     }
 }
 
-std::string protoRefCommandToString(proto::SSL_Referee_Command command) {
+std::string protoRefCommandToString(proto::Referee_Command command) {
     switch (command) {
-        case proto::SSL_Referee_Command_HALT:
+        case proto::Referee_Command_HALT:
             return "HALT";
-        case proto::SSL_Referee_Command_STOP:
+        case proto::Referee_Command_STOP:
             return "STOP";
-        case proto::SSL_Referee_Command_NORMAL_START:
+        case proto::Referee_Command_NORMAL_START:
             return "NORMAL_START";
-        case proto::SSL_Referee_Command_FORCE_START:
+        case proto::Referee_Command_FORCE_START:
             return "FORCE_START";
-        case proto::SSL_Referee_Command_PREPARE_KICKOFF_YELLOW:
+        case proto::Referee_Command_PREPARE_KICKOFF_YELLOW:
             return "PREPARE_KICKOFF_YELLOW";
-        case proto::SSL_Referee_Command_PREPARE_KICKOFF_BLUE:
+        case proto::Referee_Command_PREPARE_KICKOFF_BLUE:
             return "PREPARE_KICKOFF_BLUE";
-        case proto::SSL_Referee_Command_PREPARE_PENALTY_YELLOW:
+        case proto::Referee_Command_PREPARE_PENALTY_YELLOW:
             return "PREPARE_PENALTY_YELLOW";
-        case proto::SSL_Referee_Command_PREPARE_PENALTY_BLUE:
+        case proto::Referee_Command_PREPARE_PENALTY_BLUE:
             return "PREPARE_PENALTY_BLUE";
-        case proto::SSL_Referee_Command_DIRECT_FREE_YELLOW:
+        case proto::Referee_Command_DIRECT_FREE_YELLOW:
             return "DIRECT_FREE_YELLOW";
-        case proto::SSL_Referee_Command_DIRECT_FREE_BLUE:
+        case proto::Referee_Command_DIRECT_FREE_BLUE:
             return "DIRECT_FREE_BLUE";
-        case proto::SSL_Referee_Command_INDIRECT_FREE_YELLOW:
-            return "INDIRECT_FREE_YELLOW";
-        case proto::SSL_Referee_Command_INDIRECT_FREE_BLUE:
-            return "INDIRECT_FREE_BLUE";
-        case proto::SSL_Referee_Command_TIMEOUT_YELLOW:
+        case proto::Referee_Command_TIMEOUT_YELLOW:
             return "TIMEOUT_YELLOW";
-        case proto::SSL_Referee_Command_TIMEOUT_BLUE:
+        case proto::Referee_Command_TIMEOUT_BLUE:
             return "TIMEOUT_BLUE";
-        case proto::SSL_Referee_Command_BALL_PLACEMENT_YELLOW:
+        case proto::Referee_Command_BALL_PLACEMENT_YELLOW:
             return "BALL_PLACEMENT_YELLOW";
-        case proto::SSL_Referee_Command_BALL_PLACEMENT_BLUE:
+        case proto::Referee_Command_BALL_PLACEMENT_BLUE:
             return "BALL_PLACEMENT_BLUE";
         default:
-            return "Warning: unknown SSL_Referee_Command";
+            return "Warning: unknown Referee_Command";
     }
 }
 
-std::string protoRefStageToString(proto::SSL_Referee_Stage stage) {
+std::string protoRefStageToString(proto::Referee_Stage stage) {
     switch (stage) {
-        case proto::SSL_Referee_Stage_NORMAL_FIRST_HALF_PRE:
+        case proto::Referee_Stage_NORMAL_FIRST_HALF_PRE:
             return "NORMAL_FIRST_HALF_PRE";
-        case proto::SSL_Referee_Stage_NORMAL_FIRST_HALF:
+        case proto::Referee_Stage_NORMAL_FIRST_HALF:
             return "NORMAL_FIRST_HALF";
-        case proto::SSL_Referee_Stage_NORMAL_HALF_TIME:
+        case proto::Referee_Stage_NORMAL_HALF_TIME:
             return "NORMAL_HALF_TIME";
-        case proto::SSL_Referee_Stage_NORMAL_SECOND_HALF_PRE:
+        case proto::Referee_Stage_NORMAL_SECOND_HALF_PRE:
             return "NORMAL_SECOND_HALF_PRE";
-        case proto::SSL_Referee_Stage_NORMAL_SECOND_HALF:
+        case proto::Referee_Stage_NORMAL_SECOND_HALF:
             return "NORMAL_SECOND_HALF";
-        case proto::SSL_Referee_Stage_EXTRA_TIME_BREAK:
+        case proto::Referee_Stage_EXTRA_TIME_BREAK:
             return "EXTRA_TIME_BREAK";
-        case proto::SSL_Referee_Stage_EXTRA_FIRST_HALF_PRE:
+        case proto::Referee_Stage_EXTRA_FIRST_HALF_PRE:
             return "EXTRA_FIRST_HALF_PRE";
-        case proto::SSL_Referee_Stage_EXTRA_FIRST_HALF:
+        case proto::Referee_Stage_EXTRA_FIRST_HALF:
             return "EXTRA_FIRST_HALF";
-        case proto::SSL_Referee_Stage_EXTRA_HALF_TIME:
+        case proto::Referee_Stage_EXTRA_HALF_TIME:
             return "EXTRA_HALF_TIME";
-        case proto::SSL_Referee_Stage_EXTRA_SECOND_HALF_PRE:
+        case proto::Referee_Stage_EXTRA_SECOND_HALF_PRE:
             return "EXTRA_SECOND_HALF_PRE";
-        case proto::SSL_Referee_Stage_EXTRA_SECOND_HALF:
+        case proto::Referee_Stage_EXTRA_SECOND_HALF:
             return "EXTRA_SECOND_HALF";
-        case proto::SSL_Referee_Stage_PENALTY_SHOOTOUT_BREAK:
+        case proto::Referee_Stage_PENALTY_SHOOTOUT_BREAK:
             return "PENALTY_SHOOTOUT_BREAK";
-        case proto::SSL_Referee_Stage_PENALTY_SHOOTOUT:
+        case proto::Referee_Stage_PENALTY_SHOOTOUT:
             return "PENALTY_SHOOTOUT";
-        case proto::SSL_Referee_Stage_POST_GAME:
+        case proto::Referee_Stage_POST_GAME:
             return "POST_GAME";
         default:
-            return "Warning: unknown SSL_Referee_Stage";
+            return "Warning: unknown Referee_Stage";
     }
 }
 

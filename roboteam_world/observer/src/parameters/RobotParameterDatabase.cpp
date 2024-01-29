@@ -4,7 +4,7 @@
 
 #include "parameters/RobotParameterDatabase.h"
 
-TwoTeamRobotParameters RobotParameterDatabase::update(const proto::SSL_Referee &refMessage) {
+TwoTeamRobotParameters RobotParameterDatabase::update(const proto::Referee &refMessage) {
     TwoTeamRobotParameters twoTeamParameters;
     if (refMessage.blue().name() != blueName) {
         twoTeamParameters.blueChanged = true;

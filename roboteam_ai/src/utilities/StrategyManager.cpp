@@ -21,7 +21,7 @@ void StrategyManager::setCurrentRefGameState(RefCommand command, proto::Referee_
         return;
     }
 
-    if (command == lastCommand || command == currentRefGameState.commandId || (currentRefGameState.isfollowUpCommand && command == RefCommand::NORMAL_START)) {
+    if (command == lastCommand || command == currentRefGameState.commandId || (currentRefGameState.isFollowUpCommand && command == RefCommand::NORMAL_START)) {
         return;
     }
 

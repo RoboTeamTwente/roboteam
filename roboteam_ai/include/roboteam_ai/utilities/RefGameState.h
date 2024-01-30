@@ -18,9 +18,14 @@ namespace rtt::ai {
  * @brief Structure that defines the game state from the referee. This is a child structure of the GameState structure
  */
 struct RefGameState : public GameState {
-    RefCommand commandId;         /**< The command that has been sent by the referee */
-    bool isfollowUpCommand;       /**< Indicates whether the command is a follow up command from the previous command */
-    RefCommand followUpCommandId; /**< The follow up command that has been sent by the referee */
+    // The command that has been sent by the referee
+    RefCommand commandId;
+
+    // Indicates whether the command is a follow up command from the previous command
+    bool isFollowUpCommand;
+
+    // The follow up command that has been sent by the referee
+    RefCommand followUpCommandId;
 
     /**
      * @brief Default constructor for the RefGameState structure
@@ -30,7 +35,6 @@ struct RefGameState : public GameState {
     /**
      * @brief Constructor for the RefGameState structure
      * @param commandId The command that has been send by the referee
-     * @param strategyName The name of the play that belongs to this command
      * @param ruleSet The ruleset that belongs to the command
      * @param isFollowUpCommand Indicates whether the command is a follow up command from the previous command
      * @param followUpCommandId The follow up command that has been sent by the referee

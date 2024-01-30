@@ -7,9 +7,8 @@
 #include "utilities/RefCommand.h"
 
 namespace rtt::ai {
-
 RefGameState::RefGameState(RefCommand commandId, RuleSet ruleSet, bool isFollowUpCommand, RefCommand followUpCommandId)
-    : GameState(commandId, std::move(ruleSet)), commandId(commandId), isfollowUpCommand(isFollowUpCommand), followUpCommandId(followUpCommandId) {}
+    : GameState(commandId, std::move(ruleSet)), commandId(commandId), isFollowUpCommand(isFollowUpCommand), followUpCommandId(followUpCommandId) {}
 
 bool RefGameState::hasFollowUpCommand() const { return followUpCommandId != RefCommand::UNDEFINED; }
 

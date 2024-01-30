@@ -36,7 +36,7 @@ std::optional<CollisionData> WorldObjects::getFirstCollision(const rtt::world::W
     if (avoidObjects.shouldAvoidOurRobots) {
         calculateOurRobotCollisions(world, collisionDatas, pathPoints, computedPaths, robotId, timeStep, completedTimeSteps, startTime);
     }
-    if (rtt::ai::GameStateManager::getCurrentGameState().getStrategyName() == "ball_placement_them") {
+    if (rtt::ai::GameStateManager::getCurrentGameState().getStrategyName() == RefCommand::BALL_PLACEMENT_THEM) {
         calculateBallPlacementCollision(world, collisionDatas, pathPoints, timeStep, completedTimeSteps[robotId]);
     }
     if (!collisionDatas.empty()) {

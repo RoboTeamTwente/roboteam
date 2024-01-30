@@ -58,27 +58,27 @@ class StrategyManager {
      * @brief Vector containing all possible game states
      */
     const std::vector<RefGameState> gameStates = {
-        RefGameState(RefCommand::UNDEFINED, "halt", Constants::RULESET_HALT()),
-        RefGameState(RefCommand::HALT, "halt", Constants::RULESET_HALT()),
-        RefGameState(RefCommand::TIMEOUT_US, "halt", Constants::RULESET_HALT()),
-        RefGameState(RefCommand::TIMEOUT_THEM, "halt", Constants::RULESET_HALT()),
+        RefGameState(RefCommand::UNDEFINED, Constants::RULESET_HALT()),
+        RefGameState(RefCommand::HALT, Constants::RULESET_HALT()),
+        RefGameState(RefCommand::TIMEOUT_US, Constants::RULESET_HALT()),
+        RefGameState(RefCommand::TIMEOUT_THEM, Constants::RULESET_HALT()),
 
-        RefGameState(RefCommand::STOP, "stop", Constants::RULESET_STOP()),
-        RefGameState(RefCommand::BALL_PLACEMENT_THEM, "ball_placement_them", Constants::RULESET_STOP()),
-        RefGameState(RefCommand::BALL_PLACEMENT_US, "ball_placement_us", Constants::RULESET_STOP()),
-        RefGameState(RefCommand::PREPARE_KICKOFF_US, "kickoff_us_prepare", Constants::RULESET_STOP(), false, RefCommand::KICKOFF_US),
-        RefGameState(RefCommand::PREPARE_KICKOFF_THEM, "kickoff_them_prepare", Constants::RULESET_STOP(), false, RefCommand::KICKOFF_THEM),
-        RefGameState(RefCommand::PREPARE_PENALTY_US, "penalty_us_prepare", Constants::RULESET_STOP(), false, RefCommand::PENALTY_US),
-        RefGameState(RefCommand::PREPARE_PENALTY_THEM, "penalty_them_prepare", Constants::RULESET_STOP(), false, RefCommand::PENALTY_THEM),
+        RefGameState(RefCommand::STOP, Constants::RULESET_STOP()),
+        RefGameState(RefCommand::BALL_PLACEMENT_THEM, Constants::RULESET_STOP()),
+        RefGameState(RefCommand::BALL_PLACEMENT_US, Constants::RULESET_STOP()),
+        RefGameState(RefCommand::PREPARE_KICKOFF_US, Constants::RULESET_STOP(), false, RefCommand::KICKOFF_US),
+        RefGameState(RefCommand::PREPARE_KICKOFF_THEM, Constants::RULESET_STOP(), false, RefCommand::KICKOFF_THEM),
+        RefGameState(RefCommand::PREPARE_PENALTY_US, Constants::RULESET_STOP(), false, RefCommand::PENALTY_US),
+        RefGameState(RefCommand::PREPARE_PENALTY_THEM, Constants::RULESET_STOP(), false, RefCommand::PENALTY_THEM),
 
-        RefGameState(RefCommand::DIRECT_FREE_THEM, "free_kick_them", Constants::RULESET_DEFAULT()),
-        RefGameState(RefCommand::NORMAL_START, "normal_play", Constants::RULESET_DEFAULT()),
-        RefGameState(RefCommand::FORCED_START, "normal_play", Constants::RULESET_DEFAULT()),
-        RefGameState(RefCommand::DIRECT_FREE_US, "free_kick_us", Constants::RULESET_DEFAULT()),
-        RefGameState(RefCommand::KICKOFF_US, "kickoff_us", Constants::RULESET_DEFAULT(), true),
-        RefGameState(RefCommand::KICKOFF_THEM, "kickoff_them", Constants::RULESET_DEFAULT(), true),
-        RefGameState(RefCommand::PENALTY_US, "penalty_us", Constants::RULESET_DEFAULT(), true),
-        RefGameState(RefCommand::PENALTY_THEM, "penalty_them", Constants::RULESET_DEFAULT(), true),
+        RefGameState(RefCommand::DIRECT_FREE_THEM, Constants::RULESET_DEFAULT()),
+        RefGameState(RefCommand::NORMAL_START, Constants::RULESET_DEFAULT()),
+        RefGameState(RefCommand::FORCED_START, Constants::RULESET_DEFAULT()),
+        RefGameState(RefCommand::DIRECT_FREE_US, Constants::RULESET_DEFAULT()),
+        RefGameState(RefCommand::KICKOFF_US, Constants::RULESET_DEFAULT(), true),
+        RefGameState(RefCommand::KICKOFF_THEM, Constants::RULESET_DEFAULT(), true),
+        RefGameState(RefCommand::PENALTY_US, Constants::RULESET_DEFAULT(), true),
+        RefGameState(RefCommand::PENALTY_THEM, Constants::RULESET_DEFAULT(), true),
     };
     RefGameState currentRefGameState = gameStates[0]; /**< Current game state according to the referee */
 };

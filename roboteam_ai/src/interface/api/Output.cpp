@@ -15,7 +15,7 @@ bool Output::useRefereeCommands = false;
 std::mutex Output::markerMutex;
 std::mutex Output::refMutex;
 
-GameState Output::interfaceGameState("halt_strategy", Constants::RULESET_DEFAULT());
+GameState Output::interfaceGameState(RefCommand::HALT, Constants::RULESET_DEFAULT());
 
 const Vector2 &Output::getInterfaceMarkerPosition() {
     std::lock_guard<std::mutex> lock(markerMutex);

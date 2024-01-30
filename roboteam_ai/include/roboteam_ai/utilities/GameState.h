@@ -7,6 +7,7 @@
 #include "Constants.h"
 #include "RuleSet.h"
 #include "stp/constants/ControlConstants.h"
+#include "utilities/RefCommand.h"
 
 namespace rtt::ai {
 /**
@@ -23,7 +24,7 @@ struct GameState {
      * @param strategyName Name of the game state
      * @param ruleSet Ruleset that belongs to the game state
      */
-    GameState(std::string strategyName, RuleSet ruleSet) : ruleSet(std::move(ruleSet)), strategyName(std::move(strategyName)){};
+    GameState(RefCommand strategyName, RuleSet ruleSet) : ruleSet(std::move(ruleSet)), strategyName(std::move(strategyName)){};
 
     RuleSet ruleSet;
     int keeperId = Constants::DEFAULT_KEEPER_ID();
@@ -40,17 +41,11 @@ struct GameState {
      * @brief Getter for the name of the current game state
      * @return The name of the current game state
      */
-    std::string getStrategyName() const { return strategyName; }
+    RefCommand getStrategyName() const { return strategyName; }
 
    private:
-    std::string strategyName; /**< The name of the current game state */
+    RefCommand strategyName; /**< The name of the current game state */
 };
-}  // namespace rtt::ai
-
-inline std::ostream& operator<<(std::ostream& os, const rtt::ai::GameState& gs) {
-    os << "GameState{"
-       << "\n.strategyName = " << gs.getStrategyName() << "\n.ruleSetName = " << gs.getRuleSet().title << "\n.keeperId = " << gs.keeperId << "\n}";
-    return os;
 }  // namespace rtt::ai
 
 #endif  // ROBOTEAM_AI_GAMESTATE_H

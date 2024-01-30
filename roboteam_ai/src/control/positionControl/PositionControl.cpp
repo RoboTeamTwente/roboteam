@@ -136,7 +136,7 @@ double PositionControl::calculateScore(const rtt::world::World *world, const rtt
     }
 
     auto currentStrategyName = rtt::ai::GameStateManager::getCurrentGameState().getStrategyName();
-    if (currentStrategyName == "ball_placement_them") {
+    if (currentStrategyName == RefCommand::BALL_PLACEMENT_THEM) {
         auto ballPlacementPos = rtt::ai::GameStateManager::getRefereeDesignatedPosition();
         auto startPositionBall = world->getWorld()->getBall()->get()->position;
         if ((startPositionBall - ballPlacementPos).length() < stp::control_constants::BALL_PLACEMENT_ALMOST_DONE_DISTANCE) {

@@ -9,9 +9,6 @@
 namespace rtt::ai::stp::evaluation {
 
 uint8_t KickOffThemPrepareGameStateEvaluation::metricCheck(const world::World *, const Field *) const noexcept {
-    return (GameStateManager::getCurrentGameState().getStrategyName() == "kickoff_them_prepare" ||
-            GameStateManager::getCurrentGameState().getStrategyName() == "formation_pre_half")
-               ? stp::control_constants::FUZZY_TRUE
-               : stp::control_constants::FUZZY_FALSE;
+    return GameStateManager::getCurrentGameState().getStrategyName() == RefCommand::PREPARE_KICKOFF_THEM ? stp::control_constants::FUZZY_TRUE : stp::control_constants::FUZZY_FALSE;
 }
 }  // namespace rtt::ai::stp::evaluation

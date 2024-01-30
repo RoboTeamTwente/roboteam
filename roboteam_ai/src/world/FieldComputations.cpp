@@ -12,11 +12,10 @@ std::tuple<double, double> FieldComputations::getDefenseAreaMargin() {
     double ourDefenseAreaMargin = stp::control_constants::ROBOT_RADIUS + stp::control_constants::GO_TO_POS_ERROR_MARGIN;
 
     std::string ruleSetTitle = GameStateManager::getCurrentGameState().getRuleSet().title;
-    std::string currentGameState = GameStateManager::getCurrentGameState().getStrategyName();
+    RefCommand currentGameState = GameStateManager::getCurrentGameState().getStrategyName();
 
-    if (ruleSetTitle == "stop" || currentGameState == "free_kick_them" || currentGameState == "kickoff_them") {
-        theirDefenseAreaMargin += 0.2;
-    } else if (currentGameState == "free_kick_us") {
+    if (ruleSetTitle == "stop" || currentGameState == RefCommand::DIRECT_FREE_THEM || currentGameState == RefCommand::KICKOFF_THEM ||
+        currentGameState == RefCommand::DIRECT_FREE_US) {
         theirDefenseAreaMargin += 0.2;
     }
 
@@ -25,9 +24,9 @@ std::tuple<double, double> FieldComputations::getDefenseAreaMargin() {
 
 bool FieldComputations::getBallAvoidance() {
     std::string ruleSetTitle = GameStateManager::getCurrentGameState().getRuleSet().title;
-    std::string currentGameState = GameStateManager::getCurrentGameState().getStrategyName();
+    RefCommand currentGameState = GameStateManager::getCurrentGameState().getStrategyName();
 
-    if (ruleSetTitle == "stop" || currentGameState == "free_kick_them" || currentGameState == "kickoff_them") {
+    if (ruleSetTitle == "stop" || currentGameState == RefCommand::DIRECT_FREE_THEM || currentGameState == RefCommand::KICKOFF_THEM) {
         return true;
     }
 

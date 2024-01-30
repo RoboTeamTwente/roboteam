@@ -9,7 +9,8 @@
 namespace rtt::ai::stp::evaluation {
 
 uint8_t NormalOrFreeKickUsGameStateEvaluation::metricCheck(const world::World *, const Field *) const noexcept {
-    return GameStateManager::getCurrentGameState().getStrategyName() == "free_kick_us" || GameStateManager::getCurrentGameState().getStrategyName() == "normal_play"
+    return (GameStateManager::getCurrentGameState().getStrategyName() == RefCommand::DIRECT_FREE_US ||
+            GameStateManager::getCurrentGameState().getStrategyName() == RefCommand::NORMAL_START)
                ? stp::control_constants::FUZZY_TRUE
                : stp::control_constants::FUZZY_FALSE;
 }

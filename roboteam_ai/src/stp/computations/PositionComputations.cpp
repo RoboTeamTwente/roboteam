@@ -50,12 +50,12 @@ std::vector<Vector2> PositionComputations::determineWallPositions(const rtt::Fie
     const double radius = control_constants::ROBOT_RADIUS;
     const double spacingRobots = radius * 0.5;
     const double spaceBetweenDefenseArea = 2 * radius;
-    auto currentGameState = GameStateManager::getCurrentGameState().getStrategyName();
+    RefCommand currentGameState = GameStateManager::getCurrentGameState().getStrategyName();
 
     Vector2 ballPos;
 
     // Calculate the position of the ball, projected onto the field
-    if (currentGameState == "ball_placement_them" || currentGameState == "ball_placement_us") {
+    if (currentGameState == RefCommand::BALL_PLACEMENT_THEM || currentGameState == RefCommand::BALL_PLACEMENT_US) {
         ballPos = rtt::ai::GameStateManager::getRefereeDesignatedPosition();
     } else {
         ballPos = FieldComputations::projectPointInField(field, world->getWorld().value().getBall()->get()->position);
@@ -172,12 +172,12 @@ std::vector<Vector2> PositionComputations::determineWallPositions(const rtt::Fie
     return positions;
 }
 Vector2 PositionComputations::calculateAvoidBallPosition(Vector2 targetPosition, Vector2 ballPosition, const Field &field) {
-    auto currentGameState = GameStateManager::getCurrentGameState().getStrategyName();
+    RefCommand currentGameState = GameStateManager::getCurrentGameState().getStrategyName();
 
     std::unique_ptr<Shape> avoidShape;
 
     // During ball placement, we need to avoid the area between the ball and the target position by a certain margin
-    if (currentGameState == "ball_placement_us" || currentGameState == "ball_placement_them") {
+    if (currentGameState == RefCommand::BALL_PLACEMENT_US || currentGameState == RefCommand::BALL_PLACEMENT_THEM) {
         avoidShape = std::make_unique<Tube>(Tube(ballPosition, GameStateManager::getRefereeDesignatedPosition(), control_constants::AVOID_BALL_DISTANCE + 0.1));
     } else {
         // During stop gamestate, we need to avoid the area directly around the ball.

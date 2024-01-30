@@ -108,26 +108,24 @@ Vector2 GameStateManager::getRefereeDesignatedPosition() {
 }
 
 void GameStateManager::updateInterfaceGameState(const char* name) {
-    static const std::map<std::string, std::pair<std::string, rtt::ai::RuleSet>> nameToGameState = {
-        {"Aggressive Stop Formation", {"stop", Constants::RULESET_STOP()}},
-        {"Defensive Stop Formation", {"stop", Constants::RULESET_STOP()}},
-        {"Ball Placement Us", {"ball_placement_us", Constants::RULESET_STOP()}},
-        {"Ball Placement Them", {"ball_placement_them", Constants::RULESET_STOP()}},
-        {"Halt", {"halt", Constants::RULESET_HALT()}},
-        {"Free Kick Them", {"free_kick_them", Constants::RULESET_DEFAULT()}},
-        {"Free Kick Us At Goal", {"free_kick_us", Constants::RULESET_DEFAULT()}},
-        {"Free Kick Us Pass", {"free_kick_us", Constants::RULESET_DEFAULT()}},
-        {"Kick Off Us Prepare", {"kickoff_us_prepare", Constants::RULESET_STOP()}},
-        {"Kick Off Them Prepare", {"kickoff_them_prepare", Constants::RULESET_STOP()}},
-        {"Kick Off Us", {"kickoff_us", Constants::RULESET_DEFAULT()}},
-        {"Kick Off Them", {"kickoff_them", Constants::RULESET_DEFAULT()}},
-        {"Penalty Us Prepare", {"penalty_us_prepare", Constants::RULESET_STOP()}},
-        {"Penalty Them Prepare", {"penalty_them_prepare", Constants::RULESET_STOP()}},
-        {"Penalty Us", {"penalty_us", Constants::RULESET_DEFAULT()}},
-        {"Penalty Them", {"penalty_them", Constants::RULESET_DEFAULT()}},
-        {"Time Out", {"time_out", Constants::RULESET_HALT()}},
-        {"Defensive Stop Formation", {"stop", Constants::RULESET_STOP()}},
-        {"Aggressive Stop Formation", {"stop", Constants::RULESET_STOP()}},
+    static const std::map<std::string, std::pair<RefCommand, rtt::ai::RuleSet>> nameToGameState = {
+        {"Aggressive Stop Formation", {RefCommand::STOP, Constants::RULESET_STOP()}},
+        {"Defensive Stop Formation", {RefCommand::STOP, Constants::RULESET_STOP()}},
+        {"Ball Placement Us", {RefCommand::BALL_PLACEMENT_US, Constants::RULESET_STOP()}},
+        {"Ball Placement Them", {RefCommand::BALL_PLACEMENT_THEM, Constants::RULESET_STOP()}},
+        {"Halt", {RefCommand::HALT, Constants::RULESET_HALT()}},
+        {"Free Kick Them", {RefCommand::DIRECT_FREE_THEM, Constants::RULESET_DEFAULT()}},
+        {"Free Kick Us At Goal", {RefCommand::DIRECT_FREE_US, Constants::RULESET_DEFAULT()}},
+        {"Free Kick Us Pass", {RefCommand::DIRECT_FREE_US, Constants::RULESET_DEFAULT()}},
+        {"Kick Off Us Prepare", {RefCommand::PREPARE_KICKOFF_US, Constants::RULESET_STOP()}},
+        {"Kick Off Them Prepare", {RefCommand::PREPARE_KICKOFF_THEM, Constants::RULESET_STOP()}},
+        {"Kick Off Us", {RefCommand::KICKOFF_US, Constants::RULESET_DEFAULT()}},
+        {"Kick Off Them", {RefCommand::KICKOFF_THEM, Constants::RULESET_DEFAULT()}},
+        {"Penalty Us Prepare", {RefCommand::PREPARE_PENALTY_US, Constants::RULESET_STOP()}},
+        {"Penalty Them Prepare", {RefCommand::PREPARE_PENALTY_THEM, Constants::RULESET_STOP()}},
+        {"Penalty Us", {RefCommand::PENALTY_US, Constants::RULESET_DEFAULT()}},
+        {"Penalty Them", {RefCommand::PENALTY_THEM, Constants::RULESET_DEFAULT()}},
+        {"Time Out", {RefCommand::TIMEOUT_US, Constants::RULESET_HALT()}},
     };
 
     auto it = nameToGameState.find(name);
@@ -135,7 +133,7 @@ void GameStateManager::updateInterfaceGameState(const char* name) {
         interface::Output::setInterfaceGameState(GameState(it->second.first, it->second.second));
     } else {
         RTT_WARNING("Play has been selected for which no ruleset is found!");
-        interface::Output::setInterfaceGameState(GameState("normal_play", Constants::RULESET_DEFAULT()));
+        interface::Output::setInterfaceGameState(GameState(RefCommand::NORMAL_START, Constants::RULESET_DEFAULT()));
     }
 }
 }  // namespace rtt::ai

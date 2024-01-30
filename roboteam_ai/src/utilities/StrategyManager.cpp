@@ -7,33 +7,32 @@
 #include "stp/constants/ControlConstants.h"
 namespace rtt::ai {
 
-void StrategyManager::setCurrentRefGameState(RefCommand command, proto::Referee_Stage stage, std::optional<world::view::BallView> ballOpt) {
+void StrategyManager::setCurrentGameState(RefCommand command, proto::Referee_Stage stage, std::optional<world::view::BallView> ballOpt) {
     if (command == RefCommand::STOP && (stage == proto::Referee_Stage_NORMAL_FIRST_HALF_PRE || stage == proto::Referee_Stage_NORMAL_SECOND_HALF_PRE ||
                                         stage == proto::Referee_Stage_EXTRA_FIRST_HALF_PRE || stage == proto::Referee_Stage_EXTRA_SECOND_HALF_PRE)) {
         command = RefCommand::PREPARE_KICKOFF_THEM;
     }
 
-    if ((currentRefGameState.commandId == RefCommand::DIRECT_FREE_THEM || currentRefGameState.commandId == RefCommand::DIRECT_FREE_US ||
-         currentRefGameState.commandId == RefCommand::KICKOFF_US || currentRefGameState.commandId == RefCommand::KICKOFF_THEM) &&
+    if ((currentGameState.commandId == RefCommand::DIRECT_FREE_THEM || currentGameState.commandId == RefCommand::DIRECT_FREE_US ||
+         currentGameState.commandId == RefCommand::KICKOFF_US || currentGameState.commandId == RefCommand::KICKOFF_THEM) &&
         ballOpt.has_value() && ballOpt.value()->velocity.length() > stp::control_constants::BALL_IS_MOVING_SLOW_LIMIT) {
-        currentRefGameState = getRefGameStateForRefCommand(RefCommand::NORMAL_START);
+        currentGameState = getGameStateForRefCommand(RefCommand::NORMAL_START);
         lastCommand = command;
         return;
     }
 
-    if (command == lastCommand || command == currentRefGameState.commandId || (currentRefGameState.isFollowUpCommand && command == RefCommand::NORMAL_START)) {
+    if (command == lastCommand || command == currentGameState.commandId || (currentGameState.isFollowUpCommand && command == RefCommand::NORMAL_START)) {
         return;
     }
 
-    currentRefGameState =
-        getRefGameStateForRefCommand(currentRefGameState.hasFollowUpCommand() && command == RefCommand::NORMAL_START ? currentRefGameState.followUpCommandId : command);
+    currentGameState = getGameStateForRefCommand(currentGameState.hasFollowUpCommand() && command == RefCommand::NORMAL_START ? currentGameState.followUpCommandId : command);
     lastCommand = command;
 }
 
-RefGameState StrategyManager::getCurrentRefGameState() { return currentRefGameState; }
+GameState StrategyManager::getCurrentGameState() { return currentGameState; }
 
-const RefGameState StrategyManager::getRefGameStateForRefCommand(RefCommand command) {
-    auto it = std::find_if(gameStates.begin(), gameStates.end(), [&command](const RefGameState &gameState) { return gameState.commandId == command; });
+const GameState StrategyManager::getGameStateForRefCommand(RefCommand command) {
+    auto it = std::find_if(gameStates.begin(), gameStates.end(), [&command](const GameState &gameState) { return gameState.commandId == command; });
 
     if (it != gameStates.end()) {
         return *it;
@@ -42,6 +41,6 @@ const RefGameState StrategyManager::getRefGameStateForRefCommand(RefCommand comm
     return gameStates[0];
 }
 
-void StrategyManager::forceCurrentRefGameState(RefCommand command) { currentRefGameState = getRefGameStateForRefCommand(command); }
+void StrategyManager::forceCurrentGameState(RefCommand command) { currentGameState = getGameStateForRefCommand(command); }
 
 }  // namespace rtt::ai

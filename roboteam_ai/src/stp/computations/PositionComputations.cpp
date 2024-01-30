@@ -50,7 +50,7 @@ std::vector<Vector2> PositionComputations::determineWallPositions(const rtt::Fie
     const double radius = control_constants::ROBOT_RADIUS;
     const double spacingRobots = radius * 0.5;
     const double spaceBetweenDefenseArea = 2 * radius;
-    RefCommand currentGameState = GameStateManager::getCurrentGameState().getStrategyName();
+    RefCommand currentGameState = GameStateManager::getCurrentGameState().getCommandId();
 
     Vector2 ballPos;
 
@@ -172,7 +172,7 @@ std::vector<Vector2> PositionComputations::determineWallPositions(const rtt::Fie
     return positions;
 }
 Vector2 PositionComputations::calculateAvoidBallPosition(Vector2 targetPosition, Vector2 ballPosition, const Field &field) {
-    RefCommand currentGameState = GameStateManager::getCurrentGameState().getStrategyName();
+    RefCommand currentGameState = GameStateManager::getCurrentGameState().getCommandId();
 
     std::unique_ptr<Shape> avoidShape;
 

@@ -65,7 +65,7 @@ void GameStateManager::setRefereeData(proto::Referee refMsg, const rtt::world::W
     auto stage = refMsg.stage();
     auto world = data->getWorld();
     if (world.has_value()) {
-        strategymanager.setCurrentRefGameState(cmd, stage, world->getBall());
+        strategymanager.setCurrentGameState(cmd, stage, world->getBall());
     }
 }
 
@@ -73,7 +73,7 @@ void GameStateManager::setRefereeData(proto::Referee refMsg, const rtt::world::W
 GameState GameStateManager::getCurrentGameState() {
     GameState newGameState;
     if (RuntimeConfig::useReferee) {
-        newGameState = static_cast<GameState>(strategymanager.getCurrentRefGameState());
+        newGameState = strategymanager.getCurrentGameState();
 
         if (GameSettings::isYellow()) {
             newGameState.keeperId = getRefereeData().yellow().goalkeeper();
@@ -83,10 +83,6 @@ GameState GameStateManager::getCurrentGameState() {
             newGameState.maxAllowedRobots = getRefereeData().blue().max_allowed_bots();
         }
 
-        // TODO: FIX for the new config system
-        // if there is a ref we set the interface gamestate to these values as well
-        // this makes sure that when we stop using the referee we don't return to an unknown state,
-        // // so now we keep the same.
         interface::Output::setInterfaceGameState(newGameState);
     } else {
         newGameState = interface::Output::getInterfaceGameState();
@@ -96,10 +92,8 @@ GameState GameStateManager::getCurrentGameState() {
 
 void GameStateManager::forceNewGameState(RefCommand cmd) {
     RTT_INFO("Forcing new refstate!")
-
-    // overwrite both the interface and the strategy manager.
-    interface::Output::setInterfaceGameState(strategymanager.getRefGameStateForRefCommand(cmd));
-    strategymanager.forceCurrentRefGameState(cmd);
+    interface::Output::setInterfaceGameState(strategymanager.getGameStateForRefCommand(cmd));
+    strategymanager.forceCurrentGameState(cmd);
 }
 
 Vector2 GameStateManager::getRefereeDesignatedPosition() {
@@ -126,6 +120,11 @@ void GameStateManager::updateInterfaceGameState(const char* name) {
         {"Penalty Us", {RefCommand::PENALTY_US, Constants::RULESET_DEFAULT()}},
         {"Penalty Them", {RefCommand::PENALTY_THEM, Constants::RULESET_DEFAULT()}},
         {"Time Out", {RefCommand::TIMEOUT_US, Constants::RULESET_HALT()}},
+        {"Attacking Pass", {RefCommand::NORMAL_START, Constants::RULESET_DEFAULT()}},
+        {"Attack", {RefCommand::NORMAL_START, Constants::RULESET_DEFAULT()}},
+        {"Defend Shot", {RefCommand::NORMAL_START, Constants::RULESET_DEFAULT()}},
+        {"Defend Pass", {RefCommand::NORMAL_START, Constants::RULESET_DEFAULT()}},
+        {"Keeper Kick Ball", {RefCommand::NORMAL_START, Constants::RULESET_DEFAULT()}},
     };
 
     auto it = nameToGameState.find(name);
@@ -133,7 +132,7 @@ void GameStateManager::updateInterfaceGameState(const char* name) {
         interface::Output::setInterfaceGameState(GameState(it->second.first, it->second.second));
     } else {
         RTT_WARNING("Play has been selected for which no ruleset is found!");
-        interface::Output::setInterfaceGameState(GameState(RefCommand::NORMAL_START, Constants::RULESET_DEFAULT()));
+        interface::Output::setInterfaceGameState(GameState(RefCommand::HALT, Constants::RULESET_HALT()));
     }
 }
 }  // namespace rtt::ai

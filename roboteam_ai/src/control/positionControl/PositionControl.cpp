@@ -135,7 +135,7 @@ double PositionControl::calculateScore(const rtt::world::World *world, const rtt
         }
     }
 
-    auto currentStrategyName = rtt::ai::GameStateManager::getCurrentGameState().getStrategyName();
+    auto currentStrategyName = rtt::ai::GameStateManager::getCurrentGameState().getCommandId();
     if (currentStrategyName == RefCommand::BALL_PLACEMENT_THEM) {
         auto ballPlacementPos = rtt::ai::GameStateManager::getRefereeDesignatedPosition();
         auto startPositionBall = world->getWorld()->getBall()->get()->position;

@@ -35,10 +35,10 @@ class StrategyManager {
     /**
      * @brief Sets the current game state from the referee
      * @param command Game state the referee is giving
-     * @param stage Stage of the game
+     * @param nextCommand Game state the referee is giving after the current one
      * @param ballOpt Data about the ball
      */
-    void setCurrentGameState(RefCommand command, proto::Referee_Stage stage, std::optional<rtt::world::view::BallView> ballOpt);
+    void setCurrentGameState(RefCommand command, RefCommand nextCommand, std::optional<rtt::world::view::BallView> ballOpt);
 
     /**
      * @brief Forces the AI into a given game state
@@ -66,6 +66,7 @@ class StrategyManager {
         GameState(RefCommand::STOP, Constants::RULESET_STOP()),
         GameState(RefCommand::BALL_PLACEMENT_THEM, Constants::RULESET_STOP()),
         GameState(RefCommand::BALL_PLACEMENT_US, Constants::RULESET_STOP()),
+        GameState(RefCommand::BALL_PLACEMENT_US_DIRECT, Constants::RULESET_STOP()),
         GameState(RefCommand::PREPARE_KICKOFF_US, Constants::RULESET_STOP(), false, RefCommand::KICKOFF_US),
         GameState(RefCommand::PREPARE_KICKOFF_THEM, Constants::RULESET_STOP(), false, RefCommand::KICKOFF_THEM),
         GameState(RefCommand::PREPARE_PENALTY_US, Constants::RULESET_STOP(), false, RefCommand::PENALTY_US),

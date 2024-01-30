@@ -60,12 +60,12 @@ void GameStateManager::setRefereeData(proto::Referee refMsg, const rtt::world::W
     std::lock_guard<std::mutex> lock(refMsgLock);
     GameStateManager::refMsg = refMsg;
     bool isYellow = GameSettings::isYellow();
-    RefCommand cmd = getCommandFromRefMsg(refMsg.command(), isYellow);
+    RefCommand command = getCommandFromRefMsg(refMsg.command(), isYellow);
+    RefCommand nextCommand = refMsg.has_next_command() ? getCommandFromRefMsg(refMsg.next_command(), isYellow) : RefCommand::UNDEFINED;
 
-    auto stage = refMsg.stage();
     auto world = data->getWorld();
     if (world.has_value()) {
-        strategymanager.setCurrentGameState(cmd, stage, world->getBall());
+        strategymanager.setCurrentGameState(command, nextCommand, world->getBall());
     }
 }
 

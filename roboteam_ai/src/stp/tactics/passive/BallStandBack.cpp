@@ -18,11 +18,13 @@ std::optional<StpInfo> BallStandBack::calculateInfoForSkill(StpInfo const &info)
     StpInfo skillStpInfo = info;
 
     if (!info.getPositionToMoveTo() || !skillStpInfo.getBall() || !skillStpInfo.getRobot()) return std::nullopt;
-
+    RefCommand currentGameState = GameStateManager::getCurrentGameState().getCommandId();
     Vector2 targetPos;
     if (standStillCounter > 60) {
         auto moveVector = info.getRobot()->get()->getPos() - info.getBall()->get()->position;
-        targetPos = info.getBall()->get()->position + moveVector.stretchToLength(0.80);
+        double stretchLength =
+            (currentGameState == RefCommand::BALL_PLACEMENT_US_DIRECT) ? control_constants::AVOID_BALL_DISTANCE_BEFORE_FREE_KICK : control_constants::AVOID_BALL_DISTANCE;
+        targetPos = info.getBall()->get()->position + moveVector.stretchToLength(stretchLength);
     } else {
         standStillCounter++;
         targetPos = info.getRobot()->get()->getPos();

@@ -78,6 +78,8 @@ constexpr double DISTANCE_FROM_GOAL_CLOSE = 2 * ROBOT_RADIUS; /**< Distance from
 
 /// GameState constants
 constexpr double AVOID_BALL_DISTANCE = 0.5 + ROBOT_RADIUS + GO_TO_POS_ERROR_MARGIN + BALL_RADIUS + 0.1; /**< Minimum distance all robots should keep when avoiding the ball */
+constexpr double AVOID_BALL_DISTANCE_BEFORE_FREE_KICK =
+    0.05 + ROBOT_RADIUS + GO_TO_POS_ERROR_MARGIN + BALL_RADIUS + 0.01; /**< Minimum distance all robots should keep when avoiding the ball before a free kick */
 
 }  // namespace rtt::ai::stp::control_constants
 

@@ -7,10 +7,13 @@
 #include "stp/constants/ControlConstants.h"
 namespace rtt::ai {
 
-void StrategyManager::setCurrentGameState(RefCommand command, proto::Referee_Stage stage, std::optional<world::view::BallView> ballOpt) {
-    if (command == RefCommand::STOP && (stage == proto::Referee_Stage_NORMAL_FIRST_HALF_PRE || stage == proto::Referee_Stage_NORMAL_SECOND_HALF_PRE ||
-                                        stage == proto::Referee_Stage_EXTRA_FIRST_HALF_PRE || stage == proto::Referee_Stage_EXTRA_SECOND_HALF_PRE)) {
-        command = RefCommand::PREPARE_KICKOFF_THEM;
+void StrategyManager::setCurrentGameState(RefCommand command, RefCommand nextCommand, std::optional<world::view::BallView> ballOpt) {
+    if (command == RefCommand::STOP && (nextCommand == RefCommand::PREPARE_KICKOFF_THEM || nextCommand == RefCommand::PREPARE_KICKOFF_US)) {
+        command = nextCommand;
+    }
+
+    if (command == RefCommand::BALL_PLACEMENT_US && nextCommand == RefCommand::DIRECT_FREE_US) {
+        command = RefCommand::BALL_PLACEMENT_US_DIRECT;
     }
 
     if ((currentGameState.commandId == RefCommand::DIRECT_FREE_THEM || currentGameState.commandId == RefCommand::DIRECT_FREE_US ||

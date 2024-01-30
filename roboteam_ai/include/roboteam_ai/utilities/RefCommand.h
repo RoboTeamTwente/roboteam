@@ -36,6 +36,7 @@ enum class RefCommand {
     KICKOFF_THEM = 19,
     PENALTY_US = 20,
     PENALTY_THEM = 21,
+    BALL_PLACEMENT_US_DIRECT = 22,  // Ball placement before a direct free kick
 
     UNDEFINED = -1
 };
@@ -87,6 +88,9 @@ inline std::ostream &operator<<(std::ostream &os, const RefCommand &command) {
             break;
         case RefCommand::BALL_PLACEMENT_US:
             os << "BALL_PLACEMENT_US";
+            break;
+        case RefCommand::BALL_PLACEMENT_US_DIRECT:
+            os << "BALL_PLACEMENT_US_DIRECT";
             break;
         case RefCommand::BALL_PLACEMENT_THEM:
             os << "BALL_PLACEMENT_THEM";

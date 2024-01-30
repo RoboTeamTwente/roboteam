@@ -80,7 +80,8 @@ class StrategyManager {
         RefGameState(RefCommand::PENALTY_US, Constants::RULESET_DEFAULT(), true),
         RefGameState(RefCommand::PENALTY_THEM, Constants::RULESET_DEFAULT(), true),
     };
-    RefGameState currentRefGameState = gameStates[0]; /**< Current game state according to the referee */
+    RefGameState currentRefGameState = gameStates[0]; /**< Current game state according to the referee, after the StrategyManager has processed it */
+    RefCommand lastCommand = RefCommand::UNDEFINED;   /**< Last command given by the referee */
 };
 
 }  // namespace rtt::ai

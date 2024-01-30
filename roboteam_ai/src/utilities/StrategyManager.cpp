@@ -15,14 +15,19 @@ void StrategyManager::setCurrentRefGameState(RefCommand command, proto::Referee_
 
     if ((currentRefGameState.commandId == RefCommand::DIRECT_FREE_THEM || currentRefGameState.commandId == RefCommand::DIRECT_FREE_US ||
          currentRefGameState.commandId == RefCommand::KICKOFF_US || currentRefGameState.commandId == RefCommand::KICKOFF_THEM) &&
-        ballOpt.has_value() && (ballOpt.value()->velocity.length() > stp::control_constants::BALL_IS_MOVING_SLOW_LIMIT)) {
-        command = RefCommand::NORMAL_START;
-    } else if (command != currentRefGameState.commandId && !(currentRefGameState.isfollowUpCommand && command == RefCommand::NORMAL_START)) {
-        command = currentRefGameState.hasFollowUpCommand() && command == RefCommand::NORMAL_START ? currentRefGameState.followUpCommandId : command;
-    } else {
+        ballOpt.has_value() && ballOpt.value()->velocity.length() > stp::control_constants::BALL_IS_MOVING_SLOW_LIMIT) {
+        currentRefGameState = getRefGameStateForRefCommand(RefCommand::NORMAL_START);
+        lastCommand = command;
         return;
     }
-    currentRefGameState = getRefGameStateForRefCommand(command);
+
+    if (command == lastCommand || command == currentRefGameState.commandId || (currentRefGameState.isfollowUpCommand && command == RefCommand::NORMAL_START)) {
+        return;
+    }
+
+    currentRefGameState =
+        getRefGameStateForRefCommand(currentRefGameState.hasFollowUpCommand() && command == RefCommand::NORMAL_START ? currentRefGameState.followUpCommandId : command);
+    lastCommand = command;
 }
 
 RefGameState StrategyManager::getCurrentRefGameState() { return currentRefGameState; }

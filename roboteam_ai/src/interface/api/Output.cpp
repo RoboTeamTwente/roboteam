@@ -37,7 +37,7 @@ void Output::setUseRefereeCommands(bool useRefereeCommands) {
     Output::useRefereeCommands = useRefereeCommands;
 }
 
-void Output::setRuleSetName(std::string name) { Output::interfaceGameState.ruleSet.title = std::move(name); }
+void Output::setRuleSetName(std::string name) { Output::interfaceGameState.ruleSet.toString() = std::move(name); }
 
 void Output::setKeeperId(int id) { Output::interfaceGameState.keeperId = id; }
 

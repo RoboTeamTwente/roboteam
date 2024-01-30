@@ -3,12 +3,15 @@
 
 #include <string>
 
+enum RuleSetName { DEFAULT, HALT, STOP };
+
 namespace rtt::ai {
 
 /**
  * @brief Structure that contains the ruleset of a certain game state
  */
 struct RuleSet {
+   public:
     /**
      * @brief Default constructor for the RuleSet structure
      */
@@ -18,11 +21,36 @@ struct RuleSet {
      * @brief Constructor for the RuleSet structure
      * @param title Title of the RuleSet
      * @param maxRobotVel Maximum allowed velocities for robots
-     * @param robotsCanGoOutOfField Indicates whether the robots are allowed to go out of the field
      */
-    RuleSet(std::string title, double maxRobotVel) : title(std::move(title)), maxRobotVel(maxRobotVel) {}
+    RuleSet(RuleSetName title, double maxRobotVel) : title(std::move(title)), maxRobotVel(maxRobotVel) {}
 
-    std::string title;
+    /**
+     * @brief Getter for the title of the RuleSet
+     * @return Title of the RuleSet
+     */
+    RuleSetName getTitle() const { return title; }
+
+    /**
+     * @brief Getter for the maximum allowed velocities for robots
+     * @return Maximum allowed velocities for robots
+     */
+    double getMaxRobotVel() const { return maxRobotVel; }
+
+    std::string toString() const {
+        switch (title) {
+            case RuleSetName::DEFAULT:
+                return "Default";
+            case RuleSetName::HALT:
+                return "Halt";
+            case RuleSetName::STOP:
+                return "Stop";
+            default:
+                return "Unknown";
+        }
+    }
+
+   private:
+    RuleSetName title;
     double maxRobotVel;
 };
 

@@ -2,6 +2,7 @@ var ControlConstants_8h =
 [
     [ "ANGLE_RATE", "d4/de4/ControlConstants_8h.html#a75bf4289b2ca6b1f968a4bc2095d9bce", null ],
     [ "AVOID_BALL_DISTANCE", "d4/de4/ControlConstants_8h.html#a8ac896036838a0c21ff0b72a6c35612e", null ],
+    [ "AVOID_BALL_DISTANCE_BEFORE_FREE_KICK", "d4/de4/ControlConstants_8h.html#a8fa01669dc4aaee68b979a785e121e8b", null ],
     [ "BALL_GOT_SHOT_LIMIT", "d4/de4/ControlConstants_8h.html#aa8b98c67e91a1bbd0830a58216211d13", null ],
     [ "BALL_IS_CLOSE", "d4/de4/ControlConstants_8h.html#a698051354245c440ac40068a61237b48", null ],
     [ "BALL_IS_MOVING_SLOW_LIMIT", "d4/de4/ControlConstants_8h.html#a296817cdf1a97b2ebd3ccff76d2dcf5b", null ],

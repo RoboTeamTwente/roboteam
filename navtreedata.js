@@ -66,6 +66,8 @@ var NAVTREE =
         [ "Functions", "globals_func.html", null ],
         [ "Variables", "globals_vars.html", null ],
         [ "Typedefs", "globals_type.html", null ],
+        [ "Enumerations", "globals_enum.html", null ],
+        [ "Enumerator", "globals_eval.html", null ],
         [ "Macros", "globals_defs.html", null ]
       ] ]
     ] ]
@@ -75,19 +77,19 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"d1/d54/classrtt_1_1ai_1_1stp_1_1PlayDecider.html#a0bc0ff5fa8ab787d1be0dfb9fac675f1",
-"d3/d1a/RefereeTest_8cpp.html",
-"d4/d99/classrtt_1_1world_1_1robot_1_1Robot.html#a09ab3d98c0353797bbc01083958ab6ce",
-"d5/d14/namespacertt_1_1ai_1_1stp.html#ac1022c629183d4661ea68235d22a651e",
-"d5/dd8/ParamImplementation_8h.html",
-"d7/d54/classrtt_1_1ai_1_1BallPossession.html#aac3b04b1d08a6333049eba6c02d5ebc9a1af2a51f03727e6cdfda6777f8083f0c",
-"d8/d57/classrtt_1_1ai_1_1stp_1_1skill_1_1TestSkill.html#a0f136c2ac131c1b44b65cb9eeba823fe",
-"d9/dd3/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThem.html#a81d204e55bab023d2937c1420abd04ad",
-"db/d03/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUs.html#a977b3063d4d26bee4be08d71c2ab7ccc",
-"dc/d0d/DefendPass_8h.html",
-"dd/d2c/classrtt_1_1ai_1_1stp_1_1PositionComputations.html#af25973a46636e1484d163aedd83e6737",
-"de/d3e/classrtt_1_1ai_1_1stp_1_1role_1_1Chipper.html#a4ff09c5a0803236b90ca9e14abb1ae6e",
-"df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass.html#aed0df525447b64522d49c9979f27d131"
+"d1/d71/classrtt_1_1ai_1_1gui_1_1net_1_1InterfacePublisher.html#a6342bb2c90bd02e736c62a2f955b01e1",
+"d3/d66/classrtt_1_1ai_1_1stp_1_1tactic_1_1Receive.html#a5da4cb4324bd3bbd9587fdeb3f7e515a",
+"d4/d99/classrtt_1_1world_1_1robot_1_1Robot.html#a4f2c074023a97acc566e0e9c0989c0cd",
+"d5/d14/namespacertt_1_1ai_1_1stp.html#d9/db1/structrtt_1_1ai_1_1stp_1_1EnemyInfo",
+"d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82",
+"d7/d54/classrtt_1_1ai_1_1BallPossession.html#aeadff5002008e3ad5a5141e49169ebb8",
+"d8/d57/classrtt_1_1ai_1_1stp_1_1skill_1_1TestSkill.html#a97aca306adb701181c5726a09cac208c",
+"d9/df0/classrtt_1_1ai_1_1stp_1_1play_1_1KickOffUsPrepare.html#a08a78e2b6bb5fb4f75d0c9dc572d25fa",
+"db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#a3d452ea4fa3adb5e179ceac1df091caf",
+"dc/d18/classrtt_1_1ai_1_1stp_1_1role_1_1BallPlacer.html#a5be4bc6e61b5cdfc3c128ef86d1d52d4",
+"dd/d4b/classrtt_1_1ai_1_1stp_1_1evaluation_1_1StopGameStateEvaluation.html#a9f8cc42698553fc84df4ce7e4b1a68b9",
+"de/d4c/classrtt_1_1BB_1_1BBTrajectory1D.html#ad9d0aed118aa92d7f38df19b7a850e85",
+"dir_5733d7042189ba3c2a676fedaf910e20.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

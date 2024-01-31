@@ -34,8 +34,9 @@ var searchData=
   ['attackingpass_2ecpp_42',['AttackingPass.cpp',['../d7/d39/AttackingPass_8cpp.html',1,'']]],
   ['attackingpass_2eh_43',['AttackingPass.h',['../dd/d29/AttackingPass_8h.html',1,'']]],
   ['avoid_5fball_5fdistance_44',['AVOID_BALL_DISTANCE',['../db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#a8ac896036838a0c21ff0b72a6c35612e',1,'rtt::ai::stp::control_constants']]],
-  ['avoidance_5fdistance_45',['AVOIDANCE_DISTANCE',['../d4/df6/classrtt_1_1ai_1_1control_1_1NumTreesPlanning.html#a28bab180646956ee4c19f688e8715a3b',1,'rtt::ai::control::NumTreesPlanning']]],
-  ['avoidballdist_46',['avoidBallDist',['../d5/d14/namespacertt_1_1ai_1_1stp.html#a6577b099f78be27629402214f0ba3c35',1,'rtt::ai::stp::AvoidObjects']]],
-  ['avoidobjects_47',['avoidObjects',['../d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#a410c71825d572f4fc63f0df9ba8f7b35',1,'rtt::ai::stp::StpInfo']]],
-  ['avoidobjects_48',['AvoidObjects',['../d5/d14/namespacertt_1_1ai_1_1stp.html#d8/dcb/structrtt_1_1ai_1_1stp_1_1AvoidObjects',1,'rtt::ai::stp']]]
+  ['avoid_5fball_5fdistance_5fbefore_5ffree_5fkick_45',['AVOID_BALL_DISTANCE_BEFORE_FREE_KICK',['../db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#a8fa01669dc4aaee68b979a785e121e8b',1,'rtt::ai::stp::control_constants']]],
+  ['avoidance_5fdistance_46',['AVOIDANCE_DISTANCE',['../d4/df6/classrtt_1_1ai_1_1control_1_1NumTreesPlanning.html#a28bab180646956ee4c19f688e8715a3b',1,'rtt::ai::control::NumTreesPlanning']]],
+  ['avoidballdist_47',['avoidBallDist',['../d5/d14/namespacertt_1_1ai_1_1stp.html#a6577b099f78be27629402214f0ba3c35',1,'rtt::ai::stp::AvoidObjects']]],
+  ['avoidobjects_48',['avoidObjects',['../d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#a410c71825d572f4fc63f0df9ba8f7b35',1,'rtt::ai::stp::StpInfo']]],
+  ['avoidobjects_49',['AvoidObjects',['../d5/d14/namespacertt_1_1ai_1_1stp.html#d8/dcb/structrtt_1_1ai_1_1stp_1_1AvoidObjects',1,'rtt::ai::stp']]]
 ];

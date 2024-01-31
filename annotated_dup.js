@@ -166,7 +166,6 @@ var annotated_dup =
         [ "Dealer", "d7/ddc/classrtt_1_1ai_1_1Dealer.html", "d7/ddc/classrtt_1_1ai_1_1Dealer" ],
         [ "GameState", "d6/dc7/structrtt_1_1ai_1_1GameState.html", "d6/dc7/structrtt_1_1ai_1_1GameState" ],
         [ "GameStateManager", "db/de9/classrtt_1_1ai_1_1GameStateManager.html", "db/de9/classrtt_1_1ai_1_1GameStateManager" ],
-        [ "RefGameState", "d0/d56/structrtt_1_1ai_1_1RefGameState.html", "d0/d56/structrtt_1_1ai_1_1RefGameState" ],
         [ "RuleSet", "dd/d26/structrtt_1_1ai_1_1RuleSet.html", "dd/d26/structrtt_1_1ai_1_1RuleSet" ],
         [ "RuntimeConfig", "da/da8/classrtt_1_1ai_1_1RuntimeConfig.html", "da/da8/classrtt_1_1ai_1_1RuntimeConfig" ],
         [ "StrategyManager", "dc/d52/classrtt_1_1ai_1_1StrategyManager.html", "dc/d52/classrtt_1_1ai_1_1StrategyManager" ],

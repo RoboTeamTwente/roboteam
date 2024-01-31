@@ -121,22 +121,14 @@ Enumerations</h2></td></tr>
 , <a class="el" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843abafba8df79d3bc511dadfaf088ca4382">rtt::TIMEOUT_US</a> = 12
 , <a class="el" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a4ed2eef26cd6b0c52acf3cca0480c4cd">rtt::TIMEOUT_THEM</a> = 13
 , <br />
-&#160;&#160;<a class="el" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a39ccdc256c297b083c1c27e0b8966e1d">rtt::GOAL_US</a> = 14
-, <a class="el" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843ab42cf7ab4e2edf86fe6615453c8a3cd2">rtt::GOAL_THEM</a> = 15
-, <a class="el" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843aaa94a644a66e971a67a1865b6256bda0">rtt::BALL_PLACEMENT_US</a> = 16
+&#160;&#160;<a class="el" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843aaa94a644a66e971a67a1865b6256bda0">rtt::BALL_PLACEMENT_US</a> = 16
 , <a class="el" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a4abfa514bf71ac46359cd47ef3aa6c7e">rtt::BALL_PLACEMENT_THEM</a> = 17
+, <a class="el" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a3bba2e3a8ac7ac7b6660543c3fbdc937">rtt::KICKOFF_US</a> = 18
+, <a class="el" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a13e4f3671937675a16a04b085cc5b393">rtt::KICKOFF_THEM</a> = 19
 , <br />
-&#160;&#160;<a class="el" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843ac60d706414e773e40e5ed75f08fdd174">rtt::PRE_HALF</a> = 26
-, <a class="el" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843ac766c96004938ec5169924b49991db80">rtt::DO_KICKOFF</a> = 18
-, <a class="el" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a72f563c62c00af0cfc0ee3eaab845977">rtt::DEFEND_KICKOFF</a> = 19
-, <a class="el" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843aebeaa9ab22742007979d572d20598029">rtt::DO_PENALTY</a> = 20
-, <br />
-&#160;&#160;<a class="el" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843aa6b70db59e1883c1e4ea49b4a98a1752">rtt::DEFEND_PENALTY</a> = 21
-, <a class="el" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a10684e2f808b973f63f052a73ed9fbc8">rtt::PREPARE_SHOOTOUT_US</a> = 22
-, <a class="el" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a66494dcf8b34d95827497d38a0cb6f52">rtt::PREPARE_SHOOTOUT_THEM</a> = 23
-, <a class="el" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843abd5c8f61e87bba645fcee84cb72408d0">rtt::DO_SHOOTOUT</a> = 24
-, <br />
-&#160;&#160;<a class="el" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843ac0714ce4a9e5ab35c97fdd18065f81a5">rtt::DEFEND_SHOOTOUT</a> = 25
+&#160;&#160;<a class="el" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843ac8e4285c18e34175148b25b8d4f00e1a">rtt::PENALTY_US</a> = 20
+, <a class="el" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843af97cec8038d98ef4a331a5e3ba53a429">rtt::PENALTY_THEM</a> = 21
+, <a class="el" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843adc054ff36312758291b2f2f24ea69166">rtt::BALL_PLACEMENT_US_DIRECT</a> = 22
 , <a class="el" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a0db45d2a4141101bdfe48e3314cfbca3">rtt::UNDEFINED</a> = -1
 <br />
  }</td></tr>
@@ -145,14 +137,9 @@ Enumerations</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ae5bbaaf45e9a5e03ae2a4ef009799b98"><td class="memItemLeft" align="right" valign="top">RefCommand&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d8f/namespacertt.html#ae5bbaaf45e9a5e03ae2a4ef009799b98">rtt::sslRefCmdToRefCmd</a> (proto::Referee_Command sslRefCmd, bool isYellow)</td></tr>
-<tr class="separator:ae5bbaaf45e9a5e03ae2a4ef009799b98"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a67b8dcc3285025260f8505a53d8a1ffc"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d8f/namespacertt.html#a67b8dcc3285025260f8505a53d8a1ffc">rtt::refCommandToString</a> (RefCommand command)</td></tr>
-<tr class="separator:a67b8dcc3285025260f8505a53d8a1ffc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa753c2a203088d8d6e3778cb8ebeee89"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d8f/namespacertt.html#aa753c2a203088d8d6e3778cb8ebeee89">rtt::protoRefCommandToString</a> (proto::Referee_Command command)</td></tr>
-<tr class="separator:aa753c2a203088d8d6e3778cb8ebeee89"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad4ea7dcb64b0c8e09f9e755f06eea7e9"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d8f/namespacertt.html#ad4ea7dcb64b0c8e09f9e755f06eea7e9">rtt::protoRefStageToString</a> (proto::Referee_Stage stage)</td></tr>
-<tr class="separator:ad4ea7dcb64b0c8e09f9e755f06eea7e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a348468bc2c2e59d32ab7c1b7d0479f9b"><td class="memItemLeft" align="right" valign="top">std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d8f/namespacertt.html#a348468bc2c2e59d32ab7c1b7d0479f9b">rtt::operator&lt;&lt;</a> (std::ostream &amp;os, const RefCommand &amp;command)</td></tr>
+<tr class="memdesc:a348468bc2c2e59d32ab7c1b7d0479f9b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Overload the &lt;&lt; operator for the RefCommand enum.  <a href="../../dc/d8f/namespacertt.html#a348468bc2c2e59d32ab7c1b7d0479f9b">More...</a><br /></td></tr>
+<tr class="separator:a348468bc2c2e59d32ab7c1b7d0479f9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

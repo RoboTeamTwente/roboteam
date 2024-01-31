@@ -54,9 +54,7 @@ var hierarchy =
     [ "testhelpers::FieldHelper", "de/da9/classtesthelpers_1_1FieldHelper.html", null ],
     [ "rtt::ai::Dealer::FlagScore", "d7/ddc/classrtt_1_1ai_1_1Dealer.html#d2/daa/structrtt_1_1ai_1_1Dealer_1_1FlagScore", null ],
     [ "rtt::GameSettings", "df/db4/classrtt_1_1GameSettings.html", null ],
-    [ "rtt::ai::GameState", "d6/dc7/structrtt_1_1ai_1_1GameState.html", [
-      [ "rtt::ai::RefGameState", "d0/d56/structrtt_1_1ai_1_1RefGameState.html", null ]
-    ] ],
+    [ "rtt::ai::GameState", "d6/dc7/structrtt_1_1ai_1_1GameState.html", null ],
     [ "rtt::ai::GameStateManager", "db/de9/classrtt_1_1ai_1_1GameStateManager.html", null ],
     [ "rtt::ai::stp::computations::GoalComputations", "de/dd2/classrtt_1_1ai_1_1stp_1_1computations_1_1GoalComputations.html", null ],
     [ "rtt::ai::stp::evaluation::GoalShotEvaluation", "d3/df8/classrtt_1_1ai_1_1stp_1_1evaluation_1_1GoalShotEvaluation.html", null ],

@@ -451,7 +451,37 @@ Static Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-
+<b>Initial value:</b><div class="fragment"><div class="line">= ([] {</div>
+<div class="line">    <span class="keyword">auto</span> <a class="code" href="../../d8/d32/namespacertt_1_1ai_1_1stp_1_1play.html">plays</a> = std::vector&lt;std::unique_ptr&lt;ai::stp::Play&gt;&gt;();</div>
+<div class="line"> </div>
+<div class="line">    <a class="code" href="../../d8/d32/namespacertt_1_1ai_1_1stp_1_1play.html">plays</a>.emplace_back(std::make_unique&lt;plays::AttackingPass&gt;());</div>
+<div class="line">    </div>
+<div class="line">    <a class="code" href="../../d8/d32/namespacertt_1_1ai_1_1stp_1_1play.html">plays</a>.emplace_back(std::make_unique&lt;plays::Attack&gt;());</div>
+<div class="line">    <a class="code" href="../../d8/d32/namespacertt_1_1ai_1_1stp_1_1play.html">plays</a>.emplace_back(std::make_unique&lt;plays::Halt&gt;());</div>
+<div class="line">    <a class="code" href="../../d8/d32/namespacertt_1_1ai_1_1stp_1_1play.html">plays</a>.emplace_back(std::make_unique&lt;plays::DefendShot&gt;());</div>
+<div class="line">    <a class="code" href="../../d8/d32/namespacertt_1_1ai_1_1stp_1_1play.html">plays</a>.emplace_back(std::make_unique&lt;plays::DefendPass&gt;());</div>
+<div class="line">    <a class="code" href="../../d8/d32/namespacertt_1_1ai_1_1stp_1_1play.html">plays</a>.emplace_back(std::make_unique&lt;plays::KeeperKickBall&gt;());</div>
+<div class="line">    <a class="code" href="../../d8/d32/namespacertt_1_1ai_1_1stp_1_1play.html">plays</a>.emplace_back(std::make_unique&lt;plays::DefensiveStopFormation&gt;());</div>
+<div class="line">    <a class="code" href="../../d8/d32/namespacertt_1_1ai_1_1stp_1_1play.html">plays</a>.emplace_back(std::make_unique&lt;plays::AggressiveStopFormation&gt;());</div>
+<div class="line">    <a class="code" href="../../d8/d32/namespacertt_1_1ai_1_1stp_1_1play.html">plays</a>.emplace_back(std::make_unique&lt;plays::BallPlacementUs&gt;());</div>
+<div class="line">    <a class="code" href="../../d8/d32/namespacertt_1_1ai_1_1stp_1_1play.html">plays</a>.emplace_back(std::make_unique&lt;plays::BallPlacementThem&gt;());</div>
+<div class="line">    </div>
+<div class="line">    <a class="code" href="../../d8/d32/namespacertt_1_1ai_1_1stp_1_1play.html">plays</a>.emplace_back(std::make_unique&lt;plays::PenaltyThemPrepare&gt;());</div>
+<div class="line">    <a class="code" href="../../d8/d32/namespacertt_1_1ai_1_1stp_1_1play.html">plays</a>.emplace_back(std::make_unique&lt;plays::PenaltyUsPrepare&gt;());</div>
+<div class="line">    <a class="code" href="../../d8/d32/namespacertt_1_1ai_1_1stp_1_1play.html">plays</a>.emplace_back(std::make_unique&lt;plays::PenaltyThem&gt;());</div>
+<div class="line">    <a class="code" href="../../d8/d32/namespacertt_1_1ai_1_1stp_1_1play.html">plays</a>.emplace_back(std::make_unique&lt;plays::PenaltyUs&gt;());</div>
+<div class="line">    <a class="code" href="../../d8/d32/namespacertt_1_1ai_1_1stp_1_1play.html">plays</a>.emplace_back(std::make_unique&lt;plays::KickOffUsPrepare&gt;());</div>
+<div class="line">    <a class="code" href="../../d8/d32/namespacertt_1_1ai_1_1stp_1_1play.html">plays</a>.emplace_back(std::make_unique&lt;plays::KickOffThemPrepare&gt;());</div>
+<div class="line">    <a class="code" href="../../d8/d32/namespacertt_1_1ai_1_1stp_1_1play.html">plays</a>.emplace_back(std::make_unique&lt;plays::FreeKickThem&gt;());</div>
+<div class="line">    <a class="code" href="../../d8/d32/namespacertt_1_1ai_1_1stp_1_1play.html">plays</a>.emplace_back(std::make_unique&lt;plays::FreeKickUsAtGoal&gt;());</div>
+<div class="line">    <a class="code" href="../../d8/d32/namespacertt_1_1ai_1_1stp_1_1play.html">plays</a>.emplace_back(std::make_unique&lt;plays::FreeKickUsPass&gt;());</div>
+<div class="line">    <a class="code" href="../../d8/d32/namespacertt_1_1ai_1_1stp_1_1play.html">plays</a>.emplace_back(std::make_unique&lt;plays::KickOffUs&gt;());</div>
+<div class="line">    <a class="code" href="../../d8/d32/namespacertt_1_1ai_1_1stp_1_1play.html">plays</a>.emplace_back(std::make_unique&lt;plays::KickOffThem&gt;());</div>
+<div class="line">    <span class="keywordflow">return</span> <a class="code" href="../../da/de3/classrtt_1_1STPManager.html#aab4870dcc35daae7666fd1128173ba07">plays</a>;</div>
+<div class="line">})()</div>
+<div class="ttc" id="aclassrtt_1_1STPManager_html_aab4870dcc35daae7666fd1128173ba07"><div class="ttname"><a href="../../da/de3/classrtt_1_1STPManager.html#aab4870dcc35daae7666fd1128173ba07">rtt::STPManager::plays</a></div><div class="ttdeci">static const PlaysVec plays</div><div class="ttdoc">Initialize all plays here (since play vector is static, it's better to do it here to make sure it's i...</div><div class="ttdef"><b>Definition:</b> STPManager.h:49</div></div>
+<div class="ttc" id="anamespacertt_1_1ai_1_1stp_1_1play_html"><div class="ttname"><a href="../../d8/d32/namespacertt_1_1ai_1_1stp_1_1play.html">rtt::ai::stp::play</a></div><div class="ttdef"><b>Definition:</b> DefendPass.h:10</div></div>
+</div><!-- fragment -->
 <p>Initialize all plays here (since play vector is static, it's better to do it here to make sure it's initialized before use) </p>
 <p>The vector that contains all plays </p>
 

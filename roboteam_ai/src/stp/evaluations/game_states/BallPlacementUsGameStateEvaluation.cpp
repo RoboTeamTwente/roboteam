@@ -8,6 +8,9 @@
 
 namespace rtt::ai::stp::evaluation {
 uint8_t BallPlacementUsGameStateEvaluation::metricCheck(const world::World *, const Field *) const noexcept {
-    return GameStateManager::getCurrentGameState().getStrategyName() == "ball_placement_us" ? stp::control_constants::FUZZY_TRUE : stp::control_constants::FUZZY_FALSE;
+    return (GameStateManager::getCurrentGameState().getCommandId() == RefCommand::BALL_PLACEMENT_US ||
+            GameStateManager::getCurrentGameState().getCommandId() == RefCommand::BALL_PLACEMENT_US_DIRECT)
+               ? stp::control_constants::FUZZY_TRUE
+               : stp::control_constants::FUZZY_FALSE;
 }
 }  // namespace rtt::ai::stp::evaluation

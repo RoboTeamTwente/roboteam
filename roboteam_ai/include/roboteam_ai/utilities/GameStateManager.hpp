@@ -3,7 +3,7 @@
 
 #include <proto/messages_robocup_ssl_referee.pb.h>
 
-#include "RefGameState.h"
+#include "GameState.h"
 #include "StrategyManager.h"
 
 namespace rtt::ai {

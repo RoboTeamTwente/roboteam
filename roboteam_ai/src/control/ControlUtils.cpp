@@ -16,14 +16,14 @@
 namespace rtt::ai::control {
 
 double ControlUtils::getMaxVelocity(bool hasBall) {
-    double maxVel = rtt::ai::GameStateManager::getCurrentGameState().getRuleSet().maxRobotVel;
+    double maxVel = rtt::ai::GameStateManager::getCurrentGameState().getRuleSet().getMaxRobotVel();
     if (hasBall) maxVel = std::min(stp::control_constants::MAX_VEL_WHEN_HAS_BALL, maxVel);
     return maxVel;
 }
 /// Limits velocity to maximum velocity. it defaults to the max velocity stored in Referee.
 Vector2 ControlUtils::velocityLimiter(const Vector2 &vel, double maxVel, double minVel, bool listenToReferee) {
     if (listenToReferee) {
-        double refereeMaxVel = rtt::ai::GameStateManager::getCurrentGameState().getRuleSet().maxRobotVel;
+        double refereeMaxVel = rtt::ai::GameStateManager::getCurrentGameState().getRuleSet().getMaxRobotVel();
         if (refereeMaxVel < maxVel) {
             maxVel = refereeMaxVel;
         }

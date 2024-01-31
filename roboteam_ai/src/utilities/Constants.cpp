@@ -172,9 +172,9 @@ pidVals Constants::standardKeeperPID() { return GameSettings::getRobotHubMode() 
 
 pidVals Constants::standardKeeperInterceptPID() { return GameSettings::getRobotHubMode() == net::RobotHubMode::BASESTATION ? pidVals(6, 0, 1) : pidVals(6, 0, 1); }
 
-RuleSet Constants::RULESET_DEFAULT() { return {"default", 2}; }
-RuleSet Constants::RULESET_HALT() { return {"halt", 0.0}; }
-RuleSet Constants::RULESET_STOP() { return {"stop", 1.3}; }
+RuleSet Constants::RULESET_DEFAULT() { return {RuleSetName::DEFAULT, 2}; }
+RuleSet Constants::RULESET_HALT() { return {RuleSetName::HALT, 0.0}; }
+RuleSet Constants::RULESET_STOP() { return {RuleSetName::STOP, 1.3}; }
 
 std::vector<RuleSet> Constants::ruleSets() {
     return {

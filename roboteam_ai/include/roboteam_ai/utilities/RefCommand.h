@@ -28,75 +28,91 @@ enum class RefCommand {
     DIRECT_FREE_THEM = 9,
     TIMEOUT_US = 12,
     TIMEOUT_THEM = 13,
-    GOAL_US = 14,
-    GOAL_THEM = 15,
     BALL_PLACEMENT_US = 16,
     BALL_PLACEMENT_THEM = 17,
-    PRE_HALF = 26,
 
     /// CUSTOM GAME STATES ///
-    DO_KICKOFF = 18,
-    DEFEND_KICKOFF = 19,
-    DO_PENALTY = 20,
-    DEFEND_PENALTY = 21,
-    PREPARE_SHOOTOUT_US = 22,
-    PREPARE_SHOOTOUT_THEM = 23,
-    DO_SHOOTOUT = 24,
-    DEFEND_SHOOTOUT = 25,
+    KICKOFF_US = 18,
+    KICKOFF_THEM = 19,
+    PENALTY_US = 20,
+    PENALTY_THEM = 21,
+    BALL_PLACEMENT_US_DIRECT = 22,  // Ball placement before a direct free kick
 
     UNDEFINED = -1
 };
 
-inline RefCommand sslRefCmdToRefCmd(proto::Referee_Command sslRefCmd, bool isYellow) {
-    using RefCommandMap = std::unordered_map<proto::Referee_Command, RefCommand>;
+/**
+ * @brief Overload the << operator for the RefCommand enum
+ * @param os The output stream
+ * @param command The RefCommand to print
+ * @return The output stream
+ */
 
-    // static const == they are initialized only once, se we don't allocate on heap every time
-    static const RefCommandMap yellowMap = {{proto::Referee_Command_HALT, RefCommand::HALT},
-                                            {proto::Referee_Command_STOP, RefCommand::STOP},
-                                            {proto::Referee_Command_NORMAL_START, RefCommand::NORMAL_START},
-                                            {proto::Referee_Command_FORCE_START, RefCommand::FORCED_START},
-                                            {proto::Referee_Command_PREPARE_KICKOFF_YELLOW, RefCommand::PREPARE_KICKOFF_US},
-                                            {proto::Referee_Command_PREPARE_KICKOFF_BLUE, RefCommand::PREPARE_KICKOFF_THEM},
-                                            {proto::Referee_Command_PREPARE_PENALTY_YELLOW, RefCommand::PREPARE_PENALTY_US},
-                                            {proto::Referee_Command_PREPARE_PENALTY_BLUE, RefCommand::PREPARE_PENALTY_THEM},
-                                            {proto::Referee_Command_DIRECT_FREE_YELLOW, RefCommand::DIRECT_FREE_US},
-                                            {proto::Referee_Command_DIRECT_FREE_BLUE, RefCommand::DIRECT_FREE_THEM},
-                                            {proto::Referee_Command_TIMEOUT_YELLOW, RefCommand::TIMEOUT_US},
-                                            {proto::Referee_Command_TIMEOUT_BLUE, RefCommand::TIMEOUT_THEM},
-                                            {proto::Referee_Command_BALL_PLACEMENT_YELLOW, RefCommand::BALL_PLACEMENT_US},
-                                            {proto::Referee_Command_BALL_PLACEMENT_BLUE, RefCommand::BALL_PLACEMENT_THEM}};
-
-    // static const == they are initialized only once, se we don't allocate on heap every time
-    static const RefCommandMap blueMap = {{proto::Referee_Command_HALT, RefCommand::HALT},
-                                          {proto::Referee_Command_STOP, RefCommand::STOP},
-                                          {proto::Referee_Command_NORMAL_START, RefCommand::NORMAL_START},
-                                          {proto::Referee_Command_FORCE_START, RefCommand::FORCED_START},
-                                          {proto::Referee_Command_PREPARE_KICKOFF_YELLOW, RefCommand::PREPARE_KICKOFF_THEM},
-                                          {proto::Referee_Command_PREPARE_KICKOFF_BLUE, RefCommand::PREPARE_KICKOFF_US},
-                                          {proto::Referee_Command_PREPARE_PENALTY_YELLOW, RefCommand::PREPARE_PENALTY_THEM},
-                                          {proto::Referee_Command_PREPARE_PENALTY_BLUE, RefCommand::PREPARE_PENALTY_US},
-                                          {proto::Referee_Command_DIRECT_FREE_YELLOW, RefCommand::DIRECT_FREE_THEM},
-                                          {proto::Referee_Command_DIRECT_FREE_BLUE, RefCommand::DIRECT_FREE_US},
-                                          {proto::Referee_Command_TIMEOUT_YELLOW, RefCommand::TIMEOUT_THEM},
-                                          {proto::Referee_Command_TIMEOUT_BLUE, RefCommand::TIMEOUT_US},
-                                          {proto::Referee_Command_BALL_PLACEMENT_YELLOW, RefCommand::BALL_PLACEMENT_THEM},
-                                          {proto::Referee_Command_BALL_PLACEMENT_BLUE, RefCommand::BALL_PLACEMENT_US}};
-
-    // .find() != .end() could be replaced by contains in C++20
-    if (isYellow && yellowMap.find(sslRefCmd) != yellowMap.end()) {
-        return yellowMap.at(sslRefCmd);
-    } else if (!isYellow && blueMap.find(sslRefCmd) != yellowMap.end()) {
-        return blueMap.at(sslRefCmd);
+inline std::ostream &operator<<(std::ostream &os, const RefCommand &command) {
+    switch (command) {
+        case RefCommand::HALT:
+            os << "HALT";
+            break;
+        case RefCommand::STOP:
+            os << "STOP";
+            break;
+        case RefCommand::NORMAL_START:
+            os << "NORMAL_START";
+            break;
+        case RefCommand::FORCED_START:
+            os << "FORCED_START";
+            break;
+        case RefCommand::PREPARE_KICKOFF_US:
+            os << "PREPARE_KICKOFF_US";
+            break;
+        case RefCommand::PREPARE_KICKOFF_THEM:
+            os << "PREPARE_KICKOFF_THEM";
+            break;
+        case RefCommand::PREPARE_PENALTY_US:
+            os << "PREPARE_PENALTY_US";
+            break;
+        case RefCommand::PREPARE_PENALTY_THEM:
+            os << "PREPARE_PENALTY_THEM";
+            break;
+        case RefCommand::DIRECT_FREE_US:
+            os << "DIRECT_FREE_US";
+            break;
+        case RefCommand::DIRECT_FREE_THEM:
+            os << "DIRECT_FREE_THEM";
+            break;
+        case RefCommand::TIMEOUT_US:
+            os << "TIMEOUT_US";
+            break;
+        case RefCommand::TIMEOUT_THEM:
+            os << "TIMEOUT_THEM";
+            break;
+        case RefCommand::BALL_PLACEMENT_US:
+            os << "BALL_PLACEMENT_US";
+            break;
+        case RefCommand::BALL_PLACEMENT_US_DIRECT:
+            os << "BALL_PLACEMENT_US_DIRECT";
+            break;
+        case RefCommand::BALL_PLACEMENT_THEM:
+            os << "BALL_PLACEMENT_THEM";
+            break;
+        case RefCommand::KICKOFF_US:
+            os << "KICKOFF_US";
+            break;
+        case RefCommand::KICKOFF_THEM:
+            os << "KICKOFF_THEM";
+            break;
+        case RefCommand::PENALTY_US:
+            os << "PENALTY_US";
+            break;
+        case RefCommand::PENALTY_THEM:
+            os << "PENALTY_THEM";
+            break;
+        case RefCommand::UNDEFINED:
+            os << "UNDEFINED";
+            break;
     }
-
-    RTT_ERROR("Unknown refstate, halting all robots for safety!")
-    return RefCommand::HALT;
+    return os;
 }
-
-std::string refCommandToString(RefCommand command);
-std::string protoRefCommandToString(proto::Referee_Command command);
-std::string protoRefStageToString(proto::Referee_Stage stage);
-
 }  // namespace rtt
 
 #endif  // RTT_REFCOMMAND_H

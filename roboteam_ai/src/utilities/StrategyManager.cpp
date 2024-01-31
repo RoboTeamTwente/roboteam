@@ -7,64 +7,35 @@
 #include "stp/constants/ControlConstants.h"
 namespace rtt::ai {
 
-// process ref commands
-void StrategyManager::setCurrentRefGameState(RefCommand command, proto::Referee_Stage stage, std::optional<world::view::BallView> ballOpt) {
-    // if the stage is shootout, we interpret penalty commands as shootOut penalty commands
-    if (stage == proto::Referee_Stage_PENALTY_SHOOTOUT) {
-        if (command == RefCommand::PREPARE_PENALTY_US) {
-            command = RefCommand::PREPARE_SHOOTOUT_US;
-        } else if (command == RefCommand::PREPARE_PENALTY_THEM) {
-            command = RefCommand::PREPARE_SHOOTOUT_THEM;
-        }
+void StrategyManager::setCurrentGameState(RefCommand command, RefCommand nextCommand, std::optional<world::view::BallView> ballOpt) {
+    if (command == RefCommand::STOP && (nextCommand == RefCommand::PREPARE_KICKOFF_THEM || nextCommand == RefCommand::PREPARE_KICKOFF_US)) {
+        command = nextCommand;
     }
 
-    // If game is in pre start stage and the game is in stop state
-    if (command == RefCommand::STOP && (stage == proto::Referee_Stage_NORMAL_FIRST_HALF_PRE || stage == proto::Referee_Stage_NORMAL_SECOND_HALF_PRE ||
-                                        stage == proto::Referee_Stage_EXTRA_FIRST_HALF_PRE || stage == proto::Referee_Stage_EXTRA_SECOND_HALF_PRE)) {
-        command = RefCommand::PRE_HALF;
+    if (command == RefCommand::BALL_PLACEMENT_US && nextCommand == RefCommand::DIRECT_FREE_US) {
+        command = RefCommand::BALL_PLACEMENT_US_DIRECT;
     }
 
-    // If the ball has been kicked during kickoff or a free kick, continue with NORMAL_START
-    if ((currentRefGameState.commandId == RefCommand::DIRECT_FREE_THEM || currentRefGameState.commandId == RefCommand::DIRECT_FREE_US ||
-         currentRefGameState.commandId == RefCommand::DO_KICKOFF || currentRefGameState.commandId == RefCommand::DEFEND_KICKOFF) &&
-        ballOpt.has_value() && (ballOpt.value()->velocity.length() > stp::control_constants::BALL_IS_MOVING_SLOW_LIMIT)) {
-        RefGameState newState = getRefGameStateForRefCommand(RefCommand::NORMAL_START);
-        currentRefGameState = newState;
-        currentRefCmd = command;
+    if ((currentGameState.commandId == RefCommand::DIRECT_FREE_THEM || currentGameState.commandId == RefCommand::DIRECT_FREE_US ||
+         currentGameState.commandId == RefCommand::KICKOFF_US || currentGameState.commandId == RefCommand::KICKOFF_THEM) &&
+        ballOpt.has_value() && ballOpt.value()->velocity.length() > stp::control_constants::BALL_IS_MOVING_SLOW_LIMIT) {
+        currentGameState = getGameStateForRefCommand(RefCommand::NORMAL_START);
+        lastCommand = command;
         return;
     }
 
-    // if the command is the same as the previous, we don't need to do anything
-    if (command == currentRefCmd) {
+    if (command == lastCommand || command == currentGameState.commandId || (currentGameState.isFollowUpCommand && command == RefCommand::NORMAL_START)) {
         return;
     }
 
-    // if the command is the same, we don't need to do anything
-    if (command == currentRefGameState.commandId) {
-        return;
-    }
-
-    // otherwise, if we are in a followupstate and the refcommand is normal start we don't change a thing
-    if (currentRefGameState.isfollowUpCommand && command == RefCommand::NORMAL_START) {
-        return;
-    }
-
-    // we need to change refgamestate here
-    RefGameState newState;
-    if (currentRefGameState.hasFollowUpCommand() && command == RefCommand::NORMAL_START) {
-        newState = getRefGameStateForRefCommand(currentRefGameState.followUpCommandId);
-    } else {
-        newState = getRefGameStateForRefCommand(command);
-    }
-
-    currentRefGameState = newState;
-    currentRefCmd = command;
+    currentGameState = getGameStateForRefCommand(currentGameState.hasFollowUpCommand() && command == RefCommand::NORMAL_START ? currentGameState.followUpCommandId : command);
+    lastCommand = command;
 }
 
-RefGameState StrategyManager::getCurrentRefGameState() { return currentRefGameState; }
+GameState StrategyManager::getCurrentGameState() { return currentGameState; }
 
-const RefGameState StrategyManager::getRefGameStateForRefCommand(RefCommand command) {
-    auto it = std::find_if(gameStates.begin(), gameStates.end(), [&command](const RefGameState &gameState) { return gameState.commandId == command; });
+const GameState StrategyManager::getGameStateForRefCommand(RefCommand command) {
+    auto it = std::find_if(gameStates.begin(), gameStates.end(), [&command](const GameState &gameState) { return gameState.commandId == command; });
 
     if (it != gameStates.end()) {
         return *it;
@@ -73,11 +44,6 @@ const RefGameState StrategyManager::getRefGameStateForRefCommand(RefCommand comm
     return gameStates[0];
 }
 
-void StrategyManager::forceCurrentRefGameState(RefCommand command) {
-    // we need to change refgamestate here
-    RefGameState newState = getRefGameStateForRefCommand(command);
-
-    currentRefGameState = newState;
-}
+void StrategyManager::forceCurrentGameState(RefCommand command) { currentGameState = getGameStateForRefCommand(command); }
 
 }  // namespace rtt::ai

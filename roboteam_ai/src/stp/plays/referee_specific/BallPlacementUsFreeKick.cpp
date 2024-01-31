@@ -1,16 +1,17 @@
 //
-// Created by jessevw on 24.03.20.
+// Created by Luuk on 31/1/2024.
 //
 
-#include "stp/plays/referee_specific/BallPlacementUs.h"
+#include "stp/plays/referee_specific/BallPlacementUsFreeKick.h"
 
 #include "stp/roles/active/BallPlacer.h"
+#include "stp/roles/passive/Defender.h"
 #include "stp/roles/passive/Formation.h"
 #include "utilities/GameStateManager.hpp"
 
 namespace rtt::ai::stp::play {
 
-BallPlacementUs::BallPlacementUs() : Play() {
+BallPlacementUsFreeKick::BallPlacementUsFreeKick() : Play() {
     // Evaluations that have to be true in order for this play to be considered valid.
     startPlayEvaluation.clear();
     startPlayEvaluation.emplace_back(GlobalEvaluation::BallPlacementUsGameState);
@@ -22,19 +23,27 @@ BallPlacementUs::BallPlacementUs() : Play() {
     // Role creation, the names should be unique. The names are used in the stpInfos-map.
     roles = std::array<std::unique_ptr<Role>, rtt::ai::Constants::ROBOT_COUNT()>{
         // Roles is we play 6v6
-        std::make_unique<role::Formation>("keeper"), std::make_unique<role::BallPlacer>("ball_placer"), std::make_unique<role::Formation>("formation_back_0"),
-        std::make_unique<role::Formation>("formation_mid_0"), std::make_unique<role::Formation>("formation_front_0"), std::make_unique<role::Formation>("formation_mid_1"),
+        std::make_unique<role::Formation>("keeper"),
+        std::make_unique<role::BallPlacer>("ball_placer"),
+        std::make_unique<role::Formation>("attacker_0"),
+        std::make_unique<role::Defender>("defender_0"),
+        std::make_unique<role::Defender>("defender_1"),
+        std::make_unique<role::Formation>("attacker_1"),
         // Additional roles if we play 11v11
-        std::make_unique<role::Formation>("formation_back_1"), std::make_unique<role::Formation>("formation_front_1"), std::make_unique<role::Formation>("formation_back_2"),
-        std::make_unique<role::Formation>("formation_mid_2"), std::make_unique<role::Formation>("formation_front_2")};
+        std::make_unique<role::Formation>("waller_0"),
+        std::make_unique<role::Formation>("waller_1"),
+        std::make_unique<role::Formation>("attacker_2"),
+        std::make_unique<role::Defender>("defender_2"),
+        std::make_unique<role::Formation>("attacker_3"),
+    };
 }
 
-uint8_t BallPlacementUs::score(const rtt::Field&) noexcept {
+uint8_t BallPlacementUsFreeKick::score(const rtt::Field& field) noexcept {
     // If this play is valid we always want to execute this play
-    return control_constants::FUZZY_TRUE;
+    return (rtt::ai::GameStateManager::getCurrentGameState().getCommandId() == RefCommand::BALL_PLACEMENT_US_DIRECT);
 }
 
-Dealer::FlagMap BallPlacementUs::decideRoleFlags() const noexcept {
+Dealer::FlagMap BallPlacementUsFreeKick::decideRoleFlags() const noexcept {
     Dealer::FlagMap flagMap;
     Dealer::DealerFlag detectionFlag(DealerFlagTitle::CAN_DETECT_BALL);
     Dealer::DealerFlag dribblerFlag(DealerFlagTitle::WITH_WORKING_DRIBBLER);
@@ -42,22 +51,23 @@ Dealer::FlagMap BallPlacementUs::decideRoleFlags() const noexcept {
 
     flagMap.insert({"keeper", {DealerFlagPriority::KEEPER, {keeperFlag}}});
     flagMap.insert({"ball_placer", {DealerFlagPriority::REQUIRED, {dribblerFlag, detectionFlag}}});
-    flagMap.insert({"formation_back_0", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"formation_back_1", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"formation_back_2", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"formation_mid_0", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"formation_mid_1", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"formation_mid_2", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"formation_front_0", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"formation_front_1", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"formation_front_2", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"waller_0", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"waller_1", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"defender_0", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
+    flagMap.insert({"defender_1", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
+    flagMap.insert({"defender_2", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
+    flagMap.insert({"attacker_0", {DealerFlagPriority::HIGH_PRIORITY, {}}});
+    flagMap.insert({"attacker_1", {DealerFlagPriority::HIGH_PRIORITY, {}}});
+    flagMap.insert({"attacker_2", {DealerFlagPriority::HIGH_PRIORITY, {}}});
+    flagMap.insert({"attacker_3", {DealerFlagPriority::HIGH_PRIORITY, {}}});
 
     return flagMap;
 }
 
-void BallPlacementUs::calculateInfoForRoles() noexcept {
+void BallPlacementUsFreeKick::calculateInfoForRoles() noexcept {
     PositionComputations::calculateInfoForKeeper(stpInfos, field, world);
-    PositionComputations::calculateInfoForFormation(stpInfos, roles, field, world);
+    PositionComputations::calculateInfoForDefendersAndWallers(stpInfos, roles, field, world, true);
+    PositionComputations::calculateInfoForAttackers(stpInfos, roles, field, world);
 
     Vector2 ballTarget = Vector2();
 
@@ -71,7 +81,7 @@ void BallPlacementUs::calculateInfoForRoles() noexcept {
         ballTarget = world->getWorld()->get()->getBall()->get()->position;
     }
 
-    stpInfos["ball_placer"].setPositionToShootAt(ballTarget);
+    // stpInfos["ball_placer"].setPositionToShootAt(ballTarget);
     stpInfos["ball_placer"].setPositionToMoveTo(ballTarget);
     stpInfos["ball_placer"].setShouldAvoidOutOfField(false);
     stpInfos["ball_placer"].setShouldAvoidBall(false);
@@ -85,5 +95,5 @@ void BallPlacementUs::calculateInfoForRoles() noexcept {
     }
 }
 
-const char* BallPlacementUs::getName() const { return "Ball Placement Us"; }
+const char* BallPlacementUsFreeKick::getName() const { return "Ball Placement Us Free Kick"; }
 }  // namespace rtt::ai::stp::play

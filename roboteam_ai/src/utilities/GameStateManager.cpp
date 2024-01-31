@@ -105,7 +105,8 @@ void GameStateManager::updateInterfaceGameState(const char* name) {
     static const std::map<std::string, std::pair<RefCommand, rtt::ai::RuleSet>> nameToGameState = {
         {"Aggressive Stop Formation", {RefCommand::STOP, Constants::RULESET_STOP()}},
         {"Defensive Stop Formation", {RefCommand::STOP, Constants::RULESET_STOP()}},
-        {"Ball Placement Us", {RefCommand::BALL_PLACEMENT_US, Constants::RULESET_STOP()}},
+        {"Ball Placement Us Free Kick", {RefCommand::BALL_PLACEMENT_US_DIRECT, Constants::RULESET_STOP()}},
+        {"Ball Placement Us Force Start", {RefCommand::BALL_PLACEMENT_US, Constants::RULESET_STOP()}},
         {"Ball Placement Them", {RefCommand::BALL_PLACEMENT_THEM, Constants::RULESET_STOP()}},
         {"Halt", {RefCommand::HALT, Constants::RULESET_HALT()}},
         {"Free Kick Them", {RefCommand::DIRECT_FREE_THEM, Constants::RULESET_DEFAULT()}},

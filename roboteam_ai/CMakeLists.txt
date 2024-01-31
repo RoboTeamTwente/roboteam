@@ -119,7 +119,8 @@ add_library(roboteam_ai_plays
         # referee_specific/
         ${PROJECT_SOURCE_DIR}/src/stp/plays/referee_specific/AggressiveStopFormation.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/plays/referee_specific/BallPlacementThem.cpp
-        ${PROJECT_SOURCE_DIR}/src/stp/plays/referee_specific/BallPlacementUs.cpp
+        ${PROJECT_SOURCE_DIR}/src/stp/plays/referee_specific/BallPlacementUsFreeKick.cpp
+        ${PROJECT_SOURCE_DIR}/src/stp/plays/referee_specific/BallPlacementUsForceStart.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/plays/referee_specific/DefensiveStopFormation.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/plays/referee_specific/FreeKickThem.cpp
         ${PROJECT_SOURCE_DIR}/src/stp/plays/referee_specific/FreeKickUsAtGoal.cpp

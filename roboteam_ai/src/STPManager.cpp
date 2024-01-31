@@ -26,7 +26,8 @@
 #include "stp/plays/offensive/ChippingPass.h"
 #include "stp/plays/referee_specific/AggressiveStopFormation.h"
 #include "stp/plays/referee_specific/BallPlacementThem.h"
-#include "stp/plays/referee_specific/BallPlacementUs.h"
+#include "stp/plays/referee_specific/BallPlacementUsForceStart.h"
+#include "stp/plays/referee_specific/BallPlacementUsFreeKick.h"
 #include "stp/plays/referee_specific/DefensiveStopFormation.h"
 #include "stp/plays/referee_specific/FreeKickThem.h"
 #include "stp/plays/referee_specific/FreeKickUsAtGoal.h"
@@ -60,7 +61,8 @@ const STPManager::PlaysVec STPManager::plays = ([] {
     plays.emplace_back(std::make_unique<plays::KeeperKickBall>());
     plays.emplace_back(std::make_unique<plays::DefensiveStopFormation>());
     plays.emplace_back(std::make_unique<plays::AggressiveStopFormation>());
-    plays.emplace_back(std::make_unique<plays::BallPlacementUs>());
+    plays.emplace_back(std::make_unique<plays::BallPlacementUsFreeKick>());
+    plays.emplace_back(std::make_unique<plays::BallPlacementUsForceStart>());
     plays.emplace_back(std::make_unique<plays::BallPlacementThem>());
     // plays.emplace_back(std::make_unique<play::TimeOut>());
     plays.emplace_back(std::make_unique<plays::PenaltyThemPrepare>());

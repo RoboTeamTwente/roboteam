@@ -93,9 +93,6 @@ void BallPlacementUsFreeKick::calculateInfoForRoles() noexcept {
     if (stpInfos["ball_placer"].getRobot() && stpInfos["ball_placer"].getRobot()->get()->getDistanceToBall() < control_constants::TURN_ON_DRIBBLER_DISTANCE) {
         stpInfos["ball_placer"].setDribblerSpeed(100);
     }
-    if (stpInfos["ball_placer"].getRobot() && stpInfos["ball_placer"].getRobot()->get()->hasBall()) {
-        stpInfos["ball_placer"].second.setShouldAvoidTheirRobots(false);
-    }
 }
 
 const char* BallPlacementUsFreeKick::getName() const { return "Ball Placement Us Free Kick"; }

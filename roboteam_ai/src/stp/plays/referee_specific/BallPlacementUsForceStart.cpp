@@ -38,9 +38,9 @@ BallPlacementUsForceStart::BallPlacementUsForceStart() : Play() {
     };
 }
 
-uint8_t BallPlacementUsForceStart::score(const rtt::Field& field) noexcept {
+uint8_t BallPlacementUsForceStart::score(const rtt::Field&) noexcept {
     // If this play is valid we always want to execute this play
-    return (rtt::ai::GameStateManager::getCurrentGameState().getCommandId() != RefCommand::BALL_PLACEMENT_US_DIRECT);
+    return control_constants::FUZZY_TRUE;
 }
 
 Dealer::FlagMap BallPlacementUsForceStart::decideRoleFlags() const noexcept {

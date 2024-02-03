@@ -14,11 +14,11 @@ namespace rtt::ai::stp::play {
 BallPlacementUsFreeKick::BallPlacementUsFreeKick() : Play() {
     // Evaluations that have to be true in order for this play to be considered valid.
     startPlayEvaluation.clear();
-    startPlayEvaluation.emplace_back(GlobalEvaluation::BallPlacementUsGameState);
+    startPlayEvaluation.emplace_back(GlobalEvaluation::BallPlacementUsDirectGameState);
 
     // Evaluations that have to be true to allow the play to continue, otherwise the play will change. Plays can also end using the shouldEndPlay().
     keepPlayEvaluation.clear();
-    keepPlayEvaluation.emplace_back(GlobalEvaluation::BallPlacementUsGameState);
+    keepPlayEvaluation.emplace_back(GlobalEvaluation::BallPlacementUsDirectGameState);
 
     // Role creation, the names should be unique. The names are used in the stpInfos-map.
     roles = std::array<std::unique_ptr<Role>, rtt::ai::Constants::ROBOT_COUNT()>{
@@ -38,9 +38,9 @@ BallPlacementUsFreeKick::BallPlacementUsFreeKick() : Play() {
     };
 }
 
-uint8_t BallPlacementUsFreeKick::score(const rtt::Field& field) noexcept {
+uint8_t BallPlacementUsFreeKick::score(const rtt::Field&) noexcept {
     // If this play is valid we always want to execute this play
-    return (rtt::ai::GameStateManager::getCurrentGameState().getCommandId() == RefCommand::BALL_PLACEMENT_US_DIRECT);
+    return control_constants::FUZZY_TRUE;
 }
 
 Dealer::FlagMap BallPlacementUsFreeKick::decideRoleFlags() const noexcept {
@@ -92,6 +92,9 @@ void BallPlacementUsFreeKick::calculateInfoForRoles() noexcept {
     if (stpInfos["ball_placer"].getRobot() && stpInfos["ball_placer"].getRobot()->get()->getDistanceToBall() < 1.0) stpInfos["ball_placer"].setMaxRobotVelocity(0.75);
     if (stpInfos["ball_placer"].getRobot() && stpInfos["ball_placer"].getRobot()->get()->getDistanceToBall() < control_constants::TURN_ON_DRIBBLER_DISTANCE) {
         stpInfos["ball_placer"].setDribblerSpeed(100);
+    }
+    if (stpInfos["ball_placer"].getRobot() && stpInfos["ball_placer"].getRobot()->get()->hasBall()) {
+        stpInfos["ball_placer"].second.setShouldAvoidTheirRobots(false);
     }
 }
 

@@ -17,6 +17,7 @@ enum class GlobalEvaluation {
     /// Game States
     BallPlacementThemGameState = 0,
     BallPlacementUsGameState,
+    BallPlacementUsDirectGameState,
     FreeKickThemGameState,
     FreeKickUsGameState,
     HaltGameState,

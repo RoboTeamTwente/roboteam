@@ -311,7 +311,7 @@ void PositionComputations::calculateInfoForDefendersAndWallers(std::unordered_ma
         // Calculate the distance between the defenders and their enemies
         std::vector<std::vector<double>> cost_matrix;
         cost_matrix.resize(activeDefenderNames.size());
-        int row_length = std::min(activeDefenderNames.size(), enemyMap.size());
+        size_t row_length = std::min(activeDefenderNames.size(), enemyMap.size());
         for (size_t i = 0; i < row_length; i++) {
             enemies.emplace_back((mustStayOnOurSide && (enemyMap.begin()->second.position.x > 0.0)) ? Vector2{0.0, enemyMap.begin()->second.position.y}
                                                                                                     : enemyMap.begin()->second.position);
@@ -320,7 +320,7 @@ void PositionComputations::calculateInfoForDefendersAndWallers(std::unordered_ma
         }
         for (size_t i = 0; i < activeDefenderNames.size(); i++) {
             cost_matrix[i].resize(row_length);
-            for (int j = 0; j < row_length; j++) {
+            for (size_t j = 0; j < row_length; j++) {
                 cost_matrix[i][j] = stpInfos[activeDefenderNames[i]].getRobot()->get()->getPos().dist(enemies[j]);
             }
         }

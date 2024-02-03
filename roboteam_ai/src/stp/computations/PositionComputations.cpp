@@ -312,17 +312,17 @@ void PositionComputations::calculateInfoForDefendersAndWallers(std::unordered_ma
         std::vector<std::vector<double>> cost_matrix;
         cost_matrix.resize(activeDefenderNames.size());
         int row_length = std::min(activeDefenderNames.size(), enemyMap.size());
+        for (size_t i = 0; i < row_length; i++) {
+            enemies.emplace_back((mustStayOnOurSide && (enemyMap.begin()->second.position.x > 0.0)) ? Vector2{0.0, enemyMap.begin()->second.position.y}
+                                                                                                    : enemyMap.begin()->second.position);
+            ComputationManager::calculatedEnemyMapIds.emplace_back(enemyMap.begin()->second.id);
+            enemyMap.erase(enemyMap.begin());
+        }
         for (size_t i = 0; i < activeDefenderNames.size(); i++) {
             cost_matrix[i].resize(row_length);
-            // Check if there are still enemies left
-            if (enemyMap.empty()) continue;
-            enemies.emplace_back((mustStayOnOurSide && (enemyMap.begin()->second.position.x > 0)) ? Vector2{0, enemyMap.begin()->second.position.y}
-                                                                                                  : enemyMap.begin()->second.position);
-            ComputationManager::calculatedEnemyMapIds.emplace_back(enemyMap.begin()->second.id);
             for (int j = 0; j < row_length; j++) {
                 cost_matrix[i][j] = stpInfos[activeDefenderNames[i]].getRobot()->get()->getPos().dist(enemies[j]);
             }
-            enemyMap.erase(enemyMap.begin());
         }
         // Calculate the optimal assignment of enemies to pass_defenders using the hungarian algorithm and set the position to defend for each
         // active pass defender

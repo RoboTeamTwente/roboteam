@@ -63,7 +63,7 @@ void Play::update() noexcept {
     // If we have more robots than allowed, one drives to the edge of the field
     if (currentMaxRobots < sizeUs) {
         stpInfos[roles[currentMaxRobots]->getName()].setShouldAvoidBall(true);
-        stpInfos[roles[currentMaxRobots]->getName()].setPositionToMoveTo(Vector2(0, -field.playArea.width() / 2));
+        stpInfos[roles[currentMaxRobots]->getName()].setPositionToMoveTo(Vector2(0.0, -field.playArea.width() / 2));
     }
 
     // Loop through roles and update them if they are assigned to a robot
@@ -135,7 +135,7 @@ void Play::distributeRoles() noexcept {
         flagMap[roles[currentMaxRobots]->getName()].priority = DealerFlagPriority::CARD;
         flagMap[roles[currentMaxRobots]->getName()].forcedID = cardId;
         stpInfos[roles[currentMaxRobots]->getName()].setShouldAvoidBall(true);
-        stpInfos[roles[currentMaxRobots]->getName()].setPositionToMoveTo(Vector2(0, -field.playArea.width() / 2));
+        stpInfos[roles[currentMaxRobots]->getName()].setPositionToMoveTo(Vector2(0.0, -field.playArea.width() / 2));
     }
     // Only keep the first n roles, where n is the amount of robots we have
     // This order is based on the order of the roles array

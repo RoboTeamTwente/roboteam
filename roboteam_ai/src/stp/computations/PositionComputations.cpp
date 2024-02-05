@@ -298,7 +298,7 @@ void PositionComputations::calculateInfoForDefendersAndWallers(std::unordered_ma
         for (size_t i = 0; i < loopSize; i++) {
             Vector2 defendPostion = enemyMap.begin()->second.position;
             if (mustStayOnOurSide && defendPostion.x > 0) {
-                defendPostion.x = 0;
+                defendPostion.x = 0.0;
             }
             stpInfos["defender_" + std::to_string(i)].setPositionToDefend(defendPostion);
             ComputationManager::calculatedEnemyMapIds.emplace_back(enemyMap.begin()->second.id);

@@ -53,7 +53,7 @@ endif ()
 set(DEBUG_COMPILE_FLAGS "${CPP_STANDARD_FLAG}" "-fPIC" "-g" "-O0" "-Wall" "-Wextra" "-Wnon-virtual-dtor" "-pedantic" "-fdiagnostics-color=always")
 
 # march mtune https://stackoverflow.com/questions/54039176/mtune-and-march-when-compiling-in-a-docker-image
-set(RELEASE_COMPILE_FLAGS "${CPP_STANDARD_FLAG}" "-fPIC" "-Ofast" "-march=x86-64" "-mtune=generic" "-fdiagnostics-color=always")
+set(RELEASE_COMPILE_FLAGS "${CPP_STANDARD_FLAG}" "-fPIC" "-O3" "-march=native" "-fdiagnostics-color=always")
 
 # Specify manually which compiler arguments we want to use, either DEBUG (default) or RELEASE ones
 # If you want to build in release mode, pass '-DCMAKE_BUILD_TYPE=RELEASE' as argument to cmake

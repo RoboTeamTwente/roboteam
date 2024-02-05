@@ -8,12 +8,17 @@
 namespace rtt::ai {
 
 void StrategyManager::setCurrentGameState(RefCommand command, RefCommand nextCommand, std::optional<world::view::BallView> ballOpt) {
-    if (command == RefCommand::STOP && (nextCommand == RefCommand::PREPARE_KICKOFF_THEM || nextCommand == RefCommand::PREPARE_KICKOFF_US)) {
+    if (command == RefCommand::STOP && (nextCommand == RefCommand::PREPARE_KICKOFF_THEM || nextCommand == RefCommand::PREPARE_KICKOFF_US ||
+                                        nextCommand == RefCommand::PREPARE_PENALTY_THEM || nextCommand == RefCommand::PREPARE_PENALTY_US ||)) {
         command = nextCommand;
     }
 
     if (command == RefCommand::BALL_PLACEMENT_US && nextCommand == RefCommand::DIRECT_FREE_US) {
         command = RefCommand::BALL_PLACEMENT_US_DIRECT;
+    }
+    // Go to ball placement them, such that we are standing between the ball and our goal while keeping the required distance
+    if (command == RefCommand::STOP && nextCommand == RefCommand::FORCED_START) {
+        command = RefCommand::BALL_PLACEMENT_THEM;
     }
 
     if ((currentGameState.commandId == RefCommand::DIRECT_FREE_THEM || currentGameState.commandId == RefCommand::DIRECT_FREE_US ||

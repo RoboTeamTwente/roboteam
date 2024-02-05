@@ -452,7 +452,12 @@ void PositionComputations::calculateInfoForFormationOurSide(std::unordered_map<s
         stpInfos[formationMidNames[i]].setPositionToMoveTo(Vector2{-width / 5, -height / 2 + height / (formationMidNames.size() + 1) * (i + 1)});
     }
     for (size_t i = 0; i < formationFrontNames.size(); i++) {
-        stpInfos[formationFrontNames[i]].setPositionToMoveTo(Vector2{-width / 15, -height / 2 + height / (formationFrontNames.size() + 1) * (i + 1)});
+        double y = -height / 2 + height / (formationFrontNames.size() + 1) * (i + 1);
+        // Make sure no robot is between our passer and receiver
+        if (formationFrontNames.size() % 2 != 0 && i == formationFrontNames.size() / 2) {
+            y += 0.7;
+        }
+        stpInfos[formationFrontNames[i]].setPositionToMoveTo(Vector2{-width / 15, y});
     }
 }
 

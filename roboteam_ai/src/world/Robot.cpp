@@ -100,7 +100,7 @@ void Robot::updateHasBallMap(std::optional<view::BallView> &ball) {
     if (!ball) return;
 
     auto hasBallAccordingToVision = distanceToBall < ai::Constants::HAS_BALL_DISTANCE() && angleDiffToBall < ai::Constants::HAS_BALL_ANGLE();
-    auto hasBallAccordingToDribblerOrBallSensor = (GameSettings::getRobotHubMode() == net::RobotHubMode::BASESTATION) ? ballSensorSeesBall : dribblerSeesBall;
+    auto hasBallAccordingToDribblerOrBallSensor = (GameSettings::getRobotHubMode() == net::RobotHubMode::BASESTATION) ? dribblerSeesBall : ballSensorSeesBall;
     if (hasBallAccordingToDribblerOrBallSensor && hasBallAccordingToVision) {
         hasBallUpdateMap[id].score = 25;
     } else {

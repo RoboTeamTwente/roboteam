@@ -16,9 +16,12 @@ void StrategyManager::setCurrentGameState(RefCommand command, RefCommand nextCom
     if (command == RefCommand::BALL_PLACEMENT_US && nextCommand == RefCommand::DIRECT_FREE_US) {
         command = RefCommand::BALL_PLACEMENT_US_DIRECT;
     }
-    // Go to ball placement them, such that we are standing between the ball and our goal while keeping the required distance
-    if (command == RefCommand::STOP && nextCommand == RefCommand::FORCED_START) {
-        command = RefCommand::BALL_PLACEMENT_THEM;
+    if (command == RefCommand::STOP && (nextCommand == RefCommand::FORCED_START || nextCommand == RefCommand::DIRECT_FREE_THEM)) {
+        command = RefCommand::DIRECT_FREE_THEM_STOP;
+    }
+
+    if (command == RefCommand::STOP && nextCommand == RefCommand::DIRECT_FREE_US) {
+        command = RefCommand::DIRECT_FREE_US_STOP;
     }
 
     if ((currentGameState.commandId == RefCommand::DIRECT_FREE_THEM || currentGameState.commandId == RefCommand::DIRECT_FREE_US ||

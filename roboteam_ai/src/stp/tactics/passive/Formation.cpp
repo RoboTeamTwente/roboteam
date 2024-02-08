@@ -1,7 +1,6 @@
 //
 // Created by timovdk on 3/27/20.
 /// Goes to a give POSITION and ROTATEs to face forwards
-/// TODO-Max Make angle an optional info
 
 /// PASSIVE
 //
@@ -21,6 +20,7 @@ std::optional<StpInfo> Formation::calculateInfoForSkill(StpInfo const &info) noe
     StpInfo skillStpInfo = info;
 
     if (!info.getPositionToMoveTo()) return std::nullopt;
+    if (!info.getAngle()) skillStpInfo.setAngle(0);
 
     // Be 100% sure the dribbler is off during the formation
     skillStpInfo.setDribblerSpeed(0);

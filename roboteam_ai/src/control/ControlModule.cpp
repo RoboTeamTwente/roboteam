@@ -19,34 +19,31 @@ void ControlModule::rotateRobotCommand(rtt::RobotCommand& command) {
     command.targetAngle += M_PI;
 }
 
-void ControlModule::limitRobotCommand(rtt::RobotCommand& command, std::optional<rtt::world::view::RobotView> robot) {
+void ControlModule::limitRobotCommand(rtt::RobotCommand& command, rtt::world::view::RobotView robot) {
     limitVel(command);
     limitAngularVel(command, robot);
 }
 
 void ControlModule::limitVel(rtt::RobotCommand& command) {
-    // The robot can currently not reach very low speeds- if we want it to move a non-trivial amount, we need to send a higher velocity than the path-planning outputs
-    // TODO: Look at the correct value for this with control
-    if (command.velocity.length() > 0.03 && command.velocity.length() < 0.25) command.velocity = command.velocity.stretchToLength(0.25);
     command.velocity = command.velocity.stretchToLength(std::clamp(command.velocity.length(), 0.0, Constants::MAX_VEL_CMD()));
 }
 
-void ControlModule::limitAngularVel(rtt::RobotCommand& command, std::optional<rtt::world::view::RobotView> robot) {
+void ControlModule::limitAngularVel(rtt::RobotCommand& command, rtt::world::view::RobotView robot) {
     // Limit the angular velocity when the robot has the ball by setting the target angle in small steps
-    // Might want to limit on the robot itself
-    if (robot.value()->hasBall() && !command.useAngularVelocity) {
+    if (robot->hasBall() && !command.useAngularVelocity) {
         auto targetAngle = command.targetAngle;
-        // TODO: Why use optional robotView if we never check for the case where it does not contain one?
-        auto robotAngle = robot.value()->getAngle();
+        auto robotAngle = robot->getAngle();
 
+        // Adjust robot angle if game is not on the left
         if (!GameSettings::isLeft()) {
             robotAngle += M_PI;
         }
 
-        // If the angle error is larger than the desired angle rate, the angle command is adjusted
+        // If the angle error is larger than the desired angle rate, adjust the angle command
         if (robotAngle.shortestAngleDiff(targetAngle) > stp::control_constants::ANGLE_RATE) {
-            // Direction of rotation is the shortest distance
+            // Determine direction of rotation (shortest distance)
             int direction = Angle(robotAngle).rotateDirection(targetAngle) ? 1 : -1;
+
             // Set the angle command to the current robot angle + the angle rate
             command.targetAngle = robotAngle + Angle(direction * stp::control_constants::ANGLE_RATE);
         }
@@ -54,23 +51,22 @@ void ControlModule::limitAngularVel(rtt::RobotCommand& command, std::optional<rt
     // TODO: Well, then also limit the target angular velocity just like target angle!
 }
 
-void ControlModule::addRobotCommand(std::optional<::rtt::world::view::RobotView> robot, const rtt::RobotCommand& command) noexcept {
-    rtt::RobotCommand robot_command = command;  // TODO: Why make a copy of the command? It will be copied anyway when we put it in the vector
+void ControlModule::addRobotCommand(std::optional<::rtt::world::view::RobotView> robot, rtt::RobotCommand command) noexcept {
     // If we are not left, commands should be rotated (because we play as right)
     if (!GameSettings::isLeft()) {
-        rotateRobotCommand(robot_command);
+        rotateRobotCommand(command);
     }
 
-    if (robot) limitRobotCommand(robot_command, robot);
+    if (robot) limitRobotCommand(command, *robot);
 
     // if we are in simulation; adjust w() to be angular velocity)
-    if (GameSettings::getRobotHubMode() == net::RobotHubMode::SIMULATOR && !robot_command.useAngularVelocity) {
-        simulator_angular_control(robot, robot_command);
+    if (GameSettings::getRobotHubMode() == net::RobotHubMode::SIMULATOR && !command.useAngularVelocity) {
+        simulator_angular_control(robot, command);
     }
 
     // Only add commands with a robotID that is not in the vector yet
-    if (robot_command.id >= 0 && robot_command.id < 16) {
-        robotCommands.emplace_back(robot_command);
+    if (command.id >= 0 && command.id < 16) {
+        robotCommands.emplace_back(command);
     }
 }
 
@@ -105,9 +101,13 @@ void ControlModule::simulator_angular_control(const std::optional<::rtt::world::
 }
 
 void ControlModule::sendAllCommands() {
-    // TODO: check for double commands (But do we really have to do that?)
+    // Remove duplicate commands
+    std::sort(robotCommands.begin(), robotCommands.end(), [](const rtt::RobotCommand& a, const rtt::RobotCommand& b) { return a.id < b.id; });
+    auto last = std::unique(robotCommands.begin(), robotCommands.end(), [](const rtt::RobotCommand& a, const rtt::RobotCommand& b) { return a.id == b.id; });
+    robotCommands.erase(last, robotCommands.end());
 
-    io::io.publishAllRobotCommands(robotCommands);  // When vector has all commands, send in one go
+    // When vector has all commands, send in one go
+    io::io.publishAllRobotCommands(robotCommands);
     robotCommands.clear();
 }
 }  // namespace rtt::ai::control

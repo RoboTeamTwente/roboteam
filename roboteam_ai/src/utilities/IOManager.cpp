@@ -124,7 +124,6 @@ bool IOManager::publishRobotCommands(const rtt::RobotCommands& aiCommand, bool f
     }
 
     if (!sentCommands) {
-        // TODO: Uncomment
         RTT_ERROR("Failed to send command: Publisher is not initialized (yet)");
     }
 

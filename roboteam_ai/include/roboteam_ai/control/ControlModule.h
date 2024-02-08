@@ -30,7 +30,7 @@ class ControlModule {
      * @param command Robot command that needs to be checked
      * @param robot Info about the robot
      */
-    static void limitRobotCommand(rtt::RobotCommand& command, std::optional<rtt::world::view::RobotView> robot);
+    static void limitRobotCommand(rtt::RobotCommand& command, rtt::world::view::RobotView robot);
 
     /**
      * @brief Limits the velocity with a control_constants value
@@ -43,7 +43,7 @@ class ControlModule {
      * @param command Robot command that needs to be checked
      * @param robot Info about the robot
      */
-    static void limitAngularVel(rtt::RobotCommand& command, std::optional<rtt::world::view::RobotView> robot);
+    static void limitAngularVel(rtt::RobotCommand& command, rtt::world::view::RobotView robot);
 
     /**
      * @brief Rotates the robot command to the other side of the field
@@ -57,7 +57,7 @@ class ControlModule {
      * @param command Robot command that needs to be added
      * @param robot Info about the robot
      */
-    static void addRobotCommand(std::optional<rtt::world::view::RobotView> robot, const rtt::RobotCommand& command) noexcept;
+    static void addRobotCommand(std::optional<rtt::world::view::RobotView> robot, rtt::RobotCommand command) noexcept;
     /**
      * @brief Sends all commands to robothub
      */

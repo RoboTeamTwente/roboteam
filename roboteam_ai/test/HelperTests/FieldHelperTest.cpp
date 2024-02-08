@@ -51,8 +51,7 @@ TEST(FieldHelperTests, FieldTest) {
     auto fieldWidth = field.playArea.width();
     auto fieldHeight = field.playArea.height();
 
-    // TODO: What does this line do? Should it be tested? Or can it be removed?
-    field.playArea.contains(rtt::Vector2(0.99 * fieldWidth, 0.99 * fieldHeight));
+    EXPECT_FALSE(field.playArea.contains(rtt::Vector2(0.99 * fieldWidth, 0.99 * fieldHeight)));
     EXPECT_TRUE(field.playArea.contains(rtt::Vector2(0.49 * fieldWidth, 0.49 * fieldHeight)));
     EXPECT_TRUE(field.playArea.contains(rtt::Vector2(-0.49 * fieldWidth, -0.49 * fieldHeight)));
 

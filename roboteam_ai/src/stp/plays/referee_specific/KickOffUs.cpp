@@ -88,7 +88,6 @@ bool KickOffUs::shouldEndPlay() noexcept {
 }
 
 bool KickOffUs::ballKicked() {
-    // TODO: create better way of checking when ball has been kicked
     return std::any_of(roles.begin(), roles.end(), [](const std::unique_ptr<Role> &role) {
         return role != nullptr && role->getName() == "kick_off_taker" && strcmp(role->getCurrentTactic()->getName(), "Formation") == 0;
     });

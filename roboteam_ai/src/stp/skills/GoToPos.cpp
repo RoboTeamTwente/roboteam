@@ -18,6 +18,9 @@ Status GoToPos::onUpdate(const StpInfo &info) noexcept {
     if (!FieldComputations::pointIsValidPosition(info.getField().value(), targetPos, avoidObj) && roleName != "ball_placer") {
         targetPos = FieldComputations::projectPointToValidPosition(info.getField().value(), targetPos, avoidObj);
     }
+    if (avoidObj.shouldAvoidOurRobots || avoidObj.shouldAvoidTheirRobots || avoidObj.notAvoidTheirRobotId != -1) {
+        targetPos = PositionComputations::calculateAvoidRobotsPosition(targetPos, info.getCurrentWorld(), info.getRobot().value()->getId(), avoidObj, info.getField().value());
+    }
     if (avoidObj.shouldAvoidBall) {
         targetPos = PositionComputations::calculateAvoidBallPosition(targetPos, ballLocation, info.getField().value());
     }

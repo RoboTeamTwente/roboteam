@@ -70,13 +70,15 @@ class PositionComputations {
     static Vector2 getWallPosition(int index, int amountDefenders, const Field &field, world::World *world);
 
     /**
-     * @brief Calculates where a robot should stand to prevent the ball from going in the goal
-     * @param field The current field
+     * @brief Calculates the position of the robot to avoid other robots
+     * @param targetPosition The initial target position
      * @param world The current world
-     * @return The position a robot should go to to block the ball (this does not depend on the position of any of our robots)
+     * @param robotId The id of the robot
+     * @param avoidObj The objects to avoid
+     * @param field The current field
+     * @return A position that is not too close to other robots
      */
-    static Vector2 getBallBlockPosition(const Field &field, const world::World *world);
-
+    static Vector2 calculateAvoidRobotsPosition(Vector2 targetPosition, const world::World *world, int robotId, const AvoidObjects &avoidObj, const Field &field);
     /**
      * @brief Calculates a position, near the target position, that is not too close to the ball
      * @param targetPosition The initial target position

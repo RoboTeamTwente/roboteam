@@ -171,17 +171,56 @@ std::vector<Vector2> PositionComputations::determineWallPositions(const rtt::Fie
     }
     return positions;
 }
+
+Vector2 PositionComputations::calculateAvoidRobotsPosition(Vector2 targetPosition, const world::World *world, int robotId, const AvoidObjects &avoidObj, const Field &field) {
+    std::vector<Vector2> pointsToAvoid = {};
+    if (avoidObj.shouldAvoidOurRobots) {
+        for (auto &robot : world->getWorld()->getUs()) {
+            if (robot->getId() != robotId) {
+                pointsToAvoid.push_back(robot->getPos());
+            }
+        }
+    }
+    if (avoidObj.shouldAvoidTheirRobots || avoidObj.notAvoidTheirRobotId != -1) {
+        for (auto &robot : world->getWorld()->getThem()) {
+            if (robot->getId() != avoidObj.notAvoidTheirRobotId) {
+                pointsToAvoid.push_back(robot->getPos());
+            }
+        }
+    }
+
+    if (std::all_of(pointsToAvoid.begin(), pointsToAvoid.end(),
+                    [&](const Vector2 &avoidPoint) { return avoidPoint.dist(targetPosition) >= 2 * control_constants::ROBOT_RADIUS; })) {
+        return targetPosition;
+    }
+
+    for (int distanceSteps = 0; distanceSteps < 5; ++distanceSteps) {
+        auto distance = 4 * control_constants::ROBOT_RADIUS + distanceSteps * control_constants::ROBOT_RADIUS * 2;
+        auto possiblePoints = Grid(targetPosition.x - distance / 2.0, targetPosition.y - distance / 2.0, distance, distance, 3, 3).getPoints();
+        for (auto &pointVector : possiblePoints) {
+            for (auto &point : pointVector) {
+                if (FieldComputations::pointIsValidPosition(field, point) && std::all_of(pointsToAvoid.begin(), pointsToAvoid.end(), [&](const Vector2 &avoidPoint) {
+                        return avoidPoint.dist(point) >= 2 * control_constants::ROBOT_RADIUS;
+                    })) {
+                    return point;
+                }
+            }
+        }
+    }
+    RTT_WARNING("Could not find good position to avoid robots for robot with id: " + std::to_string(robotId));
+    return targetPosition;
+}
+
 Vector2 PositionComputations::calculateAvoidBallPosition(Vector2 targetPosition, Vector2 ballPosition, const Field &field) {
     RefCommand currentGameState = GameStateManager::getCurrentGameState().getCommandId();
 
     std::unique_ptr<Shape> avoidShape;
 
-    // During ball placement, we need to avoid the area between the ball and the target position by a certain margin
     if (currentGameState == RefCommand::BALL_PLACEMENT_US || currentGameState == RefCommand::BALL_PLACEMENT_THEM || currentGameState == RefCommand::BALL_PLACEMENT_US_DIRECT) {
-        avoidShape = std::make_unique<Tube>(Tube(ballPosition, GameStateManager::getRefereeDesignatedPosition(), control_constants::AVOID_BALL_DISTANCE + 0.1));
+        avoidShape = std::make_unique<Tube>(
+            Tube(ballPosition, GameStateManager::getRefereeDesignatedPosition(), control_constants::AVOID_BALL_DISTANCE + control_constants::GO_TO_POS_ERROR_MARGIN));
     } else {
-        // During stop gamestate, we need to avoid the area directly around the ball.
-        avoidShape = std::make_unique<Circle>(Circle(ballPosition, control_constants::AVOID_BALL_DISTANCE));
+        avoidShape = std::make_unique<Circle>(Circle(ballPosition, control_constants::AVOID_BALL_DISTANCE + control_constants::GO_TO_POS_ERROR_MARGIN));
     }
 
     if (avoidShape->contains(targetPosition)) {
@@ -196,28 +235,19 @@ Vector2 PositionComputations::calculateAvoidBallPosition(Vector2 targetPosition,
 }
 
 Vector2 PositionComputations::calculatePositionOutsideOfShape(Vector2 targetPosition, const rtt::Field &field, const std::unique_ptr<Shape> &avoidShape) {
-    Vector2 newTarget = targetPosition;  // The new position to go to
-    bool pointFound = false;
     for (int distanceSteps = 0; distanceSteps < 5; ++distanceSteps) {
-        // Use a larger grid each iteration in case no valid point is found
-        auto distance = 3 * control_constants::AVOID_BALL_DISTANCE + distanceSteps * control_constants::AVOID_BALL_DISTANCE / 2.0;
+        auto distance = 2 * control_constants::AVOID_BALL_DISTANCE + distanceSteps * control_constants::AVOID_BALL_DISTANCE;
         auto possiblePoints = Grid(targetPosition.x - distance / 2.0, targetPosition.y - distance / 2.0, distance, distance, 3, 3).getPoints();
-        double dist = 1e3;
         for (auto &pointVector : possiblePoints) {
             for (auto &point : pointVector) {
                 if (FieldComputations::pointIsValidPosition(field, point) && !avoidShape->contains(point)) {
-                    if (targetPosition.dist(point) < dist) {
-                        dist = targetPosition.dist(point);
-                        newTarget = point;
-                        pointFound = true;
-                    }
+                    return point;
                 }
             }
         }
-        if (pointFound) break;  // As soon as a valid point is found, don't look at more points further away
     }
-    if (newTarget == targetPosition) RTT_WARNING("Could not find good position to avoid ball");
-    return newTarget;
+    RTT_WARNING("Could not find good position to avoid ball");
+    return targetPosition;
 }
 
 void PositionComputations::calculateInfoForKeeper(std::unordered_map<std::string, StpInfo> &stpInfos, const Field &field, world::World *world) noexcept {

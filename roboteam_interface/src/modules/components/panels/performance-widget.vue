@@ -2,6 +2,8 @@
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { useSTPDataStore } from '../../stores/data-stores/stp-data-store'
 import { useVisionDataStore } from '../../stores/data-stores/vision-data-store'
+import { exec } from 'child_process';
+import VueSocketIO from 'vue-socket.io'
 
 const stpData = useSTPDataStore()
 const visionData = useVisionDataStore()
@@ -221,10 +223,35 @@ export default defineComponent({
       
     },
 
+    launch_py_server() {
+      // netstat -tulpn | grep LISTEN
+      const { spawn } = require('child_process')
+      spawn('sh', ['run_pdf.sh'], {
+        cwd: '.'
+      })
+    },
+
     downloadCSV() {
       for (let i = 0; i < this.robots_x_coord.length; i++) { //Array of x and y coordinates have same coordinates
           this.x_y_positions_freq[this.robots_x_coord[i]][this.robots_y_coord[i]] += 1
         }
+
+      const array2DJson = JSON.stringify(this.x_y_positions_freq);
+      //const command = `python3 heatmap_plotter.py "${array2DJson}"`;
+      
+
+      // Exec the secundary process
+      /*const proceso = exec(command, (error, stdout, stderr) => {
+        if (error) {
+          console.error(`Error al ejecutar el script: ${error}`);
+          return;
+        }
+
+        // Manejar cualquier error en la salida estándar de error
+        if (stderr) {
+          console.error(`Error en la salida estándar de error: ${stderr}`);
+        }
+      });*/
     
       const csv = this.to_csv(this.x_y_positions_freq);
 
@@ -234,11 +261,18 @@ export default defineComponent({
       const a = document.createElement('a');
       a.href = url;
       a.download = 'heatmap.csv';
+      // Crea un enlace <a> para la descarga
       document.body.appendChild(a);
       a.click();
 
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
+
+      const { spawn } = require('child_process')
+      spawn('sh', ['run_pdf.sh', csv], {
+        cwd: '.'
+      })
+
     },
 
     to_csv(array: number[][]) {
@@ -294,6 +328,7 @@ export default defineComponent({
   mounted() {
     this.possession_counters();
     this.keeper_actions_counter();
+    this.launch_py_server();
   },
 
   watch: {

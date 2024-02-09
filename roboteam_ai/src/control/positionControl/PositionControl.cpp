@@ -164,7 +164,7 @@ std::optional<Trajectory2D> PositionControl::findNewTrajectory(const rtt::world:
               [&targetPosition](const Vector2 &a, const Vector2 &b) { return (a - targetPosition).length() < (b - targetPosition).length(); });
     timeStep *= 3;
 
-    double bestScore = 999;
+    double bestScore = std::numeric_limits<double>::max();
     std::optional<Trajectory2D> bestTrajectory = std::nullopt;
 
     for (const auto &intermediatePoint : intermediatePoints) {
@@ -198,7 +198,7 @@ std::vector<Vector2> PositionControl::createIntermediatePoints(const rtt::Field 
     float angleBetweenIntermediatePoints = M_PI_4 / 2;
     float fieldHeight = field.playArea.height();
     float pointExtension = fieldHeight / 18;
-    Vector2 collisionToTargetNormalized = (firstCollision->collisionPosition - targetPosition).normalize();
+    Vector2 collisionToTargetNormalized = (targetPosition - firstCollision->collisionPosition).normalize();
     Vector2 pointToDrawFrom = firstCollision->collisionPosition + collisionToTargetNormalized * pointExtension;
 
     std::vector<Vector2> intermediatePoints;
@@ -206,7 +206,9 @@ std::vector<Vector2> PositionControl::createIntermediatePoints(const rtt::Field 
     Vector2 pointToRotate = pointToDrawFrom + collisionToTargetNormalized * intermediatePointRadius;
     for (int i = -6; i < 7; i++) {
         if (i != 0) {
-            Vector2 intermediatePoint = pointToRotate.rotateAroundPoint(i * angleBetweenIntermediatePoints, pointToDrawFrom);
+            // The slight offset to the angle makes sure the points are not symmetrically placed, this means we don't keep on switching between two points that are equally good
+            // when there is a collision at time 0ss
+            Vector2 intermediatePoint = pointToRotate.rotateAroundPoint(i * angleBetweenIntermediatePoints - 0.01, pointToDrawFrom);
 
             if (field.playArea.contains(intermediatePoint)) {
                 intermediatePoints.emplace_back(intermediatePoint);

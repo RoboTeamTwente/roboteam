@@ -60,7 +60,7 @@ std::optional<RobotView> WorldDataView::whichRobotHasBall(Team team) const {
         robots = getRobotsNonOwning();
     }
 
-    double bestDistance = 9e9;
+    double bestDistance = std::numeric_limits<double>::max();
     RobotView bestRobot = RobotView{nullptr};
     for (auto &robot : robots) {
         if (robot->hasBall()) {
@@ -79,7 +79,7 @@ std::optional<RobotView> WorldDataView::getRobotClosestToPoint(const Vector2 &po
     if (robots.empty()) return std::nullopt;
 
     size_t bestIndex = 0;
-    double closest = 9e9;
+    double closest = std::numeric_limits<double>::max();
     for (size_t i = 0; i < robots.size(); i++) {
         if (auto currentBot = robots[i]) {
             double distance = (currentBot->getPos() - point).length();

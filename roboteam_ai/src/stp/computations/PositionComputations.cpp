@@ -307,8 +307,13 @@ void PositionComputations::calculateInfoForDefendersAndWallers(std::unordered_ma
     }
     // Calculate the n closest enemies
     auto enemyRobots = world->getWorld()->getThem();
-    auto enemyClosestToBall = world->getWorld()->getRobotClosestToBall(world::them);
-    erase_if(enemyRobots, [&](const auto enemyRobot) -> bool { return enemyClosestToBall && enemyRobot->getId() == enemyClosestToBall.value()->getId(); });
+    std::optional<rtt::world::view::RobotView> enemyToIgnore;
+    if (GameStateManager::getCurrentGameState().getCommandId() == RefCommand::BALL_PLACEMENT_THEM) {
+        enemyToIgnore = world->getWorld()->getRobotClosestToPoint(GameStateManager::getRefereeDesignatedPosition(), world::them);
+    } else {
+        enemyToIgnore = world->getWorld()->getRobotClosestToBall(world::them);
+    }
+    erase_if(enemyRobots, [&](const auto enemyRobot) -> bool { return enemyToIgnore && enemyRobot->getId() == enemyToIgnore.value()->getId(); });
     std::map<double, EnemyInfo> enemyMap;
     std::vector<Vector2> enemies;
     for (auto enemy : enemyRobots) {

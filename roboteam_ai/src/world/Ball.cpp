@@ -4,6 +4,7 @@
 
 #include "world/Ball.hpp"
 
+#include "gui/Out.h"
 #include "utilities/Constants.h"
 #include "utilities/GameSettings.h"
 #include "world/World.hpp"
@@ -16,7 +17,7 @@ namespace rtt::world::ball {
  *
  * The expected movement friction of the ball during simulation
  */
-constexpr static float SIMULATION_FRICTION = 1.22;
+constexpr static float SIMULATION_FRICTION = 0.69;
 
 /**
  * The expected movement friction of the ball on the field
@@ -26,9 +27,9 @@ constexpr static float REAL_FRICTION = 0.5;
 Ball::Ball(const proto::WorldBall& copy, const World* data) : position{copy.pos().x(), copy.pos().y()}, velocity{copy.vel().x(), copy.vel().y()}, visible{copy.visible()} {
     if (!visible || position == Vector2()) {
         initBallAtExpectedPosition(data);
-        updateBallAtRobotPosition(data);
     }
-    updateExpectedBallEndPosition(data);
+    updateBallAtRobotPosition(data);
+    // updateExpectedBallEndPosition(data);
 }
 
 void Ball::initBallAtExpectedPosition(const world::World* data) noexcept {
@@ -52,7 +53,19 @@ void Ball::updateExpectedBallEndPosition(const world::World* data) noexcept {
     double ballVelSquared = ball->velocity.length2();
     const double frictionCoefficient = GameSettings::getRobotHubMode() == net::RobotHubMode::SIMULATOR ? SIMULATION_FRICTION : REAL_FRICTION;
 
-    ball->position + ball->velocity.stretchToLength(ballVelSquared / frictionCoefficient);
+    Vector2 expectedEnd = ball->position + ball->velocity.stretchToLength(ballVelSquared / frictionCoefficient);
+    std::array<rtt::Vector2, 2> arr = {expectedEnd, ball->position};
+    std::span<rtt::Vector2> span(arr);
+    rtt::ai::gui::Out::draw(
+        {
+            .label = "expectedBallEnd",
+            .color = proto::Drawing::MAGENTA,
+            .method = proto::Drawing::LINES_CONNECTED,
+            .category = proto::Drawing::PATH_PLANNING,
+            .forRobotId = 3,
+            .thickness = 3,
+        },
+        span);
 }
 
 void Ball::updateBallAtRobotPosition(const world::World* data) noexcept {
@@ -61,6 +74,9 @@ void Ball::updateBallAtRobotPosition(const world::World* data) noexcept {
 
     std::optional<rtt::world::view::RobotView> robotWithBall = world->whichRobotHasBall();
     if (!robotWithBall.has_value()) {
+        return;
+    }
+    if ((robotWithBall->get()->getVel() - velocity).length() > 0.1) {
         return;
     }
     // Place the ball where we would expect it to be given that this robot has the ball

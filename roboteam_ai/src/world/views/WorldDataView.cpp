@@ -65,6 +65,9 @@ std::optional<RobotView> WorldDataView::whichRobotHasBall(Team team) const {
     for (auto &robot : robots) {
         if (robot->hasBall()) {
             auto distanceToBall = robot->getDistanceToBall();
+            if (robot->getTeam() == us) {
+                distanceToBall -= 99;
+            }
             if (distanceToBall < bestDistance) {
                 bestDistance = distanceToBall;
                 bestRobot = robot;

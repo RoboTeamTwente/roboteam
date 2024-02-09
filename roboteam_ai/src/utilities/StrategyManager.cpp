@@ -13,6 +13,10 @@ void StrategyManager::setCurrentGameState(RefCommand command, RefCommand nextCom
         command = nextCommand;
     }
 
+    if (command == RefCommand::FORCED_START) {
+        command = RefCommand::NORMAL_START;
+    }
+
     if (command == RefCommand::BALL_PLACEMENT_US && nextCommand == RefCommand::DIRECT_FREE_US) {
         command = RefCommand::BALL_PLACEMENT_US_DIRECT;
     }

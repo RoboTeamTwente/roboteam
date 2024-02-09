@@ -5,6 +5,7 @@
 #include "stp/PlayEvaluator.h"
 
 #include <stp/evaluations/game_states/BallPlacementThemGameStateEvaluation.h>
+#include <stp/evaluations/game_states/BallPlacementUsDirectGameStateEvaluation.h>
 #include <stp/evaluations/game_states/BallPlacementUsGameStateEvaluation.h>
 #include <stp/evaluations/game_states/FreeKickThemGameStateEvaluation.h>
 #include <stp/evaluations/game_states/FreeKickUsGameStateEvaluation.h>
@@ -44,6 +45,8 @@ uint8_t PlayEvaluator::updateGlobalEvaluation(GlobalEvaluation& evaluation, cons
             return evaluation::BallPlacementThemGameStateEvaluation().metricCheck(world, &field);
         case GlobalEvaluation::BallPlacementUsGameState:
             return evaluation::BallPlacementUsGameStateEvaluation().metricCheck(world, &field);
+        case GlobalEvaluation::BallPlacementUsDirectGameState:
+            return evaluation::BallPlacementUsDirectGameStateEvaluation().metricCheck(world, &field);
         case GlobalEvaluation::FreeKickThemGameState:
             return evaluation::FreeKickThemGameStateEvaluation().metricCheck(world, &field);
         case GlobalEvaluation::FreeKickUsGameState:

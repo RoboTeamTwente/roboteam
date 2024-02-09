@@ -38,7 +38,7 @@ double Constants::MAX_DEC_LOWER() { return MAX_ACC_LOWER() * 1.2; }  // magic nu
 double Constants::HAS_BALL_DISTANCE() { return (GameSettings::getRobotHubMode() == net::RobotHubMode::BASESTATION) ? 0.11 : 0.12; }
 
 // The max angle the ball can have to the robot for the robot to have the ball
-double Constants::HAS_BALL_ANGLE() { return 0.10 * M_PI; }
+double Constants::HAS_BALL_ANGLE() { return 0.15 * M_PI; }
 
 std::map<int, bool> Constants::ROBOTS_WITH_WORKING_DRIBBLER() {
     static std::map<int, bool> workingDribblerRobots;

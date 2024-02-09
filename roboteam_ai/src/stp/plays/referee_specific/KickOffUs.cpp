@@ -81,15 +81,13 @@ void KickOffUs::calculateInfoForRoles() noexcept {
 
 bool KickOffUs::shouldEndPlay() noexcept {
     if (stpInfos["receiver"].getRobot() && stpInfos["receiver"].getRobot().value()->hasBall()) return true;
-
-    // If the ball is moving too slow after we have kicked it, we should stop the play to get the ball
     if (ballKicked() && world->getWorld()->getBall()->get()->velocity.length() < control_constants::BALL_IS_MOVING_SLOW_LIMIT) return true;
+    if (stpInfos["receiver"].getRobot() && world->getWorld()->getBall()->get()->position.x < stpInfos["receiver"].getRobot()->get()->getPos().x) return true;
 
     return false;
 }
 
 bool KickOffUs::ballKicked() {
-    // TODO: create better way of checking when ball has been kicked
     return std::any_of(roles.begin(), roles.end(), [](const std::unique_ptr<Role> &role) {
         return role != nullptr && role->getName() == "kick_off_taker" && strcmp(role->getCurrentTactic()->getName(), "Formation") == 0;
     });

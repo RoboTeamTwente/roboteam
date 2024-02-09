@@ -1,19 +1,19 @@
-#ifndef RTT_BALLPLACEMENTUS_H
-#define RTT_BALLPLACEMENTUS_H
+#ifndef RTT_BallPlacementUsFreeKick_H
+#define RTT_BallPlacementUsFreeKick_H
 
 #include "stp/Play.hpp"
 
 namespace rtt::ai::stp::play {
 
 /**
- * @brief The ball placement us play is executed when the ball placement us game state is selected
+ * @brief The ball placement us Free kick play is executed when the ball placement us game state is selected and the next ref command is Free Kick Us
  */
-class BallPlacementUs : public Play {
+class BallPlacementUsFreeKick : public Play {
    public:
     /**
      * @brief Constructor that initializes roles with roles that are necessary for this play
      */
-    BallPlacementUs();
+    BallPlacementUsFreeKick();
 
     /**
      * @brief Calculates the score of this play to determine which play is best in this situation
@@ -41,4 +41,4 @@ class BallPlacementUs : public Play {
 };
 }  // namespace rtt::ai::stp::play
 
-#endif  // RTT_BALLPLACEMENTUS_H
+#endif  // RTT_BallPlacementUsFreeKick_H

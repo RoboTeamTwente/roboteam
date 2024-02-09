@@ -8,12 +8,20 @@
 namespace rtt::ai {
 
 void StrategyManager::setCurrentGameState(RefCommand command, RefCommand nextCommand, std::optional<world::view::BallView> ballOpt) {
-    if (command == RefCommand::STOP && (nextCommand == RefCommand::PREPARE_KICKOFF_THEM || nextCommand == RefCommand::PREPARE_KICKOFF_US)) {
+    if (command == RefCommand::STOP && (nextCommand == RefCommand::PREPARE_KICKOFF_THEM || nextCommand == RefCommand::PREPARE_KICKOFF_US ||
+                                        nextCommand == RefCommand::PREPARE_PENALTY_THEM || nextCommand == RefCommand::PREPARE_PENALTY_US)) {
         command = nextCommand;
     }
 
     if (command == RefCommand::BALL_PLACEMENT_US && nextCommand == RefCommand::DIRECT_FREE_US) {
         command = RefCommand::BALL_PLACEMENT_US_DIRECT;
+    }
+    if (command == RefCommand::STOP && (nextCommand == RefCommand::FORCED_START || nextCommand == RefCommand::DIRECT_FREE_THEM)) {
+        command = RefCommand::DIRECT_FREE_THEM_STOP;
+    }
+
+    if (command == RefCommand::STOP && nextCommand == RefCommand::DIRECT_FREE_US) {
+        command = RefCommand::DIRECT_FREE_US_STOP;
     }
 
     if ((currentGameState.commandId == RefCommand::DIRECT_FREE_THEM || currentGameState.commandId == RefCommand::DIRECT_FREE_US ||

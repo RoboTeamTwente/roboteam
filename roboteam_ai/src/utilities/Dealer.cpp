@@ -273,7 +273,6 @@ double Dealer::getRobotScoreForDistance(const stp::StpInfo &stpInfo, const v::Ro
     return costForDistance(distance, field->playArea.height());
 }
 
-// TODO these values need to be tuned.
 double Dealer::getDefaultFlagScores(const v::RobotView &robot, const Dealer::DealerFlag &flag) {
     switch (flag.title) {
         // case DealerFlagTitle::WITH_WORKING_BALL_SENSOR:

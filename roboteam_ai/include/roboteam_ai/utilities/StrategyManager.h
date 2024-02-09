@@ -67,6 +67,8 @@ class StrategyManager {
         GameState(RefCommand::BALL_PLACEMENT_THEM, Constants::RULESET_STOP()),
         GameState(RefCommand::BALL_PLACEMENT_US, Constants::RULESET_STOP()),
         GameState(RefCommand::BALL_PLACEMENT_US_DIRECT, Constants::RULESET_STOP()),
+        GameState(RefCommand::DIRECT_FREE_THEM_STOP, Constants::RULESET_STOP()),
+        GameState(RefCommand::DIRECT_FREE_US_STOP, Constants::RULESET_STOP()),
         GameState(RefCommand::PREPARE_KICKOFF_US, Constants::RULESET_STOP(), false, RefCommand::KICKOFF_US),
         GameState(RefCommand::PREPARE_KICKOFF_THEM, Constants::RULESET_STOP(), false, RefCommand::KICKOFF_THEM),
         GameState(RefCommand::PREPARE_PENALTY_US, Constants::RULESET_STOP(), false, RefCommand::PENALTY_US),

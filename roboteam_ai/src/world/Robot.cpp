@@ -89,7 +89,7 @@ void Robot::updateFromFeedback(const proto::RobotProcessedFeedback &feedback) no
     // TODO: add processing of more of the fields of feedback
     if (ai::Constants::FEEDBACK_ENABLED()) {
         setWorkingBallSensor(feedback.ball_sensor_is_working());
-        setBatteryLow(feedback.battery_level() < 22);  // TODO: Define what is considered a 'low' voltage
+        setBatteryLow(feedback.battery_level() < 22);  // TODO: Figure out with electronics which value should be considered low
         setBallSensorSeesBall(feedback.ball_sensor_sees_ball());
         setDribblerSeesBall(feedback.dribbler_sees_ball());
         setBallPosBallSensor(feedback.ball_position());
@@ -100,7 +100,7 @@ void Robot::updateHasBallMap(std::optional<view::BallView> &ball) {
     if (!ball) return;
 
     auto hasBallAccordingToVision = distanceToBall < ai::Constants::HAS_BALL_DISTANCE() && angleDiffToBall < ai::Constants::HAS_BALL_ANGLE();
-    auto hasBallAccordingToDribblerOrBallSensor = (GameSettings::getRobotHubMode() == net::RobotHubMode::BASESTATION) ? ballSensorSeesBall : dribblerSeesBall;
+    auto hasBallAccordingToDribblerOrBallSensor = (GameSettings::getRobotHubMode() == net::RobotHubMode::BASESTATION) ? dribblerSeesBall : ballSensorSeesBall;
     if (hasBallAccordingToDribblerOrBallSensor && hasBallAccordingToVision) {
         hasBallUpdateMap[id].score = 25;
     } else {

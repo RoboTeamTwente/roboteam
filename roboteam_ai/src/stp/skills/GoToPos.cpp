@@ -28,19 +28,8 @@ Status GoToPos::onUpdate(const StpInfo &info) noexcept {
         info.getCurrentWorld(), info.getField().value(), info.getRobot().value()->getId(), info.getRobot().value()->getPos(), info.getRobot().value()->getVel(), targetPos,
         info.getMaxRobotVelocity(), info.getPidType().value(), avoidObj);
 
-    double targetVelocityLength;
-    if (info.getPidType() == stp::PIDType::KEEPER && (info.getRobot()->get()->getPos() - targetPos).length() > 2.0 * control_constants::ROBOT_RADIUS) {
-        targetVelocityLength = std::max(std::clamp(commandCollision.robotCommand.velocity.length(), 0.0, info.getMaxRobotVelocity()), 1.5);  // TODO: Tune this value better
-    } else if (info.getPidType() == stp::PIDType::INTERCEPT && (info.getRobot()->get()->getPos() - targetPos).length() > 2.0 * control_constants::ROBOT_RADIUS) {
-        targetVelocityLength = std::max(std::clamp(commandCollision.robotCommand.velocity.length(), 0.0, info.getMaxRobotVelocity()), 1.5);  // TODO: Tune this value better
-    } else {
-        targetVelocityLength = std::clamp(commandCollision.robotCommand.velocity.length(), 0.0, info.getMaxRobotVelocity());
-    }
-    // Clamp and set velocity
-    Vector2 targetVelocity = commandCollision.robotCommand.velocity.stretchToLength(targetVelocityLength);
-
-    // Set velocity and angle commands
-    command.velocity = targetVelocity;
+    auto &velocity = commandCollision.robotCommand.velocity;
+    command.velocity = velocity.stretchToLength(std::clamp(velocity.length(), 0.0, info.getMaxRobotVelocity()));
 
     // TODO: Test with control peeps to see what angle works best when driving.
     // Driving and turning do not work well together, so we only turn when we are close to the target position.

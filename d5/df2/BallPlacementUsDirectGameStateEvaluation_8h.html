@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Roboteam AI: roboteam_ai/src/stp/plays/referee_specific/BallPlacementUs.cpp File Reference</title>
+<title>Roboteam AI: roboteam_ai/include/roboteam_ai/stp/evaluations/game_states/BallPlacementUsDirectGameStateEvaluation.h File Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -65,7 +65,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
-$(document).ready(function(){initNavTree('da/dab/BallPlacementUs_8cpp.html','../../'); initResizable(); });
+$(document).ready(function(){initNavTree('d5/df2/BallPlacementUsDirectGameStateEvaluation_8h.html','../../'); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -85,16 +85,22 @@ $(document).ready(function(){initNavTree('da/dab/BallPlacementUs_8cpp.html','../
 
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#namespaces">Namespaces</a>  </div>
   <div class="headertitle">
-<div class="title">BallPlacementUs.cpp File Reference</div>  </div>
+<div class="title">BallPlacementUsDirectGameStateEvaluation.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="../../db/d3e/BallPlacementUs_8h_source.html">stp/plays/referee_specific/BallPlacementUs.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d3/d88/BallPlacer_8h_source.html">stp/roles/active/BallPlacer.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d5/d64/roles_2passive_2Formation_8h_source.html">stp/roles/passive/Formation.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d1/dff/GameStateManager_8hpp_source.html">utilities/GameStateManager.hpp</a>&quot;</code><br />
-</div><table class="memberdecls">
+<div class="textblock"><code>#include &quot;<a class="el" href="../../db/ddd/BaseEvaluation_8h_source.html">stp/evaluations/BaseEvaluation.h</a>&quot;</code><br />
+</div>
+<p><a href="../../d5/df2/BallPlacementUsDirectGameStateEvaluation_8h_source.html">Go to the source code of this file.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/dbf/classrtt_1_1ai_1_1stp_1_1evaluation_1_1BallPlacementUsDirectGameStateEvaluation.html">rtt::ai::stp::evaluation::BallPlacementUsDirectGameStateEvaluation</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class that evaluates the ball placement us game state when the next command is direct free kick.  <a href="../../de/dbf/classrtt_1_1ai_1_1stp_1_1evaluation_1_1BallPlacementUsDirectGameStateEvaluation.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
 Namespaces</h2></td></tr>
 <tr class="memitem:dc/d8f/namespacertt"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d8f/namespacertt.html">rtt</a></td></tr>
@@ -103,7 +109,8 @@ Namespaces</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:d5/d14/namespacertt_1_1ai_1_1stp"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html">rtt::ai::stp</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:d8/d32/namespacertt_1_1ai_1_1stp_1_1play"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d32/namespacertt_1_1ai_1_1stp_1_1play.html">rtt::ai::stp::play</a></td></tr>
+<tr class="memitem:dc/d81/namespacertt_1_1ai_1_1stp_1_1evaluation"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d81/namespacertt_1_1ai_1_1stp_1_1evaluation.html">rtt::ai::stp::evaluation</a></td></tr>
+<tr class="memdesc:dc/d81/namespacertt_1_1ai_1_1stp_1_1evaluation"><td class="mdescLeft">&#160;</td><td class="mdescRight">T/F Invariant if the ball is in our defense area and not moving. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
@@ -111,7 +118,7 @@ Namespaces</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="../../dir_50f0153f528c810051dffd2bb4bf2701.html">roboteam_ai</a></li><li class="navelem"><a class="el" href="../../dir_5733d7042189ba3c2a676fedaf910e20.html">src</a></li><li class="navelem"><a class="el" href="../../dir_ff7bab2f878481c7f00fafbde64f720d.html">stp</a></li><li class="navelem"><a class="el" href="../../dir_8b49c3571067561010f7596bbb88350a.html">plays</a></li><li class="navelem"><a class="el" href="../../dir_da313de16f3ef3dafe4a78332c822bbd.html">referee_specific</a></li><li class="navelem"><a class="el" href="../../da/dab/BallPlacementUs_8cpp.html">BallPlacementUs.cpp</a></li>
+    <li class="navelem"><a class="el" href="../../dir_50f0153f528c810051dffd2bb4bf2701.html">roboteam_ai</a></li><li class="navelem"><a class="el" href="../../dir_bbb6d9c6e1ec46a5917265ba3c1454a0.html">include</a></li><li class="navelem"><a class="el" href="../../dir_f05b0dc76e3df98305e815f3f2af1cb1.html">roboteam_ai</a></li><li class="navelem"><a class="el" href="../../dir_04073f17e812443a0077cb35d5b96a06.html">stp</a></li><li class="navelem"><a class="el" href="../../dir_10424ead6b393b1b07991cc29b882f68.html">evaluations</a></li><li class="navelem"><a class="el" href="../../dir_319020dd40c89deb6cd7eba6429fada4.html">game_states</a></li><li class="navelem"><a class="el" href="../../d5/df2/BallPlacementUsDirectGameStateEvaluation_8h.html">BallPlacementUsDirectGameStateEvaluation.h</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>

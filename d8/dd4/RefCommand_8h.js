@@ -20,6 +20,8 @@ var RefCommand_8h =
       [ "PENALTY_US", "d8/dd4/RefCommand_8h.html#ac458fd2464c54331a04fc2fd54d82843ac8e4285c18e34175148b25b8d4f00e1a", null ],
       [ "PENALTY_THEM", "d8/dd4/RefCommand_8h.html#ac458fd2464c54331a04fc2fd54d82843af97cec8038d98ef4a331a5e3ba53a429", null ],
       [ "BALL_PLACEMENT_US_DIRECT", "d8/dd4/RefCommand_8h.html#ac458fd2464c54331a04fc2fd54d82843adc054ff36312758291b2f2f24ea69166", null ],
+      [ "DIRECT_FREE_US_STOP", "d8/dd4/RefCommand_8h.html#ac458fd2464c54331a04fc2fd54d82843aa0e17303d5ddfc03629d114713d8fa7d", null ],
+      [ "DIRECT_FREE_THEM_STOP", "d8/dd4/RefCommand_8h.html#ac458fd2464c54331a04fc2fd54d82843ae4a42a36109c1c3e473ec1ed275f2809", null ],
       [ "UNDEFINED", "d8/dd4/RefCommand_8h.html#ac458fd2464c54331a04fc2fd54d82843a0db45d2a4141101bdfe48e3314cfbca3", null ]
     ] ],
     [ "operator<<", "d8/dd4/RefCommand_8h.html#a348468bc2c2e59d32ab7c1b7d0479f9b", null ]

@@ -48,6 +48,7 @@ var annotated_dup =
           [ "evaluation", "dc/d81/namespacertt_1_1ai_1_1stp_1_1evaluation.html", [
             [ "BaseEvaluation", "d1/d1a/classrtt_1_1ai_1_1stp_1_1evaluation_1_1BaseEvaluation.html", "d1/d1a/classrtt_1_1ai_1_1stp_1_1evaluation_1_1BaseEvaluation" ],
             [ "BallPlacementThemGameStateEvaluation", "dc/d07/classrtt_1_1ai_1_1stp_1_1evaluation_1_1BallPlacementThemGameStateEvaluation.html", "dc/d07/classrtt_1_1ai_1_1stp_1_1evaluation_1_1BallPlacementThemGameStateEvaluation" ],
+            [ "BallPlacementUsDirectGameStateEvaluation", "de/dbf/classrtt_1_1ai_1_1stp_1_1evaluation_1_1BallPlacementUsDirectGameStateEvaluation.html", "de/dbf/classrtt_1_1ai_1_1stp_1_1evaluation_1_1BallPlacementUsDirectGameStateEvaluation" ],
             [ "BallPlacementUsGameStateEvaluation", "d7/db7/classrtt_1_1ai_1_1stp_1_1evaluation_1_1BallPlacementUsGameStateEvaluation.html", "d7/db7/classrtt_1_1ai_1_1stp_1_1evaluation_1_1BallPlacementUsGameStateEvaluation" ],
             [ "FreeKickThemGameStateEvaluation", "d5/df9/classrtt_1_1ai_1_1stp_1_1evaluation_1_1FreeKickThemGameStateEvaluation.html", "d5/df9/classrtt_1_1ai_1_1stp_1_1evaluation_1_1FreeKickThemGameStateEvaluation" ],
             [ "FreeKickUsGameStateEvaluation", "d6/dca/classrtt_1_1ai_1_1stp_1_1evaluation_1_1FreeKickUsGameStateEvaluation.html", "d6/dca/classrtt_1_1ai_1_1stp_1_1evaluation_1_1FreeKickUsGameStateEvaluation" ],
@@ -91,7 +92,8 @@ var annotated_dup =
             [ "ChippingPass", "dc/d26/classrtt_1_1ai_1_1stp_1_1play_1_1ChippingPass.html", "dc/d26/classrtt_1_1ai_1_1stp_1_1play_1_1ChippingPass" ],
             [ "AggressiveStopFormation", "dd/dff/classrtt_1_1ai_1_1stp_1_1play_1_1AggressiveStopFormation.html", "dd/dff/classrtt_1_1ai_1_1stp_1_1play_1_1AggressiveStopFormation" ],
             [ "BallPlacementThem", "d7/d43/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementThem.html", "d7/d43/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementThem" ],
-            [ "BallPlacementUs", "d5/d6f/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUs.html", "d5/d6f/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUs" ],
+            [ "BallPlacementUsForceStart", "de/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsForceStart.html", "de/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsForceStart" ],
+            [ "BallPlacementUsFreeKick", "d9/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsFreeKick.html", "d9/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsFreeKick" ],
             [ "DefensiveStopFormation", "df/de3/classrtt_1_1ai_1_1stp_1_1play_1_1DefensiveStopFormation.html", "df/de3/classrtt_1_1ai_1_1stp_1_1play_1_1DefensiveStopFormation" ],
             [ "FreeKickThem", "dc/d7b/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickThem.html", "dc/d7b/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickThem" ],
             [ "FreeKickUsAtGoal", "dd/dc8/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsAtGoal.html", "dd/dc8/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsAtGoal" ],

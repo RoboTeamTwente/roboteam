@@ -2,6 +2,7 @@ var namespacertt_1_1ai_1_1stp_1_1evaluation =
 [
     [ "BaseEvaluation", "d1/d1a/classrtt_1_1ai_1_1stp_1_1evaluation_1_1BaseEvaluation.html", "d1/d1a/classrtt_1_1ai_1_1stp_1_1evaluation_1_1BaseEvaluation" ],
     [ "BallPlacementThemGameStateEvaluation", "dc/d07/classrtt_1_1ai_1_1stp_1_1evaluation_1_1BallPlacementThemGameStateEvaluation.html", "dc/d07/classrtt_1_1ai_1_1stp_1_1evaluation_1_1BallPlacementThemGameStateEvaluation" ],
+    [ "BallPlacementUsDirectGameStateEvaluation", "de/dbf/classrtt_1_1ai_1_1stp_1_1evaluation_1_1BallPlacementUsDirectGameStateEvaluation.html", "de/dbf/classrtt_1_1ai_1_1stp_1_1evaluation_1_1BallPlacementUsDirectGameStateEvaluation" ],
     [ "BallPlacementUsGameStateEvaluation", "d7/db7/classrtt_1_1ai_1_1stp_1_1evaluation_1_1BallPlacementUsGameStateEvaluation.html", "d7/db7/classrtt_1_1ai_1_1stp_1_1evaluation_1_1BallPlacementUsGameStateEvaluation" ],
     [ "FreeKickThemGameStateEvaluation", "d5/df9/classrtt_1_1ai_1_1stp_1_1evaluation_1_1FreeKickThemGameStateEvaluation.html", "d5/df9/classrtt_1_1ai_1_1stp_1_1evaluation_1_1FreeKickThemGameStateEvaluation" ],
     [ "FreeKickUsGameStateEvaluation", "d6/dca/classrtt_1_1ai_1_1stp_1_1evaluation_1_1FreeKickUsGameStateEvaluation.html", "d6/dca/classrtt_1_1ai_1_1stp_1_1evaluation_1_1FreeKickUsGameStateEvaluation" ],

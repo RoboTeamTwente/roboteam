@@ -3,6 +3,9 @@ var dir_319020dd40c89deb6cd7eba6429fada4 =
     [ "BallPlacementThemGameStateEvaluation.h", "dd/d6e/BallPlacementThemGameStateEvaluation_8h.html", [
       [ "BallPlacementThemGameStateEvaluation", "dc/d07/classrtt_1_1ai_1_1stp_1_1evaluation_1_1BallPlacementThemGameStateEvaluation.html", "dc/d07/classrtt_1_1ai_1_1stp_1_1evaluation_1_1BallPlacementThemGameStateEvaluation" ]
     ] ],
+    [ "BallPlacementUsDirectGameStateEvaluation.h", "d5/df2/BallPlacementUsDirectGameStateEvaluation_8h.html", [
+      [ "BallPlacementUsDirectGameStateEvaluation", "de/dbf/classrtt_1_1ai_1_1stp_1_1evaluation_1_1BallPlacementUsDirectGameStateEvaluation.html", "de/dbf/classrtt_1_1ai_1_1stp_1_1evaluation_1_1BallPlacementUsDirectGameStateEvaluation" ]
+    ] ],
     [ "BallPlacementUsGameStateEvaluation.h", "d6/d14/BallPlacementUsGameStateEvaluation_8h.html", [
       [ "BallPlacementUsGameStateEvaluation", "d7/db7/classrtt_1_1ai_1_1stp_1_1evaluation_1_1BallPlacementUsGameStateEvaluation.html", "d7/db7/classrtt_1_1ai_1_1stp_1_1evaluation_1_1BallPlacementUsGameStateEvaluation" ]
     ] ],

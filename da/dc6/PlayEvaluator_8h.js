@@ -8,6 +8,7 @@ var PlayEvaluator_8h =
     [ "GlobalEvaluation", "da/dc6/PlayEvaluator_8h.html#a9b1a79ba58c1300d9f6f0e073f9d7db2", [
       [ "BallPlacementThemGameState", "da/dc6/PlayEvaluator_8h.html#a9b1a79ba58c1300d9f6f0e073f9d7db2a775d0ce7887fa4de0aadf511dcd6fd71", null ],
       [ "BallPlacementUsGameState", "da/dc6/PlayEvaluator_8h.html#a9b1a79ba58c1300d9f6f0e073f9d7db2a195616208981cef4a486610feadfb6f6", null ],
+      [ "BallPlacementUsDirectGameState", "da/dc6/PlayEvaluator_8h.html#a9b1a79ba58c1300d9f6f0e073f9d7db2a85c18d9aa394e8aa1f12d62124b1d6dd", null ],
       [ "FreeKickThemGameState", "da/dc6/PlayEvaluator_8h.html#a9b1a79ba58c1300d9f6f0e073f9d7db2af5ef925cf3c281225810c9118fd382e0", null ],
       [ "FreeKickUsGameState", "da/dc6/PlayEvaluator_8h.html#a9b1a79ba58c1300d9f6f0e073f9d7db2aca71e05faa7b1711d1367178d9c4e11f", null ],
       [ "HaltGameState", "da/dc6/PlayEvaluator_8h.html#a9b1a79ba58c1300d9f6f0e073f9d7db2a77d4126c5a58e2c92ae78938de37c559", null ],

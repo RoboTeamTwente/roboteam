@@ -1,8 +1,8 @@
 var classrtt_1_1ai_1_1control_1_1ControlModule =
 [
-    [ "addRobotCommand", "dd/d16/classrtt_1_1ai_1_1control_1_1ControlModule.html#a62d14f97dea3b56e96cfc8117b47c589", null ],
-    [ "limitAngularVel", "dd/d16/classrtt_1_1ai_1_1control_1_1ControlModule.html#a617266c078a647731d7dcd166b84f541", null ],
-    [ "limitRobotCommand", "dd/d16/classrtt_1_1ai_1_1control_1_1ControlModule.html#a9705f8be2e44fa106a911b2e07510114", null ],
+    [ "addRobotCommand", "dd/d16/classrtt_1_1ai_1_1control_1_1ControlModule.html#a15c26394190bfe2514e7200f8afe2856", null ],
+    [ "limitAngularVel", "dd/d16/classrtt_1_1ai_1_1control_1_1ControlModule.html#a83ed3d4414ee987f51f7264f1b086ef8", null ],
+    [ "limitRobotCommand", "dd/d16/classrtt_1_1ai_1_1control_1_1ControlModule.html#a8711bcf5096ff5f7e093a114976d35f4", null ],
     [ "limitVel", "dd/d16/classrtt_1_1ai_1_1control_1_1ControlModule.html#abb4d047769239c8684b254bc7224d93d", null ],
     [ "rotateRobotCommand", "dd/d16/classrtt_1_1ai_1_1control_1_1ControlModule.html#a7dbb8c2e2347fef7089cf563ae2162a6", null ],
     [ "sendAllCommands", "dd/d16/classrtt_1_1ai_1_1control_1_1ControlModule.html#a0fadb136765f78b16de7198756c104bc", null ],

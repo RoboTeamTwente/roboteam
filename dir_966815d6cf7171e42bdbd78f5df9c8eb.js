@@ -1,6 +1,7 @@
 var dir_966815d6cf7171e42bdbd78f5df9c8eb =
 [
     [ "BallPlacementThemGameStateEvaluation.cpp", "dc/d3a/BallPlacementThemGameStateEvaluation_8cpp.html", null ],
+    [ "BallPlacementUsDirectGameStateEvaluation.cpp", "d4/d3a/BallPlacementUsDirectGameStateEvaluation_8cpp.html", null ],
     [ "BallPlacementUsGameStateEvaluation.cpp", "db/dd5/BallPlacementUsGameStateEvaluation_8cpp.html", null ],
     [ "FreeKickThemGameStateEvaluation.cpp", "d5/d45/FreeKickThemGameStateEvaluation_8cpp.html", null ],
     [ "FreeKickUsGameStateEvaluation.cpp", "d5/d81/FreeKickUsGameStateEvaluation_8cpp.html", null ],

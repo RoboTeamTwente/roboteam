@@ -2,7 +2,8 @@ var dir_da313de16f3ef3dafe4a78332c822bbd =
 [
     [ "AggressiveStopFormation.cpp", "d1/d2e/AggressiveStopFormation_8cpp.html", null ],
     [ "BallPlacementThem.cpp", "d5/ddd/BallPlacementThem_8cpp.html", null ],
-    [ "BallPlacementUs.cpp", "da/dab/BallPlacementUs_8cpp.html", null ],
+    [ "BallPlacementUsForceStart.cpp", "da/d05/BallPlacementUsForceStart_8cpp.html", null ],
+    [ "BallPlacementUsFreeKick.cpp", "d9/d90/BallPlacementUsFreeKick_8cpp.html", null ],
     [ "DefensiveStopFormation.cpp", "d5/d2f/DefensiveStopFormation_8cpp.html", null ],
     [ "FreeKickThem.cpp", "db/dbe/FreeKickThem_8cpp.html", null ],
     [ "FreeKickUsAtGoal.cpp", "d5/d8d/FreeKickUsAtGoal_8cpp.html", null ],

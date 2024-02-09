@@ -6,8 +6,11 @@ var dir_4eacba08721ac3b0e1d4b27ca96b0fbb =
     [ "BallPlacementThem.h", "d2/d09/BallPlacementThem_8h.html", [
       [ "BallPlacementThem", "d7/d43/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementThem.html", "d7/d43/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementThem" ]
     ] ],
-    [ "BallPlacementUs.h", "db/d3e/BallPlacementUs_8h.html", [
-      [ "BallPlacementUs", "d5/d6f/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUs.html", "d5/d6f/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUs" ]
+    [ "BallPlacementUsForceStart.h", "d4/db8/BallPlacementUsForceStart_8h.html", [
+      [ "BallPlacementUsForceStart", "de/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsForceStart.html", "de/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsForceStart" ]
+    ] ],
+    [ "BallPlacementUsFreeKick.h", "db/ddc/BallPlacementUsFreeKick_8h.html", [
+      [ "BallPlacementUsFreeKick", "d9/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsFreeKick.html", "d9/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsFreeKick" ]
     ] ],
     [ "DefensiveStopFormation.h", "d2/d2a/DefensiveStopFormation_8h.html", [
       [ "DefensiveStopFormation", "df/de3/classrtt_1_1ai_1_1stp_1_1play_1_1DefensiveStopFormation.html", "df/de3/classrtt_1_1ai_1_1stp_1_1play_1_1DefensiveStopFormation" ]

@@ -26,6 +26,10 @@ std::optional<StpInfo> GetBall::calculateInfoForSkill(StpInfo const &info) noexc
         std::vector<rtt::Vector2> intersections =
             FieldComputations::getDefenseArea(skillStpInfo.getField().value(), true, 0, 0).intersections({ballPosition, skillStpInfo.getBall().value()->expectedEndPosition});
         if (intersections.size() == 1) ballPosition = intersections.at(0);
+    } else if (skillStpInfo.getField().value().rightDefenseArea.contains(ballPosition)) {
+        std::vector<rtt::Vector2> intersections =
+            FieldComputations::getDefenseArea(skillStpInfo.getField().value(), false, 0, 0).intersections({ballPosition, skillStpInfo.getBall().value()->expectedEndPosition});
+        if (intersections.size() == 1) ballPosition = intersections.at(0);
     }
     double ballDistance = (ballPosition - robotPosition).length() - control_constants::BALL_RADIUS - control_constants::ROBOT_RADIUS + control_constants::GO_TO_POS_ERROR_MARGIN +
                           2 * control_constants::BALL_RADIUS;

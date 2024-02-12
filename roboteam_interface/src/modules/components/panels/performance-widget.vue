@@ -3,7 +3,9 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { useSTPDataStore } from '../../stores/data-stores/stp-data-store'
 import { useVisionDataStore } from '../../stores/data-stores/vision-data-store'
 import { exec } from 'child_process';
-import VueSocketIO from 'vue-socket.io'
+import VueSocketIO from 'vue'
+import Vue from 'vue';
+import axios from 'axios';
 
 const stpData = useSTPDataStore()
 const visionData = useVisionDataStore()
@@ -61,9 +63,12 @@ const visionData = useVisionDataStore()
     </div>
 
     <div class="centered">
-      <button @click="downloadCSV" class="my-boton">Download metrics</button>
+      <button @click="concat_metrics" class="my-boton">Download metrics</button>
     </div>
-                                                 
+
+    <div class="centered">
+      <p style="font-size: 20px; font-weight: bold; margin-top: 10px;">{{transmit_metrics}}</p>
+    </div>                                  
 
 </template>
 
@@ -164,12 +169,15 @@ export default defineComponent({
       ],
       players_on_plus_6_field: 0,
       average_team_speed: 0, 
-      instant_team_speed: 0
+      instant_team_speed: 0, 
+      concated_metrics: [],
+      transmit_metrics : Array(5).fill(0),
+      transmit_heatmap : Array(120).fill(0)
 
     };
   },
   beforeDestroy() {
-    this.downloadCSV();
+    //this.downloadCSV();
   },
   methods: {
     possession_counters() {
@@ -226,9 +234,20 @@ export default defineComponent({
     launch_py_server() {
       // netstat -tulpn | grep LISTEN
       const { spawn } = require('child_process')
-      spawn('sh', ['run_pdf.sh'], {
+      spawn('sh', ['run_pdf'], {
         cwd: '.'
       })
+    },
+
+    fetchData() {
+      axios.get('http://localhost:5000/api/data')
+        .then(response => {
+          console.log(response.data);
+          // do something with response.data
+        })
+        .catch(error => {
+          console.error(error);
+        });
     },
 
     downloadCSV() {
@@ -237,6 +256,19 @@ export default defineComponent({
         }
 
       const array2DJson = JSON.stringify(this.x_y_positions_freq);
+
+      // Open a connection on port
+      /*const { spawn } = require('child_process')
+      spawn('sh', ['run_pdf'], {
+        cwd: '.'
+      })*/
+
+      /*Vue.config.productionTip = false;
+
+      Vue.use(new VueSocketIO({
+        connection: 'http://localhost:65432'
+      }));*/
+
       //const command = `python3 heatmap_plotter.py "${array2DJson}"`;
       
 
@@ -253,7 +285,7 @@ export default defineComponent({
         }
       });*/
     
-      const csv = this.to_csv(this.x_y_positions_freq);
+      /*const csv = this.to_csv(this.x_y_positions_freq);
 
       const blob = new Blob([csv], { type: 'text/csv' });
       const url = URL.createObjectURL(blob);
@@ -271,7 +303,7 @@ export default defineComponent({
       const { spawn } = require('child_process')
       spawn('sh', ['run_pdf.sh', csv], {
         cwd: '.'
-      })
+      })*/
 
     },
 
@@ -288,6 +320,16 @@ export default defineComponent({
       }
 
       this.instant_team_speed = vel_module/11 
+    },
+
+    concat_metrics() {
+
+      let concated_metrics = [(this.total_time/1000).toFixed(2), this.possession.toFixed(2), this.offensive_counter, this.defensive_counter, this.keeper_actions_counter]
+      let flat_positions = this.x_y_positions_freq.flat()
+
+      this.transmit_metrics = concated_metrics
+      this.transmit_heatmap = flat_positions
+
     },
 
     define_event() {
@@ -326,9 +368,9 @@ export default defineComponent({
   },
 
   mounted() {
+    //this.launch_py_server();
     this.possession_counters();
     this.keeper_actions_counter();
-    this.launch_py_server();
   },
 
   watch: {

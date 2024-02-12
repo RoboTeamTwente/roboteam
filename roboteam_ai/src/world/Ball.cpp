@@ -29,7 +29,7 @@ Ball::Ball(const proto::WorldBall& copy, const World* data) : position{copy.pos(
         initBallAtExpectedPosition(data);
     }
     updateBallAtRobotPosition(data);
-    // updateExpectedBallEndPosition(data);
+    updateExpectedBallEndPosition(data);
 }
 
 void Ball::initBallAtExpectedPosition(const world::World* data) noexcept {
@@ -53,16 +53,15 @@ void Ball::updateExpectedBallEndPosition(const world::World* data) noexcept {
     double ballVelSquared = ball->velocity.length2();
     const double frictionCoefficient = GameSettings::getRobotHubMode() == net::RobotHubMode::SIMULATOR ? SIMULATION_FRICTION : REAL_FRICTION;
 
-    Vector2 expectedEnd = ball->position + ball->velocity.stretchToLength(ballVelSquared / frictionCoefficient);
-    std::array<rtt::Vector2, 2> arr = {expectedEnd, ball->position};
+    expectedEndPosition = ball->position + ball->velocity.stretchToLength(ballVelSquared / frictionCoefficient);
+    std::array<rtt::Vector2, 2> arr = {expectedEndPosition, ball->position};
     std::span<rtt::Vector2> span(arr);
+    // maybe change to a cross at the end instead of a line?
     rtt::ai::gui::Out::draw(
         {
-            .label = "expectedBallEnd",
+            .label = "expected_end_position_ball",
             .color = proto::Drawing::MAGENTA,
             .method = proto::Drawing::LINES_CONNECTED,
-            .category = proto::Drawing::PATH_PLANNING,
-            .forRobotId = 3,
             .thickness = 3,
         },
         span);

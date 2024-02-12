@@ -258,13 +258,18 @@ void PositionComputations::calculateInfoForKeeper(std::unordered_map<std::string
 void PositionComputations::calculateInfoForHarasser(std::unordered_map<std::string, StpInfo> &stpInfos,
                                                     std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT> *roles, const Field &field,
                                                     world::World *world) noexcept {
-    auto enemyClosestToBall = world->getWorld()->getRobotClosestToBall(world::them);
+    rtt::Vector2 ballPos = world->getWorld()->getBall()->get()->position;
+    if (field.leftDefenseArea.contains(ballPos)) {
+        std::vector<rtt::Vector2> intersections =
+            FieldComputations::getDefenseArea(field, true, 0, 0).intersections({ballPos, world->getWorld()->getBall()->get()->expectedEndPosition});
+        if (intersections.size() == 1) ballPos = intersections.at(0);
+    }
+    auto enemyClosestToBall = world->getWorld()->getRobotClosestToPoint(ballPos, world::them);
     // If there is no enemy or we don't have a harasser yet, estimate the position to move to
     if (!stpInfos["harasser"].getRobot() || !enemyClosestToBall) {
-        stpInfos["harasser"].setPositionToMoveTo(world->getWorld()->getBall()->get()->position);
+        stpInfos["harasser"].setPositionToMoveTo(ballPos);
         return;
     }
-    auto ballPos = world->getWorld()->getBall()->get()->position;
     auto enemyAngle = enemyClosestToBall->get()->getAngle();
     auto enemyToGoalAngle = (field.leftGoalArea.leftLine().center() - enemyClosestToBall->get()->getPos()).angle();
 

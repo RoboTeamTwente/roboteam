@@ -263,6 +263,10 @@ void PositionComputations::calculateInfoForHarasser(std::unordered_map<std::stri
         std::vector<rtt::Vector2> intersections =
             FieldComputations::getDefenseArea(field, true, 0, 0).intersections({ballPos, world->getWorld()->getBall()->get()->expectedEndPosition});
         if (intersections.size() == 1) ballPos = intersections.at(0);
+    } else if (field.rightDefenseArea.contains(ballPos)) {
+        std::vector<rtt::Vector2> intersections =
+            FieldComputations::getDefenseArea(field, false, 0, 0).intersections({ballPos, world->getWorld()->getBall()->get()->expectedEndPosition});
+        if (intersections.size() == 1) ballPos = intersections.at(0);
     }
     auto enemyClosestToBall = world->getWorld()->getRobotClosestToPoint(ballPos, world::them);
     // If there is no enemy or we don't have a harasser yet, estimate the position to move to

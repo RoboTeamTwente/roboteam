@@ -60,6 +60,12 @@ rtt::BB::CommandCollision PositionControl::computeAndTrackTrajectory(const rtt::
             firstCollision = worldObjects.getFirstCollision(world, field, computedTrajectories[robotId], computedPaths, robotId, avoidObjects, completedTimeSteps);
             if (firstCollision.has_value()) {
                 commandCollision.collisionData = firstCollision;
+                if ((firstCollision.value().collisionType == BB::CollisionType::BALL || firstCollision.value().collisionType == BB::CollisionType::BALLPLACEMENT) &&
+                    firstCollision.value().collisionTime <= 0.11) {
+                    targetPosition =
+                        currentPosition + (currentPosition - world->getWorld()->getBall()->get()->position).stretchToLength(stp::control_constants::AVOID_BALL_DISTANCE * 2);
+                    computedTrajectories[robotId] = Trajectory2D(currentPosition, currentVelocity, targetPosition, maxRobotVelocity, ai::Constants::MAX_ACC_UPPER());
+                }
             }
         }
 

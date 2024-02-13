@@ -60,11 +60,14 @@ rtt::BB::CommandCollision PositionControl::computeAndTrackTrajectory(const rtt::
             firstCollision = worldObjects.getFirstCollision(world, field, computedTrajectories[robotId], computedPaths, robotId, avoidObjects, completedTimeSteps);
             if (firstCollision.has_value()) {
                 commandCollision.collisionData = firstCollision;
-                if ((firstCollision.value().collisionType == BB::CollisionType::BALL || firstCollision.value().collisionType == BB::CollisionType::BALLPLACEMENT) &&
-                    firstCollision.value().collisionTime <= 0.11) {
-                    targetPosition =
-                        currentPosition + (currentPosition - world->getWorld()->getBall()->get()->position).stretchToLength(stp::control_constants::AVOID_BALL_DISTANCE * 2);
-                    computedTrajectories[robotId] = Trajectory2D(currentPosition, currentVelocity, targetPosition, maxRobotVelocity, ai::Constants::MAX_ACC_UPPER());
+
+                if ((firstCollision.value().collisionType == BB::CollisionType::BALL) && firstCollision.value().collisionTime <= 0.11) {
+                    targetPosition = handleBallCollision(world, field, currentPosition, avoidObjects);
+                    computedTrajectories[robotId] = Trajectory2D(currentPosition, currentVelocity, targetPosition, 1.0, ai::Constants::MAX_ACC_UPPER());
+                }
+                if ((firstCollision.value().collisionType == BB::CollisionType::BALLPLACEMENT) && firstCollision.value().collisionTime <= 0.11) {
+                    targetPosition = handleBallPlacementCollision(world, field, currentPosition, avoidObjects);
+                    computedTrajectories[robotId] = Trajectory2D(currentPosition, currentVelocity, targetPosition, 1.0, ai::Constants::MAX_ACC_UPPER());
                 }
             }
         }
@@ -120,6 +123,57 @@ rtt::BB::CommandCollision PositionControl::computeAndTrackTrajectory(const rtt::
     commandCollision.robotCommand.targetAngle = trackingVelocity.rot;
 
     return commandCollision;
+}
+
+rtt::Vector2 PositionControl::handleBallCollision(const rtt::world::World *world, const rtt::Field &field, Vector2 currentPosition, stp::AvoidObjects avoidObjects) {
+    auto ballPos = world->getWorld()->getBall()->get()->position;
+    auto direction = currentPosition - ballPos;
+    Vector2 targetPosition = currentPosition + direction.stretchToLength(stp::control_constants::AVOID_BALL_DISTANCE * 2);
+    if (FieldComputations::pointIsValidPosition(field, targetPosition, avoidObjects, stp::control_constants::OUT_OF_FIELD_MARGIN)) {
+        return targetPosition;
+    }
+    int rotationStepDegrees = 10;
+    int maxRotationDegrees = 90;
+    for (int i = rotationStepDegrees; i <= maxRotationDegrees; i += rotationStepDegrees) {
+        for (int sign : {1, -1}) {
+            double rotation = sign * i * M_PI / 180;
+            Vector2 rotatedDirection = direction.stretchToLength(stp::control_constants::AVOID_BALL_DISTANCE * 2).rotate(rotation);
+            Vector2 potentialTargetPosition = currentPosition + rotatedDirection;
+            if (FieldComputations::pointIsValidPosition(field, potentialTargetPosition, avoidObjects, stp::control_constants::OUT_OF_FIELD_MARGIN)) {
+                return potentialTargetPosition;
+            }
+        }
+    }
+    return currentPosition + direction.stretchToLength(stp::control_constants::AVOID_BALL_DISTANCE * 2).rotate(M_PI / 2);
+}
+
+rtt::Vector2 PositionControl::handleBallPlacementCollision(const rtt::world::World *world, const rtt::Field &field, Vector2 currentPosition, stp::AvoidObjects avoidObjects) {
+    auto placementPos = rtt::ai::GameStateManager::getRefereeDesignatedPosition();
+    auto ballPos = world->getWorld()->getBall()->get()->position;
+    auto direction = (placementPos - ballPos).stretchToLength(stp::control_constants::AVOID_BALL_DISTANCE * 2);
+    double distance = (placementPos - ballPos).length();
+    if (distance > 0.10) {  // distance is more than 10cm
+        direction = direction.rotate((currentPosition - ballPos).cross(placementPos - ballPos) < 0 ? M_PI / 2 : -M_PI / 2);
+    } else {  // distance is less than or equal to 10cm
+        direction = (currentPosition - ballPos).stretchToLength(stp::control_constants::AVOID_BALL_DISTANCE * 2);
+    }
+    Vector2 targetPosition = currentPosition + direction;
+    if (FieldComputations::pointIsValidPosition(field, targetPosition, avoidObjects, stp::control_constants::OUT_OF_FIELD_MARGIN)) {
+        return targetPosition;
+    }
+    int rotationStepDegrees = 10;
+    int maxRotationDegrees = 90;
+    for (int i = rotationStepDegrees; i <= maxRotationDegrees; i += rotationStepDegrees) {
+        for (int sign : {1, -1}) {
+            double rotation = sign * i * M_PI / 180;
+            Vector2 rotatedDirection = direction.rotate(rotation);
+            Vector2 potentialTargetPosition = currentPosition + rotatedDirection;
+            if (FieldComputations::pointIsValidPosition(field, potentialTargetPosition, avoidObjects, stp::control_constants::OUT_OF_FIELD_MARGIN)) {
+                return potentialTargetPosition;
+            }
+        }
+    }
+    return targetPosition;
 }
 
 double PositionControl::calculateScore(const rtt::world::World *world, const rtt::Field &field, std::optional<BB::CollisionData> &firstCollision,

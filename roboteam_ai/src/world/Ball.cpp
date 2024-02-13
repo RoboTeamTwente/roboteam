@@ -30,6 +30,17 @@ Ball::Ball(const proto::WorldBall& copy, const World* data) : position{copy.pos(
     }
     updateBallAtRobotPosition(data);
     updateExpectedBallEndPosition(data);
+    if (data->getWorld() and data->getWorld()->getBall()) {
+        auto ballPosition = data->getWorld()->getBall().value()->position;
+        std::array<rtt::Vector2, 1> arr = {ballPosition};
+        std::span<rtt::Vector2> span(arr);
+        rtt::ai::gui::Out::draw(
+            {
+                .label = "Ball according to the AI", .color = proto::Drawing::CYAN, .method = proto::Drawing::CIRCLES, .size = 4,
+                // .thickness = 4,
+            },
+            span);
+    }
 }
 
 void Ball::initBallAtExpectedPosition(const world::World* data) noexcept {

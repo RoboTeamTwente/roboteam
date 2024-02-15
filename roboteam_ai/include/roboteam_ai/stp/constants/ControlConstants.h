@@ -19,8 +19,8 @@ constexpr double MAX_KICK_ATTEMPTS = 25; /**< Maximum allowed kicking attempts *
 constexpr double MAX_CHIP_ATTEMPTS = 25; /**< Maximum allowed chipping attempts */
 
 /// Robot physical constants
-constexpr double ROBOT_RADIUS = 0.088;   /**< Radius of a robot */
-constexpr double CENTER_TO_FRONT = 0.05; /**< Distance from center of the robot to the front of the robot */
+constexpr double ROBOT_RADIUS = 0.088;    /**< Radius of a robot */
+constexpr double CENTER_TO_FRONT = 0.069; /**< Distance from center of the robot to the front of the robot */
 
 /// Dribbler constants
 // The distance from robot to ball at which the dribbler should turn on
@@ -80,6 +80,10 @@ constexpr double DISTANCE_FROM_GOAL_CLOSE = 2 * ROBOT_RADIUS; /**< Distance from
 constexpr double AVOID_BALL_DISTANCE = 0.5 + ROBOT_RADIUS + GO_TO_POS_ERROR_MARGIN + BALL_RADIUS + 0.1; /**< Minimum distance all robots should keep when avoiding the ball */
 constexpr double AVOID_BALL_DISTANCE_BEFORE_FREE_KICK =
     0.05 + ROBOT_RADIUS + GO_TO_POS_ERROR_MARGIN + BALL_RADIUS + 0.01; /**< Minimum distance all robots should keep when avoiding the ball before a free kick */
+
+/// Friction constants
+constexpr static float SIMULATION_FRICTION = 0.69; /**<  * The expected movement friction of the ball during simulation */
+constexpr static float REAL_FRICTION = 0.5;        /**< The expected movement friction of the ball on the field */
 
 }  // namespace rtt::ai::stp::control_constants
 

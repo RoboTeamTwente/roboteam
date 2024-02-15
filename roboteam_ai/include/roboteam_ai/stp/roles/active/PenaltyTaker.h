@@ -14,6 +14,13 @@ class PenaltyTaker : public Role {
      * @param name The name of the role
      */
     PenaltyTaker(std::string name);
+
+    /**
+     * @brief Method that updates the role
+     * @param info The information to update the role with
+     * @return Status of the update
+     */
+    [[nodiscard]] Status update(StpInfo const& info) noexcept override;
 };
 }  // namespace rtt::ai::stp::role
 

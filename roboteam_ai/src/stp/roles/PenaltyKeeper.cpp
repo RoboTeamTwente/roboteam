@@ -33,44 +33,15 @@ PenaltyKeeper::PenaltyKeeper(std::string name) : Keeper(std::move(name)) {
 Status PenaltyKeeper::update(StpInfo const& info) noexcept {
     // Failure if the required data is not present
     if (!info.getBall() || !info.getRobot() || !info.getField()) {
-        RTT_WARNING("Required information missing in the tactic info")
+        RTT_WARNING("Required information missing in the tactic info for ", roleName)
         return Status::Failure;
     }
 
     // Stop Formation tactic when ball is moving, start blocking, getting the ball and pass (normal keeper behavior)
-    if (robotTactics.current_num() == 0 && info.getBall().value()->velocity.length() > control_constants::BALL_STILL_VEL) forceNextTactic();
-
-    currentRobot = info.getRobot();
-    // Update the current tactic with the new tacticInfo
-    auto status = robotTactics.update(info);
-
-    // Success if the tactic returned success and if all tactics are done
-    if (status == Status::Success && robotTactics.finished()) {
-        RTT_INFO("ROLE SUCCESSFUL for ", info.getRobot()->get()->getId())
-        return Status::Success;
+    if (robotTactics.current_num() == 0 && info.getBall().value()->velocity.length() > control_constants::BALL_STILL_VEL) {
+        forceNextTactic();
     }
 
-    // Reset the tactic state machine if a tactic failed and the state machine is not yet finished
-    if ((status == Status::Failure && !robotTactics.finished())) {
-        RTT_INFO("State Machine reset for current role for ID = ", info.getRobot()->get()->getId())
-        // Reset all the Skills state machines
-        for (auto& tactic : robotTactics) {
-            tactic->reset();
-        }
-        // Reset Tactics state machine
-        robotTactics.reset();
-    }
-
-    // Success if waiting and tactics are finished
-    // Waiting if waiting but not finished
-    if (status == Status::Waiting) {
-        if (robotTactics.finished()) {
-            return Status::Success;
-        }
-        return Status::Waiting;
-    }
-
-    // Return running by default
-    return Status::Running;
+    return Role::update(info);
 }
 }  // namespace rtt::ai::stp::role

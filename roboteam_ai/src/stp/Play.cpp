@@ -196,41 +196,29 @@ void Play::DrawMargins() noexcept {
     RefCommand currentGameState = GameStateManager::getCurrentGameState().getCommandId();
     auto color = proto::Drawing::BLUE;
 
-    // Resetting all the drawn figures
-    for (const auto &label : {"Left defense area to avoid", "Right defense area to avoid", "Ball area to avoid", "Placement location", "Path to placement location", "CardID"}) {
-        rtt::ai::gui::Out::draw(
-            {
-                .label = label,
-                .color = proto::Drawing::YELLOW,
-                .method = proto::Drawing::CIRCLES,
-                .size = 0,
-                .thickness = 0,
-            },
-            ball);
-    }
-
     // Drawing all figures regarding states robots have to avoid certain area's (stop, ball placement, free kick, kick off)
-    if ((ruleSetTitle == RuleSetName::STOP || currentGameState == RefCommand::DIRECT_FREE_THEM || currentGameState == RefCommand::DIRECT_FREE_THEM_STOP ||
-         currentGameState == RefCommand::DIRECT_FREE_US || currentGameState == RefCommand::KICKOFF_US || currentGameState == RefCommand::KICKOFF_THEM) &&
-        currentGameState != RefCommand::BALL_PLACEMENT_THEM && currentGameState != RefCommand::BALL_PLACEMENT_US && currentGameState != RefCommand::BALL_PLACEMENT_US_DIRECT) {
-        rtt::ai::gui::Out::draw(
-            {
-                .label = "Left defense area to avoid",
-                .color = GameSettings::isYellow() ? proto::Drawing::BLUE : proto::Drawing::YELLOW,
-                .method = proto::Drawing::LINES_CONNECTED,
-                .size = 8,
-                .thickness = 8,
-            },
-            leftDefenseAreaMargin);
-        rtt::ai::gui::Out::draw(
-            {
-                .label = "Right defense area to avoid",
-                .color = GameSettings::isYellow() ? proto::Drawing::YELLOW : proto::Drawing::BLUE,
-                .method = proto::Drawing::LINES_CONNECTED,
-                .size = 8,
-                .thickness = 8,
-            },
-            rightDefenseAreaMargin);
+    if (ruleSetTitle == RuleSetName::STOP || currentGameState == RefCommand::DIRECT_FREE_THEM || currentGameState == RefCommand::DIRECT_FREE_THEM_STOP ||
+        currentGameState == RefCommand::DIRECT_FREE_US || currentGameState == RefCommand::KICKOFF_US || currentGameState == RefCommand::KICKOFF_THEM) {
+        if (currentGameState != RefCommand::BALL_PLACEMENT_THEM && currentGameState != RefCommand::BALL_PLACEMENT_US && currentGameState != RefCommand::BALL_PLACEMENT_US_DIRECT) {
+            rtt::ai::gui::Out::draw(
+                {
+                    .label = "Left defense area to avoid",
+                    .color = GameSettings::isYellow() ? proto::Drawing::BLUE : proto::Drawing::YELLOW,
+                    .method = proto::Drawing::LINES_CONNECTED,
+                    .size = 8,
+                    .thickness = 8,
+                },
+                leftDefenseAreaMargin);
+            rtt::ai::gui::Out::draw(
+                {
+                    .label = "Right defense area to avoid",
+                    .color = GameSettings::isYellow() ? proto::Drawing::YELLOW : proto::Drawing::BLUE,
+                    .method = proto::Drawing::LINES_CONNECTED,
+                    .size = 8,
+                    .thickness = 8,
+                },
+                rightDefenseAreaMargin);
+        }
 
         if (currentGameState == RefCommand::BALL_PLACEMENT_THEM || currentGameState == RefCommand::DIRECT_FREE_THEM || currentGameState == RefCommand::KICKOFF_THEM)
             color = GameSettings::isYellow() ? proto::Drawing::YELLOW : proto::Drawing::BLUE;

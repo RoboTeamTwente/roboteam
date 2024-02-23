@@ -84,9 +84,9 @@ void ControlModule::simulator_angular_control(const std::optional<::rtt::world::
         } else {
             // initialize PID controller for robot
             // below tuning only works ish for erforce, is completely useless in grsim
-            double P = 4.0;
+            double P = 2.5;
             double I = 0.0;
-            double D = 0.01;
+            double D = 0;
             double max_ang_vel = 5.0;  // rad/s
             double dt = 1. / double(Constants::STP_TICK_RATE());
 

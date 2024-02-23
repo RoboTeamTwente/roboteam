@@ -23,7 +23,7 @@ namespace v = rtt::world::view;
 /**
  * @brief Enumerator that defines the name of the dealerFlags
  */
-enum class DealerFlagTitle { WITH_WORKING_BALL_SENSOR, WITH_WORKING_DRIBBLER, READY_TO_INTERCEPT_GOAL_SHOT, KEEPER, CAN_DETECT_BALL, CAN_KICK_BALL };
+enum class DealerFlagTitle { WITH_WORKING_BALL_SENSOR, WITH_WORKING_DRIBBLER, KEEPER, CAN_DETECT_BALL, CAN_KICK_BALL };
 
 /**
  * @brief Enumerator that defines the priority of the dealerFlags

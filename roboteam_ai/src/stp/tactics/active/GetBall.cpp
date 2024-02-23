@@ -7,9 +7,12 @@
 
 #include "stp/tactics/active/GetBall.h"
 
+#include <world/World.hpp>
+
 #include "control/ControlUtils.h"
 #include "stp/skills/GoToPos.h"
 #include "stp/skills/Rotate.h"
+#include "utilities/GameStateManager.hpp"
 #include "world/FieldComputations.h"
 
 namespace rtt::ai::stp::tactic {
@@ -21,34 +24,56 @@ std::optional<StpInfo> GetBall::calculateInfoForSkill(StpInfo const &info) noexc
     if (!skillStpInfo.getRobot() || !skillStpInfo.getBall() || !skillStpInfo.getField()) return std::nullopt;
 
     Vector2 robotPosition = skillStpInfo.getRobot().value()->getPos();
+    Vector2 robotVelocity = skillStpInfo.getRobot().value()->getVel();
+    Vector2 interceptionPosition;
     Vector2 ballPosition = skillStpInfo.getBall().value()->position;
-    if (skillStpInfo.getField().value().leftDefenseArea.contains(ballPosition)) {
-        std::vector<rtt::Vector2> intersections =
-            FieldComputations::getDefenseArea(skillStpInfo.getField().value(), true, 0, 0).intersections({ballPosition, skillStpInfo.getBall().value()->expectedEndPosition});
-        if (intersections.size() == 1) ballPosition = intersections.at(0);
-    } else if (skillStpInfo.getField().value().rightDefenseArea.contains(ballPosition)) {
-        std::vector<rtt::Vector2> intersections =
-            FieldComputations::getDefenseArea(skillStpInfo.getField().value(), false, 0, 0).intersections({ballPosition, skillStpInfo.getBall().value()->expectedEndPosition});
-        if (intersections.size() == 1) ballPosition = intersections.at(0);
+    auto maxRobotVelocity = GameStateManager::getCurrentGameState().getRuleSet().getMaxRobotVel();
+    if (skillStpInfo.getRobot()->get()->hasBall()) {
+        maxRobotVelocity = std::clamp(skillStpInfo.getBall().value()->velocity.length() * 0.8, 0.5, maxRobotVelocity);
+        skillStpInfo.setMaxRobotVelocity(maxRobotVelocity);
     }
-    double ballDistance = (ballPosition - robotPosition).length() - control_constants::BALL_RADIUS - control_constants::ROBOT_RADIUS + control_constants::GO_TO_POS_ERROR_MARGIN +
-                          2 * control_constants::BALL_RADIUS;
+    for (double loopTime = 0; loopTime < 5; loopTime += 0.1) {
+        interceptionPosition = FieldComputations::getBallPositionAtTime(*(skillStpInfo.getCurrentWorld()->getWorld()->getBall()->get()), loopTime);
+        if (skillStpInfo.getObjectsToAvoid().shouldAvoidDefenseArea) {
+            if (skillStpInfo.getField().value().leftDefenseArea.contains(interceptionPosition)) {
+                std::vector<rtt::Vector2> intersections = FieldComputations::getDefenseArea(skillStpInfo.getField().value(), true, 0, 0)
+                                                              .intersections({interceptionPosition, skillStpInfo.getBall().value()->expectedEndPosition});
+                if (intersections.size() == 1) interceptionPosition = intersections.at(0);
+            } else if (skillStpInfo.getField().value().rightDefenseArea.contains(interceptionPosition)) {
+                std::vector<rtt::Vector2> intersections = FieldComputations::getDefenseArea(skillStpInfo.getField().value(), false, 0, 0)
+                                                              .intersections({interceptionPosition, skillStpInfo.getBall().value()->expectedEndPosition});
+                if (intersections.size() == 1) interceptionPosition = intersections.at(0);
+            }
+        }
 
-    if (skillStpInfo.getRobot()->get()->getAngleDiffToBall() > Constants::HAS_BALL_ANGLE() && ballDistance < control_constants::ROBOT_CLOSE_TO_POINT) {
+        auto trajectory = Trajectory2D(robotPosition, robotVelocity, interceptionPosition, maxRobotVelocity, ai::Constants::MAX_ACC_UPPER());
+        auto timeToTarget = trajectory.getTotalTime();
+        if (timeToTarget < loopTime) {
+            break;
+        }
+    }
+    // distance to the ball at the time we intercept it
+    double distanceToInterception = (interceptionPosition - robotPosition).length() - control_constants::BALL_RADIUS - control_constants::ROBOT_RADIUS +
+                                    control_constants::GO_TO_POS_ERROR_MARGIN + 2 * control_constants::BALL_RADIUS;
+    // distance to the ball right now
+    double distanceToBall = (ballPosition - robotPosition).length() - control_constants::BALL_RADIUS - control_constants::ROBOT_RADIUS + control_constants::GO_TO_POS_ERROR_MARGIN +
+                            2 * control_constants::BALL_RADIUS;
+
+    if (skillStpInfo.getRobot()->get()->getAngleDiffToBall() > Constants::HAS_BALL_ANGLE() && distanceToBall < control_constants::ROBOT_CLOSE_TO_POINT) {
         // don't move too close to the ball until the angle to the ball is (roughly) correct
         skillStpInfo.setPositionToMoveTo(
             FieldComputations::projectPointToValidPosition(info.getField().value(), skillStpInfo.getRobot()->get()->getPos(), info.getObjectsToAvoid()));
     } else {
         // We want to keep going towards the ball slowly if we are already close, to make sure we get it
-        auto getBallDistance = std::max(ballDistance, control_constants::ROBOT_RADIUS);
-        Vector2 newRobotPosition = robotPosition + (ballPosition - robotPosition).stretchToLength(getBallDistance);
+        auto getBallDistance = std::max(distanceToInterception, control_constants::ROBOT_RADIUS);
+        Vector2 newRobotPosition = robotPosition + (interceptionPosition - robotPosition).stretchToLength(getBallDistance);
         newRobotPosition = FieldComputations::projectPointToValidPosition(info.getField().value(), newRobotPosition, info.getObjectsToAvoid());
         skillStpInfo.setPositionToMoveTo(newRobotPosition);
     }
 
     skillStpInfo.setAngle((ballPosition - robotPosition).angle());
 
-    if (ballDistance < control_constants::TURN_ON_DRIBBLER_DISTANCE) {
+    if (distanceToBall < control_constants::TURN_ON_DRIBBLER_DISTANCE) {
         skillStpInfo.setDribblerSpeed(100);
     }
 

@@ -2,6 +2,7 @@
 
 #include <roboteam_utils/Shadow.h>
 
+#include "utilities/GameSettings.h"
 #include "utilities/GameStateManager.hpp"
 #include "world/views/WorldDataView.hpp"
 
@@ -31,6 +32,19 @@ bool FieldComputations::getBallAvoidance() {
     }
 
     return false;
+}
+
+Vector2 FieldComputations::getBallPositionAtTime(const rtt::world::ball::Ball &ball, double time) {
+    const double initialVelocity = ball.velocity.length();
+    const double frictionCoefficient =
+        GameSettings::getRobotHubMode() == net::RobotHubMode::SIMULATOR ? ai::stp::control_constants::SIMULATION_FRICTION : ai::stp::control_constants::REAL_FRICTION;
+    double timeToStop = initialVelocity / frictionCoefficient;
+    if (time > timeToStop) {
+        time = timeToStop;
+    }
+    double distance = initialVelocity * time - 0.5 * frictionCoefficient * time * time;
+    auto expectedEndPosition = ball.position + ball.velocity.stretchToLength(distance);
+    return expectedEndPosition;
 }
 
 bool FieldComputations::pointIsValidPosition(const rtt::Field &field, const Vector2 &point, stp::AvoidObjects avoidObjects, double fieldMargin) {

@@ -34,14 +34,7 @@ Status GoToPos::onUpdate(const StpInfo &info) noexcept {
     auto &velocity = commandCollision.robotCommand.velocity;
     command.velocity = velocity.stretchToLength(std::clamp(velocity.length(), 0.0, info.getMaxRobotVelocity()));
 
-    // TODO: Test with control peeps to see what angle works best when driving.
-    // Driving and turning do not work well together, so we only turn when we are close to the target position.
-    // This also avoids driving into the defense area when robots are moving just allong the edge of the defense area.
-    if ((info.getRobot().value()->getPos() - targetPos).length() <= 0.5) {
-        command.targetAngle = info.getAngle();
-    } else {
-        command.targetAngle = info.getRobot().value()->getAngle();
-    }
+    command.targetAngle = info.getAngle();
 
     // Clamp and set dribbler speed
     int targetDribblerPercentage = std::clamp(info.getDribblerSpeed(), 0, 100);

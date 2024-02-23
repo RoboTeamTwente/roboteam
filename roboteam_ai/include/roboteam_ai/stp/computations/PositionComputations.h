@@ -31,6 +31,11 @@ struct EnemyInfo {
     int id;
 };
 
+struct HarasserInfo {
+    int harasserId;
+    double timeToBall;
+};
+
 /**
  * @brief class with computations about positions
  */
@@ -97,14 +102,23 @@ class PositionComputations {
     static void calculateInfoForKeeper(std::unordered_map<std::string, StpInfo> &stpInfos, const Field &field, world::World *world) noexcept;
 
     /**
+     * @brief Calculates the id of the harasser
+     * @param world The current world
+     * @param field The current field
+     * @return HarasserInfo with the id and the time to the ball
+     */
+    static HarasserInfo calculateHarasserId(rtt::world::World *world, const Field &field) noexcept;
+
+    /**
      * @brief Calculates info for the harasser role
      * @param stpInfos The current stpInfos
      * @param roles The current roles
      * @param field The current field
      * @param world The current world
+     * @param timeToBall The time to the ball
      */
     static void calculateInfoForHarasser(std::unordered_map<std::string, StpInfo> &stpInfos, std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT> *roles,
-                                         const Field &field, world::World *world) noexcept;
+                                         const Field &field, world::World *world, double timeToBall) noexcept;
 
     /**
      * @brief Calculates info for the defenders

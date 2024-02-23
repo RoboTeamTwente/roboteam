@@ -56,7 +56,7 @@ std::vector<Vector2> PositionComputations::determineWallPositions(const rtt::Fie
 
     // Calculate the position of the ball, projected onto the field
     if (currentGameState == RefCommand::BALL_PLACEMENT_THEM || currentGameState == RefCommand::BALL_PLACEMENT_US || currentGameState == RefCommand::BALL_PLACEMENT_US_DIRECT) {
-        ballPos = rtt::ai::GameStateManager::getRefereeDesignatedPosition();
+        ballPos = GameStateManager::getRefereeDesignatedPosition();
     } else {
         ballPos = FieldComputations::projectPointInField(field, world->getWorld().value().getBall()->get()->position);
     }
@@ -255,10 +255,41 @@ void PositionComputations::calculateInfoForKeeper(std::unordered_map<std::string
     stpInfos["keeper"].setEnemyRobot(world->getWorld()->getRobotClosestToBall(world::them));
 }
 
+HarasserInfo PositionComputations::calculateHarasserId(world::World *world, const Field &field) noexcept {
+    auto maxRobotVelocity = GameStateManager::getCurrentGameState().getRuleSet().getMaxRobotVel();
+    int harasserId = -1;
+    int keeperId = GameStateManager::getCurrentGameState().keeperId;
+    Vector2 newBallPos;
+    double endTime = 0;
+    for (double loopTime = 0; loopTime < 5; loopTime += 0.1) {
+        newBallPos = FieldComputations::getBallPositionAtTime(*(world->getWorld()->getBall()->get()), loopTime);
+
+        if (field.leftDefenseArea.contains(newBallPos)) {
+            std::vector<rtt::Vector2> intersections =
+                FieldComputations::getDefenseArea(field, true, 0, 0).intersections({newBallPos, world->getWorld()->getBall()->get()->expectedEndPosition});
+            if (intersections.size() == 1) newBallPos = intersections.at(0);
+        } else if (field.rightDefenseArea.contains(newBallPos)) {
+            std::vector<rtt::Vector2> intersections =
+                FieldComputations::getDefenseArea(field, false, 0, 0).intersections({newBallPos, world->getWorld()->getBall()->get()->expectedEndPosition});
+            if (intersections.size() == 1) newBallPos = intersections.at(0);
+        }
+
+        for (const auto &robot : world->getWorld()->getUs()) {
+            if (robot->getId() == keeperId) continue;
+            auto trajectory = Trajectory2D(robot->getPos(), robot->getVel(), newBallPos, maxRobotVelocity, ai::Constants::MAX_ACC_UPPER());
+            auto timeToTarget = trajectory.getTotalTime();
+            if (timeToTarget < loopTime) {
+                return {robot->getId(), loopTime};
+            }
+        }
+    }
+    return {harasserId, endTime};
+}
+
 void PositionComputations::calculateInfoForHarasser(std::unordered_map<std::string, StpInfo> &stpInfos,
-                                                    std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT> *roles, const Field &field,
-                                                    world::World *world) noexcept {
-    rtt::Vector2 ballPos = world->getWorld()->getBall()->get()->position;
+                                                    std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT> *roles, const Field &field, world::World *world,
+                                                    double timeToBall) noexcept {
+    rtt::Vector2 ballPos = FieldComputations::getBallPositionAtTime(*(world->getWorld()->getBall()->get()), timeToBall);
     if (field.leftDefenseArea.contains(ballPos)) {
         std::vector<rtt::Vector2> intersections =
             FieldComputations::getDefenseArea(field, true, 0, 0).intersections({ballPos, world->getWorld()->getBall()->get()->expectedEndPosition});
@@ -282,7 +313,7 @@ void PositionComputations::calculateInfoForHarasser(std::unordered_map<std::stri
         auto enemyPos = enemyClosestToBall->get()->getPos();
         auto targetPos = enemyPos + (field.leftGoalArea.leftLine().center() - enemyPos).stretchToLength(control_constants::ROBOT_RADIUS * 4);
         stpInfos["harasser"].setPositionToMoveTo(targetPos);
-        stpInfos["harasser"].setAngle((ballPos - targetPos).angle());
+        stpInfos["harasser"].setAngle((world->getWorld()->getBall()->get()->position - targetPos).angle());
     } else {
         if (enemyClosestToBall->get()->getPos().dist(field.leftGoalArea.rightLine().center()) >
             stpInfos["harasser"].getRobot()->get()->getPos().dist(field.leftGoalArea.rightLine().center())) {

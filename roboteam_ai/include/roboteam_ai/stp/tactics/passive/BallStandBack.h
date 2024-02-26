@@ -55,6 +55,8 @@ class BallStandBack : public Tactic {
      * @return The name of this tactic
      */
     const char *getName() override;
+
+    bool standBack;
 };
 }  // namespace rtt::ai::stp::tactic
 

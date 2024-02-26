@@ -32,8 +32,11 @@ std::optional<StpInfo> GetBall::calculateInfoForSkill(StpInfo const &info) noexc
         maxRobotVelocity = std::clamp(skillStpInfo.getBall().value()->velocity.length() * 0.8, 0.5, maxRobotVelocity);
         skillStpInfo.setMaxRobotVelocity(maxRobotVelocity);
     }
-    for (double loopTime = 0; loopTime < 5; loopTime += 0.1) {
+    for (double loopTime = 0; loopTime < 1; loopTime += 0.1) {
         interceptionPosition = FieldComputations::getBallPositionAtTime(*(skillStpInfo.getCurrentWorld()->getWorld()->getBall()->get()), loopTime);
+        if (skillStpInfo.getObjectsToAvoid().shouldAvoidOutOfField && !skillStpInfo.getField().value().playArea.contains(interceptionPosition, control_constants::BALL_RADIUS)) {
+            break;
+        }
         if (skillStpInfo.getObjectsToAvoid().shouldAvoidDefenseArea) {
             if (skillStpInfo.getField().value().leftDefenseArea.contains(interceptionPosition)) {
                 std::vector<rtt::Vector2> intersections = FieldComputations::getDefenseArea(skillStpInfo.getField().value(), true, 0, 0)
@@ -47,8 +50,7 @@ std::optional<StpInfo> GetBall::calculateInfoForSkill(StpInfo const &info) noexc
         }
 
         auto trajectory = Trajectory2D(robotPosition, robotVelocity, interceptionPosition, maxRobotVelocity, ai::Constants::MAX_ACC_UPPER());
-        auto timeToTarget = trajectory.getTotalTime();
-        if (timeToTarget < loopTime) {
+        if (trajectory.getTotalTime() < loopTime) {
             break;
         }
     }

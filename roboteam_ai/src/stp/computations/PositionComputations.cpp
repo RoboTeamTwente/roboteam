@@ -257,13 +257,15 @@ void PositionComputations::calculateInfoForKeeper(std::unordered_map<std::string
 
 HarasserInfo PositionComputations::calculateHarasserId(world::World *world, const Field &field) noexcept {
     auto maxRobotVelocity = GameStateManager::getCurrentGameState().getRuleSet().getMaxRobotVel();
-    int harasserId = -1;
     int keeperId = GameStateManager::getCurrentGameState().keeperId;
+    double maximumTimeToIntercept = 1;
     Vector2 newBallPos;
-    double endTime = 0;
-    for (double loopTime = 0; loopTime < 5; loopTime += 0.1) {
+    for (double loopTime = 0; loopTime < 1; loopTime += 0.1) {
         newBallPos = FieldComputations::getBallPositionAtTime(*(world->getWorld()->getBall()->get()), loopTime);
-
+        if (!field.playArea.contains(newBallPos, control_constants::BALL_RADIUS)) {
+            maximumTimeToIntercept = loopTime;
+            break;
+        }
         if (field.leftDefenseArea.contains(newBallPos)) {
             std::vector<rtt::Vector2> intersections =
                 FieldComputations::getDefenseArea(field, true, 0, 0).intersections({newBallPos, world->getWorld()->getBall()->get()->expectedEndPosition});
@@ -277,13 +279,23 @@ HarasserInfo PositionComputations::calculateHarasserId(world::World *world, cons
         for (const auto &robot : world->getWorld()->getUs()) {
             if (robot->getId() == keeperId) continue;
             auto trajectory = Trajectory2D(robot->getPos(), robot->getVel(), newBallPos, maxRobotVelocity, ai::Constants::MAX_ACC_UPPER());
-            auto timeToTarget = trajectory.getTotalTime();
-            if (timeToTarget < loopTime) {
+            if (trajectory.getTotalTime() < loopTime) {
                 return {robot->getId(), loopTime};
             }
         }
     }
-    return {harasserId, endTime};
+    double minTimeToTarget = std::numeric_limits<double>::max();
+    int minTimeRobotId;
+    for (const auto &robot : world->getWorld()->getUs()) {
+        if (robot->getId() == keeperId) continue;
+        auto trajectory = Trajectory2D(robot->getPos(), robot->getVel(), newBallPos, maxRobotVelocity, ai::Constants::MAX_ACC_UPPER());
+        auto timeToTarget = trajectory.getTotalTime();
+        if (timeToTarget < minTimeToTarget) {
+            minTimeToTarget = timeToTarget;
+            minTimeRobotId = robot->getId();
+        }
+    }
+    return {minTimeRobotId, maximumTimeToIntercept};
 }
 
 void PositionComputations::calculateInfoForHarasser(std::unordered_map<std::string, StpInfo> &stpInfos,

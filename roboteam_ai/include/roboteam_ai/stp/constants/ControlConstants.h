@@ -81,8 +81,8 @@ constexpr double AVOID_BALL_DISTANCE_BEFORE_FREE_KICK =
     0.05 + ROBOT_RADIUS + GO_TO_POS_ERROR_MARGIN + BALL_RADIUS + 0.01; /**< Minimum distance all robots should keep when avoiding the ball before a free kick */
 
 /// Friction constants
-constexpr static float SIMULATION_FRICTION = 0.69; /**<  * The expected movement friction of the ball during simulation */
-constexpr static float REAL_FRICTION = 0.5;        /**< The expected movement friction of the ball on the field */
+constexpr static float SIMULATION_FRICTION = 0.71; /**< The expected movement friction of the ball during simulation */
+constexpr static float REAL_FRICTION = 0.44;       /**< The expected movement friction of the ball on the field */
 
 }  // namespace rtt::ai::stp::control_constants
 

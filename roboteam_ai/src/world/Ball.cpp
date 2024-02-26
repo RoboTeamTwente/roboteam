@@ -10,6 +10,10 @@
 #include "world/World.hpp"
 
 namespace rtt::world::ball {
+// Uncomment the following lines to calculate the friction coefficient
+// static Vector2 maxVelocity;
+// static Vector2 posAtMaxVelocity;
+// static std::chrono::steady_clock::time_point timeOfLastReset;
 
 Ball::Ball(const proto::WorldBall& copy, const World* data) : position{copy.pos().x(), copy.pos().y()}, velocity{copy.vel().x(), copy.vel().y()}, visible{copy.visible()} {
     if (!visible || position == Vector2()) {
@@ -50,6 +54,20 @@ void Ball::updateExpectedBallEndPosition(const world::World* data) noexcept {
     const double frictionCoefficient =
         GameSettings::getRobotHubMode() == net::RobotHubMode::SIMULATOR ? ai::stp::control_constants::SIMULATION_FRICTION : ai::stp::control_constants::REAL_FRICTION;
     expectedEndPosition = ball->position + ball->velocity.stretchToLength(ballVelSquared / frictionCoefficient);
+
+    // Uncomment the following lines to calculate the friction coefficient
+    // auto currentTime = std::chrono::steady_clock::now();
+    // if (std::chrono::duration_cast<std::chrono::seconds>(currentTime - timeOfLastReset).count() >= 30) {
+    //     maxVelocity = Vector2(0, 0);
+    //     posAtMaxVelocity = Vector2(0, 0);
+    //     timeOfLastReset = currentTime;
+    // }
+    // if (velocity.length() > maxVelocity.length()) {
+    //     maxVelocity = velocity;
+    //     posAtMaxVelocity = position;
+    // }
+    // std::cout << "Expected friction coefficient: " << maxVelocity.length2() / (posAtMaxVelocity - ball->position).length() << std::endl;
+    // std::cout << "Time till next reset: " << 30.0 - std::chrono::duration<double>(currentTime - timeOfLastReset).count() << std::endl;
 
     std::array<rtt::Vector2, 2> ballPoints = {expectedEndPosition, ball->position};
     rtt::ai::gui::Out::draw(

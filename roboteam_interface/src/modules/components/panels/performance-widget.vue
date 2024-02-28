@@ -63,12 +63,16 @@ const visionData = useVisionDataStore()
     </div>
 
     <div class="centered">
-      <button @click="concat_metrics" class="my-boton">Download metrics</button>
+      <button @click="enviarAlServidor" class="my-boton">Download metrics</button>
     </div>
 
     <div class="centered">
       <p style="font-size: 20px; font-weight: bold; margin-top: 10px;">{{transmit_metrics}}</p>
-    </div>                                  
+    </div> 
+    
+    <div class="centered">
+      <p style="font-size: 20px; font-weight: bold; margin-top: 10px;">{{data_sent_successfully}}</p>
+    </div> 
 
 </template>
 
@@ -172,7 +176,9 @@ export default defineComponent({
       instant_team_speed: 0, 
       concated_metrics: [],
       transmit_metrics : Array(5).fill(0),
-      transmit_heatmap : Array(120).fill(0)
+      transmit_heatmap : Array(120).fill(0), 
+      metrics : Array(125).fill(0),
+      data_sent_successfully: false
 
     };
   },
@@ -239,15 +245,34 @@ export default defineComponent({
       })
     },
 
-    fetchData() {
-      axios.get('http://localhost:5000/api/data')
-        .then(response => {
-          console.log(response.data);
-          // do something with response.data
-        })
-        .catch(error => {
-          console.error(error);
+    async enviarAlServidor() {
+
+      //Call the function to concatenate the metrics to be sent
+      this.concat_metrics();
+
+      // Realiza la solicitud POST al servidor
+      try {
+        const response = await fetch('http://127.0.0.1:50000/process_data', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            metrics: this.metrics,
+          }),
         });
+
+        if (response.ok) {
+          // Manejar la respuesta del servidor
+          const data = await response.json();
+          console.log(data);
+          this.data_sent_successfully = true; 
+        } else {
+          console.error('Error al enviar los datos al servidor');
+        }
+      } catch (error) {
+        console.error('Error de red', error);
+      }
     },
 
     downloadCSV() {
@@ -324,11 +349,17 @@ export default defineComponent({
 
     concat_metrics() {
 
-      let concated_metrics = [(this.total_time/1000).toFixed(2), this.possession.toFixed(2), this.offensive_counter, this.defensive_counter, this.keeper_actions_counter]
+      let concated_metrics = [parseFloat((this.total_time/1000).toFixed(2)), 
+                              parseFloat(this.possession.toFixed(2)), 
+                              this.offensive_counter, 
+                              this.defensive_counter, 
+                              this.keeper_actions_counter]
       let flat_positions = this.x_y_positions_freq.flat()
+      let metrics = [concated_metrics, flat_positions]
 
       this.transmit_metrics = concated_metrics
       this.transmit_heatmap = flat_positions
+      this.metrics = metrics
 
     },
 

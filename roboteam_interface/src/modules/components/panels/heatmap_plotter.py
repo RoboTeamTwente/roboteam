@@ -27,6 +27,6 @@ plt.xlabel('X')
 plt.ylabel('Y')
 
 # Añade un título (puedes personalizarlo según tus datos)
-plt.title('Heatmap from args')
+plt.title('Heatmap')
 
-plt.savefig("Heatmap_from_interface.png")
+plt.savefig("heatmap_from_interface.png")

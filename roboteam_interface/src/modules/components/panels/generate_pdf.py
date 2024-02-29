@@ -15,6 +15,8 @@ import time
 from datetime import datetime
 from PIL import Image as PILImage
 
+# /home/juanjo20/roboteam/roboteam_interface/src/modules/components/panels
+
 def generate_heatmap(data_array): 
 
     plt.imshow(data_array, cmap='RdBu', interpolation='nearest')
@@ -35,6 +37,7 @@ def generate_pdf(a, b, c, d, e, header_image_path, center_image_path, filename='
         parent=styles['BodyText'],
         leftIndent=40,
         spaceAfter=12,
+        spaceBefore=0,
         textColor=colors.black,
         fontName='Helvetica-Bold',
         fontSize = 24
@@ -44,11 +47,33 @@ def generate_pdf(a, b, c, d, e, header_image_path, center_image_path, filename='
         'CustomStyle',
         parent=styles['BodyText'],
         leftIndent=40,
-        spaceBefore=6,
-        spaceAfter=6,
+        spaceBefore=8,
+        spaceAfter=8, 
         textColor=colors.black,
         fontName='Helvetica-Bold',
         fontSize = 12
+    )
+
+    score_style = ParagraphStyle(
+        'CustomStyle',
+        parent=styles['BodyText'],
+        leftIndent=100,
+        spaceBefore=6,
+        spaceAfter=12,
+        textColor=colors.black,
+        fontName='Helvetica-Bold',
+        fontSize = 28
+    )
+
+    score_result = ParagraphStyle(
+        'CustomStyle',
+        parent=styles['BodyText'],
+        leftIndent=210,
+        spaceBefore=12,
+        spaceAfter=12,
+        textColor=colors.black,
+        fontName='Helvetica-Bold',
+        fontSize = 34
     )
 
     aligh_left = ParagraphStyle(
@@ -67,9 +92,9 @@ def generate_pdf(a, b, c, d, e, header_image_path, center_image_path, filename='
 
     # Agregar el encabezado con la imagen
     header_image = PILImage.open(header_image_path)
-    header_image_width, header_image_height = int(pdf_document.width*1.2), 100
-    header_image = header_image.resize((header_image_width, header_image_height))
-    header_image_path = 'robo_header.jpeg'  # Nombre del archivo de imagen de encabezado
+    header_image_width, header_image_height = int(pdf_document.width), 100*1.2
+    #header_image = header_image.resize((header_image_width, header_image_height))
+    #header_image_path = 'robo_header.jpeg'  # Nombre del archivo de imagen de encabezado
     header_image.save(header_image_path)
 
     content.append(Image(header_image_path, width=pdf_document.width, height=header_image_height))
@@ -77,22 +102,29 @@ def generate_pdf(a, b, c, d, e, header_image_path, center_image_path, filename='
 
     # Agregar los puntos con texto en negrita
     content.append(Paragraph(f"{formated_date}", aligh_left))
-    content.append(Paragraph("<b>PERFORMANCE REPORT</b>", header_style))
+
     content.append(Spacer(1, 10))
-    content.append(Paragraph(f"<b>- Total time:</b> {a}", custom_style))
-    content.append(Paragraph(f"<b>- Possession:</b> {b}", custom_style))
+
+    score_teams = '<font color="yellow"><b>YELLOW TEAM</b></font> - <font color="blue"><b>BLUE TEAM</b></font>'
+    content.append(Paragraph(score_teams, score_style))
+    content.append(Spacer(10, 1))
+    score_goals = '0<font color="white"><b>____</b></font><font color="white"><b>____--</b></font>0'
+    content.append(Paragraph(score_goals, score_result))
+
+    content.append(Spacer(10, 20))
+    content.append(Paragraph(f"<b>- Total played time:</b> {a}s", custom_style))
+    content.append(Paragraph(f"<b>- Attacking/defending ratio:</b> {b}%", custom_style))
     content.append(Paragraph(f"<b>- Number of offensive actions:</b> {c}", custom_style))
     content.append(Paragraph(f"<b>- Number of defensive actions:</b> {d}", custom_style))
     content.append(Paragraph(f"<b>- Number of keeper actions:</b> {e}", custom_style))
-
-    # Agregar espacio antes de la imagen centrada
-    content.append(Spacer(1, 30))
+    content.append(Paragraph(f"<b>- Team's heatmap:</b>", custom_style))
+    content.append(Spacer(5, 1))
 
     # Agregar la imagen centrada
     center_image = PILImage.open(center_image_path)
     center_image_width, center_image_height = 200, 200
-    center_image = center_image.resize((center_image_width, center_image_height))
-    center_image_path = 'center_image.png'  # Nombre del archivo de imagen centrada
+    #center_image = center_image.resize((center_image_width, center_image_height))
+    #center_image_path = 'center_image.png'  # Nombre del archivo de imagen centrada
     center_image.save(center_image_path)
 
     content.append(Image(center_image_path, width=center_image_width, height=center_image_height, hAlign='CENTER'))
@@ -143,7 +175,7 @@ def manejar_post():
                      general_metrics[2], 
                      general_metrics[3], 
                      general_metrics[4], 
-                     "robo_header.jpeg",
+                     "Report_header.png",
                      "heatmap_from_interface.png", 
                      "performance_report.pdf")
         print("Report generated successfully!!!")
@@ -155,6 +187,7 @@ def manejar_post():
     except Exception as e:
         # Manejar cualquier error que pueda ocurrir durante el procesamiento
         print("Msg NOT processed successfully")
+        print(e)
         return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':

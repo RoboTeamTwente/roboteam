@@ -8,8 +8,8 @@
 #include <stp/computations/PositionScoring.h>
 
 #include "control/ControlUtils.h"
-#include "roboteam_utils/Tube.h"
 #include "gui/Out.h"
+#include "roboteam_utils/Tube.h"
 #include "stp/constants/ControlConstants.h"
 
 namespace rtt::ai::stp::computations {
@@ -71,12 +71,12 @@ PassInfo PassComputations::calculatePass(gen::ScoreProfile profile, const rtt::w
                 rtt::ai::gui::Out::draw(
                     {
                         .label = "pass_location" + std::to_string(numberOfPoints),
-                        .color = passInfo.passScore >= 245 ? proto::Drawing::GREEN : proto::Drawing::MAGENTA,
+                        .color = scoredPosition.score >= 245 ? proto::Drawing::GREEN : proto::Drawing::MAGENTA,
                         .method = proto::Drawing::PLUSES,
                         .category = proto::Drawing::DEBUG,
                         .forRobotId = passInfo.passerId,
-                        .size = pow(passInfo.passScore/40, 2) + 4,
-                        .thickness = pow(passInfo.passScore/80, 2) + 3,
+                        .size = pow(scoredPosition.score / 40, 2) + 4,
+                        .thickness = pow(scoredPosition.score / 80, 2) + 3,
                     },
                     pointToPassTo);
                 if (scoredPosition.score > passInfo.passScore) {

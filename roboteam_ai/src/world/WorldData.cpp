@@ -50,11 +50,11 @@ WorldData::WorldData(const World *data, proto::World &protoMsg) noexcept : time{
     setViewVectors();
 
     // TODO: add information from robots which were only seen on feedback but not on vision
-    if (GameSettings::isYellow() && protoMsg.yellow_unseen_robots_size() > 0) {
-        RTT_WARNING("Received feedback from unseen robots!")
-    } else if (!GameSettings::isYellow() && protoMsg.blue_unseen_robots_size() > 0) {
-        RTT_WARNING("Received feedback from unseen robots!")
-    }
+    // if (GameSettings::isYellow() && protoMsg.yellow_unseen_robots_size() > 0) {
+    //     RTT_WARNING("Received feedback from unseen robots!")
+    // } else if (!GameSettings::isYellow() && protoMsg.blue_unseen_robots_size() > 0) {
+    //     RTT_WARNING("Received feedback from unseen robots!")
+    // }
 }
 
 std::vector<view::RobotView> const &WorldData::getUs() const noexcept { return us; }

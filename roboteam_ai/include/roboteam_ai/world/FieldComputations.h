@@ -45,6 +45,13 @@ class FieldComputations {
     static bool getBallAvoidance();
 
     /**
+     * @brief Get the expected ball position after a certain amount of time
+     * @param ball The current ball position
+     * @param time The time in seconds after which the expected ball position should be returned
+     */
+    static Vector2 getBallPositionAtTime(const rtt::world::ball::Ball &ball, double time);
+
+    /**
      * @brief Check whether a given point is a valid position given which parts of the field should be avoided (note that shouldAvoidBall is not taken into consideration)
      * @param field The field class which is used to determine the boundaries of the field.
      * @param point The point for which it is checked whether it is valid or not

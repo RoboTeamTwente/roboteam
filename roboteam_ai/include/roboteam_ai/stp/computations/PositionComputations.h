@@ -31,6 +31,11 @@ struct EnemyInfo {
     int id;
 };
 
+struct HarasserInfo {
+    int harasserId;
+    double timeToBall;
+};
+
 /**
  * @brief class with computations about positions
  */
@@ -70,13 +75,15 @@ class PositionComputations {
     static Vector2 getWallPosition(int index, int amountDefenders, const Field &field, world::World *world);
 
     /**
-     * @brief Calculates where a robot should stand to prevent the ball from going in the goal
-     * @param field The current field
+     * @brief Calculates the position of the robot to avoid other robots
+     * @param targetPosition The initial target position
      * @param world The current world
-     * @return The position a robot should go to to block the ball (this does not depend on the position of any of our robots)
+     * @param robotId The id of the robot
+     * @param avoidObj The objects to avoid
+     * @param field The current field
+     * @return A position that is not too close to other robots
      */
-    static Vector2 getBallBlockPosition(const Field &field, const world::World *world);
-
+    static Vector2 calculateAvoidRobotsPosition(Vector2 targetPosition, const world::World *world, int robotId, const AvoidObjects &avoidObj, const Field &field);
     /**
      * @brief Calculates a position, near the target position, that is not too close to the ball
      * @param targetPosition The initial target position
@@ -95,14 +102,23 @@ class PositionComputations {
     static void calculateInfoForKeeper(std::unordered_map<std::string, StpInfo> &stpInfos, const Field &field, world::World *world) noexcept;
 
     /**
+     * @brief Calculates the id of the harasser
+     * @param world The current world
+     * @param field The current field
+     * @return HarasserInfo with the id and the time to the ball
+     */
+    static HarasserInfo calculateHarasserId(rtt::world::World *world, const Field &field) noexcept;
+
+    /**
      * @brief Calculates info for the harasser role
      * @param stpInfos The current stpInfos
      * @param roles The current roles
      * @param field The current field
      * @param world The current world
+     * @param timeToBall The time to the ball
      */
     static void calculateInfoForHarasser(std::unordered_map<std::string, StpInfo> &stpInfos, std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT> *roles,
-                                         const Field &field, world::World *world) noexcept;
+                                         const Field &field, world::World *world, double timeToBall) noexcept;
 
     /**
      * @brief Calculates info for the defenders

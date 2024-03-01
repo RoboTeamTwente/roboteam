@@ -156,6 +156,12 @@ class Play {
      */
     void reassignRobots() noexcept;
 
+    /**
+     * @brief Draws the margins for the defence area, ball and cardRobot.
+     * This function will draw margins in the interfacce
+     */
+    void DrawMargins() noexcept;
+
     size_t previousRobotNum{}; /**< The previous amount of robots. This is used to check if we need to re-deal (if a robot disappears for example) */
 
     int previousKeeperId = -1;  /**< The previous keeperId. This is used to check if we need to re-deal (if keeper id was changed from UI or GameController) */

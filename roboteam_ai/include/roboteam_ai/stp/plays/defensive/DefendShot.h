@@ -43,6 +43,8 @@ class DefendShot : public Play {
      * @brief Gets the play name
      */
     const char* getName() const override;
+
+    HarasserInfo harasserInfo;
 };
 }  // namespace rtt::ai::stp::play
 

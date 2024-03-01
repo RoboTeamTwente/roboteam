@@ -20,16 +20,25 @@ std::optional<StpInfo> BallStandBack::calculateInfoForSkill(StpInfo const &info)
     if (!info.getPositionToMoveTo() || !skillStpInfo.getBall() || !skillStpInfo.getRobot()) return std::nullopt;
     RefCommand currentGameState = GameStateManager::getCurrentGameState().getCommandId();
     Vector2 targetPos;
+    Vector2 ballTarget = info.getBall()->get()->position;
     if (standStillCounter > 60) {
-        auto moveVector = info.getRobot()->get()->getPos() - info.getBall()->get()->position;
+        auto moveVector = info.getRobot()->get()->getPos() - ballTarget;
         double stretchLength =
             (currentGameState == RefCommand::BALL_PLACEMENT_US_DIRECT) ? control_constants::AVOID_BALL_DISTANCE_BEFORE_FREE_KICK : control_constants::AVOID_BALL_DISTANCE;
-        targetPos = info.getBall()->get()->position + moveVector.stretchToLength(stretchLength);
+        targetPos = ballTarget + moveVector.stretchToLength(stretchLength);
+        if (((info.getRobot()->get()->getPos() - targetPos).length() < control_constants::GO_TO_POS_ERROR_MARGIN || standBack == true) &&
+            currentGameState != RefCommand::BALL_PLACEMENT_US_DIRECT) {
+            targetPos = ballTarget + (skillStpInfo.getField().value().leftGoalArea.leftLine().center() - ballTarget).stretchToLength(control_constants::AVOID_BALL_DISTANCE);
+            standBack = true;
+            skillStpInfo.setShouldAvoidBall(true);
+        }
     } else {
+        standBack = false;
         standStillCounter++;
         targetPos = info.getRobot()->get()->getPos();
+        skillStpInfo.setShouldAvoidBall(false);
     }
-    skillStpInfo.setShouldAvoidBall(false);
+
     double angle = (info.getBall()->get()->position - targetPos).angle();
     skillStpInfo.setPositionToMoveTo(targetPos);
     skillStpInfo.setAngle(angle);

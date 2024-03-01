@@ -60,6 +60,15 @@ rtt::BB::CommandCollision PositionControl::computeAndTrackTrajectory(const rtt::
             firstCollision = worldObjects.getFirstCollision(world, field, computedTrajectories[robotId], computedPaths, robotId, avoidObjects, completedTimeSteps);
             if (firstCollision.has_value()) {
                 commandCollision.collisionData = firstCollision;
+
+                if ((firstCollision.value().collisionType == BB::CollisionType::BALL) && firstCollision.value().collisionTime <= 0.11) {
+                    targetPosition = handleBallCollision(world, field, currentPosition, avoidObjects);
+                    computedTrajectories[robotId] = Trajectory2D(currentPosition, currentVelocity, targetPosition, 1.0, ai::Constants::MAX_ACC_UPPER());
+                }
+                if ((firstCollision.value().collisionType == BB::CollisionType::BALLPLACEMENT) && firstCollision.value().collisionTime <= 0.11) {
+                    targetPosition = handleBallPlacementCollision(world, field, currentPosition, avoidObjects);
+                    computedTrajectories[robotId] = Trajectory2D(currentPosition, currentVelocity, targetPosition, 1.0, ai::Constants::MAX_ACC_UPPER());
+                }
             }
         }
 
@@ -116,6 +125,57 @@ rtt::BB::CommandCollision PositionControl::computeAndTrackTrajectory(const rtt::
     return commandCollision;
 }
 
+rtt::Vector2 PositionControl::handleBallCollision(const rtt::world::World *world, const rtt::Field &field, Vector2 currentPosition, stp::AvoidObjects avoidObjects) {
+    auto ballPos = world->getWorld()->getBall()->get()->position;
+    auto direction = currentPosition - ballPos;
+    Vector2 targetPosition = currentPosition + direction.stretchToLength(stp::control_constants::AVOID_BALL_DISTANCE * 2);
+    if (FieldComputations::pointIsValidPosition(field, targetPosition, avoidObjects, stp::control_constants::OUT_OF_FIELD_MARGIN)) {
+        return targetPosition;
+    }
+    int rotationStepDegrees = 10;
+    int maxRotationDegrees = 90;
+    for (int i = rotationStepDegrees; i <= maxRotationDegrees; i += rotationStepDegrees) {
+        for (int sign : {1, -1}) {
+            double rotation = sign * i * M_PI / 180;
+            Vector2 rotatedDirection = direction.stretchToLength(stp::control_constants::AVOID_BALL_DISTANCE * 2).rotate(rotation);
+            Vector2 potentialTargetPosition = currentPosition + rotatedDirection;
+            if (FieldComputations::pointIsValidPosition(field, potentialTargetPosition, avoidObjects, stp::control_constants::OUT_OF_FIELD_MARGIN)) {
+                return potentialTargetPosition;
+            }
+        }
+    }
+    return currentPosition + direction.stretchToLength(stp::control_constants::AVOID_BALL_DISTANCE * 2).rotate(M_PI / 2);
+}
+
+rtt::Vector2 PositionControl::handleBallPlacementCollision(const rtt::world::World *world, const rtt::Field &field, Vector2 currentPosition, stp::AvoidObjects avoidObjects) {
+    auto placementPos = rtt::ai::GameStateManager::getRefereeDesignatedPosition();
+    auto ballPos = world->getWorld()->getBall()->get()->position;
+    auto direction = (placementPos - ballPos).stretchToLength(stp::control_constants::AVOID_BALL_DISTANCE * 2);
+    double distance = (placementPos - ballPos).length();
+    if (distance > 0.10) {  // distance is more than 10cm
+        direction = direction.rotate((currentPosition - ballPos).cross(placementPos - ballPos) < 0 ? M_PI / 2 : -M_PI / 2);
+    } else {  // distance is less than or equal to 10cm
+        direction = (currentPosition - ballPos).stretchToLength(stp::control_constants::AVOID_BALL_DISTANCE * 2);
+    }
+    Vector2 targetPosition = currentPosition + direction;
+    if (FieldComputations::pointIsValidPosition(field, targetPosition, avoidObjects, stp::control_constants::OUT_OF_FIELD_MARGIN)) {
+        return targetPosition;
+    }
+    int rotationStepDegrees = 10;
+    int maxRotationDegrees = 90;
+    for (int i = rotationStepDegrees; i <= maxRotationDegrees; i += rotationStepDegrees) {
+        for (int sign : {1, -1}) {
+            double rotation = sign * i * M_PI / 180;
+            Vector2 rotatedDirection = direction.rotate(rotation);
+            Vector2 potentialTargetPosition = currentPosition + rotatedDirection;
+            if (FieldComputations::pointIsValidPosition(field, potentialTargetPosition, avoidObjects, stp::control_constants::OUT_OF_FIELD_MARGIN)) {
+                return potentialTargetPosition;
+            }
+        }
+    }
+    return targetPosition;
+}
+
 double PositionControl::calculateScore(const rtt::world::World *world, const rtt::Field &field, std::optional<BB::CollisionData> &firstCollision,
                                        Trajectory2D &trajectoryAroundCollision, stp::AvoidObjects avoidObjects, double startTime) {
     double totalTime = trajectoryAroundCollision.getTotalTime();
@@ -164,7 +224,7 @@ std::optional<Trajectory2D> PositionControl::findNewTrajectory(const rtt::world:
               [&targetPosition](const Vector2 &a, const Vector2 &b) { return (a - targetPosition).length() < (b - targetPosition).length(); });
     timeStep *= 3;
 
-    double bestScore = 999;
+    double bestScore = std::numeric_limits<double>::max();
     std::optional<Trajectory2D> bestTrajectory = std::nullopt;
 
     for (const auto &intermediatePoint : intermediatePoints) {
@@ -198,7 +258,7 @@ std::vector<Vector2> PositionControl::createIntermediatePoints(const rtt::Field 
     float angleBetweenIntermediatePoints = M_PI_4 / 2;
     float fieldHeight = field.playArea.height();
     float pointExtension = fieldHeight / 18;
-    Vector2 collisionToTargetNormalized = (firstCollision->collisionPosition - targetPosition).normalize();
+    Vector2 collisionToTargetNormalized = (targetPosition - firstCollision->collisionPosition).normalize();
     Vector2 pointToDrawFrom = firstCollision->collisionPosition + collisionToTargetNormalized * pointExtension;
 
     std::vector<Vector2> intermediatePoints;
@@ -206,7 +266,9 @@ std::vector<Vector2> PositionControl::createIntermediatePoints(const rtt::Field 
     Vector2 pointToRotate = pointToDrawFrom + collisionToTargetNormalized * intermediatePointRadius;
     for (int i = -6; i < 7; i++) {
         if (i != 0) {
-            Vector2 intermediatePoint = pointToRotate.rotateAroundPoint(i * angleBetweenIntermediatePoints, pointToDrawFrom);
+            // The slight offset to the angle makes sure the points are not symmetrically placed, this means we don't keep on switching between two points that are equally good
+            // when there is a collision at time 0ss
+            Vector2 intermediatePoint = pointToRotate.rotateAroundPoint(i * angleBetweenIntermediatePoints - 0.01, pointToDrawFrom);
 
             if (field.playArea.contains(intermediatePoint)) {
                 intermediatePoints.emplace_back(intermediatePoint);

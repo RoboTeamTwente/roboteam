@@ -19,8 +19,8 @@ constexpr double MAX_KICK_ATTEMPTS = 25; /**< Maximum allowed kicking attempts *
 constexpr double MAX_CHIP_ATTEMPTS = 25; /**< Maximum allowed chipping attempts */
 
 /// Robot physical constants
-constexpr double ROBOT_RADIUS = 0.088;   /**< Radius of a robot */
-constexpr double CENTER_TO_FRONT = 0.05; /**< Distance from center of the robot to the front of the robot */
+constexpr double ROBOT_RADIUS = 0.088;    /**< Radius of a robot */
+constexpr double CENTER_TO_FRONT = 0.069; /**< Distance from center of the robot to the front of the robot */
 
 /// Dribbler constants
 // The distance from robot to ball at which the dribbler should turn on
@@ -52,9 +52,8 @@ constexpr double GO_TO_POS_ERROR_MARGIN = 0.01; /**< Distance error for a robot 
 // Angle margin for 'goToPos'. If the robot is within this margin, goToPos is successful
 constexpr double GO_TO_POS_ANGLE_ERROR_MARGIN = 0.04; /**< Angle error for a robot to be considered to have reached a position */
 // Maximum inaccuracy during ballplacement
-constexpr double BALL_PLACEMENT_MARGIN = 0.15;            /**< Distance error for the ball to be considered to have reached the ball placement position*/
-constexpr double DEALER_SPEED_FACTOR = 0.5;               /**< Multiplication factor of speed used by the dealer */
-constexpr double ENEMY_ALREADY_ASSIGNED_MULTIPLIER = 0.9; /**< Multiplication factor for the distance to goal used by the dealer when the enemy is already assigned */
+constexpr double BALL_PLACEMENT_MARGIN = 0.15 - BALL_RADIUS; /**< Distance error for the ball to be considered to have reached the ball placement position*/
+constexpr double ENEMY_ALREADY_ASSIGNED_MULTIPLIER = 0.9;    /**< Multiplication factor for the distance to goal used by the dealer when the enemy is already assigned */
 
 /// Invariant constants
 constexpr uint8_t FUZZY_TRUE = 255;          /**< Value at which the fuzzy logic is considered 100% true */
@@ -80,6 +79,10 @@ constexpr double DISTANCE_FROM_GOAL_CLOSE = 2 * ROBOT_RADIUS; /**< Distance from
 constexpr double AVOID_BALL_DISTANCE = 0.5 + ROBOT_RADIUS + GO_TO_POS_ERROR_MARGIN + BALL_RADIUS + 0.1; /**< Minimum distance all robots should keep when avoiding the ball */
 constexpr double AVOID_BALL_DISTANCE_BEFORE_FREE_KICK =
     0.05 + ROBOT_RADIUS + GO_TO_POS_ERROR_MARGIN + BALL_RADIUS + 0.01; /**< Minimum distance all robots should keep when avoiding the ball before a free kick */
+
+/// Friction constants
+constexpr static float SIMULATION_FRICTION = 0.71; /**< The expected movement friction of the ball during simulation */
+constexpr static float REAL_FRICTION = 0.44;       /**< The expected movement friction of the ball on the field */
 
 }  // namespace rtt::ai::stp::control_constants
 

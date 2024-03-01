@@ -252,6 +252,7 @@ double Dealer::getRobotScoreForDistance(const stp::StpInfo &stpInfo, const v::Ro
     if (stpInfo.getPositionToShootAt().has_value()) target_position = world.getBall()->get()->position;
     if (stpInfo.getPositionToMoveTo().has_value()) target_position = stpInfo.getPositionToMoveTo().value();
     // If robot is keeper, set distance to self. Basically 0
+    // TODO: Is this if ever true? This is already handeled before right?
     if (stpInfo.getRoleName() == "keeper" && robot->getId() == GameStateManager::getCurrentGameState().keeperId) target_position = robot->getPos();
 
     // No target found to move to
@@ -261,14 +262,7 @@ double Dealer::getRobotScoreForDistance(const stp::StpInfo &stpInfo, const v::Ro
             RTT_WARNING("No target position found for role " + stpInfo.getRoleName() + " for robot " + std::to_string(robot->getId()))
         return 0;
     }
-    double dealer_speed_factor = stp::control_constants::DEALER_SPEED_FACTOR;
-    // if role is harasher
-    if (stpInfo.getRoleName() == "harasser") {
-        target_position = target_position.value() + world.getBall()->get()->velocity * dealer_speed_factor;
-        distance = (robot->getPos() + robot->getVel() * dealer_speed_factor).dist(*target_position);
-    } else {
-        distance = robot->getPos().dist(*target_position);
-    }
+    distance = robot->getPos().dist(*target_position);
 
     return costForDistance(distance, field->playArea.height());
 }
@@ -279,12 +273,6 @@ double Dealer::getDefaultFlagScores(const v::RobotView &robot, const Dealer::Dea
         // return costForProperty(robot->isWorkingBallSensor());
         case DealerFlagTitle::WITH_WORKING_DRIBBLER:
             return costForProperty(robot->isWorkingDribbler());
-        // case DealerFlagTitle::READY_TO_INTERCEPT_GOAL_SHOT: {
-        // get distance to line between ball and goal
-        // TODO this method can be improved by choosing a better line for the interception.
-        // LineSegment lineSegment = {world.getBall()->get()->position, field->leftGoalArea.rightLine().center()};
-        // return lineSegment.distanceToLine(robot->getPos());
-        // }
         case DealerFlagTitle::KEEPER:
             return costForProperty(robot->getId() == GameStateManager::getCurrentGameState().keeperId);
         case DealerFlagTitle::CAN_DETECT_BALL: {

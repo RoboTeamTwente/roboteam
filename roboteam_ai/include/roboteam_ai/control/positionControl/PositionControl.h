@@ -106,6 +106,26 @@ class PositionControl {
                                                         Vector2 targetPosition, double maxRobotVelocity, stp::PIDType pidType, stp::AvoidObjects avoidObjects);
 
     /**
+     * @brief Handles the collision with the ball at the current position. This function will calculate a new target, moving away from the ball as quickly as possible.
+     * @param world a pointer to the current world
+     * @param field the field object, used onwards by the collision detector
+     * @param currentPosition the current position of the robot
+     * @param avoidObjects whether or not to avoid objects
+     * @return A new trajectory to the target
+     */
+    Vector2 handleBallCollision(const rtt::world::World *world, const rtt::Field &field, Vector2 currentPosition, stp::AvoidObjects avoidObjects);
+
+    /**
+     * @brief Handles the collision with the ball placement at the current position, will move away from the ball placement location to ball line as quickly as possible.
+     * @param world a pointer to the current world
+     * @param field the field object, used onwards by the collision detector
+     * @param currentPosition the current position of the robot
+     * @param avoidObjects whether or not to avoid objects
+     * @return A new trajectory to the target
+     */
+    Vector2 handleBallPlacementCollision(const rtt::world::World *world, const rtt::Field &field, Vector2 currentPosition, stp::AvoidObjects avoidObjects);
+
+    /**
      * @brief Calculates a score for a trajectory. The score is based on the distance to the target and the
      * distance to the first collision on the path
      * @param world a pointer to the current world

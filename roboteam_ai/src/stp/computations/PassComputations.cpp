@@ -9,6 +9,7 @@
 
 #include "control/ControlUtils.h"
 #include "roboteam_utils/Tube.h"
+#include "gui/Out.h"
 #include "stp/constants/ControlConstants.h"
 
 namespace rtt::ai::stp::computations {
@@ -60,10 +61,24 @@ PassInfo PassComputations::calculatePass(gen::ScoreProfile profile, const rtt::w
 
     // Now find out the best pass location and corresponding info
     auto possiblePassLocationsVector = getPassGrid(field).getPoints();
+    int numberOfPoints = 0;
     for (auto& pointVector : possiblePassLocationsVector) {
         for (auto& point : pointVector) {
+            numberOfPoints++;
+            std::array<rtt::Vector2, 1> pointToPassTo = {point};
             if (pointIsValidPassLocation(point, ballLocation, possibleReceiverLocations, passerLocation, field, world)) {
                 gen::ScoredPosition scoredPosition = PositionScoring::scorePosition(point, profile, field, world);
+                rtt::ai::gui::Out::draw(
+                    {
+                        .label = "pass_location" + std::to_string(numberOfPoints),
+                        .color = passInfo.passScore >= 245 ? proto::Drawing::GREEN : proto::Drawing::MAGENTA,
+                        .method = proto::Drawing::PLUSES,
+                        .category = proto::Drawing::DEBUG,
+                        .forRobotId = passInfo.passerId,
+                        .size = pow(passInfo.passScore/40, 2) + 4,
+                        .thickness = pow(passInfo.passScore/80, 2) + 3,
+                    },
+                    pointToPassTo);
                 if (scoredPosition.score > passInfo.passScore) {
                     passInfo.passScore = scoredPosition.score;
                     passInfo.passLocation = scoredPosition.position;
@@ -72,7 +87,6 @@ PassInfo PassComputations::calculatePass(gen::ScoreProfile profile, const rtt::w
             }
         }
     }
-
     if (passInfo.passScore == 0) {
         // If no good pass is found, pass to the robot furthest in the field
         auto furthestRobotIt = std::max_element(possibleReceiverLocations.begin(), possibleReceiverLocations.end(), [](auto& p1, auto& p2) { return p1.x > p2.x; });

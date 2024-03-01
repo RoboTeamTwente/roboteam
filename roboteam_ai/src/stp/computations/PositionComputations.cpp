@@ -56,7 +56,7 @@ std::vector<Vector2> PositionComputations::determineWallPositions(const rtt::Fie
 
     // Calculate the position of the ball, projected onto the field
     if (currentGameState == RefCommand::BALL_PLACEMENT_THEM || currentGameState == RefCommand::BALL_PLACEMENT_US || currentGameState == RefCommand::BALL_PLACEMENT_US_DIRECT) {
-        ballPos = rtt::ai::GameStateManager::getRefereeDesignatedPosition();
+        ballPos = GameStateManager::getRefereeDesignatedPosition();
     } else {
         ballPos = FieldComputations::projectPointInField(field, world->getWorld().value().getBall()->get()->position);
     }
@@ -171,17 +171,56 @@ std::vector<Vector2> PositionComputations::determineWallPositions(const rtt::Fie
     }
     return positions;
 }
+
+Vector2 PositionComputations::calculateAvoidRobotsPosition(Vector2 targetPosition, const world::World *world, int robotId, const AvoidObjects &avoidObj, const Field &field) {
+    std::vector<Vector2> pointsToAvoid = {};
+    if (avoidObj.shouldAvoidOurRobots) {
+        for (auto &robot : world->getWorld()->getUs()) {
+            if (robot->getId() != robotId) {
+                pointsToAvoid.push_back(robot->getPos());
+            }
+        }
+    }
+    if (avoidObj.shouldAvoidTheirRobots || avoidObj.notAvoidTheirRobotId != -1) {
+        for (auto &robot : world->getWorld()->getThem()) {
+            if (robot->getId() != avoidObj.notAvoidTheirRobotId) {
+                pointsToAvoid.push_back(robot->getPos());
+            }
+        }
+    }
+
+    if (std::all_of(pointsToAvoid.begin(), pointsToAvoid.end(),
+                    [&](const Vector2 &avoidPoint) { return avoidPoint.dist(targetPosition) >= 2 * control_constants::ROBOT_RADIUS; })) {
+        return targetPosition;
+    }
+
+    for (int distanceSteps = 0; distanceSteps < 5; ++distanceSteps) {
+        auto distance = 4 * control_constants::ROBOT_RADIUS + distanceSteps * control_constants::ROBOT_RADIUS * 2;
+        auto possiblePoints = Grid(targetPosition.x - distance / 2.0, targetPosition.y - distance / 2.0, distance, distance, 3, 3).getPoints();
+        for (auto &pointVector : possiblePoints) {
+            for (auto &point : pointVector) {
+                if (FieldComputations::pointIsValidPosition(field, point) && std::all_of(pointsToAvoid.begin(), pointsToAvoid.end(), [&](const Vector2 &avoidPoint) {
+                        return avoidPoint.dist(point) >= 2 * control_constants::ROBOT_RADIUS;
+                    })) {
+                    return point;
+                }
+            }
+        }
+    }
+    RTT_WARNING("Could not find good position to avoid robots for robot with id: " + std::to_string(robotId));
+    return targetPosition;
+}
+
 Vector2 PositionComputations::calculateAvoidBallPosition(Vector2 targetPosition, Vector2 ballPosition, const Field &field) {
     RefCommand currentGameState = GameStateManager::getCurrentGameState().getCommandId();
 
     std::unique_ptr<Shape> avoidShape;
 
-    // During ball placement, we need to avoid the area between the ball and the target position by a certain margin
     if (currentGameState == RefCommand::BALL_PLACEMENT_US || currentGameState == RefCommand::BALL_PLACEMENT_THEM || currentGameState == RefCommand::BALL_PLACEMENT_US_DIRECT) {
-        avoidShape = std::make_unique<Tube>(Tube(ballPosition, GameStateManager::getRefereeDesignatedPosition(), control_constants::AVOID_BALL_DISTANCE + 0.1));
+        avoidShape = std::make_unique<Tube>(
+            Tube(ballPosition, GameStateManager::getRefereeDesignatedPosition(), control_constants::AVOID_BALL_DISTANCE + control_constants::GO_TO_POS_ERROR_MARGIN));
     } else {
-        // During stop gamestate, we need to avoid the area directly around the ball.
-        avoidShape = std::make_unique<Circle>(Circle(ballPosition, control_constants::AVOID_BALL_DISTANCE));
+        avoidShape = std::make_unique<Circle>(Circle(ballPosition, control_constants::AVOID_BALL_DISTANCE + control_constants::GO_TO_POS_ERROR_MARGIN));
     }
 
     if (avoidShape->contains(targetPosition)) {
@@ -196,28 +235,19 @@ Vector2 PositionComputations::calculateAvoidBallPosition(Vector2 targetPosition,
 }
 
 Vector2 PositionComputations::calculatePositionOutsideOfShape(Vector2 targetPosition, const rtt::Field &field, const std::unique_ptr<Shape> &avoidShape) {
-    Vector2 newTarget = targetPosition;  // The new position to go to
-    bool pointFound = false;
     for (int distanceSteps = 0; distanceSteps < 5; ++distanceSteps) {
-        // Use a larger grid each iteration in case no valid point is found
-        auto distance = 3 * control_constants::AVOID_BALL_DISTANCE + distanceSteps * control_constants::AVOID_BALL_DISTANCE / 2.0;
+        auto distance = 2 * control_constants::AVOID_BALL_DISTANCE + distanceSteps * control_constants::AVOID_BALL_DISTANCE;
         auto possiblePoints = Grid(targetPosition.x - distance / 2.0, targetPosition.y - distance / 2.0, distance, distance, 3, 3).getPoints();
-        double dist = 1e3;
         for (auto &pointVector : possiblePoints) {
             for (auto &point : pointVector) {
                 if (FieldComputations::pointIsValidPosition(field, point) && !avoidShape->contains(point)) {
-                    if (targetPosition.dist(point) < dist) {
-                        dist = targetPosition.dist(point);
-                        newTarget = point;
-                        pointFound = true;
-                    }
+                    return point;
                 }
             }
         }
-        if (pointFound) break;  // As soon as a valid point is found, don't look at more points further away
     }
-    if (newTarget == targetPosition) RTT_WARNING("Could not find good position to avoid ball");
-    return newTarget;
+    RTT_WARNING("Could not find good position to avoid ball");
+    return targetPosition;
 }
 
 void PositionComputations::calculateInfoForKeeper(std::unordered_map<std::string, StpInfo> &stpInfos, const Field &field, world::World *world) noexcept {
@@ -225,16 +255,68 @@ void PositionComputations::calculateInfoForKeeper(std::unordered_map<std::string
     stpInfos["keeper"].setEnemyRobot(world->getWorld()->getRobotClosestToBall(world::them));
 }
 
+HarasserInfo PositionComputations::calculateHarasserId(world::World *world, const Field &field) noexcept {
+    auto maxRobotVelocity = GameStateManager::getCurrentGameState().getRuleSet().getMaxRobotVel();
+    int keeperId = GameStateManager::getCurrentGameState().keeperId;
+    double maximumTimeToIntercept = 1;
+    Vector2 newBallPos;
+    for (double loopTime = 0; loopTime < 1; loopTime += 0.1) {
+        newBallPos = FieldComputations::getBallPositionAtTime(*(world->getWorld()->getBall()->get()), loopTime);
+        if (!field.playArea.contains(newBallPos, control_constants::BALL_RADIUS)) {
+            maximumTimeToIntercept = loopTime;
+            break;
+        }
+        if (field.leftDefenseArea.contains(newBallPos)) {
+            std::vector<rtt::Vector2> intersections =
+                FieldComputations::getDefenseArea(field, true, 0, 0).intersections({newBallPos, world->getWorld()->getBall()->get()->expectedEndPosition});
+            if (intersections.size() == 1) newBallPos = intersections.at(0);
+        } else if (field.rightDefenseArea.contains(newBallPos)) {
+            std::vector<rtt::Vector2> intersections =
+                FieldComputations::getDefenseArea(field, false, 0, 0).intersections({newBallPos, world->getWorld()->getBall()->get()->expectedEndPosition});
+            if (intersections.size() == 1) newBallPos = intersections.at(0);
+        }
+
+        for (const auto &robot : world->getWorld()->getUs()) {
+            if (robot->getId() == keeperId) continue;
+            auto trajectory = Trajectory2D(robot->getPos(), robot->getVel(), newBallPos, maxRobotVelocity, ai::Constants::MAX_ACC_UPPER());
+            if (trajectory.getTotalTime() < loopTime) {
+                return {robot->getId(), loopTime};
+            }
+        }
+    }
+    double minTimeToTarget = std::numeric_limits<double>::max();
+    int minTimeRobotId;
+    for (const auto &robot : world->getWorld()->getUs()) {
+        if (robot->getId() == keeperId) continue;
+        auto trajectory = Trajectory2D(robot->getPos(), robot->getVel(), newBallPos, maxRobotVelocity, ai::Constants::MAX_ACC_UPPER());
+        auto timeToTarget = trajectory.getTotalTime();
+        if (timeToTarget < minTimeToTarget) {
+            minTimeToTarget = timeToTarget;
+            minTimeRobotId = robot->getId();
+        }
+    }
+    return {minTimeRobotId, maximumTimeToIntercept};
+}
+
 void PositionComputations::calculateInfoForHarasser(std::unordered_map<std::string, StpInfo> &stpInfos,
-                                                    std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT> *roles, const Field &field,
-                                                    world::World *world) noexcept {
-    auto enemyClosestToBall = world->getWorld()->getRobotClosestToBall(world::them);
+                                                    std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT> *roles, const Field &field, world::World *world,
+                                                    double timeToBall) noexcept {
+    rtt::Vector2 ballPos = FieldComputations::getBallPositionAtTime(*(world->getWorld()->getBall()->get()), timeToBall);
+    if (field.leftDefenseArea.contains(ballPos)) {
+        std::vector<rtt::Vector2> intersections =
+            FieldComputations::getDefenseArea(field, true, 0, 0).intersections({ballPos, world->getWorld()->getBall()->get()->expectedEndPosition});
+        if (intersections.size() == 1) ballPos = intersections.at(0);
+    } else if (field.rightDefenseArea.contains(ballPos)) {
+        std::vector<rtt::Vector2> intersections =
+            FieldComputations::getDefenseArea(field, false, 0, 0).intersections({ballPos, world->getWorld()->getBall()->get()->expectedEndPosition});
+        if (intersections.size() == 1) ballPos = intersections.at(0);
+    }
+    auto enemyClosestToBall = world->getWorld()->getRobotClosestToPoint(ballPos, world::them);
     // If there is no enemy or we don't have a harasser yet, estimate the position to move to
     if (!stpInfos["harasser"].getRobot() || !enemyClosestToBall) {
-        stpInfos["harasser"].setPositionToMoveTo(world->getWorld()->getBall()->get()->position);
+        stpInfos["harasser"].setPositionToMoveTo(ballPos);
         return;
     }
-    auto ballPos = world->getWorld()->getBall()->get()->position;
     auto enemyAngle = enemyClosestToBall->get()->getAngle();
     auto enemyToGoalAngle = (field.leftGoalArea.leftLine().center() - enemyClosestToBall->get()->getPos()).angle();
 
@@ -243,7 +325,7 @@ void PositionComputations::calculateInfoForHarasser(std::unordered_map<std::stri
         auto enemyPos = enemyClosestToBall->get()->getPos();
         auto targetPos = enemyPos + (field.leftGoalArea.leftLine().center() - enemyPos).stretchToLength(control_constants::ROBOT_RADIUS * 4);
         stpInfos["harasser"].setPositionToMoveTo(targetPos);
-        stpInfos["harasser"].setAngle((ballPos - targetPos).angle());
+        stpInfos["harasser"].setAngle((world->getWorld()->getBall()->get()->position - targetPos).angle());
     } else {
         if (enemyClosestToBall->get()->getPos().dist(field.leftGoalArea.rightLine().center()) >
             stpInfos["harasser"].getRobot()->get()->getPos().dist(field.leftGoalArea.rightLine().center())) {
@@ -277,8 +359,13 @@ void PositionComputations::calculateInfoForDefendersAndWallers(std::unordered_ma
     }
     // Calculate the n closest enemies
     auto enemyRobots = world->getWorld()->getThem();
-    auto enemyClosestToBall = world->getWorld()->getRobotClosestToBall(world::them);
-    erase_if(enemyRobots, [&](const auto enemyRobot) -> bool { return enemyClosestToBall && enemyRobot->getId() == enemyClosestToBall.value()->getId(); });
+    std::optional<rtt::world::view::RobotView> enemyToIgnore;
+    if (GameStateManager::getCurrentGameState().getCommandId() == RefCommand::BALL_PLACEMENT_THEM) {
+        enemyToIgnore = world->getWorld()->getRobotClosestToPoint(GameStateManager::getRefereeDesignatedPosition(), world::them);
+    } else {
+        enemyToIgnore = world->getWorld()->getRobotClosestToBall(world::them);
+    }
+    erase_if(enemyRobots, [&](const auto enemyRobot) -> bool { return enemyToIgnore && enemyRobot->getId() == enemyToIgnore.value()->getId(); });
     std::map<double, EnemyInfo> enemyMap;
     std::vector<Vector2> enemies;
     for (auto enemy : enemyRobots) {

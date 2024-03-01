@@ -2,6 +2,7 @@ var classrtt_1_1ai_1_1stp_1_1role_1_1Chipper =
 [
     [ "Chipper", "de/d3e/classrtt_1_1ai_1_1stp_1_1role_1_1Chipper.html#a183fb936976c2c6640c90f5273cca74d", null ],
     [ "finished", "de/d3e/classrtt_1_1ai_1_1stp_1_1role_1_1Chipper.html#ae9c573acec4e3999f6b1695c386c06a7", null ],
+    [ "forceLastTactic", "de/d3e/classrtt_1_1ai_1_1stp_1_1role_1_1Chipper.html#af552230abdea1d790bd74ad4baf9704c", null ],
     [ "forceNextTactic", "de/d3e/classrtt_1_1ai_1_1stp_1_1role_1_1Chipper.html#a319de4e261a9194b2c8c6859b63f2f0d", null ],
     [ "getCurrentRobot", "de/d3e/classrtt_1_1ai_1_1stp_1_1role_1_1Chipper.html#a89bcbea7b61a816c97caec1cbef1eaff", null ],
     [ "getCurrentTactic", "de/d3e/classrtt_1_1ai_1_1stp_1_1role_1_1Chipper.html#a692cb6f9ade70bebc8f56e5175036c9a", null ],

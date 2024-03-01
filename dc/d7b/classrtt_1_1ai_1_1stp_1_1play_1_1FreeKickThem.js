@@ -5,6 +5,7 @@ var classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickThem =
     [ "calculateInfoForRoles", "dc/d7b/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickThem.html#a6418f13a332106ead16b4b82cbac6a0a", null ],
     [ "decideRoleFlags", "dc/d7b/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickThem.html#af0b49d33a7d073d05681a715063a01aa", null ],
     [ "distributeRoles", "dc/d7b/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickThem.html#a977b3063d4d26bee4be08d71c2ab7ccc", null ],
+    [ "DrawMargins", "dc/d7b/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickThem.html#ae5f7186f0f7c176decd4e26a6d5fa566", null ],
     [ "getLastScore", "dc/d7b/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickThem.html#a7439c6149abbc461640c9ecdad2ba8d6", null ],
     [ "getName", "dc/d7b/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickThem.html#ac6beffcf942c99fecf124b8be10035bb", null ],
     [ "getRoleStatuses", "dc/d7b/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickThem.html#ab5f09cfa9cd1ddb2a6990cb3c1b4d691", null ],

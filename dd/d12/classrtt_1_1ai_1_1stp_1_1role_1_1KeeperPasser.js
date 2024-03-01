@@ -2,6 +2,7 @@ var classrtt_1_1ai_1_1stp_1_1role_1_1KeeperPasser =
 [
     [ "KeeperPasser", "dd/d12/classrtt_1_1ai_1_1stp_1_1role_1_1KeeperPasser.html#ab63b95181398ce9f0791e95f4b2feff7", null ],
     [ "finished", "dd/d12/classrtt_1_1ai_1_1stp_1_1role_1_1KeeperPasser.html#ae9c573acec4e3999f6b1695c386c06a7", null ],
+    [ "forceLastTactic", "dd/d12/classrtt_1_1ai_1_1stp_1_1role_1_1KeeperPasser.html#af552230abdea1d790bd74ad4baf9704c", null ],
     [ "forceNextTactic", "dd/d12/classrtt_1_1ai_1_1stp_1_1role_1_1KeeperPasser.html#a319de4e261a9194b2c8c6859b63f2f0d", null ],
     [ "getCurrentRobot", "dd/d12/classrtt_1_1ai_1_1stp_1_1role_1_1KeeperPasser.html#a89bcbea7b61a816c97caec1cbef1eaff", null ],
     [ "getCurrentTactic", "dd/d12/classrtt_1_1ai_1_1stp_1_1role_1_1KeeperPasser.html#a692cb6f9ade70bebc8f56e5175036c9a", null ],

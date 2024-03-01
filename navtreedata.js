@@ -77,19 +77,19 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"d1/d71/classrtt_1_1ai_1_1gui_1_1net_1_1InterfacePublisher.html#a6342bb2c90bd02e736c62a2f955b01e1",
-"d3/d66/classrtt_1_1ai_1_1stp_1_1tactic_1_1Receive.html#a5da4cb4324bd3bbd9587fdeb3f7e515a",
-"d4/d99/classrtt_1_1world_1_1robot_1_1Robot.html#a4eae9a3012c792896a9e59ed3e6f2879",
-"d5/d14/namespacertt_1_1ai_1_1stp.html#ade9fd3e730cedcea632a7e5a800b8400",
-"d6/d08/classrtt_1_1world_1_1view_1_1WorldDataView.html#ab41aa608b2e0f97399de74f361adbe15",
-"d7/d73/namespacertt_1_1ai_1_1stp_1_1gen.html#ad3d0ebb02049b8fc34765bd5a265b854",
-"d8/d89/structnativeformat_1_1param_1_1LinearRampEvent.html#a56a115a786ef2cec3b5261eed0f22784",
-"d9/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsFreeKick.html#ab5f09cfa9cd1ddb2a6990cb3c1b4d691",
-"db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#a04a3cb6fafbe1eb9b78c04122caea777",
-"dc/d16/structnativeformat_1_1param_1_1DummyEvent.html#a5f9e6e936ffcf53b51f255cf874c116b",
-"dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#a4c981f92e8bca5864cf26f0cee2886ab",
-"de/d4c/classrtt_1_1BB_1_1BBTrajectory1D.html#a1ba9366f7f3b0598af0a3084904234e2",
-"df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass.html#a7439c6149abbc461640c9ecdad2ba8d6"
+"d1/d71/classrtt_1_1ai_1_1gui_1_1net_1_1InterfacePublisher.html#a05a060288761eba3f61a7e72b0b7c772",
+"d3/d66/classrtt_1_1ai_1_1stp_1_1tactic_1_1Receive.html#a030c4fd95301f6d2b73bd815500be3fa",
+"d4/d99/classrtt_1_1world_1_1robot_1_1Robot.html#a1406b017329e1f25c9c44c0bb7f47468",
+"d5/d14/namespacertt_1_1ai_1_1stp.html#ab40410d00349ef6102ce3d0fd36a58d3a31234537adb52d5df18dc9596010708b",
+"d6/d01/FreeKickTaker_8h.html",
+"d7/d66/GameSettings_8h_source.html",
+"d8/d57/classrtt_1_1ai_1_1stp_1_1skill_1_1TestSkill.html#ae3db983eda1761d7ccd3f68a0ef731dd",
+"d9/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsFreeKick.html#a08a78e2b6bb5fb4f75d0c9dc572d25fa",
+"db/d03/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUs.html#a0c13cbd482099fa139f3a5f08d964efe",
+"db/df9/classrtt_1_1ai_1_1stp_1_1evaluation_1_1BallOnTheirSideGlobalEvaluation.html#a91a7ec16136e71ef26201e95886d94e6",
+"dd/d26/structrtt_1_1ai_1_1RuleSet.html#a26c0da35074e1503f712386c69002332",
+"de/d0f/classrtt_1_1ai_1_1stp_1_1TestTactic.html#ac7dba7916b5fc648439cb51181d01358",
+"df/de3/classrtt_1_1ai_1_1stp_1_1play_1_1DefensiveStopFormation.html#a0329d2814e2651902bb05f23659e0084"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

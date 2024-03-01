@@ -112,9 +112,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a15197389a03a216c2ad571bb6240069e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d03/classrtt_1_1ai_1_1stp_1_1role_1_1PenaltyTaker.html#a15197389a03a216c2ad571bb6240069e">PenaltyTaker</a> (std::string name)</td></tr>
 <tr class="memdesc:a15197389a03a216c2ad571bb6240069e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor that sets the name of the role and creates a state machine of tactics.  <a href="../../d0/d03/classrtt_1_1ai_1_1stp_1_1role_1_1PenaltyTaker.html#a15197389a03a216c2ad571bb6240069e">More...</a><br /></td></tr>
 <tr class="separator:a15197389a03a216c2ad571bb6240069e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae37bbc212bbf3af61007918004e13678"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#a3055c554f88c993b2e023c90717631d3">Status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d9f/classrtt_1_1ai_1_1stp_1_1Role.html#ae37bbc212bbf3af61007918004e13678">update</a> (<a class="el" href="../../d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html">StpInfo</a> const &amp;info) noexcept</td></tr>
-<tr class="memdesc:ae37bbc212bbf3af61007918004e13678"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function that's called every tick, default implementation is robotTactics.update();.  <a href="../../d2/d9f/classrtt_1_1ai_1_1stp_1_1Role.html#ae37bbc212bbf3af61007918004e13678">More...</a><br /></td></tr>
-<tr class="separator:ae37bbc212bbf3af61007918004e13678"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a94378e22f7e504fcebea2faddbb45bfe"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#a3055c554f88c993b2e023c90717631d3">Status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d03/classrtt_1_1ai_1_1stp_1_1role_1_1PenaltyTaker.html#a94378e22f7e504fcebea2faddbb45bfe">update</a> (<a class="el" href="../../d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html">StpInfo</a> const &amp;info) noexcept override</td></tr>
+<tr class="memdesc:a94378e22f7e504fcebea2faddbb45bfe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method that updates the role.  <a href="../../d0/d03/classrtt_1_1ai_1_1stp_1_1role_1_1PenaltyTaker.html#a94378e22f7e504fcebea2faddbb45bfe">More...</a><br /></td></tr>
+<tr class="separator:a94378e22f7e504fcebea2faddbb45bfe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae9c573acec4e3999f6b1695c386c06a7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d9f/classrtt_1_1ai_1_1stp_1_1Role.html#ae9c573acec4e3999f6b1695c386c06a7">finished</a> () const noexcept</td></tr>
 <tr class="memdesc:ae9c573acec4e3999f6b1695c386c06a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether the role is finished with all tactics.  <a href="../../d2/d9f/classrtt_1_1ai_1_1stp_1_1Role.html#ae9c573acec4e3999f6b1695c386c06a7">More...</a><br /></td></tr>
 <tr class="separator:ae9c573acec4e3999f6b1695c386c06a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -130,6 +130,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a319de4e261a9194b2c8c6859b63f2f0d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d9f/classrtt_1_1ai_1_1stp_1_1Role.html#a319de4e261a9194b2c8c6859b63f2f0d">forceNextTactic</a> () noexcept</td></tr>
 <tr class="memdesc:a319de4e261a9194b2c8c6859b63f2f0d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Forces the <a class="el" href="../../d2/d9f/classrtt_1_1ai_1_1stp_1_1Role.html" title="Role class used in STP Every robot needs to have a role A role is essentially a state machine of Tact...">Role</a> to skip to the next tactic in the state machine.  <a href="../../d2/d9f/classrtt_1_1ai_1_1stp_1_1Role.html#a319de4e261a9194b2c8c6859b63f2f0d">More...</a><br /></td></tr>
 <tr class="separator:a319de4e261a9194b2c8c6859b63f2f0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af552230abdea1d790bd74ad4baf9704c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d9f/classrtt_1_1ai_1_1stp_1_1Role.html#af552230abdea1d790bd74ad4baf9704c">forceLastTactic</a> () noexcept</td></tr>
+<tr class="memdesc:af552230abdea1d790bd74ad4baf9704c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Forces the <a class="el" href="../../d2/d9f/classrtt_1_1ai_1_1stp_1_1Role.html" title="Role class used in STP Every robot needs to have a role A role is essentially a state machine of Tact...">Role</a> to skip to the last tactic in the state machine.  <a href="../../d2/d9f/classrtt_1_1ai_1_1stp_1_1Role.html#af552230abdea1d790bd74ad4baf9704c">More...</a><br /></td></tr>
+<tr class="separator:af552230abdea1d790bd74ad4baf9704c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab3a4dd278c94db922409c690ae5d13b4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d9f/classrtt_1_1ai_1_1stp_1_1Role.html#ab3a4dd278c94db922409c690ae5d13b4">reset</a> () noexcept</td></tr>
 <tr class="memdesc:ab3a4dd278c94db922409c690ae5d13b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resets the tactics, skills and robot of this role so re-dealing of robots works as expected.  <a href="../../d2/d9f/classrtt_1_1ai_1_1stp_1_1Role.html#ab3a4dd278c94db922409c690ae5d13b4">More...</a><br /></td></tr>
 <tr class="separator:ab3a4dd278c94db922409c690ae5d13b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -198,6 +201,33 @@ Protected Attributes</h2></td></tr>
 
 <p>Checks whether the role is finished with all tactics. </p>
 <dl class="section return"><dt>Returns</dt><dd>True if all tactics returned Status::finish </dd></dl>
+
+</div>
+</div>
+<a id="af552230abdea1d790bd74ad4baf9704c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af552230abdea1d790bd74ad4baf9704c">&#9670;&nbsp;</a></span>forceLastTactic()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void rtt::ai::stp::Role::forceLastTactic </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Forces the <a class="el" href="../../d2/d9f/classrtt_1_1ai_1_1stp_1_1Role.html" title="Role class used in STP Every robot needs to have a role A role is essentially a state machine of Tact...">Role</a> to skip to the last tactic in the state machine. </p>
 
 </div>
 </div>
@@ -339,8 +369,8 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ae37bbc212bbf3af61007918004e13678"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae37bbc212bbf3af61007918004e13678">&#9670;&nbsp;</a></span>update()</h2>
+<a id="a94378e22f7e504fcebea2faddbb45bfe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a94378e22f7e504fcebea2faddbb45bfe">&#9670;&nbsp;</a></span>update()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -349,7 +379,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#a3055c554f88c993b2e023c90717631d3">Status</a> rtt::ai::stp::Role::update </td>
+          <td class="memname"><a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#a3055c554f88c993b2e023c90717631d3">Status</a> rtt::ai::stp::role::PenaltyTaker::update </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="../../d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html">StpInfo</a> const &amp;&#160;</td>
           <td class="paramname"><em>info</em></td><td>)</td>
@@ -358,21 +388,21 @@ Protected Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span><span class="mlabel">noexcept</span><span class="mlabel">inherited</span></span>  </td>
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span><span class="mlabel">noexcept</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p>Function that's called every tick, default implementation is robotTactics.update();. </p>
+<p>Method that updates the role. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">info</td><td>TacticInfo to be passed to <a class="el" href="../../d2/d9f/classrtt_1_1ai_1_1stp_1_1Role.html#ae37bbc212bbf3af61007918004e13678" title="Function that&#39;s called every tick, default implementation is robotTactics.update();.">update()</a> </td></tr>
+    <tr><td class="paramname">info</td><td>The information to update the role with </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>The status that the current tactic returns </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Status of the update </dd></dl>
 
-<p>Reimplemented in <a class="el" href="../../d3/de8/classrtt_1_1ai_1_1stp_1_1role_1_1PenaltyKeeper.html#acfe4a8fb4bf252239e4951d1627d0db1">rtt::ai::stp::role::PenaltyKeeper</a>.</p>
+<p>Reimplemented from <a class="el" href="../../d2/d9f/classrtt_1_1ai_1_1stp_1_1Role.html#ae37bbc212bbf3af61007918004e13678">rtt::ai::stp::Role</a>.</p>
 
 </div>
 </div>

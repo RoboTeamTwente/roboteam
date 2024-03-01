@@ -109,18 +109,21 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:aa2f878898f3137390e52452e59eea498"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d2c/classrtt_1_1ai_1_1stp_1_1PositionComputations.html#aa2f878898f3137390e52452e59eea498">getWallPosition</a> (int index, int amountDefenders, const Field &amp;field, <a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">world::World</a> *world)</td></tr>
 <tr class="memdesc:aa2f878898f3137390e52452e59eea498"><td class="mdescLeft">&#160;</td><td class="mdescRight">Makes a wall if not ready done, saves it in calculatedWallPositions and deals the index.  <a href="../../dd/d2c/classrtt_1_1ai_1_1stp_1_1PositionComputations.html#aa2f878898f3137390e52452e59eea498">More...</a><br /></td></tr>
 <tr class="separator:aa2f878898f3137390e52452e59eea498"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af25973a46636e1484d163aedd83e6737"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d2c/classrtt_1_1ai_1_1stp_1_1PositionComputations.html#af25973a46636e1484d163aedd83e6737">getBallBlockPosition</a> (const Field &amp;field, const <a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">world::World</a> *world)</td></tr>
-<tr class="memdesc:af25973a46636e1484d163aedd83e6737"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates where a robot should stand to prevent the ball from going in the goal.  <a href="../../dd/d2c/classrtt_1_1ai_1_1stp_1_1PositionComputations.html#af25973a46636e1484d163aedd83e6737">More...</a><br /></td></tr>
-<tr class="separator:af25973a46636e1484d163aedd83e6737"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a66b4fdb571e96f30048ea51bed4151f0"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d2c/classrtt_1_1ai_1_1stp_1_1PositionComputations.html#a66b4fdb571e96f30048ea51bed4151f0">calculateAvoidRobotsPosition</a> (<a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> targetPosition, const <a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">world::World</a> *world, int robotId, const <a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#d8/dcb/structrtt_1_1ai_1_1stp_1_1AvoidObjects">AvoidObjects</a> &amp;avoidObj, const Field &amp;field)</td></tr>
+<tr class="memdesc:a66b4fdb571e96f30048ea51bed4151f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates the position of the robot to avoid other robots.  <a href="../../dd/d2c/classrtt_1_1ai_1_1stp_1_1PositionComputations.html#a66b4fdb571e96f30048ea51bed4151f0">More...</a><br /></td></tr>
+<tr class="separator:a66b4fdb571e96f30048ea51bed4151f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adc1c4ad8ba5bed740333dffdaa31d0f4"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d2c/classrtt_1_1ai_1_1stp_1_1PositionComputations.html#adc1c4ad8ba5bed740333dffdaa31d0f4">calculateAvoidBallPosition</a> (<a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> targetPosition, <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> ballPosition, const Field &amp;field)</td></tr>
 <tr class="memdesc:adc1c4ad8ba5bed740333dffdaa31d0f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates a position, near the target position, that is not too close to the ball.  <a href="../../dd/d2c/classrtt_1_1ai_1_1stp_1_1PositionComputations.html#adc1c4ad8ba5bed740333dffdaa31d0f4">More...</a><br /></td></tr>
 <tr class="separator:adc1c4ad8ba5bed740333dffdaa31d0f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a794ab844b3ce50f3ef8f9813e2e71bf1"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d2c/classrtt_1_1ai_1_1stp_1_1PositionComputations.html#a794ab844b3ce50f3ef8f9813e2e71bf1">calculateInfoForKeeper</a> (std::unordered_map&lt; std::string, <a class="el" href="../../d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html">StpInfo</a> &gt; &amp;stpInfos, const Field &amp;field, <a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">world::World</a> *world) noexcept</td></tr>
 <tr class="memdesc:a794ab844b3ce50f3ef8f9813e2e71bf1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates info for the keeper.  <a href="../../dd/d2c/classrtt_1_1ai_1_1stp_1_1PositionComputations.html#a794ab844b3ce50f3ef8f9813e2e71bf1">More...</a><br /></td></tr>
 <tr class="separator:a794ab844b3ce50f3ef8f9813e2e71bf1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa8e79cd21d39872e80214736fd5606d0"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d2c/classrtt_1_1ai_1_1stp_1_1PositionComputations.html#aa8e79cd21d39872e80214736fd5606d0">calculateInfoForHarasser</a> (std::unordered_map&lt; std::string, <a class="el" href="../../d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html">StpInfo</a> &gt; &amp;stpInfos, std::array&lt; std::unique_ptr&lt; <a class="el" href="../../d2/d9f/classrtt_1_1ai_1_1stp_1_1Role.html">Role</a> &gt;, <a class="el" href="../../db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#ace5948146011dcdb71513f56f9b66688">stp::control_constants::MAX_ROBOT_COUNT</a> &gt; *roles, const Field &amp;field, <a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">world::World</a> *world) noexcept</td></tr>
-<tr class="memdesc:aa8e79cd21d39872e80214736fd5606d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates info for the harasser role.  <a href="../../dd/d2c/classrtt_1_1ai_1_1stp_1_1PositionComputations.html#aa8e79cd21d39872e80214736fd5606d0">More...</a><br /></td></tr>
-<tr class="separator:aa8e79cd21d39872e80214736fd5606d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a89ab6b910587ad483138e113f68fc731"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#d7/da7/structrtt_1_1ai_1_1stp_1_1HarasserInfo">HarasserInfo</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d2c/classrtt_1_1ai_1_1stp_1_1PositionComputations.html#a89ab6b910587ad483138e113f68fc731">calculateHarasserId</a> (<a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">rtt::world::World</a> *world, const Field &amp;field) noexcept</td></tr>
+<tr class="memdesc:a89ab6b910587ad483138e113f68fc731"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates the id of the harasser.  <a href="../../dd/d2c/classrtt_1_1ai_1_1stp_1_1PositionComputations.html#a89ab6b910587ad483138e113f68fc731">More...</a><br /></td></tr>
+<tr class="separator:a89ab6b910587ad483138e113f68fc731"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9eec65c62b2ed264b9230da4978c3549"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d2c/classrtt_1_1ai_1_1stp_1_1PositionComputations.html#a9eec65c62b2ed264b9230da4978c3549">calculateInfoForHarasser</a> (std::unordered_map&lt; std::string, <a class="el" href="../../d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html">StpInfo</a> &gt; &amp;stpInfos, std::array&lt; std::unique_ptr&lt; <a class="el" href="../../d2/d9f/classrtt_1_1ai_1_1stp_1_1Role.html">Role</a> &gt;, <a class="el" href="../../db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#ace5948146011dcdb71513f56f9b66688">stp::control_constants::MAX_ROBOT_COUNT</a> &gt; *roles, const Field &amp;field, <a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">world::World</a> *world, double timeToBall) noexcept</td></tr>
+<tr class="memdesc:a9eec65c62b2ed264b9230da4978c3549"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates info for the harasser role.  <a href="../../dd/d2c/classrtt_1_1ai_1_1stp_1_1PositionComputations.html#a9eec65c62b2ed264b9230da4978c3549">More...</a><br /></td></tr>
+<tr class="separator:a9eec65c62b2ed264b9230da4978c3549"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aee1793aa893c78194a99b296e5f521f6"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d2c/classrtt_1_1ai_1_1stp_1_1PositionComputations.html#aee1793aa893c78194a99b296e5f521f6">calculateInfoForDefendersAndWallers</a> (std::unordered_map&lt; std::string, <a class="el" href="../../d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html">StpInfo</a> &gt; &amp;stpInfos, std::array&lt; std::unique_ptr&lt; <a class="el" href="../../d2/d9f/classrtt_1_1ai_1_1stp_1_1Role.html">Role</a> &gt;, <a class="el" href="../../db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#ace5948146011dcdb71513f56f9b66688">stp::control_constants::MAX_ROBOT_COUNT</a> &gt; &amp;roles, const Field &amp;field, <a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">world::World</a> *world, bool mustStayOnOurSide) noexcept</td></tr>
 <tr class="memdesc:aee1793aa893c78194a99b296e5f521f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates info for the defenders.  <a href="../../dd/d2c/classrtt_1_1ai_1_1stp_1_1PositionComputations.html#aee1793aa893c78194a99b296e5f521f6">More...</a><br /></td></tr>
 <tr class="separator:aee1793aa893c78194a99b296e5f521f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -196,6 +199,119 @@ Static Private Member Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A position that is not within the min allowed distance to the ball </dd></dl>
+
+</div>
+</div>
+<a id="a66b4fdb571e96f30048ea51bed4151f0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a66b4fdb571e96f30048ea51bed4151f0">&#9670;&nbsp;</a></span>calculateAvoidRobotsPosition()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> rtt::ai::stp::PositionComputations::calculateAvoidRobotsPosition </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a>&#160;</td>
+          <td class="paramname"><em>targetPosition</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">world::World</a> *&#160;</td>
+          <td class="paramname"><em>world</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>robotId</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#d8/dcb/structrtt_1_1ai_1_1stp_1_1AvoidObjects">AvoidObjects</a> &amp;&#160;</td>
+          <td class="paramname"><em>avoidObj</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const Field &amp;&#160;</td>
+          <td class="paramname"><em>field</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Calculates the position of the robot to avoid other robots. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">targetPosition</td><td>The initial target position </td></tr>
+    <tr><td class="paramname">world</td><td>The current world </td></tr>
+    <tr><td class="paramname">robotId</td><td>The id of the robot </td></tr>
+    <tr><td class="paramname">avoidObj</td><td>The objects to avoid </td></tr>
+    <tr><td class="paramname">field</td><td>The current field </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A position that is not too close to other robots </dd></dl>
+
+</div>
+</div>
+<a id="a89ab6b910587ad483138e113f68fc731"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a89ab6b910587ad483138e113f68fc731">&#9670;&nbsp;</a></span>calculateHarasserId()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#d7/da7/structrtt_1_1ai_1_1stp_1_1HarasserInfo">HarasserInfo</a> rtt::ai::stp::PositionComputations::calculateHarasserId </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">rtt::world::World</a> *&#160;</td>
+          <td class="paramname"><em>world</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const Field &amp;&#160;</td>
+          <td class="paramname"><em>field</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Calculates the id of the harasser. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">world</td><td>The current world </td></tr>
+    <tr><td class="paramname">field</td><td>The current field </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#d7/da7/structrtt_1_1ai_1_1stp_1_1HarasserInfo">HarasserInfo</a> with the id and the time to the ball </dd></dl>
 
 </div>
 </div>
@@ -442,8 +558,8 @@ Static Private Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aa8e79cd21d39872e80214736fd5606d0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa8e79cd21d39872e80214736fd5606d0">&#9670;&nbsp;</a></span>calculateInfoForHarasser()</h2>
+<a id="a9eec65c62b2ed264b9230da4978c3549"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9eec65c62b2ed264b9230da4978c3549">&#9670;&nbsp;</a></span>calculateInfoForHarasser()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -473,7 +589,13 @@ Static Private Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">world::World</a> *&#160;</td>
-          <td class="paramname"><em>world</em>&#160;</td>
+          <td class="paramname"><em>world</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>timeToBall</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -495,6 +617,7 @@ Static Private Member Functions</h2></td></tr>
     <tr><td class="paramname">roles</td><td>The current roles </td></tr>
     <tr><td class="paramname">field</td><td>The current field </td></tr>
     <tr><td class="paramname">world</td><td>The current world </td></tr>
+    <tr><td class="paramname">timeToBall</td><td>The time to the ball </td></tr>
   </table>
   </dd>
 </dl>
@@ -656,52 +779,6 @@ Static Private Member Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>vector with Vector2 positions for each of the defenders </dd></dl>
-
-</div>
-</div>
-<a id="af25973a46636e1484d163aedd83e6737"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af25973a46636e1484d163aedd83e6737">&#9670;&nbsp;</a></span>getBallBlockPosition()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> rtt::ai::stp::PositionComputations::getBallBlockPosition </td>
-          <td>(</td>
-          <td class="paramtype">const Field &amp;&#160;</td>
-          <td class="paramname"><em>field</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">world::World</a> *&#160;</td>
-          <td class="paramname"><em>world</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Calculates where a robot should stand to prevent the ball from going in the goal. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">field</td><td>The current field </td></tr>
-    <tr><td class="paramname">world</td><td>The current world </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The position a robot should go to to block the ball (this does not depend on the position of any of our robots) </dd></dl>
 
 </div>
 </div>

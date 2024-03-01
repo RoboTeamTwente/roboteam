@@ -4,6 +4,7 @@ var classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsForceStart =
     [ "calculateInfoForRoles", "de/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsForceStart.html#a1d25436d84cf05e9d164139d1038591d", null ],
     [ "decideRoleFlags", "de/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsForceStart.html#a3eee34c793189abc4a9f9b98340a5cdb", null ],
     [ "distributeRoles", "de/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsForceStart.html#a977b3063d4d26bee4be08d71c2ab7ccc", null ],
+    [ "DrawMargins", "de/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsForceStart.html#ae5f7186f0f7c176decd4e26a6d5fa566", null ],
     [ "getLastScore", "de/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsForceStart.html#a7439c6149abbc461640c9ecdad2ba8d6", null ],
     [ "getName", "de/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsForceStart.html#a185f8b4ba9db2f7c98967dcbda67689b", null ],
     [ "getRoleStatuses", "de/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsForceStart.html#ab5f09cfa9cd1ddb2a6990cb3c1b4d691", null ],

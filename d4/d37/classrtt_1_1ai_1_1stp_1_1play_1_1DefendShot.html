@@ -155,6 +155,8 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
+<tr class="memitem:a1da25eafe17775e31254d88680ba4f9a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#d7/da7/structrtt_1_1ai_1_1stp_1_1HarasserInfo">HarasserInfo</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot.html#a1da25eafe17775e31254d88680ba4f9a">harasserInfo</a></td></tr>
+<tr class="separator:a1da25eafe17775e31254d88680ba4f9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a17fc7a716064d918aa29c072832c2ef8"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#a9b1a79ba58c1300d9f6f0e073f9d7db2">GlobalEvaluation</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#a17fc7a716064d918aa29c072832c2ef8">keepPlayEvaluation</a></td></tr>
 <tr class="separator:a17fc7a716064d918aa29c072832c2ef8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a859e8c8abae48115eab588736926368f"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#a9b1a79ba58c1300d9f6f0e073f9d7db2">GlobalEvaluation</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#a859e8c8abae48115eab588736926368f">startPlayEvaluation</a></td></tr>
@@ -194,6 +196,9 @@ Private Member Functions</h2></td></tr>
 <tr class="memitem:aa20291b5cee34414dfb81aa0fd33713f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#aa20291b5cee34414dfb81aa0fd33713f">reassignRobots</a> () noexcept</td></tr>
 <tr class="memdesc:aa20291b5cee34414dfb81aa0fd33713f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Re-calculates info for roles and reassigns robots. This function is only used when the amount of robots in the field changed compared to the previous tick.  <a href="../../d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#aa20291b5cee34414dfb81aa0fd33713f">More...</a><br /></td></tr>
 <tr class="separator:aa20291b5cee34414dfb81aa0fd33713f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae5f7186f0f7c176decd4e26a6d5fa566"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#ae5f7186f0f7c176decd4e26a6d5fa566">DrawMargins</a> () noexcept</td></tr>
+<tr class="memdesc:ae5f7186f0f7c176decd4e26a6d5fa566"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draws the margins for the defence area, ball and cardRobot. This function will draw margins in the interfacce.  <a href="../../d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#ae5f7186f0f7c176decd4e26a6d5fa566">More...</a><br /></td></tr>
+<tr class="separator:ae5f7186f0f7c176decd4e26a6d5fa566"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -310,6 +315,33 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Assigns robots to roles. </p>
+
+</div>
+</div>
+<a id="ae5f7186f0f7c176decd4e26a6d5fa566"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae5f7186f0f7c176decd4e26a6d5fa566">&#9670;&nbsp;</a></span>DrawMargins()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void rtt::ai::stp::Play::DrawMargins </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span><span class="mlabel">noexcept</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Draws the margins for the defence area, ball and cardRobot. This function will draw margins in the interfacce. </p>
 
 </div>
 </div>
@@ -718,6 +750,20 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <p>The Field </p>
+
+</div>
+</div>
+<a id="a1da25eafe17775e31254d88680ba4f9a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1da25eafe17775e31254d88680ba4f9a">&#9670;&nbsp;</a></span>harasserInfo</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#d7/da7/structrtt_1_1ai_1_1stp_1_1HarasserInfo">HarasserInfo</a> rtt::ai::stp::play::DefendShot::harasserInfo</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>

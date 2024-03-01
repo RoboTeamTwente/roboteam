@@ -4,6 +4,7 @@ var classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsFreeKick =
     [ "calculateInfoForRoles", "d9/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsFreeKick.html#acc2102a8987505e475eaa0169e65b27e", null ],
     [ "decideRoleFlags", "d9/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsFreeKick.html#aa7f5f499c9f87cb6cffe92942de46ee3", null ],
     [ "distributeRoles", "d9/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsFreeKick.html#a977b3063d4d26bee4be08d71c2ab7ccc", null ],
+    [ "DrawMargins", "d9/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsFreeKick.html#ae5f7186f0f7c176decd4e26a6d5fa566", null ],
     [ "getLastScore", "d9/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsFreeKick.html#a7439c6149abbc461640c9ecdad2ba8d6", null ],
     [ "getName", "d9/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsFreeKick.html#a480baf512666763a3a83eebd94d66350", null ],
     [ "getRoleStatuses", "d9/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsFreeKick.html#ab5f09cfa9cd1ddb2a6990cb3c1b4d691", null ],

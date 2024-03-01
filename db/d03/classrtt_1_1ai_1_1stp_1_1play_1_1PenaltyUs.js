@@ -4,6 +4,7 @@ var classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUs =
     [ "calculateInfoForRoles", "db/d03/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUs.html#a0695d80e803e8665deba37e83ded3da1", null ],
     [ "decideRoleFlags", "db/d03/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUs.html#a33ba78482387de28e5b7b8abeb82e449", null ],
     [ "distributeRoles", "db/d03/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUs.html#a977b3063d4d26bee4be08d71c2ab7ccc", null ],
+    [ "DrawMargins", "db/d03/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUs.html#ae5f7186f0f7c176decd4e26a6d5fa566", null ],
     [ "getLastScore", "db/d03/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUs.html#a7439c6149abbc461640c9ecdad2ba8d6", null ],
     [ "getName", "db/d03/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUs.html#aa2af3d3d04a32d2ef268858fd6c56922", null ],
     [ "getRoleStatuses", "db/d03/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUs.html#ab5f09cfa9cd1ddb2a6990cb3c1b4d691", null ],

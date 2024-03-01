@@ -59,6 +59,7 @@ var hierarchy =
     [ "rtt::ai::GameStateManager", "db/de9/classrtt_1_1ai_1_1GameStateManager.html", null ],
     [ "rtt::ai::stp::computations::GoalComputations", "de/dd2/classrtt_1_1ai_1_1stp_1_1computations_1_1GoalComputations.html", null ],
     [ "rtt::ai::stp::evaluation::GoalShotEvaluation", "d3/df8/classrtt_1_1ai_1_1stp_1_1evaluation_1_1GoalShotEvaluation.html", null ],
+    [ "rtt::ai::stp::HarasserInfo", "d5/d14/namespacertt_1_1ai_1_1stp.html#d7/da7/structrtt_1_1ai_1_1stp_1_1HarasserInfo", null ],
     [ "rtt::world::robot::hasBallInfo", "de/d2f/namespacertt_1_1world_1_1robot.html#d1/d9d/structrtt_1_1world_1_1robot_1_1hasBallInfo", null ],
     [ "rtt::ai::gui::net::InterfaceGateway", "d5/db9/classrtt_1_1ai_1_1gui_1_1net_1_1InterfaceGateway.html", null ],
     [ "rtt::ai::gui::net::InterfacePublisher", "d1/d71/classrtt_1_1ai_1_1gui_1_1net_1_1InterfacePublisher.html", null ],

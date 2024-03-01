@@ -1,6 +1,7 @@
 var classrtt_1_1ai_1_1FieldComputations =
 [
     [ "getBallAvoidance", "d2/d21/classrtt_1_1ai_1_1FieldComputations.html#a956e75cd5b56896215f2fa117882ca68", null ],
+    [ "getBallPositionAtTime", "d2/d21/classrtt_1_1ai_1_1FieldComputations.html#a714e1656650ae507cb3729297ca19e76", null ],
     [ "getBlockadesMappedToGoal", "d2/d21/classrtt_1_1ai_1_1FieldComputations.html#ac983ba299fa63555dc2edc12cae3634f", null ],
     [ "getDefenseArea", "d2/d21/classrtt_1_1ai_1_1FieldComputations.html#ac2270396778173e5041011109176fd6c", null ],
     [ "getDefenseAreaMargin", "d2/d21/classrtt_1_1ai_1_1FieldComputations.html#a2b91936d7a902cafabaec8aa5e9709c9", null ],

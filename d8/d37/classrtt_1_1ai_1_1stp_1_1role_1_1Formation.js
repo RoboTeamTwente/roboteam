@@ -2,6 +2,7 @@ var classrtt_1_1ai_1_1stp_1_1role_1_1Formation =
 [
     [ "Formation", "d8/d37/classrtt_1_1ai_1_1stp_1_1role_1_1Formation.html#ae6fe048822fde41558a607334fb250cc", null ],
     [ "finished", "d8/d37/classrtt_1_1ai_1_1stp_1_1role_1_1Formation.html#ae9c573acec4e3999f6b1695c386c06a7", null ],
+    [ "forceLastTactic", "d8/d37/classrtt_1_1ai_1_1stp_1_1role_1_1Formation.html#af552230abdea1d790bd74ad4baf9704c", null ],
     [ "forceNextTactic", "d8/d37/classrtt_1_1ai_1_1stp_1_1role_1_1Formation.html#a319de4e261a9194b2c8c6859b63f2f0d", null ],
     [ "getCurrentRobot", "d8/d37/classrtt_1_1ai_1_1stp_1_1role_1_1Formation.html#a89bcbea7b61a816c97caec1cbef1eaff", null ],
     [ "getCurrentTactic", "d8/d37/classrtt_1_1ai_1_1stp_1_1role_1_1Formation.html#a692cb6f9ade70bebc8f56e5175036c9a", null ],

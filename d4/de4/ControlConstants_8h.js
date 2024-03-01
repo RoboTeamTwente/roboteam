@@ -12,7 +12,6 @@ var ControlConstants_8h =
     [ "BALL_STILL_VEL", "d4/de4/ControlConstants_8h.html#a5baaa7b811964a3a0afdf32840b9cd42", null ],
     [ "BALL_STILL_VEL2", "d4/de4/ControlConstants_8h.html#ab5d9ab2c942d0063751c3492c7230a97", null ],
     [ "CENTER_TO_FRONT", "d4/de4/ControlConstants_8h.html#aa47ef791660935a050e3d381aba0d10d", null ],
-    [ "DEALER_SPEED_FACTOR", "d4/de4/ControlConstants_8h.html#ab2d52f33b6380ded372f9148aecc28de", null ],
     [ "DEFENSE_AREA_AVOIDANCE_MARGIN", "d4/de4/ControlConstants_8h.html#a6f520dc4302ed5a08e93b676c8dbf20d", null ],
     [ "DISTANCE_FROM_GOAL_CLOSE", "d4/de4/ControlConstants_8h.html#a04a3cb6fafbe1eb9b78c04122caea777", null ],
     [ "DISTANCE_TO_PASS_TRAJECTORY", "d4/de4/ControlConstants_8h.html#ad549fb504142f49623c4816fcf3e7e2a", null ],
@@ -42,7 +41,9 @@ var ControlConstants_8h =
     [ "MIN_CHIP_POWER", "d4/de4/ControlConstants_8h.html#aacd087121e51233fb24c4dcb4c00161a", null ],
     [ "MIN_KICK_POWER", "d4/de4/ControlConstants_8h.html#a6255d0c226e7cce6f321bb35463b4e23", null ],
     [ "OUT_OF_FIELD_MARGIN", "d4/de4/ControlConstants_8h.html#a25699ade5273eb118a5a6572f5b684f7", null ],
+    [ "REAL_FRICTION", "d4/de4/ControlConstants_8h.html#a5397f353ac07deaa2a3a5a7cf85f8faf", null ],
     [ "ROBOT_CLOSE_TO_POINT", "d4/de4/ControlConstants_8h.html#a2065e692775cf964b93006329a1b0b15", null ],
     [ "ROBOT_RADIUS", "d4/de4/ControlConstants_8h.html#a6571c4e8f14e7dc072d17dc431f18e48", null ],
+    [ "SIMULATION_FRICTION", "d4/de4/ControlConstants_8h.html#ad37dafcd825af19967116e4f39089357", null ],
     [ "TURN_ON_DRIBBLER_DISTANCE", "d4/de4/ControlConstants_8h.html#acd30b6326a0e8f8a387db14972abac0d", null ]
 ];

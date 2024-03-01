@@ -4,6 +4,7 @@ var classrtt_1_1ai_1_1stp_1_1play_1_1Halt =
     [ "calculateInfoForRoles", "d2/dc0/classrtt_1_1ai_1_1stp_1_1play_1_1Halt.html#a3e2848845cc9c82526a642c2b39dd8c0", null ],
     [ "decideRoleFlags", "d2/dc0/classrtt_1_1ai_1_1stp_1_1play_1_1Halt.html#a4f8c10dad84ec64090a7f9c8601bb4a8", null ],
     [ "distributeRoles", "d2/dc0/classrtt_1_1ai_1_1stp_1_1play_1_1Halt.html#a977b3063d4d26bee4be08d71c2ab7ccc", null ],
+    [ "DrawMargins", "d2/dc0/classrtt_1_1ai_1_1stp_1_1play_1_1Halt.html#ae5f7186f0f7c176decd4e26a6d5fa566", null ],
     [ "getLastScore", "d2/dc0/classrtt_1_1ai_1_1stp_1_1play_1_1Halt.html#a7439c6149abbc461640c9ecdad2ba8d6", null ],
     [ "getName", "d2/dc0/classrtt_1_1ai_1_1stp_1_1play_1_1Halt.html#a96c37ec0328877d33fc2eef036514c0f", null ],
     [ "getRoleStatuses", "d2/dc0/classrtt_1_1ai_1_1stp_1_1play_1_1Halt.html#ab5f09cfa9cd1ddb2a6990cb3c1b4d691", null ],

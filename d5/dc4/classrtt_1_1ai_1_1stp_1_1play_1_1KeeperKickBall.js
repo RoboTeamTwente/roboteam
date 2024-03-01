@@ -5,6 +5,7 @@ var classrtt_1_1ai_1_1stp_1_1play_1_1KeeperKickBall =
     [ "calculateInfoForRoles", "d5/dc4/classrtt_1_1ai_1_1stp_1_1play_1_1KeeperKickBall.html#a5f8c091e19a138dbf20722713472d468", null ],
     [ "decideRoleFlags", "d5/dc4/classrtt_1_1ai_1_1stp_1_1play_1_1KeeperKickBall.html#a9ac7ac1dfabba0707048bb2dbcaefe38", null ],
     [ "distributeRoles", "d5/dc4/classrtt_1_1ai_1_1stp_1_1play_1_1KeeperKickBall.html#a977b3063d4d26bee4be08d71c2ab7ccc", null ],
+    [ "DrawMargins", "d5/dc4/classrtt_1_1ai_1_1stp_1_1play_1_1KeeperKickBall.html#ae5f7186f0f7c176decd4e26a6d5fa566", null ],
     [ "getLastScore", "d5/dc4/classrtt_1_1ai_1_1stp_1_1play_1_1KeeperKickBall.html#a7439c6149abbc461640c9ecdad2ba8d6", null ],
     [ "getName", "d5/dc4/classrtt_1_1ai_1_1stp_1_1play_1_1KeeperKickBall.html#a4a02b1ca3b45f46291cdfeeb44b52fde", null ],
     [ "getRoleStatuses", "d5/dc4/classrtt_1_1ai_1_1stp_1_1play_1_1KeeperKickBall.html#ab5f09cfa9cd1ddb2a6990cb3c1b4d691", null ],

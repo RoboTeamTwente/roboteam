@@ -4,6 +4,7 @@ var classrtt_1_1ai_1_1stp_1_1play_1_1DefensiveStopFormation =
     [ "calculateInfoForRoles", "df/de3/classrtt_1_1ai_1_1stp_1_1play_1_1DefensiveStopFormation.html#a8a4ab1672b7a623f333dbeff7da3607b", null ],
     [ "decideRoleFlags", "df/de3/classrtt_1_1ai_1_1stp_1_1play_1_1DefensiveStopFormation.html#a541b4d7ccd8d412b39c1a2b1087008ec", null ],
     [ "distributeRoles", "df/de3/classrtt_1_1ai_1_1stp_1_1play_1_1DefensiveStopFormation.html#a977b3063d4d26bee4be08d71c2ab7ccc", null ],
+    [ "DrawMargins", "df/de3/classrtt_1_1ai_1_1stp_1_1play_1_1DefensiveStopFormation.html#ae5f7186f0f7c176decd4e26a6d5fa566", null ],
     [ "getLastScore", "df/de3/classrtt_1_1ai_1_1stp_1_1play_1_1DefensiveStopFormation.html#a7439c6149abbc461640c9ecdad2ba8d6", null ],
     [ "getName", "df/de3/classrtt_1_1ai_1_1stp_1_1play_1_1DefensiveStopFormation.html#a1cb900cb312f0aea58bfe08a773803a6", null ],
     [ "getRoleStatuses", "df/de3/classrtt_1_1ai_1_1stp_1_1play_1_1DefensiveStopFormation.html#ab5f09cfa9cd1ddb2a6990cb3c1b4d691", null ],

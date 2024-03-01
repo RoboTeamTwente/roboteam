@@ -5,6 +5,7 @@ var classrtt_1_1ai_1_1stp_1_1play_1_1ChippingPass =
     [ "calculateInfoForRoles", "dc/d26/classrtt_1_1ai_1_1stp_1_1play_1_1ChippingPass.html#ab01128a11c508593ef4c9b9bd806fa5b", null ],
     [ "decideRoleFlags", "dc/d26/classrtt_1_1ai_1_1stp_1_1play_1_1ChippingPass.html#a84662328ed7f972ec588090a5975e22d", null ],
     [ "distributeRoles", "dc/d26/classrtt_1_1ai_1_1stp_1_1play_1_1ChippingPass.html#a977b3063d4d26bee4be08d71c2ab7ccc", null ],
+    [ "DrawMargins", "dc/d26/classrtt_1_1ai_1_1stp_1_1play_1_1ChippingPass.html#ae5f7186f0f7c176decd4e26a6d5fa566", null ],
     [ "getLastScore", "dc/d26/classrtt_1_1ai_1_1stp_1_1play_1_1ChippingPass.html#a7439c6149abbc461640c9ecdad2ba8d6", null ],
     [ "getName", "dc/d26/classrtt_1_1ai_1_1stp_1_1play_1_1ChippingPass.html#acb487148454d3f71d7fe8153f7e9c5a9", null ],
     [ "getRoleStatuses", "dc/d26/classrtt_1_1ai_1_1stp_1_1play_1_1ChippingPass.html#ab5f09cfa9cd1ddb2a6990cb3c1b4d691", null ],

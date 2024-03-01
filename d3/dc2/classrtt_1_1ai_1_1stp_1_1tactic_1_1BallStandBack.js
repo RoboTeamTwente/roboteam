@@ -14,5 +14,6 @@ var classrtt_1_1ai_1_1stp_1_1tactic_1_1BallStandBack =
     [ "update", "d3/dc2/classrtt_1_1ai_1_1stp_1_1tactic_1_1BallStandBack.html#ac66cf9fe9def08172b053a6abc869ba1", null ],
     [ "currentStatus", "d3/dc2/classrtt_1_1ai_1_1stp_1_1tactic_1_1BallStandBack.html#a0dd3439d999970125264ce7fccadff49", null ],
     [ "skills", "d3/dc2/classrtt_1_1ai_1_1stp_1_1tactic_1_1BallStandBack.html#a242748b42fbc99613b65f6500eb12f8f", null ],
+    [ "standBack", "d3/dc2/classrtt_1_1ai_1_1stp_1_1tactic_1_1BallStandBack.html#aa254e0a9bed6d1b0d5254ac15f2d320b", null ],
     [ "standStillCounter", "d3/dc2/classrtt_1_1ai_1_1stp_1_1tactic_1_1BallStandBack.html#a4fca185d8444789b0ad99d0709e9fe33", null ]
 ];

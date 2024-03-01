@@ -26,7 +26,6 @@ var namespacertt_1_1ai =
     [ "DealerFlagTitle", "d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67", [
       [ "WITH_WORKING_BALL_SENSOR", "d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67aac0e2e4aa6cbbee20fe1379efba0836c", null ],
       [ "WITH_WORKING_DRIBBLER", "d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67a2b4671aba77bf173ab74c6d65817a114", null ],
-      [ "READY_TO_INTERCEPT_GOAL_SHOT", "d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67abfc3039b758d22d1b5f75a7451d6d44b", null ],
       [ "KEEPER", "d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67a0ed045ed8cb14e824a1e372dd5398682", null ],
       [ "CAN_DETECT_BALL", "d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67a55ce2fe53a7b2039f6acfcac2eed55e9", null ],
       [ "CAN_KICK_BALL", "d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67af7d59f4e29c18dc164f77922c6c0145b", null ]

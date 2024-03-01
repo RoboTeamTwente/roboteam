@@ -4,6 +4,7 @@ var classrtt_1_1ai_1_1stp_1_1play_1_1Attack =
     [ "calculateInfoForRoles", "db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html#addf737d170c5e01d48694435670d7b12", null ],
     [ "decideRoleFlags", "db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html#a89f90b210807d2d69e62a5244b3d6881", null ],
     [ "distributeRoles", "db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html#a977b3063d4d26bee4be08d71c2ab7ccc", null ],
+    [ "DrawMargins", "db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html#ae5f7186f0f7c176decd4e26a6d5fa566", null ],
     [ "getLastScore", "db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html#a7439c6149abbc461640c9ecdad2ba8d6", null ],
     [ "getName", "db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html#ac7023239c6f9c4fdcd7b863e8b87b01d", null ],
     [ "getRoleStatuses", "db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html#ab5f09cfa9cd1ddb2a6990cb3c1b4d691", null ],

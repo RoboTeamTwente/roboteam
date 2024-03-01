@@ -4,6 +4,7 @@ var classrtt_1_1ai_1_1stp_1_1play_1_1KickOffUsPrepare =
     [ "calculateInfoForRoles", "d9/df0/classrtt_1_1ai_1_1stp_1_1play_1_1KickOffUsPrepare.html#af404d4b05be5e3793e8d7e9e388d4bff", null ],
     [ "decideRoleFlags", "d9/df0/classrtt_1_1ai_1_1stp_1_1play_1_1KickOffUsPrepare.html#ad1c4d385f6a5636603166a0a5401b881", null ],
     [ "distributeRoles", "d9/df0/classrtt_1_1ai_1_1stp_1_1play_1_1KickOffUsPrepare.html#a977b3063d4d26bee4be08d71c2ab7ccc", null ],
+    [ "DrawMargins", "d9/df0/classrtt_1_1ai_1_1stp_1_1play_1_1KickOffUsPrepare.html#ae5f7186f0f7c176decd4e26a6d5fa566", null ],
     [ "getLastScore", "d9/df0/classrtt_1_1ai_1_1stp_1_1play_1_1KickOffUsPrepare.html#a7439c6149abbc461640c9ecdad2ba8d6", null ],
     [ "getName", "d9/df0/classrtt_1_1ai_1_1stp_1_1play_1_1KickOffUsPrepare.html#a3ccfe74e1bd9020b9f100f4b72600f06", null ],
     [ "getRoleStatuses", "d9/df0/classrtt_1_1ai_1_1stp_1_1play_1_1KickOffUsPrepare.html#ab5f09cfa9cd1ddb2a6990cb3c1b4d691", null ],

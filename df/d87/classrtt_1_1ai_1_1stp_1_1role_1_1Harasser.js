@@ -2,6 +2,7 @@ var classrtt_1_1ai_1_1stp_1_1role_1_1Harasser =
 [
     [ "Harasser", "df/d87/classrtt_1_1ai_1_1stp_1_1role_1_1Harasser.html#a4e7e1cca3f419fac09d272c3b3aeb17d", null ],
     [ "finished", "df/d87/classrtt_1_1ai_1_1stp_1_1role_1_1Harasser.html#ae9c573acec4e3999f6b1695c386c06a7", null ],
+    [ "forceLastTactic", "df/d87/classrtt_1_1ai_1_1stp_1_1role_1_1Harasser.html#af552230abdea1d790bd74ad4baf9704c", null ],
     [ "forceNextTactic", "df/d87/classrtt_1_1ai_1_1stp_1_1role_1_1Harasser.html#a319de4e261a9194b2c8c6859b63f2f0d", null ],
     [ "getCurrentRobot", "df/d87/classrtt_1_1ai_1_1stp_1_1role_1_1Harasser.html#a89bcbea7b61a816c97caec1cbef1eaff", null ],
     [ "getCurrentTactic", "df/d87/classrtt_1_1ai_1_1stp_1_1role_1_1Harasser.html#a692cb6f9ade70bebc8f56e5175036c9a", null ],

@@ -73,6 +73,7 @@ class StrategyManager {
         GameState(RefCommand::PREPARE_KICKOFF_THEM, Constants::RULESET_STOP(), false, RefCommand::KICKOFF_THEM),
         GameState(RefCommand::PREPARE_PENALTY_US, Constants::RULESET_STOP(), false, RefCommand::PENALTY_US),
         GameState(RefCommand::PREPARE_PENALTY_THEM, Constants::RULESET_STOP(), false, RefCommand::PENALTY_THEM),
+        GameState(RefCommand::PREPARE_FORCED_START, Constants::RULESET_STOP()),
 
         GameState(RefCommand::DIRECT_FREE_THEM, Constants::RULESET_DEFAULT()),
         GameState(RefCommand::NORMAL_START, Constants::RULESET_DEFAULT()),

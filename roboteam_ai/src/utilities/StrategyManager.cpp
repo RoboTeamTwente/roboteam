@@ -8,11 +8,14 @@
 namespace rtt::ai {
 
 void StrategyManager::setCurrentGameState(RefCommand command, RefCommand nextCommand, std::optional<world::view::BallView> ballOpt) {
+    RTT_INFO(command)
     if (command == RefCommand::STOP && (nextCommand == RefCommand::PREPARE_KICKOFF_THEM || nextCommand == RefCommand::PREPARE_KICKOFF_US ||
                                         nextCommand == RefCommand::PREPARE_PENALTY_THEM || nextCommand == RefCommand::PREPARE_PENALTY_US)) {
         command = nextCommand;
     }
-
+    if (nextCommand == RefCommand::FORCED_START) {
+        command = RefCommand::PREPARE_FORCED_START;
+    }
     if (command == RefCommand::FORCED_START) {
         command = RefCommand::NORMAL_START;
     }
@@ -20,7 +23,7 @@ void StrategyManager::setCurrentGameState(RefCommand command, RefCommand nextCom
     if (command == RefCommand::BALL_PLACEMENT_US && nextCommand == RefCommand::DIRECT_FREE_US) {
         command = RefCommand::BALL_PLACEMENT_US_DIRECT;
     }
-    if (command == RefCommand::STOP && (nextCommand == RefCommand::FORCED_START || nextCommand == RefCommand::DIRECT_FREE_THEM)) {
+    if (command == RefCommand::STOP && nextCommand == RefCommand::DIRECT_FREE_THEM) {
         command = RefCommand::DIRECT_FREE_THEM_STOP;
     }
 
@@ -52,6 +55,7 @@ const GameState StrategyManager::getGameStateForRefCommand(RefCommand command) {
     if (it != gameStates.end()) {
         return *it;
     }
+    RTT_INFO(command)
     std::cerr << "Returning an undefined refstate! This should never happen!" << std::endl;
     return gameStates[0];
 }

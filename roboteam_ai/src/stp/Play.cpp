@@ -198,7 +198,8 @@ void Play::DrawMargins() noexcept {
 
     // Drawing all figures regarding states robots have to avoid certain area's (stop, ball placement, free kick, kick off)
     if (ruleSetTitle == RuleSetName::STOP || currentGameState == RefCommand::DIRECT_FREE_THEM || currentGameState == RefCommand::DIRECT_FREE_THEM_STOP ||
-        currentGameState == RefCommand::DIRECT_FREE_US || currentGameState == RefCommand::KICKOFF_US || currentGameState == RefCommand::KICKOFF_THEM) {
+        currentGameState == RefCommand::DIRECT_FREE_US || currentGameState == RefCommand::KICKOFF_US || currentGameState == RefCommand::KICKOFF_THEM ||
+        currentGameState == RefCommand::PREPARE_FORCED_START) {
         if (currentGameState != RefCommand::BALL_PLACEMENT_THEM && currentGameState != RefCommand::BALL_PLACEMENT_US && currentGameState != RefCommand::BALL_PLACEMENT_US_DIRECT) {
             rtt::ai::gui::Out::draw(
                 {
@@ -225,7 +226,7 @@ void Play::DrawMargins() noexcept {
         if (currentGameState == RefCommand::BALL_PLACEMENT_THEM || currentGameState == RefCommand::DIRECT_FREE_THEM || currentGameState == RefCommand::KICKOFF_THEM)
             color = GameSettings::isYellow() ? proto::Drawing::YELLOW : proto::Drawing::BLUE;
         else if (currentGameState == RefCommand::BALL_PLACEMENT_US || currentGameState == RefCommand::BALL_PLACEMENT_US_DIRECT || currentGameState == RefCommand::DIRECT_FREE_US ||
-                 currentGameState == RefCommand::KICKOFF_US || currentGameState == RefCommand::BALL_PLACEMENT_US_DIRECT)
+                 currentGameState == RefCommand::KICKOFF_US)
             color = GameSettings::isYellow() ? proto::Drawing::BLUE : proto::Drawing::YELLOW;
         else
             color = proto::Drawing::GREEN;

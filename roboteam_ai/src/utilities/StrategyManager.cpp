@@ -8,7 +8,6 @@
 namespace rtt::ai {
 
 void StrategyManager::setCurrentGameState(RefCommand command, RefCommand nextCommand, std::optional<world::view::BallView> ballOpt) {
-    RTT_INFO(command)
     if (command == RefCommand::STOP && (nextCommand == RefCommand::PREPARE_KICKOFF_THEM || nextCommand == RefCommand::PREPARE_KICKOFF_US ||
                                         nextCommand == RefCommand::PREPARE_PENALTY_THEM || nextCommand == RefCommand::PREPARE_PENALTY_US)) {
         command = nextCommand;
@@ -55,7 +54,6 @@ const GameState StrategyManager::getGameStateForRefCommand(RefCommand command) {
     if (it != gameStates.end()) {
         return *it;
     }
-    RTT_INFO(command)
     std::cerr << "Returning an undefined refstate! This should never happen!" << std::endl;
     return gameStates[0];
 }

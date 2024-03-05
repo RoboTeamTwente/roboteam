@@ -5,6 +5,7 @@
 
 #include "control/ControlUtils.h"
 #include "roboteam_utils/LineSegment.h"
+#include "stp/computations/PositionScoring.h"
 #include "stp/constants/ControlConstants.h"
 #include "stp/skills/GoToPos.h"
 #include "utilities/Constants.h"
@@ -30,8 +31,24 @@ std::optional<StpInfo> KeeperBlockBall::calculateInfoForSkill(StpInfo const &inf
     if (!skillStpInfo.getField() || !skillStpInfo.getBall() || !skillStpInfo.getRobot()) return std::nullopt;
 
     skillStpInfo.setShouldAvoidOutOfField(false);
-
     auto targetPosition = calculateTargetPosition(info.getBall().value(), info.getField().value(), info.getEnemyRobot());
+    if (PositionScoring::scorePosition(info.getField().value().leftGoalArea.rightLine().center(), gen::LineOfSight, info.getField().value(), info.getCurrentWorld()).score > 35) {
+        auto maxRobotVelocity = GameStateManager::getCurrentGameState().getRuleSet().getMaxRobotVel();
+        auto keeper = skillStpInfo.getRobot()->get();
+        int keeperId = GameStateManager::getCurrentGameState().keeperId;
+        double maximumTimeToIntercept = 1;
+        Vector2 newBallPos;
+        for (double loopTime = 0; loopTime < 1; loopTime += 0.1) {
+            newBallPos = FieldComputations::getBallPositionAtTime(*(skillStpInfo.getBall()->get()), loopTime);
+            if (info.getField().value().leftDefenseArea.contains(newBallPos, control_constants::BALL_RADIUS)) {
+                auto trajectory = Trajectory2D(keeper->getPos(), keeper->getVel(), newBallPos, maxRobotVelocity, ai::Constants::MAX_ACC_UPPER());
+                if (trajectory.getTotalTime() < loopTime) {
+                    targetPosition = {newBallPos, PIDType::INTERCEPT};
+                    break;
+                }
+            }
+        }
+    }
     skillStpInfo.setPositionToMoveTo(targetPosition.first);
     skillStpInfo.setPidType(targetPosition.second);
 

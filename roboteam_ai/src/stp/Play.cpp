@@ -190,7 +190,7 @@ void Play::DrawMargins() noexcept {
     std::array<rtt::Vector2, 4> leftDefenseAreaMargin = {field.leftDefenseArea.topLeft() + Vector2(0.0, 0.2), field.leftDefenseArea.topRight() + Vector2(0.2, 0.2),
                                                          field.leftDefenseArea.bottomRight() + Vector2(0.2, -0.2), field.leftDefenseArea.bottomLeft() + Vector2(0.0, -0.2)};
     std::array<rtt::Vector2, 1> cardId = {rtt::Vector2(0.0, -field.playArea.height() / 2)};
-    std::array<rtt::Vector2, 2> pathToBallPlacement = {world->getWorld()->getBall()->get()->position, rtt::ai::GameStateManager::getRefereeDesignatedPosition()};
+    std::array<rtt::Vector2, 1> pathToBallPlacement = {rtt::ai::GameStateManager::getRefereeDesignatedPosition()};
 
     RuleSetName ruleSetTitle = GameStateManager::getCurrentGameState().getRuleSet().getTitle();
     RefCommand currentGameState = GameStateManager::getCurrentGameState().getCommandId();
@@ -237,23 +237,23 @@ void Play::DrawMargins() noexcept {
                 .color = color,
                 .method = proto::Drawing::CIRCLES,
                 .category = proto::Drawing::MARGINS,
-                .size = 53,
-                .thickness = 3,
+                .size = 52,
+                .thickness = 4,
             },
             ball);
     }
 
     // Drawing all figures regarding ball placement location and the path towards it
     if (currentGameState == RefCommand::BALL_PLACEMENT_THEM || currentGameState == RefCommand::BALL_PLACEMENT_US || currentGameState == RefCommand::BALL_PLACEMENT_US_DIRECT) {
-        for (auto method : {proto::Drawing::CROSSES, proto::Drawing::LINES_CONNECTED}) {
+        for (auto method : {proto::Drawing::CIRCLES, proto::Drawing::LINES_CONNECTED}) {
             rtt::ai::gui::Out::draw(
                 {
-                    .label = method == proto::Drawing::CROSSES ? "Placement location" : "Path to placement location ",
+                    .label = method == proto::Drawing::CIRCLES ? "Placement location" : "Path to placement location ",
                     .color = proto::Drawing::BLACK,
                     .method = method,
                     .category = proto::Drawing::MARGINS,
-                    .size = method == proto::Drawing::CROSSES ? 10 : 8,
-                    .thickness = method == proto::Drawing::CROSSES ? 5 : 8,
+                    .size = method == proto::Drawing::CIRCLES ? 17 : 8,
+                    .thickness = method == proto::Drawing::CIRCLES ? 4 : 8,
                 },
                 pathToBallPlacement);
         }
@@ -267,7 +267,7 @@ void Play::DrawMargins() noexcept {
                 .method = proto::Drawing::CIRCLES,
                 .category = proto::Drawing::MARGINS,
                 .size = 15,
-                .thickness = 10,
+                .thickness = 7,
             },
             cardId);
     }

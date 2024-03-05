@@ -75,8 +75,8 @@ PassInfo PassComputations::calculatePass(gen::ScoreProfile profile, const rtt::w
                         .method = proto::Drawing::PLUSES,
                         .category = proto::Drawing::DEBUG,
                         .forRobotId = passInfo.passerId,
-                        .size = pow(scoredPosition.score / 40, 2) + 4,
-                        .thickness = pow(scoredPosition.score / 80, 2) + 3,
+                        .size = static_cast<int>(pow(scoredPosition.score / 40, 2) + 4),
+                        .thickness = static_cast<int>(pow(scoredPosition.score / 80, 2) + 3),
                     },
                     pointToPassTo);
                 if (scoredPosition.score > passInfo.passScore) {

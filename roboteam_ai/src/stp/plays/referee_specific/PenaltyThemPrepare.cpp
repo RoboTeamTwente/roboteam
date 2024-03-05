@@ -1,5 +1,6 @@
 #include "stp/plays/referee_specific/PenaltyThemPrepare.h"
 
+#include "stp/roles/Keeper.h"
 #include "stp/roles/passive/Formation.h"
 
 namespace rtt::ai::stp::play {
@@ -19,7 +20,7 @@ PenaltyThemPrepare::PenaltyThemPrepare() : Play() {
     // Role creation, the names should be unique. The names are used in the stpInfos-map.
     roles = std::array<std::unique_ptr<Role>, rtt::ai::Constants::ROBOT_COUNT()>{
         // Roles is we play 6v6
-        std::make_unique<role::Formation>("keeper"),
+        std::make_unique<role::Keeper>("keeper"),
         std::make_unique<role::Formation>("formation_0"),
         std::make_unique<role::Formation>("formation_1"),
         std::make_unique<role::Formation>("formation_2"),
@@ -59,8 +60,6 @@ Dealer::FlagMap PenaltyThemPrepare::decideRoleFlags() const noexcept {
 }
 
 void PenaltyThemPrepare::calculateInfoForRoles() noexcept {
-    PositionComputations::calculateInfoForKeeper(stpInfos, field, world);
-
     // During their penalty, all our robots should be behind the ball to not interfere.
     // Create a grid pattern of robots on their side of the field
     int amountOfPassiveRobots = world->getWorld()->getUs().size() - 1;

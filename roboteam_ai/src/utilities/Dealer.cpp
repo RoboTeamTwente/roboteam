@@ -244,6 +244,7 @@ double Dealer::getRobotScoreForRole(const std::vector<Dealer::DealerFlag> &deale
 // Get the distance score for a robot to a position when there is a position that role needs to go to
 double Dealer::getRobotScoreForDistance(const stp::StpInfo &stpInfo, const v::RobotView &robot) {
     double distance;
+    if (stpInfo.getRoleName().find("halt") == std::string::npos && stpInfo.getRoleName() == "keeper") return 0;
 
     std::optional<Vector2> target_position;
     // Search for position in getEnemyRobot, getPositionToDefend, and getPositionToMoveTo
@@ -251,15 +252,10 @@ double Dealer::getRobotScoreForDistance(const stp::StpInfo &stpInfo, const v::Ro
     if (stpInfo.getPositionToDefend().has_value()) target_position = stpInfo.getPositionToDefend().value();
     if (stpInfo.getPositionToShootAt().has_value()) target_position = world.getBall()->get()->position;
     if (stpInfo.getPositionToMoveTo().has_value()) target_position = stpInfo.getPositionToMoveTo().value();
-    // If robot is keeper, set distance to self. Basically 0
-    // TODO: Is this if ever true? This is already handeled before right?
-    if (stpInfo.getRoleName() == "keeper" && robot->getId() == GameStateManager::getCurrentGameState().keeperId) target_position = robot->getPos();
 
     // No target found to move to
     if (!target_position) {
-        // only print warning if halt not in rolename
-        if (stpInfo.getRoleName().find("halt") == std::string::npos)
-            RTT_WARNING("No target position found for role " + stpInfo.getRoleName() + " for robot " + std::to_string(robot->getId()))
+        RTT_WARNING("No target position found for role " + stpInfo.getRoleName() + " for robot " + std::to_string(robot->getId()))
         return 0;
     }
     distance = robot->getPos().dist(*target_position);

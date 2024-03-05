@@ -250,11 +250,6 @@ Vector2 PositionComputations::calculatePositionOutsideOfShape(Vector2 targetPosi
     return targetPosition;
 }
 
-void PositionComputations::calculateInfoForKeeper(std::unordered_map<std::string, StpInfo> &stpInfos, const Field &field, world::World *world) noexcept {
-    stpInfos["keeper"].setPositionToMoveTo(field.leftGoalArea.rightLine().center());
-    stpInfos["keeper"].setEnemyRobot(world->getWorld()->getRobotClosestToBall(world::them));
-}
-
 HarasserInfo PositionComputations::calculateHarasserId(world::World *world, const Field &field) noexcept {
     auto maxRobotVelocity = GameStateManager::getCurrentGameState().getRuleSet().getMaxRobotVel();
     int keeperId = GameStateManager::getCurrentGameState().keeperId;

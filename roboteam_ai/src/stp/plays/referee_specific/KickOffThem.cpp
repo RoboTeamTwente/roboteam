@@ -61,7 +61,7 @@ Dealer::FlagMap KickOffThem::decideRoleFlags() const noexcept {
     return flagMap;
 }
 
-void KickOffThem::calculateInfoForRoles() noexcept { PositionComputations::calculateInfoForKeeper(stpInfos, field, world); }
+void KickOffThem::calculateInfoForRoles() noexcept {}
 
 bool KickOffThem::shouldEndPlay() noexcept { return false; }
 

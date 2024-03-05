@@ -76,7 +76,6 @@ Dealer::FlagMap AttackingPass::decideRoleFlags() const noexcept {
 }
 
 void AttackingPass::calculateInfoForRoles() noexcept {
-    PositionComputations::calculateInfoForKeeper(stpInfos, field, world);
     PositionComputations::calculateInfoForDefendersAndWallers(stpInfos, roles, field, world, true);
     PositionComputations::calculateInfoForAttackers(stpInfos, roles, field, world);
     PositionComputations::recalculateInfoForNonPassers(stpInfos, field, world, passInfo.passLocation);

@@ -94,14 +94,6 @@ class PositionComputations {
     static Vector2 calculateAvoidBallPosition(Vector2 targetPosition, Vector2 ballPosition, const Field &field);
 
     /**
-     * @brief Calculates info for the keeper
-     * @param stpInfos The current stpInfos
-     * @param field The current field
-     * @param world The current world
-     */
-    static void calculateInfoForKeeper(std::unordered_map<std::string, StpInfo> &stpInfos, const Field &field, world::World *world) noexcept;
-
-    /**
      * @brief Calculates the id of the harasser
      * @param world The current world
      * @param field The current field

@@ -60,8 +60,6 @@ Dealer::FlagMap PenaltyUs::decideRoleFlags() const noexcept {
 }
 
 void PenaltyUs::calculateInfoForRoles() noexcept {
-    PositionComputations::calculateInfoForKeeper(stpInfos, field, world);
-
     auto positionTarget = PositionComputations::getPosition(std::nullopt, field.middleRightGrid, gen::GoalShot, field, world);
     stpInfos["kicker"].setPositionToMoveTo(positionTarget);
     auto goalTarget = computations::GoalComputations::calculateGoalTarget(world, field);

@@ -4,6 +4,7 @@
 
 #include "stp/plays/referee_specific/BallPlacementUsFreeKick.h"
 
+#include "stp/roles/Keeper.h"
 #include "stp/roles/active/BallPlacer.h"
 #include "stp/roles/passive/Defender.h"
 #include "stp/roles/passive/Formation.h"
@@ -23,7 +24,7 @@ BallPlacementUsFreeKick::BallPlacementUsFreeKick() : Play() {
     // Role creation, the names should be unique. The names are used in the stpInfos-map.
     roles = std::array<std::unique_ptr<Role>, rtt::ai::Constants::ROBOT_COUNT()>{
         // Roles is we play 6v6
-        std::make_unique<role::Formation>("keeper"),
+        std::make_unique<role::Keeper>("keeper"),
         std::make_unique<role::BallPlacer>("ball_placer"),
         std::make_unique<role::Formation>("attacker_0"),
         std::make_unique<role::Defender>("defender_0"),
@@ -65,7 +66,6 @@ Dealer::FlagMap BallPlacementUsFreeKick::decideRoleFlags() const noexcept {
 }
 
 void BallPlacementUsFreeKick::calculateInfoForRoles() noexcept {
-    PositionComputations::calculateInfoForKeeper(stpInfos, field, world);
     PositionComputations::calculateInfoForDefendersAndWallers(stpInfos, roles, field, world, true);
     PositionComputations::calculateInfoForAttackers(stpInfos, roles, field, world);
 
@@ -88,7 +88,6 @@ void BallPlacementUsFreeKick::calculateInfoForRoles() noexcept {
     for (auto& stpInfo : stpInfos) {
         stpInfo.second.setShouldAvoidDefenseArea(false);
     }
-
     if ((world->getWorld()->get()->getBall()->get()->position - rtt::ai::GameStateManager::getRefereeDesignatedPosition()).length() < control_constants::BALL_PLACEMENT_MARGIN) {
         for (auto& role : roles)
             if (role->getName() == "ball_placer") role->forceLastTactic();

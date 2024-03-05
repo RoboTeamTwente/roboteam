@@ -246,12 +246,12 @@ void Play::DrawMargins() noexcept {
     // Drawing all figures regarding ball placement location and the path towards it
     if (currentGameState == RefCommand::BALL_PLACEMENT_THEM || currentGameState == RefCommand::BALL_PLACEMENT_US || currentGameState == RefCommand::BALL_PLACEMENT_US_DIRECT) {
         for (auto method : {proto::Drawing::CROSSES, proto::Drawing::LINES_CONNECTED}) {
-            RTT_INFO(method)
             rtt::ai::gui::Out::draw(
                 {
                     .label = method == proto::Drawing::CROSSES ? "Placement location" : "Path to placement location ",
                     .color = proto::Drawing::BLACK,
                     .method = method,
+                    .category = proto::Drawing::MARGINS,
                     .size = method == proto::Drawing::CROSSES ? 10 : 8,
                     .thickness = method == proto::Drawing::CROSSES ? 5 : 8,
                 },
@@ -270,6 +270,23 @@ void Play::DrawMargins() noexcept {
                 .thickness = 10,
             },
             cardId);
+    }
+    std::array<std::string, 4> names = {"harasser", "passer", "receiver", "striker"};
+    std::array<proto::Drawing::Color, 4> colors = {proto::Drawing::RED, proto::Drawing::WHITE, proto::Drawing::MAGENTA, proto::Drawing::WHITE};
+    for (int i = 0; i < names.size(); i++) {
+        if (stpInfos[names[i]].getRobot()) {
+            std::array<rtt::Vector2, 1> position = {stpInfos[names[i]].getRobot()->get()->getPos()};
+            rtt::ai::gui::Out::draw(
+                {
+                    .label = names[i],
+                    .color = colors[i],
+                    .method = proto::Drawing::CIRCLES,
+                    .category = proto::Drawing::DEBUG,
+                    .size = 15,
+                    .thickness = 7,
+                },
+                position);
+        }
     }
 }
 

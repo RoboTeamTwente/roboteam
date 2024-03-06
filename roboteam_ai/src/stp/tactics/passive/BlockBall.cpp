@@ -14,28 +14,34 @@ BlockBall::BlockBall() { skills = rtt::collections::state_machine<Skill, Status,
 std::optional<StpInfo> BlockBall::calculateInfoForSkill(StpInfo const &info) noexcept {
     StpInfo skillStpInfo = info;
 
-    if (!skillStpInfo.getField() || !skillStpInfo.getBall() || !skillStpInfo.getRobot() || !(skillStpInfo.getEnemyRobot() || skillStpInfo.getPositionToDefend()))
+    if (!skillStpInfo.getField() || !skillStpInfo.getBall() || !skillStpInfo.getRobot() ||
+        !(skillStpInfo.getEnemyRobot() || skillStpInfo.getPositionToDefend() || skillStpInfo.getPositionToMoveTo()))
         return std::nullopt;
 
-    auto defendPos = info.getEnemyRobot() ? info.getEnemyRobot().value()->getPos() : info.getPositionToDefend().value();
-    auto targetPosition = calculateTargetPosition(info.getBall().value(), defendPos, info.getBlockDistance());
+    if (!skillStpInfo.getPositionToMoveTo()) {
+        auto defendPos = info.getEnemyRobot() ? info.getEnemyRobot().value()->getPos() : info.getPositionToDefend().value();
+        auto targetPosition = calculateTargetPosition(info.getBall().value(), defendPos, info.getBlockDistance());
 
-    // Make sure this position is valid
-    targetPosition = FieldComputations::projectPointToValidPositionOnLine(info.getField().value(), targetPosition, defendPos, info.getBall()->get()->position);
+        // Make sure this position is valid
+        targetPosition = FieldComputations::projectPointToValidPositionOnLine(info.getField().value(), targetPosition, defendPos, info.getBall()->get()->position);
+        // targetPosition.x = std::min(0.0, targetPosition.x);
 
-    skillStpInfo.setPositionToMoveTo(targetPosition);
+        skillStpInfo.setPositionToMoveTo(targetPosition);
 
-    auto targetAngle = (info.getBall()->get()->position - info.getRobot()->get()->getPos()).angle();
-    skillStpInfo.setAngle(targetAngle);
+        auto targetAngle = (info.getBall()->get()->position - info.getRobot()->get()->getPos()).angle();
+        skillStpInfo.setAngle(targetAngle);
+    } else {
+        skillStpInfo.setDribblerSpeed(0);
+    }
 
     return skillStpInfo;
 }
 
 bool BlockBall::isEndTactic() noexcept { return true; }
 
-bool BlockBall::isTacticFailing(const StpInfo &info) noexcept { return false; }
+bool BlockBall::isTacticFailing(const StpInfo &) noexcept { return false; }
 
-bool BlockBall::shouldTacticReset(const StpInfo &info) noexcept { return false; }
+bool BlockBall::shouldTacticReset(const StpInfo &) noexcept { return false; }
 
 const char *BlockBall::getName() { return "Block Ball"; }
 
@@ -66,7 +72,7 @@ Vector2 BlockBall::calculateTargetPosition(const world::view::BallView &ball, Ve
     }
 
     // Do not get closer than 4 robot radii (to avoid collisions)
-    distance = std::max(4 * control_constants::ROBOT_RADIUS, distance);
+    distance = std::max(4 * control_constants::ROBOT_RADIUS + control_constants::GO_TO_POS_ERROR_MARGIN, distance);
 
     return defendPos + targetToBall.stretchToLength(distance);
 }

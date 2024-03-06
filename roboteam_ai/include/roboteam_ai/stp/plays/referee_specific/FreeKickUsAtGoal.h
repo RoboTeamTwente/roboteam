@@ -37,21 +37,6 @@ class FreeKickUsAtGoal : public Play {
     void calculateInfoForRoles() noexcept override;
 
     /**
-     * @brief Calculates info for the defenders
-     */
-    void calculateInfoForDefenders() noexcept;
-
-    /**
-     * @brief Calculates info for the midfielders
-     */
-    void calculateInfoForMidfielders() noexcept;
-
-    /**
-     * @brief Calculates info for the attackers
-     */
-    void calculateInfoForAttackers() noexcept;
-
-    /**
      * @brief Check if play should end. True when the free kick taker has kicked the ball
      */
     bool shouldEndPlay() noexcept override;

@@ -6,7 +6,7 @@
 
 #include <RobotFeedbackNetworker.hpp>
 
-proto::State Observer::process(const std::vector<proto::SSL_WrapperPacket>& visionPackets, const std::vector<proto::SSL_Referee>& refereePackets,
+proto::State Observer::process(const std::vector<proto::SSL_WrapperPacket>& visionPackets, const std::vector<proto::Referee>& refereePackets,
                                const std::vector<rtt::RobotsFeedback>& robotData) {
     updateRobotParams(refereePackets);
     proto::State state;
@@ -29,7 +29,7 @@ proto::State Observer::process(const std::vector<proto::SSL_WrapperPacket>& visi
         state.mutable_field()->CopyFrom(geometry.value());
     }
 
-    std::optional<proto::SSL_Referee> refMsg = refereeFilter.getLastRefereeMessage();
+    std::optional<proto::Referee> refMsg = refereeFilter.getLastRefereeMessage();
     if (refMsg) {
         state.mutable_referee()->CopyFrom(refMsg.value());
     }
@@ -39,7 +39,7 @@ proto::State Observer::process(const std::vector<proto::SSL_WrapperPacket>& visi
         packet->CopyFrom(visionPacket);
     }
     for (const auto& refpacket : refereePackets) {
-        proto::SSL_Referee* packet = state.add_processed_referee_packets();
+        proto::Referee* packet = state.add_processed_referee_packets();
         packet->CopyFrom(refpacket);
     }
     for (const auto& data : robotData) {
@@ -48,13 +48,13 @@ proto::State Observer::process(const std::vector<proto::SSL_WrapperPacket>& visi
     return state;
 }
 
-void Observer::updateRobotParams(std::vector<proto::SSL_Referee> refereePackets) {
+void Observer::updateRobotParams(std::vector<proto::Referee> refereePackets) {
     // sort the referee packets; we only use the last one as there is no additional information in between packets
-    std::sort(refereePackets.begin(), refereePackets.end(), [](const proto::SSL_Referee& a, const proto::SSL_Referee& b) { return a.packet_timestamp() < b.packet_timestamp(); });
+    std::sort(refereePackets.begin(), refereePackets.end(), [](const proto::Referee& a, const proto::Referee& b) { return a.packet_timestamp() < b.packet_timestamp(); });
     TwoTeamRobotParameters parameters = !refereePackets.empty() ? parameterDatabase.update(refereePackets.back()) : parameterDatabase.getParams();
     if (parameters.blueChanged || parameters.yellowChanged) {
         visionFilter.updateRobotParameters(parameters);
     }
 }
 
-void Observer::updateReferee(const std::vector<proto::SSL_Referee>& refereePackets) { refereeFilter.process(refereePackets); }
+void Observer::updateReferee(const std::vector<proto::Referee>& refereePackets) { refereeFilter.process(refereePackets); }

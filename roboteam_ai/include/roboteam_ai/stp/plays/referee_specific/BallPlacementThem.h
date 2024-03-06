@@ -33,17 +33,10 @@ class BallPlacementThem : public Play {
      */
     void calculateInfoForRoles() noexcept override;
 
-    void calculateInfoForKeeper() noexcept;
-
     /**
      * @brief Calculates info for the harasser roles
      */
     void calculateInfoForHarasser() noexcept;
-
-    /**
-     * @brief Calculates info for the waller roles
-     */
-    void calculateInfoForWallers() noexcept;
 
     /**
      * @brief Retrieves the name of the play

@@ -20,9 +20,10 @@ namespace rtt::world::ball {
  */
 class Ball {
    public:
-    Vector2 position;     /**< Position of the ball */
-    Vector2 velocity;     /**< Velocity of the ball */
-    bool visible = false; /**< Whether the ball is visible by any camera */
+    Vector2 position;            /**< Position of the ball */
+    Vector2 velocity;            /**< Velocity of the ball */
+    Vector2 expectedEndPosition; /**< Expected end position of the ball if it keeps moving in the same direction */
+    bool visible = false;        /**< Whether the ball is visible by any camera */
 
     /**
      * @brief Initializes ball at the previously seen position, if the current ball is not visible

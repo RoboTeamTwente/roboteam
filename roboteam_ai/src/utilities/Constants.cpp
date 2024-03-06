@@ -38,7 +38,7 @@ double Constants::MAX_DEC_LOWER() { return MAX_ACC_LOWER() * 1.2; }  // magic nu
 double Constants::HAS_BALL_DISTANCE() { return (GameSettings::getRobotHubMode() == net::RobotHubMode::BASESTATION) ? 0.11 : 0.12; }
 
 // The max angle the ball can have to the robot for the robot to have the ball
-double Constants::HAS_BALL_ANGLE() { return 0.10 * M_PI; }
+double Constants::HAS_BALL_ANGLE() { return 0.1 * M_PI; }
 
 std::map<int, bool> Constants::ROBOTS_WITH_WORKING_DRIBBLER() {
     static std::map<int, bool> workingDribblerRobots;
@@ -172,16 +172,15 @@ pidVals Constants::standardKeeperPID() { return GameSettings::getRobotHubMode() 
 
 pidVals Constants::standardKeeperInterceptPID() { return GameSettings::getRobotHubMode() == net::RobotHubMode::BASESTATION ? pidVals(6, 0, 1) : pidVals(6, 0, 1); }
 
-RuleSet Constants::RULESET_DEFAULT() { return {"default", 2, 6.5, 0.0, ROBOT_RADIUS(), true}; }
-RuleSet Constants::RULESET_HALT() { return {"halt", 0.0, 0.0, 0.0, -1, true}; }
-RuleSet Constants::RULESET_STOP() { return {"stop", 1.3, 0.0, 0.8, -1, false}; }
-RuleSet Constants::RULESET_BALLPLACEMENT_THEM() { return {"ballplacement_them", 1.3, 6.5, 0.8, -1, true}; }
-RuleSet Constants::RULESET_BALLPLACEMENT_US() { return {"ballplacement_us", 1.5, 6.5, 0.0, -1, true}; }
-RuleSet Constants::RULESET_KICKOFF() { return {"kickoff", 1.5, 6.5, 0.5, -1, true}; }
+RuleSet Constants::RULESET_DEFAULT() { return {RuleSetName::DEFAULT, 2}; }
+RuleSet Constants::RULESET_HALT() { return {RuleSetName::HALT, 0.0}; }
+RuleSet Constants::RULESET_STOP() { return {RuleSetName::STOP, 1.3}; }
 
 std::vector<RuleSet> Constants::ruleSets() {
     return {
-        RULESET_DEFAULT(), RULESET_HALT(), RULESET_STOP(), RULESET_BALLPLACEMENT_THEM(), RULESET_BALLPLACEMENT_US(), RULESET_KICKOFF(),
+        RULESET_DEFAULT(),
+        RULESET_HALT(),
+        RULESET_STOP(),
     };
 }
 

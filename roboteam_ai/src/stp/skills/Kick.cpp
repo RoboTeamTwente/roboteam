@@ -37,7 +37,7 @@ Status Kick::onUpdate(const StpInfo &info) noexcept {
     command.id = info.getRobot().value()->getId();
 
     // forward the generated command to the ControlModule, for checking and limiting
-    forwardRobotCommand(info.getCurrentWorld());
+    forwardRobotCommand();
 
     if (!info.getRobot().value()->hasBall() && info.getBall()->get()->velocity.length() > control_constants::BALL_GOT_SHOT_LIMIT) {
         return Status::Success;

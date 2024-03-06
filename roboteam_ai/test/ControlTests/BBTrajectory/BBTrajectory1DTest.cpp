@@ -48,7 +48,6 @@ TEST(BBTrajectories, onlyDecelerateOtherWay) {
     EXPECT_DOUBLE_EQ(test.getPosition(1), -0.75);
     EXPECT_DOUBLE_EQ(test.getVelocity(2), 0);
     EXPECT_DOUBLE_EQ(test.getVelocity(3), 0);
-    // TODO: fix buggy parts
     EXPECT_FALSE(test.inLastPart(0.000));
     EXPECT_TRUE(test.inLastPart(2.5));
 }

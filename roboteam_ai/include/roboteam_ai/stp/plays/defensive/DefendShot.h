@@ -44,41 +44,7 @@ class DefendShot : public Play {
      */
     const char* getName() const override;
 
-    /**
-     * @brief Check if play should end
-     */
-    bool shouldEndPlay() noexcept override;
-
-   protected:
-    /**
-     * @brief Calculates info for the wallers
-     */
-    void calculateInfoForWallers(bool shouldIncludeBallBlocker) noexcept;
-
-    /**
-     * @brief Calculates info for the defenders
-     */
-    void calculateInfoForDefenders() noexcept;
-
-    /**
-     * @brief Calculates info for the ballBlocker
-     */
-    void calculateInfoForBlocker() noexcept;
-
-    /**
-     * @brief Calculates info for the harasser
-     */
-    void calculateInfoForHarasser() noexcept;
-
-    /**
-     * @brief Calculates info for the keeper
-     */
-    void calculateInfoForKeeper() noexcept;
-
-    /**
-     * @brief Calculates info for the offenders
-     */
-    void calculateInfoForOffenders() noexcept;
+    HarasserInfo harasserInfo;
 };
 }  // namespace rtt::ai::stp::play
 

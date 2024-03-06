@@ -1,0 +1,224 @@
+version: '3'
+
+services:
+
+  roboteam_primary_ai:
+    image: roboteamtwente/roboteam:development
+    container_name: RTT_roboteam_primary_ai
+    restart: always
+    working_dir: "/home/roboteamtwente/"
+    command: sh -c "./bin/roboteam_ai --primary-ai"
+    network_mode: "host" # Workaround to connect from interface on host to AI websocket, please fix
+    expose:
+      - 1-65535:1-65535 # For zeromq ports
+      - 12676:12676 # Primary AI Port
+    ports:
+      - 12676:12676 # Primary AI Port
+    environment:
+      - LD_LIBRARY_PATH=/home/roboteamtwente/lib/
+    volumes:
+      - ../../build/release/:/home/roboteamtwente/
+    profiles: ["simulator","diff","game"]
+  
+  roboteam_secondary_ai:
+    image: roboteamtwente/roboteam:development
+    container_name: RTT_roboteam_secondary_ai
+    restart: always
+    working_dir: "/home/roboteamtwente/"
+    command: sh -c "./bin/roboteam_ai --secondary-ai"
+    network_mode: "host" # Workaround to connect from interface on host to AI websocket, please fix
+    expose:
+      - 1-65535:1-65535 # For zeromq ports
+      - 12677:12677 # Secondary AI Port
+    ports:
+      - 12677:12677 # Secondary AI Port
+    environment:
+      - LD_LIBRARY_PATH=/home/roboteamtwente/lib/
+    volumes:
+      - ../../build/release/:/home/roboteamtwente/
+    profiles: ["simulator"]
+
+  roboteam_prev_ai:
+    image: roboteamtwente/roboteam:development
+    container_name: RTT_roboteam_prev_ai
+    restart: always
+    working_dir: "/home/roboteamtwente/"
+    command: sh -c "./build_old/release/bin/roboteam_ai --secondary-ai"
+    network_mode: "host" # Workaround to connect from interface on host to AI websocket, please fix
+    expose:
+      - 1-65535:1-65535 # For zeromq ports
+      - 12677:12677 # Secondary AI Port
+    ports:
+      - 12677:12677 # Secondary AI Port
+    environment:
+      - LD_LIBRARY_PATH=/home/roboteamtwente/build_old/release/lib/
+    volumes:
+      - ../../:/home/roboteamtwente/
+    profiles: ["diff"]
+
+  roboteam_observer_sim:
+    image: roboteamtwente/roboteam:development
+    container_name: RTT_roboteam_observer_sim
+    restart: always
+    working_dir: "/home/roboteamtwente/"
+    command: sh -c "./bin/roboteam_observer --vision-ip 224.5.23.2 --referee-ip 224.5.23.1 --vision-port 10020 --referee-port 10003"
+    network_mode: "host" # Workaround to connect from interface on host to AI websocket, please fix
+    expose:
+      - 1-65535:1-65535 # For zeromq ports
+      - 10006:10006 # Vision port vision
+      - 10020:10020 # Vision port simulator
+      - 10003:10003 # Referee port
+    environment:
+      - LD_LIBRARY_PATH=/home/roboteamtwente/lib/
+    volumes:
+      - ../../build/release/:/home/roboteamtwente/
+    profiles: ["simulator","diff"]
+
+  roboteam_observer_game:
+    image: roboteamtwente/roboteam:development
+    container_name: RTT_roboteam_observer_game
+    restart: always
+    working_dir: "/home/roboteamtwente/"
+    command: sh -c "./bin/roboteam_observer --vision-ip 224.5.23.2 --referee-ip 224.5.23.1 --vision-port 10006 --referee-port 10003"
+    network_mode: "host" # Workaround to connect from interface on host to AI websocket, please fix
+    expose:
+      - 1-65535:1-65535 # For zeromq ports
+      - 10006:10006 # Vision port vision
+      - 10020:10020 # Vision port simulator
+      - 10003:10003 # Referee port
+    environment:
+      - LD_LIBRARY_PATH=/home/roboteamtwente/lib/
+    volumes:
+      - ../../build/release/:/home/roboteamtwente/
+    profiles: ["game"]
+
+  roboteam_robothub_sim:
+    image: roboteamtwente/roboteam:development
+    container_name: RTT_roboteam_robothub_sim
+    restart: always
+    working_dir: "/home/roboteamtwente/"
+    command: sh -c "./bin/roboteam_robothub"
+    network_mode: "host" # Workaround to connect from interface on host to AI websocket, please fix
+    expose:
+      - 1-65535:1-65535 # For zeromq ports
+      - 10301:10301 #Blue Control Port
+      - 30011:30011 #Blue Feedback Port
+      - 10302:10302 #Yellow Control Port
+      - 30012:30012 #Yellow Feedback Port
+      - 10300:10300 #Simulation Control Port
+      - 30013:30013 #Simulation Feedback Port
+    environment:
+      - LD_LIBRARY_PATH=/home/roboteamtwente/lib/
+    volumes:
+      - ../../build/release/:/home/roboteamtwente/
+    profiles: ["simulator","diff"]
+
+  roboteam_robothub_game:
+    image: roboteamtwente/roboteam:development
+    container_name: RTT_roboteam_robothub_game
+    restart: always
+    working_dir: "/home/roboteamtwente/"
+    command: sh -c "sudo bash -c \"export LD_LIBRARY_PATH=/home/roboteamtwente/lib/ && ./bin/roboteam_robothub\"" # "sudo" needed to access USB device
+    network_mode: "host" # Workaround to connect from interface on host to AI websocket, please fix
+    expose:
+      - 1-65535:1-65535 # For zeromq ports
+      - 10301:10301 #Blue Control Port
+      - 30011:30011 #Blue Feedback Port
+      - 10302:10302 #Yellow Control Port
+      - 30012:30012 #Yellow Feedback Port
+      - 10300:10300 #Simulation Control Port
+      - 30013:30013 #Simulation Feedback Port
+    environment:
+      - LD_LIBRARY_PATH=/home/roboteamtwente/lib/
+    volumes:
+      - ../../build/release/:/home/roboteamtwente/
+    privileged: true
+    devices:
+      - /dev/rtt-basestation:/dev/ttyACM1
+    profiles: ["game"]
+
+  roboteam_interface:
+    image: roboteamtwente/roboteam:development
+    container_name: RTT_roboteam_interface
+    restart: always
+    working_dir: "/home/roboteamtwente/"
+    command: sh -c "yarn serve --host 0.0.0.0"
+    ports:
+      - 8080:8080
+    volumes:
+      - ../../roboteam_interface/:/home/roboteamtwente/
+    profiles: ["simulator","diff","game"]
+
+  roboteam_autoref:
+    image: gradle:8.4.0-jdk17
+    container_name: RTT_roboteam_autoref
+    user: gradle # Do not build as root
+    restart: always
+    working_dir: "/home/roboteamtwente/"
+    command: sh -c "./gradlew run --args=\"-cli --world-ip=127.0.0.1 --world-port=5558 --gc-ip=127.0.0.1 --gc-port=10007\""
+    network_mode: "host" # Workaround to connect from interface on host to AI websocket, please fix
+    expose:
+      - 10007:10007 # GC port
+      - 5558:5558 # World port
+    environment:
+      - GRADLE_USER_HOME=/home/roboteamtwente/.cache # Cache gradle dependencies
+    volumes:
+      - ../../roboteam_autoref/:/home/roboteamtwente/
+    profiles: ["simulator","diff","game"]
+
+  erforce_autoref_sim:
+    image: roboteamtwente/roboteam:development
+    container_name: RTT_erforce_autoref_sim
+    restart: always
+    working_dir: "/home/roboteamtwente/external/autoref/build/bin/"
+    command: sh -c "./autoref-cli --vision-port 10020 --tracker-port 10010 --gc-port 10003"
+    network_mode: "host" # Workaround to connect from interface on host to AI websocket, please fix
+    expose:
+      - 10020:10020 # Vision port simulator
+      - 10003:10003 # GC port
+      - 10010:10010 # Tracker port
+    volumes:
+      - ../../:/home/roboteamtwente/
+    profiles: ["simulator","diff"]
+
+  erforce_autoref_game:
+    image: roboteamtwente/roboteam:development
+    container_name: RTT_erforce_autoref_game
+    restart: always
+    working_dir: "/home/roboteamtwente/external/autoref/build/bin/"
+    command: sh -c "./autoref-cli --vision-port 10006 --tracker-port 10010 --gc-port 10003"
+    network_mode: "host" # Workaround to connect from interface on host to AI websocket, please fix
+    expose:
+      - 10006:10006 #Vision port
+      - 10003:10003 #Ref port
+      - 10010:10010 #Tracker port
+    volumes:
+      - ../../:/home/roboteamtwente/
+    profiles: ["game"]
+
+  erforce_simulator:
+    image: roboteamtwente/roboteam:development
+    container_name: RTT_erforce_simulator
+    restart: always
+    working_dir: "/home/roboteamtwente/external/framework/build/bin/"
+    command: sh -c "./simulator-cli"
+    network_mode: "host" # Workaround to connect from interface on host to AI websocket, please fix
+    expose:
+      - 10301:10301 #Blue Control Port
+      - 30011:30011 #Blue Feedback Port
+      - 10302:10302 #Yellow Control Port
+      - 30012:30012 #Yellow Feedback Port
+      - 10300:10300 #Simulation Control Port
+      - 30013:30013 #Simulation Feedback Port
+    volumes:
+      - ../../:/home/roboteamtwente/
+    profiles: ["simulator","diff"]
+
+  ssl-game-controller:
+    image: robocupssl/ssl-game-controller:latest
+    container_name: RTT_ssl-game-controller
+    restart: always
+    network_mode: "host" # Workaround to connect from interface on host to AI websocket, please fix
+    ports:
+      - "8081:8081/tcp" # UI port
+    profiles: ["simulator","diff","game"]

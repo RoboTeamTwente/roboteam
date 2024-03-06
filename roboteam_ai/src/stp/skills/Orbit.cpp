@@ -42,7 +42,7 @@ Status Orbit::onUpdate(const StpInfo &info) noexcept {
     command.id = info.getRobot().value()->getId();
 
     // forward the generated command to the ControlModule, for checking and limiting
-    forwardRobotCommand(info.getCurrentWorld());
+    forwardRobotCommand();
 
     // Check if successful
     double errorMargin = stp::control_constants::GO_TO_POS_ANGLE_ERROR_MARGIN * M_PI;

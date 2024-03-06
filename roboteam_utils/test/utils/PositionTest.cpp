@@ -3,10 +3,9 @@
 #include "roboteam_utils/Position.h"
 
 using namespace rtt;
-
-//#define ASSERT_ALL_EQ(p, x, y, rot) ASSERT_DOUBLE_EQ(p.x, x); \
-//                                    ASSERT_DOUBLE_EQ(p.y, y); \
-//                                    ASSERT_DOUBLE_EQ(p.rot, rot);
+// #define ASSERT_ALL_EQ(p, x, y, rot) ASSERT_DOUBLE_EQ(p.x, x);
+// #define ASSERT_DOUBLE_EQ(p.y, y);
+// #define ASSERT_DOUBLE_EQ(p.rot, rot);
 void ASSERT_ALL_EQ(Position p, double x, double y, double rot) {
     ASSERT_DOUBLE_EQ(p.x, x);
     ASSERT_DOUBLE_EQ(p.y, y);

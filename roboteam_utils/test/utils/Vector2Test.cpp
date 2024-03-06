@@ -74,7 +74,7 @@ TEST(VectorTests, math) {
     ASSERT_DOUBLE_EQ(def.dot(tenten), 0);
     ASSERT_DOUBLE_EQ(tenten.dot(fivezero), 50);
 
-    // ASSERT_DOUBLE_EQ(M_PI_4, tenten.angle()); //TODO: somehow is not compiling on macOS
+    ASSERT_DOUBLE_EQ(M_PI_4, tenten.angle());
     ASSERT_DOUBLE_EQ(0, fivezero.angle());
 
     Vector2 proj = fivezero.project(def, tenten);
@@ -197,8 +197,8 @@ TEST(VectorTests, lerp) {
 
     EXPECT_DOUBLE_EQ(origin.x, 0);
     EXPECT_DOUBLE_EQ(origin.y, 0);
-    EXPECT_DOUBLE_EQ(origin.x, 0);
-    EXPECT_DOUBLE_EQ(origin.y, 0);
+    EXPECT_DOUBLE_EQ(origin2.x, 0);
+    EXPECT_DOUBLE_EQ(origin2.y, 0);
 }
 
 TEST(VectorTests, nan) {

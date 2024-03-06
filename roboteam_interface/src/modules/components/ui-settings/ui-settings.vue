@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useUIStore } from '../../stores/ui-store'
 import TriState from './tri-state.vue'
+import DualState from './dual-state.vue'
 import { computed } from 'vue'
 import { TabKey, TABS_DEFINITION } from '../../../tabs'
 
@@ -99,6 +100,11 @@ const leftPanelSelectedTabs = computed({
       <div class="form-control mb-4">
         Debug
         <tri-state v-model="uiStore.visualizations.debug" />
+      </div>
+
+      <div class="form-control mb-4">
+        Margins
+        <dual-state v-model="uiStore.visualizations.margins" />
       </div>
     </div>
   </div>

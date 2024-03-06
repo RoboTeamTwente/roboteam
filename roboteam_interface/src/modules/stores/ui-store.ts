@@ -10,6 +10,7 @@ type Panel = {
 }
 
 export type TriState = 'SHOW' | 'HIDE' | 'FOR_SELECTED_ROBOTS'
+export type DualState = 'SHOW' | 'HIDE'
 
 export type UiStore = {
   bottomPanel: Panel
@@ -27,6 +28,7 @@ export type UiStore = {
     velocities: TriState
     pathPlanning: TriState
     debug: TriState
+    margins: DualState
   }
   internalTeam: 'BLACK' | 'PURPLE'
 }
@@ -54,7 +56,8 @@ const defaultState: () => UiStore = () => ({
     velocities: 'SHOW',
     drawings: 'SHOW',
     pathPlanning: 'SHOW',
-    debug: 'SHOW'
+    debug: 'SHOW',
+    margins: 'SHOW'
   },
   internalTeam: 'PURPLE'
 })
@@ -90,6 +93,10 @@ export const useUIStore = defineStore('uiStore', {
     },
     isaRobotSelected(state) {
       return (id: number) => state.selectedRobots.has(id)
+    },
+    showMargins(state) {
+      return (forRobot?: number | null) => 
+        state.visualizations.margins === 'SHOW'
     },
     showDebug(state) {
       return (forRobot?: number | null) =>

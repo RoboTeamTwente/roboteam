@@ -30,9 +30,12 @@
 #include "stp/plays/offensive/AttackingPass.h"
 #include "stp/plays/referee_specific/AggressiveStopFormation.h"
 #include "stp/plays/referee_specific/BallPlacementThem.h"
-#include "stp/plays/referee_specific/BallPlacementUs.h"
+#include "stp/plays/referee_specific/BallPlacementUsForceStart.h"
+#include "stp/plays/referee_specific/BallPlacementUsFreeKick.h"
 #include "stp/plays/referee_specific/DefensiveStopFormation.h"
 #include "stp/plays/referee_specific/FreeKickThem.h"
+#include "stp/plays/referee_specific/FreeKickUsAtGoal.h"
+#include "stp/plays/referee_specific/FreeKickUsPass.h"
 #include "stp/plays/referee_specific/Halt.h"
 #include "stp/plays/referee_specific/KickOffThem.h"
 #include "stp/plays/referee_specific/KickOffThemPrepare.h"
@@ -61,7 +64,7 @@ class RTT_AI_Tests : public ::testing::Test {
 
         // Set other variables to their default values
         rtt::ai::interface::Output::setKeeperId(-1);
-        rtt::ai::GameStateManager::forceNewGameState(rtt::RefCommand::NORMAL_START, std::nullopt);
+        rtt::ai::GameStateManager::forceNewGameState(rtt::RefCommand::NORMAL_START);
         rtt::ai::interface::Output::setUseRefereeCommands(false);
 
         // Make sure all plays exist as new
@@ -103,18 +106,23 @@ class RTT_AI_Tests : public ::testing::Test {
         plays.emplace_back(std::make_unique<rtt::ai::stp::play::KeeperKickBall>());
         plays.emplace_back(std::make_unique<rtt::ai::stp::play::DefensiveStopFormation>());
         plays.emplace_back(std::make_unique<rtt::ai::stp::play::AggressiveStopFormation>());
-        plays.emplace_back(std::make_unique<rtt::ai::stp::play::BallPlacementUs>());
+        plays.emplace_back(std::make_unique<rtt::ai::stp::play::BallPlacementUsFreeKick>());
+        plays.emplace_back(std::make_unique<rtt::ai::stp::play::BallPlacementUsForceStart>());
         plays.emplace_back(std::make_unique<rtt::ai::stp::play::BallPlacementThem>());
         // plays.emplace_back(std::make_unique<rtt::ai::stp::play::TimeOut>());
-        // plays.emplace_back(std::make_unique<rtt::ai::stp::play::PenaltyThemPrepare>());
-        // plays.emplace_back(std::make_unique<rtt::ai::stp::play::PenaltyUsPrepare>());
-        // plays.emplace_back(std::make_unique<rtt::ai::stp::play::PenaltyThem>());
-        // plays.emplace_back(std::make_unique<rtt::ai::stp::play::PenaltyUs>());
+        plays.emplace_back(std::make_unique<rtt::ai::stp::play::PenaltyThemPrepare>());
+        plays.emplace_back(std::make_unique<rtt::ai::stp::play::PenaltyUsPrepare>());
+        plays.emplace_back(std::make_unique<rtt::ai::stp::play::PenaltyThem>());
+        plays.emplace_back(std::make_unique<rtt::ai::stp::play::PenaltyUs>());
         plays.emplace_back(std::make_unique<rtt::ai::stp::play::KickOffUsPrepare>());
         plays.emplace_back(std::make_unique<rtt::ai::stp::play::KickOffThemPrepare>());
-        // plays.emplace_back(std::make_unique<rtt::ai::stp::play::FreeKickThem>());
+        plays.emplace_back(std::make_unique<rtt::ai::stp::play::FreeKickThem>());
+        plays.emplace_back(std::make_unique<rtt::ai::stp::play::FreeKickUsAtGoal>());
+        plays.emplace_back(std::make_unique<rtt::ai::stp::play::FreeKickUsPass>());
         plays.emplace_back(std::make_unique<rtt::ai::stp::play::KickOffUs>());
+        plays.emplace_back(std::make_unique<rtt::ai::stp::play::KickOffUsPrepare>());
         plays.emplace_back(std::make_unique<rtt::ai::stp::play::KickOffThem>());
+        plays.emplace_back(std::make_unique<rtt::ai::stp::play::KickOffThemPrepare>());
         // plays.emplace_back(std::make_unique<rtt::ai::stp::play::GetBallPossession>());
         // plays.emplace_back(std::make_unique<rtt::ai::stp::play::GetBallRisky>());
         // plays.emplace_back(std::make_unique<rtt::ai::stp::play::ReflectKick>());

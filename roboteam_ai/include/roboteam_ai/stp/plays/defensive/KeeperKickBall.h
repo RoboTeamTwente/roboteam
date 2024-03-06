@@ -40,21 +40,6 @@ class KeeperKickBall : public Play {
     void calculateInfoForRoles() noexcept override;
 
     /**
-     * @brief Calculates info for the defenders
-     */
-    void calculateInfoForDefenders() noexcept;
-
-    /**
-     * @brief Calculates info for the midfielders
-     */
-    void calculateInfoForMidfielders() noexcept;
-
-    /**
-     * @brief Calculates info for the attackers
-     */
-    void calculateInfoForAttackers() noexcept;
-
-    /**
      * @brief Retrieve name of the play
      * @return The name of the play as a string
      */

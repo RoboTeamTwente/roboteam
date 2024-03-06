@@ -19,7 +19,6 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${RTT_BUILD_FOLDER}/lib)
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules)
 include(ccache) # For faster compiling
 include(GetZmqpp) # For networking between AI, RobotHub and World
-include(BuildLibusb) # USB library for RobotHub
 include(CheckCXXCompilerFlag) # For testing compiler cxx standard support
 include(LocateQt5) # For GUI and some networking
 include(GetGoogleTest) # For testing
@@ -54,7 +53,7 @@ endif ()
 set(DEBUG_COMPILE_FLAGS "${CPP_STANDARD_FLAG}" "-fPIC" "-g" "-O0" "-Wall" "-Wextra" "-Wnon-virtual-dtor" "-pedantic" "-fdiagnostics-color=always")
 
 # march mtune https://stackoverflow.com/questions/54039176/mtune-and-march-when-compiling-in-a-docker-image
-set(RELEASE_COMPILE_FLAGS "${CPP_STANDARD_FLAG}" "-fPIC" "-Ofast" "-march=x86-64" "-mtune=generic" "-fdiagnostics-color=always")
+set(RELEASE_COMPILE_FLAGS "${CPP_STANDARD_FLAG}" "-fPIC" "-O3" "-march=native" "-fdiagnostics-color=always")
 
 # Specify manually which compiler arguments we want to use, either DEBUG (default) or RELEASE ones
 # If you want to build in release mode, pass '-DCMAKE_BUILD_TYPE=RELEASE' as argument to cmake

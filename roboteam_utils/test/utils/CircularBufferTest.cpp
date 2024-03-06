@@ -15,7 +15,7 @@ void access() {
 }
 void constAccess() {
     const circular_buffer<double, 1> s;
-    double x = s.at(2);
+    s.at(2);
 }
 TEST(CircularBufferTest, atThrowTest) {
     EXPECT_ANY_THROW(access());

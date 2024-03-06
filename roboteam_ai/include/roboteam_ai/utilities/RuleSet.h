@@ -3,12 +3,15 @@
 
 #include <string>
 
+enum RuleSetName { DEFAULT, HALT, STOP };
+
 namespace rtt::ai {
 
 /**
  * @brief Structure that contains the ruleset of a certain game state
  */
 struct RuleSet {
+   public:
     /**
      * @brief Default constructor for the RuleSet structure
      */
@@ -18,31 +21,37 @@ struct RuleSet {
      * @brief Constructor for the RuleSet structure
      * @param title Title of the RuleSet
      * @param maxRobotVel Maximum allowed velocities for robots
-     * @param maxBallVel Maximum allowed velocity for the ball
-     * @param minDistanceToBall Minimum distance to the ball the robots have to keep
-     * @param minDistanceToDefenseArea Minimum distance to the defense area the robots have to keep
-     * @param robotsCanGoOutOfField Indicates whether the robots are allowed to go out of the field
      */
-    RuleSet(std::string title, double maxRobotVel, double maxBallVel, double minDistanceToBall, double minDistanceToDefenseArea, bool robotsCanGoOutOfField)
-        : title(std::move(title)),
-          maxRobotVel(maxRobotVel),
-          maxBallVel(maxBallVel),
-          minDistanceToBall(minDistanceToBall),
-          minDistanceToDefenseArea(minDistanceToDefenseArea),
-          robotsCanGoOutOfField(robotsCanGoOutOfField) {}
-
-    std::string title;
-    double maxRobotVel;
-    double maxBallVel;
-    double minDistanceToBall;
-    double minDistanceToDefenseArea;
-    bool robotsCanGoOutOfField;
+    RuleSet(RuleSetName title, double maxRobotVel) : title(std::move(title)), maxRobotVel(maxRobotVel) {}
 
     /**
-     * @brief Checks whether the robots are allowed to enter the defense area
-     * @return Boolean that tells whether the robots are allowed to enter the defense area
+     * @brief Getter for the title of the RuleSet
+     * @return Title of the RuleSet
      */
-    bool robotsCanEnterDefenseArea() { return minDistanceToDefenseArea == -1; }
+    RuleSetName getTitle() const { return title; }
+
+    /**
+     * @brief Getter for the maximum allowed velocities for robots
+     * @return Maximum allowed velocities for robots
+     */
+    double getMaxRobotVel() const { return maxRobotVel; }
+
+    std::string toString() const {
+        switch (title) {
+            case RuleSetName::DEFAULT:
+                return "Default";
+            case RuleSetName::HALT:
+                return "Halt";
+            case RuleSetName::STOP:
+                return "Stop";
+            default:
+                return "Unknown";
+        }
+    }
+
+   private:
+    RuleSetName title;
+    double maxRobotVel;
 };
 
 }  // namespace rtt::ai

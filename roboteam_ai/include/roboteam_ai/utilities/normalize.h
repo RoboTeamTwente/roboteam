@@ -38,7 +38,7 @@ void rotate(proto::World *world);
  * Pointer is asserted in debug mode
  * @param refereeData Referee to rotate
  */
-void rotate(proto::SSL_Referee *refereeData);
+void rotate(proto::Referee *refereeData);
 
 /**
  * @brief Rotates all members of a Circular arc

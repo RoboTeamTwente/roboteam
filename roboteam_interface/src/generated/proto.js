@@ -440,6 +440,10 @@ export const proto = $root.proto = (() => {
             case 1:
                 message.category = 1;
                 break;
+            case "MARGIN":
+            case 2:
+                message.category = 2;
+                break;
             }
             if (object.forRobotId != null)
                 message.forRobotId = object.forRobotId >>> 0;
@@ -577,11 +581,13 @@ export const proto = $root.proto = (() => {
          * @enum {number}
          * @property {number} PATH_PLANNING=0 PATH_PLANNING value
          * @property {number} DEBUG=1 DEBUG value
+         * @property {number} MARGINS=2 MARGINS value
          */
         Drawing.Category = (function() {
             const valuesById = {}, values = Object.create(valuesById);
             values[valuesById[0] = "PATH_PLANNING"] = 0;
             values[valuesById[1] = "DEBUG"] = 1;
+            values[valuesById[2] = "MARGINS"] = 2;
             return values;
         })();
 

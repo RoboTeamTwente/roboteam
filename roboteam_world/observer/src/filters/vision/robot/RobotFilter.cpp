@@ -28,7 +28,7 @@ bool RobotFilter::processDetection(const RobotObservation &observation) {
             // TODO: make this a weighted average (using e.g. filter age / health?)
             RobotVel velocity = RobotVel();
             for (const auto &filter : cameraFilters) {
-                velocity += filter.second.velocityEstimate(observation.timeCaptured);
+                velocity += filter.second.velocityEstimate();
             }
             velocity /= double(cameraFilters.size());
             cameraFilters.insert(std::make_pair(observation.cameraID, CameraRobotFilter(observation, velocity)));

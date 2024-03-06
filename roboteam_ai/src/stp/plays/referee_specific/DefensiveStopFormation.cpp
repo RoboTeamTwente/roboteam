@@ -4,78 +4,65 @@
 
 #include "stp/plays/referee_specific/DefensiveStopFormation.h"
 
-#include "stp/roles/Keeper.h"
-#include "stp/roles/passive/BallAvoider.h"
+#include "stp/roles/passive/Formation.h"
 
 namespace rtt::ai::stp::play {
 
 DefensiveStopFormation::DefensiveStopFormation() : Play() {
-    /// Evaluations that have to be true to be considered when changing plays.
-    startPlayEvaluation.clear();  // DONT TOUCH.
-    startPlayEvaluation.emplace_back(eval::StopGameState);
-    startPlayEvaluation.emplace_back(eval::BallOnOurSide);
+    // Evaluations that have to be true in order for this play to be considered valid.
+    startPlayEvaluation.clear();
+    startPlayEvaluation.emplace_back(GlobalEvaluation::StopGameState);
+    startPlayEvaluation.emplace_back(GlobalEvaluation::BallOnOurSide);
 
-    /// Evaluations that have to be true to allow the play to continue, otherwise the play will change. Plays can also end using the shouldEndPlay().
-    keepPlayEvaluation.clear();  // DONT TOUCH.
-    keepPlayEvaluation.emplace_back(eval::StopGameState);
+    // Evaluations that have to be true to allow the play to continue, otherwise the play will change. Plays can also end using the shouldEndPlay().
+    keepPlayEvaluation.clear();
+    keepPlayEvaluation.emplace_back(GlobalEvaluation::StopGameState);
 
-    roles = std::array<std::unique_ptr<Role>, rtt::ai::Constants::ROBOT_COUNT()>{std::make_unique<role::Keeper>(role::Keeper("keeper")),
-                                                                                 std::make_unique<role::BallAvoider>(role::BallAvoider("defender_0")),
-                                                                                 std::make_unique<role::BallAvoider>(role::BallAvoider("defender_1")),
-                                                                                 std::make_unique<role::BallAvoider>(role::BallAvoider("defender_2")),
-                                                                                 std::make_unique<role::BallAvoider>(role::BallAvoider("defender_3")),
-                                                                                 std::make_unique<role::BallAvoider>(role::BallAvoider("mid_field_0")),
-                                                                                 std::make_unique<role::BallAvoider>(role::BallAvoider("mid_field_1")),
-                                                                                 std::make_unique<role::BallAvoider>(role::BallAvoider("mid_field_2")),
-                                                                                 std::make_unique<role::BallAvoider>(role::BallAvoider("offender_0")),
-                                                                                 std::make_unique<role::BallAvoider>(role::BallAvoider("offender_1")),
-                                                                                 std::make_unique<role::BallAvoider>(role::BallAvoider("offender_2"))};
+    // Role creation, the names should be unique. The names are used in the stpInfos-map.
+    roles = std::array<std::unique_ptr<Role>, rtt::ai::Constants::ROBOT_COUNT()>{
+        // Roles is we play 6v6
+        std::make_unique<role::Formation>("keeper"),
+        std::make_unique<role::Formation>("formation_back_0"),
+        std::make_unique<role::Formation>("formation_mid_0"),
+        std::make_unique<role::Formation>("formation_front_0"),
+        std::make_unique<role::Formation>("formation_back_1"),
+        std::make_unique<role::Formation>("formation_mid_1"),
+        // Additional roles if we play 11v11
+        std::make_unique<role::Formation>("formation_front_1"),
+        std::make_unique<role::Formation>("formation_back_2"),
+        std::make_unique<role::Formation>("formation_mid_2"),
+        std::make_unique<role::Formation>("formation_front_2"),
+        std::make_unique<role::Formation>("formation_back_3"),
+    };
 }
 
-uint8_t DefensiveStopFormation::score(const rtt::Field& field) noexcept {
-    /// List of all factors that combined results in an evaluation how good the play is.
-    scoring = {{PlayEvaluator::getGlobalEvaluation(eval::BallOnOurSide, world), 1.0}};
-    return (lastScore = PlayEvaluator::calculateScore(scoring)).value();  // DONT TOUCH.
-}
-
-void DefensiveStopFormation::calculateInfoForRoles() noexcept {
-    stpInfos["keeper"].setPositionToMoveTo(field.leftGoalArea.rightLine().center() + Vector2{0.5, 0.0});
-    stpInfos["keeper"].setEnemyRobot(world->getWorld()->getRobotClosestToBall(world::them));
-
-    auto width = field.playArea.width();
-    auto height = field.playArea.height();
-
-    stpInfos["defender_0"].setPositionToMoveTo(Vector2(-width / 4, height / 8));
-    stpInfos["defender_1"].setPositionToMoveTo(Vector2(-width / 4, -height / 8));
-    stpInfos["defender_2"].setPositionToMoveTo(Vector2(-width / 4.5, height / 3));
-    stpInfos["defender_3"].setPositionToMoveTo(Vector2(-width / 4.5, -height / 3));
-
-    stpInfos["mid_field_0"].setPositionToMoveTo(Vector2{-width / 8, 0.0});
-    stpInfos["mid_field_1"].setPositionToMoveTo(Vector2{-width / 9, -height / 4});
-    stpInfos["mid_field_2"].setPositionToMoveTo(Vector2{-width / 9, height / 4});
-
-    stpInfos["offender_0"].setPositionToMoveTo(Vector2{width / 12, height / 10});  // This robot is put here because BallAvoider doesnt work correctly for KickOffUs
-    stpInfos["offender_1"].setPositionToMoveTo(Vector2{width / 8, height / 4});
-    stpInfos["offender_2"].setPositionToMoveTo(Vector2{width / 8, -height / 4});
+uint8_t DefensiveStopFormation::score(const rtt::Field&) noexcept {
+    // If this play is valid we always want to execute this play
+    return control_constants::FUZZY_TRUE;
 }
 
 Dealer::FlagMap DefensiveStopFormation::decideRoleFlags() const noexcept {
     Dealer::FlagMap flagMap;
+    Dealer::DealerFlag keeperFlag(DealerFlagTitle::KEEPER);
 
-    /// Creation flagMap. Linking roles to role-priority and the above created flags, can also force ID {roleName, {priority, flags, forceID}}
-    flagMap.insert({"keeper", {DealerFlagPriority::KEEPER, {}}});
-    flagMap.insert({"defender_0", {DealerFlagPriority::HIGH_PRIORITY, {}}});
-    flagMap.insert({"defender_1", {DealerFlagPriority::HIGH_PRIORITY, {}}});
-    flagMap.insert({"defender_2", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"defender_3", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"mid_field_0", {DealerFlagPriority::HIGH_PRIORITY, {}}});
-    flagMap.insert({"mid_field_1", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
-    flagMap.insert({"mid_field_2", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
-    flagMap.insert({"offender_0", {DealerFlagPriority::REQUIRED, {}}});
-    flagMap.insert({"offender_1", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"offender_2", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"keeper", {DealerFlagPriority::KEEPER, {keeperFlag}}});
+    flagMap.insert({"formation_back_0", {DealerFlagPriority::HIGH_PRIORITY, {}}});
+    flagMap.insert({"formation_back_1", {DealerFlagPriority::HIGH_PRIORITY, {}}});
+    flagMap.insert({"formation_back_2", {DealerFlagPriority::HIGH_PRIORITY, {}}});
+    flagMap.insert({"formation_back_3", {DealerFlagPriority::HIGH_PRIORITY, {}}});
+    flagMap.insert({"formation_mid_0", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"formation_mid_1", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"formation_mid_2", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"formation_front_0", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
+    flagMap.insert({"formation_front_1", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
+    flagMap.insert({"formation_front_2", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
 
     return flagMap;
+}
+
+void DefensiveStopFormation::calculateInfoForRoles() noexcept {
+    PositionComputations::calculateInfoForKeeper(stpInfos, field, world);
+    PositionComputations::calculateInfoForFormation(stpInfos, roles, field, world);
 }
 
 const char* DefensiveStopFormation::getName() const { return "Defensive Stop Formation"; }

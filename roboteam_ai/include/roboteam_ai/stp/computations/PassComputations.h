@@ -45,15 +45,6 @@ class PassComputations {
      */
     static PassInfo calculatePass(gen::ScoreProfile profile, const world::World* world, const Field& field, bool keeperCanPass = false);
 
-    /**
-     * @brief Scores a given pass based on how likely it is to score from the passLocation, adjusted for the riskiness of the pass
-     * @param passInfo The passInfo of the pass to be scored
-     * @param world pointer to world
-     * @param field the current field
-     * @return the score of the pass (0 - 255)
-     */
-    static uint8_t scorePass(PassInfo passInfo, const world::World* world, const rtt::Field& field);
-
    private:
     /**
      * @brief Gets the grid of points containing all possible pass locations

@@ -45,31 +45,7 @@ class DefendPass : public Play {
      */
     const char* getName() const override;
 
-   protected:
-    /**
-     * @brief Calculates info for the defenders
-     */
-    void calculateInfoForDefenders() noexcept;
-
-    /**
-     * @brief Calculates info for the keeper
-     */
-    void calculateInfoForKeeper() noexcept;
-
-    /**
-     * @brief Calculates info for the RobotDefenders
-     */
-    void calculateInfoForRobotDefenders() noexcept;
-
-    /**
-     * @brief Calculates info for the offenders
-     */
-    void calculateInfoForOffenders() noexcept;
-
-    /**
-     * @brief Calculates info for the harasser role
-     */
-    void calculateInfoForHarasser() noexcept;
+    HarasserInfo harasserInfo;
 };
 }  // namespace rtt::ai::stp::play
 

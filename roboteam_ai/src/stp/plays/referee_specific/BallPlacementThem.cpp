@@ -5,83 +5,78 @@
 #include "stp/plays/referee_specific/BallPlacementThem.h"
 
 #include "stp/roles/Keeper.h"
-#include "stp/roles/passive/BallAvoider.h"
+#include "stp/roles/passive/Defender.h"
+#include "stp/roles/passive/Formation.h"
 
 namespace rtt::ai::stp::play {
 
 BallPlacementThem::BallPlacementThem() : Play() {
+    // Evaluations that have to be true in order for this play to be considered valid.
     startPlayEvaluation.clear();
-    startPlayEvaluation.emplace_back(eval::BallPlacementThemGameState);
+    startPlayEvaluation.emplace_back(GlobalEvaluation::BallPlacementThemGameState);
 
+    // Evaluations that have to be true to allow the play to continue, otherwise the play will change. Plays can also end using the shouldEndPlay().
     keepPlayEvaluation.clear();
-    keepPlayEvaluation.emplace_back(eval::BallPlacementThemGameState);
+    keepPlayEvaluation.emplace_back(GlobalEvaluation::BallPlacementThemGameState);
 
+    // Role creation, the names should be unique. The names are used in the stpInfos-map.
     roles = std::array<std::unique_ptr<Role>, rtt::ai::Constants::ROBOT_COUNT()>{
-        std::make_unique<role::BallAvoider>(role::BallAvoider("keeper")),   std::make_unique<role::BallAvoider>(role::BallAvoider("waller_1")),
-        std::make_unique<role::BallAvoider>(role::BallAvoider("waller_2")), std::make_unique<role::BallAvoider>(role::BallAvoider("waller_3")),
-        std::make_unique<role::BallAvoider>(role::BallAvoider("waller_4")), std::make_unique<role::BallAvoider>(role::BallAvoider("waller_5")),
-        std::make_unique<role::BallAvoider>(role::BallAvoider("waller_6")), std::make_unique<role::BallAvoider>(role::BallAvoider("waller_7")),
-        std::make_unique<role::BallAvoider>(role::BallAvoider("waller_8")), std::make_unique<role::BallAvoider>(role::BallAvoider("waller_9")),
-        std::make_unique<role::BallAvoider>(role::BallAvoider("harasser"))};
+        // Roles is we play 6v6
+        std::make_unique<role::Formation>("keeper"),
+        std::make_unique<role::Formation>("harasser"),
+        std::make_unique<role::Formation>("waller_0"),
+        std::make_unique<role::Formation>("waller_1"),
+        std::make_unique<role::Defender>("defender_0"),
+        std::make_unique<role::Defender>("defender_1"),
+        // Additional roles if we play 11v11
+        std::make_unique<role::Formation>("waller_2"),
+        std::make_unique<role::Defender>("defender_2"),
+        std::make_unique<role::Defender>("defender_3"),
+        std::make_unique<role::Formation>("waller_3"),
+        std::make_unique<role::Formation>("attacker_0"),
+    };
 }
 
-uint8_t BallPlacementThem::score(const rtt::Field& field) noexcept {
-    /// List of all factors that combined results in an evaluation how good the play is.
-    scoring = {{PlayEvaluator::getGlobalEvaluation(eval::BallPlacementThemGameState, world), 1.0}};
-    return (lastScore = PlayEvaluator::calculateScore(scoring)).value();  // DONT TOUCH.
+uint8_t BallPlacementThem::score(const rtt::Field&) noexcept {
+    // If this play is valid we always want to execute this play
+    return control_constants::FUZZY_TRUE;
 }
 
 Dealer::FlagMap BallPlacementThem::decideRoleFlags() const noexcept {
     Dealer::FlagMap flagMap;
-    Dealer::DealerFlag keeperFlag(DealerFlagTitle::KEEPER, DealerFlagPriority::KEEPER);
+    Dealer::DealerFlag keeperFlag(DealerFlagTitle::KEEPER);
 
     flagMap.insert({"keeper", {DealerFlagPriority::KEEPER, {keeperFlag}}});
+    flagMap.insert({"harasser", {DealerFlagPriority::REQUIRED, {}}});
+    flagMap.insert({"waller_0", {DealerFlagPriority::LOW_PRIORITY, {}}});
     flagMap.insert({"waller_1", {DealerFlagPriority::LOW_PRIORITY, {}}});
     flagMap.insert({"waller_2", {DealerFlagPriority::LOW_PRIORITY, {}}});
     flagMap.insert({"waller_3", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"waller_4", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"waller_5", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"waller_6", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"waller_7", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"waller_8", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"waller_9", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"harasser", {DealerFlagPriority::HIGH_PRIORITY, {}}});
+    flagMap.insert({"defender_0", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"defender_1", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"defender_2", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"defender_3", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"attacker_0", {DealerFlagPriority::LOW_PRIORITY, {}}});
 
     return flagMap;
 }
 
 void BallPlacementThem::calculateInfoForRoles() noexcept {
-    calculateInfoForWallers();
-    calculateInfoForKeeper();
+    PositionComputations::calculateInfoForKeeper(stpInfos, field, world);
+    PositionComputations::calculateInfoForDefendersAndWallers(stpInfos, roles, field, world, false);
+    PositionComputations::calculateInfoForAttackers(stpInfos, roles, field, world);
     calculateInfoForHarasser();
-}
-
-void BallPlacementThem::calculateInfoForWallers() noexcept {
-    constexpr auto wallerNames = std::array{"waller_1", "waller_2", "waller_3", "waller_4", "waller_5", "waller_6", "waller_7", "waller_8", "waller_9"};
-    auto activeWallerNames = std::vector<std::string>{};
-    for (auto name : wallerNames) {
-        if (stpInfos[name].getRobot().has_value()) activeWallerNames.emplace_back(name);
-    }
-    for (int i = 0; i < activeWallerNames.size(); ++i) {
-        // For each waller, stand in the right wall position and look at the ball
-        const auto side = i % 2 == 0 ? 1 : -1;
-        auto& wallerStpInfo = stpInfos[activeWallerNames[i]];
-
-        wallerStpInfo.setPositionToMoveTo(
-            Vector2(FieldComputations::getDefenseArea(field, true, 0, 0)[2].x + 2 * control_constants::ROBOT_RADIUS, side * 1.7 * (i + 1) * control_constants::ROBOT_RADIUS));
-        wallerStpInfo.setAngle((Vector2{0, 0} - field.leftGoalArea.rightLine().center()).angle());
+    for (auto& stpInfo : stpInfos) {
+        stpInfo.second.setShouldAvoidDefenseArea(false);
     }
 }
 
 void BallPlacementThem::calculateInfoForHarasser() noexcept {
     auto placementPos = rtt::ai::GameStateManager::getRefereeDesignatedPosition();
     auto targetPos = placementPos + (field.leftGoalArea.rightLine().center() - placementPos).stretchToLength(control_constants::AVOID_BALL_DISTANCE);
-    targetPos = PositionComputations::calculateAvoidBallPosition(targetPos, world->getWorld()->getBall().value()->position, field);
     stpInfos["harasser"].setPositionToMoveTo(targetPos);
     stpInfos["harasser"].setAngle((placementPos - field.leftGoalArea.rightLine().center()).toAngle());
 }
-
-void BallPlacementThem::calculateInfoForKeeper() noexcept { stpInfos["keeper"].setPositionToMoveTo(field.leftGoalArea.rightLine().center()); }
 
 const char* BallPlacementThem::getName() const { return "Ball Placement Them"; }
 }  // namespace rtt::ai::stp::play

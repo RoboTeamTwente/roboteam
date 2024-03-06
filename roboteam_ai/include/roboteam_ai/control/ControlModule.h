@@ -30,21 +30,20 @@ class ControlModule {
      * @param command Robot command that needs to be checked
      * @param robot Info about the robot
      */
-    static void limitRobotCommand(rtt::RobotCommand& command, std::optional<rtt::world::view::RobotView> robot);
+    static void limitRobotCommand(rtt::RobotCommand& command, rtt::world::view::RobotView robot);
 
     /**
      * @brief Limits the velocity with a control_constants value
      * @param command Robot command that needs to be checked
-     * @param robot Info about the robot
      */
-    static void limitVel(rtt::RobotCommand& command, std::optional<rtt::world::view::RobotView> robot);
+    static void limitVel(rtt::RobotCommand& command);
 
     /**
      * @brief Limits the angular velocity with a control_constants value
      * @param command Robot command that needs to be checked
      * @param robot Info about the robot
      */
-    static void limitAngularVel(rtt::RobotCommand& command, std::optional<rtt::world::view::RobotView> robot);
+    static void limitAngularVel(rtt::RobotCommand& command, rtt::world::view::RobotView robot);
 
     /**
      * @brief Rotates the robot command to the other side of the field
@@ -57,9 +56,8 @@ class ControlModule {
      * @brief Limits the current robot command and adds it to the list of commands to be sent
      * @param command Robot command that needs to be added
      * @param robot Info about the robot
-     * @param data Info about world
      */
-    static void addRobotCommand(std::optional<rtt::world::view::RobotView> robot, const rtt::RobotCommand& command, const rtt::world::World* data) noexcept;
+    static void addRobotCommand(std::optional<rtt::world::view::RobotView> robot, rtt::RobotCommand command) noexcept;
     /**
      * @brief Sends all commands to robothub
      */

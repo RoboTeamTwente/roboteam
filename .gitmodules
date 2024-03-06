@@ -8,3 +8,6 @@
 	path = roboteam_autoref
 	url = https://github.com/RoboTeamTwente/roboteam_autoref.git
 	branch = main
+[submodule "roboteam_robothub/roboteam_embedded_messages"]
+	path = roboteam_robothub/roboteam_embedded_messages
+	url = https://github.com/RoboTeamTwente/roboteam_embedded_messages.git

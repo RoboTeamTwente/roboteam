@@ -24,7 +24,7 @@ class CameraRobotFilter : public CameraObjectFilter {
 
     [[nodiscard]] FilteredRobot estimate(const Time& time) const;
 
-    [[nodiscard]] RobotVel velocityEstimate(const Time& time) const;
+    [[nodiscard]] RobotVel velocityEstimate() const;
 
     [[nodiscard]] bool acceptObservation(const RobotObservation& observation) const;
 

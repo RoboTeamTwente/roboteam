@@ -55,7 +55,7 @@ class GetBehindBallInDirection : public Tactic {
     bool shouldTacticReset(const StpInfo &info) noexcept override;
 
     /**
-     * @brief Returns whether this is a passive tactic (formerly called endTactic)
+     * @brief Returns whether this is an end tactic, meaning it should keep looping this tactic if all skills are finished
      * @return This will always return false, since it is NOT an endTactic
      */
     bool isEndTactic() noexcept override;

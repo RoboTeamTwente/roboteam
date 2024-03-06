@@ -9,139 +9,63 @@
 #include "world/World.hpp"
 
 namespace rtt::ai {
+int GameState::cardId = -1;
 
-proto::SSL_Referee GameStateManager::refMsg;
+proto::Referee GameStateManager::refMsg;
 StrategyManager GameStateManager::strategymanager;
 std::mutex GameStateManager::refMsgLock;
 
-proto::SSL_Referee GameStateManager::getRefereeData() {
+proto::Referee GameStateManager::getRefereeData() {
     std::lock_guard<std::mutex> lock(refMsgLock);
     return GameStateManager::refMsg;
 }
 
-void GameStateManager::setRefereeData(proto::SSL_Referee refMsg, const rtt::world::World* data) {
+RefCommand GameStateManager::getCommandFromRefMsg(proto::Referee_Command command, bool isYellow) {
+    switch (command) {
+        case proto::Referee_Command_HALT:
+            return RefCommand::HALT;
+        case proto::Referee_Command_STOP:
+            return RefCommand::STOP;
+        case proto::Referee_Command_NORMAL_START:
+            return RefCommand::NORMAL_START;
+        case proto::Referee_Command_FORCE_START:
+            return RefCommand::FORCED_START;
+        case proto::Referee_Command_PREPARE_KICKOFF_YELLOW:
+            return isYellow ? RefCommand::PREPARE_KICKOFF_US : RefCommand::PREPARE_KICKOFF_THEM;
+        case proto::Referee_Command_PREPARE_KICKOFF_BLUE:
+            return isYellow ? RefCommand::PREPARE_KICKOFF_THEM : RefCommand::PREPARE_KICKOFF_US;
+        case proto::Referee_Command_PREPARE_PENALTY_YELLOW:
+            return isYellow ? RefCommand::PREPARE_PENALTY_US : RefCommand::PREPARE_PENALTY_THEM;
+        case proto::Referee_Command_PREPARE_PENALTY_BLUE:
+            return isYellow ? RefCommand::PREPARE_PENALTY_THEM : RefCommand::PREPARE_PENALTY_US;
+        case proto::Referee_Command_DIRECT_FREE_YELLOW:
+            return isYellow ? RefCommand::DIRECT_FREE_US : RefCommand::DIRECT_FREE_THEM;
+        case proto::Referee_Command_DIRECT_FREE_BLUE:
+            return isYellow ? RefCommand::DIRECT_FREE_THEM : RefCommand::DIRECT_FREE_US;
+        case proto::Referee_Command_TIMEOUT_YELLOW:
+            return isYellow ? RefCommand::TIMEOUT_US : RefCommand::TIMEOUT_THEM;
+        case proto::Referee_Command_TIMEOUT_BLUE:
+            return isYellow ? RefCommand::TIMEOUT_THEM : RefCommand::TIMEOUT_US;
+        case proto::Referee_Command_BALL_PLACEMENT_YELLOW:
+            return isYellow ? RefCommand::BALL_PLACEMENT_US : RefCommand::BALL_PLACEMENT_THEM;
+        case proto::Referee_Command_BALL_PLACEMENT_BLUE:
+            return isYellow ? RefCommand::BALL_PLACEMENT_THEM : RefCommand::BALL_PLACEMENT_US;
+        default:
+            RTT_ERROR("Unknown refstate, halting all robots for safety!")
+            return RefCommand::HALT;
+    }
+}
+
+void GameStateManager::setRefereeData(proto::Referee refMsg, const rtt::world::World* data) {
     std::lock_guard<std::mutex> lock(refMsgLock);
     GameStateManager::refMsg = refMsg;
-    RefCommand cmd;
-    // COLOR DEPENDENT STATES
-    if (GameSettings::isYellow()) {
-        switch (refMsg.command()) {
-            case proto::SSL_Referee_Command_HALT:
-                cmd = RefCommand::HALT;
-                break;
-            case proto::SSL_Referee_Command_STOP:
-                cmd = RefCommand::STOP;
-                break;
-            case proto::SSL_Referee_Command_NORMAL_START:
-                cmd = RefCommand::NORMAL_START;
-                break;
-            case proto::SSL_Referee_Command_FORCE_START:
-                cmd = RefCommand::FORCED_START;
-                break;
-            case proto::SSL_Referee_Command_PREPARE_KICKOFF_YELLOW:
-                cmd = RefCommand::PREPARE_KICKOFF_US;
-                break;
-            case proto::SSL_Referee_Command_PREPARE_KICKOFF_BLUE:
-                cmd = RefCommand::PREPARE_KICKOFF_THEM;
-                break;
-            case proto::SSL_Referee_Command_PREPARE_PENALTY_YELLOW:
-                cmd = RefCommand::PREPARE_PENALTY_US;
-                break;
-            case proto::SSL_Referee_Command_PREPARE_PENALTY_BLUE:
-                cmd = RefCommand::PREPARE_PENALTY_THEM;
-                break;
-            case proto::SSL_Referee_Command_DIRECT_FREE_YELLOW:
-                cmd = RefCommand::DIRECT_FREE_US;
-                break;
-            case proto::SSL_Referee_Command_DIRECT_FREE_BLUE:
-                cmd = RefCommand::DIRECT_FREE_THEM;
-                break;
-            case proto::SSL_Referee_Command_INDIRECT_FREE_YELLOW:
-                cmd = RefCommand::INDIRECT_FREE_US;
-                break;
-            case proto::SSL_Referee_Command_INDIRECT_FREE_BLUE:
-                cmd = RefCommand::INDIRECT_FREE_THEM;
-                break;
-            case proto::SSL_Referee_Command_TIMEOUT_YELLOW:
-                cmd = RefCommand::TIMEOUT_US;
-                break;
-            case proto::SSL_Referee_Command_TIMEOUT_BLUE:
-                cmd = RefCommand::TIMEOUT_THEM;
-                break;
-            case proto::SSL_Referee_Command_BALL_PLACEMENT_YELLOW:
-                cmd = RefCommand::BALL_PLACEMENT_US;
-                break;
-            case proto::SSL_Referee_Command_BALL_PLACEMENT_BLUE:
-                cmd = RefCommand::BALL_PLACEMENT_THEM;
-                break;
-            default: {
-                RTT_ERROR("Unknown refstate, halting all robots for safety!")
-                cmd = RefCommand::HALT;
-                break;
-            }
-        }
-    } else {
-        switch (refMsg.command()) {
-            case proto::SSL_Referee_Command_HALT:
-                cmd = RefCommand::HALT;
-                break;
-            case proto::SSL_Referee_Command_STOP:
-                cmd = RefCommand::STOP;
-                break;
-            case proto::SSL_Referee_Command_NORMAL_START:
-                cmd = RefCommand::NORMAL_START;
-                break;
-            case proto::SSL_Referee_Command_FORCE_START:
-                cmd = RefCommand::FORCED_START;
-                break;
-            case proto::SSL_Referee_Command_PREPARE_KICKOFF_YELLOW:
-                cmd = RefCommand::PREPARE_KICKOFF_THEM;
-                break;
-            case proto::SSL_Referee_Command_PREPARE_KICKOFF_BLUE:
-                cmd = RefCommand::PREPARE_KICKOFF_US;
-                break;
-            case proto::SSL_Referee_Command_PREPARE_PENALTY_YELLOW:
-                cmd = RefCommand::PREPARE_PENALTY_THEM;
-                break;
-            case proto::SSL_Referee_Command_PREPARE_PENALTY_BLUE:
-                cmd = RefCommand::PREPARE_SHOOTOUT_US;
-                break;
-            case proto::SSL_Referee_Command_DIRECT_FREE_YELLOW:
-                cmd = RefCommand::DIRECT_FREE_THEM;
-                break;
-            case proto::SSL_Referee_Command_DIRECT_FREE_BLUE:
-                cmd = RefCommand::DIRECT_FREE_US;
-                break;
-            case proto::SSL_Referee_Command_INDIRECT_FREE_YELLOW:
-                cmd = RefCommand::INDIRECT_FREE_THEM;
-                break;
-            case proto::SSL_Referee_Command_INDIRECT_FREE_BLUE:
-                cmd = RefCommand::INDIRECT_FREE_US;
-                break;
-            case proto::SSL_Referee_Command_TIMEOUT_YELLOW:
-                cmd = RefCommand::TIMEOUT_THEM;
-                break;
-            case proto::SSL_Referee_Command_TIMEOUT_BLUE:
-                cmd = RefCommand::TIMEOUT_US;
-                break;
-            case proto::SSL_Referee_Command_BALL_PLACEMENT_YELLOW:
-                cmd = RefCommand::BALL_PLACEMENT_THEM;
-                break;
-            case proto::SSL_Referee_Command_BALL_PLACEMENT_BLUE:
-                cmd = RefCommand::BALL_PLACEMENT_US;
-                break;
-            default: {
-                RTT_ERROR("Unknown refstate, halting all robots for safety!")
-                cmd = RefCommand::HALT;
-                break;
-            }
-        }
-    }
+    bool isYellow = GameSettings::isYellow();
+    RefCommand command = getCommandFromRefMsg(refMsg.command(), isYellow);
+    RefCommand nextCommand = refMsg.has_next_command() ? getCommandFromRefMsg(refMsg.next_command(), isYellow) : RefCommand::UNDEFINED;
 
-    auto stage = refMsg.stage();
     auto world = data->getWorld();
     if (world.has_value()) {
-        strategymanager.setCurrentRefGameState(cmd, stage, world->getBall());
+        strategymanager.setCurrentGameState(command, nextCommand, world->getBall());
     }
 }
 
@@ -149,18 +73,16 @@ void GameStateManager::setRefereeData(proto::SSL_Referee refMsg, const rtt::worl
 GameState GameStateManager::getCurrentGameState() {
     GameState newGameState;
     if (RuntimeConfig::useReferee) {
-        newGameState = static_cast<GameState>(strategymanager.getCurrentRefGameState());
+        newGameState = strategymanager.getCurrentGameState();
 
         if (GameSettings::isYellow()) {
             newGameState.keeperId = getRefereeData().yellow().goalkeeper();
+            newGameState.maxAllowedRobots = getRefereeData().yellow().max_allowed_bots();
         } else {
             newGameState.keeperId = getRefereeData().blue().goalkeeper();
+            newGameState.maxAllowedRobots = getRefereeData().blue().max_allowed_bots();
         }
 
-        // TODO: FIX for the new config system
-        // if there is a ref we set the interface gamestate to these values as well
-        // this makes sure that when we stop using the referee we don't return to an unknown state,
-        // // so now we keep the same.
         interface::Output::setInterfaceGameState(newGameState);
     } else {
         newGameState = interface::Output::getInterfaceGameState();
@@ -168,12 +90,10 @@ GameState GameStateManager::getCurrentGameState() {
     return newGameState;
 }
 
-void GameStateManager::forceNewGameState(RefCommand cmd, std::optional<rtt::world::view::BallView> ball) {
+void GameStateManager::forceNewGameState(RefCommand cmd) {
     RTT_INFO("Forcing new refstate!")
-
-    // overwrite both the interface and the strategy manager.
-    interface::Output::setInterfaceGameState(strategymanager.getRefGameStateForRefCommand(cmd));
-    strategymanager.forceCurrentRefGameState(cmd, ball);
+    interface::Output::setInterfaceGameState(strategymanager.getGameStateForRefCommand(cmd));
+    strategymanager.forceCurrentGameState(cmd);
 }
 
 Vector2 GameStateManager::getRefereeDesignatedPosition() {
@@ -182,43 +102,38 @@ Vector2 GameStateManager::getRefereeDesignatedPosition() {
 }
 
 void GameStateManager::updateInterfaceGameState(const char* name) {
-    if (strcmp(name, "Ball Placement Us") == 0) {
-        interface::Output::setInterfaceGameState(GameState("ball_placement_us", Constants::RULESET_BALLPLACEMENT_US()));
-    } else if (strcmp(name, "Halt") == 0) {
-        interface::Output::setInterfaceGameState(GameState("halt", Constants::RULESET_HALT()));
-    } else if (strcmp(name, "Free Kick Them") == 0) {
-        interface::Output::setInterfaceGameState(GameState("free_kick_them", Constants::RULESET_STOP()));
-    } else if (strcmp(name, "Free Kick Us At Goal") == 0) {
-        interface::Output::setInterfaceGameState(GameState("free_kick_us", Constants::RULESET_DEFAULT()));
-    } else if (strcmp(name, "Free Kick Us Pass") == 0) {
-        interface::Output::setInterfaceGameState(GameState("free_kick_us", Constants::RULESET_DEFAULT()));
-    } else if (strcmp(name, "Ball Placement Them") == 0) {
-        interface::Output::setInterfaceGameState(GameState("ball_placement_them", Constants::RULESET_BALLPLACEMENT_THEM()));
-    } else if (strcmp(name, "Kick Off Them Prepare") == 0) {
-        interface::Output::setInterfaceGameState(GameState("kickoff_them_prepare", Constants::RULESET_KICKOFF()));
-    } else if (strcmp(name, "Kick Off Us Prepare") == 0) {
-        interface::Output::setInterfaceGameState(GameState("kickoff_us_prepare", Constants::RULESET_KICKOFF()));
-    } else if (strcmp(name, "Kick Off Them") == 0) {
-        interface::Output::setInterfaceGameState(GameState("kickoff_them", Constants::RULESET_DEFAULT()));
-    } else if (strcmp(name, "Kick Off Us") == 0) {
-        interface::Output::setInterfaceGameState(GameState("kickoff_us", Constants::RULESET_DEFAULT()));
-    } else if (strcmp(name, "Penalty Them Prepare") == 0) {
-        interface::Output::setInterfaceGameState(GameState("penalty_them_prepare", Constants::RULESET_DEFAULT()));
-    } else if (strcmp(name, "Penalty Us Prepare") == 0) {
-        interface::Output::setInterfaceGameState(GameState("penalty_us_prepare", Constants::RULESET_DEFAULT()));
-    } else if (strcmp(name, "Penalty Them") == 0) {
-        interface::Output::setInterfaceGameState(GameState("penalty_them", Constants::RULESET_DEFAULT()));
-    } else if (strcmp(name, "Penalty Us") == 0) {
-        interface::Output::setInterfaceGameState(GameState("penalty_us", Constants::RULESET_DEFAULT()));
-    } else if (strcmp(name, "Time Out") == 0) {
-        interface::Output::setInterfaceGameState(GameState("time_out", Constants::RULESET_DEFAULT()));
-    } else if (strcmp(name, "Defensive Stop Formation") == 0) {
-        interface::Output::setInterfaceGameState(GameState("stop", Constants::RULESET_STOP()));
-    } else if (strcmp(name, "Aggressive Stop Formation") == 0) {
-        interface::Output::setInterfaceGameState(GameState("stop", Constants::RULESET_STOP()));
+    static const std::map<std::string, std::pair<RefCommand, rtt::ai::RuleSet>> nameToGameState = {
+        {"Aggressive Stop Formation", {RefCommand::STOP, Constants::RULESET_STOP()}},
+        {"Defensive Stop Formation", {RefCommand::STOP, Constants::RULESET_STOP()}},
+        {"Ball Placement Us Free Kick", {RefCommand::BALL_PLACEMENT_US_DIRECT, Constants::RULESET_STOP()}},
+        {"Ball Placement Us Force Start", {RefCommand::BALL_PLACEMENT_US, Constants::RULESET_STOP()}},
+        {"Ball Placement Them", {RefCommand::BALL_PLACEMENT_THEM, Constants::RULESET_STOP()}},
+        {"Halt", {RefCommand::HALT, Constants::RULESET_HALT()}},
+        {"Free Kick Them", {RefCommand::DIRECT_FREE_THEM, Constants::RULESET_DEFAULT()}},
+        {"Free Kick Us At Goal", {RefCommand::DIRECT_FREE_US, Constants::RULESET_DEFAULT()}},
+        {"Free Kick Us Pass", {RefCommand::DIRECT_FREE_US, Constants::RULESET_DEFAULT()}},
+        {"Kick Off Us Prepare", {RefCommand::PREPARE_KICKOFF_US, Constants::RULESET_STOP()}},
+        {"Kick Off Them Prepare", {RefCommand::PREPARE_KICKOFF_THEM, Constants::RULESET_STOP()}},
+        {"Kick Off Us", {RefCommand::KICKOFF_US, Constants::RULESET_DEFAULT()}},
+        {"Kick Off Them", {RefCommand::KICKOFF_THEM, Constants::RULESET_DEFAULT()}},
+        {"Penalty Us Prepare", {RefCommand::PREPARE_PENALTY_US, Constants::RULESET_STOP()}},
+        {"Penalty Them Prepare", {RefCommand::PREPARE_PENALTY_THEM, Constants::RULESET_STOP()}},
+        {"Penalty Us", {RefCommand::PENALTY_US, Constants::RULESET_DEFAULT()}},
+        {"Penalty Them", {RefCommand::PENALTY_THEM, Constants::RULESET_DEFAULT()}},
+        {"Time Out", {RefCommand::TIMEOUT_US, Constants::RULESET_HALT()}},
+        {"Attacking Pass", {RefCommand::NORMAL_START, Constants::RULESET_DEFAULT()}},
+        {"Attack", {RefCommand::NORMAL_START, Constants::RULESET_DEFAULT()}},
+        {"Defend Shot", {RefCommand::NORMAL_START, Constants::RULESET_DEFAULT()}},
+        {"Defend Pass", {RefCommand::NORMAL_START, Constants::RULESET_DEFAULT()}},
+        {"Keeper Kick Ball", {RefCommand::NORMAL_START, Constants::RULESET_DEFAULT()}},
+    };
+
+    auto it = nameToGameState.find(name);
+    if (it != nameToGameState.end()) {
+        interface::Output::setInterfaceGameState(GameState(it->second.first, it->second.second));
     } else {
         RTT_WARNING("Play has been selected for which no ruleset is found!");
-        interface::Output::setInterfaceGameState(GameState("normal_play", Constants::RULESET_DEFAULT()));
+        interface::Output::setInterfaceGameState(GameState(RefCommand::HALT, Constants::RULESET_HALT()));
     }
 }
 }  // namespace rtt::ai

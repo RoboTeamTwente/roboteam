@@ -8,7 +8,7 @@
 
 namespace rtt::ai::stp::evaluation {
 
-uint8_t StopGameStateEvaluation::metricCheck(const world::World* world, const Field* field) const noexcept {
-    return GameStateManager::getCurrentGameState().getStrategyName() == "stop" ? stp::control_constants::FUZZY_TRUE : stp::control_constants::FUZZY_FALSE;
+uint8_t StopGameStateEvaluation::metricCheck(const world::World*, const Field*) const noexcept {
+    return GameStateManager::getCurrentGameState().getCommandId() == RefCommand::STOP ? stp::control_constants::FUZZY_TRUE : stp::control_constants::FUZZY_FALSE;
 }
 }  // namespace rtt::ai::stp::evaluation

@@ -29,7 +29,7 @@ InterfacePublisher& InterfacePublisher::publishStpStatus(stp::Play* selectedPlay
     currentPlay->set_play_name(selectedPlay->getName());
 
     auto gameState = GameStateManager::getCurrentGameState();
-    currentPlay->set_ruleset_name(gameState.getRuleSet().title);
+    currentPlay->set_ruleset_name(gameState.getRuleSet().toString());
     currentPlay->set_keeper_id(gameState.keeperId);
 
     for (const auto& play : plays) {
@@ -96,7 +96,7 @@ InterfacePublisher& InterfacePublisher::publishAIStatus() {
     }
 
     for (const auto& ruleSet : Constants::ruleSets()) {
-        aiState->add_rule_sets(ruleSet.title);
+        aiState->add_rule_sets(ruleSet.toString());
     }
 
     aiState->set_is_paused(RuntimeConfig::isPaused);

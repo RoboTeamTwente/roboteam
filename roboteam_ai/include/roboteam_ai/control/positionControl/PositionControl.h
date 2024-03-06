@@ -34,6 +34,7 @@ class PositionControl {
     std::unordered_map<int, std::vector<Vector2>> computedPaths;                           /**< Map of computed paths for each robot */
     std::unordered_map<int, std::vector<Vector2>> computedPathsVel;                        /**< Map of computed velocities for each robot */
     std::unordered_map<int, std::vector<std::pair<Vector2, Vector2>>> computedPathsPosVel; /**< Map of pairs containing position and velocity for each robot */
+    std::unordered_map<int, int> completedTimeSteps;                                       /**< Map of completed time steps for each robot */
 
     /**
      * @brief Checks if the current path should be recalculated:
@@ -105,9 +106,43 @@ class PositionControl {
                                                         Vector2 targetPosition, double maxRobotVelocity, stp::PIDType pidType, stp::AvoidObjects avoidObjects);
 
     /**
+     * @brief Handles the collision with the ball at the current position. This function will calculate a new target, moving away from the ball as quickly as possible.
+     * @param world a pointer to the current world
+     * @param field the field object, used onwards by the collision detector
+     * @param currentPosition the current position of the robot
+     * @param avoidObjects whether or not to avoid objects
+     * @return A new trajectory to the target
+     */
+    Vector2 handleBallCollision(const rtt::world::World *world, const rtt::Field &field, Vector2 currentPosition, stp::AvoidObjects avoidObjects);
+
+    /**
+     * @brief Handles the collision with the ball placement at the current position, will move away from the ball placement location to ball line as quickly as possible.
+     * @param world a pointer to the current world
+     * @param field the field object, used onwards by the collision detector
+     * @param currentPosition the current position of the robot
+     * @param avoidObjects whether or not to avoid objects
+     * @return A new trajectory to the target
+     */
+    Vector2 handleBallPlacementCollision(const rtt::world::World *world, const rtt::Field &field, Vector2 currentPosition, stp::AvoidObjects avoidObjects);
+
+    /**
+     * @brief Calculates a score for a trajectory. The score is based on the distance to the target and the
+     * distance to the first collision on the path
+     * @param world a pointer to the current world
+     * @param field the field object, used onwards by the collision detector
+     * @param firstCollision location of the first collision on the current path
+     * @param trajectoryAroundCollision the trajectory to the intermediate point
+     * @param avoidObjects whether or not to avoid objects
+     * @param startTime the time at which the trajectory starts
+     * @return A score for the trajectory
+     */
+    double calculateScore(const rtt::world::World *world, const rtt::Field &field, std::optional<BB::CollisionData> &firstCollision, Trajectory2D &trajectoryAroundCollision,
+                          stp::AvoidObjects avoidObjects, double startTime = 0);
+
+    /**
      * @brief Tries to find a new trajectory when the current path has a collision on it. It tries this by
      * looking for trajectories which go to intermediate points in the area of the collision and from these
-     * paths again to the target. Also draws the intermediate point and path in the interface
+     * paths again to the target
      * @param world the world object
      * @param field the field object, used onwards by the collision detector
      * @param robotId the ID of the robot for which the path is calculated
@@ -124,41 +159,14 @@ class PositionControl {
                                                   stp::AvoidObjects AvoidObjects);
 
     /**
-     * @brief Calculates a path to the targetPosition from a point on the path to an intermediate path and
-     * return it if there are no collisions
-     * @param world the world object
+     * @brief Creates intermediate points to make a path to. These points all have equal distance to the
+     * collision point
      * @param field the field object, used onwards by the collision detector
-     * @param intermediatePathCollision if intermediatePathCollision has no value, return {}
-     * @param pathToIntermediatePoint used for getting new start points of the BBT to the targetPosition
-     * @param targetPosition the desired position that the robot has to reach
-     * @param robotId the ID of the robot for which the path is calculated
-     * @param timeStep time in seconds between new start points on the BBT to the intermediatePoint
-     * @return optional Trajectory if a new path was found
-     */
-    std::optional<Trajectory2D> calculateTrajectoryAroundCollision(const rtt::world::World *world, const rtt::Field &field,
-                                                                   std::optional<BB::CollisionData> &intermediatePathCollision, Trajectory2D trajectoryToIntermediatePoint,
-                                                                   Vector2 &targetPosition, int robotId, double maxRobotVelocity, double timeStep, stp::AvoidObjects avoidObjects);
-
-    /**
-     * @brief Creates intermediate points to make a path to. First, a pointToDrawFrom is picked by drawing a line
-     * from the target position to the obstacle and extending that line further towards our currentPosition.
-     * Second, make half circle of intermediatePoints pointed towards obstaclePosition, originating from pointToDrawFrom
-     * @param field the field object, used onwards by the collision detector
-     * @param robotId the ID of the robot for which the path is calculated
      * @param firstCollision location of the first collision on the current path
      * @param targetPosition the desired position that the robot has to reach
      * @return A vector with coordinates of the intermediate points
      */
-    std::vector<Vector2> createIntermediatePoints(const rtt::Field &field, int robotId, std::optional<BB::CollisionData> &firstCollision, Vector2 &targetPosition);
-
-    /**
-     * @brief Gives each intermediate point a score for how close the point is to the collisionPosition
-     * @param intermediatePoints the intermediate points for trying to find a new path
-     * @param firstCollision used for scoring the points
-     * @return A priority_queue to sort the points
-     */
-    std::priority_queue<std::pair<double, Vector2>, std::vector<std::pair<double, Vector2>>, std::greater<>> scoreIntermediatePoints(
-        std::vector<Vector2> &intermediatePoints, std::optional<BB::CollisionData> &firstCollision);
+    std::vector<Vector2> createIntermediatePoints(const rtt::Field &field, std::optional<BB::CollisionData> &firstCollision, Vector2 &targetPosition);
 };
 
 }  // namespace rtt::ai::control

@@ -41,6 +41,15 @@ bool Line::isOnLine(const Vector2 &point) const {
     return fabs(A.cross(B)) < RTT_PRECISION_LIMIT;
 }
 
+bool Line::arePointsOnOppositeSides(const Vector2 &point1, const Vector2 &point2) const {
+    Vector2 lineVector = v1 - v2;                       // vector along the line
+    Vector2 vectorFromLineStartToPoint1 = point1 - v1;  // vector from line start to point 1
+    Vector2 vectorFromLineStartToPoint2 = point2 - v1;  // vector from line start to point 2
+
+    // if the cross products have different signs, the points are on opposite sides of the line
+    return lineVector.cross(vectorFromLineStartToPoint1) * lineVector.cross(vectorFromLineStartToPoint2) < 0;
+}
+
 std::optional<Vector2> Line::intersect(const Line &line) const {
     auto result = intersect(v1, v2, line.v1, line.v2);
     if (result.has_value()) {

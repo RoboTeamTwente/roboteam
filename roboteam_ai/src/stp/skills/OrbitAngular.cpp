@@ -10,7 +10,7 @@ Status OrbitAngular::onUpdate(const StpInfo &info) noexcept {
     Angle currentAngle = info.getRobot().value()->getAngle();                                               // Angle the robot is currently facing
     Angle targetAngle = (info.getPositionToShootAt().value() - info.getBall()->get()->position).toAngle();  // targetAngle the robot should have
     int direction = targetAngle.rotateDirection(currentAngle) ? -1 : 1;                                     // Direction in which the robot should move
-    double speedFactor = std::clamp(currentAngle.shortestAngleDiff(targetAngle) * 2 * M_PI, M_PI_4, M_PI);  // Speed at which the robot should orbit
+    double speedFactor = std::clamp(currentAngle.shortestAngleDiff(targetAngle) * 2 * M_PI, 0.0, M_PI);     // Speed at which the robot should orbit
 
     double targetAngularVelocity = direction * speedFactor;  // Set the target angular velocity of the robot
 
@@ -27,10 +27,10 @@ Status OrbitAngular::onUpdate(const StpInfo &info) noexcept {
     command.targetAngle = targetAngle;
     command.dribblerSpeed = stp::control_constants::MAX_DRIBBLER_CMD;
 
-    forwardRobotCommand(info.getCurrentWorld());  // Send the robot command
+    forwardRobotCommand();  // Send the robot command
 
     // Return success if the angle difference is within the margin
-    if (currentAngle.shortestAngleDiff(targetAngle) < stp::control_constants::GO_TO_POS_ANGLE_ERROR_MARGIN) {
+    if (currentAngle.shortestAngleDiff(targetAngle) < stp::control_constants::GO_TO_POS_ANGLE_ERROR_MARGIN * M_PI) {
         return Status::Success;
     } else {
         return Status::Running;

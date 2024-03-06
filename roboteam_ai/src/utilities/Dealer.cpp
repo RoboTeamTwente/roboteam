@@ -4,10 +4,6 @@
  * to a position that a robot might need to travel to. The lower the score of a robot, the better.
  */
 
-// TODO Fix issue where roles get redistributed whilst robots are already in position
-// This issue occurs when there are multiple roles classes (defender+midfielder) that have the same priority
-// 01-24-2022 emiel : Not sure if these are still a thing ^^^^^ Who wrote these?
-
 #include "utilities/Dealer.h"
 
 #include <roboteam_utils/Hungarian.h>
@@ -25,7 +21,7 @@ namespace rtt::ai {
 
 Dealer::Dealer(v::WorldDataView world, rtt::Field *field) : world(world), field(field) {}
 
-Dealer::DealerFlag::DealerFlag(DealerFlagTitle title, DealerFlagPriority priority) : title(title), priority(priority) {}
+Dealer::DealerFlag::DealerFlag(DealerFlagTitle title) : title(title) {}
 
 // Create a distribution of robots according to their flags
 std::unordered_map<std::string, v::RobotView> Dealer::distribute(std::vector<v::RobotView> robots, FlagMap role_to_flags,
@@ -224,8 +220,7 @@ std::vector<std::vector<double>> Dealer::getScoreMatrix(const std::vector<v::Rob
             }
             // The better the flags, the lower the score
             auto robotScore = getRobotScoreForRole(dealerFlags.flags, robot);
-            // Simple normalizer. DistanceScore has weight 1, the other factors can have various weights.
-            double robotRoleScore = (robotDistanceScore + robotScore.sumScore) / (robotScore.sumWeights + 1);  // the +1 is the distanceScore weight
+            double robotRoleScore = robotDistanceScore + robotScore;
             robot_costs_for_role.push_back(robotRoleScore);
         }
         cost_matrix.push_back(std::move(robot_costs_for_role));
@@ -234,21 +229,16 @@ std::vector<std::vector<double>> Dealer::getScoreMatrix(const std::vector<v::Rob
 }
 
 // Calculate the score for all flags for a role for one robot
-Dealer::RobotRoleScore Dealer::getRobotScoreForRole(const std::vector<Dealer::DealerFlag> &dealerFlags, const v::RobotView &robot) {
+double Dealer::getRobotScoreForRole(const std::vector<Dealer::DealerFlag> &dealerFlags, const v::RobotView &robot) {
     double robotScore = 0;
-    double sumWeights = 0;
     for (auto flag : dealerFlags) {
-        FlagScore ScoreForFlag = getRobotScoreForFlag(robot, flag);
-        robotScore += ScoreForFlag.score;
-        sumWeights += ScoreForFlag.weight;
+        // The lower the score, the better
+        // If a flag is not met, we really don't want that robot to be assigned to that role
+        // For example, it can not kick, so it should not be assigned to the striker role
+        // Hence, we multiple by at least 11
+        robotScore += 1000 * getDefaultFlagScores(robot, flag);
     }
-    return {robotScore, sumWeights};  // [score,sum of weights]
-}
-
-// Get the score of one flag for a role for one robot
-Dealer::FlagScore Dealer::getRobotScoreForFlag(v::RobotView robot, Dealer::DealerFlag flag) {
-    double factor = getWeightForPriority(flag.priority);
-    return {factor * getDefaultFlagScores(robot, flag), factor};  // [score,weight]
+    return robotScore;
 }
 
 // Get the distance score for a robot to a position when there is a position that role needs to go to
@@ -259,67 +249,32 @@ double Dealer::getRobotScoreForDistance(const stp::StpInfo &stpInfo, const v::Ro
     // Search for position in getEnemyRobot, getPositionToDefend, and getPositionToMoveTo
     if (stpInfo.getEnemyRobot().has_value()) target_position = stpInfo.getEnemyRobot().value()->getPos();
     if (stpInfo.getPositionToDefend().has_value()) target_position = stpInfo.getPositionToDefend().value();
+    if (stpInfo.getPositionToShootAt().has_value()) target_position = world.getBall()->get()->position;
     if (stpInfo.getPositionToMoveTo().has_value()) target_position = stpInfo.getPositionToMoveTo().value();
     // If robot is keeper, set distance to self. Basically 0
+    // TODO: Is this if ever true? This is already handeled before right?
     if (stpInfo.getRoleName() == "keeper" && robot->getId() == GameStateManager::getCurrentGameState().keeperId) target_position = robot->getPos();
 
     // No target found to move to
-    if (!target_position) return 0;
-
-    // Target found. Calculate distance
+    if (!target_position) {
+        // only print warning if halt not in rolename
+        if (stpInfo.getRoleName().find("halt") == std::string::npos)
+            RTT_WARNING("No target position found for role " + stpInfo.getRoleName() + " for robot " + std::to_string(robot->getId()))
+        return 0;
+    }
     distance = robot->getPos().dist(*target_position);
 
-    return costForDistance(distance, field->playArea.width(), field->playArea.height());
+    return costForDistance(distance, field->playArea.height());
 }
 
-// TODO these values need to be tuned.
-double Dealer::getWeightForPriority(const DealerFlagPriority &flagPriority) {
-    switch (flagPriority) {
-        case DealerFlagPriority::LOW_PRIORITY:
-            return 0.5;
-        case DealerFlagPriority::MEDIUM_PRIORITY:
-            return 1;
-        case DealerFlagPriority::HIGH_PRIORITY:
-            return 5;
-        case DealerFlagPriority::REQUIRED:
-            return 100;
-        case DealerFlagPriority::KEEPER:
-            return 1000;
-        default:
-            RTT_WARNING("Unhandled dealerflag!")
-            return 0;
-    }
-}
-
-// TODO these values need to be tuned.
 double Dealer::getDefaultFlagScores(const v::RobotView &robot, const Dealer::DealerFlag &flag) {
-    auto fieldHeight = field->playArea.height();
-    auto fieldWidth = field->playArea.width();
     switch (flag.title) {
-        case DealerFlagTitle::CLOSE_TO_THEIR_GOAL:
-            return costForDistance(FieldComputations::getDistanceToGoal(*field, false, robot->getPos()), fieldHeight, fieldWidth);
-        case DealerFlagTitle::CLOSE_TO_OUR_GOAL:
-            return costForDistance(FieldComputations::getDistanceToGoal(*field, true, robot->getPos()), fieldHeight, fieldWidth);
-        case DealerFlagTitle::CLOSE_TO_BALL:
-            return costForDistance(robot->getDistanceToBall(), fieldWidth, fieldWidth);
-        case DealerFlagTitle::CLOSE_TO_POSITIONING:
-            return costForProperty(true);
-        case DealerFlagTitle::WITH_WORKING_BALL_SENSOR:
-            return costForProperty(robot->isWorkingBallSensor());
+        // case DealerFlagTitle::WITH_WORKING_BALL_SENSOR:
+        // return costForProperty(robot->isWorkingBallSensor());
         case DealerFlagTitle::WITH_WORKING_DRIBBLER:
             return costForProperty(robot->isWorkingDribbler());
-        case DealerFlagTitle::READY_TO_INTERCEPT_GOAL_SHOT: {
-            // get distance to line between ball and goal
-            // TODO this method can be improved by choosing a better line for the interception.
-            LineSegment lineSegment = {world.getBall()->get()->position, field->leftGoalArea.rightLine().center()};
-            return lineSegment.distanceToLine(robot->getPos());
-        }
         case DealerFlagTitle::KEEPER:
             return costForProperty(robot->getId() == GameStateManager::getCurrentGameState().keeperId);
-        case DealerFlagTitle::CLOSEST_TO_BALL:
-            return costForProperty(robot->getId() == world.getRobotClosestToBall(rtt::world::us)->get()->getId());
-        case DealerFlagTitle::NOT_IMPORTANT:
-            return 0;
         case DealerFlagTitle::CAN_DETECT_BALL: {
             bool hasWorkingBallSensor = Constants::ROBOT_HAS_WORKING_BALL_SENSOR(robot->getId());
             bool hasDribblerEncoder = Constants::ROBOT_HAS_WORKING_DRIBBLER_ENCODER(robot->getId());
@@ -340,13 +295,10 @@ void Dealer::setGameStateRoleIds(std::unordered_map<std::string, v::RobotView> o
     if (output.find("keeper") != output.end()) {
         interface::Output::setKeeperId(output.find("keeper")->second->getId());
     }
-    if (output.find("ball_placer") != output.end()) {
-        interface::Output::setBallPlacerId(output.find("ball_placer")->second->getId());
-    }
 }
 
 // Calculate the cost for distance. The further away the target, the higher the cost for that distance.
-double Dealer::costForDistance(double distance, double fieldWidth, double fieldHeight) {
+double Dealer::costForDistance(double distance, double fieldHeight) {
     auto fieldDiagonalLength = sqrt(pow(fieldHeight, 2.0) + pow(fieldHeight, 2.0));
     return distance / fieldDiagonalLength;
 }

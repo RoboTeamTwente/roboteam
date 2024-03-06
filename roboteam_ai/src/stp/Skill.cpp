@@ -9,9 +9,9 @@
 
 namespace rtt::ai::stp {
 
-void Skill::forwardRobotCommand(world::World const* data) noexcept {
+void Skill::forwardRobotCommand() noexcept {
     // The command gets passed to the ControlModule here, for checking and limiting
-    control::ControlModule::addRobotCommand(robot, command, data);
+    control::ControlModule::addRobotCommand(robot, command);
 
     // refresh the robot command after it has been sent
     refreshRobotCommand();

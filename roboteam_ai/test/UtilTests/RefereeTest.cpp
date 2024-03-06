@@ -23,31 +23,31 @@ TEST(RefereeTest, it_gets_and_sets_the_ref) {
     auto const& [_, worldPtr] = rtt::world::World::instance();
     worldPtr->updateWorld(world);
 
-    proto::SSL_Referee refereeData;
-    refereeData.set_command(proto::SSL_Referee_Command_PREPARE_KICKOFF_BLUE);
+    proto::Referee refereeData;
+    refereeData.set_command(proto::Referee_Command_PREPARE_KICKOFF_BLUE);
     rtt::ai::GameStateManager::setRefereeData(refereeData, worldPtr);
 
-    EXPECT_EQ(rtt::ai::GameStateManager::getRefereeData().command(), proto::SSL_Referee_Command_PREPARE_KICKOFF_BLUE);
+    EXPECT_EQ(rtt::ai::GameStateManager::getRefereeData().command(), proto::Referee_Command_PREPARE_KICKOFF_BLUE);
 
-    refereeData.set_command(proto::SSL_Referee_Command_PREPARE_KICKOFF_YELLOW);
+    refereeData.set_command(proto::Referee_Command_PREPARE_KICKOFF_YELLOW);
     rtt::ai::GameStateManager::setRefereeData(refereeData, worldPtr);
 
-    EXPECT_EQ(rtt::ai::GameStateManager::getRefereeData().command(), proto::SSL_Referee_Command_PREPARE_KICKOFF_YELLOW);
+    EXPECT_EQ(rtt::ai::GameStateManager::getRefereeData().command(), proto::Referee_Command_PREPARE_KICKOFF_YELLOW);
 
     // this is necessary for this following test to work properly since it listens to the interface
     rtt::ai::interface::Output::setUseRefereeCommands(true);
 
-    refereeData.set_stage(proto::SSL_Referee_Stage_PENALTY_SHOOTOUT);
-    refereeData.set_command(proto::SSL_Referee_Command_PREPARE_PENALTY_YELLOW);
+    refereeData.set_stage(proto::Referee_Stage_PENALTY_SHOOTOUT);
+    refereeData.set_command(proto::Referee_Command_PREPARE_PENALTY_YELLOW);
     rtt::ai::GameStateManager::setRefereeData(refereeData, worldPtr);
 
-    EXPECT_EQ(rtt::ai::GameStateManager::getCurrentGameState().getStrategyName(), "penalty_us_prepare");
+    EXPECT_EQ(rtt::ai::GameStateManager::getCurrentGameState().getCommandId(), rtt::RefCommand::PREPARE_PENALTY_US);
 
-    refereeData.set_stage(proto::SSL_Referee_Stage_PENALTY_SHOOTOUT);
-    refereeData.set_command(proto::SSL_Referee_Command_PREPARE_PENALTY_BLUE);
+    refereeData.set_stage(proto::Referee_Stage_PENALTY_SHOOTOUT);
+    refereeData.set_command(proto::Referee_Command_PREPARE_PENALTY_BLUE);
     rtt::ai::GameStateManager::setRefereeData(refereeData, worldPtr);
 
-    EXPECT_EQ(rtt::ai::GameStateManager::getCurrentGameState().getStrategyName(), "penalty_them_prepare");
+    EXPECT_EQ(rtt::ai::GameStateManager::getCurrentGameState().getCommandId(), rtt::RefCommand::PREPARE_PENALTY_THEM);
 
     rtt::ai::RuntimeConfig::useReferee = false;
 }

@@ -31,10 +31,9 @@ class KeeperBlockBall : public Tactic {
     /**
      * @brief Is this tactic failing during execution (go back to the previous tactic)
      * This tactic can never fail, so always returns false
-     * @param info StpInfo can be used to check some data
      * @return true, tactic will fail (go back to prev tactic), false execution will continue as usual
      */
-    bool isTacticFailing(const StpInfo &info) noexcept override;
+    bool isTacticFailing(const StpInfo &) noexcept override;
 
     /**
      * @brief Should this tactic be reset (go back to the first skill of this tactic)
@@ -45,7 +44,7 @@ class KeeperBlockBall : public Tactic {
     bool shouldTacticReset(const StpInfo &info) noexcept override;
 
     /**
-     * @brief Checks whether this is a passive tactic (formerly called endTactic)
+     * @brief Checks whether this is an end tactic, meaning it should keep looping this tactic if all skills are finished
      * @return This will always return true, since it is an endTactic
      */
     bool isEndTactic() noexcept override;

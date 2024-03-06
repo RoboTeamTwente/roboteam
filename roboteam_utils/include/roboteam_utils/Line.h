@@ -69,6 +69,14 @@ class Line {
     [[nodiscard]] bool isOnLine(const Vector2 &point) const;
 
     /**
+     * Determine whether two points lie on opposite sides of this Line.
+     * @param point1 The first point.
+     * @param point2 The second point.
+     * @return True if the two points lie on opposite sides of this Line, false otherwise.
+     */
+    [[nodiscard]] bool arePointsOnOppositeSides(const Vector2 &point1, const Vector2 &point2) const;
+
+    /**
      * Get the intersection point between two infinite lines. No intersection point is returned in case the lines are equal, parallel or if one of the lines is undefined
      * (a line is undefined if the 2 given points, which define the line, are equal). See https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection for more information.
      *

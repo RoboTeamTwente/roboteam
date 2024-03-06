@@ -22,7 +22,7 @@ def generate_heatmap(data_array):
     plt.imshow(data_array, cmap='RdBu', interpolation='nearest')
     plt.savefig("heatmap_from_interface.png")
 
-def generate_pdf(a, b, c, d, e, header_image_path, center_image_path, filename='performance_report.pdf'):
+def generate_pdf(a, b, c, d, e, f, header_image_path, center_image_path, filename='performance_report.pdf'):
     
     current_time = time.time()
     date = datetime.fromtimestamp(current_time)
@@ -111,23 +111,26 @@ def generate_pdf(a, b, c, d, e, header_image_path, center_image_path, filename='
     score_goals = '0<font color="white"><b>____</b></font><font color="white"><b>____--</b></font>0'
     content.append(Paragraph(score_goals, score_result))
 
-    content.append(Spacer(10, 20))
-    content.append(Paragraph(f"<b>- Total played time:</b> {a}s", custom_style))
+    content.append(Spacer(10, 10))
+    aux = '<font color="white"><b>____</b></font>'
+    content.append(Paragraph(aux, custom_style))
+    content.append(Paragraph(f"<b>- Effective game time:</b> {a} s", custom_style))
     content.append(Paragraph(f"<b>- Attacking/defending ratio:</b> {b}%", custom_style))
-    content.append(Paragraph(f"<b>- Number of offensive actions:</b> {c}", custom_style))
-    content.append(Paragraph(f"<b>- Number of defensive actions:</b> {d}", custom_style))
-    content.append(Paragraph(f"<b>- Number of keeper actions:</b> {e}", custom_style))
+    content.append(Paragraph(f"<b>- Average team speed:</b> {c} m/s", custom_style))
+    content.append(Paragraph(f"<b>- Number of offensive actions:</b> {d}", custom_style))
+    content.append(Paragraph(f"<b>- Number of defensive actions:</b> {e}", custom_style))
+    content.append(Paragraph(f"<b>- Number of keeper actions:</b> {f}", custom_style))
     content.append(Paragraph(f"<b>- Team's heatmap:</b>", custom_style))
     content.append(Spacer(5, 1))
 
-    # Agregar la imagen centrada
     center_image = PILImage.open(center_image_path)
     center_image_width, center_image_height = 200, 200
-    #center_image = center_image.resize((center_image_width, center_image_height))
-    #center_image_path = 'center_image.png'  # Nombre del archivo de imagen centrada
     center_image.save(center_image_path)
 
-    content.append(Image(center_image_path, width=center_image_width, height=center_image_height, hAlign='CENTER'))
+    content.append(Image(center_image_path, width=center_image_width, height=center_image_height/1.5, hAlign='CENTER'))
+
+    content.append(Paragraph(aux, custom_style))
+    content.append(Image("white_logo.png", width=center_image_width/3, height=center_image_height/3, hAlign='CENTER'))
 
     # Construir el PDF
     pdf_document.build(content)
@@ -172,9 +175,10 @@ def manejar_post():
 
         generate_pdf(general_metrics[0], 
                      general_metrics[1], 
-                     general_metrics[2], 
+                     round(general_metrics[2],3), 
                      general_metrics[3], 
                      general_metrics[4], 
+                     general_metrics[5], 
                      "Report_header.png",
                      "heatmap_from_interface.png", 
                      "performance_report.pdf")

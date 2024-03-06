@@ -13,42 +13,45 @@ const visionData = useVisionDataStore()
 </script>
 
 <template>
+    <div style="margin-bottom: 10px;">
+      <p v-if="is_match_started"></p>
+      <p v-else>THE MATCH HAS NOT STARTED YET</p>
+    </div>
+
     <p style="font-size: 20px; font-weight: bold;">Ratio Offensive/Defensive</p>
+
     <div style="margin-top: 10px;">
-      Current play: 
-      {{stpData.latest?.currentPlay?.playName}}
+      <p v-if="is_match_started">Current play: {{stpData.latest?.currentPlay?.playName}}</p>
+      <p v-else>Current play: None</p>
     </div>
     <div>
-      Ratio:
-      {{possession.toFixed(2)}} %
+      <p v-if="is_match_started">Ratio attacking/defending: {{possession.toFixed(2)}} %</p>
+      <p v-else>Ratio attacking/defending: None</p>
     </div>
     <div>
-      Offensive counter:
-      {{offensive_counter}}
+      <p v-if="is_match_started">Offensive counter: {{offensive_counter}}</p>
+      <p v-else>Offensive counter: None</p>
     </div>
     <div>
-      Defensive counter:
-      {{defensive_counter}}
+      <p v-if="is_match_started">Defensive counter: {{defensive_counter}}</p>
+      <p v-else>Defensive counter: None</p>
     </div>
     <div>
-      Effective game time:
-      {{(total_time/1000).toFixed(2)}}
-    </div>
-
-    <p style="font-size: 20px; font-weight: bold; margin-top: 10px;">Counter of keeper actions:</p>
-    <div>
-      {{keeper_kick_counter}}
+      <p v-if="is_match_started">Effective game time: {{(total_time/1000).toFixed(2)}} s</p>
+      <p v-else>Effective game time: None</p>
     </div>
 
-    <p style="font-size: 20px; font-weight: bold; margin-top: 10px;">Average robots' speed:</p>
     <div>
-      Instant average speed: {{ instant_team_speed }}
+      <p v-if="is_match_started">Counter of keeper actions: {{keeper_kick_counter}}</p>
+      <p v-else>Counter of keeper actions: None</p>
     </div>
-    <div>
-      Average speed: {{ average_team_speed }}
-    </div>
-    <div>
 
+    <div>
+      <p v-if="is_match_started">Average robots' speed: {{ instant_team_speed }}</p>
+      <p v-else>Average robots' speed: None</p>
+    </div>
+
+    <div>
       <p style="font-size: 20px; font-weight: bold; margin-top: 10px;">HEATMAP:</p>
     </div>
 
@@ -63,7 +66,7 @@ const visionData = useVisionDataStore()
     </div>
 
     <div class="centered">
-      <button @click="enviarAlServidor" class="my-boton">Download metrics</button>
+      <button @click="send_to_server" class="my-boton">Download metrics</button>
     </div>
 
     <div class="centered">
@@ -134,10 +137,12 @@ export default defineComponent({
       stpData: useSTPDataStore(),
       visionData: useVisionDataStore(),
 
-      match_started: false, 
+      is_match_started: false, 
+      is_kick_off: false, 
 
       offensive_plays: ['Attack', 'AttackingPass', 'ChippingPass'],
       defensive_plays: ['Defend Shot', 'Defend Pass', 'Keeper Kick Ball'],
+      starting_plays: ['Kick Off Us', 'Kick Off Them'],
       /*neutral_plays: ['Halt', 'BallPlacementUs', 'BallPlacementThem', 'PenaltyThemPrepare', 'PenaltyUsPrepare', 'PenaltyThem', 'DefensiveStopFormation', 'AggressiveStopFormation',
       'PenaltyUs', 'KickOffUsPrepare', 'KickOffThemPrepare', 'FreeKickThem', 'FreeKickUsAtGoal', 'FreeKickUsPass', 'KickOffUs', 'KickOffThem'],*/
       offensive_counter: 0,
@@ -175,9 +180,9 @@ export default defineComponent({
       average_team_speed: 0, 
       instant_team_speed: 0, 
       concated_metrics: [],
-      transmit_metrics : Array(5).fill(0),
+      transmit_metrics : Array(6).fill(0),
       transmit_heatmap : Array(120).fill(0), 
-      metrics : Array(125).fill(0),
+      metrics : Array(126).fill(0),
       data_sent_successfully: false
 
     };
@@ -196,7 +201,7 @@ export default defineComponent({
         this.defensive_timer = this.defensive_timer + this.interval_time;
       } else if (this.offensive_plays.includes(String(playName))) {
         this.offensive_counter++;
-        this.offensive_timer = this.offensive_timer + this.interval_time;;
+        this.offensive_timer = this.offensive_timer + this.interval_time;
       } 
 
       this.possession = this.offensive_timer / (this.offensive_timer + this.defensive_timer) * 100
@@ -245,12 +250,10 @@ export default defineComponent({
       })
     },
 
-    async enviarAlServidor() {
+    async send_to_server() {
 
-      //Call the function to concatenate the metrics to be sent
       this.concat_metrics();
 
-      // Realiza la solicitud POST al servidor
       try {
         const response = await fetch('http://127.0.0.1:50000/process_data', {
           method: 'POST',
@@ -263,15 +266,14 @@ export default defineComponent({
         });
 
         if (response.ok) {
-          // Manejar la respuesta del servidor
           const data = await response.json();
           console.log(data);
           this.data_sent_successfully = true; 
         } else {
-          console.error('Error al enviar los datos al servidor');
+          console.error('Error sending the message to the server');
         }
       } catch (error) {
-        console.error('Error de red', error);
+        console.error('Network error', error);
       }
     },
 
@@ -281,54 +283,6 @@ export default defineComponent({
         }
 
       const array2DJson = JSON.stringify(this.x_y_positions_freq);
-
-      // Open a connection on port
-      /*const { spawn } = require('child_process')
-      spawn('sh', ['run_pdf'], {
-        cwd: '.'
-      })*/
-
-      /*Vue.config.productionTip = false;
-
-      Vue.use(new VueSocketIO({
-        connection: 'http://localhost:65432'
-      }));*/
-
-      //const command = `python3 heatmap_plotter.py "${array2DJson}"`;
-      
-
-      // Exec the secundary process
-      /*const proceso = exec(command, (error, stdout, stderr) => {
-        if (error) {
-          console.error(`Error al ejecutar el script: ${error}`);
-          return;
-        }
-
-        // Manejar cualquier error en la salida estándar de error
-        if (stderr) {
-          console.error(`Error en la salida estándar de error: ${stderr}`);
-        }
-      });*/
-    
-      /*const csv = this.to_csv(this.x_y_positions_freq);
-
-      const blob = new Blob([csv], { type: 'text/csv' });
-      const url = URL.createObjectURL(blob);
-
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'heatmap.csv';
-      // Crea un enlace <a> para la descarga
-      document.body.appendChild(a);
-      a.click();
-
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-
-      const { spawn } = require('child_process')
-      spawn('sh', ['run_pdf.sh', csv], {
-        cwd: '.'
-      })*/
 
     },
 
@@ -351,6 +305,7 @@ export default defineComponent({
 
       let concated_metrics = [parseFloat((this.total_time/1000).toFixed(2)), 
                               parseFloat(this.possession.toFixed(2)), 
+                              this.average_team_speed,
                               this.offensive_counter, 
                               this.defensive_counter, 
                               this.keeper_actions_counter]
@@ -368,7 +323,7 @@ export default defineComponent({
         const playName = this.stpData.latest?.currentPlay?.playName;
         this.current_play = String(playName);
 
-        if ((this.defensive_plays.includes(String(playName)) || this.offensive_plays.includes(String(playName))) && this.match_started === true) {
+        if ((this.defensive_plays.includes(String(playName)) || this.offensive_plays.includes(String(playName))) && this.is_match_started === true) {
 
         this.average_team_speed = (this.average_team_speed*this.timer_switch + this.instant_team_speed*0.1) / (this.timer_switch + 0.1)
         this.timer_switch = this.timer_switch + 0.1;
@@ -383,11 +338,20 @@ export default defineComponent({
       const is_started_interval = setInterval(() => {
         const playName = this.stpData.latest?.currentPlay?.playName;
         this.current_play = String(playName);
-        if (!this.defensive_plays.includes(String(playName)) && !this.offensive_plays.includes(String(playName)))
+        if (this.starting_plays.includes(String(playName)))
         {
-          this.match_started = true
+          this.is_kick_off = true
+          //clearInterval(is_started_interval)
+        }
+        if (this.is_kick_off && !this.starting_plays.includes(String(playName)))
+        /*
+        If the kick off has been already used as a play and now the play is not kick-off, then the match has started!
+        */
+        {
+          this.is_match_started = true
           clearInterval(is_started_interval)
-        }},
+        }
+      },
         100);
     }, 
 

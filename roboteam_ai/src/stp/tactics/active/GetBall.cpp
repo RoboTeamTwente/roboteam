@@ -22,7 +22,7 @@ std::optional<StpInfo> GetBall::calculateInfoForSkill(StpInfo const &info) noexc
     StpInfo skillStpInfo = info;
 
     if (!skillStpInfo.getRobot() || !skillStpInfo.getBall() || !skillStpInfo.getField()) return std::nullopt;
-
+    skillStpInfo.setShouldAvoidBall(false);
     Vector2 robotPosition = skillStpInfo.getRobot().value()->getPos();
     Vector2 robotVelocity = skillStpInfo.getRobot().value()->getVel();
     Vector2 interceptionPosition;
@@ -35,6 +35,10 @@ std::optional<StpInfo> GetBall::calculateInfoForSkill(StpInfo const &info) noexc
     for (double loopTime = 0; loopTime < 1; loopTime += 0.1) {
         interceptionPosition = FieldComputations::getBallPositionAtTime(*(skillStpInfo.getCurrentWorld()->getWorld()->getBall()->get()), loopTime);
         if (skillStpInfo.getObjectsToAvoid().shouldAvoidOutOfField && !skillStpInfo.getField().value().playArea.contains(interceptionPosition, control_constants::BALL_RADIUS)) {
+            break;
+        }
+        if (LineSegment(ballPosition, interceptionPosition).distanceToLine(robotPosition) < 1.5 * control_constants::ROBOT_RADIUS) {
+            interceptionPosition = LineSegment(ballPosition, interceptionPosition).project(robotPosition);
             break;
         }
         if (skillStpInfo.getObjectsToAvoid().shouldAvoidDefenseArea) {

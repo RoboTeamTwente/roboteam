@@ -274,6 +274,9 @@ HarasserInfo PositionComputations::calculateHarasserId(world::World *world, cons
         for (const auto &robot : world->getWorld()->getUs()) {
             if (robot->getId() == keeperId) continue;
             auto trajectory = Trajectory2D(robot->getPos(), robot->getVel(), newBallPos, maxRobotVelocity, ai::Constants::MAX_ACC_UPPER());
+            if (LineSegment(newBallPos, world->getWorld()->getBall()->get()->position).distanceToLine(robot->getPos()) < 1.5 * control_constants::ROBOT_RADIUS) {
+                return {robot->getId(), loopTime};
+            }
             if (trajectory.getTotalTime() < loopTime) {
                 return {robot->getId(), loopTime};
             }

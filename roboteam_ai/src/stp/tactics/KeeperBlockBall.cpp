@@ -40,10 +40,14 @@ std::optional<StpInfo> KeeperBlockBall::calculateInfoForSkill(StpInfo const &inf
         Vector2 newBallPos;
         for (double loopTime = 0; loopTime < 1; loopTime += 0.1) {
             newBallPos = FieldComputations::getBallPositionAtTime(*(skillStpInfo.getBall()->get()), loopTime);
-            if (info.getField().value().leftDefenseArea.contains(newBallPos, control_constants::BALL_RADIUS)) {
+            if (LineSegment(skillStpInfo.getBall()->get()->position, newBallPos).distanceToLine(keeper->getPos()) < control_constants::ROBOT_RADIUS) {
+                targetPosition.first = LineSegment(skillStpInfo.getBall()->get()->position, newBallPos).project(keeper->getPos());
+                break;
+            }
+            if (info.getField().value().leftDefenseArea.contains(newBallPos)) {
                 auto trajectory = Trajectory2D(keeper->getPos(), keeper->getVel(), newBallPos, maxRobotVelocity, ai::Constants::MAX_ACC_UPPER());
                 if (trajectory.getTotalTime() < loopTime) {
-                    targetPosition = {newBallPos, PIDType::INTERCEPT};
+                    targetPosition.first = newBallPos;
                     break;
                 }
             }

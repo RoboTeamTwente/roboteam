@@ -44,16 +44,10 @@ void Ball::initBallAtExpectedPosition(const world::World* data) noexcept {
 }
 
 void Ball::updateExpectedBallEndPosition(const world::World* data) noexcept {
-    auto previousWorld = data->getHistoryWorld(1);
-    if (!previousWorld || !previousWorld->getBall()) {
-        return;
-    }
-
-    auto ball = previousWorld->getBall().value();
-    const double ballVelSquared = ball->velocity.length2();
+    const double ballVelSquared = velocity.length2();
     const double frictionCoefficient =
         GameSettings::getRobotHubMode() == net::RobotHubMode::SIMULATOR ? ai::stp::control_constants::SIMULATION_FRICTION : ai::stp::control_constants::REAL_FRICTION;
-    expectedEndPosition = ball->position + ball->velocity.stretchToLength(ballVelSquared / frictionCoefficient);
+    expectedEndPosition = position + velocity.stretchToLength(ballVelSquared / frictionCoefficient);
 
     // Uncomment the following lines to calculate the friction coefficient
     // auto currentTime = std::chrono::steady_clock::now();
@@ -69,7 +63,7 @@ void Ball::updateExpectedBallEndPosition(const world::World* data) noexcept {
     // std::cout << "Expected friction coefficient: " << maxVelocity.length2() / (posAtMaxVelocity - ball->position).length() << std::endl;
     // std::cout << "Time till next reset: " << 30.0 - std::chrono::duration<double>(currentTime - timeOfLastReset).count() << std::endl;
 
-    std::array<rtt::Vector2, 2> ballPoints = {expectedEndPosition, ball->position};
+    std::array<rtt::Vector2, 2> ballPoints = {expectedEndPosition, position};
     rtt::ai::gui::Out::draw(
         {
             .label = "expected_end_position_ball",

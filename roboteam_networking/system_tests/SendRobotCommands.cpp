@@ -67,10 +67,14 @@ int main() {
 
     std::cout << "Starting to send commands: " << std::endl << std::endl;
     auto command = getEmptyRobotCommandToAllRobots();
-    while (true) {
+    int count = 0;
+    // We send 10 commands to all robots
+    // This number is chosen randomly, just needs to be finite and not extremely large
+    while (count < 10) {
         commandsYellowPub->publish(command);
         commandsBluePub->publish(command);
         std::cout << "Sent robot command..." << std::endl;
-        std::this_thread::sleep_for(std::chrono::seconds(1));
+        std::this_thread::sleep_for(std::chrono::milliseconds(16));
+        count++;
     }
 }

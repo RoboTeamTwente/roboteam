@@ -30,6 +30,9 @@ void InterfaceSubscriber::onMessage(const proto::MsgFromInterface&& message) {
         case proto::MsgFromInterface::kSetRuntimeConfig: {
             RuntimeConfig::useReferee = message.set_runtime_config().use_referee();
             RuntimeConfig::ignoreInvariants = message.set_runtime_config().ignore_invariants();
+            if (RuntimeConfig::useReferee) {
+                stp::PlayDecider::unlockPlay();
+            }
         } break;
 
         case proto::MsgFromInterface::kSetGameSettings: {

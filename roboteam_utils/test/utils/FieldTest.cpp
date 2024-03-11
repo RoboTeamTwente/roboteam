@@ -91,3 +91,9 @@ TEST(FieldTest, equals) {
         ASSERT_EQ(f, copy);
     }
 }
+
+TEST(FieldTest, edgeCases) {
+    // Zero width and height
+    Field zeroField = Field::createField(0, 0, 0, 0, 0, 0, 0, 0, Vector2(0, 0), Vector2(0, 0));
+    testCoherence(zeroField);
+}

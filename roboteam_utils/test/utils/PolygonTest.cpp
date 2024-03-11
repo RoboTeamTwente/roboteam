@@ -52,10 +52,9 @@ TEST(basicFunctions, PolygonTest) {
     }
 }
 
-/*
 TEST(isSimple, PolygonTest) {
     Vector2 leftCorner(1.0, 1.0), rightBottom(3.0, 1.0), rightTop(3.0, 4.0), leftTop(1.0, 4.0);
-    //should be simple
+    // should be simple
     Polygon rect(leftCorner, 2.0, 3.0);
     Polygon rect2({leftCorner, rightBottom, rightTop, leftTop});
     Polygon rect3({leftCorner, leftTop, rightTop, rightBottom});
@@ -76,7 +75,6 @@ TEST(isSimple, PolygonTest) {
     EXPECT_FALSE(rect6.isSimple());
     EXPECT_FALSE(rect7.isSimple());
 }
-*/
 
 TEST(isConvex, PolygonTest) {
     Vector2 leftCorner(1.0, 1.0), rightBottom(3.0, 1.0), rightTop(3.0, 4.0), leftTop(1.0, 4.0), convexPoint(4.0, 2.0), nonConvexPoint(2.0, 2.0);

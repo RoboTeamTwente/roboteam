@@ -12,7 +12,7 @@ typedef struct Ball {
     double verticalVelocity = 0.0;  // (m/s) The vertical velocity
     Vector2 expectedEndPosition;    // (m) Expected position of the ball after it stopped moving
     bool isVisible = false;         // If the ball is currently visible
-    unsigned int area;              // The amount of pixels this ball has in the camera
+    unsigned int area = 0;          // The amount of pixels this ball has in the camera
 
     bool operator==(const Ball& other) const;
 } Ball;

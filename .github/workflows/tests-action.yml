@@ -52,7 +52,8 @@ jobs:
         
       - name: Install tests
         run: |
-             cmake --build build --target all -j $(nproc)
+             cmake --build build --target all
+            #  cmake --build build --target all -j $(nproc)
              
       - name: Run
         run: find ./build/debug/bin/ -type f -iname "*test*" -exec {} \;

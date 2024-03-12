@@ -184,23 +184,22 @@ uint8_t Play::getLastScore() const { return lastScore.value_or(0); }
 bool Play::shouldEndPlay() noexcept { return false; }
 
 void Play::DrawMargins() noexcept {
-    std::array<rtt::Vector2, 1> ball = {world->getWorld()->getBall()->get()->position};
+    RuleSetName ruleSetTitle = GameStateManager::getCurrentGameState().getRuleSet().getTitle();
+    RefCommand currentGameState = GameStateManager::getCurrentGameState().getCommandId();
     std::array<rtt::Vector2, 4> rightDefenseAreaMargin = {field.rightDefenseArea.topRight() + Vector2(0.0, 0.2), field.rightDefenseArea.topLeft() + Vector2(-0.2, 0.2),
                                                           field.rightDefenseArea.bottomLeft() + Vector2(-0.2, -0.2), field.rightDefenseArea.bottomRight() + Vector2(0.0, -0.2)};
     std::array<rtt::Vector2, 4> leftDefenseAreaMargin = {field.leftDefenseArea.topLeft() + Vector2(0.0, 0.2), field.leftDefenseArea.topRight() + Vector2(0.2, 0.2),
                                                          field.leftDefenseArea.bottomRight() + Vector2(0.2, -0.2), field.leftDefenseArea.bottomLeft() + Vector2(0.0, -0.2)};
     std::array<rtt::Vector2, 1> cardId = {rtt::Vector2(0.0, -field.playArea.height() / 2)};
-    std::array<rtt::Vector2, 1> pathToBallPlacement = {rtt::ai::GameStateManager::getRefereeDesignatedPosition()};
-
-    RuleSetName ruleSetTitle = GameStateManager::getCurrentGameState().getRuleSet().getTitle();
-    RefCommand currentGameState = GameStateManager::getCurrentGameState().getCommandId();
-    auto color = proto::Drawing::BLUE;
+    std::array<rtt::Vector2, 1> placementLocation = {rtt::ai::GameStateManager::getRefereeDesignatedPosition()};
+    std::array<rtt::Vector2, 2> pathToPlacementLocation = {world->getWorld()->getBall()->get()->position, world->getWorld()->getBall()->get()->position};
+    if (currentGameState == RefCommand::BALL_PLACEMENT_THEM || currentGameState == RefCommand::BALL_PLACEMENT_US || currentGameState == RefCommand::BALL_PLACEMENT_US_DIRECT || currentGameState == RefCommand::PREPARE_FORCED_START) pathToPlacementLocation = {world->getWorld()->getBall()->get()->position, rtt::ai::GameStateManager::getRefereeDesignatedPosition()};
 
     // Drawing all figures regarding states robots have to avoid certain area's (stop, ball placement, free kick, kick off)
     if (ruleSetTitle == RuleSetName::STOP || currentGameState == RefCommand::DIRECT_FREE_THEM || currentGameState == RefCommand::DIRECT_FREE_THEM_STOP ||
         currentGameState == RefCommand::DIRECT_FREE_US || currentGameState == RefCommand::KICKOFF_US || currentGameState == RefCommand::KICKOFF_THEM ||
         currentGameState == RefCommand::PREPARE_FORCED_START) {
-        if (currentGameState != RefCommand::BALL_PLACEMENT_THEM && currentGameState != RefCommand::BALL_PLACEMENT_US && currentGameState != RefCommand::BALL_PLACEMENT_US_DIRECT) {
+        if (currentGameState != RefCommand::BALL_PLACEMENT_THEM && currentGameState != RefCommand::BALL_PLACEMENT_US && currentGameState != RefCommand::BALL_PLACEMENT_US_DIRECT && currentGameState != RefCommand::PREPARE_FORCED_START) {
             rtt::ai::gui::Out::draw(
                 {
                     .label = "Left defense area to avoid",
@@ -222,41 +221,39 @@ void Play::DrawMargins() noexcept {
                 },
                 rightDefenseAreaMargin);
         }
-
-        if (currentGameState == RefCommand::BALL_PLACEMENT_THEM || currentGameState == RefCommand::DIRECT_FREE_THEM || currentGameState == RefCommand::KICKOFF_THEM)
+        auto color = proto::Drawing::BLUE;
+        if (currentGameState == RefCommand::BALL_PLACEMENT_THEM || currentGameState == RefCommand::DIRECT_FREE_THEM || currentGameState == RefCommand::KICKOFF_THEM || currentGameState == RefCommand::PREPARE_FORCED_START)
             color = GameSettings::isYellow() ? proto::Drawing::YELLOW : proto::Drawing::BLUE;
         else if (currentGameState == RefCommand::BALL_PLACEMENT_US || currentGameState == RefCommand::BALL_PLACEMENT_US_DIRECT || currentGameState == RefCommand::DIRECT_FREE_US ||
                  currentGameState == RefCommand::KICKOFF_US)
             color = GameSettings::isYellow() ? proto::Drawing::BLUE : proto::Drawing::YELLOW;
-        else
-            color = proto::Drawing::GREEN;
-
-        rtt::ai::gui::Out::draw(
-            {
-                .label = "Ball area to avoid",
-                .color = color,
-                .method = proto::Drawing::CIRCLES,
-                .category = proto::Drawing::MARGINS,
-                .size = 52,
-                .thickness = 4,
-            },
-            ball);
-    }
-
-    // Drawing all figures regarding ball placement location and the path towards it
-    if (currentGameState == RefCommand::BALL_PLACEMENT_THEM || currentGameState == RefCommand::BALL_PLACEMENT_US || currentGameState == RefCommand::BALL_PLACEMENT_US_DIRECT) {
+        else color = proto::Drawing::GREEN;
         for (auto method : {proto::Drawing::CIRCLES, proto::Drawing::LINES_CONNECTED}) {
             rtt::ai::gui::Out::draw(
                 {
-                    .label = method == proto::Drawing::CIRCLES ? "Placement location" : "Path to placement location ",
-                    .color = proto::Drawing::BLACK,
+                    .label = method == proto::Drawing::CIRCLES ? "Ball area to avoid" : "Path to placement location",
+                    .color = method == proto::Drawing::CIRCLES ? color : proto::Drawing::BLACK,
                     .method = method,
                     .category = proto::Drawing::MARGINS,
-                    .size = method == proto::Drawing::CIRCLES ? 17 : 8,
+                    .size = method == proto::Drawing::CIRCLES ? 52 : 8,
                     .thickness = method == proto::Drawing::CIRCLES ? 4 : 8,
                 },
-                pathToBallPlacement);
+                pathToPlacementLocation);
         }
+    }
+
+    // Drawing all figures regarding ball placement location and the path towards it
+    if (currentGameState == RefCommand::BALL_PLACEMENT_THEM || currentGameState == RefCommand::BALL_PLACEMENT_US || currentGameState == RefCommand::BALL_PLACEMENT_US_DIRECT || currentGameState == RefCommand::PREPARE_FORCED_START) {
+        rtt::ai::gui::Out::draw(
+            {
+                .label = "Placement location",
+                .color = proto::Drawing::BLACK,
+                .method = proto::Drawing::CIRCLES,
+                .category = proto::Drawing::MARGINS,
+                .size = 17,
+                .thickness = 4,
+            },
+            placementLocation);
     }
 
     if (GameStateManager::getCurrentGameState().cardId != -1) {

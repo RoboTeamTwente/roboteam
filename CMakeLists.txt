@@ -19,6 +19,7 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${RTT_BUILD_FOLDER}/lib)
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules)
 include(ccache) # For faster compiling
 include(GetZmqpp) # For networking between AI, RobotHub and World
+include(BuildLibusb) # USB library for RobotHub
 include(CheckCXXCompilerFlag) # For testing compiler cxx standard support
 include(LocateQt5) # For GUI and some networking
 include(GetGoogleTest) # For testing

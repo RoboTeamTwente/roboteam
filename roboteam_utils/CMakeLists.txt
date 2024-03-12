@@ -12,7 +12,6 @@ set(ROBOTEAM_UTILS_SRC
         src/utils/Hungarian.cpp
         src/utils/Arc.cpp
         src/utils/Timer.cpp
-        src/utils/LazyRectangle.cpp
         src/utils/Circle.cpp
         src/utils/pid.cpp
         src/utils/Tube.cpp
@@ -27,7 +26,6 @@ set(ROBOTEAM_UTILS_SRC
         src/utils/RobotFeedback.cpp
         src/utils/FileLogger.cpp
         src/utils/Teams.cpp
-        src/utils/AIData.cpp
         src/utils/FastRectangle.cpp
         src/utils/Field.cpp
         src/utils/Robot.cpp
@@ -38,24 +36,25 @@ set(ROBOTEAM_UTILS_SRC
 set(ROBOTEAM_UTILS_TEST_SRC
         test/utils/AngleTest.cpp
         test/utils/ArcTest.cpp
+        test/utils/BallTest.cpp
         test/utils/LineTest.cpp
         test/utils/LineIntersectionTest.cpp
         test/utils/LineProjectionTest.cpp
         test/utils/LineSegmentTest.cpp
+        test/utils/MathematicsTest.cpp
         test/utils/CircleTest.cpp
         test/utils/PolygonTest.cpp
         test/utils/PositionTest.cpp
         test/utils/Vector2Test.cpp
-        test/utils/LazyRectangleTest.cpp
         test/utils/HungarianTest.cpp
         test/utils/TubeTest.cpp
         test/utils/TimeTest.cpp
         test/utils/RandomTest.cpp
         test/utils/StateMachineTest.cpp
+        test/utils/HalfLineTest.cpp
         test/utils/GridTest.cpp
         test/utils/StaticVectorTest.cpp
         test/utils/ShadowTest.cpp
-        test/utils/CircularBufferTest.cpp
         test/utils/RobotShapeTest.cpp
         test/utils/RobotCommandsTest.cpp
         test/utils/RobotFeedbackTest.cpp

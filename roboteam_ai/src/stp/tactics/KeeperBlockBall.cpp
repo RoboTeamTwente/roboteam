@@ -32,24 +32,22 @@ std::optional<StpInfo> KeeperBlockBall::calculateInfoForSkill(StpInfo const &inf
 
     skillStpInfo.setShouldAvoidOutOfField(false);
     auto targetPosition = calculateTargetPosition(info.getBall().value(), info.getField().value(), info.getEnemyRobot());
-    if (PositionScoring::scorePosition(info.getField().value().leftGoalArea.rightLine().center(), gen::LineOfSight, info.getField().value(), info.getCurrentWorld()).score > 35) {
-        auto maxRobotVelocity = GameStateManager::getCurrentGameState().getRuleSet().getMaxRobotVel();
-        auto keeper = skillStpInfo.getRobot()->get();
-        int keeperId = GameStateManager::getCurrentGameState().keeperId;
-        double maximumTimeToIntercept = 1;
-        Vector2 newBallPos;
-        for (double loopTime = 0; loopTime < 1; loopTime += 0.1) {
-            newBallPos = FieldComputations::getBallPositionAtTime(*(skillStpInfo.getBall()->get()), loopTime);
-            if (LineSegment(skillStpInfo.getBall()->get()->position, newBallPos).distanceToLine(keeper->getPos()) < control_constants::ROBOT_RADIUS) {
-                targetPosition.first = LineSegment(skillStpInfo.getBall()->get()->position, newBallPos).project(keeper->getPos());
+    auto maxRobotVelocity = GameStateManager::getCurrentGameState().getRuleSet().getMaxRobotVel();
+    auto keeper = skillStpInfo.getRobot()->get();
+    int keeperId = GameStateManager::getCurrentGameState().keeperId;
+    double maximumTimeToIntercept = 1;
+    Vector2 newBallPos;
+    for (double loopTime = 0; loopTime < 1; loopTime += 0.1) {
+        newBallPos = FieldComputations::getBallPositionAtTime(*(skillStpInfo.getBall()->get()), loopTime);
+        if (LineSegment(skillStpInfo.getBall()->get()->position, newBallPos).distanceToLine(keeper->getPos()) < control_constants::ROBOT_RADIUS) {
+            targetPosition.first = LineSegment(skillStpInfo.getBall()->get()->position, newBallPos).project(keeper->getPos());
+            break;
+        }
+        if (info.getField().value().leftDefenseArea.contains(newBallPos)) {
+            auto trajectory = Trajectory2D(keeper->getPos(), keeper->getVel(), newBallPos, maxRobotVelocity, ai::Constants::MAX_ACC_UPPER());
+            if (trajectory.getTotalTime() < loopTime) {
+                targetPosition.first = newBallPos;
                 break;
-            }
-            if (info.getField().value().leftDefenseArea.contains(newBallPos)) {
-                auto trajectory = Trajectory2D(keeper->getPos(), keeper->getVel(), newBallPos, maxRobotVelocity, ai::Constants::MAX_ACC_UPPER());
-                if (trajectory.getTotalTime() < loopTime) {
-                    targetPosition.first = newBallPos;
-                    break;
-                }
             }
         }
     }

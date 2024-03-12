@@ -52,7 +52,7 @@ jobs:
         
       - name: Install tests
         run: |
-             cmake --build build --target all -j 3
+             cmake --build build --target all -j 2
             #  cmake --build build --target all -j $(nproc)
              
       - name: Run

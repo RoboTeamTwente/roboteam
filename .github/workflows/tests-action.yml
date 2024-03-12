@@ -12,11 +12,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      steps:
-        - name: Checkout repository and submodules
-          uses: actions/checkout@v2
-          with:
-            submodules: recursive    
+      - name: Checkout repository and submodules
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive    
       
       - name: Restored cached build
         id: cache-build-restore

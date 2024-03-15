@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import RobotStpBadge from './stp-panel/robot-stp-badge.vue'
 import { useSTPDataStore } from '../../stores/data-stores/stp-data-store'
 import { useVisionDataStore } from '../../stores/data-stores/vision-data-store'
 import { exec } from 'child_process';
@@ -8,7 +9,7 @@ import Vue from 'vue';
 import axios from 'axios';
 
 const stpData = useSTPDataStore()
-const visionData = useVisionDataStore()
+//const visionData = useVisionDataStore()
 
 </script>
 
@@ -23,6 +24,17 @@ const visionData = useVisionDataStore()
     <div style="margin-top: 10px;">
       <p v-if="is_match_started">Current play: {{stpData.latest?.currentPlay?.playName}}</p>
       <p v-else>Current play: None</p>
+    </div>
+    <div>
+      <p>Number of passes tried: {{number_of_tried_passes}}</p>
+    </div>
+    <div>
+      <p v-if="is_match_started">Robot roles: {{robots_roles}}</p>
+      <p v-else>List of roles: None</p>
+    </div>
+    <div>
+      <p v-if="is_match_started">Is there a passer? {{is_there_passer}}</p>
+      <p v-else>Is there a passer?: None</p>
     </div>
     <div>
       <p v-if="is_match_started">Ratio attacking/defending: {{possession.toFixed(2)}} %</p>
@@ -131,6 +143,10 @@ import { defineComponent, ref, watch } from 'vue';
 import { proto } from '../../../generated/proto';
 //import Chart from '../../../../../node_modules/chart.js/auto/auto.mjs'
 import Chart from 'chart.js/auto';
+import STPRobot = proto.STPStatus.STPRobot
+
+type RobotDictionary = { [key: string]: proto.STPStatus.ISTPRobot } | null;
+
 export default defineComponent({
   data() {
     return {
@@ -139,8 +155,9 @@ export default defineComponent({
 
       is_match_started: false, 
       is_kick_off: false, 
+      is_there_passer: false, 
 
-      offensive_plays: ['Attack', 'AttackingPass', 'ChippingPass'],
+      offensive_plays: ['Attack', 'Attacking Pass', 'Chipping Pass'],
       defensive_plays: ['Defend Shot', 'Defend Pass', 'Keeper Kick Ball'],
       starting_plays: ['Kick Off Us', 'Kick Off Them'],
       /*neutral_plays: ['Halt', 'BallPlacementUs', 'BallPlacementThem', 'PenaltyThemPrepare', 'PenaltyUsPrepare', 'PenaltyThem', 'DefensiveStopFormation', 'AggressiveStopFormation',
@@ -162,6 +179,8 @@ export default defineComponent({
       keeper_kick_counter: 0,
       robots_x_coord: [0,0,0,0,0,0,0,0,0,0,0],
       robots_y_coord: [0,0,0,0,0,0,0,0,0,0,0],
+      robots_roles: ['None','None','None','None','None','None','None','None','None','None','None'],
+      list_of_robots: null as RobotDictionary,
       x_y_positions_freq: [
         [0,0,0,0,0,0,0,0,0,0],
         [0,0,0,0,0,0,0,0,0,0],
@@ -183,7 +202,17 @@ export default defineComponent({
       transmit_metrics : Array(6).fill(0),
       transmit_heatmap : Array(120).fill(0), 
       metrics : Array(126).fill(0),
-      data_sent_successfully: false
+      data_sent_successfully: false,
+      aux_var: "variable type", 
+      ball_x_coordinate: 0.0,
+      ball_y_coordinate: 0.0,
+      previous_passer_id: 0, 
+      passer_x: 0.0, 
+      passer_y: 0.0, 
+      receiver_x: 0.0, 
+      receiver_y: 0.0,
+      is_pass_tried: false, 
+      number_of_tried_passes: 0,
 
     };
   },
@@ -206,6 +235,82 @@ export default defineComponent({
 
       this.possession = this.offensive_timer / (this.offensive_timer + this.defensive_timer) * 100
 
+    },
+
+    get_passer_position() { // Look for a passer and if there is one, return its position
+
+      /*
+      THE ROBOT ROLE IS IN THE STPDATA STORE, BUT THEIR POSITION IS IN VISION DATA...
+      LET'S HOPE THAT THE POSITION IN BOTH STORES ARE THE SAME
+      */
+
+      /*
+      Passer role is keep until receiver gets the pass or play is set to defensive, then it makes sense to 
+      look at the position of the ball wrt the passer 
+      */
+
+      const playName = this.stpData.latest?.currentPlay?.playName;
+
+      if (this.defensive_plays.includes(String(playName)) || this.offensive_plays.includes(String(playName))) { // Only look for passers when we are attacking (have the)
+
+        let list_of_robots = this.stpData.latest?.robots
+        let robots_on_vision = this.visionData.ourRobots || []
+        let counter = 0; // Let's assume that the position of each robot on the list list_of_robots is always the same
+        // And use the counter to update the role of each robot
+
+        for (let key in list_of_robots ) { // Go through the IDs of the robots
+
+          if (Object.prototype.hasOwnProperty.call(list_of_robots, key)) {
+
+            this.robots_roles[counter] = list_of_robots[key].role?.name!;
+
+            if (list_of_robots[key].role?.name! === "passer") {
+
+              this.is_there_passer = true; 
+              const passer_id = counter; 
+
+              if (passer_id === this.previous_passer_id) { // Check that the passer is not the same as in the previous iteration
+                this.is_there_passer = false; 
+                this.passer_x = 0;
+                this.passer_y = 0;
+              }
+
+              // Get the coordinates of the passer
+              this.passer_x = robots_on_vision[passer_id].pos?.x!;
+              this.passer_y = robots_on_vision[passer_id].pos?.y!;
+
+              this.previous_passer_id = passer_id;
+              return
+
+            } else {
+
+              this.is_there_passer = false; 
+              this.passer_x = 0;
+              this.passer_y = 0;
+
+            }
+            counter = counter + 1;
+          }
+        }  
+        this.is_there_passer = false; 
+        return
+      }
+    },
+
+    get_ball_position() {
+      const world = this.visionData.latestWorld; 
+      this.ball_x_coordinate = world?.ball?.pos!.x!; 
+      this.ball_y_coordinate = world?.ball?.pos!.y!;
+    },
+
+    check_is_pass_tried() {
+      if (this.is_there_passer) { // If there is a passer check if he executes the pass (not if the pass arrives to the passer)
+        const ball_passer_distance = Math.sqrt((this.ball_x_coordinate-this.passer_x) ** 2 + (this.ball_y_coordinate-this.passer_y) ** 2); 
+        if (ball_passer_distance > 0.05) {
+          this.is_pass_tried = true; 
+          this.number_of_tried_passes = this.number_of_tried_passes + 1;
+        }
+      }
     },
 
     keeper_actions_counter() {
@@ -329,6 +434,22 @@ export default defineComponent({
         this.timer_switch = this.timer_switch + 0.1;
         this.instant_speed_calculator();
         this.instant_position_calculator();
+        //this.get_passer_position();
+        }
+
+        //this.get_ball_position();
+      }, 500);
+      
+    }, 
+
+    passing_accuracy_block() {
+      setInterval(() => {
+        this.get_passer_position(); 
+        if (this.is_match_started && this.is_there_passer) { // Only if there is a passer, check if the pass has been tried
+          this.get_ball_position();
+          this.check_is_pass_tried();
+        } else {
+          this.is_pass_tried = false; 
         }
       }, 100);
       
@@ -360,6 +481,7 @@ export default defineComponent({
   created() {
     this.define_event(); // Init when the script is run
     this.is_started();
+    this.passing_accuracy_block();
   },
 
   mounted() {

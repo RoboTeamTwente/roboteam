@@ -55,7 +55,8 @@ std::vector<Vector2> PositionComputations::determineWallPositions(const rtt::Fie
     Vector2 ballPos;
 
     // Calculate the position of the ball, projected onto the field
-    if (currentGameState == RefCommand::BALL_PLACEMENT_THEM || currentGameState == RefCommand::BALL_PLACEMENT_US || currentGameState == RefCommand::BALL_PLACEMENT_US_DIRECT || currentGameState == RefCommand::PREPARE_FORCED_START) {
+    if (currentGameState == RefCommand::BALL_PLACEMENT_THEM || currentGameState == RefCommand::BALL_PLACEMENT_US || currentGameState == RefCommand::BALL_PLACEMENT_US_DIRECT ||
+        currentGameState == RefCommand::PREPARE_FORCED_START) {
         ballPos = GameStateManager::getRefereeDesignatedPosition();
     } else {
         ballPos = FieldComputations::projectPointInField(field, world->getWorld().value().getBall()->get()->position);
@@ -216,7 +217,8 @@ Vector2 PositionComputations::calculateAvoidBallPosition(Vector2 targetPosition,
 
     std::unique_ptr<Shape> avoidShape;
 
-    if (currentGameState == RefCommand::BALL_PLACEMENT_US || currentGameState == RefCommand::BALL_PLACEMENT_THEM || currentGameState == RefCommand::BALL_PLACEMENT_US_DIRECT || currentGameState == RefCommand::PREPARE_FORCED_START) {
+    if (currentGameState == RefCommand::BALL_PLACEMENT_US || currentGameState == RefCommand::BALL_PLACEMENT_THEM || currentGameState == RefCommand::BALL_PLACEMENT_US_DIRECT ||
+        currentGameState == RefCommand::PREPARE_FORCED_START) {
         avoidShape = std::make_unique<Tube>(
             Tube(ballPosition, GameStateManager::getRefereeDesignatedPosition(), control_constants::AVOID_BALL_DISTANCE + control_constants::GO_TO_POS_ERROR_MARGIN));
     } else {

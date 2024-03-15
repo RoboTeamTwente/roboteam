@@ -6,6 +6,7 @@ import Feedback       from './modules/components/panels/feedback-widget.vue'
 import PlayEvaluation from './modules/components/panels/play-evaluation-widget.vue'
 import Metrics        from './modules/components/panels/metrics-widget.vue'
 import UiSettings     from './modules/components/ui-settings/ui-settings.vue'
+import Performance    from './modules/components/panels/performance-widget.vue'
 
 export const TABS_DEFINITION = {
   'Game Settings': {
@@ -35,6 +36,10 @@ export const TABS_DEFINITION = {
   'UI Settings': {
     icon: 'fa-gear',
     component: markRaw(UiSettings)
+  },
+  'Performance': {
+    icon: 'fa-gear',
+    component: markRaw(Performance)
   }
 }
 

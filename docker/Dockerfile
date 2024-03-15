@@ -69,6 +69,9 @@ RUN apk add --no-cache \
     qt5-qtbase-dev qt5-qtcharts-dev qt5-qtdeclarative-dev qt5-qtsvg-dev \
     sudo nodejs npm
 RUN npm install -g yarn
+RUN npm install chart.js
+RUN npm install vue-socket.io socket.io socket.io-client
+RUN npm install axios
 
 COPY --from=development --chown=root:root /usr/local/lib/libprotobuf.so.31 /usr/local/lib/libprotobuf.so.31
 COPY --from=development --chown=root:root /usr/local/bin/protoc /usr/local/bin/protoc

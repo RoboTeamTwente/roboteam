@@ -194,13 +194,16 @@ void Play::DrawMargins() noexcept {
     std::array<rtt::Vector2, 1> cardId = {rtt::Vector2(0.0, -field.playArea.height() / 2)};
     std::array<rtt::Vector2, 1> placementLocation = {rtt::ai::GameStateManager::getRefereeDesignatedPosition()};
     std::array<rtt::Vector2, 2> pathToPlacementLocation = {world->getWorld()->getBall()->get()->position, world->getWorld()->getBall()->get()->position};
-    if (currentGameState == RefCommand::BALL_PLACEMENT_THEM || currentGameState == RefCommand::BALL_PLACEMENT_US || currentGameState == RefCommand::BALL_PLACEMENT_US_DIRECT || currentGameState == RefCommand::PREPARE_FORCED_START) pathToPlacementLocation = {world->getWorld()->getBall()->get()->position, rtt::ai::GameStateManager::getRefereeDesignatedPosition()};
+    if (currentGameState == RefCommand::BALL_PLACEMENT_THEM || currentGameState == RefCommand::BALL_PLACEMENT_US || currentGameState == RefCommand::BALL_PLACEMENT_US_DIRECT ||
+        currentGameState == RefCommand::PREPARE_FORCED_START)
+        pathToPlacementLocation = {world->getWorld()->getBall()->get()->position, rtt::ai::GameStateManager::getRefereeDesignatedPosition()};
 
     // Drawing all figures regarding states robots have to avoid certain area's (stop, ball placement, free kick, kick off)
     if (ruleSetTitle == RuleSetName::STOP || currentGameState == RefCommand::DIRECT_FREE_THEM || currentGameState == RefCommand::DIRECT_FREE_THEM_STOP ||
         currentGameState == RefCommand::DIRECT_FREE_US || currentGameState == RefCommand::KICKOFF_US || currentGameState == RefCommand::KICKOFF_THEM ||
         currentGameState == RefCommand::PREPARE_FORCED_START) {
-        if (currentGameState != RefCommand::BALL_PLACEMENT_THEM && currentGameState != RefCommand::BALL_PLACEMENT_US && currentGameState != RefCommand::BALL_PLACEMENT_US_DIRECT && currentGameState != RefCommand::PREPARE_FORCED_START) {
+        if (currentGameState != RefCommand::BALL_PLACEMENT_THEM && currentGameState != RefCommand::BALL_PLACEMENT_US && currentGameState != RefCommand::BALL_PLACEMENT_US_DIRECT &&
+            currentGameState != RefCommand::PREPARE_FORCED_START) {
             rtt::ai::gui::Out::draw(
                 {
                     .label = "Left defense area to avoid",
@@ -223,12 +226,14 @@ void Play::DrawMargins() noexcept {
                 rightDefenseAreaMargin);
         }
         auto color = proto::Drawing::BLUE;
-        if (currentGameState == RefCommand::BALL_PLACEMENT_THEM || currentGameState == RefCommand::DIRECT_FREE_THEM || currentGameState == RefCommand::KICKOFF_THEM || currentGameState == RefCommand::PREPARE_FORCED_START)
+        if (currentGameState == RefCommand::BALL_PLACEMENT_THEM || currentGameState == RefCommand::DIRECT_FREE_THEM || currentGameState == RefCommand::KICKOFF_THEM ||
+            currentGameState == RefCommand::PREPARE_FORCED_START)
             color = GameSettings::isYellow() ? proto::Drawing::YELLOW : proto::Drawing::BLUE;
         else if (currentGameState == RefCommand::BALL_PLACEMENT_US || currentGameState == RefCommand::BALL_PLACEMENT_US_DIRECT || currentGameState == RefCommand::DIRECT_FREE_US ||
                  currentGameState == RefCommand::KICKOFF_US)
             color = GameSettings::isYellow() ? proto::Drawing::BLUE : proto::Drawing::YELLOW;
-        else color = proto::Drawing::GREEN;
+        else
+            color = proto::Drawing::GREEN;
         for (auto method : {proto::Drawing::CIRCLES, proto::Drawing::LINES_CONNECTED}) {
             rtt::ai::gui::Out::draw(
                 {
@@ -244,7 +249,8 @@ void Play::DrawMargins() noexcept {
     }
 
     // Drawing all figures regarding ball placement location and the path towards it
-    if (currentGameState == RefCommand::BALL_PLACEMENT_THEM || currentGameState == RefCommand::BALL_PLACEMENT_US || currentGameState == RefCommand::BALL_PLACEMENT_US_DIRECT || currentGameState == RefCommand::PREPARE_FORCED_START) {
+    if (currentGameState == RefCommand::BALL_PLACEMENT_THEM || currentGameState == RefCommand::BALL_PLACEMENT_US || currentGameState == RefCommand::BALL_PLACEMENT_US_DIRECT ||
+        currentGameState == RefCommand::PREPARE_FORCED_START) {
         rtt::ai::gui::Out::draw(
             {
                 .label = "Placement location",

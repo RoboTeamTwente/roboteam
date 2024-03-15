@@ -58,12 +58,15 @@ class PassComputations {
      * @param point the point to check for validity
      * @param ballLocation the current ball location
      * @param possibleReceiverLocations the locations of all robots that could receive the ball
+     * @param possibleReceiverVelocities the velocities of all robots that could receive the ball
      * @param passerLocation the location of the robot that will pass the ball
+     * @param passerVelocity the velocity of the robot that will pass the ball
      * @param field the current field
      * @param world the current world
      * @return bool indicating whether this point is (likely) possible to pass to
      */
-    static bool pointIsValidPassLocation(Vector2 point, Vector2 ballLocation, const std::vector<Vector2>& possibleReceiverLocations, Vector2 passerLocation, const Field& field,
+    static bool pointIsValidPassLocation(Vector2 point, Vector2 ballLocation, const std::vector<Vector2>& possibleReceiverLocations,
+                                         const std::vector<Vector2>& possibleReceiverVelocities, Vector2 passerLocation, Vector2 passerVelocity, const Field& field,
                                          const world::World* world);
 
     /**
@@ -87,19 +90,21 @@ class PassComputations {
     /**
      * @brief Approximate the time it takes a robot to reach a point
      * @param robotPosition current position of robot
+     * @param robotVelocity current velocity of robot
      * @param targetPosition position to calculate travel time to
      * @return approximated time to reach target from position
      */
-    static double calculateRobotTravelTime(Vector2 robotPosition, Vector2 targetPosition);
+    static double calculateRobotTravelTime(Vector2 robotPosition, Vector2 robotVelocity, Vector2 targetPosition);
 
     /**
      * Approximate the time it takes the ball to reach a point
      * @param ballLocation current location of the ball
      * @param passerLocation current location of the passer
+     * @param robotVelocity current velocity of robot
      * @param targetPosition position to calculate travel time to
      * @return approximated time for ball to reach target position
      */
-    static double calculateBallTravelTime(Vector2 ballLocation, Vector2 passerLocation, Vector2 targetPosition);
+    static double calculateBallTravelTime(Vector2 ballLocation, Vector2 passerLocation, Vector2 passerVelocity, Vector2 targetPosition);
 };
 }  // namespace rtt::ai::stp::computations
 #endif  // RTT_PASSCOMPUTATIONS_H

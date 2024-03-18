@@ -10,12 +10,12 @@
 #include <world/World.hpp>
 
 #include "control/ControlUtils.h"
+#include "stp/computations/PositionComputations.h"
+#include "stp/computations/PositionScoring.h"
 #include "stp/skills/GoToPos.h"
 #include "stp/skills/Rotate.h"
 #include "utilities/GameStateManager.hpp"
 #include "world/FieldComputations.h"
-#include "stp/computations/PositionScoring.h"
-#include "stp/computations/PositionComputations.h"
 
 namespace rtt::ai::stp::tactic {
 GetBall::GetBall() { skills = collections::state_machine<Skill, Status, StpInfo>{skill::GoToPos()}; }
@@ -30,8 +30,9 @@ std::optional<StpInfo> GetBall::calculateInfoForSkill(StpInfo const &info) noexc
     Vector2 ballPosition = skillStpInfo.getBall().value()->position;
     Vector2 interceptionPosition = ballPosition;
     auto maxRobotVelocity = GameStateManager::getCurrentGameState().getRuleSet().getMaxRobotVel();
-    InterceptInfo interceptionInfo = PositionComputations::calculateInterceptionInfo(skillStpInfo.getField().value(), skillStpInfo.getCurrentWorld(), skillStpInfo.getRobot().value()->getId());
-    if (interceptionInfo.interceptId ==  skillStpInfo.getRobot().value()->getId()) interceptionPosition = interceptionInfo.interceptLocation;
+    InterceptInfo interceptionInfo =
+        PositionComputations::calculateInterceptionInfo(skillStpInfo.getField().value(), skillStpInfo.getCurrentWorld(), skillStpInfo.getRobot().value()->getId());
+    if (interceptionInfo.interceptId == skillStpInfo.getRobot().value()->getId()) interceptionPosition = interceptionInfo.interceptLocation;
     if (skillStpInfo.getRobot()->get()->hasBall()) {
         maxRobotVelocity = std::clamp(skillStpInfo.getBall().value()->velocity.length() * 0.8, 0.5, maxRobotVelocity);
         skillStpInfo.setMaxRobotVelocity(maxRobotVelocity);

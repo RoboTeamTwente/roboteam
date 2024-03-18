@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 3.22)
 project(roboteam_ai)
 
-add_subdirectory(src)
-
 ###### UTILS #######
 add_library(roboteam_ai_utils
         ${PROJECT_SOURCE_DIR}/src/utilities/StrategyManager.cpp
@@ -141,7 +139,6 @@ target_include_directories(roboteam_ai_plays
 target_link_libraries(roboteam_ai_plays
         PRIVATE roboteam_networking
         PRIVATE roboteam_utils
-        PRIVATE NFParam
         PRIVATE roboteam_ai_utils
         PRIVATE roboteam_ai_world
 )
@@ -186,7 +183,6 @@ target_include_directories(roboteam_ai_evaluation
 target_link_libraries(roboteam_ai_evaluation
         PRIVATE roboteam_networking
         PRIVATE roboteam_utils
-        PRIVATE NFParam
 )
 target_compile_options(roboteam_ai_evaluation PRIVATE "${COMPILER_FLAGS}")
 
@@ -203,7 +199,6 @@ target_include_directories(roboteam_ai_computation
 target_link_libraries(roboteam_ai_computation
         PRIVATE roboteam_utils
         PRIVATE roboteam_networking
-        PRIVATE NFParam
 )
 target_compile_options(roboteam_ai_computation PRIVATE "${COMPILER_FLAGS}")
 

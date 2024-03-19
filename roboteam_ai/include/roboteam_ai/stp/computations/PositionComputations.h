@@ -31,9 +31,9 @@ struct EnemyInfo {
     int id;
 };
 
-struct HarasserInfo {
-    int harasserId;
-    double timeToBall;
+struct InterceptInfo {
+    Vector2 interceptLocation;
+    int interceptId = -1;
 };
 
 /**
@@ -94,20 +94,20 @@ class PositionComputations {
     static Vector2 calculateAvoidBallPosition(Vector2 targetPosition, Vector2 ballPosition, const Field &field);
 
     /**
-     * @brief Calculates info for the keeper
-     * @param stpInfos The current stpInfos
-     * @param field The current field
-     * @param world The current world
-     */
-    static void calculateInfoForKeeper(std::unordered_map<std::string, StpInfo> &stpInfos, const Field &field, world::World *world) noexcept;
-
-    /**
      * @brief Calculates the id of the harasser
      * @param world The current world
      * @param field The current field
      * @return HarasserInfo with the id and the time to the ball
      */
-    static HarasserInfo calculateHarasserId(rtt::world::World *world, const Field &field) noexcept;
+    static InterceptInfo calculateHarasserId(rtt::world::World *world, const Field &field) noexcept;
+
+    /**
+     * @brief Calculates the position for an intercept
+     * @param field The current field
+     * @param world The current world
+     * @param interceptId The Id of the robot which will intercept
+     */
+    static InterceptInfo calculateInterceptionInfo(const Field &field, rtt::world::World *world, int interceptId) noexcept;
 
     /**
      * @brief Calculates info for the harasser role
@@ -115,10 +115,10 @@ class PositionComputations {
      * @param roles The current roles
      * @param field The current field
      * @param world The current world
-     * @param timeToBall The time to the ball
+     * @param interceptionLocation The location where the harasser should go to
      */
     static void calculateInfoForHarasser(std::unordered_map<std::string, StpInfo> &stpInfos, std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT> *roles,
-                                         const Field &field, world::World *world, double timeToBall) noexcept;
+                                         const Field &field, world::World *world, Vector2 interceptionLocation) noexcept;
 
     /**
      * @brief Calculates info for the defenders

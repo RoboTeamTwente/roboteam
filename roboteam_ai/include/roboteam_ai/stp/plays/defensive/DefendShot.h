@@ -44,7 +44,7 @@ class DefendShot : public Play {
      */
     const char* getName() const override;
 
-    HarasserInfo harasserInfo;
+    InterceptInfo harasserInfo;
 };
 }  // namespace rtt::ai::stp::play
 

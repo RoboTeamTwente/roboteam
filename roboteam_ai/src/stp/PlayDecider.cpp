@@ -50,6 +50,12 @@ void PlayDecider::lockPlay(const std::optional<std::string> playName) {
     playLock.didChange = true;
 }
 
+void PlayDecider::unlockPlay() {
+    std::scoped_lock lock(playLock.lock);
+    playLock.isSet = false;
+    playLock.didChange = true;
+}
+
 Play* PlayDecider::getPlayForName(std::string name, const std::vector<std::unique_ptr<ai::stp::Play>>& plays) {
     auto found = std::find_if(plays.begin(), plays.end(), [&](auto& play) { return play->getName() == name; });
     if (found == plays.end()) {

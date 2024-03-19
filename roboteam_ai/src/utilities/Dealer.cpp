@@ -13,6 +13,7 @@
 #include <iterator>
 #include <numeric>
 
+#include "control/positionControl/BBTrajectories/Trajectory2D.h"
 #include "interface/api/Output.h"
 #include "utilities/GameStateManager.hpp"
 #include "world/FieldComputations.h"
@@ -244,6 +245,7 @@ double Dealer::getRobotScoreForRole(const std::vector<Dealer::DealerFlag> &deale
 // Get the distance score for a robot to a position when there is a position that role needs to go to
 double Dealer::getRobotScoreForDistance(const stp::StpInfo &stpInfo, const v::RobotView &robot) {
     double distance;
+    if (stpInfo.getRoleName().find("halt") == std::string::npos && stpInfo.getRoleName() == "keeper") return 0;
 
     std::optional<Vector2> target_position;
     // Search for position in getEnemyRobot, getPositionToDefend, and getPositionToMoveTo
@@ -251,20 +253,14 @@ double Dealer::getRobotScoreForDistance(const stp::StpInfo &stpInfo, const v::Ro
     if (stpInfo.getPositionToDefend().has_value()) target_position = stpInfo.getPositionToDefend().value();
     if (stpInfo.getPositionToShootAt().has_value()) target_position = world.getBall()->get()->position;
     if (stpInfo.getPositionToMoveTo().has_value()) target_position = stpInfo.getPositionToMoveTo().value();
-    // If robot is keeper, set distance to self. Basically 0
-    // TODO: Is this if ever true? This is already handeled before right?
-    if (stpInfo.getRoleName() == "keeper" && robot->getId() == GameStateManager::getCurrentGameState().keeperId) target_position = robot->getPos();
 
     // No target found to move to
     if (!target_position) {
-        // only print warning if halt not in rolename
-        if (stpInfo.getRoleName().find("halt") == std::string::npos)
-            RTT_WARNING("No target position found for role " + stpInfo.getRoleName() + " for robot " + std::to_string(robot->getId()))
+        RTT_WARNING("No target position found for role " + stpInfo.getRoleName() + " for robot " + std::to_string(robot->getId()))
         return 0;
     }
-    distance = robot->getPos().dist(*target_position);
 
-    return costForDistance(distance, field->playArea.height());
+    return costForDistance(robot, *target_position, stpInfo.getMaxRobotVelocity());
 }
 
 double Dealer::getDefaultFlagScores(const v::RobotView &robot, const Dealer::DealerFlag &flag) {
@@ -298,9 +294,8 @@ void Dealer::setGameStateRoleIds(std::unordered_map<std::string, v::RobotView> o
 }
 
 // Calculate the cost for distance. The further away the target, the higher the cost for that distance.
-double Dealer::costForDistance(double distance, double fieldHeight) {
-    auto fieldDiagonalLength = sqrt(pow(fieldHeight, 2.0) + pow(fieldHeight, 2.0));
-    return distance / fieldDiagonalLength;
+double Dealer::costForDistance(const v::RobotView &robot, const rtt::Vector2 target_position, const double MaxRobotVelocity) {
+    return Trajectory2D(robot->getPos(), robot->getVel(), target_position, MaxRobotVelocity, ai::Constants::MAX_ACC_UPPER()).getTotalTime();
 }
 
 double Dealer::costForProperty(bool property) { return property ? 0.0 : 1.0; }

@@ -16,67 +16,71 @@ TEST(worldTest, WhichRobotHasBallTest) {
     rtt::GameSettings::setPrimaryAI(true);
     rtt::GameSettings::setYellow(true);
 
-    // TODO: Extend test to also work in SIM environment making use of dribbler encoder and / or dedicated ballsensor
-    // Base our test on vision information (instead of ballsensor/dribbler information)
-    rtt::GameSettings::setRobotHubMode(rtt::net::RobotHubMode::BASESTATION);
+    std::vector<rtt::net::RobotHubMode> modes = {rtt::net::RobotHubMode::BASESTATION, rtt::net::RobotHubMode::SIMULATOR};
+    for (const auto& mode : modes) {
+        rtt::GameSettings::setRobotHubMode(mode);
 
-    auto const& [_, worldInstance] = rtt::world::World::instance();
+        auto const& [_, worldInstance] = rtt::world::World::instance();
 
-    google::protobuf::RepeatedPtrField<proto::WorldRobot> robotsYellow;
-    google::protobuf::RepeatedPtrField<proto::WorldRobot> robotsBlue;
+        google::protobuf::RepeatedPtrField<proto::WorldRobot> robotsYellow;
+        google::protobuf::RepeatedPtrField<proto::WorldRobot> robotsBlue;
 
-    // Create robots yellow
-    proto::WorldRobot roboty1;
-    roboty1.set_id(1);
-    roboty1.mutable_pos()->set_x(0.1);
-    roboty1.set_angle(M_PI);
+        // Create robots yellow
+        proto::WorldRobot roboty1;
+        roboty1.set_id(1);
+        roboty1.mutable_pos()->set_x(0.1);
+        roboty1.mutable_feedbackinfo()->set_dribbler_sees_ball(true);
+        roboty1.mutable_feedbackinfo()->set_ball_sensor_sees_ball(true);
 
-    proto::WorldRobot roboty2;
-    roboty2.set_id(2);
-    roboty2.mutable_pos()->set_x(0.5);
-    roboty2.set_angle(M_PI);
+        roboty1.set_angle(M_PI);
 
-    // Create robots blue
-    proto::WorldRobot robotb1;
-    robotb1.set_id(3);
-    robotb1.mutable_pos()->set_x(0.05);
-    robotb1.set_angle(M_PI);
+        proto::WorldRobot roboty2;
+        roboty2.set_id(2);
+        roboty2.mutable_pos()->set_x(0.5);
+        roboty2.set_angle(M_PI);
 
-    /* Setup :  Ball ..0.05.. robotb1(3) ..0.1.. roboty1(1) ..0.5.. roboty2(2) */
+        // Create robots blue
+        proto::WorldRobot robotb1;
+        robotb1.set_id(3);
+        robotb1.mutable_pos()->set_x(0.05);
+        robotb1.set_angle(M_PI);
 
-    // Create ball
-    proto::WorldBall ball;
-    ball.mutable_pos()->set_x(0.001);
-    ball.mutable_pos()->set_y(0);
-    ball.set_visible(true);
+        /* Setup :  Ball ..0.05.. robotb1(3) ..0.1.. roboty1(1) ..0.5.. roboty2(2) */
 
-    // Add robots
-    robotsYellow.Add()->CopyFrom(roboty1);
-    robotsYellow.Add()->CopyFrom(roboty2);
-    robotsBlue.Add()->CopyFrom(robotb1);
+        // Create ball
+        proto::WorldBall ball;
+        ball.mutable_pos()->set_x(0.001);
+        ball.mutable_pos()->set_y(0);
+        ball.set_visible(true);
 
-    /** Test 1 : Two yellow robots (ids 1 & 2), one blue robots (id = 3) and one ball **/
-    proto::World msgBall;
-    msgBall.mutable_yellow()->CopyFrom(robotsYellow);
-    msgBall.mutable_blue()->CopyFrom(robotsBlue);
-    msgBall.mutable_ball()->CopyFrom(ball);
-    worldInstance->updateWorld(msgBall);
-    auto world = worldInstance->getWorld();
-    assert(world->getUs().size() == 2);
-    assert(world->getThem().size() == 1);
-    assert(world->getBall().has_value());
+        // Add robots
+        robotsYellow.Add()->CopyFrom(roboty1);
+        robotsYellow.Add()->CopyFrom(roboty2);
+        robotsBlue.Add()->CopyFrom(robotb1);
 
-    std::optional<rtt::world::view::RobotView> robot;
+        /** Test 1 : Two yellow robots (ids 1 & 2), one blue robots (id = 3) and one ball **/
+        proto::World msgBall;
+        msgBall.mutable_yellow()->CopyFrom(robotsYellow);
+        msgBall.mutable_blue()->CopyFrom(robotsBlue);
+        msgBall.mutable_ball()->CopyFrom(ball);
+        worldInstance->updateWorld(msgBall);
+        auto world = worldInstance->getWorld();
+        assert(world->getUs().size() == 2);
+        assert(world->getThem().size() == 1);
+        assert(world->getBall().has_value());
 
-    /** Test 1.1 : us */
-    robot = world->whichRobotHasBall(rtt::world::Team::us);
-    EXPECT_EQ((*robot)->getId(), 1);
-    /** Test 1.2 : them */
-    robot = world->whichRobotHasBall(rtt::world::Team::them);
-    EXPECT_EQ((*robot)->getId(), 3);
-    /** Test 1.3 : both */
-    robot = world->whichRobotHasBall(rtt::world::Team::both);
-    EXPECT_EQ((*robot)->getId(), 3);
+        std::optional<rtt::world::view::RobotView> robot;
+
+        /** Test 1.1 : us */
+        robot = world->whichRobotHasBall(rtt::world::Team::us);
+        EXPECT_EQ((*robot)->getId(), 1);
+        /** Test 1.2 : them */
+        robot = world->whichRobotHasBall(rtt::world::Team::them);
+        EXPECT_EQ((*robot)->getId(), 3);
+        /** Test 1.3 : both, 1 and 3 return true on has ball. 3 is closer to the ball, however we trust our own dribbler */
+        robot = world->whichRobotHasBall(rtt::world::Team::both);
+        EXPECT_EQ((*robot)->getId(), 1);
+    }
 }
 
 TEST(worldTest, NoRobotHasBall) {
@@ -93,19 +97,22 @@ TEST(worldTest, NoRobotHasBall) {
 
     // Create robots yellow
     proto::WorldRobot roboty1;
-    roboty1.set_id(1);
+    roboty1.set_id(4);
     roboty1.mutable_pos()->set_x(1);
+    roboty1.mutable_pos()->set_y(0);
     roboty1.set_angle(M_PI);
 
     proto::WorldRobot roboty2;
-    roboty2.set_id(2);
+    roboty2.set_id(5);
     roboty2.mutable_pos()->set_x(2);
+    roboty2.mutable_pos()->set_y(0);
     roboty2.set_angle(M_PI);
 
     // Create robots blue
     proto::WorldRobot robotb1;
-    robotb1.set_id(3);
+    robotb1.set_id(6);
     robotb1.mutable_pos()->set_x(3);
+    robotb1.mutable_pos()->set_y(0);
     robotb1.set_angle(M_PI);
 
     /* Setup :  Ball ..1.. robotb1(3) ..2.. roboty1(1) ..3.. roboty2(2) */
@@ -121,7 +128,7 @@ TEST(worldTest, NoRobotHasBall) {
     robotsYellow.Add()->CopyFrom(roboty2);
     robotsBlue.Add()->CopyFrom(robotb1);
 
-    /** Test 1 : Two yellow robots (ids 1 & 2), one blue robots (id = 3) and one ball **/
+    /** Test 1 : Two yellow robots (ids 1 & 2), one blue robots (id 3) and one ball **/
     proto::World msgBall;
     msgBall.mutable_yellow()->CopyFrom(robotsYellow);
     msgBall.mutable_blue()->CopyFrom(robotsBlue);

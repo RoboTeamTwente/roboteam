@@ -5,6 +5,8 @@
 
 #include "control/ControlUtils.h"
 #include "roboteam_utils/LineSegment.h"
+#include "stp/computations/PositionComputations.h"
+#include "stp/computations/PositionScoring.h"
 #include "stp/constants/ControlConstants.h"
 #include "stp/skills/GoToPos.h"
 #include "utilities/Constants.h"
@@ -27,11 +29,16 @@ KeeperBlockBall::KeeperBlockBall() { skills = rtt::collections::state_machine<Sk
 std::optional<StpInfo> KeeperBlockBall::calculateInfoForSkill(StpInfo const &info) noexcept {
     StpInfo skillStpInfo = info;
 
-    if (!skillStpInfo.getField() || !skillStpInfo.getBall() || !skillStpInfo.getRobot()) return std::nullopt;
+    if (!skillStpInfo.getField() || !skillStpInfo.getBall() || !skillStpInfo.getRobot() || !skillStpInfo.getCurrentWorld()) return std::nullopt;
 
     skillStpInfo.setShouldAvoidOutOfField(false);
-
     auto targetPosition = calculateTargetPosition(info.getBall().value(), info.getField().value(), info.getEnemyRobot());
+    auto maxRobotVelocity = GameStateManager::getCurrentGameState().getRuleSet().getMaxRobotVel();
+    auto keeper = skillStpInfo.getRobot()->get();
+    int keeperId = GameStateManager::getCurrentGameState().keeperId;
+    Vector2 newBallPos;
+    InterceptInfo interceptionInfo = PositionComputations::calculateInterceptionInfo(skillStpInfo.getField().value(), skillStpInfo.getCurrentWorld(), keeperId);
+    if (interceptionInfo.interceptId == keeperId) targetPosition.first = interceptionInfo.interceptLocation;
     skillStpInfo.setPositionToMoveTo(targetPosition.first);
     skillStpInfo.setPidType(targetPosition.second);
 

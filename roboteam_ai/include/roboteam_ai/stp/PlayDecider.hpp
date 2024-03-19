@@ -41,6 +41,11 @@ class PlayDecider {
     static void lockPlay(const std::optional<std::string> playName);
 
     /**
+     * @brief Unlocks the play
+     */
+    static void unlockPlay();
+
+    /**
      * @brief This function checks if there is a locked play. If there is, pick that play.
      * If there isn't, pick the play with the highest score (either a locked play through the interface or just the highest scored play)
      * @param World The world pointer

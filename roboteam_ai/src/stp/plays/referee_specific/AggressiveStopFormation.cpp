@@ -4,6 +4,7 @@
 
 #include "stp/plays/referee_specific/AggressiveStopFormation.h"
 
+#include "stp/roles/Keeper.h"
 #include "stp/roles/passive/Formation.h"
 
 namespace rtt::ai::stp::play {
@@ -20,7 +21,7 @@ AggressiveStopFormation::AggressiveStopFormation() : Play() {
     /// Role creation, the names should be unique. The names are used in the stpInfos-map.
     roles = std::array<std::unique_ptr<Role>, rtt::ai::Constants::ROBOT_COUNT()>{
         // Roles is we play 6v6
-        std::make_unique<role::Formation>("keeper"),
+        std::make_unique<role::Keeper>("keeper"),
         std::make_unique<role::Formation>("formation_back_0"),
         std::make_unique<role::Formation>("formation_mid_0"),
         std::make_unique<role::Formation>("formation_front_0"),
@@ -59,10 +60,7 @@ Dealer::FlagMap AggressiveStopFormation::decideRoleFlags() const noexcept {
     return flagMap;
 }
 
-void AggressiveStopFormation::calculateInfoForRoles() noexcept {
-    PositionComputations::calculateInfoForKeeper(stpInfos, field, world);
-    PositionComputations::calculateInfoForFormation(stpInfos, roles, field, world);
-}
+void AggressiveStopFormation::calculateInfoForRoles() noexcept { PositionComputations::calculateInfoForFormation(stpInfos, roles, field, world); }
 
 const char* AggressiveStopFormation::getName() const { return "Aggressive Stop Formation"; }
 }  // namespace rtt::ai::stp::play

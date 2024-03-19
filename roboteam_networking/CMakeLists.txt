@@ -55,3 +55,5 @@ add_executable(roboteam_networking_syscheck
 target_link_libraries(roboteam_networking_syscheck
         PRIVATE roboteam_networking)
 
+gtest_discover_tests(roboteam_networking_syscheck)
+

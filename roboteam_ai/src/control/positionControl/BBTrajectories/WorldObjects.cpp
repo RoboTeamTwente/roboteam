@@ -27,7 +27,8 @@ std::optional<CollisionData> WorldObjects::getFirstCollision(const rtt::world::W
     if (avoidObjects.shouldAvoidDefenseArea) {
         calculateDefenseAreaCollisions(field, collisionDatas, pathPoints, timeStep, completedTimeSteps[robotId]);
     }
-    if (rtt::ai::GameStateManager::getCurrentGameState().getCommandId() == RefCommand::BALL_PLACEMENT_THEM) {
+    if (rtt::ai::GameStateManager::getCurrentGameState().getCommandId() == RefCommand::BALL_PLACEMENT_THEM ||
+        rtt::ai::GameStateManager::getCurrentGameState().getCommandId() == RefCommand::PREPARE_FORCED_START) {
         calculateBallPlacementCollision(world, collisionDatas, pathPoints, timeStep, completedTimeSteps[robotId]);
     }
     if (avoidObjects.shouldAvoidBall) {

@@ -12,7 +12,9 @@ void StrategyManager::setCurrentGameState(RefCommand command, RefCommand nextCom
                                         nextCommand == RefCommand::PREPARE_PENALTY_THEM || nextCommand == RefCommand::PREPARE_PENALTY_US)) {
         command = nextCommand;
     }
-
+    if (command != RefCommand::BALL_PLACEMENT_US && nextCommand == RefCommand::FORCED_START) {
+        command = RefCommand::PREPARE_FORCED_START;
+    }
     if (command == RefCommand::FORCED_START) {
         command = RefCommand::NORMAL_START;
     }
@@ -20,7 +22,7 @@ void StrategyManager::setCurrentGameState(RefCommand command, RefCommand nextCom
     if (command == RefCommand::BALL_PLACEMENT_US && nextCommand == RefCommand::DIRECT_FREE_US) {
         command = RefCommand::BALL_PLACEMENT_US_DIRECT;
     }
-    if (command == RefCommand::STOP && (nextCommand == RefCommand::FORCED_START || nextCommand == RefCommand::DIRECT_FREE_THEM)) {
+    if (command == RefCommand::STOP && nextCommand == RefCommand::DIRECT_FREE_THEM) {
         command = RefCommand::DIRECT_FREE_THEM_STOP;
     }
 

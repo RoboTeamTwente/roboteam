@@ -10,7 +10,7 @@ namespace rtt::ai {
 
 std::tuple<double, double> FieldComputations::getDefenseAreaMargin() {
     double theirDefenseAreaMargin = stp::control_constants::ROBOT_RADIUS + stp::control_constants::GO_TO_POS_ERROR_MARGIN;
-    double ourDefenseAreaMargin = stp::control_constants::ROBOT_RADIUS + stp::control_constants::GO_TO_POS_ERROR_MARGIN;
+    double ourDefenseAreaMargin = -stp::control_constants::ROBOT_RADIUS + stp::control_constants::GO_TO_POS_ERROR_MARGIN;
 
     RuleSetName ruleSetTitle = GameStateManager::getCurrentGameState().getRuleSet().getTitle();
     RefCommand currentGameState = GameStateManager::getCurrentGameState().getCommandId();

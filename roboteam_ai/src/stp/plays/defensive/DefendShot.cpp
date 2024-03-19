@@ -55,7 +55,7 @@ Dealer::FlagMap DefendShot::decideRoleFlags() const noexcept {
     Dealer::DealerFlag keeperFlag(DealerFlagTitle::KEEPER);
 
     flagMap.insert({"keeper", {DealerFlagPriority::KEEPER, {keeperFlag}}});
-    flagMap.insert({"harasser", {DealerFlagPriority::REQUIRED, {}, harasserInfo.harasserId}});
+    flagMap.insert({"harasser", {DealerFlagPriority::REQUIRED, {}, harasserInfo.interceptId}});
     flagMap.insert({"waller_0", {DealerFlagPriority::HIGH_PRIORITY, {}}});
     flagMap.insert({"waller_1", {DealerFlagPriority::HIGH_PRIORITY, {}}});
     flagMap.insert({"waller_2", {DealerFlagPriority::HIGH_PRIORITY, {}}});
@@ -71,8 +71,7 @@ Dealer::FlagMap DefendShot::decideRoleFlags() const noexcept {
 
 void DefendShot::calculateInfoForRoles() noexcept {
     harasserInfo = PositionComputations::calculateHarasserId(world, field);
-    PositionComputations::calculateInfoForKeeper(stpInfos, field, world);
-    PositionComputations::calculateInfoForHarasser(stpInfos, &roles, field, world, harasserInfo.timeToBall);
+    PositionComputations::calculateInfoForHarasser(stpInfos, &roles, field, world, harasserInfo.interceptLocation);
     PositionComputations::calculateInfoForDefendersAndWallers(stpInfos, roles, field, world, false);
     PositionComputations::calculateInfoForAttackers(stpInfos, roles, field, world);
 }

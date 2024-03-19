@@ -1,7 +1,3 @@
-//
-// Created by rolf on 24-06-21.
-//
-
 #include "filters/vision/robot/RobotOrientationFilter.h"
 RobotOrientationFilter::RobotOrientationFilter(const Eigen::Vector2d &initialState, const Eigen::Matrix2d &initialCovariance, double modelError, double measurementError,
                                                const Time &timeStamp)

@@ -1,7 +1,3 @@
-//
-// Created by john on 12/18/19.
-//
-
 #ifndef RTT_BALL_HPP
 #define RTT_BALL_HPP
 

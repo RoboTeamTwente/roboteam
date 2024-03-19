@@ -1,7 +1,3 @@
-//
-// Created by Yuhanun Citgez on 05/12/2019.
-//
-
 #ifndef RTT_UTILS_TYPE_TRAITS_H
 #define RTT_UTILS_TYPE_TRAITS_H
 

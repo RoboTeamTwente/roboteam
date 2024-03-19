@@ -1,7 +1,3 @@
-//
-// Created by Tijmen on 22-04-22.
-//
-
 #include "stp/plays/referee_specific/FreeKickUsPass.h"
 
 #include "stp/computations/PassComputations.h"

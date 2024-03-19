@@ -1,7 +1,3 @@
-//
-// Created by ratoone on 18-11-19.
-//
-
 #include "control/positionControl/PositionControl.h"
 
 #include "control/positionControl/BBTrajectories/BBTrajectory2D.h"

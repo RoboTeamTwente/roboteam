@@ -1,7 +1,3 @@
-//
-// Created by emiel on 24-02-20.
-//
-
 #ifndef RTT_CIRCLE_H
 #define RTT_CIRCLE_H
 

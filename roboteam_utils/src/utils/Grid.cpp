@@ -1,7 +1,3 @@
-//
-// Created by jesse on 18-05-20.
-//
-
 #include "Grid.h"
 namespace rtt {
 

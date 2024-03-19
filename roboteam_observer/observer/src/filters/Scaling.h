@@ -1,7 +1,3 @@
-//
-// Created by rolf on 16-11-19.
-//
-
 #ifndef RTT_SCALING_H
 #define RTT_SCALING_H
 

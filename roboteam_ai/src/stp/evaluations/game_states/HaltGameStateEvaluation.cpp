@@ -1,7 +1,3 @@
-//
-// Created by ratoone on 27-03-20.
-//
-
 #include "stp/evaluations/game_states/HaltGameStateEvaluation.h"
 
 #include "utilities/GameStateManager.hpp"

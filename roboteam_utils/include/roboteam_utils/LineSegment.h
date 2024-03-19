@@ -12,9 +12,6 @@ class Line;
 /**
  * The LineSegment class represents a finite length line that starts at a given point and ends at a given point. If you want to use an infinite length Line instead then use the
  * Line class instead.
- * @author Created by: Rolf van der Hulst <br>
- *         Documented and redesigned by: Haico Dorenbos
- * @since 2019-05-15
  */
 class LineSegment {
    public:

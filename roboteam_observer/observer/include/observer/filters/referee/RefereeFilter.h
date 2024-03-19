@@ -1,7 +1,3 @@
-//
-// Created by rolf on 05-11-20.
-//
-
 #ifndef RTT_REFEREEFILTER_H
 #define RTT_REFEREEFILTER_H
 

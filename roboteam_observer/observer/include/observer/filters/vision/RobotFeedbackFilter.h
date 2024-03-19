@@ -1,7 +1,3 @@
-//
-// Created by rolf on 26-05-22.
-//
-
 #ifndef RTT_ROBOTFEEDBACKFILTER_H
 #define RTT_ROBOTFEEDBACKFILTER_H
 

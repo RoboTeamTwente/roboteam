@@ -1,7 +1,3 @@
-//
-// Created by emiel on 24-02-20.
-//
-
 #include "Circle.h"
 
 #include "Polynomial.h"

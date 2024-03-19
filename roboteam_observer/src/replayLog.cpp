@@ -1,7 +1,3 @@
-//
-// Created by rolf on 14-5-23.
-//
-
 #include <roboteam_logging/LogFileReader.h>
 
 #include "Handler.h"

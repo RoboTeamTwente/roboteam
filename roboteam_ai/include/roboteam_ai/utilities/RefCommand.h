@@ -1,7 +1,3 @@
-//
-// Created by Martin Miksik on 05/05/2023.
-//
-
 #ifndef RTT_REFCOMMAND_H
 #define RTT_REFCOMMAND_H
 

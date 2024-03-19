@@ -1,7 +1,3 @@
-//
-// Created by jessevw on 03.03.20.
-//
-
 #ifndef RTT_TACTIC_H
 #define RTT_TACTIC_H
 

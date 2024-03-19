@@ -1,7 +1,3 @@
-//
-// Created by maxl on 09-02-21.
-//
-
 #ifndef RTT_POSITIONCOMPUTATIONS_H
 #define RTT_POSITIONCOMPUTATIONS_H
 

@@ -1,7 +1,3 @@
-//
-// Created by kjhertenberg on 13-5-19.
-//
-
 #include "filters/vision/WorldFilter.h"
 
 #include "filters/vision/ball/BallAssigner.h"

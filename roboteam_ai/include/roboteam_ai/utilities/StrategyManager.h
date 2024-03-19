@@ -1,7 +1,3 @@
-/*
- * Created by mrlukasbos on 9-11-18.
- */
-
 #ifndef ROBOTEAM_AI_STRATEGYMANAGER_H
 #define ROBOTEAM_AI_STRATEGYMANAGER_H
 

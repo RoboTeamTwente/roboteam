@@ -1,7 +1,3 @@
-//
-// Created by john on 12/16/19.
-//
-
 #ifndef RTT_WORLD_HPP
 #define RTT_WORLD_HPP
 #include <proto/RobotFeedback.pb.h>

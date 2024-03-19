@@ -1,7 +1,3 @@
-//
-// Created by rolf on 23-06-21.
-//
-
 #include "filters/vision/VisionFilter.h"
 proto::World VisionFilter::process(const std::vector<proto::SSL_WrapperPacket>& packets, const std::vector<rtt::RobotsFeedback>& robotData) {
     processGeometry(packets);

@@ -1,7 +1,3 @@
-//
-// Created by rolf on 18-10-20.
-//
-
 #include "Polynomial.h"
 
 #include <cmath>

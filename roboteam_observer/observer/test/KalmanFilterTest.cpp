@@ -1,7 +1,3 @@
-//
-// Created by rolf on 22-11-19.
-//
-
 #include <gtest/gtest.h>
 #include <observer/filters/vision/KalmanFilter.h>
 

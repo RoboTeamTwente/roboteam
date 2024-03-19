@@ -1,7 +1,3 @@
-//
-// Created by rolf on 26-05-22.
-//
-
 #include "filters/vision/RobotFeedbackFilter.h"
 
 void RobotFeedbackFilter::process(const std::vector<rtt::RobotsFeedback>& feedback) {

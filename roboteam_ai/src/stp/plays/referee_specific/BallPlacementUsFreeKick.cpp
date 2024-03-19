@@ -1,7 +1,3 @@
-//
-// Created by Luuk on 31/1/2024.
-//
-
 #include "stp/plays/referee_specific/BallPlacementUsFreeKick.h"
 
 #include "stp/roles/Keeper.h"

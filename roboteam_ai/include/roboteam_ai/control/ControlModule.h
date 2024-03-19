@@ -1,7 +1,3 @@
-//
-// Created by jaro on 15-10-20.
-//
-
 #ifndef RTT_CONTROLMODULE_H
 #define RTT_CONTROLMODULE_H
 

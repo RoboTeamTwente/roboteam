@@ -1,7 +1,3 @@
-//
-// Created by rolf on 05-11-20.
-//
-
 #include "filters/referee/RefereeFilter.h"
 
 void RefereeFilter::process(const std::vector<proto::Referee> &refereePackets) {

@@ -1,7 +1,3 @@
-//
-// Created by rolf on 29-06-21.
-//
-
 #include "filters/vision/ball/BallObservation.h"
 
 #include <utility>

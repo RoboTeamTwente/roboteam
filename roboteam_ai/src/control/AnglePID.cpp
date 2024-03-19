@@ -1,7 +1,3 @@
-//
-// Created by rolf on 01-06-21.
-//
-
 #include "control/AnglePID.h"
 
 #include <algorithm>

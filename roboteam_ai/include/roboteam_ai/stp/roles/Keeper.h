@@ -1,7 +1,3 @@
-//
-// Created by jordi on 08-04-20.
-//
-
 #ifndef RTT_KEEPER_H
 #define RTT_KEEPER_H
 

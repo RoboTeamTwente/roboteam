@@ -1,7 +1,3 @@
-//
-// Created by john on 1/13/20.
-//
-
 #ifndef RTT_BALL_VIEW_HPP
 #define RTT_BALL_VIEW_HPP
 

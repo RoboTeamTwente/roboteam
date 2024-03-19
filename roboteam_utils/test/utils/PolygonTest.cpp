@@ -1,7 +1,3 @@
-//
-// Created by rolf on 14-5-19.
-//
-
 #include <gtest/gtest.h>
 #include <math.h>
 

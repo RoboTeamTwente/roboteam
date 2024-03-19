@@ -1,7 +1,3 @@
-//
-// Created by john on 1/6/20.
-//
-
 #include "world/views/WorldDataView.hpp"
 
 #include "stp/constants/ControlConstants.h"

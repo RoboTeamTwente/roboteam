@@ -1,7 +1,3 @@
-//
-// Created by rolf on 21-10-20.
-//
-
 #include "parameters/RobotParameterDatabase.h"
 
 TwoTeamRobotParameters RobotParameterDatabase::update(const proto::Referee &refMessage) {

@@ -1,7 +1,3 @@
-//
-// Created by rolf on 22-01-20.
-//
-
 #ifndef RTT_DEFINITIONS_H
 #define RTT_DEFINITIONS_H
 

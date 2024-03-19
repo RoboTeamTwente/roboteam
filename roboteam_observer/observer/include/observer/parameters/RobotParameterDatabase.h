@@ -1,7 +1,3 @@
-//
-// Created by rolf on 21-10-20.
-//
-
 #ifndef RTT_ROBOTPARAMETERDATABASE_H
 #define RTT_ROBOTPARAMETERDATABASE_H
 #include <proto/messages_robocup_ssl_referee.pb.h>

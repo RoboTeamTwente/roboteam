@@ -1,11 +1,3 @@
-//
-// Created by rolf on 05-11-19.
-//
-
-//
-// Created by rolf on 05-08-20.
-//
-
 #include "filters/vision/robot/RobotFilter.h"
 
 bool RobotFilter::processDetection(const RobotObservation &observation) {

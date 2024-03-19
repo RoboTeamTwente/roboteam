@@ -1,7 +1,3 @@
-//
-// Created by timovdk on 3/10/20.
-//
-
 #include "stp/roles/TestRole.h"
 
 #include "stp/tactics/TestTactic.h"

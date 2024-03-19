@@ -1,7 +1,3 @@
-//
-// Created by rolf on 26-10-20.
-//
-
 #ifndef RTT_GEOMETRYFILTER_H
 #define RTT_GEOMETRYFILTER_H
 

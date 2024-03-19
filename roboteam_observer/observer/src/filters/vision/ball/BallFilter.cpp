@@ -1,7 +1,3 @@
-//
-// Created by rolf on 17-11-19.
-//
-
 #include "filters/vision/ball/BallFilter.h"
 
 #include <utility>

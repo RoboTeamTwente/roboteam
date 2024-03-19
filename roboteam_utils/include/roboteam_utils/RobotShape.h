@@ -1,7 +1,3 @@
-//
-// Created by rolf on 26-04-20.
-//
-
 #ifndef ROBOTEAM_UTILS_ROBOTSHAPE_H_
 #define ROBOTEAM_UTILS_ROBOTSHAPE_H_
 

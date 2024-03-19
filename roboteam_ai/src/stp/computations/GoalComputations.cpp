@@ -1,7 +1,3 @@
-//
-// Created by maxl on 11-02-21.
-//
-
 #include "stp/computations/GoalComputations.h"
 
 #include <roboteam_utils/Grid.h>

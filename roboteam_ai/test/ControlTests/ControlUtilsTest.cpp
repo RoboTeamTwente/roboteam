@@ -1,7 +1,3 @@
-//
-// Created by rolf on 05/12/18.
-//
-
 #include <gtest/gtest.h>
 #include <roboteam_utils/Angle.h>
 

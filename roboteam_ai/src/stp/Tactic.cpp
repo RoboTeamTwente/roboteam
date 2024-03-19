@@ -1,7 +1,3 @@
-//
-// Created by jessevw on 03.03.20.
-//
-
 #include "stp/Tactic.h"
 
 #include <roboteam_utils/Print.h>

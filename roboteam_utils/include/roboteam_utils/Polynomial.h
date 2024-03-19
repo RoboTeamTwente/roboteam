@@ -1,7 +1,3 @@
-//
-// Created by rolf on 18-10-20.
-//
-
 #ifndef RTT_POLYNOMIAL_H
 #define RTT_POLYNOMIAL_H
 #include <optional>

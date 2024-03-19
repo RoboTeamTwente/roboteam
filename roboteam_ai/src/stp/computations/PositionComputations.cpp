@@ -1,7 +1,3 @@
-//
-// Created by maxl on 09-02-21.
-//
-
 #include "stp/computations/PositionComputations.h"
 
 #include <roboteam_utils/Grid.h>

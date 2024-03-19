@@ -1,8 +1,3 @@
-//
-// Created by ratoone on 27-03-20.
-/// T/F Invariant if ENEMY has BALL
-//
-
 #include "stp/evaluations/global/TheyHaveBallGlobalEvaluation.h"
 
 namespace rtt::ai::stp::evaluation {

@@ -1,7 +1,3 @@
-//
-// Created by rolf on 17-11-19.
-//
-
 #ifndef RTT_BALLFILTER_H
 #define RTT_BALLFILTER_H
 

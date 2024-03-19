@@ -1,7 +1,3 @@
-//
-// Created by jordi on 26-03-20.
-//
-
 #ifndef RTT_DEFENDER_H
 #define RTT_DEFENDER_H
 

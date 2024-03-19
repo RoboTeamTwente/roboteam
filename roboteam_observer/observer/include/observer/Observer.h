@@ -1,7 +1,3 @@
-//
-// Created by rolf on 19-10-20.
-//
-
 #ifndef RTT_OBSERVER_H
 #define RTT_OBSERVER_H
 

@@ -1,7 +1,3 @@
-//
-// Created by Alexander on 29/01/2022.
-//
-
 #ifndef RTT_KEEPERKICKBALL_H
 #define RTT_KEEPERKICKBALL_H
 

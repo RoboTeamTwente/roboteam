@@ -1,7 +1,3 @@
-//
-// Created by timovdk on 4/28/20.
-//
-
 #include "stp/plays/referee_specific/PenaltyThem.h"
 
 #include "stp/roles/Keeper.h"

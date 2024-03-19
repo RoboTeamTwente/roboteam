@@ -1,7 +1,3 @@
-//
-// Created by rolf on 08-07-21.
-//
-
 #include "observer/filters/vision/ball/BallAssigner.h"
 
 #include <algorithm>

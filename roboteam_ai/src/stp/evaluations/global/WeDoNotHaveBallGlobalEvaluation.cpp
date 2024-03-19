@@ -1,7 +1,3 @@
-//
-// Created by Luuk and Jorn on 12-12-23.
-//
-
 #include "stp/evaluations/global/WeDoNotHaveBallGlobalEvaluation.h"
 
 namespace rtt::ai::stp::evaluation {

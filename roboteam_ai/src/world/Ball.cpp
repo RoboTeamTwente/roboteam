@@ -1,7 +1,3 @@
-//
-// Created by john on 12/18/19.
-//
-
 #include "world/Ball.hpp"
 
 #include "gui/Out.h"

@@ -1,7 +1,3 @@
-//
-// Created by timovdk on 3/12/20.
-//
-
 #ifndef RTT_KICKATPOS_H
 #define RTT_KICKATPOS_H
 

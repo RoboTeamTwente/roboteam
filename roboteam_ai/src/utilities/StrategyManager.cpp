@@ -1,7 +1,3 @@
-//
-// Created by mrlukasbos on 9-11-18.
-//
-
 #include "utilities/StrategyManager.h"
 
 #include "stp/constants/ControlConstants.h"

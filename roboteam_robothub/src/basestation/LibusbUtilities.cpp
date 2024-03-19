@@ -1,4 +1,3 @@
-// Created by emiel on 21-05-21.
 #include "../../include/basestation/LibusbUtilities.h"
 
 #include <basestation/LibusbUtilities.h>

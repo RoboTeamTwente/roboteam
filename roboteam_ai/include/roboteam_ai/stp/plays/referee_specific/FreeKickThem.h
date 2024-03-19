@@ -1,7 +1,3 @@
-//
-// Created by jordi on 07-05-20.
-//
-
 #ifndef RTT_FREEKICKTHEM_H
 #define RTT_FREEKICKTHEM_H
 

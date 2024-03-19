@@ -1,10 +1,3 @@
-//
-// Created by ratoone on 10-03-20.
-/// Moves the robot to the BALL in a straight line and ROTATES the robot towards to ball.
-
-/// ACTIVE
-//
-
 #include "stp/tactics/active/GetBall.h"
 
 #include <world/World.hpp>

@@ -1,7 +1,3 @@
-//
-// Created by rolf on 29-06-21.
-//
-
 #include "filters/vision/DetectionFrame.h"
 DetectionFrame::DetectionFrame(const proto::SSL_DetectionFrame& protoFrame)
     : cameraID(protoFrame.camera_id()), timeCaptured{protoFrame.t_capture()}, timeSent{protoFrame.t_sent()} {

@@ -1,7 +1,3 @@
-//
-// Created by Lukas Bos on 24/09/2019.
-//
-
 #include "Timer.h"
 
 #include <Timer.h>

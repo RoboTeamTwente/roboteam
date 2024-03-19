@@ -1,7 +1,3 @@
-//
-// Created by john on 3/9/20.
-//
-
 #include "stp/Role.hpp"
 
 #include <roboteam_utils/Print.h>

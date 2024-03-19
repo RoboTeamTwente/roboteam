@@ -1,7 +1,3 @@
-//
-// Created by rolf on 23-09-21.
-//
-
 #include "filters/vision/CameraMap.h"
 
 void CameraMap::addCamera(const Camera &camera) { map.insert({camera.getID(), camera}); }

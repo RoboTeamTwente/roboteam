@@ -1,7 +1,3 @@
-//
-// Created by rolf on 06-06-22.
-//
-
 #include "BackLogger.h"
 
 #include "LogFileWriter.h"

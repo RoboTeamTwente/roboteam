@@ -1,7 +1,3 @@
-//
-// Created by rolf on 26-10-20.
-//
-
 #include "filters/vision/GeometryFilter.h"
 
 bool GeometryFilter::process(const proto::SSL_GeometryData& geometryData) {

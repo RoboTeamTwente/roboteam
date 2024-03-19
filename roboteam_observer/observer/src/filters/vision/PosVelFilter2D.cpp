@@ -1,7 +1,3 @@
-//
-// Created by rolf on 24-06-21.
-//
-
 #include "filters/vision/PosVelFilter2D.h"
 
 bool PosVelFilter2D::predict(const Time &timeStamp) {

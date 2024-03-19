@@ -1,7 +1,3 @@
-//
-// Created by rolf on 26-10-20.
-//
-
 #ifndef RTT_ROBOTPARAMETERS_H
 #define RTT_ROBOTPARAMETERS_H
 

@@ -1,7 +1,3 @@
-//
-// Created by rolf on 19-10-20.
-//
-
 #include "Observer.h"
 
 #include <RobotFeedbackNetworker.hpp>

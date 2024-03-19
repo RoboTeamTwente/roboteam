@@ -1,7 +1,3 @@
-//
-// Created by rolf on 23-09-21.
-//
-
 #ifndef RTT_CAMERA_H
 #define RTT_CAMERA_H
 

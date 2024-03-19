@@ -1,7 +1,3 @@
-//
-// Created by rolf on 26-10-20.
-//
-
 #include "../../include/observer/data/RobotParameters.h"
 
 RobotParameters RobotParameters::from_default() {

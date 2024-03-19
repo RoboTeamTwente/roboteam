@@ -1,7 +1,3 @@
-//
-// Created by rolf on 29-06-21.
-//
-
 #ifndef RTT_ROBOTEAM_OBSERVER_OBSERVER_SRC_FILTERS_VISION_DETECTIONFRAME_H_
 #define RTT_ROBOTEAM_OBSERVER_OBSERVER_SRC_FILTERS_VISION_DETECTIONFRAME_H_
 #include <proto/messages_robocup_ssl_detection.pb.h>

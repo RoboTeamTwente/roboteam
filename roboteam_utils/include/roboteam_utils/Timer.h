@@ -1,7 +1,3 @@
-//
-// Created by Lukas Bos on 24/09/2019.
-//
-
 #ifndef RTT_TIMER_H
 #define RTT_TIMER_H
 

@@ -1,7 +1,3 @@
-//
-// Created by maxl on 11-02-21.
-//
-
 #include <roboteam_utils/Grid.h>
 #include <stp/computations/PassComputations.h>
 #include <stp/computations/PositionComputations.h>

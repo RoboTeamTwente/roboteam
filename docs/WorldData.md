@@ -1,7 +1,7 @@
 # WorldData # 
 
 ## General ##
-[WorldData]() itself is just a representation of the current world. It receives data from [roboteam_world](http://://github.com/roboteamtwente/roboteam_world) and transforms it into a WorldData structure.
+[WorldData]() itself is just a representation of the current world. It receives data from [roboteam_observer](http://://github.com/roboteamtwente/roboteam_world) and transforms it into a WorldData structure.
 
 WorldData itself is not that complicated, it serves to be a simple data-only structure with some getters and setters.
 

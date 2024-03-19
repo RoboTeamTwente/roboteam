@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.22)
-project(roboteam_world)
+project(roboteam_observer)
 
 find_package(Eigen3 REQUIRED)
 find_package(Qt5 REQUIRED COMPONENTS Network)

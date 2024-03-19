@@ -1,5 +1,5 @@
-#ifndef ROBOTEAM_WORLD_KALMANFILTER_H
-#define ROBOTEAM_WORLD_KALMANFILTER_H
+#ifndef ROBOTEAM_OBSERVER_KALMANFILTER_H
+#define ROBOTEAM_OBSERVER_KALMANFILTER_H
 
 #include <proto/World.pb.h>
 #include <proto/WorldRobot.pb.h>
@@ -59,4 +59,4 @@ class WorldFilter {
     static void updateRobotsNotSeen(const DetectionFrame& frame, robotMap& robots);
 };
 
-#endif  // ROBOTEAM_WORLD_KALMANFILTER_H
+#endif  // ROBOTEAM_OBSERVER_KALMANFILTER_H

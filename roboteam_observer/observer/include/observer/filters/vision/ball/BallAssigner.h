@@ -2,8 +2,8 @@
 // Created by rolf on 08-07-21.
 //
 
-#ifndef RTT_ROBOTEAM_WORLD_OBSERVER_SRC_FILTERS_VISION_BALL_BALLASSIGNER_H_
-#define RTT_ROBOTEAM_WORLD_OBSERVER_SRC_FILTERS_VISION_BALL_BALLASSIGNER_H_
+#ifndef RTT_ROBOTEAM_OBSERVER_OBSERVER_SRC_FILTERS_VISION_BALL_BALLASSIGNER_H_
+#define RTT_ROBOTEAM_OBSERVER_OBSERVER_SRC_FILTERS_VISION_BALL_BALLASSIGNER_H_
 #include "BallFilter.h"
 
 /**
@@ -32,4 +32,4 @@ BallAssignmentResult assign_balls(const std::vector<CameraGroundBallPrediction>&
 BallObservation mergeObservationsByArea(const std::vector<BallObservation>& observations);
 }  // namespace BallAssigner
 
-#endif  // RTT_ROBOTEAM_WORLD_OBSERVER_SRC_FILTERS_VISION_BALL_BALLASSIGNER_H_
+#endif  // RTT_ROBOTEAM_OBSERVER_OBSERVER_SRC_FILTERS_VISION_BALL_BALLASSIGNER_H_

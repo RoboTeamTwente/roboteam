@@ -75,11 +75,11 @@ NOTE: if you dont't specify COMMIT=<commit>, the default will be origin/main~1
 2. Start services:
 ```
 cd $ROBOTEAM_REPO/docker/runner
-docker compose --profile <simulator / diff / game> up -d
+docker compose --profile <simulator / diff / game / autoref> up -d
 ```
 When you want to stop services:
 ```
-docker compose --profile <simulator / diff /game> down
+docker compose --profile <simulator / diff / game / autoref> down
 ```
 
 Note: you may want to use `docker logs -t <container_name>` to see output of a container (service).

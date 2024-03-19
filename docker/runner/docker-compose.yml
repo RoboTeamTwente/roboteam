@@ -90,7 +90,7 @@ services:
       - LD_LIBRARY_PATH=/home/roboteamtwente/lib/
     volumes:
       - ../../build/release/:/home/roboteamtwente/
-    profiles: ["game"]
+    profiles: ["game","autoref"]
 
   roboteam_robothub_sim:
     image: roboteamtwente/roboteam:development
@@ -164,7 +164,7 @@ services:
       - GRADLE_USER_HOME=/home/roboteamtwente/.cache # Cache gradle dependencies
     volumes:
       - ../../roboteam_autoref/:/home/roboteamtwente/
-    profiles: ["simulator","diff","game"]
+    profiles: ["simulator","diff","game","autoref"]
 
   erforce_autoref_sim:
     image: roboteamtwente/roboteam:development

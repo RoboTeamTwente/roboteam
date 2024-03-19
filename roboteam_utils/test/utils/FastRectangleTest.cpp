@@ -111,3 +111,24 @@ TEST(FastRectangleTest, equals) {
         ASSERT_EQ(r, copy);
     }
 }
+
+TEST(FastRectangleTest, edgeCases) {
+    // Zero width and height
+    FastRectangle zeroRectangle(Vector2(0, 0), Vector2(0, 0));
+    EXPECT_FALSE(zeroRectangle.contains(Vector2(1, 1)));
+
+    // Negative width and height
+    FastRectangle negativeRectangle(Vector2(1, 1), Vector2(-1, -1));
+    EXPECT_TRUE(negativeRectangle.contains(Vector2(0, 0)));
+}
+
+TEST(FastRectangleTest, randomizedTesting) {
+    for (int i = 0; i < 50; i++) {
+        Vector2 a(SimpleRandom::getDouble(-20, -15), SimpleRandom::getDouble(-20, -15));
+        Vector2 b(SimpleRandom::getDouble(15, 20), SimpleRandom::getDouble(15, 20));
+        FastRectangle r(a, b);
+
+        Vector2 point(SimpleRandom::getDouble(-15, 15), SimpleRandom::getDouble(-15, 15));
+        EXPECT_EQ(r.contains(r.project(point)), true);
+    }
+}

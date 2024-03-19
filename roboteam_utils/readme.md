@@ -5,7 +5,7 @@ This repository is a library containing utility classes that can be used in any 
 Particularly useful are the functions for geometry and vector calculus.
 
 Provides library functionality for example for the following: 
-- Geometry (Polygon, Rectangle, Triangle, Line, etc.)
+- Geometry (Polygon, Rectangle, Line, etc.)
   - Intersections
   - Area  
   - Distances

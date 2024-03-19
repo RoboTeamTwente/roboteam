@@ -32,50 +32,6 @@ double toRadians(double degrees);
 double cleanAngle(double angle);
 
 /**
- * @brief ???
- *
- * @param vector1 First Vector
- * @param vector2 Second vecor
- * @param maxAngleDiff ??
- * @return Vector2
- */
-Vector2 limitAngleDiff(Vector2 vector1, const Vector2& vector2, double maxAngleDiff);
-
-/**
- * @brief Checks whether a point is in a circle
- *
- * @param center Center of the circle
- * @param radius Radius of the circle
- * @param point Point to check
- * @return true True if \ref point is in circle
- * @return false False if \ref point is not in circle
- */
-bool isPointInCircle(const Vector2& center, double radius, const Vector2& point);
-
-Vector2 worldToRobotFrame(const Vector2& requiredv, double rotation);
-
-/**
- * @brief Computes the angle between 2 vectors
- *
- * @param robotPos Vector one
- * @param faceTowardsPos Vector two
- * @return double Computed angle, in radians
- */
-double computeAngle(const Vector2& robotPos, const Vector2& faceTowardsPos);
-
-bool isBetweenAngles(double a1, double a2, double testAngle);
-
-double getClockwiseAngle(double a1, double a2);
-
-double getCounterClockwiseAngle(double a1, double a2);
-
-double smoothStep(const double& x);
-
-double distanceFromPointToLine(const Vector2& P1, const Vector2& P2, const Vector2& pos);
-
-Vector2 projectPointOntoLine(const Vector2& P1, const Vector2& P2, const Vector2& pos);
-
-/**
  * @brief Calculates signum of an integral value
  *
  * @tparam T Type of integral, has to be zero initializable

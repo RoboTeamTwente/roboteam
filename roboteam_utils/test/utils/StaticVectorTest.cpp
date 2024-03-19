@@ -4,6 +4,7 @@
 
 #include <gtest/gtest.h>
 
+#include <numeric>
 #include <roboteam_utils/containers/static_vector.hpp>
 using namespace rtt::collections;
 TEST(static_vector, initialisation) {
@@ -37,11 +38,8 @@ TEST(static_vector, erase) {
     EXPECT_EQ(x[0], 3.0);
     EXPECT_EQ(x[1], 5.0);
     EXPECT_EQ(x.size(), 2);
-    // CHeck if begin and end pointers are properly adjusted as well
-    double sum = 0;
-    for (auto& elem : x) {
-        sum += elem;
-    }
+    // Check if begin and end pointers are properly adjusted as well
+    double sum = std::accumulate(x.begin(), x.end(), 0);
     EXPECT_EQ(sum, 8.0);
 }
 
@@ -55,22 +53,13 @@ TEST(static_vector, range_based_for_loop) {
     static_vector<double, 3> x;
     x.push_back(3.0);
     x.push_back(4.0);
-    double sum = 0.0;
-    for (const auto& elem : x) {
-        sum += elem;
-    }
+    double sum = std::accumulate(x.begin(), x.end(), 0);
     EXPECT_EQ(sum, 7.0);
     x.push_back(5.0);
-    double sum2 = 0.0;
-    for (auto& elem : x) {
-        sum2 += elem;
-    }
+    double sum2 = std::accumulate(x.begin(), x.end(), 0);
     EXPECT_EQ(sum2, 12.0);
 
-    double sum3 = 0.0;
-    for (auto elem : x) {
-        sum3 += elem;
-    }
+    double sum3 = std::accumulate(x.begin(), x.end(), 0);
     EXPECT_EQ(sum3, 12.0);
     EXPECT_DOUBLE_EQ(x.front(), *x.data());
 }
@@ -91,10 +80,9 @@ TEST(static_vector, none_movable) {
     MockClass data3{1.0};
     static_vector<MockClass, 3> dataList = {data, data2, data3};
     const static_vector<MockClass, 3> copy = dataList;
-    double sum = 0;
-    for (const auto& elem : copy) {
-        sum += elem.value;
-    }
+
+    double sum = std::accumulate(copy.begin(), copy.end(), 0.0, [](double sum, const auto& elem) { return sum + elem.value; });
+
     EXPECT_DOUBLE_EQ(sum, 6.0);
 
     const MockClass& read = copy[1];

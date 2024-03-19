@@ -99,7 +99,7 @@ PassInfo PassComputations::calculatePass(gen::ScoreProfile profile, const rtt::w
     }
     if (passInfo.passScore == 0) {
         // If no good pass is found, pass to the robot furthest in the field
-        auto furthestRobotIt = std::max_element(possibleReceiverLocations.begin(), possibleReceiverLocations.end(), [](auto& p1, auto& p2) { return p1.x > p2.x; });
+        auto furthestRobotIt = std::max_element(possibleReceiverLocations.begin(), possibleReceiverLocations.end(), [](const auto& p1, const auto& p2) { return p1.x > p2.x; });
         // We should always be able to find a furthest robot, this check avoids the AI crashing in case something does go wrong due to changes/bugs
         passInfo.passLocation = (furthestRobotIt != possibleReceiverLocations.end()) ? *furthestRobotIt : Vector2();
     }
@@ -124,7 +124,7 @@ bool PassComputations::pointIsValidPassLocation(Vector2 point, Vector2 ballLocat
     if (!FieldComputations::pointIsValidPosition(field, point)) return false;
     // Pass is valid if the above conditions are met and there is a robot whose travel time is smaller than the balls travel time (i.e. the robot can actually receive the ball)
     auto ballTravelTime = calculateBallTravelTime(ballLocation, passerLocation, passerVelocity, point);
-    for (int i = 0; i < possibleReceiverLocations.size(); i++) {
+    for (std::vector<rtt::Vector2>::size_type i = 0; i < possibleReceiverLocations.size(); i++) {
         if (calculateRobotTravelTime(possibleReceiverLocations[i], possibleReceiverVelocities[i], point) < ballTravelTime) return true;
     }
     return false;

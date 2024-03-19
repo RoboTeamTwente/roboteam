@@ -105,7 +105,7 @@ double Hungarian::Solve(vector<vector<double>>& DistMatrix, vector<int>& Assignm
 // Solve optimal solution for assignment problem using Munkres algorithm, also known as Hungarian Algorithm.
 //********************************************************//
 void Hungarian::assignmentoptimal(int* assignment, double* cost, double* distMatrixIn, int nOfRows, int nOfColumns) {
-    double *distMatrix, *distMatrixTemp, *distMatrixEnd, *columnEnd, value, minValue;
+    double *distMatrix, *distMatrixTemp, *distMatrixEnd, value, minValue;
     bool *coveredColumns, *coveredRows, *starMatrix, *newStarMatrix, *primeMatrix;
     int nOfElements, minDim, row, col;
 
@@ -171,7 +171,7 @@ void Hungarian::assignmentoptimal(int* assignment, double* cost, double* distMat
         for (col = 0; col < nOfColumns; col++) {
             /* find the smallest element in the column */
             distMatrixTemp = distMatrix + nOfRows * col;
-            columnEnd = distMatrixTemp + nOfRows;
+            double* columnEnd = distMatrixTemp + nOfRows;
 
             minValue = *distMatrixTemp++;
             while (distMatrixTemp < columnEnd) {
@@ -214,22 +214,21 @@ void Hungarian::assignmentoptimal(int* assignment, double* cost, double* distMat
 
 /********************************************************/
 void Hungarian::buildassignmentvector(int* assignment, bool* starMatrix, int nOfRows, int nOfColumns) {
-    int row, col;
-
-    for (row = 0; row < nOfRows; row++)
-        for (col = 0; col < nOfColumns; col++)
+    int row;
+    for (row = 0; row < nOfRows; row++) {
+        for (int col = 0; col < nOfColumns; col++) {
             if (starMatrix[row + nOfRows * col]) {
                 assignment[row] = col;
                 break;
             }
+        }
+    }
 }
 
 /********************************************************/
 void Hungarian::computeassignmentcost(int* assignment, double* cost, double* distMatrix, int nOfRows) {
-    int row, col;
-
-    for (row = 0; row < nOfRows; row++) {
-        col = assignment[row];
+    for (int row = 0; row < nOfRows; row++) {
+        int col = assignment[row];
         if (col >= 0) *cost += distMatrix[row + nOfRows * col];
     }
 }
@@ -237,13 +236,12 @@ void Hungarian::computeassignmentcost(int* assignment, double* cost, double* dis
 /********************************************************/
 void Hungarian::step2a(int* assignment, double* distMatrix, bool* starMatrix, bool* newStarMatrix, bool* primeMatrix, bool* coveredColumns, bool* coveredRows, int nOfRows,
                        int nOfColumns, int minDim) {
-    bool *starMatrixTemp, *columnEnd;
     int col;
 
     /* cover every column containing a starred zero */
     for (col = 0; col < nOfColumns; col++) {
-        starMatrixTemp = starMatrix + nOfRows * col;
-        columnEnd = starMatrixTemp + nOfRows;
+        bool* starMatrixTemp = starMatrix + nOfRows * col;
+        bool* columnEnd = starMatrixTemp + nOfRows;
         while (starMatrixTemp < columnEnd) {
             if (*starMatrixTemp++) {
                 coveredColumns[col] = true;
@@ -316,7 +314,7 @@ void Hungarian::step3(int* assignment, double* distMatrix, bool* starMatrix, boo
 /********************************************************/
 void Hungarian::step4(int* assignment, double* distMatrix, bool* starMatrix, bool* newStarMatrix, bool* primeMatrix, bool* coveredColumns, bool* coveredRows, int nOfRows,
                       int nOfColumns, int minDim, int row, int col) {
-    int n, starRow, starCol, primeRow, primeCol;
+    int n, starRow, starCol, primeCol;
     int nOfElements = nOfRows * nOfColumns;
 
     /* generate temporary copy of starMatrix */
@@ -335,7 +333,7 @@ void Hungarian::step4(int* assignment, double* distMatrix, bool* starMatrix, boo
         newStarMatrix[starRow + nOfRows * starCol] = false;
 
         /* find primed zero in current row */
-        primeRow = starRow;
+        int primeRow = starRow;
         for (primeCol = 0; primeCol < nOfColumns; primeCol++)
             if (primeMatrix[primeRow + nOfRows * primeCol]) break;
 

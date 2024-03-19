@@ -22,9 +22,7 @@ size_t Polygon::amountOfVertices() const { return vertices.size(); }
 Vector2 Polygon::operator[](size_t idx) const { return vertices[idx]; }
 
 void Polygon::move(const Vector2 &moveBy) {
-    for (auto &vertex : vertices) {
-        vertex += moveBy;
-    }
+    std::transform(vertices.begin(), vertices.end(), vertices.begin(), [&moveBy](Vector2 &vertex) { return vertex += moveBy; });
 }
 
 std::vector<LineSegment> Polygon::getBoundary() const {

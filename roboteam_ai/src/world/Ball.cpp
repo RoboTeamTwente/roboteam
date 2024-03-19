@@ -20,7 +20,7 @@ Ball::Ball(const proto::WorldBall& copy, const World* data) : position{copy.pos(
         initBallAtExpectedPosition(data);
     }
     updateBallAtRobotPosition(data);
-    updateExpectedBallEndPosition(data);
+    updateExpectedBallEndPosition();
 
     if (position != Vector2()) {
         std::array<rtt::Vector2, 1> point = {position};
@@ -43,7 +43,7 @@ void Ball::initBallAtExpectedPosition(const world::World* data) noexcept {
     position = previousWorld->getBall().value()->position;
 }
 
-void Ball::updateExpectedBallEndPosition(const world::World* data) noexcept {
+void Ball::updateExpectedBallEndPosition() noexcept {
     const double ballVelSquared = velocity.length2();
     const double frictionCoefficient =
         GameSettings::getRobotHubMode() == net::RobotHubMode::SIMULATOR ? ai::stp::control_constants::SIMULATION_FRICTION : ai::stp::control_constants::REAL_FRICTION;

@@ -75,7 +75,7 @@ void Handler::start(std::string visionip, std::string refereeip, int visionport,
                         std::cout << "/";
                     else if (no_vision_received % 200 < 150)
                         std::cout << "-";
-                    else if (no_vision_received % 200 < 200)
+                    else
                         std::cout << "\\";
                     std::cout << std::flush;
                 }

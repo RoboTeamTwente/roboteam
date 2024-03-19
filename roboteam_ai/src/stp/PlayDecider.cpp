@@ -37,7 +37,7 @@ Play* PlayDecider::decideBestPlay(const rtt::world::World* world, const std::vec
         return getPlayForName("Defend Shot", plays);
     }
 
-    return std::max_element(playsWithScores.begin(), playsWithScores.end(), [](auto& lhs, auto& rhs) { return lhs.second < rhs.second; })->first;
+    return std::max_element(playsWithScores.begin(), playsWithScores.end(), [](const auto& lhs, const auto& rhs) { return lhs.second < rhs.second; })->first;
 }
 
 bool PlayDecider::didLockPlay() noexcept { return playLock.didChange.exchange(false); }

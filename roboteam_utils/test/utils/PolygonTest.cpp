@@ -5,6 +5,8 @@
 #include <gtest/gtest.h>
 #include <math.h>
 
+#include <numeric>
+
 #include "roboteam_utils/Line.h"
 #include "roboteam_utils/Polygon.h"
 #include "roboteam_utils/Vector2.h"
@@ -118,7 +120,7 @@ TEST(boundaryTests, PolygonTest) {
     Polygon rect(leftCorner, width, height);
     Polygon rect2({leftCorner, rightBottom, rightTop, leftTop});
     Polygon triangle({leftCorner, rightBottom, leftTop});
-    std::vector<Polygon> objects;
+    std::vector<Polygon> objects = {rect, rect2, triangle};
     for (const Polygon &obj : objects) {
         std::vector<LineSegment> lines = obj.getBoundary();
         for (size_t i = 0; i < lines.size(); ++i) {
@@ -130,10 +132,7 @@ TEST(boundaryTests, PolygonTest) {
             EXPECT_TRUE(obj.isOnBoundary(line.end));
             EXPECT_TRUE(obj.isOnBoundary((line.start + line.end) * 0.5));
         }
-        double lenSum = 0;
-        for (const LineSegment &line : lines) {
-            lenSum += line.length();
-        }
+        double lenSum = std::accumulate(lines.begin(), lines.end(), 0.0, [](double sum, const LineSegment &line) { return sum + line.length(); });
         EXPECT_EQ(lenSum, obj.perimeterLength());
     }
     EXPECT_EQ(rect.perimeterLength(), 2 * (width + height));

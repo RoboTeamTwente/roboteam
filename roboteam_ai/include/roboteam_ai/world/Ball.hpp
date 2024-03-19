@@ -33,9 +33,8 @@ class Ball {
 
     /**
      * @brief Updates the expected ball end position
-     * @param data The current world
      */
-    void updateExpectedBallEndPosition(const world::World *data) noexcept;
+    void updateExpectedBallEndPosition() noexcept;
 
     /**
      * @brief Places the ball in front of the robot that has the ball, if any

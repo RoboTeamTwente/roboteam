@@ -244,7 +244,6 @@ double Dealer::getRobotScoreForRole(const std::vector<Dealer::DealerFlag> &deale
 
 // Get the distance score for a robot to a position when there is a position that role needs to go to
 double Dealer::getRobotScoreForDistance(const stp::StpInfo &stpInfo, const v::RobotView &robot) {
-    double distance;
     if (stpInfo.getRoleName().find("halt") == std::string::npos && stpInfo.getRoleName() == "keeper") return 0;
 
     std::optional<Vector2> target_position;

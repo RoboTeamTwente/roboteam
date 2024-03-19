@@ -26,7 +26,6 @@ std::optional<StpInfo> GetBall::calculateInfoForSkill(StpInfo const &info) noexc
     if (!skillStpInfo.getRobot() || !skillStpInfo.getBall() || !skillStpInfo.getField() || !skillStpInfo.getCurrentWorld()) return std::nullopt;
     skillStpInfo.setShouldAvoidBall(false);
     Vector2 robotPosition = skillStpInfo.getRobot().value()->getPos();
-    Vector2 robotVelocity = skillStpInfo.getRobot().value()->getVel();
     Vector2 ballPosition = skillStpInfo.getBall().value()->position;
     Vector2 interceptionPosition = ballPosition;
     auto maxRobotVelocity = GameStateManager::getCurrentGameState().getRuleSet().getMaxRobotVel();

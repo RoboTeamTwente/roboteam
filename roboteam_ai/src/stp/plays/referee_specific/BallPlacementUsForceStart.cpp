@@ -69,7 +69,7 @@ void BallPlacementUsForceStart::calculateInfoForRoles() noexcept {
     PositionComputations::calculateInfoForDefendersAndWallers(stpInfos, roles, field, world, false);
     PositionComputations::calculateInfoForAttackers(stpInfos, roles, field, world);
 
-    Vector2 ballTarget = Vector2();
+    Vector2 ballTarget;
 
     // Adjust placement position to be one robot radius away in the distance of movement
     if (stpInfos["ball_placer"].getRobot()) {

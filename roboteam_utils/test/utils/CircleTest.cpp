@@ -191,8 +191,6 @@ TEST(CircleTests, operatorDivide) {
 }
 
 TEST(CircleTests, intersectionsTest) {
-    // There are two intersection functions... Lets test individually
-    // intersects
     Circle circle({0, 0}, 1);
     LineSegment noIntersectLine({-2, 2}, {2, 2});
     ASSERT_TRUE(circle.intersects(noIntersectLine).empty());
@@ -224,6 +222,7 @@ TEST(CircleTests, intersectionsTest) {
     auto intersectionsDiagonal = circle.intersects(twoIntersectLine);
     auto possibilityDiagonal1 = std::vector<Vector2>{Vector2(-0.71, -0.71), Vector2(0.71, 0.71)};
     auto possibilityDiagonal2 = std::vector<Vector2>{Vector2(0.71, 0.71), Vector2(-0.71, -0.71)};
+    ASSERT_TRUE(intersectionsDiagonal == possibilityDiagonal1 || intersectionsDiagonal == possibilityDiagonal2);
 }
 
 TEST(CircleTests, moveTest) {

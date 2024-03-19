@@ -19,7 +19,7 @@ var classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot =
     [ "update", "d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot.html#a52fc8b6075367b48ae05021829ebcc8f", null ],
     [ "updateField", "d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot.html#a805621fd748e3dfd6399ff69570f7e56", null ],
     [ "field", "d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot.html#a1dc216d51c90eb0e6ddb0298e1ad034e", null ],
-    [ "harasserInfo", "d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot.html#a1da25eafe17775e31254d88680ba4f9a", null ],
+    [ "harasserInfo", "d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot.html#aace5bfea5f77fc9b61ed0225a6a323b3", null ],
     [ "keepPlayEvaluation", "d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot.html#a17fc7a716064d918aa29c072832c2ef8", null ],
     [ "lastScore", "d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot.html#a81d204e55bab023d2937c1420abd04ad", null ],
     [ "previousKeeperId", "d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot.html#a7164f241b13b1aa59b6e6b5c30a3094b", null ],

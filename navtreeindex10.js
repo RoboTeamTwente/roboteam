@@ -1,5 +1,7 @@
 var NAVTREEINDEX10 =
 {
+"db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html#afc2268677ee563a2f0a7efa4acff465e":[3,0,1,0,4,3,3,23],
+"db/df9/classrtt_1_1ai_1_1stp_1_1evaluation_1_1BallOnTheirSideGlobalEvaluation.html":[3,0,1,0,4,1,23],
 "db/df9/classrtt_1_1ai_1_1stp_1_1evaluation_1_1BallOnTheirSideGlobalEvaluation.html#a91a7ec16136e71ef26201e95886d94e6":[3,0,1,0,4,1,23,0],
 "db/df9/classrtt_1_1ai_1_1stp_1_1evaluation_1_1BallOnTheirSideGlobalEvaluation.html#abd4cee4b8f299212e34be69ea694abf0":[3,0,1,0,4,1,23,1],
 "dc/d00/classrtt_1_1ai_1_1stp_1_1evaluation_1_1BallInOurDefenseAreaAndStillGlobalEvaluation.html":[3,0,1,0,4,1,20],
@@ -167,7 +169,7 @@ var NAVTREEINDEX10 =
 "dc/d8f/namespacertt.html#a9feb9543be1fca6a886698e4854b3dfa":[2,0,10,22],
 "dc/d8f/namespacertt.html#ab8672b6bb09e9e87cf96d0f810666589":[2,0,10,18],
 "dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843":[2,0,10,8],
-"dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a0db45d2a4141101bdfe48e3314cfbca3":[2,0,10,8,21],
+"dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a0db45d2a4141101bdfe48e3314cfbca3":[2,0,10,8,22],
 "dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a13e4f3671937675a16a04b085cc5b393":[2,0,10,8,15],
 "dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a3bba2e3a8ac7ac7b6660543c3fbdc937":[2,0,10,8,14],
 "dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a43cad1b6fd7d5153cb60f7d88d9f0f31":[2,0,10,8,9],
@@ -176,6 +178,7 @@ var NAVTREEINDEX10 =
 "dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a51fb032d2ec071f1b8cdbcdffaa5a947":[2,0,10,8,6],
 "dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a605d4c9e57ea162973c0d8681035c2d1":[2,0,10,8,5],
 "dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a615a46af313786fc4e349f34118be111":[2,0,10,8,1],
+"dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a7894f3ecc3abad045c2909912bdd5132":[2,0,10,8,21],
 "dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a7d4f8613628e265b6bf9c674bedad46d":[2,0,10,8,8],
 "dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843aa0e17303d5ddfc03629d114713d8fa7d":[2,0,10,8,19],
 "dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843aa582f62ddc20516e733b0ce09acc219a":[2,0,10,8,7],
@@ -246,8 +249,5 @@ var NAVTREEINDEX10 =
 "dd/d23/STPManager_8h.html":[4,0,0,0,0,6],
 "dd/d23/STPManager_8h_source.html":[4,0,0,0,0,6],
 "dd/d25/structrtt_1_1ai_1_1Dealer_1_1DealerFlag.html":[3,0,1,0,6,0],
-"dd/d25/structrtt_1_1ai_1_1Dealer_1_1DealerFlag.html#a16e607c86f0a605e25561caf3ecb7099":[3,0,1,0,6,0,1],
-"dd/d25/structrtt_1_1ai_1_1Dealer_1_1DealerFlag.html#a90954c3ad173501afe950348b4cdb6e3":[3,0,1,0,6,0,0],
-"dd/d26/structrtt_1_1ai_1_1RuleSet.html":[3,0,1,0,9],
-"dd/d26/structrtt_1_1ai_1_1RuleSet.html#a14eb9b95b379f938f7881e9e44bf050a":[3,0,1,0,9,3]
+"dd/d25/structrtt_1_1ai_1_1Dealer_1_1DealerFlag.html#a16e607c86f0a605e25561caf3ecb7099":[3,0,1,0,6,0,1]
 };

@@ -1,5 +1,6 @@
 var NAVTREEINDEX5 =
 {
+"d5/df9/classrtt_1_1ai_1_1stp_1_1evaluation_1_1FreeKickThemGameStateEvaluation.html#a9f21481641bbcb0bfb1c4a7aabc52138":[3,0,1,0,4,1,4,0],
 "d6/d01/FreeKickTaker_8h.html":[4,0,0,0,0,3,4,0,2],
 "d6/d01/FreeKickTaker_8h_source.html":[4,0,0,0,0,3,4,0,2],
 "d6/d06/InterfacePublisher_8h.html":[4,0,0,0,0,1,0,1],
@@ -248,6 +249,5 @@ var NAVTREEINDEX5 =
 "d7/d54/classrtt_1_1ai_1_1BallPossession.html#aec5f5a8033768c727ab02f8d7d6cfaac":[3,0,1,0,12,13],
 "d7/d54/classrtt_1_1ai_1_1BallPossession.html#aeef48d5da8e5d7c266d56fb77e0bd471":[3,0,1,0,12,14],
 "d7/d54/classrtt_1_1ai_1_1BallPossession.html#af62c7481ecaaf4508de7570a9883a81c":[3,0,1,0,12,15],
-"d7/d62/PenaltyUs_8cpp.html":[4,0,0,1,4,2,2,15],
-"d7/d66/GameSettings_8h.html":[4,0,0,0,0,4,2]
+"d7/d62/PenaltyUs_8cpp.html":[4,0,0,1,4,2,2,15]
 };

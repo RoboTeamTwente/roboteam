@@ -106,6 +106,9 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:aadf00661b17f0e24d722a21448ce578d"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d54/classrtt_1_1ai_1_1stp_1_1PlayDecider.html#aadf00661b17f0e24d722a21448ce578d">lockPlay</a> (const std::optional&lt; std::string &gt; playName)</td></tr>
 <tr class="memdesc:aadf00661b17f0e24d722a21448ce578d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets play name to lock.  <a href="../../d1/d54/classrtt_1_1ai_1_1stp_1_1PlayDecider.html#aadf00661b17f0e24d722a21448ce578d">More...</a><br /></td></tr>
 <tr class="separator:aadf00661b17f0e24d722a21448ce578d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a51b5a7e2a55bcaac336f6e0a17ae9ecc"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d54/classrtt_1_1ai_1_1stp_1_1PlayDecider.html#a51b5a7e2a55bcaac336f6e0a17ae9ecc">unlockPlay</a> ()</td></tr>
+<tr class="memdesc:a51b5a7e2a55bcaac336f6e0a17ae9ecc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unlocks the play.  <a href="../../d1/d54/classrtt_1_1ai_1_1stp_1_1PlayDecider.html#a51b5a7e2a55bcaac336f6e0a17ae9ecc">More...</a><br /></td></tr>
+<tr class="separator:a51b5a7e2a55bcaac336f6e0a17ae9ecc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a46abbae5c2dbca1a311088e3da3982b8"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="../../d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html">Play</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d54/classrtt_1_1ai_1_1stp_1_1PlayDecider.html#a46abbae5c2dbca1a311088e3da3982b8">decideBestPlay</a> (const <a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">rtt::world::World</a> *world, const std::vector&lt; std::unique_ptr&lt; <a class="el" href="../../d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html">ai::stp::Play</a> &gt;&gt; &amp;plays) noexcept</td></tr>
 <tr class="memdesc:a46abbae5c2dbca1a311088e3da3982b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function checks if there is a locked play. If there is, pick that play. If there isn't, pick the play with the highest score (either a locked play through the interface or just the highest scored play)  <a href="../../d1/d54/classrtt_1_1ai_1_1stp_1_1PlayDecider.html#a46abbae5c2dbca1a311088e3da3982b8">More...</a><br /></td></tr>
 <tr class="separator:a46abbae5c2dbca1a311088e3da3982b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -272,6 +275,33 @@ Static Private Attributes</h2></td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="a51b5a7e2a55bcaac336f6e0a17ae9ecc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a51b5a7e2a55bcaac336f6e0a17ae9ecc">&#9670;&nbsp;</a></span>unlockPlay()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void rtt::ai::stp::PlayDecider::unlockPlay </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Unlocks the play. </p>
 
 </div>
 </div>

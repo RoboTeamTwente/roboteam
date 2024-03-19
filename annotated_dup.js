@@ -150,7 +150,7 @@ var annotated_dup =
           [ "ComputationManager", "df/d7d/classrtt_1_1ai_1_1stp_1_1ComputationManager.html", "df/d7d/classrtt_1_1ai_1_1stp_1_1ComputationManager" ],
           [ "PassInfo", "d5/d14/namespacertt_1_1ai_1_1stp.html#dd/d7d/structrtt_1_1ai_1_1stp_1_1PassInfo", "d5/d14/namespacertt_1_1ai_1_1stp_dd/d7d/structrtt_1_1ai_1_1stp_1_1PassInfo_dup" ],
           [ "EnemyInfo", "d5/d14/namespacertt_1_1ai_1_1stp.html#d9/db1/structrtt_1_1ai_1_1stp_1_1EnemyInfo", "d5/d14/namespacertt_1_1ai_1_1stp_d9/db1/structrtt_1_1ai_1_1stp_1_1EnemyInfo_dup" ],
-          [ "HarasserInfo", "d5/d14/namespacertt_1_1ai_1_1stp.html#d7/da7/structrtt_1_1ai_1_1stp_1_1HarasserInfo", "d5/d14/namespacertt_1_1ai_1_1stp_d7/da7/structrtt_1_1ai_1_1stp_1_1HarasserInfo_dup" ],
+          [ "InterceptInfo", "d5/d14/namespacertt_1_1ai_1_1stp.html#d5/d12/structrtt_1_1ai_1_1stp_1_1InterceptInfo", "d5/d14/namespacertt_1_1ai_1_1stp_d5/d12/structrtt_1_1ai_1_1stp_1_1InterceptInfo_dup" ],
           [ "PositionComputations", "dd/d2c/classrtt_1_1ai_1_1stp_1_1PositionComputations.html", "dd/d2c/classrtt_1_1ai_1_1stp_1_1PositionComputations" ],
           [ "PositionScoring", "de/de9/classrtt_1_1ai_1_1stp_1_1PositionScoring.html", "de/de9/classrtt_1_1ai_1_1stp_1_1PositionScoring" ],
           [ "Play", "d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html", "d7/d91/classrtt_1_1ai_1_1stp_1_1Play" ],

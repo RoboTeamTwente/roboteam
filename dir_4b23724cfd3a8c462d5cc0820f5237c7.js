@@ -22,9 +22,9 @@ var dir_4b23724cfd3a8c462d5cc0820f5237c7 =
         [ "position", "d5/d14/namespacertt_1_1ai_1_1stp.html#ae2103cf7192b58b17a262338286d186b", null ],
         [ "velocity", "d5/d14/namespacertt_1_1ai_1_1stp.html#ade9fd3e730cedcea632a7e5a800b8400", null ]
       ] ],
-      [ "HarasserInfo", "d5/d14/namespacertt_1_1ai_1_1stp.html#d7/da7/structrtt_1_1ai_1_1stp_1_1HarasserInfo", [
-        [ "harasserId", "d5/d14/namespacertt_1_1ai_1_1stp.html#a4583ed6b6238aa913294e58cadaa29fa", null ],
-        [ "timeToBall", "d5/d14/namespacertt_1_1ai_1_1stp.html#ad310fe2ec2adcb57868a52385210a72e", null ]
+      [ "InterceptInfo", "d5/d14/namespacertt_1_1ai_1_1stp.html#d5/d12/structrtt_1_1ai_1_1stp_1_1InterceptInfo", [
+        [ "interceptId", "d5/d14/namespacertt_1_1ai_1_1stp.html#a05eb54654c3c63598834977327169865", null ],
+        [ "interceptLocation", "d5/d14/namespacertt_1_1ai_1_1stp.html#a8b6f581c21b0d0e7432e3aadf920a907", null ]
       ] ],
       [ "PositionComputations", "dd/d2c/classrtt_1_1ai_1_1stp_1_1PositionComputations.html", "dd/d2c/classrtt_1_1ai_1_1stp_1_1PositionComputations" ]
     ] ],

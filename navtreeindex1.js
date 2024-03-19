@@ -1,5 +1,6 @@
 var NAVTREEINDEX1 =
 {
+"d1/d71/classrtt_1_1ai_1_1gui_1_1net_1_1InterfacePublisher.html#a0332dcf12eb4488040851565de1572c1":[3,0,1,0,1,0,1,8],
 "d1/d71/classrtt_1_1ai_1_1gui_1_1net_1_1InterfacePublisher.html#a05a060288761eba3f61a7e72b0b7c772":[3,0,1,0,1,0,1,0],
 "d1/d71/classrtt_1_1ai_1_1gui_1_1net_1_1InterfacePublisher.html#a088e0e32f5761f3e446f7e0797a6adfe":[3,0,1,0,1,0,1,2],
 "d1/d71/classrtt_1_1ai_1_1gui_1_1net_1_1InterfacePublisher.html#a218b3a5ccb8b556b552d4089d0ffdff8":[3,0,1,0,1,0,1,4],
@@ -248,6 +249,5 @@ var NAVTREEINDEX1 =
 "d3/d2b/FieldHelper_8h.html":[4,0,0,2,1,1],
 "d3/d2b/FieldHelper_8h_source.html":[4,0,0,2,1,1],
 "d3/d45/Attack_8cpp.html":[4,0,0,1,4,2,1,0],
-"d3/d66/OrbitKick_8cpp.html":[4,0,0,1,4,5,0,5],
-"d3/d66/classrtt_1_1ai_1_1stp_1_1tactic_1_1Receive.html":[3,0,1,0,4,6,6]
+"d3/d66/OrbitKick_8cpp.html":[4,0,0,1,4,5,0,5]
 };

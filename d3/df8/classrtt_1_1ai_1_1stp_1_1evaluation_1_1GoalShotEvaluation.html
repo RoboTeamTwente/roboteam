@@ -99,15 +99,15 @@ $(document).ready(function(){initNavTree('d3/df8/classrtt_1_1ai_1_1stp_1_1evalua
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a668eeb1e55b712c9e4579f3b23cd8877"><td class="memItemLeft" align="right" valign="top">static uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/df8/classrtt_1_1ai_1_1stp_1_1evaluation_1_1GoalShotEvaluation.html#a668eeb1e55b712c9e4579f3b23cd8877">metricCheck</a> (double goalVisibility, double goalAngle) noexcept</td></tr>
-<tr class="memdesc:a668eeb1e55b712c9e4579f3b23cd8877"><td class="mdescLeft">&#160;</td><td class="mdescRight">Score ability to make a goal from position based on how much of the goal is visible and the angular size of the goal.  <a href="../../d3/df8/classrtt_1_1ai_1_1stp_1_1evaluation_1_1GoalShotEvaluation.html#a668eeb1e55b712c9e4579f3b23cd8877">More...</a><br /></td></tr>
-<tr class="separator:a668eeb1e55b712c9e4579f3b23cd8877"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab736a3ad454b15a1ed558a444bdfc3a1"><td class="memItemLeft" align="right" valign="top">static uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/df8/classrtt_1_1ai_1_1stp_1_1evaluation_1_1GoalShotEvaluation.html#ab736a3ad454b15a1ed558a444bdfc3a1">metricCheck</a> (double goalVisibility, double goalAngle, double normalizedDistanceToGoal) noexcept</td></tr>
+<tr class="memdesc:ab736a3ad454b15a1ed558a444bdfc3a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Score ability to make a goal from position based on how much of the goal is visible and the angular size of the goal.  <a href="../../d3/df8/classrtt_1_1ai_1_1stp_1_1evaluation_1_1GoalShotEvaluation.html#ab736a3ad454b15a1ed558a444bdfc3a1">More...</a><br /></td></tr>
+<tr class="separator:ab736a3ad454b15a1ed558a444bdfc3a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class that evaluates the Goal Shot score. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a668eeb1e55b712c9e4579f3b23cd8877"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a668eeb1e55b712c9e4579f3b23cd8877">&#9670;&nbsp;</a></span>metricCheck()</h2>
+<a id="ab736a3ad454b15a1ed558a444bdfc3a1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab736a3ad454b15a1ed558a444bdfc3a1">&#9670;&nbsp;</a></span>metricCheck()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -125,7 +125,13 @@ Static Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>goalAngle</em>&#160;</td>
+          <td class="paramname"><em>goalAngle</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>normalizedDistanceToGoal</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -144,7 +150,8 @@ Static Public Member Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">goalVisibility</td><td>% visibility of the goal (taking in account other robots) </td></tr>
-    <tr><td class="paramname">goalAngle</td><td>angular size of the goal (relative to the goal angle from the penalty point) </td></tr>
+    <tr><td class="paramname">goalAngle</td><td>angular size of the goal (relative to the goal angle from the best position) </td></tr>
+    <tr><td class="paramname">normalizedDistanceToGoal</td><td>normalized distance to the goal (0 = closest, 1 = furthest) </td></tr>
   </table>
   </dd>
 </dl>

@@ -1,5 +1,6 @@
 var NAVTREEINDEX6 =
 {
+"d7/d66/GameSettings_8h.html":[4,0,0,0,0,4,2],
 "d7/d66/GameSettings_8h_source.html":[4,0,0,0,0,4,2],
 "d7/d72/BallStandBack_8h.html":[4,0,0,0,0,3,6,1,0],
 "d7/d72/BallStandBack_8h_source.html":[4,0,0,0,0,3,6,1,0],
@@ -149,13 +150,13 @@ var NAVTREEINDEX6 =
 "d7/ddc/classrtt_1_1ai_1_1Dealer.html#a03a176cf1ad988aa9439cf26f78f99f9":[3,0,1,0,6,9],
 "d7/ddc/classrtt_1_1ai_1_1Dealer.html#a0d5123c8592eed2fef1de6b80f4922ce":[3,0,1,0,6,13],
 "d7/ddc/classrtt_1_1ai_1_1Dealer.html#a10b762714097d7afe3ad688f418538fd":[3,0,1,0,6,19],
+"d7/ddc/classrtt_1_1ai_1_1Dealer.html#a175c8f978efe7506b0007e24671e608a":[3,0,1,0,6,6],
 "d7/ddc/classrtt_1_1ai_1_1Dealer.html#a18c5060ec7b4d6baa7f4b19b71579ea8":[3,0,1,0,6,17],
 "d7/ddc/classrtt_1_1ai_1_1Dealer.html#a18f662b889ef52c85aa211ba5c133c72":[3,0,1,0,6,7],
 "d7/ddc/classrtt_1_1ai_1_1Dealer.html#a19728e8bc666c22d342d91521cab7650":[3,0,1,0,6,14],
 "d7/ddc/classrtt_1_1ai_1_1Dealer.html#a239709eb792970c058e595f1340b397d":[3,0,1,0,6,3],
 "d7/ddc/classrtt_1_1ai_1_1Dealer.html#a38e5570d819dc8de80c478c5deba6703":[3,0,1,0,6,4],
 "d7/ddc/classrtt_1_1ai_1_1Dealer.html#a444db4b2230cdcee01993e4146716777":[3,0,1,0,6,8],
-"d7/ddc/classrtt_1_1ai_1_1Dealer.html#a4b5bf80e68e7d4c62fa6d11d02f4124a":[3,0,1,0,6,6],
 "d7/ddc/classrtt_1_1ai_1_1Dealer.html#a7e2e15fabf6224fcf62d55d3761ec7da":[3,0,1,0,6,2,2],
 "d7/ddc/classrtt_1_1ai_1_1Dealer.html#a7e2e15fabf6224fcf62d55d3761ec7da":[4,0,0,0,0,4,1,2,2],
 "d7/ddc/classrtt_1_1ai_1_1Dealer.html#a89e3f7131deb54621ec7fb8261ca543a":[3,0,1,0,6,1,0],
@@ -164,8 +165,8 @@ var NAVTREEINDEX6 =
 "d7/ddc/classrtt_1_1ai_1_1Dealer.html#a94358830841e86be15709f16a5a71aa5":[3,0,1,0,6,1,1],
 "d7/ddc/classrtt_1_1ai_1_1Dealer.html#a94358830841e86be15709f16a5a71aa5":[4,0,0,0,0,4,1,3,1],
 "d7/ddc/classrtt_1_1ai_1_1Dealer.html#a9c3ea880f0bfdd05727d3d0a661d2ceb":[3,0,1,0,6,16],
-"d7/ddc/classrtt_1_1ai_1_1Dealer.html#aa55cf5612995a0d899e7c185e6e46c4e":[4,0,0,0,0,4,1,2,1],
 "d7/ddc/classrtt_1_1ai_1_1Dealer.html#aa55cf5612995a0d899e7c185e6e46c4e":[3,0,1,0,6,2,1],
+"d7/ddc/classrtt_1_1ai_1_1Dealer.html#aa55cf5612995a0d899e7c185e6e46c4e":[4,0,0,0,0,4,1,2,1],
 "d7/ddc/classrtt_1_1ai_1_1Dealer.html#aad8a4055abc33454fce6cf0966ee3d9e":[3,0,1,0,6,5],
 "d7/ddc/classrtt_1_1ai_1_1Dealer.html#ab3d3176a7d6bee6d573b23f5140fdbea":[3,0,1,0,6,18],
 "d7/ddc/classrtt_1_1ai_1_1Dealer.html#abffef721813b1e58bf8754f963c29abb":[3,0,1,0,6,2,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX6 =
 "d8/d57/classrtt_1_1ai_1_1stp_1_1skill_1_1TestSkill.html#a81322ea82e04b0ee8bc318f9dfec8f32":[3,0,1,0,4,5,6,1],
 "d8/d57/classrtt_1_1ai_1_1stp_1_1skill_1_1TestSkill.html#a8625bf35b1b36ec18fd8ff68926ec0d4":[3,0,1,0,4,5,6,10],
 "d8/d57/classrtt_1_1ai_1_1stp_1_1skill_1_1TestSkill.html#a97aca306adb701181c5726a09cac208c":[3,0,1,0,4,5,6,3],
-"d8/d57/classrtt_1_1ai_1_1stp_1_1skill_1_1TestSkill.html#aa20f026f0c4b0a4c303c4b1ac65c6650":[3,0,1,0,4,5,6,0],
-"d8/d57/classrtt_1_1ai_1_1stp_1_1skill_1_1TestSkill.html#aab9578d86a91f8a16f5c02200ca3b5e8":[3,0,1,0,4,5,6,7]
+"d8/d57/classrtt_1_1ai_1_1stp_1_1skill_1_1TestSkill.html#aa20f026f0c4b0a4c303c4b1ac65c6650":[3,0,1,0,4,5,6,0]
 };

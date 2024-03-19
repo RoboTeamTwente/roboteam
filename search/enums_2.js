@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['collisiontype_2778',['CollisionType',['../d0/dde/namespacertt_1_1BB.html#a90ddec283fc8250879e878c985a14524',1,'rtt::BB']]]
+  ['collisiontype_2783',['CollisionType',['../d0/dde/namespacertt_1_1BB.html#a90ddec283fc8250879e878c985a14524',1,'rtt::BB']]]
 ];

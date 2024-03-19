@@ -1,5 +1,7 @@
 var NAVTREEINDEX8 =
 {
+"d9/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsFreeKick.html#a0329d2814e2651902bb05f23659e0084":[3,0,1,0,4,3,9,24],
+"d9/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsFreeKick.html#a067c0013eb3e4d70eedd32a504dee10d":[3,0,1,0,4,3,9,22],
 "d9/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsFreeKick.html#a08a78e2b6bb5fb4f75d0c9dc572d25fa":[3,0,1,0,4,3,9,28],
 "d9/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsFreeKick.html#a0c13cbd482099fa139f3a5f08d964efe":[3,0,1,0,4,3,9,29],
 "d9/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsFreeKick.html#a17fc7a716064d918aa29c072832c2ef8":[3,0,1,0,4,3,9,19],
@@ -247,7 +249,5 @@ var NAVTREEINDEX8 =
 "db/d01/PlayDecider_8cpp.html":[4,0,0,1,4,7],
 "db/d03/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUs.html":[3,0,1,0,4,3,21],
 "db/d03/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUs.html#a0329d2814e2651902bb05f23659e0084":[3,0,1,0,4,3,21,24],
-"db/d03/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUs.html#a067c0013eb3e4d70eedd32a504dee10d":[3,0,1,0,4,3,21,22],
-"db/d03/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUs.html#a0695d80e803e8665deba37e83ded3da1":[3,0,1,0,4,3,21,1],
-"db/d03/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUs.html#a08a78e2b6bb5fb4f75d0c9dc572d25fa":[3,0,1,0,4,3,21,28]
+"db/d03/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUs.html#a067c0013eb3e4d70eedd32a504dee10d":[3,0,1,0,4,3,21,22]
 };

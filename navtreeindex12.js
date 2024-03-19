@@ -1,5 +1,8 @@
 var NAVTREEINDEX12 =
 {
+"de/d0f/classrtt_1_1ai_1_1stp_1_1TestTactic.html#ab7650037eb092459aca7247ea77f2ad4":[3,0,1,0,4,22,4],
+"de/d0f/classrtt_1_1ai_1_1stp_1_1TestTactic.html#ab8d1e4dfb359b1438512e1ac9a0dfb84":[3,0,1,0,4,22,0],
+"de/d0f/classrtt_1_1ai_1_1stp_1_1TestTactic.html#ac66cf9fe9def08172b053a6abc869ba1":[3,0,1,0,4,22,11],
 "de/d0f/classrtt_1_1ai_1_1stp_1_1TestTactic.html#ac7dba7916b5fc648439cb51181d01358":[3,0,1,0,4,22,10],
 "de/d0f/classrtt_1_1ai_1_1stp_1_1TestTactic.html#af4a9f63577d36c0cf178aae99fb0fd00":[3,0,1,0,4,22,8],
 "de/d0f/classrtt_1_1ai_1_1stp_1_1TestTactic.html#afb1458c3773ef5d68fac7bf41966f0d5":[3,0,1,0,4,22,6],
@@ -246,8 +249,5 @@ var NAVTREEINDEX12 =
 "df/dcf/classrtt_1_1ai_1_1control_1_1CollisionDetector.html#a6cc31ddf7474bec676ea0af7bc795d3c":[3,0,1,0,0,2,8],
 "df/dcf/classrtt_1_1ai_1_1control_1_1CollisionDetector.html#a9868c9172109e6ade667231037f882b9":[3,0,1,0,0,2,9],
 "df/dcf/classrtt_1_1ai_1_1control_1_1CollisionDetector.html#ac9969c2b4849e60788aa414ebe745ee0":[3,0,1,0,0,2,7],
-"df/dcf/classrtt_1_1ai_1_1control_1_1CollisionDetector.html#ae5089387641148d139b3f6c7a662915f":[3,0,1,0,0,2,5],
-"df/dcf/classrtt_1_1ai_1_1control_1_1CollisionDetector.html#ae906d8add547c1aaea714b2b07a68bfc":[3,0,1,0,0,2,3],
-"df/dcf/classrtt_1_1ai_1_1control_1_1CollisionDetector.html#af1aa682e09acef1df076a73804591757":[3,0,1,0,0,2,6],
-"df/de3/classrtt_1_1ai_1_1stp_1_1play_1_1DefensiveStopFormation.html":[3,0,1,0,4,3,10]
+"df/dcf/classrtt_1_1ai_1_1control_1_1CollisionDetector.html#ae5089387641148d139b3f6c7a662915f":[3,0,1,0,0,2,5]
 };

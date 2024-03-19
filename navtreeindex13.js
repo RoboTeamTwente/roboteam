@@ -1,5 +1,8 @@
 var NAVTREEINDEX13 =
 {
+"df/dcf/classrtt_1_1ai_1_1control_1_1CollisionDetector.html#ae906d8add547c1aaea714b2b07a68bfc":[3,0,1,0,0,2,3],
+"df/dcf/classrtt_1_1ai_1_1control_1_1CollisionDetector.html#af1aa682e09acef1df076a73804591757":[3,0,1,0,0,2,6],
+"df/de3/classrtt_1_1ai_1_1stp_1_1play_1_1DefensiveStopFormation.html":[3,0,1,0,4,3,10],
 "df/de3/classrtt_1_1ai_1_1stp_1_1play_1_1DefensiveStopFormation.html#a0329d2814e2651902bb05f23659e0084":[3,0,1,0,4,3,10,24],
 "df/de3/classrtt_1_1ai_1_1stp_1_1play_1_1DefensiveStopFormation.html#a067c0013eb3e4d70eedd32a504dee10d":[3,0,1,0,4,3,10,22],
 "df/de3/classrtt_1_1ai_1_1stp_1_1play_1_1DefensiveStopFormation.html#a08a78e2b6bb5fb4f75d0c9dc572d25fa":[3,0,1,0,4,3,10,28],
@@ -143,8 +146,8 @@ var NAVTREEINDEX13 =
 "dir_f92df6d1e0367e98e851dd9f3404154c.html":[4,0,0,2,3],
 "dir_ff7bab2f878481c7f00fafbde64f720d.html":[4,0,0,1,4],
 "files.html":[4,0],
-"functions.html":[3,3,0,0],
 "functions.html":[3,3,0],
+"functions.html":[3,3,0,0],
 "functions_a.html":[3,3,0,1],
 "functions_b.html":[3,3,0,2],
 "functions_c.html":[3,3,0,3],
@@ -193,8 +196,8 @@ var NAVTREEINDEX13 =
 "functions_type.html":[3,3,3],
 "functions_u.html":[3,3,0,19],
 "functions_v.html":[3,3,0,20],
-"functions_vars.html":[3,3,2,0],
 "functions_vars.html":[3,3,2],
+"functions_vars.html":[3,3,2,0],
 "functions_vars_a.html":[3,3,2,1],
 "functions_vars_b.html":[3,3,2,2],
 "functions_vars_c.html":[3,3,2,3],

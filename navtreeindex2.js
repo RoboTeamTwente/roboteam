@@ -1,5 +1,6 @@
 var NAVTREEINDEX2 =
 {
+"d3/d66/classrtt_1_1ai_1_1stp_1_1tactic_1_1Receive.html":[3,0,1,0,4,6,6],
 "d3/d66/classrtt_1_1ai_1_1stp_1_1tactic_1_1Receive.html#a030c4fd95301f6d2b73bd815500be3fa":[3,0,1,0,4,6,6,8],
 "d3/d66/classrtt_1_1ai_1_1stp_1_1tactic_1_1Receive.html#a0dd3439d999970125264ce7fccadff49":[3,0,1,0,4,6,6,13],
 "d3/d66/classrtt_1_1ai_1_1stp_1_1tactic_1_1Receive.html#a23922c2249f7b5ed30d50c081be5971c":[3,0,1,0,4,6,6,7],
@@ -45,12 +46,12 @@ var NAVTREEINDEX2 =
 "d3/db5/KickOffThemGameStateEvaluation_8h.html":[4,0,0,0,0,3,2,0,6],
 "d3/db5/KickOffThemGameStateEvaluation_8h_source.html":[4,0,0,0,0,3,2,0,6],
 "d3/db6/classrtt_1_1ai_1_1stp_1_1computations_1_1PassComputations.html":[3,0,1,0,4,0,1],
-"d3/db6/classrtt_1_1ai_1_1stp_1_1computations_1_1PassComputations.html#a22a89e19f50438abc4c59f4385bf069e":[3,0,1,0,4,0,1,0],
+"d3/db6/classrtt_1_1ai_1_1stp_1_1computations_1_1PassComputations.html#a009bea3d481f0df644c5fef6437d29f6":[3,0,1,0,4,0,1,0],
 "d3/db6/classrtt_1_1ai_1_1stp_1_1computations_1_1PassComputations.html#a488d6b9f063d586fcd5ffde7392aefbc":[3,0,1,0,4,0,1,3],
+"d3/db6/classrtt_1_1ai_1_1stp_1_1computations_1_1PassComputations.html#a67e3c8a7e0f3977a950a30bfe83c9a07":[3,0,1,0,4,0,1,6],
 "d3/db6/classrtt_1_1ai_1_1stp_1_1computations_1_1PassComputations.html#a6a66f6eadf80387d1a2fb17ecef2827c":[3,0,1,0,4,0,1,4],
 "d3/db6/classrtt_1_1ai_1_1stp_1_1computations_1_1PassComputations.html#a6c40cbab959ed7ac73c9f9b7f3733453":[3,0,1,0,4,0,1,5],
-"d3/db6/classrtt_1_1ai_1_1stp_1_1computations_1_1PassComputations.html#a80096bd75d8bd0850aab43b936ab8a65":[3,0,1,0,4,0,1,6],
-"d3/db6/classrtt_1_1ai_1_1stp_1_1computations_1_1PassComputations.html#af4e8d665496030778207457a85cb4f1d":[3,0,1,0,4,0,1,2],
+"d3/db6/classrtt_1_1ai_1_1stp_1_1computations_1_1PassComputations.html#aa8ae831b546105ff8b4df02e7057715e":[3,0,1,0,4,0,1,2],
 "d3/db6/classrtt_1_1ai_1_1stp_1_1computations_1_1PassComputations.html#af6a65675c3cf64e4b7a19d7e2dc6ef24":[3,0,1,0,4,0,1,1],
 "d3/dbe/WorldDataView_8cpp.html":[4,0,0,1,6,0,2],
 "d3/dc1/WorldDataView_8hpp.html":[4,0,0,0,0,5,0,2],
@@ -121,7 +122,7 @@ var NAVTREEINDEX2 =
 "d3/dec/NumTreesPlanning_8h.html":[4,0,0,0,0,0,0,1,0],
 "d3/dec/NumTreesPlanning_8h_source.html":[4,0,0,0,0,0,0,1,0],
 "d3/df8/classrtt_1_1ai_1_1stp_1_1evaluation_1_1GoalShotEvaluation.html":[3,0,1,0,4,1,28],
-"d3/df8/classrtt_1_1ai_1_1stp_1_1evaluation_1_1GoalShotEvaluation.html#a668eeb1e55b712c9e4579f3b23cd8877":[3,0,1,0,4,1,28,0],
+"d3/df8/classrtt_1_1ai_1_1stp_1_1evaluation_1_1GoalShotEvaluation.html#ab736a3ad454b15a1ed558a444bdfc3a1":[3,0,1,0,4,1,28,0],
 "d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html":[3,0,1,0,4,20],
 "d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#a010b914f84632c97e54730a7b84b23b0":[3,0,1,0,4,20,45],
 "d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#a038cc31112b0e9e659b3c51b34fb1930":[3,0,1,0,4,20,1],
@@ -213,7 +214,6 @@ var NAVTREEINDEX2 =
 "d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot.html#a08a78e2b6bb5fb4f75d0c9dc572d25fa":[3,0,1,0,4,3,1,29],
 "d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot.html#a0c13cbd482099fa139f3a5f08d964efe":[3,0,1,0,4,3,1,30],
 "d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot.html#a17fc7a716064d918aa29c072832c2ef8":[3,0,1,0,4,3,1,20],
-"d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot.html#a1da25eafe17775e31254d88680ba4f9a":[3,0,1,0,4,3,1,19],
 "d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot.html#a1dc216d51c90eb0e6ddb0298e1ad034e":[3,0,1,0,4,3,1,18],
 "d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot.html#a4598ba530d29d7f4f53bcec0c9845100":[3,0,1,0,4,3,1,27],
 "d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot.html#a52fc8b6075367b48ae05021829ebcc8f":[3,0,1,0,4,3,1,16],
@@ -232,6 +232,7 @@ var NAVTREEINDEX2 =
 "d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot.html#aa0405b45c69fc25464bec621fbcbe0cc":[3,0,1,0,4,3,1,8],
 "d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot.html#aa20291b5cee34414dfb81aa0fd33713f":[3,0,1,0,4,3,1,11],
 "d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot.html#aa4f72c0cc4fce12be8dfbc56d6074cac":[3,0,1,0,4,3,1,1],
+"d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot.html#aace5bfea5f77fc9b61ed0225a6a323b3":[3,0,1,0,4,3,1,19],
 "d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot.html#ab23ad33458ed975661cdc593bdf40968":[3,0,1,0,4,3,1,14],
 "d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot.html#ab5f09cfa9cd1ddb2a6990cb3c1b4d691":[3,0,1,0,4,3,1,7],
 "d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot.html#ad7b71d56f8b8d8d62b7ec945847a2bec":[3,0,1,0,4,3,1,12],
@@ -248,6 +249,5 @@ var NAVTREEINDEX2 =
 "d4/d5a/InterfaceGateway_8h_source.html":[4,0,0,0,0,1,0,0],
 "d4/d81/BBTrajectory2D_8h.html":[4,0,0,0,0,0,0,0,1],
 "d4/d81/BBTrajectory2D_8h_source.html":[4,0,0,0,0,0,0,0,1],
-"d4/d99/classrtt_1_1world_1_1robot_1_1Robot.html":[3,0,1,2,1,1],
-"d4/d99/classrtt_1_1world_1_1robot_1_1Robot.html#a09ab3d98c0353797bbc01083958ab6ce":[3,0,1,2,1,1,27]
+"d4/d99/classrtt_1_1world_1_1robot_1_1Robot.html":[3,0,1,2,1,1]
 };

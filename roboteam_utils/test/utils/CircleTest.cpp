@@ -219,9 +219,9 @@ TEST(CircleTests, intersectionsTest) {
     ASSERT_TRUE(circle.intersects(containsTwoEnds).empty());
 
     LineSegment diagonalLineSegment({-2, -2}, {2, 2});
-    auto intersectionsDiagonal = circle.intersects(twoIntersectLine);
-    auto possibilityDiagonal1 = std::vector<Vector2>{Vector2(-0.71, -0.71), Vector2(0.71, 0.71)};
-    auto possibilityDiagonal2 = std::vector<Vector2>{Vector2(0.71, 0.71), Vector2(-0.71, -0.71)};
+    auto intersectionsDiagonal = circle.intersects(diagonalLineSegment);
+    auto possibilityDiagonal1 = std::vector<Vector2>{Vector2(-sqrt(2) / 2, -sqrt(2) / 2), Vector2(sqrt(2) / 2, sqrt(2) / 2)};
+    auto possibilityDiagonal2 = std::vector<Vector2>{Vector2(sqrt(2) / 2, sqrt(2) / 2), Vector2(-sqrt(2) / 2, -sqrt(2) / 2)};
     ASSERT_TRUE(intersectionsDiagonal == possibilityDiagonal1 || intersectionsDiagonal == possibilityDiagonal2);
 }
 
@@ -237,13 +237,4 @@ TEST(CircleTests, moveTest) {
     circle.move(vector2);
     EXPECT_DOUBLE_EQ(circle.center.x, -1);
     EXPECT_DOUBLE_EQ(circle.center.y, -1);
-}
-
-TEST(CircleTests, intersectsTest) {
-    Circle circle({0, 0}, 1);
-    LineSegment diagonalLineSegment({-2, -2}, {2, 2});
-    auto intersectionsDiagonal = circle.intersects(diagonalLineSegment);
-    auto possibilityDiagonal1 = std::vector<Vector2>{Vector2(-sqrt(2) / 2, -sqrt(2) / 2), Vector2(sqrt(2) / 2, sqrt(2) / 2)};
-    auto possibilityDiagonal2 = std::vector<Vector2>{Vector2(sqrt(2) / 2, sqrt(2) / 2), Vector2(-sqrt(2) / 2, -sqrt(2) / 2)};
-    ASSERT_TRUE(intersectionsDiagonal == possibilityDiagonal1 || intersectionsDiagonal == possibilityDiagonal2);
 }

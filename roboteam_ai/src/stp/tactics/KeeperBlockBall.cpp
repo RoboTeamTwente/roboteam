@@ -5,6 +5,7 @@
 
 #include "control/ControlUtils.h"
 #include "roboteam_utils/LineSegment.h"
+#include "stp/computations/PositionComputations.h"
 #include "stp/computations/PositionScoring.h"
 #include "stp/constants/ControlConstants.h"
 #include "stp/skills/GoToPos.h"
@@ -28,29 +29,16 @@ KeeperBlockBall::KeeperBlockBall() { skills = rtt::collections::state_machine<Sk
 std::optional<StpInfo> KeeperBlockBall::calculateInfoForSkill(StpInfo const &info) noexcept {
     StpInfo skillStpInfo = info;
 
-    if (!skillStpInfo.getField() || !skillStpInfo.getBall() || !skillStpInfo.getRobot()) return std::nullopt;
+    if (!skillStpInfo.getField() || !skillStpInfo.getBall() || !skillStpInfo.getRobot() || !skillStpInfo.getCurrentWorld()) return std::nullopt;
 
     skillStpInfo.setShouldAvoidOutOfField(false);
     auto targetPosition = calculateTargetPosition(info.getBall().value(), info.getField().value(), info.getEnemyRobot());
     auto maxRobotVelocity = GameStateManager::getCurrentGameState().getRuleSet().getMaxRobotVel();
     auto keeper = skillStpInfo.getRobot()->get();
     int keeperId = GameStateManager::getCurrentGameState().keeperId;
-    double maximumTimeToIntercept = 1;
     Vector2 newBallPos;
-    for (double loopTime = 0; loopTime < 1; loopTime += 0.1) {
-        newBallPos = FieldComputations::getBallPositionAtTime(*(skillStpInfo.getBall()->get()), loopTime);
-        if (LineSegment(skillStpInfo.getBall()->get()->position, newBallPos).distanceToLine(keeper->getPos()) < control_constants::ROBOT_RADIUS) {
-            targetPosition.first = LineSegment(skillStpInfo.getBall()->get()->position, newBallPos).project(keeper->getPos());
-            break;
-        }
-        if (info.getField().value().leftDefenseArea.contains(newBallPos)) {
-            auto trajectory = Trajectory2D(keeper->getPos(), keeper->getVel(), newBallPos, maxRobotVelocity, ai::Constants::MAX_ACC_UPPER());
-            if (trajectory.getTotalTime() < loopTime) {
-                targetPosition.first = newBallPos;
-                break;
-            }
-        }
-    }
+    InterceptInfo interceptionInfo = PositionComputations::calculateInterceptionInfo(skillStpInfo.getField().value(), skillStpInfo.getCurrentWorld(), keeperId);
+    if (interceptionInfo.interceptId == keeperId) targetPosition.first = interceptionInfo.interceptLocation;
     skillStpInfo.setPositionToMoveTo(targetPosition.first);
     skillStpInfo.setPidType(targetPosition.second);
 

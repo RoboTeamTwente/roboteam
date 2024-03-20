@@ -10,6 +10,7 @@ add_library(roboteam_ai_utils ${UTILS_SRC})
 target_link_libraries(roboteam_ai_utils
         PUBLIC Qt5::Network
         PRIVATE roboteam_networking
+        PRIVATE roboteam_utils
         PRIVATE roboteam_ai_gui
 )
 target_include_directories(roboteam_ai_utils
@@ -29,6 +30,7 @@ target_include_directories(roboteam_ai_skills
 )
 target_link_libraries(roboteam_ai_skills
         PRIVATE roboteam_networking
+        PRIVATE roboteam_utils
 )
 target_compile_options(roboteam_ai_skills PRIVATE "${COMPILER_FLAGS}")
 
@@ -44,6 +46,7 @@ target_include_directories(roboteam_ai_tactics
 )
 target_link_libraries(roboteam_ai_tactics
         PRIVATE roboteam_networking
+        PRIVATE roboteam_utils
         PRIVATE roboteam_ai_skills
 )
 target_compile_options(roboteam_ai_tactics PRIVATE "${COMPILER_FLAGS}")
@@ -60,6 +63,7 @@ target_include_directories(roboteam_ai_roles
 )
 target_link_libraries(roboteam_ai_roles
         PRIVATE roboteam_networking
+        PRIVATE roboteam_utils
         PRIVATE roboteam_ai_tactics
 )
 target_compile_options(roboteam_ai_roles PRIVATE "${COMPILER_FLAGS}")
@@ -78,6 +82,7 @@ target_include_directories(roboteam_ai_plays
 )
 target_link_libraries(roboteam_ai_plays
         PRIVATE roboteam_networking
+        PRIVATE roboteam_utils
         PRIVATE roboteam_ai_utils
         PRIVATE roboteam_ai_world
         PRIVATE roboteam_ai_evaluation
@@ -98,6 +103,7 @@ target_include_directories(roboteam_ai_evaluation
 )
 target_link_libraries(roboteam_ai_evaluation
         PRIVATE roboteam_networking
+        PRIVATE roboteam_utils
 )
 target_compile_options(roboteam_ai_evaluation PRIVATE "${COMPILER_FLAGS}")
 
@@ -111,8 +117,9 @@ target_include_directories(roboteam_ai_computation
     PRIVATE include/roboteam_ai
 )
 target_link_libraries(roboteam_ai_computation
-    PRIVATE roboteam_networking
-    PRIVATE roboteam_ai_evaluation
+        PRIVATE roboteam_networking
+        PRIVATE roboteam_utils
+        PRIVATE roboteam_ai_evaluation
 )
 target_compile_options(roboteam_ai_computation PRIVATE "${COMPILER_FLAGS}")
 
@@ -127,6 +134,7 @@ target_include_directories(roboteam_ai_control
 )
 target_link_libraries(roboteam_ai_control
         PRIVATE roboteam_networking
+        PRIVATE roboteam_utils
         PUBLIC Qt5::Network
 )
 target_compile_options(roboteam_ai_control PRIVATE "${COMPILER_FLAGS}")
@@ -168,6 +176,7 @@ target_include_directories(roboteam_ai_world
 )
 target_link_libraries(roboteam_ai_world
         PRIVATE roboteam_networking
+        PRIVATE roboteam_utils
         PRIVATE roboteam_ai_control
 )
 target_compile_options(roboteam_ai_world PRIVATE "${COMPILER_FLAGS}")
@@ -194,6 +203,7 @@ target_link_libraries(roboteam_ai
         PRIVATE roboteam_ai_utils
         PRIVATE roboteam_ai_world
         PRIVATE roboteam_networking
+        PRIVATE roboteam_utils
 )
 target_compile_options(roboteam_ai PRIVATE "${COMPILER_FLAGS}")
 
@@ -209,6 +219,7 @@ target_include_directories(testHelpers
 
 target_link_libraries(testHelpers
         PRIVATE roboteam_networking
+        PRIVATE roboteam_utils
         PRIVATE roboteam_ai_utils
         )
 
@@ -253,6 +264,7 @@ target_link_libraries(roboteam_ai_tests
         PRIVATE roboteam_ai_utils
         PRIVATE roboteam_ai_world
         PRIVATE roboteam_networking
+        PRIVATE roboteam_utils
         PRIVATE testHelpers
 )
 
@@ -284,5 +296,6 @@ gtest_discover_tests(roboteam_ai_tests)
 #         PRIVATE roboteam_ai_utils
 #         PRIVATE roboteam_ai_world
 #         PRIVATE roboteam_networking
+#         PRIVATE roboteam_utils
 #         PRIVATE testHelpers
 # )

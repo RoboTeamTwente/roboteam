@@ -96,8 +96,6 @@ endif()
 
 find_package(Qt5Network REQUIRED)
 
-
-
 # internal projects
 add_subdirectory(roboteam_networking)
 add_subdirectory(roboteam_utils)

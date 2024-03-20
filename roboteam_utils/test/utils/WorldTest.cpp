@@ -6,10 +6,25 @@
 using namespace rtt;
 
 World randomWorld() {
-    return World{.timePoint = static_cast<unsigned long>(SimpleRandom::getInt(0, 1000)),
-                 .id = static_cast<unsigned int>(SimpleRandom::getInt(0, 1000)),
-                 .ball = Ball{.position = Vector2(SimpleRandom::getDouble(-5, 5), SimpleRandom::getDouble(-5, 5))},
-                 .yellowRobots = {Robot{.id = SimpleRandom::getInt(0, 15)}}};
+    return World{
+        .timePoint = static_cast<unsigned long>(SimpleRandom::getInt(0, 1000)),
+        .id = static_cast<unsigned int>(SimpleRandom::getInt(0, 1000)),
+        .ball = Ball{
+            .position = Vector2(SimpleRandom::getDouble(-5, 5), SimpleRandom::getDouble(-5, 5)),
+            .velocity = Vector2(SimpleRandom::getDouble(-5, 5), SimpleRandom::getDouble(-5, 5)),
+            .expectedEndPosition = Vector2(SimpleRandom::getDouble(-5, 5), SimpleRandom::getDouble(-5, 5))
+        },
+        .yellowRobots = {
+            Robot{
+                .id = SimpleRandom::getInt(0, 15),
+                .position = Vector2(SimpleRandom::getDouble(-5, 5), SimpleRandom::getDouble(-5, 5)),
+                .velocity = Vector2(SimpleRandom::getDouble(-5, 5), SimpleRandom::getDouble(-5, 5)),
+                .angle = SimpleRandom::getDouble(-5, 5),
+                .capOffset = SimpleRandom::getDouble(-5, 5)
+            }
+        },
+        .blueRobots = {}
+    };
 }
 
 Field randomField() {

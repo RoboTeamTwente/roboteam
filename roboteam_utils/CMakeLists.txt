@@ -32,7 +32,6 @@ target_link_libraries(roboteam_utils_tests
         PRIVATE roboteam_utils
         PRIVATE GTest::gtest
         PRIVATE GTest::gtest_main
-        PRIVATE pthread
 )
 
 target_compile_options(roboteam_utils_tests PRIVATE "${COMPILER_FLAGS}")

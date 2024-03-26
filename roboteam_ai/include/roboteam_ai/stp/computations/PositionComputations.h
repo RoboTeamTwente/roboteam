@@ -107,7 +107,7 @@ class PositionComputations {
      * @param world The current world
      * @param interceptId The Id of the robot which will intercept
      */
-    static InterceptInfo calculateInterceptionInfo(const Field &field, rtt::world::World *world, int interceptId) noexcept;
+    static InterceptInfo calculateInterceptionInfo(const Field &field, const rtt::world::World *world, int interceptId) noexcept;
 
     /**
      * @brief Calculates info for the harasser role

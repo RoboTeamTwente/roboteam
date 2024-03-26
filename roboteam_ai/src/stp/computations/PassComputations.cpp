@@ -132,6 +132,7 @@ bool PassComputations::pointIsValidPassLocation(Vector2 point, Vector2 ballLocat
 
 int PassComputations::getPasserId(Vector2 ballLocation, const std::vector<world::view::RobotView>& ourRobots, const world::World* world) {
     int bestPasserId = -1;
+    auto field = world->getField().value();
 
     auto possiblePassers = ourRobots;
     // Remove robots that cannot kick
@@ -140,8 +141,8 @@ int PassComputations::getPasserId(Vector2 ballLocation, const std::vector<world:
     // If there is no robot that can kick, return -1
     if (possiblePassers.empty()) return bestPasserId;
     // If there is at least one, pick the closest one to the ball as best passer
-    auto closestPasser = world->getWorld()->getRobotClosestToPoint(ballLocation, possiblePassers);
-    if (closestPasser.has_value()) bestPasserId = closestPasser.value()->getId();
+    auto closestPasserId = PositionComputations::calculateInterceptionInfo(field, world, -1).interceptId;
+    if (closestPasserId != -1) bestPasserId = closestPasserId;
 
     // Remove robots that cannot detect the ball themselves (so no ballSensor or dribblerEncoder)
     std::erase_if(possiblePassers, [](const world::view::RobotView& rbv) { return !Constants::ROBOT_HAS_WORKING_DRIBBLER_ENCODER(rbv->getId()); });
@@ -149,8 +150,8 @@ int PassComputations::getPasserId(Vector2 ballLocation, const std::vector<world:
     // If no robot can detect the ball, the previous closest robot that can only kick is the best one
     if (possiblePassers.empty()) return bestPasserId;
     // But if there is one, the current best passer will be the closest one
-    closestPasser = world->getWorld()->getRobotClosestToPoint(ballLocation, possiblePassers);
-    if (closestPasser.has_value()) bestPasserId = closestPasser.value()->getId();
+    closestPasserId = PositionComputations::calculateInterceptionInfo(field, world, -1).interceptId;
+    if (closestPasserId != -1) bestPasserId = closestPasserId;
 
     return bestPasserId;
 }

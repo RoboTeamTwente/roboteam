@@ -262,7 +262,7 @@ InterceptInfo PositionComputations::calculateHarasserId(world::World *world, con
     return interceptionInfo;
 }
 
-InterceptInfo PositionComputations::calculateInterceptionInfo(const Field &field, world::World *world, int interceptId) noexcept {
+InterceptInfo PositionComputations::calculateInterceptionInfo(const Field &field, const world::World *world, int interceptId) noexcept {
     auto maxRobotVelocity = GameStateManager::getCurrentGameState().getRuleSet().getMaxRobotVel();
     double minTimeToTarget = std::numeric_limits<double>::max();
     int keeperId = GameStateManager::getCurrentGameState().keeperId;

@@ -16,7 +16,7 @@ DefendShot::DefendShot() : Play() {
     // Evaluations that have to be true in order for this play to be considered valid.
     startPlayEvaluation.clear();
     startPlayEvaluation.emplace_back(GlobalEvaluation::NormalPlayGameState);
-    startPlayEvaluation.emplace_back(GlobalEvaluation::WeDoNotHaveBall);
+    startPlayEvaluation.emplace_back(GlobalEvaluation::WeWillNotHaveBall);
     startPlayEvaluation.emplace_back(GlobalEvaluation::BallOnOurSide);
     startPlayEvaluation.emplace_back(GlobalEvaluation::BallNotInOurDefenseAreaAndStill);
 

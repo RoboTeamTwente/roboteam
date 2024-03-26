@@ -1,15 +1,5 @@
 var annotated_dup =
 [
-    [ "nativeformat", "d9/d35/namespacenativeformat.html", [
-      [ "param", "d2/d2c/namespacenativeformat_1_1param.html", [
-        [ "Param", "d2/d80/classnativeformat_1_1param_1_1Param.html", "d2/d80/classnativeformat_1_1param_1_1Param" ],
-        [ "ParamEvent", "db/da6/structnativeformat_1_1param_1_1ParamEvent.html", "db/da6/structnativeformat_1_1param_1_1ParamEvent" ],
-        [ "ParamImplementation", "da/d80/classnativeformat_1_1param_1_1ParamImplementation.html", "da/d80/classnativeformat_1_1param_1_1ParamImplementation" ],
-        [ "ValueAtTimeEvent", "dc/dad/structnativeformat_1_1param_1_1ValueAtTimeEvent.html", "dc/dad/structnativeformat_1_1param_1_1ValueAtTimeEvent" ],
-        [ "LinearRampEvent", "d8/d89/structnativeformat_1_1param_1_1LinearRampEvent.html", "d8/d89/structnativeformat_1_1param_1_1LinearRampEvent" ],
-        [ "DummyEvent", "dc/d16/structnativeformat_1_1param_1_1DummyEvent.html", "dc/d16/structnativeformat_1_1param_1_1DummyEvent" ]
-      ] ]
-    ] ],
     [ "rtt", "dc/d8f/namespacertt.html", [
       [ "ai", "d4/dcc/namespacertt_1_1ai.html", [
         [ "control", "d0/d4f/namespacertt_1_1ai_1_1control.html", [

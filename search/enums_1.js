@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['blockdistance_2782',['BlockDistance',['../d5/d14/namespacertt_1_1ai_1_1stp.html#ab40410d00349ef6102ce3d0fd36a58d3',1,'rtt::ai::stp']]]
+  ['collisiontype_2659',['CollisionType',['../d0/dde/namespacertt_1_1BB.html#a90ddec283fc8250879e878c985a14524',1,'rtt::BB']]]
 ];

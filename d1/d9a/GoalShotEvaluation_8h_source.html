@@ -88,25 +88,21 @@ $(document).ready(function(){initNavTree('d1/d9a/GoalShotEvaluation_8h_source.ht
 <div class="title">GoalShotEvaluation.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<a href="../../d1/d9a/GoalShotEvaluation_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">//</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">// Created by maxl on 23-03-21.</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">//</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160; </div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#ifndef RTT_GOALSHOTEVALUATION_H</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#define RTT_GOALSHOTEVALUATION_H</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &lt;cstdint&gt;</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="keyword">namespace </span><a class="code" href="../../dc/d81/namespacertt_1_1ai_1_1stp_1_1evaluation.html">rtt::ai::stp::evaluation</a> {</div>
-<div class="line"><a name="l00014"></a><span class="lineno"><a class="line" href="../../d3/df8/classrtt_1_1ai_1_1stp_1_1evaluation_1_1GoalShotEvaluation.html">   14</a></span>&#160;<span class="keyword">class </span><a class="code" href="../../d3/df8/classrtt_1_1ai_1_1stp_1_1evaluation_1_1GoalShotEvaluation.html">GoalShotEvaluation</a> {</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;   <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    [[nodiscard]] <span class="keyword">static</span> uint8_t <a class="code" href="../../d3/df8/classrtt_1_1ai_1_1stp_1_1evaluation_1_1GoalShotEvaluation.html#ab736a3ad454b15a1ed558a444bdfc3a1">metricCheck</a>(<span class="keywordtype">double</span> goalVisibility, <span class="keywordtype">double</span> goalAngle, <span class="keywordtype">double</span> normalizedDistanceToGoal) noexcept;</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;};</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;}  <span class="comment">// namespace rtt::ai::stp::evaluation</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#endif  </span><span class="comment">// RTT_GOALSHOTEVALUATION_H</span></div>
-<div class="ttc" id="aclassrtt_1_1ai_1_1stp_1_1evaluation_1_1GoalShotEvaluation_html"><div class="ttname"><a href="../../d3/df8/classrtt_1_1ai_1_1stp_1_1evaluation_1_1GoalShotEvaluation.html">rtt::ai::stp::evaluation::GoalShotEvaluation</a></div><div class="ttdoc">Class that evaluates the Goal Shot score.</div><div class="ttdef"><b>Definition:</b> GoalShotEvaluation.h:14</div></div>
-<div class="ttc" id="aclassrtt_1_1ai_1_1stp_1_1evaluation_1_1GoalShotEvaluation_html_ab736a3ad454b15a1ed558a444bdfc3a1"><div class="ttname"><a href="../../d3/df8/classrtt_1_1ai_1_1stp_1_1evaluation_1_1GoalShotEvaluation.html#ab736a3ad454b15a1ed558a444bdfc3a1">rtt::ai::stp::evaluation::GoalShotEvaluation::metricCheck</a></div><div class="ttdeci">static uint8_t metricCheck(double goalVisibility, double goalAngle, double normalizedDistanceToGoal) noexcept</div><div class="ttdoc">Score ability to make a goal from position based on how much of the goal is visible and the angular s...</div><div class="ttdef"><b>Definition:</b> GoalShotEvaluation.cpp:11</div></div>
-<div class="ttc" id="anamespacertt_1_1ai_1_1stp_1_1evaluation_html"><div class="ttname"><a href="../../dc/d81/namespacertt_1_1ai_1_1stp_1_1evaluation.html">rtt::ai::stp::evaluation</a></div><div class="ttdoc">T/F Invariant if the ball is in our defense area and not moving.</div><div class="ttdef"><b>Definition:</b> BaseEvaluation.h:10</div></div>
+<a href="../../d1/d9a/GoalShotEvaluation_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef RTT_GOALSHOTEVALUATION_H</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#define RTT_GOALSHOTEVALUATION_H</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;cstdint&gt;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160; </div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="keyword">namespace </span><a class="code" href="../../dc/d81/namespacertt_1_1ai_1_1stp_1_1evaluation.html">rtt::ai::stp::evaluation</a> {</div>
+<div class="line"><a name="l00010"></a><span class="lineno"><a class="line" href="../../d3/df8/classrtt_1_1ai_1_1stp_1_1evaluation_1_1GoalShotEvaluation.html">   10</a></span>&#160;<span class="keyword">class </span><a class="code" href="../../d3/df8/classrtt_1_1ai_1_1stp_1_1evaluation_1_1GoalShotEvaluation.html">GoalShotEvaluation</a> {</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;   <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    [[nodiscard]] <span class="keyword">static</span> uint8_t <a class="code" href="../../d3/df8/classrtt_1_1ai_1_1stp_1_1evaluation_1_1GoalShotEvaluation.html#ab736a3ad454b15a1ed558a444bdfc3a1">metricCheck</a>(<span class="keywordtype">double</span> goalVisibility, <span class="keywordtype">double</span> goalAngle, <span class="keywordtype">double</span> normalizedDistanceToGoal) noexcept;</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;};</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;}  <span class="comment">// namespace rtt::ai::stp::evaluation</span></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#endif  </span><span class="comment">// RTT_GOALSHOTEVALUATION_H</span></div>
+<div class="ttc" id="aclassrtt_1_1ai_1_1stp_1_1evaluation_1_1GoalShotEvaluation_html"><div class="ttname"><a href="../../d3/df8/classrtt_1_1ai_1_1stp_1_1evaluation_1_1GoalShotEvaluation.html">rtt::ai::stp::evaluation::GoalShotEvaluation</a></div><div class="ttdoc">Class that evaluates the Goal Shot score.</div><div class="ttdef"><b>Definition:</b> GoalShotEvaluation.h:10</div></div>
+<div class="ttc" id="aclassrtt_1_1ai_1_1stp_1_1evaluation_1_1GoalShotEvaluation_html_ab736a3ad454b15a1ed558a444bdfc3a1"><div class="ttname"><a href="../../d3/df8/classrtt_1_1ai_1_1stp_1_1evaluation_1_1GoalShotEvaluation.html#ab736a3ad454b15a1ed558a444bdfc3a1">rtt::ai::stp::evaluation::GoalShotEvaluation::metricCheck</a></div><div class="ttdeci">static uint8_t metricCheck(double goalVisibility, double goalAngle, double normalizedDistanceToGoal) noexcept</div><div class="ttdoc">Score ability to make a goal from position based on how much of the goal is visible and the angular s...</div><div class="ttdef"><b>Definition:</b> GoalShotEvaluation.cpp:7</div></div>
+<div class="ttc" id="anamespacertt_1_1ai_1_1stp_1_1evaluation_html"><div class="ttname"><a href="../../dc/d81/namespacertt_1_1ai_1_1stp_1_1evaluation.html">rtt::ai::stp::evaluation</a></div><div class="ttdef"><b>Definition:</b> BaseEvaluation.h:6</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

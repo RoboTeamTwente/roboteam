@@ -1,29 +1,5 @@
 var namespaces_dup =
 [
-    [ "Platform support", "df/d89/md_roboteam_ai_src_NFParam_README.html#autotoc_md9", null ],
-    [ "Raison D'être :thought_balloon:", "df/d89/md_roboteam_ai_src_NFParam_README.html#autotoc_md10", null ],
-    [ "Architecture :triangular_ruler:", "df/d89/md_roboteam_ai_src_NFParam_README.html#autotoc_md11", null ],
-    [ "Installation", "df/d89/md_roboteam_ai_src_NFParam_README.html#autotoc_md12", [
-      [ "For Linux", "df/d89/md_roboteam_ai_src_NFParam_README.html#autotoc_md13", null ],
-      [ "For iOS/OSX", "df/d89/md_roboteam_ai_src_NFParam_README.html#autotoc_md14", null ]
-    ] ],
-    [ "Examples", "df/d89/md_roboteam_ai_src_NFParam_README.html#autotoc_md15", [
-      [ "Create the \"Audio Param Example\" curve pictured below", "df/d89/md_roboteam_ai_src_NFParam_README.html#autotoc_md16", [
-        [ "Create the <tt>Param</tt>", "df/d89/md_roboteam_ai_src_NFParam_README.html#autotoc_md17", null ],
-        [ "Add some events", "df/d89/md_roboteam_ai_src_NFParam_README.html#autotoc_md18", null ],
-        [ "Retrieve some values from the <tt>Param</tt>", "df/d89/md_roboteam_ai_src_NFParam_README.html#autotoc_md19", null ]
-      ] ]
-    ] ],
-    [ "Tests", "df/d89/md_roboteam_ai_src_NFParam_README.html#autotoc_md20", [
-      [ "Generating a plot", "df/d89/md_roboteam_ai_src_NFParam_README.html#autotoc_md21", null ]
-    ] ],
-    [ "Contributing :mailbox_with_mail:", "df/d89/md_roboteam_ai_src_NFParam_README.html#autotoc_md22", null ],
-    [ "License :memo:", "df/d89/md_roboteam_ai_src_NFParam_README.html#autotoc_md23", [
-      [ "Acknowledgements", "df/d89/md_roboteam_ai_src_NFParam_README.html#autotoc_md24", [
-        [ "Contributors", "df/d89/md_roboteam_ai_src_NFParam_README.html#autotoc_md25", null ]
-      ] ]
-    ] ],
-    [ "nativeformat", "d9/d35/namespacenativeformat.html", "d9/d35/namespacenativeformat" ],
     [ "roboteam_utils", "dc/d50/namespaceroboteam__utils.html", [
       [ "rotate", "dc/d50/namespaceroboteam__utils.html#aa2b2f6b69f4299177182eff225c47d9e", null ],
       [ "rotate", "dc/d50/namespaceroboteam__utils.html#aa09e3d2031464816b0791edb97a74655", null ],

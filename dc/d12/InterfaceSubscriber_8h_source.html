@@ -88,29 +88,25 @@ $(document).ready(function(){initNavTree('dc/d12/InterfaceSubscriber_8h_source.h
 <div class="title">InterfaceSubscriber.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<a href="../../dc/d12/InterfaceSubscriber_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">//</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">// Created by Martin Miksik on 24/05/2023.</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">//</span></div>
+<a href="../../dc/d12/InterfaceSubscriber_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef RTT_INTERFACESUBSCRIBER_H</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#define RTT_INTERFACESUBSCRIBER_H</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &lt;atomic&gt;</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160; </div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#ifndef RTT_INTERFACESUBSCRIBER_H</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#define RTT_INTERFACESUBSCRIBER_H</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;atomic&gt;</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &quot;proto/GUI.pb.h&quot;</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="keyword">namespace </span><a class="code" href="../../de/d3f/namespacertt_1_1ai_1_1gui_1_1net.html">rtt::ai::gui::net</a> {</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="keyword">class </span>InterfaceGateway;</div>
-<div class="line"><a name="l00013"></a><span class="lineno"><a class="line" href="../../d0/d5c/classrtt_1_1ai_1_1gui_1_1net_1_1InterfaceSubscriber.html">   13</a></span>&#160;<span class="keyword">class </span><a class="code" href="../../d0/d5c/classrtt_1_1ai_1_1gui_1_1net_1_1InterfaceSubscriber.html">InterfaceSubscriber</a> {</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;   <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="../../d0/d5c/classrtt_1_1ai_1_1gui_1_1net_1_1InterfaceSubscriber.html#a46c79919d1ffe9ee497942f094cb96da">onMessage</a>(<span class="keyword">const</span> proto::MsgFromInterface&amp;&amp; message);</div>
-<div class="line"><a name="l00022"></a><span class="lineno"><a class="line" href="../../d0/d5c/classrtt_1_1ai_1_1gui_1_1net_1_1InterfaceSubscriber.html#a70d74e5e971945650c779aacda64bbf0">   22</a></span>&#160;    <a class="code" href="../../d0/d5c/classrtt_1_1ai_1_1gui_1_1net_1_1InterfaceSubscriber.html#a70d74e5e971945650c779aacda64bbf0">InterfaceSubscriber</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;};</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;}  <span class="comment">// namespace rtt::ai::gui::net</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#endif  </span><span class="comment">// RTT_INTERFACESUBSCRIBER_H</span></div>
-<div class="ttc" id="aclassrtt_1_1ai_1_1gui_1_1net_1_1InterfaceSubscriber_html"><div class="ttname"><a href="../../d0/d5c/classrtt_1_1ai_1_1gui_1_1net_1_1InterfaceSubscriber.html">rtt::ai::gui::net::InterfaceSubscriber</a></div><div class="ttdef"><b>Definition:</b> InterfaceSubscriber.h:13</div></div>
-<div class="ttc" id="aclassrtt_1_1ai_1_1gui_1_1net_1_1InterfaceSubscriber_html_a46c79919d1ffe9ee497942f094cb96da"><div class="ttname"><a href="../../d0/d5c/classrtt_1_1ai_1_1gui_1_1net_1_1InterfaceSubscriber.html#a46c79919d1ffe9ee497942f094cb96da">rtt::ai::gui::net::InterfaceSubscriber::onMessage</a></div><div class="ttdeci">void onMessage(const proto::MsgFromInterface &amp;&amp;message)</div><div class="ttdoc">Callback function invoked when a message is received from a client. Processes the received message an...</div><div class="ttdef"><b>Definition:</b> InterfaceSubscriber.cpp:18</div></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &quot;proto/GUI.pb.h&quot;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keyword">namespace </span><a class="code" href="../../de/d3f/namespacertt_1_1ai_1_1gui_1_1net.html">rtt::ai::gui::net</a> {</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="keyword">class </span>InterfaceGateway;</div>
+<div class="line"><a name="l00009"></a><span class="lineno"><a class="line" href="../../d0/d5c/classrtt_1_1ai_1_1gui_1_1net_1_1InterfaceSubscriber.html">    9</a></span>&#160;<span class="keyword">class </span><a class="code" href="../../d0/d5c/classrtt_1_1ai_1_1gui_1_1net_1_1InterfaceSubscriber.html">InterfaceSubscriber</a> {</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;   <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="../../d0/d5c/classrtt_1_1ai_1_1gui_1_1net_1_1InterfaceSubscriber.html#a46c79919d1ffe9ee497942f094cb96da">onMessage</a>(<span class="keyword">const</span> proto::MsgFromInterface&amp;&amp; message);</div>
+<div class="line"><a name="l00018"></a><span class="lineno"><a class="line" href="../../d0/d5c/classrtt_1_1ai_1_1gui_1_1net_1_1InterfaceSubscriber.html#a70d74e5e971945650c779aacda64bbf0">   18</a></span>&#160;    <a class="code" href="../../d0/d5c/classrtt_1_1ai_1_1gui_1_1net_1_1InterfaceSubscriber.html#a70d74e5e971945650c779aacda64bbf0">InterfaceSubscriber</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;};</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;}  <span class="comment">// namespace rtt::ai::gui::net</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#endif  </span><span class="comment">// RTT_INTERFACESUBSCRIBER_H</span></div>
+<div class="ttc" id="aclassrtt_1_1ai_1_1gui_1_1net_1_1InterfaceSubscriber_html"><div class="ttname"><a href="../../d0/d5c/classrtt_1_1ai_1_1gui_1_1net_1_1InterfaceSubscriber.html">rtt::ai::gui::net::InterfaceSubscriber</a></div><div class="ttdef"><b>Definition:</b> InterfaceSubscriber.h:9</div></div>
+<div class="ttc" id="aclassrtt_1_1ai_1_1gui_1_1net_1_1InterfaceSubscriber_html_a46c79919d1ffe9ee497942f094cb96da"><div class="ttname"><a href="../../d0/d5c/classrtt_1_1ai_1_1gui_1_1net_1_1InterfaceSubscriber.html#a46c79919d1ffe9ee497942f094cb96da">rtt::ai::gui::net::InterfaceSubscriber::onMessage</a></div><div class="ttdeci">void onMessage(const proto::MsgFromInterface &amp;&amp;message)</div><div class="ttdoc">Callback function invoked when a message is received from a client. Processes the received message an...</div><div class="ttdef"><b>Definition:</b> InterfaceSubscriber.cpp:14</div></div>
 <div class="ttc" id="aclassrtt_1_1ai_1_1gui_1_1net_1_1InterfaceSubscriber_html_a70d74e5e971945650c779aacda64bbf0"><div class="ttname"><a href="../../d0/d5c/classrtt_1_1ai_1_1gui_1_1net_1_1InterfaceSubscriber.html#a70d74e5e971945650c779aacda64bbf0">rtt::ai::gui::net::InterfaceSubscriber::InterfaceSubscriber</a></div><div class="ttdeci">InterfaceSubscriber()=default</div></div>
-<div class="ttc" id="anamespacertt_1_1ai_1_1gui_1_1net_html"><div class="ttname"><a href="../../de/d3f/namespacertt_1_1ai_1_1gui_1_1net.html">rtt::ai::gui::net</a></div><div class="ttdef"><b>Definition:</b> InterfaceGateway.h:16</div></div>
+<div class="ttc" id="anamespacertt_1_1ai_1_1gui_1_1net_html"><div class="ttname"><a href="../../de/d3f/namespacertt_1_1ai_1_1gui_1_1net.html">rtt::ai::gui::net</a></div><div class="ttdef"><b>Definition:</b> InterfaceGateway.h:12</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

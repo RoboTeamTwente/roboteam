@@ -88,26 +88,22 @@ $(document).ready(function(){initNavTree('d4/df8/OpennessEvaluation_8h_source.ht
 <div class="title">OpennessEvaluation.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<a href="../../d4/df8/OpennessEvaluation_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">//</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">// Created by maxl on 19-03-21.</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">//</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160; </div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#ifndef RTT_OPENNESSEVALUATION_H</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#define RTT_OPENNESSEVALUATION_H</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &lt;cstdint&gt;</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &lt;vector&gt;</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="keyword">namespace </span><a class="code" href="../../dc/d81/namespacertt_1_1ai_1_1stp_1_1evaluation.html">rtt::ai::stp::evaluation</a> {</div>
-<div class="line"><a name="l00015"></a><span class="lineno"><a class="line" href="../../d6/d61/classrtt_1_1ai_1_1stp_1_1evaluation_1_1OpennessEvaluation.html">   15</a></span>&#160;<span class="keyword">class </span><a class="code" href="../../d6/d61/classrtt_1_1ai_1_1stp_1_1evaluation_1_1OpennessEvaluation.html">OpennessEvaluation</a> {</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;   <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    [[nodiscard]] <span class="keyword">static</span> uint8_t <a class="code" href="../../d6/d61/classrtt_1_1ai_1_1stp_1_1evaluation_1_1OpennessEvaluation.html#ace05ccd67d79a52389c0e48556568213">metricCheck</a>(std::vector&lt;double&gt;&amp; enemyDistances, <span class="keywordtype">double</span> radius) noexcept;</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;};</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;}  <span class="comment">// namespace rtt::ai::stp::evaluation</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#endif  </span><span class="comment">// RTT_OPENNESSEVALUATION_H</span></div>
-<div class="ttc" id="aclassrtt_1_1ai_1_1stp_1_1evaluation_1_1OpennessEvaluation_html"><div class="ttname"><a href="../../d6/d61/classrtt_1_1ai_1_1stp_1_1evaluation_1_1OpennessEvaluation.html">rtt::ai::stp::evaluation::OpennessEvaluation</a></div><div class="ttdoc">Class that evaluates the Openness score.</div><div class="ttdef"><b>Definition:</b> OpennessEvaluation.h:15</div></div>
-<div class="ttc" id="aclassrtt_1_1ai_1_1stp_1_1evaluation_1_1OpennessEvaluation_html_ace05ccd67d79a52389c0e48556568213"><div class="ttname"><a href="../../d6/d61/classrtt_1_1ai_1_1stp_1_1evaluation_1_1OpennessEvaluation.html#ace05ccd67d79a52389c0e48556568213">rtt::ai::stp::evaluation::OpennessEvaluation::metricCheck</a></div><div class="ttdeci">static uint8_t metricCheck(std::vector&lt; double &gt; &amp;enemyDistances, double radius) noexcept</div><div class="ttdoc">Score openness of position based on enemy distances to point (quadratically correlated)</div><div class="ttdef"><b>Definition:</b> OpennessEvaluation.cpp:11</div></div>
-<div class="ttc" id="anamespacertt_1_1ai_1_1stp_1_1evaluation_html"><div class="ttname"><a href="../../dc/d81/namespacertt_1_1ai_1_1stp_1_1evaluation.html">rtt::ai::stp::evaluation</a></div><div class="ttdoc">T/F Invariant if the ball is in our defense area and not moving.</div><div class="ttdef"><b>Definition:</b> BaseEvaluation.h:10</div></div>
+<a href="../../d4/df8/OpennessEvaluation_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef RTT_OPENNESSEVALUATION_H</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#define RTT_OPENNESSEVALUATION_H</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;cstdint&gt;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keyword">namespace </span><a class="code" href="../../dc/d81/namespacertt_1_1ai_1_1stp_1_1evaluation.html">rtt::ai::stp::evaluation</a> {</div>
+<div class="line"><a name="l00011"></a><span class="lineno"><a class="line" href="../../d6/d61/classrtt_1_1ai_1_1stp_1_1evaluation_1_1OpennessEvaluation.html">   11</a></span>&#160;<span class="keyword">class </span><a class="code" href="../../d6/d61/classrtt_1_1ai_1_1stp_1_1evaluation_1_1OpennessEvaluation.html">OpennessEvaluation</a> {</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;   <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    [[nodiscard]] <span class="keyword">static</span> uint8_t <a class="code" href="../../d6/d61/classrtt_1_1ai_1_1stp_1_1evaluation_1_1OpennessEvaluation.html#ace05ccd67d79a52389c0e48556568213">metricCheck</a>(std::vector&lt;double&gt;&amp; enemyDistances, <span class="keywordtype">double</span> radius) noexcept;</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;};</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;}  <span class="comment">// namespace rtt::ai::stp::evaluation</span></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#endif  </span><span class="comment">// RTT_OPENNESSEVALUATION_H</span></div>
+<div class="ttc" id="aclassrtt_1_1ai_1_1stp_1_1evaluation_1_1OpennessEvaluation_html"><div class="ttname"><a href="../../d6/d61/classrtt_1_1ai_1_1stp_1_1evaluation_1_1OpennessEvaluation.html">rtt::ai::stp::evaluation::OpennessEvaluation</a></div><div class="ttdoc">Class that evaluates the Openness score.</div><div class="ttdef"><b>Definition:</b> OpennessEvaluation.h:11</div></div>
+<div class="ttc" id="aclassrtt_1_1ai_1_1stp_1_1evaluation_1_1OpennessEvaluation_html_ace05ccd67d79a52389c0e48556568213"><div class="ttname"><a href="../../d6/d61/classrtt_1_1ai_1_1stp_1_1evaluation_1_1OpennessEvaluation.html#ace05ccd67d79a52389c0e48556568213">rtt::ai::stp::evaluation::OpennessEvaluation::metricCheck</a></div><div class="ttdeci">static uint8_t metricCheck(std::vector&lt; double &gt; &amp;enemyDistances, double radius) noexcept</div><div class="ttdoc">Score openness of position based on enemy distances to point (quadratically correlated)</div><div class="ttdef"><b>Definition:</b> OpennessEvaluation.cpp:7</div></div>
+<div class="ttc" id="anamespacertt_1_1ai_1_1stp_1_1evaluation_html"><div class="ttname"><a href="../../dc/d81/namespacertt_1_1ai_1_1stp_1_1evaluation.html">rtt::ai::stp::evaluation</a></div><div class="ttdef"><b>Definition:</b> BaseEvaluation.h:6</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

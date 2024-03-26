@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['globalevaluation_2786',['GlobalEvaluation',['../d5/d14/namespacertt_1_1ai_1_1stp.html#a9b1a79ba58c1300d9f6f0e073f9d7db2',1,'rtt::ai::stp']]]
+  ['kickorchip_2663',['KickOrChip',['../d5/d14/namespacertt_1_1ai_1_1stp.html#a8a168b78725926f5901d2f6370784113',1,'rtt::ai::stp']]]
 ];

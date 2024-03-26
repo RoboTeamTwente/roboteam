@@ -77,6 +77,10 @@ void Play::update() noexcept {
             auto roleStatus = role->update(stpInfos[role->getName()]);
             roleStatuses[role.get()] = roleStatus;
         }
+        if (stpInfos.find(role->getName())->second.getRobot()->get()->getId() == GameStateManager::getCurrentGameState().cardId && (stpInfos.find(role->getName())->second.getRobot()->get()->getPos() - Vector2(0.0, -field.playArea.height() / 2)).length() <= control_constants::GO_TO_POS_ERROR_MARGIN * 4) {
+            stpInfos[role->getName()].setShouldAvoidTheirRobots(false);
+            stpInfos[role->getName()].setShouldAvoidOurRobots(false);
+        }
     }
     DrawMargins();
 }
@@ -138,7 +142,7 @@ void Play::distributeRoles() noexcept {
         flagMap[roles[currentMaxRobots]->getName()].priority = DealerFlagPriority::CARD;
         flagMap[roles[currentMaxRobots]->getName()].forcedID = cardId;
         stpInfos[roles[currentMaxRobots]->getName()].setShouldAvoidBall(true);
-        stpInfos[roles[currentMaxRobots]->getName()].setPositionToMoveTo(Vector2(0.0, -field.playArea.width() / 2));
+        stpInfos[roles[currentMaxRobots]->getName()].setPositionToMoveTo(Vector2(0.0, -field.playArea.height() / 2));
     }
     // Only keep the first n roles, where n is the amount of robots we have
     // This order is based on the order of the roles array

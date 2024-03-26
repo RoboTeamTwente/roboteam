@@ -22,8 +22,8 @@ AttackingPass::AttackingPass() : Play() {
     // Evaluations that have to be true in order for this play to be considered valid.
     startPlayEvaluation.clear();
     startPlayEvaluation.emplace_back(GlobalEvaluation::NormalPlayGameState);
-    startPlayEvaluation.emplace_back(GlobalEvaluation::WeHaveBall);
     startPlayEvaluation.emplace_back(GlobalEvaluation::BallNotInOurDefenseAreaAndStill);
+    startPlayEvaluation.emplace_back(GlobalEvaluation::WeWillHaveBall);
 
     // Evaluations that have to be true to allow the play to continue, otherwise the play will change. Plays can also end using the shouldEndPlay().
     keepPlayEvaluation.clear();
@@ -117,6 +117,9 @@ bool AttackingPass::shouldEndPlay() noexcept {
 
     // If the ball is moving too slow after we have kicked it, we should stop the play to get the ball
     if (ballKicked() && world->getWorld()->getBall()->get()->velocity.length() < control_constants::BALL_IS_MOVING_SLOW_LIMIT) return true;
+
+    // If the ball is rolling away from the receiver
+    if (ballKicked() && (world->getWorld()->getBall()->get()->position - passInfo.passLocation).dot(world->getWorld()->getBall()->get()->velocity) > 0) return true;
 
     // If the passer doesn't have the ball yet and there is a better pass available, we should stop the play
     if (!ballKicked() && stpInfos["passer"].getRobot() && !stpInfos["passer"].getRobot().value()->hasBall() &&

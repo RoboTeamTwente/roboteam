@@ -1,8 +1,3 @@
-//
-// Created by jaro on 30-10-20.
-/// T/F Invariant if the ball is on ENEMY side
-//
-
 #include "stp/evaluations/global/BallOnTheirSideGlobalEvaluation.h"
 
 namespace rtt::ai::stp::evaluation {

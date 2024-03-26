@@ -1,7 +1,3 @@
-//
-// Created by jordi on 06-04-20.
-//
-
 #ifndef RTT_GETBEHINDBALLINDIRECTION_H
 #define RTT_GETBEHINDBALLINDIRECTION_H
 

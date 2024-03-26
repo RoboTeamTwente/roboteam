@@ -1,7 +1,3 @@
-//
-// Created by john on 3/4/20.
-//
-
 #ifndef RTT_TYPE_TRAITS_HPP
 #define RTT_TYPE_TRAITS_HPP
 

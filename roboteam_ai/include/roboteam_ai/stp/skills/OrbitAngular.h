@@ -1,7 +1,3 @@
-//
-// Created by tijmen on 01-07-22.
-//
-
 #ifndef RTT_ORBITANGULAR_H
 #define RTT_ORBITANGULAR_H
 

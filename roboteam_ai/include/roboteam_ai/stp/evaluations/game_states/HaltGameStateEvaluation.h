@@ -1,7 +1,3 @@
-//
-// Created by ratoone on 27-03-20.
-//
-
 #ifndef RTT_HALTGAMESTATEEVALUATION_H
 #define RTT_HALTGAMESTATEEVALUATION_H
 

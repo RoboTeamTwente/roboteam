@@ -1,7 +1,3 @@
-//
-// Created by jordi on 24-03-20.
-//
-
 #ifndef RTT_ATTACK_H
 #define RTT_ATTACK_H
 

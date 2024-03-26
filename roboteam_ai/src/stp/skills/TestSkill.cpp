@@ -1,7 +1,3 @@
-//
-// Created by rtt-vision on 12-10-21.
-//
-
 #include "stp/skills/TestSkill.h"
 
 namespace rtt::ai::stp::skill {

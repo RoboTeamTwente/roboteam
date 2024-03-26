@@ -1,7 +1,3 @@
-//
-// Created by mrlukasbos on 29-3-19.
-//
-
 #ifndef ROBOTEAM_AI_PID_H
 #define ROBOTEAM_AI_PID_H
 

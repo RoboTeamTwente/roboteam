@@ -1,7 +1,3 @@
-//
-// Created by jessevw on 17.03.20.
-//
-
 #ifndef RTT_ATTACKING_PASS_PLAY_H
 #define RTT_ATTACKING_PASS_PLAY_H
 

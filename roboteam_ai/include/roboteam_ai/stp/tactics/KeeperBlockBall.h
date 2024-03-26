@@ -1,7 +1,3 @@
-//
-// Created by jordi on 08-04-20.
-//
-
 #ifndef RTT_KEEPERBLOCKBALL_H
 #define RTT_KEEPERBLOCKBALL_H
 

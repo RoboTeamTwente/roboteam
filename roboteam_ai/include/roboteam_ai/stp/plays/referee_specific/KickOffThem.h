@@ -1,7 +1,3 @@
-//
-// Created by timovdk on 5/1/20.
-//
-
 #ifndef RTT_KICKOFFTHEM_H
 #define RTT_KICKOFFTHEM_H
 

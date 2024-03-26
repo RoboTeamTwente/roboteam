@@ -1,7 +1,3 @@
-//
-// Created by ratoone on 18-11-19.
-//
-
 #include "control/positionControl/PositionControl.h"
 
 #include "control/positionControl/BBTrajectories/BBTrajectory2D.h"
@@ -42,12 +38,11 @@ void PositionControl::setRobotPositions(std::vector<Vector2> &robotPositions) { 
 rtt::BB::CommandCollision PositionControl::computeAndTrackTrajectory(const rtt::world::World *world, const rtt::Field &field, int robotId, Vector2 currentPosition,
                                                                      Vector2 currentVelocity, Vector2 targetPosition, double maxRobotVelocity, stp::PIDType pidType,
                                                                      stp::AvoidObjects avoidObjects) {
-    double timeStep = 0.1;
-
     std::optional<BB::CollisionData> firstCollision;
     rtt::BB::CommandCollision commandCollision = {};
 
     if (shouldRecalculateTrajectory(world, field, robotId, targetPosition, currentPosition, avoidObjects)) {
+        double timeStep = 0.1;
         computedTrajectories[robotId] = Trajectory2D(currentPosition, currentVelocity, targetPosition, maxRobotVelocity, ai::Constants::MAX_ACC_UPPER());
         completedTimeSteps[robotId] = 0;
         firstCollision = worldObjects.getFirstCollision(world, field, computedTrajectories[robotId], computedPaths, robotId, avoidObjects, completedTimeSteps);

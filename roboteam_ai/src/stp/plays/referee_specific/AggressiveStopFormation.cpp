@@ -1,7 +1,3 @@
-//
-// Created by timovdk on 3/30/20.
-//
-
 #include "stp/plays/referee_specific/AggressiveStopFormation.h"
 
 #include "stp/roles/Keeper.h"

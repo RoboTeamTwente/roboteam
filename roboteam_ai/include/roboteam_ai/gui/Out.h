@@ -1,7 +1,3 @@
-//
-// Created by Martin Miksik on 25/04/2023.
-//
-
 #ifndef RTT_OUT_H
 #define RTT_OUT_H
 

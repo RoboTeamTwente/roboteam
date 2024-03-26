@@ -1,7 +1,3 @@
-//
-// Created by jaro on 15-10-20.
-//
-
 #include "control/ControlModule.h"
 
 #include "control/ControlUtils.h"

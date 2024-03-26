@@ -1,7 +1,3 @@
-//
-// Created by ratoone on 24-01-20.
-//
-
 #include "control/positionControl/pathTracking/DensePathTracking.h"
 
 #include "control/positionControl/PositionControlUtils.h"

@@ -1,7 +1,3 @@
-//
-// Created by ratoone on 15-05-20.
-//
-
 #include "stp/evaluations/game_states/NormalOrFreeKickUsGameStateEvaluation.h"
 
 #include "utilities/GameStateManager.hpp"

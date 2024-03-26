@@ -1,7 +1,3 @@
-//
-// Created by ratoone on 30-01-20.
-//
-
 #include "control/positionControl/PositionControlUtils.h"
 
 namespace rtt::ai::control {

@@ -1,7 +1,3 @@
-//
-// Created by jordi on 28-04-20.
-//
-
 #ifndef RTT_PENALTYUSGAMESTATEEVALUATION_H
 #define RTT_PENALTYUSGAMESTATEEVALUATION_H
 

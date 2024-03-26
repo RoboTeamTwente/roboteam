@@ -1,7 +1,3 @@
-//
-// Created by jessevw on 17.03.20.
-//
-
 #include "stp/plays/offensive/AttackingPass.h"
 
 #include <roboteam_utils/Hungarian.h>

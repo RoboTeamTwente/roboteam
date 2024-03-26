@@ -1,7 +1,3 @@
-//
-// Created by Martin Miksik on 24/05/2023.
-//
-
 #include "gui/networking/InterfacePublisher.h"
 
 #include "STPManager.h"

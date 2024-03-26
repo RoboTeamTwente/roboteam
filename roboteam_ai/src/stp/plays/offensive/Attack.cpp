@@ -1,7 +1,3 @@
-//
-// Created by jordi on 24-03-20.
-//
-
 #include "stp/plays/offensive/Attack.h"
 
 #include <roboteam_utils/Hungarian.h>

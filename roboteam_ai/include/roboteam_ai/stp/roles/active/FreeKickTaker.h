@@ -1,7 +1,3 @@
-//
-// Created Alexander on 22-04-2022
-//
-
 #ifndef RTT_FREEKICKTAKER_H
 #define RTT_FREEKICKTAKER_H
 

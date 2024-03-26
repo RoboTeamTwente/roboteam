@@ -1,7 +1,3 @@
-//
-// Created by alexander on 29-04-22.
-//
-
 #ifndef RTT_SHAPE_H
 #define RTT_SHAPE_H
 

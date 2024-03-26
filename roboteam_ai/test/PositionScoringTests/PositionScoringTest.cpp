@@ -1,6 +1,3 @@
-//
-// Created by Alexander de Ranitz on 09-02-22.
-//
 #include <fstream>
 
 #include "helpers/FieldHelper.h"

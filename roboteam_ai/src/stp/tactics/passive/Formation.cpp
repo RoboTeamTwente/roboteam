@@ -1,10 +1,3 @@
-//
-// Created by timovdk on 3/27/20.
-/// Goes to a give POSITION and ROTATEs to face forwards
-
-/// PASSIVE
-//
-
 #include "stp/tactics/passive/Formation.h"
 
 #include "stp/skills/GoToPos.h"

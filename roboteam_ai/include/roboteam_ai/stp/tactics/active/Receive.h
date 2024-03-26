@@ -1,7 +1,3 @@
-//
-// Created by jordi on 13-03-20.
-//
-
 #ifndef RTT_RECEIVE_H
 #define RTT_RECEIVE_H
 

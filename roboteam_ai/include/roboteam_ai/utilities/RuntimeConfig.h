@@ -1,7 +1,3 @@
-//
-// Created by Martin Miksik on 04/05/2023.
-//
-
 #ifndef RTT_RUNTIMECONFIG_H
 #define RTT_RUNTIMECONFIG_H
 

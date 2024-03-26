@@ -1,5 +1,3 @@
-/// Places our robot between the ball and a given target position (either enemy robot or position to defend)
-
 #include "stp/tactics/passive/BlockBall.h"
 
 #include <roboteam_utils/Circle.h>

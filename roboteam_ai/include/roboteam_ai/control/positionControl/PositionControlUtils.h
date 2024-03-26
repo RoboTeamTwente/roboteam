@@ -1,7 +1,3 @@
-//
-// Created by ratoone on 30-01-20.
-//
-
 #ifndef RTT_POSITIONCONTROLUTILS_H
 #define RTT_POSITIONCONTROLUTILS_H
 

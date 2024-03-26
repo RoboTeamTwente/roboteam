@@ -1,7 +1,3 @@
-//
-// Created by rolf on 19-08-20.
-//
-
 #include "Time.h"
 
 #include <cmath>

@@ -1,7 +1,3 @@
-//
-// Created by agata on 14/01/2022.
-//
-
 #ifndef RTT_DEFENDSHOT_H
 #define RTT_DEFENDSHOT_H
 

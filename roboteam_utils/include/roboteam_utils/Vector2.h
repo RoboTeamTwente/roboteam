@@ -226,7 +226,7 @@ std::ostream &operator<<(std::ostream &os, Vector2 const &vec);
 }  // namespace rtt
 
 /**
- * A hash function for the Vector2, for use with unordered_maps. It uses the implementation of the boost hash combine
+ * A hash function for the Vector2, for use with unordered_maps. It uses the implementation of the hash combine
  */
 template <>
 struct std::hash<rtt::Vector2> {

@@ -13,8 +13,6 @@ endif()
 
 find_package(Qt5Network REQUIRED)
 
-set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
-set(THREADS_PREFER_PTHREAD_FLAG TRUE)
 find_package(Threads REQUIRED)
 
 # Generate the proto files for the simulator manager

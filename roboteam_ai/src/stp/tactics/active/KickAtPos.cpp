@@ -1,9 +1,3 @@
-//
-// Created by timovdk on 3/12/20.
-/// Rotates (with dribbler) the robot if needed to target angle then calculates the power to KICK the BALL with.
-/// ACTIVE
-//
-
 #include "stp/tactics/active/KickAtPos.h"
 
 #include "control/ControlUtils.h"

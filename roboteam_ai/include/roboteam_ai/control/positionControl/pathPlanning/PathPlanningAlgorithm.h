@@ -1,7 +1,3 @@
-//
-// Created by ratoone on 09-03-20.
-//
-
 #ifndef RTT_PATHPLANNINGALGORITHM_H
 #define RTT_PATHPLANNINGALGORITHM_H
 

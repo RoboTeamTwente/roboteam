@@ -1,7 +1,3 @@
-//
-// Created by Martin Miksik on 25/04/2023.
-//
-
 #include "gui/networking/InterfaceGateway.h"
 
 #include <memory>

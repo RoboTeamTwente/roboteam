@@ -1,7 +1,3 @@
-//
-// Created by john on 3/2/20.
-//
-
 #include "stp/Skill.h"
 
 #include "control/ControlModule.h"

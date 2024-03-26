@@ -1,8 +1,3 @@
-//
-// Created by jordi on 26-03-20.
-/// TODO-Max Fix Intercept usage in play (mimics "Oppertunic Behavior")
-//
-
 #include "stp/roles/passive/Defender.h"
 
 #include "stp/tactics/passive/BlockBall.h"

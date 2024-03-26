@@ -1,7 +1,3 @@
-//
-// Created by jordi on 17-03-20.
-//
-
 #include "stp/roles/active/Striker.h"
 
 #include "stp/tactics/active/GetBall.h"

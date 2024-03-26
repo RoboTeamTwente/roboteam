@@ -1,7 +1,3 @@
-//
-// Created by alexander on 02-12-21.
-//
-
 #include "stp/computations/PositionScoring.h"
 
 #include "stp/computations/ComputationManager.h"

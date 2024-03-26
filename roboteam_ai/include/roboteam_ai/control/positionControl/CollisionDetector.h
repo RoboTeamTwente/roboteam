@@ -1,7 +1,3 @@
-//
-// Created by ratoone on 10-12-19.
-//
-
 #ifndef RTT_COLLISIONDETECTOR_H
 #define RTT_COLLISIONDETECTOR_H
 

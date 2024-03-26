@@ -1,7 +1,3 @@
-//
-// Created by rolf on 24-02-20.
-//
-
 #ifndef ROBOTEAM_UTILS_TUBE_H
 #define ROBOTEAM_UTILS_TUBE_H
 #include "LineSegment.h"

@@ -1,7 +1,3 @@
-//
-// Created by rolf on 24-4-19.
-//
-
 #ifndef ROBOTEAM_UTILS_POLYGON_H
 #define ROBOTEAM_UTILS_POLYGON_H
 

@@ -1,9 +1,3 @@
-//
-// Created by jordi on 13-03-20.
-
-/// ACTIVE
-//
-
 #include "stp/tactics/active/Receive.h"
 
 #include "stp/constants/ControlConstants.h"

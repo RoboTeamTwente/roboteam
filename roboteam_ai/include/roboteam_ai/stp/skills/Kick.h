@@ -1,7 +1,3 @@
-//
-// Created by jordi on 03-03-20.
-//
-
 #ifndef RTT_KICK_H
 #define RTT_KICK_H
 

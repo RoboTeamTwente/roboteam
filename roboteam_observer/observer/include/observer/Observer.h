@@ -1,0 +1,44 @@
+#ifndef RTT_OBSERVER_H
+#define RTT_OBSERVER_H
+
+#include <proto/State.pb.h>
+#include <proto/messages_robocup_ssl_referee.pb.h>
+#include <proto/messages_robocup_ssl_wrapper.pb.h>
+#include <roboteam_utils/Time.h>
+
+#include <roboteam_utils/RobotFeedback.hpp>
+
+#include "filters/referee/RefereeFilter.h"
+#include "filters/vision/VisionFilter.h"
+#include "parameters/RobotParameterDatabase.h"
+
+/**
+ * @brief This class provides a unified interface for processing all the real-time information provided by the SSL and our system
+ * on the physical state and the referee's current state of the game.
+ * Note this interface is NOT responsible for networking-related issues, e.g. all objects passed to it are assumed to be from a
+ * trusted source. Some packets may however still be discarded if they have bad timestamps for example.
+ * @author Rolf
+ */
+class Observer {
+   public:
+    /**
+     * Calls all of the feedbacks for processing relevant data given the given input data.
+     * @param time time to extrapolate the world to
+     * @param visionPackets all of the packets received from vision, including detectionFrames and geometry information
+     * @param refereePackets All of the packets which were received from the referee.
+     *@return The entire known/predicted state of the game at this point in time.
+     */
+    proto::State process(const std::vector<proto::SSL_WrapperPacket>& visionPackets, const std::vector<proto::Referee>& refereePackets,
+                         const std::vector<rtt::RobotsFeedback>& robotData);
+
+   private:
+    RobotParameterDatabase parameterDatabase;
+    VisionFilter visionFilter;
+    RefereeFilter refereeFilter;
+
+    void updateRobotParams(std::vector<proto::Referee> refereePackets);
+
+    void updateReferee(const std::vector<proto::Referee>& refereePackets);
+};
+
+#endif  // RTT_OBSERVER_H

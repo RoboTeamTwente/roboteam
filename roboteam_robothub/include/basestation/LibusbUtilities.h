@@ -1,4 +1,3 @@
-// Created by emiel on 21-05-21.
 #pragma once
 
 #include <libusb-1.0/libusb.h>

@@ -1,7 +1,3 @@
-//
-// Created by ratoone on 20-02-20.
-//
-
 #ifndef RTT_PATHPOINTNODE_H
 #define RTT_PATHPOINTNODE_H
 

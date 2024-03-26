@@ -1,7 +1,3 @@
-//
-// Created by thijs on 28-2-19.
-//
-
 #ifndef ANGLE_H
 #define ANGLE_H
 
@@ -13,9 +9,6 @@ class Vector2;
 
 /**
  * The Angle class is a modular class on the interval [-PI, PI) that deals with addition, subtractions, distances and comparisons on this scale.
- * @author Created by: Thijs Luttikhuis <br>
- *         Recreated by: Haico Dorenbos
- * @since 2019-02-28
  */
 class Angle {
    public:

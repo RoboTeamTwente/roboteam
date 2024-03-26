@@ -1,7 +1,3 @@
-//
-// Created by tijmen on 24-04-22.
-//
-
 #include "stp/roles/active/Harasser.h"
 
 #include "stp/tactics/active/GetBall.h"

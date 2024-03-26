@@ -1,7 +1,3 @@
-//
-// Created by tijmen on 16-12-21.
-//
-
 #ifndef RTT_TRAJECTORY1D_H
 #define RTT_TRAJECTORY1D_H
 

@@ -1,7 +1,3 @@
-//
-// Created by rolf on 19-08-20.
-//
-
 #include <gtest/gtest.h>
 #include <roboteam_utils/Time.h>
 

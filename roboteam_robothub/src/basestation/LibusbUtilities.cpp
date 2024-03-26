@@ -1,4 +1,3 @@
-// Created by emiel on 21-05-21.
 #include "../../include/basestation/LibusbUtilities.h"
 
 #include <basestation/LibusbUtilities.h>
@@ -248,19 +247,36 @@ void usbutils_enumerate() {
         }
 
         error = libusb_get_string_descriptor_ascii(handle, desc.iManufacturer, str, sizeof(str));
+        if (error) {
+            std::cout << "Error while retrieving manufacturer : " << usbutils_errorToString(error) << std::endl;
+            continue;
+        }
         std::string manufacturer((char *)str);
+
         error = libusb_get_string_descriptor_ascii(handle, desc.iProduct, str, sizeof(str));
+        if (error) {
+            std::cout << "Error while retrieving product : " << usbutils_errorToString(error) << std::endl;
+            continue;
+        }
         std::string product((char *)str);
+
         error = libusb_get_string_descriptor_ascii(handle, desc.iSerialNumber, str, sizeof(str));
+        if (error) {
+            std::cout << "Error while retrieving serial number : " << usbutils_errorToString(error) << std::endl;
+            continue;
+        }
         std::string serialNumber((char *)str);
+
         std::cout << "Device : " << manufacturer << " " << product << " " << serialNumber << std::endl;
 
         /** http://libusb.sourceforge.net/api-1.0/structlibusb__config__descriptor.html */
         for (int iConfig = 0; iConfig < desc.bNumConfigurations; iConfig++) {
             libusb_config_descriptor *configDesc;
             error = libusb_get_config_descriptor(device, iConfig, &configDesc);
-            if (error) std::cout << "Error while retrieving config " << iConfig << " : " << usbutils_errorToString(error) << std::endl;
-            if (error) continue;
+            if (error) {
+                std::cout << "Error while retrieving config " << iConfig << " : " << usbutils_errorToString(error) << std::endl;
+                continue;
+            }
 
             std::cout << "CONFIGURATION " << iConfig << std::endl;
             // bNumInterfaces : Number of interfaces supported by this configuration.
@@ -275,8 +291,8 @@ void usbutils_enumerate() {
                 std::cout << "│   Configuration : " << str << std::endl;
             // 	MaxPower : Maximum power consumption of the USB device from this bus in this configuration when the device is fully operation.
             //  Expressed in units of 2 mA when the device is operating in high-speed mode and in units of 8 mA when the device is operating in super-speed mode.
-            std::bitset<8> bmAttributes(configDesc->bmAttributes);
-            std::cout << "|   bmAttributes : " << bmAttributes << std::endl;
+            std::bitset<8> configBmAttributes(configDesc->bmAttributes);
+            std::cout << "|   bmAttributes : " << configBmAttributes << std::endl;
             std::cout << "│   MaxPower : " << std::to_string(configDesc->MaxPower) << std::endl;
             // Length of the extra descriptors, in bytes.
             std::cout << "│   extra_length : " << std::to_string(configDesc->extra_length) << std::endl;
@@ -306,8 +322,8 @@ void usbutils_enumerate() {
                         libusb_endpoint_descriptor endpointDesc = interfaceDesc.endpoint[iEndpoint];
                         std::cout << "│   │   ├──ENDPOINT " << std::to_string(iEndpoint) << std::endl;
                         // bEndPointAddress : The address of the endpoint described by this descriptor.
-                        std::bitset<8> bmAttributes(endpointDesc.bEndpointAddress);
-                        std::cout << "|   │   │   bEndpointAddress : " << bmAttributes << std::endl;
+                        std::bitset<8> endpointBmAttributes(endpointDesc.bEndpointAddress);
+                        std::cout << "|   │   │   bEndpointAddress : " << endpointBmAttributes << std::endl;
                         std::cout << "│   │   │   endpoint number : " << usbutils_bEndpointAddress_EndpointNumberToString(endpointDesc.bEndpointAddress).c_str() << std::endl;
                         std::cout << "│   │   │   endpoint direction : " << usbutils_endpointDirectionToString(usbutils_getEndpointDirection(endpointDesc.bEndpointAddress))
                                   << std::endl;

@@ -1,7 +1,3 @@
-//
-// Created by Floris Hoek on 22-06-21.
-//
-
 #include "stp/plays/referee_specific/FreeKickUsAtGoal.h"
 
 #include "stp/computations/GoalComputations.h"

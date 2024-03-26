@@ -1,7 +1,3 @@
-//
-// Created by Martin Miksik on 24/05/2023.
-//
-
 #ifndef RTT_INTERFACESUBSCRIBER_H
 #define RTT_INTERFACESUBSCRIBER_H
 #include <atomic>

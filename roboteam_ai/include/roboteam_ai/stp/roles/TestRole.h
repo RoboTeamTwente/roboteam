@@ -1,7 +1,3 @@
-//
-// Created by timovdk on 3/10/20.
-//
-
 #ifndef RTT_TESTROLE_H
 #define RTT_TESTROLE_H
 

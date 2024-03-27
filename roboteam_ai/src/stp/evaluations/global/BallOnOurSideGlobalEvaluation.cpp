@@ -1,8 +1,3 @@
-//
-// Created by timovdk on 4/14/20.
-/// T/F Invariant if the ball is on FRIENDLY side
-//
-
 #include "stp/evaluations/global/BallOnOurSideGlobalEvaluation.h"
 
 namespace rtt::ai::stp::evaluation {

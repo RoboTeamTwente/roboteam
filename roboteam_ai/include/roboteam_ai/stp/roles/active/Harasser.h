@@ -1,7 +1,3 @@
-//
-// Created by tijmen on 24-04-22.
-//
-
 #ifndef RTT_HARASSER_H
 #define RTT_HARASSER_H
 

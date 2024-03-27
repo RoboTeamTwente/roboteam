@@ -1,7 +1,3 @@
-//
-// Created by jessevw on 17.03.20.
-//
-
 #ifndef RTT_PASSER_H
 #define RTT_PASSER_H
 

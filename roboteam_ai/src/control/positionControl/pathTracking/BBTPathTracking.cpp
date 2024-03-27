@@ -1,7 +1,3 @@
-//
-// Created by tijmen on 27-10-21.
-//
-
 #include "control/positionControl/pathTracking/BBTPathTracking.h"
 
 #include <stp/StpInfo.h>

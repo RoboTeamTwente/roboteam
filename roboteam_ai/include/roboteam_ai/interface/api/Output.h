@@ -1,7 +1,3 @@
-//
-// Created by mrlukasbos on 18-1-19.
-//
-
 #ifndef ROBOTEAM_AI_OUTPUT_H
 #define ROBOTEAM_AI_OUTPUT_H
 

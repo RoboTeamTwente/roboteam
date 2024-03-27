@@ -1,7 +1,3 @@
-//
-// Created by Martin Miksik on 03/05/2023.
-//
-
 #ifndef RTT_ROBOTHUBMODE_H
 #define RTT_ROBOTHUBMODE_H
 

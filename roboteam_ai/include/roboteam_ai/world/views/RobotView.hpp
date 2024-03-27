@@ -1,7 +1,3 @@
-//
-// Created by john on 1/14/20.
-//
-
 #ifndef RTT_ROBOT_VIEW_HPP
 #define RTT_ROBOT_VIEW_HPP
 

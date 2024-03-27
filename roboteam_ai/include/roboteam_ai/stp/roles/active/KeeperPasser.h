@@ -1,7 +1,3 @@
-//
-// Created by tijmen on 14-07-22.
-//
-
 #ifndef RTT_KEEPERPASSER_H
 #define RTT_KEEPERPASSER_H
 

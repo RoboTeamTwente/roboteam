@@ -1,7 +1,3 @@
-//
-// Created by maxl on 09-02-21.
-//
-
 #include "stp/computations/PositionComputations.h"
 
 #include <roboteam_utils/Grid.h>
@@ -63,12 +59,11 @@ std::vector<Vector2> PositionComputations::determineWallPositions(const rtt::Fie
     }
 
     std::vector<Vector2> positions = {};
-    Vector2 projectedPosition = {};
-    std::vector<Vector2> lineBorderIntersects = {};
+    Vector2 projectedPosition;
 
     // Find the intersection of the ball-to-goal line with the border of the defense area
     LineSegment ball2GoalLine = LineSegment(ballPos, field.leftGoalArea.rightLine().center());
-    lineBorderIntersects = FieldComputations::getDefenseArea(field, true, spaceBetweenDefenseArea, 0).intersections(ball2GoalLine);
+    std::vector<Vector2> lineBorderIntersects = FieldComputations::getDefenseArea(field, true, spaceBetweenDefenseArea, 0).intersections(ball2GoalLine);
 
     // If there are intersections, sort them and use the first one. Otherwise, use a default position
     if (!lineBorderIntersects.empty()) {
@@ -278,7 +273,7 @@ InterceptInfo PositionComputations::calculateInterceptionInfo(const Field &field
     for (double loopTime = 0; loopTime < 1; loopTime += 0.1) {
         newBallPos = FieldComputations::getBallPositionAtTime(*(world->getWorld()->getBall()->get()), loopTime);
         // If the line of sight score is too low or the ball is out of field, we don't intercept, we go to the ball
-        if (interceptId != keeperId && PositionScoring::scorePosition(newBallPos, gen::LineOfSight, field, world).score < interceptScore ||
+        if ((interceptId != keeperId && PositionScoring::scorePosition(newBallPos, gen::LineOfSight, field, world).score < interceptScore) ||
             !field.playArea.contains(newBallPos, control_constants::BALL_RADIUS)) {
             return {interceptLocation, minTimeRobotId};
         }

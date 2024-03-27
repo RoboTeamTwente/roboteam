@@ -1,6 +1,3 @@
-//
-// Created by floris on 15-11-20.
-//
 #include "control/positionControl/BBTrajectories/WorldObjects.h"
 
 #include <algorithm>

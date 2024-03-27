@@ -1,7 +1,3 @@
-//
-// Created by agata on 14/01/2022.
-//
-
 #include "stp/plays/defensive/DefendPass.h"
 
 #include <world/views/RobotView.hpp>

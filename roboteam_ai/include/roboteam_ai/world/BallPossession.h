@@ -11,9 +11,6 @@ namespace rtt::ai {
 
 /**
  * Computes and stores the ball possession state which indicates which team controls the ball (can also be both/no team).
- * @author Created by: Rolf van der Hulst <br>
- *         Documented by: Haico Dorenbos
- * @since 2019-04-15
  */
 class BallPossession {
    private:

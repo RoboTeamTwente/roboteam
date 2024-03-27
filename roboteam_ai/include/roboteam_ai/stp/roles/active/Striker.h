@@ -1,7 +1,3 @@
-//
-// Created by jordi on 17-03-20.
-//
-
 #ifndef RTT_STRIKER_H
 #define RTT_STRIKER_H
 

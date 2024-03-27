@@ -1,7 +1,3 @@
-//
-// Created by jesse on 18-05-20.
-//
-
 #ifndef RTT_GRID_H
 #define RTT_GRID_H
 

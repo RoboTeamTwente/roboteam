@@ -1,7 +1,3 @@
-//
-// Created by rolf on 06-06-22.
-//
-
 #ifndef RTT_BACKLOGGER_H
 #define RTT_BACKLOGGER_H
 

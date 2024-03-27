@@ -1,8 +1,3 @@
-#
-# Created by Max Thielen on Oct. 15, 2021
-# Updated by Jibbe Andringa on Mar. 7, 2023
-#
-
 name: Doxygen Documentation
 
 on:

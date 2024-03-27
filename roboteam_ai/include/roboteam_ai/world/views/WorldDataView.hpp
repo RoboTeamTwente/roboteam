@@ -1,7 +1,3 @@
-//
-// Created by john on 1/6/20.
-//
-
 #ifndef RTT_WORLD_DATA_VIEW_HPP
 #define RTT_WORLD_DATA_VIEW_HPP
 

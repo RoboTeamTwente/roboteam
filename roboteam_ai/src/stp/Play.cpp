@@ -1,7 +1,3 @@
-//
-// Created by john on 3/9/20.
-//
-
 #include "stp/Play.hpp"
 
 #include "control/ControlUtils.h"
@@ -229,7 +225,7 @@ void Play::DrawMargins() noexcept {
                 },
                 rightDefenseAreaMargin);
         }
-        auto color = proto::Drawing::BLUE;
+        proto::Drawing::Color color;
         if (currentGameState == RefCommand::BALL_PLACEMENT_THEM || currentGameState == RefCommand::DIRECT_FREE_THEM || currentGameState == RefCommand::KICKOFF_THEM ||
             currentGameState == RefCommand::PREPARE_FORCED_START)
             color = GameSettings::isYellow() ? proto::Drawing::YELLOW : proto::Drawing::BLUE;
@@ -281,7 +277,7 @@ void Play::DrawMargins() noexcept {
     }
     std::array<std::string, 4> names = {"harasser", "passer", "receiver", "striker"};
     std::array<proto::Drawing::Color, 4> colors = {proto::Drawing::RED, proto::Drawing::WHITE, proto::Drawing::MAGENTA, proto::Drawing::WHITE};
-    for (int i = 0; i < names.size(); i++) {
+    for (std::size_t i = 0; i < names.size(); i++) {
         if (stpInfos[names[i]].getRobot()) {
             std::array<rtt::Vector2, 1> position = {stpInfos[names[i]].getRobot()->get()->getPos()};
             rtt::ai::gui::Out::draw(

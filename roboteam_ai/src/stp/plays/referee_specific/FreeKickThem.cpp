@@ -1,7 +1,3 @@
-//
-// Created by jordi on 07-05-20.
-//
-
 #include "stp/plays/referee_specific/FreeKickThem.h"
 
 #include "stp/computations/PositionComputations.h"

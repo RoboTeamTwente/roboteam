@@ -1,7 +1,3 @@
-//
-// Created by jordi on 30-04-20.
-//
-
 #include "stp/plays/referee_specific/KickOffThemPrepare.h"
 
 #include "stp/roles/Keeper.h"

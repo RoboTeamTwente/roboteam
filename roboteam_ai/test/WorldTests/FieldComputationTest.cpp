@@ -1,7 +1,3 @@
-//
-// Created by Haico Dorenbos on 20-03-2020
-//
-
 #include <gtest/gtest.h>
 #include <helpers/FieldHelper.h>
 #include <roboteam_utils/Random.h>

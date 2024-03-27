@@ -1,7 +1,3 @@
-//
-// Created by jessevw on 17.03.20.
-//
-
 #ifndef RTT_FREE_KICK_US_PASS_PLAY_H
 #define RTT_FREE_KICK_US_PASS_PLAY_H
 

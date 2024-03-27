@@ -1,7 +1,3 @@
-//
-// Created by jordi on 09-03-20.
-//
-
 #ifndef RTT_GOTOPOS_H
 #define RTT_GOTOPOS_H
 

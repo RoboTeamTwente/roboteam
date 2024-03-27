@@ -1,10 +1,3 @@
-//
-// Created by ratoone on 10-03-20.
-/// Moves the robot to the BALL in a straight line and ROTATES the robot towards to ball.
-
-/// ACTIVE
-//
-
 #include "stp/tactics/active/GetBall.h"
 
 #include <world/World.hpp>
@@ -26,7 +19,6 @@ std::optional<StpInfo> GetBall::calculateInfoForSkill(StpInfo const &info) noexc
     if (!skillStpInfo.getRobot() || !skillStpInfo.getBall() || !skillStpInfo.getField() || !skillStpInfo.getCurrentWorld()) return std::nullopt;
     skillStpInfo.setShouldAvoidBall(false);
     Vector2 robotPosition = skillStpInfo.getRobot().value()->getPos();
-    Vector2 robotVelocity = skillStpInfo.getRobot().value()->getVel();
     Vector2 ballPosition = skillStpInfo.getBall().value()->position;
     Vector2 interceptionPosition = ballPosition;
     auto maxRobotVelocity = GameStateManager::getCurrentGameState().getRuleSet().getMaxRobotVel();

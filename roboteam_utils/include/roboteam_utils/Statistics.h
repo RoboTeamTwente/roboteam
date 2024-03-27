@@ -1,7 +1,3 @@
-//
-// Created by rolf on 22-01-20.
-//
-
 #ifndef ROBOTEAM_UTILS_STATISTICS_H
 #define ROBOTEAM_UTILS_STATISTICS_H
 

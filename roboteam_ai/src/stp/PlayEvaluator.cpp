@@ -1,7 +1,3 @@
-//
-// Created by maxl on 18-02-21.
-//
-
 #include "stp/PlayEvaluator.h"
 
 #include <stp/evaluations/game_states/BallPlacementThemGameStateEvaluation.h>

@@ -1,7 +1,3 @@
-//
-// Created by Alexander on 28-01-2022
-//
-
 #include "stp/evaluations/game_states/KickOffUsOrNormalGameStateEvaluation.h"
 
 #include "utilities/GameStateManager.hpp"

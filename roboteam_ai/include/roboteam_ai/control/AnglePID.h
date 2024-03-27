@@ -1,7 +1,3 @@
-//
-// Created by rolf on 01-06-21.
-//
-
 #ifndef RTT_ANGLEPID_H
 #define RTT_ANGLEPID_H
 

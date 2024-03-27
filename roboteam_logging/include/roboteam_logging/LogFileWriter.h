@@ -1,7 +1,3 @@
-//
-// Created by rolf on 28-05-22.
-//
-
 #ifndef RTT_LOGFILEWRITER_H
 #define RTT_LOGFILEWRITER_H
 #include <fstream>

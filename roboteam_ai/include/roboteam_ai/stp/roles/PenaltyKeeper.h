@@ -1,8 +1,3 @@
-//
-// Created by jordi on 08-04-20.
-// Modified by timovdk on 4/29/20.
-//
-
 #ifndef RTT_PENALTYKEEPER_H
 #define RTT_PENALTYKEEPER_H
 

@@ -1,7 +1,3 @@
-//
-// Created by rolf on 24-02-20.
-//
-
 #include "Tube.h"
 
 #include "Circle.h"

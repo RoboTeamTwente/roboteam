@@ -1,7 +1,3 @@
-//
-// Created by ratoone on 24-01-20.
-//
-
 #ifndef RTT_PIDTRACKING_H
 #define RTT_PIDTRACKING_H
 

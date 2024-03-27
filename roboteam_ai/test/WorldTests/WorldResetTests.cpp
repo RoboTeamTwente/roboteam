@@ -1,6 +1,3 @@
-//
-// Created by john on 3/2/20.
-//
 #define RUNNING_TEST
 
 #include <gtest/gtest.h>

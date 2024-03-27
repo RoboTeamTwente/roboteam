@@ -1,7 +1,3 @@
-//
-// Created by jordi on 09-03-20.
-//
-
 #include "stp/skills/GoToPos.h"
 
 #include "control/positionControl/BBTrajectories/WorldObjects.h"

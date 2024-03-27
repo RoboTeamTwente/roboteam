@@ -1,7 +1,3 @@
-//
-// Created by timo on 3/27/20.
-//
-
 #include "stp/plays/referee_specific/DefensiveStopFormation.h"
 
 #include "stp/roles/Keeper.h"

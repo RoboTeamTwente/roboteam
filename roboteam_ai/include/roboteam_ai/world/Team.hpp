@@ -1,7 +1,3 @@
-//
-// Created by john on 12/17/19.
-//
-
 #ifndef RTT_TEAM_HPP
 #define RTT_TEAM_HPP
 

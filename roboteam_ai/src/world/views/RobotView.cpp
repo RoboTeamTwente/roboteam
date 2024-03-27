@@ -1,7 +1,3 @@
-//
-// Created by john on 1/14/20.
-//
-
 #include "world/views/RobotView.hpp"
 
 #include "world/World.hpp"

@@ -1,7 +1,3 @@
-//
-// Created by mrlukasbos on 14-11-18.
-//
-
 #include <gtest/gtest.h>
 #include <interface/api/Output.h>
 #include <proto/messages_robocup_ssl_referee.pb.h>

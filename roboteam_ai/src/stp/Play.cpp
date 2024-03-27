@@ -73,7 +73,9 @@ void Play::update() noexcept {
             auto roleStatus = role->update(stpInfos[role->getName()]);
             roleStatuses[role.get()] = roleStatus;
         }
-        if (stpInfos.find(role->getName())->second.getRobot()->get()->getId() == GameStateManager::getCurrentGameState().cardId && (stpInfos.find(role->getName())->second.getRobot()->get()->getPos() - Vector2(0.0, -field.playArea.height() / 2)).length() <= control_constants::GO_TO_POS_ERROR_MARGIN * 4) {
+        if (stpInfos.find(role->getName())->second.getRobot()->get()->getId() == GameStateManager::getCurrentGameState().cardId &&
+            (stpInfos.find(role->getName())->second.getRobot()->get()->getPos() - Vector2(0.0, -field.playArea.height() / 2)).length() <=
+                control_constants::GO_TO_POS_ERROR_MARGIN * 4) {
             stpInfos[role->getName()].setShouldAvoidTheirRobots(false);
             stpInfos[role->getName()].setShouldAvoidOurRobots(false);
         }

@@ -92,18 +92,16 @@ class PositionComputations {
     /**
      * @brief Calculates the id of the harasser
      * @param world The current world
-     * @param field The current field
      * @return HarasserInfo with the id and the time to the ball
      */
-    static InterceptInfo calculateHarasserId(rtt::world::World *world, const Field &field) noexcept;
+    static InterceptInfo calculateHarasserId(rtt::world::World *world) noexcept;
 
     /**
      * @brief Calculates the position for an intercept
-     * @param field The current field
      * @param world The current world
      * @param interceptId The Id of the robot which will intercept
      */
-    static InterceptInfo calculateInterceptionInfo(const Field &field, const rtt::world::World *world, int interceptId) noexcept;
+    static InterceptInfo calculateInterceptionInfo(const rtt::world::World *world, int interceptId) noexcept;
 
     /**
      * @brief Calculates info for the harasser role

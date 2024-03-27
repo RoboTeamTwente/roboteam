@@ -247,17 +247,18 @@ Vector2 PositionComputations::calculatePositionOutsideOfShape(Vector2 targetPosi
     return targetPosition;
 }
 
-InterceptInfo PositionComputations::calculateHarasserId(world::World *world, const Field &field) noexcept {
+InterceptInfo PositionComputations::calculateHarasserId(world::World *world) noexcept {
     InterceptInfo interceptionInfo;
     // If the ball is moving, we will try to intercept. Otherwise, the harasser will go to the ball.
     if ((world->getWorld()->getBall()->get()->velocity).length() >= control_constants::BALL_STILL_VEL) {
-        interceptionInfo = PositionComputations::calculateInterceptionInfo(field, world, -1);
+        interceptionInfo = PositionComputations::calculateInterceptionInfo(world, -1);
     } else
         interceptionInfo.interceptLocation = world->getWorld()->getBall()->get()->position;
     return interceptionInfo;
 }
 
-InterceptInfo PositionComputations::calculateInterceptionInfo(const Field &field, const world::World *world, int interceptId) noexcept {
+InterceptInfo PositionComputations::calculateInterceptionInfo(const world::World *world, int interceptId) noexcept {
+    auto field = world->getField().value();
     auto maxRobotVelocity = GameStateManager::getCurrentGameState().getRuleSet().getMaxRobotVel();
     double minTimeToTarget = std::numeric_limits<double>::max();
     int keeperId = GameStateManager::getCurrentGameState().keeperId;

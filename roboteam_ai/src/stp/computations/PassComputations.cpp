@@ -28,7 +28,7 @@ PassInfo PassComputations::calculatePass(gen::ScoreProfile profile, const rtt::w
     std::erase_if(us, [cardId](auto& bot) { return bot->getId() == cardId; });
 
     // Find which robot should be the passer, store its id and location, and erase from us
-    passInfo.passerId = getPasserId(ballLocation, us, world);
+    passInfo.passerId = getPasserId(us, world);
     auto passerIt = std::find_if(us.begin(), us.end(), [passInfo](auto& bot) { return bot->getId() == passInfo.passerId; });
 
     Vector2 passerLocation;
@@ -126,18 +126,17 @@ bool PassComputations::pointIsValidPassLocation(Vector2 point, Vector2 ballLocat
     return false;
 }
 
-int PassComputations::getPasserId(Vector2 ballLocation, const std::vector<world::view::RobotView>& ourRobots, const world::World* world) {
+int PassComputations::getPasserId(const std::vector<world::view::RobotView>& ourRobots, const world::World* world) {
     int bestPasserId = -1;
-    auto field = world->getField().value();
 
     auto possiblePassers = ourRobots;
     // Remove robots that cannot kick
     std::erase_if(possiblePassers, [](const world::view::RobotView& rbv) { return !Constants::ROBOT_HAS_KICKER(rbv->getId()); });
 
     // If there is no robot that can kick, return -1
-    if (possiblePassers.empty()) return bestPasserId;
-    // If there is at least one, pick the closest one to the ball as best passer
-    auto closestPasserId = PositionComputations::calculateInterceptionInfo(field, world, -1).interceptId;
+    if (possiblePassers.empty()) return -1;
+    // If there is at least one, pick the one that can reach the ball the fastest
+    auto closestPasserId = PositionComputations::calculateInterceptionInfo(world, -1).interceptId;
     if (closestPasserId != -1) bestPasserId = closestPasserId;
 
     // Remove robots that cannot detect the ball themselves (so no ballSensor or dribblerEncoder)
@@ -146,7 +145,7 @@ int PassComputations::getPasserId(Vector2 ballLocation, const std::vector<world:
     // If no robot can detect the ball, the previous closest robot that can only kick is the best one
     if (possiblePassers.empty()) return bestPasserId;
     // But if there is one, the current best passer will be the closest one
-    closestPasserId = PositionComputations::calculateInterceptionInfo(field, world, -1).interceptId;
+    closestPasserId = PositionComputations::calculateInterceptionInfo(world, -1).interceptId;
     if (closestPasserId != -1) bestPasserId = closestPasserId;
 
     return bestPasserId;

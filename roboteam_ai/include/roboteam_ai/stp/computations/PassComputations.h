@@ -78,10 +78,9 @@ class PassComputations {
      * @brief Determines which robot should be the passer (the robot closest to the ball)
      * @param possibleRobots vector of robots that could become passer
      * @param world current world
-     * @param field current field
      * @return Id of robot that should become passer
      */
-    static int getPasserId(Vector2 ballLocation, const std::vector<world::view::RobotView>& possibleRobots, const world::World* world);
+    static int getPasserId(const std::vector<world::view::RobotView>& possibleRobots, const world::World* world);
 
     /**
      * @brief Approximate the time it takes a robot to reach a point

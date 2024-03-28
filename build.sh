@@ -61,7 +61,7 @@ then
             #rm -rf build
             mkdir -p build
             pushd build
-                echo -e "${GREEN}Building RoboTeamTwente software${RESET}"
+                echo -e "${GREEN}Building RoboTeam Twente software${RESET}"
                 cmake .. -DCMAKE_BUILD_TYPE=Release
                 make -j$(nproc) roboteam_observer roboteam_ai roboteam_robothub
             popd

@@ -247,17 +247,18 @@ Vector2 PositionComputations::calculatePositionOutsideOfShape(Vector2 targetPosi
     return targetPosition;
 }
 
-InterceptInfo PositionComputations::calculateHarasserId(world::World *world, const Field &field) noexcept {
+InterceptInfo PositionComputations::calculateHarasserId(world::World *world) noexcept {
     InterceptInfo interceptionInfo;
     // If the ball is moving, we will try to intercept. Otherwise, the harasser will go to the ball.
     if ((world->getWorld()->getBall()->get()->velocity).length() >= control_constants::BALL_STILL_VEL) {
-        interceptionInfo = PositionComputations::calculateInterceptionInfo(field, world, -1);
+        interceptionInfo = PositionComputations::calculateInterceptionInfo(world, -1);
     } else
         interceptionInfo.interceptLocation = world->getWorld()->getBall()->get()->position;
     return interceptionInfo;
 }
 
-InterceptInfo PositionComputations::calculateInterceptionInfo(const Field &field, world::World *world, int interceptId) noexcept {
+InterceptInfo PositionComputations::calculateInterceptionInfo(const world::World *world, int interceptId) noexcept {
+    auto field = world->getField().value();
     auto maxRobotVelocity = GameStateManager::getCurrentGameState().getRuleSet().getMaxRobotVel();
     double minTimeToTarget = std::numeric_limits<double>::max();
     int keeperId = GameStateManager::getCurrentGameState().keeperId;
@@ -335,10 +336,9 @@ void PositionComputations::calculateInfoForHarasser(std::unordered_map<std::stri
         return;
     }
     auto enemyAngle = enemyClosestToBall->get()->getAngle();
-    auto enemyToGoalAngle = (field.leftGoalArea.leftLine().center() - enemyClosestToBall->get()->getPos()).angle();
-
+    auto harasserAngle = stpInfos["harasser"].getAngle();
     // If enemy is not facing our goal AND does have the ball, stand between the enemy and our goal
-    if (enemyClosestToBall->get()->hasBall() && enemyAngle.shortestAngleDiff(enemyToGoalAngle) > M_PI / 2) {
+    if (enemyClosestToBall->get()->hasBall() && enemyAngle.shortestAngleDiff(harasserAngle) < M_PI / 1.5) {
         auto enemyPos = enemyClosestToBall->get()->getPos();
         auto targetPos =
             enemyPos + (field.leftGoalArea.leftLine().center() - enemyPos).stretchToLength(control_constants::ROBOT_RADIUS * 4 + control_constants::GO_TO_POS_ERROR_MARGIN);
@@ -346,12 +346,7 @@ void PositionComputations::calculateInfoForHarasser(std::unordered_map<std::stri
         stpInfos["harasser"].setPositionToMoveTo(targetPos);
         stpInfos["harasser"].setAngle((world->getWorld()->getBall()->get()->position - targetPos).angle());
     } else {
-        if (enemyClosestToBall->get()->getPos().dist(field.leftGoalArea.rightLine().center()) >
-            stpInfos["harasser"].getRobot()->get()->getPos().dist(field.leftGoalArea.rightLine().center())) {
-            stpInfos["harasser"].setNotAvoidTheirRobotId(enemyClosestToBall->get()->getId());
-        } else {
-            stpInfos["harasser"].setNotAvoidTheirRobotId(-1);
-        }
+        stpInfos["harasser"].setNotAvoidTheirRobotId(enemyClosestToBall->get()->getId());
         auto harasser = std::find_if(roles->begin(), roles->end(), [](const std::unique_ptr<Role> &role) { return role != nullptr && role->getName() == "harasser"; });
         if (harasser != roles->end() && !harasser->get()->finished() && strcmp(harasser->get()->getCurrentTactic()->getName(), "Formation") == 0)
             harasser->get()->forceNextTactic();

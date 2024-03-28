@@ -35,7 +35,7 @@ std::optional<StpInfo> KeeperBlockBall::calculateInfoForSkill(StpInfo const &inf
     auto targetPosition = calculateTargetPosition(info.getBall().value(), info.getField().value(), info.getEnemyRobot());
     int keeperId = skillStpInfo.getRobot()->get()->getId();
     Vector2 newBallPos;
-    InterceptInfo interceptionInfo = PositionComputations::calculateInterceptionInfo(skillStpInfo.getField().value(), skillStpInfo.getCurrentWorld(), keeperId);
+    InterceptInfo interceptionInfo = PositionComputations::calculateInterceptionInfo(skillStpInfo.getCurrentWorld(), keeperId);
     if (interceptionInfo.interceptId == keeperId) targetPosition.first = interceptionInfo.interceptLocation;
     skillStpInfo.setPositionToMoveTo(targetPosition.first);
     skillStpInfo.setPidType(targetPosition.second);

@@ -13,10 +13,9 @@ PenaltyTaker::PenaltyTaker(std::string name) : Role(std::move(name)) {
 
 [[nodiscard]] Status PenaltyTaker::update(StpInfo const& info) noexcept {
     StpInfo infoCopy = info;
-    static double distanceDriven = 0.0;
-    static Vector2 lastPosition;
-
     if (info.getRobot().has_value()) {
+        static double distanceDriven = 0.0;
+        static Vector2 lastPosition;
         auto currentPos = info.getRobot()->get()->getPos();
         auto currentVel = info.getRobot()->get()->getVel();
         distanceDriven += (currentPos - lastPosition).length();

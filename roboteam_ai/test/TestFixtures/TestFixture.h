@@ -1,7 +1,3 @@
-//
-// Created by alexander on 28-03-22.
-//
-
 #ifndef RTT_TESTFIXTURE_H
 #define RTT_TESTFIXTURE_H
 

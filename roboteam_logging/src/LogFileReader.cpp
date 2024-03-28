@@ -1,7 +1,3 @@
-//
-// Created by rolf on 28-05-22.
-//
-
 #include "LogFileReader.h"
 
 // TODO: unify error handling strategy

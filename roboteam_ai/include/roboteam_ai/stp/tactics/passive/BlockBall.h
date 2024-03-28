@@ -1,7 +1,3 @@
-//
-// Created by timovdk on 5/12/20.
-//
-
 #ifndef RTT_BLOCKBALL_H
 #define RTT_BLOCKBALL_H
 

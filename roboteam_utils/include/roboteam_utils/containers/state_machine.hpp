@@ -1,7 +1,3 @@
-//
-// Created by john on 3/4/20.
-//
-
 #ifndef RTT_STATE_MACHINE_HPP
 #define RTT_STATE_MACHINE_HPP
 

@@ -1,7 +1,3 @@
-//
-// Created by tijmen on 13-01-22.
-//
-
 #include <roboteam_utils/Teams.hpp>
 #include <simulation/SimulatorManager.hpp>
 

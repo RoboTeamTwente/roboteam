@@ -1,7 +1,3 @@
-//
-// Created by rtt-vision on 12-10-21.
-//
-
 #ifndef RTT_TESTSKILL_H
 #define RTT_TESTSKILL_H
 

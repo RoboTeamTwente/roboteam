@@ -1,7 +1,3 @@
-//
-// Created by jordi on 24-03-20.
-//
-
 #ifndef RTT_FREEKICKUSATGOAL_H
 #define RTT_FREEKICKUSATGOAL_H
 

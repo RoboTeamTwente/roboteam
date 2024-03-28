@@ -1,7 +1,3 @@
-//
-// Created by ratoone on 27-03-20.
-//
-
 #ifndef RTT_THEYHAVEBALLGLOBALEVALUATION_H
 #define RTT_THEYHAVEBALLGLOBALEVALUATION_H
 

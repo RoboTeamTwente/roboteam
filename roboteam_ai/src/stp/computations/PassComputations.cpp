@@ -1,7 +1,3 @@
-//
-// Created by maxl on 11-02-21.
-//
-
 #include <roboteam_utils/Grid.h>
 #include <stp/computations/PassComputations.h>
 #include <stp/computations/PositionComputations.h>
@@ -32,7 +28,7 @@ PassInfo PassComputations::calculatePass(gen::ScoreProfile profile, const rtt::w
     std::erase_if(us, [cardId](auto& bot) { return bot->getId() == cardId; });
 
     // Find which robot should be the passer, store its id and location, and erase from us
-    passInfo.passerId = getPasserId(ballLocation, us, world);
+    passInfo.passerId = getPasserId(us, world);
     auto passerIt = std::find_if(us.begin(), us.end(), [passInfo](auto& bot) { return bot->getId() == passInfo.passerId; });
 
     Vector2 passerLocation;
@@ -99,7 +95,7 @@ PassInfo PassComputations::calculatePass(gen::ScoreProfile profile, const rtt::w
     }
     if (passInfo.passScore == 0) {
         // If no good pass is found, pass to the robot furthest in the field
-        auto furthestRobotIt = std::max_element(possibleReceiverLocations.begin(), possibleReceiverLocations.end(), [](auto& p1, auto& p2) { return p1.x > p2.x; });
+        auto furthestRobotIt = std::max_element(possibleReceiverLocations.begin(), possibleReceiverLocations.end(), [](const auto& p1, const auto& p2) { return p1.x > p2.x; });
         // We should always be able to find a furthest robot, this check avoids the AI crashing in case something does go wrong due to changes/bugs
         passInfo.passLocation = (furthestRobotIt != possibleReceiverLocations.end()) ? *furthestRobotIt : Vector2();
     }
@@ -124,24 +120,23 @@ bool PassComputations::pointIsValidPassLocation(Vector2 point, Vector2 ballLocat
     if (!FieldComputations::pointIsValidPosition(field, point)) return false;
     // Pass is valid if the above conditions are met and there is a robot whose travel time is smaller than the balls travel time (i.e. the robot can actually receive the ball)
     auto ballTravelTime = calculateBallTravelTime(ballLocation, passerLocation, passerVelocity, point);
-    for (int i = 0; i < possibleReceiverLocations.size(); i++) {
+    for (std::vector<rtt::Vector2>::size_type i = 0; i < possibleReceiverLocations.size(); i++) {
         if (calculateRobotTravelTime(possibleReceiverLocations[i], possibleReceiverVelocities[i], point) < ballTravelTime) return true;
     }
     return false;
 }
 
-int PassComputations::getPasserId(Vector2 ballLocation, const std::vector<world::view::RobotView>& ourRobots, const world::World* world) {
+int PassComputations::getPasserId(const std::vector<world::view::RobotView>& ourRobots, const world::World* world) {
     int bestPasserId = -1;
-    auto field = world->getField().value();
 
     auto possiblePassers = ourRobots;
     // Remove robots that cannot kick
     std::erase_if(possiblePassers, [](const world::view::RobotView& rbv) { return !Constants::ROBOT_HAS_KICKER(rbv->getId()); });
 
     // If there is no robot that can kick, return -1
-    if (possiblePassers.empty()) return bestPasserId;
-    // If there is at least one, pick the closest one to the ball as best passer
-    auto closestPasserId = PositionComputations::calculateInterceptionInfo(field, world, -1).interceptId;
+    if (possiblePassers.empty()) return -1;
+    // If there is at least one, pick the one that can reach the ball the fastest
+    auto closestPasserId = PositionComputations::calculateInterceptionInfo(world, -1).interceptId;
     if (closestPasserId != -1) bestPasserId = closestPasserId;
 
     // Remove robots that cannot detect the ball themselves (so no ballSensor or dribblerEncoder)
@@ -150,7 +145,7 @@ int PassComputations::getPasserId(Vector2 ballLocation, const std::vector<world:
     // If no robot can detect the ball, the previous closest robot that can only kick is the best one
     if (possiblePassers.empty()) return bestPasserId;
     // But if there is one, the current best passer will be the closest one
-    closestPasserId = PositionComputations::calculateInterceptionInfo(field, world, -1).interceptId;
+    closestPasserId = PositionComputations::calculateInterceptionInfo(world, -1).interceptId;
     if (closestPasserId != -1) bestPasserId = closestPasserId;
 
     return bestPasserId;

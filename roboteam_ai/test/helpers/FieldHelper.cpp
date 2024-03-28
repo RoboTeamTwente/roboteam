@@ -1,7 +1,3 @@
-//
-// Created by robzelluf on 4/16/19.
-//
-
 #include "FieldHelper.h"
 
 namespace testhelpers {

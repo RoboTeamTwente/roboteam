@@ -190,7 +190,7 @@ void printCommandOptions() {
               << "- help        : For displaying this message" << std::endl;
 }
 
-int stringToRobotId(std::string s) {
+int stringToRobotId(const std::string& s) {
     if (s == "0") {
         return 0;
     } else if (s == "1") {

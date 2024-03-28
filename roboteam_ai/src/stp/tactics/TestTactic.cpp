@@ -1,7 +1,3 @@
-//
-// Created by roboteam on 9/3/20.
-//
-
 #include "stp/tactics/TestTactic.h"
 
 #include "stp/skills/TestSkill.h"

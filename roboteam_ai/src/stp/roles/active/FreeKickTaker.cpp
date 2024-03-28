@@ -1,7 +1,3 @@
-//
-// Created Alexander on 22-04-2022
-//
-
 #include "stp/roles/active/FreeKickTaker.h"
 
 #include "stp/tactics/active/GetBall.h"

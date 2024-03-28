@@ -1,7 +1,3 @@
-//
-// Created by john on 12/16/19.
-//
-
 #include "world/Robot.hpp"
 
 #include "roboteam_utils/Print.h"

@@ -1,7 +1,3 @@
-//
-// Created by agata on 14/01/2022.
-//
-
 #include "stp/plays/defensive/DefendShot.h"
 
 #include <stp/roles/passive/Formation.h>
@@ -70,7 +66,7 @@ Dealer::FlagMap DefendShot::decideRoleFlags() const noexcept {
 }
 
 void DefendShot::calculateInfoForRoles() noexcept {
-    harasserInfo = PositionComputations::calculateHarasserId(world, field);
+    harasserInfo = PositionComputations::calculateHarasserId(world);
     PositionComputations::calculateInfoForHarasser(stpInfos, &roles, field, world, harasserInfo.interceptLocation);
     PositionComputations::calculateInfoForDefendersAndWallers(stpInfos, roles, field, world, false);
     PositionComputations::calculateInfoForAttackers(stpInfos, roles, field, world);

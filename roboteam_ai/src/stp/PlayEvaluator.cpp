@@ -1,7 +1,3 @@
-//
-// Created by maxl on 18-02-21.
-//
-
 #include "stp/PlayEvaluator.h"
 
 #include <stp/evaluations/game_states/BallPlacementThemGameStateEvaluation.h>
@@ -30,9 +26,9 @@
 #include <stp/evaluations/global/TheyDoNotHaveBallGlobalEvaluation.h>
 #include <stp/evaluations/global/TheyHaveBallGlobalEvaluation.h>
 #include <stp/evaluations/global/WeDoNotHaveBallGlobalEvaluation.h>
-#include <stp/evaluations/global/WeWillNotHaveBallGlobalEvaluation.h>
-#include <stp/evaluations/global/WeWillHaveBallGlobalEvaluation.h>
 #include <stp/evaluations/global/WeHaveBallGlobalEvaluation.h>
+#include <stp/evaluations/global/WeWillHaveBallGlobalEvaluation.h>
+#include <stp/evaluations/global/WeWillNotHaveBallGlobalEvaluation.h>
 
 namespace rtt::ai::stp {
 

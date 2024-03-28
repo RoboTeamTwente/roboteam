@@ -1,7 +1,3 @@
-//
-// Created by jordi on 03-03-20.
-//
-
 #include "stp/skills/Kick.h"
 
 #include "roboteam_utils/Print.h"

@@ -1,11 +1,3 @@
-//
-// Created by jesse on 18-05-20.
-//
-
-//
-// Created by rolf on 22-01-20.
-//
-
 #include <gtest/gtest.h>
 #include <roboteam_utils/Grid.h>
 #include <roboteam_utils/Random.h>

@@ -1,7 +1,3 @@
-//
-// Created by jessevw on 24.03.20.
-//
-
 #include "stp/plays/referee_specific/BallPlacementThem.h"
 
 #include "stp/roles/Keeper.h"

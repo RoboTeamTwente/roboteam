@@ -1,7 +1,3 @@
-//
-// Created by doormat on 22-11-22.
-//
-
 #include "stp/plays/offensive/ChippingPass.h"
 
 #include <roboteam_utils/Hungarian.h>

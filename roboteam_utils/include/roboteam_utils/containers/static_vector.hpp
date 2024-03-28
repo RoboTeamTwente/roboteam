@@ -1,7 +1,3 @@
-//
-// Created by john on 25/9/20.
-//
-
 #ifndef RTT_STATIC_VECTOR_HPP
 #define RTT_STATIC_VECTOR_HPP
 

@@ -1,7 +1,3 @@
-//
-// Created by roboteam on 9/3/20.
-//
-
 #ifndef RTT_TESTTACTIC_H
 #define RTT_TESTTACTIC_H
 

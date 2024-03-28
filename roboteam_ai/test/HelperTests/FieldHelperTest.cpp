@@ -1,6 +1,3 @@
-//
-// Created by alexander on 19-04-22.
-//
 #include <gtest/gtest.h>
 
 #include <roboteam_utils/Field.hpp>

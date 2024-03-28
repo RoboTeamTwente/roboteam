@@ -1,7 +1,3 @@
-//
-// Created by timovdk on 5/1/20.
-//
-
 #include "stp/plays/referee_specific/PenaltyUs.h"
 
 #include "stp/computations/GoalComputations.h"

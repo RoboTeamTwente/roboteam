@@ -1,7 +1,3 @@
-//
-// Created by ratoone on 09-03-20.
-//
-
 #include "control/positionControl/pathTracking/PathTrackingAlgorithm.h"
 
 namespace rtt::ai::control {

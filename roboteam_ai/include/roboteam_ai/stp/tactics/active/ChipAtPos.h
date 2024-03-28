@@ -1,7 +1,3 @@
-//
-// Created by timovdk on 3/13/20.
-// rotate and chip
-
 #ifndef RTT_CHIPATPOS_H
 #define RTT_CHIPATPOS_H
 

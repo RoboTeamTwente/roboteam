@@ -1,7 +1,3 @@
-//
-// Created by john on 3/4/20.
-//
-
 #include <gtest/gtest.h>
 
 #include <vector>

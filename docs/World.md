@@ -2,8 +2,9 @@
 
 ## General ##
 [World](https://github.com/RoboTeamTwente/roboteam_ai/blob/development/include/roboteam_ai/world_new/World.hpp#L36) by itself is a very interesting conversation, because we don't just have a single world.
-We have two worlds, one called [roboteam_world](http://github.com/roboteamtwente/roboteam_world), and one that we refer 
+We have used to have two worlds, one called [roboteam_world](http://github.com/roboteamtwente/roboteam_world), and one that we refer 
 to as [ai world](https://github.com/RoboTeamTwente/roboteam_ai/blob/development/include/roboteam_ai/world_new/World.hpp)
+Now, the world in AI is called world, while the other one is called roboteam_observer.
 
 The world structure simply represents the current world and the history. 
 It keeps track of past worlds, and creates new worlds from [protobuf messages](https://developers.google.com/protocol-buffers).

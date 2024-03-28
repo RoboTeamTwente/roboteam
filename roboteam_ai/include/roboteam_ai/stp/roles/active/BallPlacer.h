@@ -1,7 +1,3 @@
-//
-// Created by RobotJesse
-//
-
 #ifndef RTT_BALLPLACER_H
 #define RTT_BALLPLACER_H
 

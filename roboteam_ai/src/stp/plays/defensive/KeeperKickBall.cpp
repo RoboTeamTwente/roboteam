@@ -1,7 +1,3 @@
-//
-// Created by Alexander on 29/01/2022.
-//
-
 #include "stp/plays/defensive/KeeperKickBall.h"
 
 #include "stp/computations/PassComputations.h"

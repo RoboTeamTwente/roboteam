@@ -1,7 +1,3 @@
-//
-// Created by maxl on 19-03-21.
-//
-
 #ifndef RTT_GENERALIZATIONCONSTANTS_H
 #define RTT_GENERALIZATIONCONSTANTS_H
 

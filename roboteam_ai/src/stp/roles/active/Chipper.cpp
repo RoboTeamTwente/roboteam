@@ -1,7 +1,3 @@
-//
-// Created by doormat on 22-11-22.
-//
-
 #include "stp/roles/active/Chipper.h"
 
 #include "stp/tactics/active/ChipAtPos.h"

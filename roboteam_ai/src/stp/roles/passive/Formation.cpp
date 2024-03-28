@@ -1,7 +1,3 @@
-//
-// Created by timovdk on 3/27/20.
-//
-
 #include "stp/roles/passive/Formation.h"
 
 #include "stp/tactics/passive/Formation.h"

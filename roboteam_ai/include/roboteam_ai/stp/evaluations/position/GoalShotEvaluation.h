@@ -1,7 +1,3 @@
-//
-// Created by maxl on 23-03-21.
-//
-
 #ifndef RTT_GOALSHOTEVALUATION_H
 #define RTT_GOALSHOTEVALUATION_H
 

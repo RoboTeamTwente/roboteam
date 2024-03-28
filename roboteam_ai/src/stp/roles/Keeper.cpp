@@ -1,7 +1,3 @@
-//
-// Created by jordi on 08-04-20.
-//
-
 #include "stp/roles/Keeper.h"
 
 #include <roboteam_utils/Print.h>

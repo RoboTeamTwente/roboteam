@@ -1,7 +1,3 @@
-//
-// Created by tijmen on 14-07-22.
-//
-
 #include "stp/roles/active/KeeperPasser.h"
 
 #include "stp/tactics/KeeperBlockBall.h"

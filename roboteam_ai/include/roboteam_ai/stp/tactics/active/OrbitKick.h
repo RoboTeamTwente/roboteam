@@ -1,7 +1,3 @@
-//
-// Created by tijmen on 01-07-22.
-//
-
 #ifndef RTT_ORBITKICK_H
 #define RTT_ORBITKICK_H
 

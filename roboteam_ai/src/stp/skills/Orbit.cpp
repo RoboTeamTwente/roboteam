@@ -1,7 +1,3 @@
-//
-// Created by mamiksik on 22-04-21.
-//
-
 #include "stp/skills/Orbit.h"
 
 #include "stp/constants/ControlConstants.h"

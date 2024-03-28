@@ -1,6 +1,3 @@
-//
-// Created by Haico Dorenbos on 08-06-2020.
-//
 #include <gtest/gtest.h>
 #include <math.h>
 

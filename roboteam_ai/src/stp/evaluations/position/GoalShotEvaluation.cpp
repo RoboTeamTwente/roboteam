@@ -1,10 +1,6 @@
-//
-// Created by maxl on 23-03-21.
-//
-
 #include "stp/evaluations/position/GoalShotEvaluation.h"
 
-#include <algorithm>  // For clamp
+#include <algorithm>
 #include <cmath>
 
 namespace rtt::ai::stp::evaluation {

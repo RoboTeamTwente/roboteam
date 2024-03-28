@@ -1,7 +1,3 @@
-//
-// Created by jessevw on 24.03.20.
-//
-
 #include "stp/roles/passive/Halt.h"
 
 #include "stp/tactics/passive/Halt.h"

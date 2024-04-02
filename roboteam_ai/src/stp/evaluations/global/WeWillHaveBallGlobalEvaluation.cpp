@@ -3,6 +3,7 @@
 namespace rtt::ai::stp::evaluation {
 uint8_t WeWillHaveBallGlobalEvaluation::metricCheck(const world::World* world, const Field*) const noexcept {
     auto& us = world->getWorld()->getUs();
+    if (!world->getWorld()->getRobotClosestToBall(world::them)) return true;
     auto theirRobotCloseToBall = (world->getWorld()->getRobotClosestToBall(world::them))->get();
 
     // If there are no bots, we will not get the ball

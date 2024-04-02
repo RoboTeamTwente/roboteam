@@ -1,4 +1,5 @@
 #include <roboteam_utils/Grid.h>
+#include <stp/computations/InterceptionComputations.h>
 #include <stp/computations/PassComputations.h>
 #include <stp/computations/PositionComputations.h>
 #include <stp/computations/PositionScoring.h>
@@ -136,17 +137,15 @@ int PassComputations::getPasserId(const std::vector<world::view::RobotView>& our
     // If there is no robot that can kick, return -1
     if (possiblePassers.empty()) return -1;
     // If there is at least one, pick the one that can reach the ball the fastest
-    auto closestPasserId = PositionComputations::calculateInterceptionInfo(world, -1).interceptId;
-    if (closestPasserId != -1) bestPasserId = closestPasserId;
+    bestPasserId = InterceptionComputations::calculateInterceptionInfo(possiblePassers, world).interceptId;
 
     // Remove robots that cannot detect the ball themselves (so no ballSensor or dribblerEncoder)
     std::erase_if(possiblePassers, [](const world::view::RobotView& rbv) { return !Constants::ROBOT_HAS_WORKING_DRIBBLER_ENCODER(rbv->getId()); });
 
     // If no robot can detect the ball, the previous closest robot that can only kick is the best one
     if (possiblePassers.empty()) return bestPasserId;
-    // But if there is one, the current best passer will be the closest one
-    closestPasserId = PositionComputations::calculateInterceptionInfo(world, -1).interceptId;
-    if (closestPasserId != -1) bestPasserId = closestPasserId;
+    // But if there is one, the current best passer will be the one that can reach the ball the fastest
+    bestPasserId = InterceptionComputations::calculateInterceptionInfo(possiblePassers, world).interceptId;
 
     return bestPasserId;
 }

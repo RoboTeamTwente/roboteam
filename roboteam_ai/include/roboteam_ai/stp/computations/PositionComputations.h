@@ -27,11 +27,6 @@ struct EnemyInfo {
     int id;
 };
 
-struct InterceptInfo {
-    Vector2 interceptLocation;
-    int interceptId = -1;
-};
-
 /**
  * @brief class with computations about positions
  */
@@ -88,20 +83,6 @@ class PositionComputations {
      * @return A position that is not within the min allowed distance to the ball
      */
     static Vector2 calculateAvoidBallPosition(Vector2 targetPosition, Vector2 ballPosition, const Field &field);
-
-    /**
-     * @brief Calculates the id of the harasser
-     * @param world The current world
-     * @return HarasserInfo with the id and the time to the ball
-     */
-    static InterceptInfo calculateHarasserId(rtt::world::World *world) noexcept;
-
-    /**
-     * @brief Calculates the position for an intercept
-     * @param world The current world
-     * @param interceptId The Id of the robot which will intercept
-     */
-    static InterceptInfo calculateInterceptionInfo(const rtt::world::World *world, int interceptId) noexcept;
 
     /**
      * @brief Calculates info for the harasser role

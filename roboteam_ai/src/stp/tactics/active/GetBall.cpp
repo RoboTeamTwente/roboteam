@@ -1,5 +1,7 @@
 #include "stp/tactics/active/GetBall.h"
 
+#include <stp/computations/InterceptionComputations.h>
+
 #include <world/World.hpp>
 
 #include "control/ControlUtils.h"
@@ -20,10 +22,10 @@ std::optional<StpInfo> GetBall::calculateInfoForSkill(StpInfo const &info) noexc
     skillStpInfo.setShouldAvoidBall(false);
     Vector2 robotPosition = skillStpInfo.getRobot().value()->getPos();
     Vector2 ballPosition = skillStpInfo.getBall().value()->position;
-    Vector2 interceptionPosition = ballPosition;
     auto maxRobotVelocity = GameStateManager::getCurrentGameState().getRuleSet().getMaxRobotVel();
-    InterceptInfo interceptionInfo = PositionComputations::calculateInterceptionInfo(skillStpInfo.getCurrentWorld(), skillStpInfo.getRobot().value()->getId());
-    if (interceptionInfo.interceptId == skillStpInfo.getRobot().value()->getId()) interceptionPosition = interceptionInfo.interceptLocation;
+    InterceptInfo interceptionInfo =
+        InterceptionComputations::calculateInterceptionInfo(std::vector<world::view::RobotView>(1, skillStpInfo.getRobot().value()), skillStpInfo.getCurrentWorld());
+    Vector2 interceptionPosition = interceptionInfo.interceptLocation;
     if (skillStpInfo.getRobot()->get()->hasBall()) {
         maxRobotVelocity = std::clamp(skillStpInfo.getBall().value()->velocity.length() * 0.8, 0.5, maxRobotVelocity);
         skillStpInfo.setMaxRobotVelocity(maxRobotVelocity);

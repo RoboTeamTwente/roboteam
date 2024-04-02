@@ -77,13 +77,10 @@ class KeeperBlockBall : public Tactic {
     /**
      * @brief Calculates the position for the keeper and the PID type with which that position should be achieved
      * PID type is different for intercepting and kicking (coarse and fast or fine and slower control)
-     * @param ball is the current ball for which the keeper should defend
-     * @param field is the field on which the keeper should defend
-     * @param enemyRobot Enemy robot closest to ball
+     * @param info the StpInfo struct
      * @return Target position for the keeper and the corresponding PID type
      */
-    static std::pair<Vector2, PIDType> calculateTargetPosition(const world::view::BallView &ball, const Field &field,
-                                                               const std::optional<world::view::RobotView> &enemyRobot) noexcept;
+    static std::pair<Vector2, PIDType> calculateTargetPosition(const StpInfo info) noexcept;
 
     /**
      * @brief Calculates the angle the robot should have

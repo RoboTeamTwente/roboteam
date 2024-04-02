@@ -1,6 +1,8 @@
 #ifndef RTT_DEFENDSHOT_H
 #define RTT_DEFENDSHOT_H
 
+#include <stp/computations/InterceptionComputations.h>
+
 #include "stp/Play.hpp"
 
 namespace rtt::ai::stp::play {

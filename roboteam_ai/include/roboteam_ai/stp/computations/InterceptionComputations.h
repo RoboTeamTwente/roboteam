@@ -24,6 +24,7 @@ struct InterceptionInfo {
     Vector2 interceptLocation;
     int interceptId = -1;
     double timeToIntercept = std::numeric_limits<double>::max();
+    bool isInterceptable = false;
 };
 
 struct KeeperInterceptionInfo {

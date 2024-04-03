@@ -1,23 +1,28 @@
 #include "stp/evaluations/global/WeWillHaveBallGlobalEvaluation.h"
 
+#include <stp/computations/InterceptionComputations.h>
+
 namespace rtt::ai::stp::evaluation {
 uint8_t WeWillHaveBallGlobalEvaluation::metricCheck(const world::World* world, const Field*) const noexcept {
     auto& us = world->getWorld()->getUs();
-    if (!world->getWorld()->getRobotClosestToBall(world::them)) return true;
-    auto theirRobotCloseToBall = (world->getWorld()->getRobotClosestToBall(world::them))->get();
+    auto& them = world->getWorld()->getThem();
 
-    // If there are no bots, we will not get the ball
-    if (us.empty()) {
-        return stp::control_constants::FUZZY_FALSE;
-    }
-    // If our robots don't stand near the trajectory of the ball, we will most likely not get the ball
-    auto ballPosition = world->getWorld()->getBall()->get()->position;
-    auto endBallPosition = world->getWorld()->getBall()->get()->expectedEndPosition;
-    return std::any_of(us.begin(), us.end(),
-                       [&](auto& robot) {
-                           return (!theirRobotCloseToBall->hasBall() && (LineSegment(ballPosition, endBallPosition).distanceToLine(robot->getPos()) < 0.25 || robot->hasBall()));
-                       })
-               ? stp::control_constants::FUZZY_TRUE
-               : stp::control_constants::FUZZY_FALSE;
+    // If the opponent has no robot, we will get the ball
+    if (them.empty()) return stp::control_constants::FUZZY_TRUE;
+
+    // If we have no bots, we will not get the ball
+    if (us.empty()) return stp::control_constants::FUZZY_FALSE;
+
+    // If any of their robot has the ball has the ball, we will not get the ball
+    if (std::any_of(them.begin(), them.end(), [](auto& robot) { return robot->hasBall(); })) return stp::control_constants::FUZZY_FALSE;
+
+    // If any of our robots has the ball, we will get the ball
+    if (std::any_of(us.begin(), us.end(), [](auto& robot) { return robot->hasBall(); })) return stp::control_constants::FUZZY_TRUE;
+
+    // If we can intercept the ball, we will get the ball
+    auto interceptionInfo = InterceptionComputations::calculateInterceptionInfo(us, world);
+    if (interceptionInfo.isInterceptable) return stp::control_constants::FUZZY_TRUE;
+
+    return stp::control_constants::FUZZY_FALSE;
 }
 }  // namespace rtt::ai::stp::evaluation

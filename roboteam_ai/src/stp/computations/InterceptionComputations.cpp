@@ -64,6 +64,7 @@ InterceptionInfo InterceptionComputations::calculateInterceptionInfo(const std::
                 interceptionInfo.interceptLocation = LineSegment(pastBallPosition, futureBallPosition).project(robot->getPos());
                 interceptionInfo.interceptId = robot->getId();
                 interceptionInfo.timeToIntercept = 0;
+                interceptionInfo.isInterceptable = true;
                 return;
             }
         }
@@ -141,6 +142,7 @@ InterceptionInfo InterceptionComputations::calculateInterceptionInfo(const std::
         calculateIntercept(futureBallPosition);
         // If any robot can intercept the ball in time, return that info
         if (loopTime >= interceptionInfo.timeToIntercept) {
+            interceptionInfo.isInterceptable = true;
             return interceptionInfo;
         }
     }

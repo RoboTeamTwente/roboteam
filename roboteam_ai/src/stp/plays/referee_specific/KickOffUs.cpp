@@ -57,7 +57,6 @@ Dealer::FlagMap KickOffUs::decideRoleFlags() const noexcept {
 }
 
 void KickOffUs::calculateInfoForRoles() noexcept {
-    // Kicker
     Vector2 receiverLocation = Vector2(-field.playArea.width() / 5, 0);
     stpInfos["kick_off_taker"].setPositionToShootAt(receiverLocation);
     stpInfos["kick_off_taker"].setShotType(ShotType::PASS);

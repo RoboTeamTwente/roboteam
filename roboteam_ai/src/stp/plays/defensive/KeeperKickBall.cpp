@@ -105,8 +105,8 @@ bool KeeperKickBall::shouldEndPlay() noexcept {
             1.05 * stp::PositionScoring::scorePosition(passInfo.receiverLocation, gen::SafePass, field, world).score)
         return true;
 
-    // If the ball is outside our defense area the keeper should not go after it so we should stop this play
-    // if (!field.leftDefenseArea.contains(world->getWorld()->getBall()->get()->position)) return true;
+    // If the keeper is outside of our defense area, we should stop the play
+    if (stpInfos["keeper"].getRobot() && !field.leftDefenseArea.contains(stpInfos["keeper"].getRobot().value()->getPos())) return true;
 
     return false;
 }

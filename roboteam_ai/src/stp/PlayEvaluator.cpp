@@ -75,23 +75,23 @@ uint8_t PlayEvaluator::updateGlobalEvaluation(GlobalEvaluation& evaluation, cons
         case GlobalEvaluation::BallOnOurSide:
             return evaluation::BallOnOurSideGlobalEvaluation().metricCheck(world, &field);
         case GlobalEvaluation::BallOnTheirSide:
-            return !evaluation::BallOnOurSideGlobalEvaluation().metricCheck(world, &field);
+            return stp::control_constants::FUZZY_TRUE - evaluation::BallOnOurSideGlobalEvaluation().metricCheck(world, &field);
         case GlobalEvaluation::BallInOurDefenseAreaAndStill:
             return evaluation::BallInOurDefenseAreaAndStillGlobalEvaluation().metricCheck(world, &field);
         case GlobalEvaluation::BallNotInOurDefenseAreaAndStill:
-            return !evaluation::BallInOurDefenseAreaAndStillGlobalEvaluation().metricCheck(world, &field);
+            return stp::control_constants::FUZZY_TRUE - evaluation::BallInOurDefenseAreaAndStillGlobalEvaluation().metricCheck(world, &field);
         case GlobalEvaluation::WeHaveBall:
             return evaluation::WeHaveBallGlobalEvaluation().metricCheck(world, &field);
         case GlobalEvaluation::WeDoNotHaveBall:
-            return !evaluation::WeHaveBallGlobalEvaluation().metricCheck(world, &field);
+            return stp::control_constants::FUZZY_TRUE - evaluation::WeHaveBallGlobalEvaluation().metricCheck(world, &field);
         case GlobalEvaluation::WeWillHaveBall:
             return evaluation::WeWillHaveBallGlobalEvaluation().metricCheck(world, &field);
         case GlobalEvaluation::WeWillNotHaveBall:
-            return !evaluation::WeWillHaveBallGlobalEvaluation().metricCheck(world, &field);
+            return stp::control_constants::FUZZY_TRUE - evaluation::WeWillHaveBallGlobalEvaluation().metricCheck(world, &field);
         case GlobalEvaluation::TheyHaveBall:
             return evaluation::TheyHaveBallGlobalEvaluation().metricCheck(world, &field);
         case GlobalEvaluation::TheyDoNotHaveBall:
-            return !evaluation::TheyHaveBallGlobalEvaluation().metricCheck(world, &field);
+            return stp::control_constants::FUZZY_TRUE - evaluation::TheyHaveBallGlobalEvaluation().metricCheck(world, &field);
         default:
             RTT_WARNING("Unhandled ScoreEvaluation!");
             return 0;

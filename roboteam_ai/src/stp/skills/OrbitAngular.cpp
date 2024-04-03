@@ -22,8 +22,9 @@ Status OrbitAngular::onUpdate(const StpInfo &info) noexcept {
     // Construct the robot command
     command.id = info.getRobot().value()->getId();
     command.velocity = targetVelocity;
-    command.useAngularVelocity = true;
-    command.targetAngularVelocity = targetAngularVelocity;
+    // Commented for the control code before the Schubert open on 3 April 2024. Possible wise to use again somewhere in the distant future.
+    // command.useAngularVelocity = true;
+    // command.targetAngularVelocity = targetAngularVelocity;
     command.targetAngle = targetAngle;
     command.dribblerSpeed = stp::control_constants::MAX_DRIBBLER_CMD;
 

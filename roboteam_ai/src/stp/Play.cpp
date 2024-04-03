@@ -103,7 +103,10 @@ void Play::refreshData() noexcept {
             stpInfo->second.setRobot(world->getWorld()->getRobotForId(stpInfo->second.getRobot()->get()->getId()));
 
             // Set max velocity depending on the gamestate rules and whether we have the ball
-            if (stpInfo->second.getRobot()) stpInfo->second.setMaxRobotVelocity(control::ControlUtils::getMaxVelocity(stpInfo->second.getRobot().value()->hasBall()));
+            if (stpInfo->second.getRobot()) {
+                stpInfo->second.setMaxRobotVelocity(control::ControlUtils::getMaxVelocity(stpInfo->second.getRobot().value()->hasBall()));
+                stpInfo->second.setShouldAvoidBall(FieldComputations::getBallAvoidance());
+            }
 
             // The keeper does not need to avoid our defense area
             if (stpInfo->second.getRoleName() == "keeper") stpInfo->second.setShouldAvoidDefenseArea(false);

@@ -18,10 +18,9 @@ PassInfo PassComputations::calculatePass(gen::ScoreProfile profile, const rtt::w
     }
 
     auto us = world->getWorld()->getUs();
-    auto ballLocation = world->getWorld()->getBall()->get()->position;
 
-    // Find which robot is keeper (bot closest to goal if there was not a keeper yet), store its id, and erase from us
-    passInfo.keeperId = getKeeperId(us, world, field);
+    // Find which robot is keeper (bot closest to goal if there was not a keeper yet), store its id, and erase from us to avoid the desired keeper to be the passer
+    passInfo.keeperId = InterceptionComputations::getKeeperId(us, world);
     if (!keeperCanPass) std::erase_if(us, [passInfo](auto& bot) { return bot->getId() == passInfo.keeperId; });
 
     // Remove cardId from us
@@ -29,7 +28,9 @@ PassInfo PassComputations::calculatePass(gen::ScoreProfile profile, const rtt::w
     std::erase_if(us, [cardId](auto& bot) { return bot->getId() == cardId; });
 
     // Find which robot should be the passer, store its id and location, and erase from us
-    passInfo.passerId = getPasserId(us, world);
+    InterceptInfo interceptInfo = InterceptionComputations::calculateInterceptionInfoForKickingRobots(us, world);
+    passInfo.passerId = interceptInfo.interceptId;
+    passInfo.passLocation = interceptInfo.interceptLocation;
     auto passerIt = std::find_if(us.begin(), us.end(), [passInfo](auto& bot) { return bot->getId() == passInfo.passerId; });
 
     Vector2 passerLocation;
@@ -47,33 +48,30 @@ PassInfo PassComputations::calculatePass(gen::ScoreProfile profile, const rtt::w
     // This is a vector with the locations of all robots that could act as a receiver (ie all robots except the keeper and the passer)
     std::vector<Vector2> possibleReceiverLocations;
     std::vector<Vector2> possibleReceiverVelocities;
-    // Add all robots that can also kick (nice for kicking at goal or passing further)
     for (const auto& robot : us) {
-        if (Constants::ROBOT_HAS_KICKER(robot->getId())) possibleReceiverLocations.push_back(robot->getPos());
-        if (Constants::ROBOT_HAS_KICKER(robot->getId())) possibleReceiverVelocities.push_back(robot->getPos());
+        if (Constants::ROBOT_HAS_KICKER(robot->getId())) {
+            possibleReceiverLocations.push_back(robot->getPos());
+            possibleReceiverVelocities.push_back(robot->getPos());
+        }
     }
     // If there are no other robots that can kick, add every other robots
     if (possibleReceiverLocations.empty()) {
         possibleReceiverLocations.reserve(us.size());
-        for (const auto& robot : us) {
-            possibleReceiverLocations.push_back(robot->getPos());
-        }
-    }
-    if (possibleReceiverVelocities.empty()) {
         possibleReceiverVelocities.reserve(us.size());
         for (const auto& robot : us) {
+            possibleReceiverLocations.push_back(robot->getPos());
             possibleReceiverVelocities.push_back(robot->getPos());
         }
     }
 
     // Now find out the best pass location and corresponding info
-    auto possiblePassLocationsVector = getPassGrid(field).getPoints();
+    auto possibleReceiverLocationsVector = getPassGrid(field).getPoints();
     int numberOfPoints = 0;
-    for (auto& pointVector : possiblePassLocationsVector) {
+    for (auto& pointVector : possibleReceiverLocationsVector) {
         for (auto& point : pointVector) {
             numberOfPoints++;
             std::array<rtt::Vector2, 1> pointToPassTo = {point};
-            if (pointIsValidPassLocation(point, ballLocation, possibleReceiverLocations, possibleReceiverVelocities, passerLocation, passerVelocity, field, world)) {
+            if (pointIsValidReceiverLocation(point, possibleReceiverLocations, possibleReceiverVelocities, passInfo.passLocation, passerLocation, passerVelocity, field, world)) {
                 gen::ScoredPosition scoredPosition = PositionScoring::scorePosition(point, profile, field, world);
                 rtt::ai::gui::Out::draw(
                     {
@@ -88,8 +86,8 @@ PassInfo PassComputations::calculatePass(gen::ScoreProfile profile, const rtt::w
                     pointToPassTo);
                 if (scoredPosition.score > passInfo.passScore) {
                     passInfo.passScore = scoredPosition.score;
-                    passInfo.passLocation = scoredPosition.position;
-                    passInfo.receiverId = world->getWorld()->getRobotClosestToPoint(passInfo.passLocation, us).value()->getId();
+                    passInfo.receiverLocation = scoredPosition.position;
+                    passInfo.receiverId = world->getWorld()->getRobotClosestToPoint(passInfo.receiverLocation, us).value()->getId();
                 }
             }
         }
@@ -98,7 +96,7 @@ PassInfo PassComputations::calculatePass(gen::ScoreProfile profile, const rtt::w
         // If no good pass is found, pass to the robot furthest in the field
         auto furthestRobotIt = std::max_element(possibleReceiverLocations.begin(), possibleReceiverLocations.end(), [](const auto& p1, const auto& p2) { return p1.x > p2.x; });
         // We should always be able to find a furthest robot, this check avoids the AI crashing in case something does go wrong due to changes/bugs
-        passInfo.passLocation = (furthestRobotIt != possibleReceiverLocations.end()) ? *furthestRobotIt : Vector2();
+        passInfo.receiverLocation = (furthestRobotIt != possibleReceiverLocations.end()) ? *furthestRobotIt : Vector2();
     }
 
     return passInfo;
@@ -111,67 +109,30 @@ Grid PassComputations::getPassGrid(const Field& field) {
     return Grid(-gridWidth / 2, -gridHeight / 2, gridWidth, gridHeight, numPoints, numPoints);  // 81 points spread over the whole field
 }
 
-bool PassComputations::pointIsValidPassLocation(Vector2 point, Vector2 ballLocation, const std::vector<Vector2>& possibleReceiverLocations,
-                                                const std::vector<Vector2>& possibleReceiverVelocities, Vector2 passerLocation, Vector2 passerVelocity, const Field& field,
-                                                const world::World* world) {
+bool PassComputations::pointIsValidReceiverLocation(Vector2 point, const std::vector<Vector2>& possibleReceiverLocations, const std::vector<Vector2>& possibleReceiverVelocities,
+                                                    Vector2 passLocation, Vector2 passerLocation, Vector2 passerVelocity, const Field& field, const world::World* world) {
     constexpr double MINIMUM_PASS_DISTANCE = 2.0;  // This can be dribbled instead of passed
-    if (point.dist(ballLocation) < MINIMUM_PASS_DISTANCE) return false;
+    if (point.dist(passLocation) < MINIMUM_PASS_DISTANCE) return false;
     constexpr double MINIMUM_LINE_OF_SIGHT = 10.0;  // The minimum LoS to be a valid pass, otherwise, the pass will go into an enemy robot
     if (PositionScoring::scorePosition(point, gen::LineOfSight, field, world).score < MINIMUM_LINE_OF_SIGHT) return false;
     if (!FieldComputations::pointIsValidPosition(field, point)) return false;
     // Pass is valid if the above conditions are met and there is a robot whose travel time is smaller than the balls travel time (i.e. the robot can actually receive the ball)
-    auto ballTravelTime = calculateBallTravelTime(ballLocation, passerLocation, passerVelocity, point);
+    auto ballTravelTime = calculateBallTravelTime(passLocation, passerLocation, passerVelocity, point);
     for (std::vector<rtt::Vector2>::size_type i = 0; i < possibleReceiverLocations.size(); i++) {
         if (calculateRobotTravelTime(possibleReceiverLocations[i], possibleReceiverVelocities[i], point) < ballTravelTime) return true;
     }
     return false;
 }
 
-int PassComputations::getPasserId(const std::vector<world::view::RobotView>& ourRobots, const world::World* world) {
-    int bestPasserId = -1;
-
-    auto possiblePassers = ourRobots;
-    // Remove robots that cannot kick
-    std::erase_if(possiblePassers, [](const world::view::RobotView& rbv) { return !Constants::ROBOT_HAS_KICKER(rbv->getId()); });
-
-    // If there is no robot that can kick, return -1
-    if (possiblePassers.empty()) return -1;
-    // If there is at least one, pick the one that can reach the ball the fastest
-    bestPasserId = InterceptionComputations::calculateInterceptionInfo(possiblePassers, world).interceptId;
-
-    // Remove robots that cannot detect the ball themselves (so no ballSensor or dribblerEncoder)
-    std::erase_if(possiblePassers, [](const world::view::RobotView& rbv) { return !Constants::ROBOT_HAS_WORKING_DRIBBLER_ENCODER(rbv->getId()); });
-
-    // If no robot can detect the ball, the previous closest robot that can only kick is the best one
-    if (possiblePassers.empty()) return bestPasserId;
-    // But if there is one, the current best passer will be the one that can reach the ball the fastest
-    bestPasserId = InterceptionComputations::calculateInterceptionInfo(possiblePassers, world).interceptId;
-
-    return bestPasserId;
-}
-
-int PassComputations::getKeeperId(const std::vector<world::view::RobotView>& possibleRobots, const world::World* world, const Field& field) {
-    auto keeperId = GameStateManager::getCurrentGameState().keeperId;
-    auto keeperIt = std::find_if(possibleRobots.begin(), possibleRobots.end(), [keeperId](const auto& bot) { return bot->getId() == keeperId; });
-    if (keeperIt != possibleRobots.end()) {
-        return (*keeperIt)->getId();
-    }
-    auto keeper = world->getWorld()->getRobotClosestToPoint(field.leftGoalArea.rightLine().center(), possibleRobots);
-    if (keeper) {
-        return keeper->get()->getId();
-    }
-    return -1;  // Should never reach this point unless there are no robots
-}
-
 double PassComputations::calculateRobotTravelTime(Vector2 robotPosition, Vector2 robotVelocity, Vector2 targetPosition) {
     return Trajectory2D(robotPosition, robotVelocity, targetPosition, control::ControlUtils::getMaxVelocity(false), ai::Constants::MAX_ACC_UPPER()).getTotalTime() * 1.1;
 }
 
-double PassComputations::calculateBallTravelTime(Vector2 ballPosition, Vector2 passerLocation, Vector2 passerVelocity, Vector2 targetPosition) {
-    auto travelTime = calculateRobotTravelTime(passerLocation, passerVelocity, ballPosition - (passerLocation - ballPosition).stretchToLength(control_constants::ROBOT_RADIUS));
-    auto rotateTime = (ballPosition - passerLocation).toAngle().shortestAngleDiff(targetPosition - ballPosition) / (M_PI);
-    double ballSpeed = control::ControlUtils::determineKickForce(ballPosition.dist(targetPosition), ShotType::PASS);
-    auto ballTime = ballPosition.dist(targetPosition) / ballSpeed;
+double PassComputations::calculateBallTravelTime(Vector2 passLocation, Vector2 passerLocation, Vector2 passerVelocity, Vector2 targetPosition) {
+    auto travelTime = calculateRobotTravelTime(passerLocation, passerVelocity, passLocation - (passerLocation - passLocation).stretchToLength(control_constants::ROBOT_RADIUS));
+    auto rotateTime = (passLocation - passerLocation).toAngle().shortestAngleDiff(targetPosition - passLocation) / (M_PI);
+    double ballSpeed = control::ControlUtils::determineKickForce(passLocation.dist(targetPosition), ShotType::PASS);
+    auto ballTime = passLocation.dist(targetPosition) / ballSpeed;
     return travelTime + rotateTime + ballTime;
 }
 

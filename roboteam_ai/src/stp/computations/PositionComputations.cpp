@@ -485,7 +485,7 @@ void PositionComputations::calculateInfoForFormationOurSide(std::unordered_map<s
 }
 
 void PositionComputations::recalculateInfoForNonPassers(std::unordered_map<std::string, StpInfo> &stpInfos, const Field &field, world::World *world,
-                                                        Vector2 passLocation) noexcept {
+                                                        Vector2 receiverLocation) noexcept {
     auto ballPosition = world->getWorld()->getBall()->get()->position;
     // Make a list of all robots that are not the passer, receiver or keeper, which need to make sure they are not in the way of the pass
     auto toBeCheckedRobots = std::vector<std::string>{};
@@ -498,7 +498,7 @@ void PositionComputations::recalculateInfoForNonPassers(std::unordered_map<std::
         }
     }
     // Make a tube around the pass trajectory, and make sure all robots outside of this tube
-    std::unique_ptr<Shape> avoidShape = std::make_unique<Tube>(Tube(ballPosition, passLocation, control_constants::DISTANCE_TO_PASS_TRAJECTORY));
+    std::unique_ptr<Shape> avoidShape = std::make_unique<Tube>(Tube(ballPosition, receiverLocation, control_constants::DISTANCE_TO_PASS_TRAJECTORY));
     for (auto &robot : toBeCheckedRobots) {
         stpInfos[robot].setShouldAvoidBall(true);
         auto robotPositionToMoveTo = stpInfos[robot].getPositionToMoveTo();

@@ -41,7 +41,7 @@ FreeKickUsPass::FreeKickUsPass() : Play() {
 uint8_t FreeKickUsPass::score(const rtt::Field& field) noexcept {
     passInfo = stp::computations::PassComputations::calculatePass(gen::AttackingPass, world, field);
 
-    if (passInfo.passLocation == Vector2()) return 0;  // In case no pass is found
+    if (passInfo.receiverLocation == Vector2()) return 0;  // In case no pass is found
 
     return passInfo.passScore;
 }
@@ -67,18 +67,18 @@ Dealer::FlagMap FreeKickUsPass::decideRoleFlags() const noexcept {
 void FreeKickUsPass::calculateInfoForRoles() noexcept {
     PositionComputations::calculateInfoForDefendersAndWallers(stpInfos, roles, field, world, true);
     PositionComputations::calculateInfoForAttackers(stpInfos, roles, field, world);
-    PositionComputations::recalculateInfoForNonPassers(stpInfos, field, world, passInfo.passLocation);
+    PositionComputations::recalculateInfoForNonPassers(stpInfos, field, world, passInfo.receiverLocation);
 
     if (!ballKicked()) {
-        stpInfos["receiver"].setPositionToMoveTo(passInfo.passLocation);
-        stpInfos["free_kick_taker"].setPositionToShootAt(passInfo.passLocation);
+        stpInfos["receiver"].setPositionToMoveTo(passInfo.receiverLocation);
+        stpInfos["free_kick_taker"].setPositionToShootAt(passInfo.receiverLocation);
         stpInfos["free_kick_taker"].setShotType(ShotType::PASS);
         stpInfos["free_kick_taker"].setKickOrChip(KickOrChip::KICK);
     } else {
-        // Receiver goes to the passLocation projected on the trajectory of the ball
+        // Receiver goes to the receiverLocation projected on the trajectory of the ball
         auto ball = world->getWorld()->getBall()->get();
         auto ballTrajectory = LineSegment(ball->position, ball->position + ball->velocity.stretchToLength(field.playArea.width()));
-        Vector2 receiverLocation = FieldComputations::projectPointToValidPositionOnLine(field, passInfo.passLocation, ballTrajectory.start, ballTrajectory.end);
+        Vector2 receiverLocation = FieldComputations::projectPointToValidPositionOnLine(field, passInfo.receiverLocation, ballTrajectory.start, ballTrajectory.end);
         stpInfos["receiver"].setPositionToMoveTo(receiverLocation);
         stpInfos["receiver"].setPidType(ball->velocity.length() > control_constants::BALL_IS_MOVING_SLOW_LIMIT ? PIDType::RECEIVE : PIDType::DEFAULT);
 
@@ -111,7 +111,7 @@ bool FreeKickUsPass::shouldEndPlay() noexcept {
     // target when we're in the process of shooting
     if (!ballKicked() && stpInfos["free_kick_taker"].getRobot() && !stpInfos["free_kick_taker"].getRobot().value()->hasBall() &&
         stp::computations::PassComputations::calculatePass(gen::AttackingPass, world, field).passScore >
-            1.05 * stp::PositionScoring::scorePosition(passInfo.passLocation, gen::AttackingPass, field, world).score)
+            1.05 * stp::PositionScoring::scorePosition(passInfo.receiverLocation, gen::AttackingPass, field, world).score)
         return true;
 
     return false;

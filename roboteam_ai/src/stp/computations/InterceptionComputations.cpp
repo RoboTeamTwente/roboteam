@@ -8,7 +8,6 @@
 #include "roboteam_utils/Hungarian.h"
 #include "stp/Play.hpp"
 #include "stp/computations/ComputationManager.h"
-#include "stp/computations/PassComputations.h"
 #include "stp/computations/PositionScoring.h"
 #include "world/World.hpp"
 
@@ -47,7 +46,6 @@ KeeperInterceptInfo InterceptionComputations::calculateKeeperInterceptionInfo(co
     return keeperInterceptInfo;
 }
 
-// Bad naming lol
 InterceptInfo InterceptionComputations::calculateInterceptionInfo(const std::vector<world::view::RobotView> &ourRobots, const world::World *world) {
     InterceptInfo interceptInfo;
     int interceptScore = 50;
@@ -149,29 +147,53 @@ InterceptInfo InterceptionComputations::calculateInterceptionInfo(const std::vec
     return interceptInfo;
 }
 
-InterceptInfo InterceptionComputations::calculateGetBallId(const world::World *world) noexcept {
-    InterceptInfo interceptionInfo;
-
-    auto ourRobots = world->getWorld()->getUs();
+int InterceptionComputations::getKeeperId(const std::vector<world::view::RobotView> &possibleRobots, const world::World *world) {
     auto keeperId = GameStateManager::getCurrentGameState().keeperId;
-    ourRobots.erase(std::remove_if(ourRobots.begin(), ourRobots.end(), [keeperId](const auto &robot) { return robot->getId() == keeperId; }), ourRobots.end());
+    auto keeperIt = std::find_if(possibleRobots.begin(), possibleRobots.end(), [keeperId](const auto &bot) { return bot->getId() == keeperId; });
+    if (keeperIt != possibleRobots.end()) {
+        return (*keeperIt)->getId();
+    }
+    auto keeper = world->getWorld()->getRobotClosestToPoint(world->getField().value().leftGoalArea.rightLine().center(), possibleRobots);
+    if (keeper) {
+        return keeper->get()->getId();
+    }
+    return -1;  // Should never reach this point unless there are no robots in the field
+}
 
-    auto possibleGetBaller = ourRobots;
+InterceptInfo InterceptionComputations::calculateInterceptionInfoForKickingRobots(const std::vector<world::view::RobotView> &robots, const world::World *world) {
+    InterceptInfo interceptInfo;
+    auto possibleRobots = robots;
+
     // Remove robots that cannot kick
-    std::erase_if(possibleGetBaller, [](const world::view::RobotView &rbv) { return !Constants::ROBOT_HAS_KICKER(rbv->getId()); });
+    std::erase_if(possibleRobots, [](const world::view::RobotView &rbv) { return !Constants::ROBOT_HAS_KICKER(rbv->getId()); });
 
-    if (possibleGetBaller.empty()) return interceptionInfo;
+    // If there is no robot that can kick, return empty
+    if (possibleRobots.empty()) return interceptInfo;
+
     // If there is at least one, pick the one that can reach the ball the fastest
-    interceptionInfo = InterceptionComputations::calculateInterceptionInfo(possibleGetBaller, world);
+    interceptInfo = InterceptionComputations::calculateInterceptionInfo(possibleRobots, world);
 
     // Remove robots that cannot detect the ball themselves (so no ballSensor or dribblerEncoder)
-    std::erase_if(possibleGetBaller, [](const world::view::RobotView &rbv) { return !Constants::ROBOT_HAS_WORKING_DRIBBLER_ENCODER(rbv->getId()); });
+    auto numRobots = possibleRobots.size();
+    std::erase_if(possibleRobots, [](const world::view::RobotView &rbv) { return !Constants::ROBOT_HAS_WORKING_DRIBBLER_ENCODER(rbv->getId()); });
 
     // If no robot can detect the ball, the previous closest robot that can only kick is the best one
-    if (possibleGetBaller.empty()) return interceptionInfo;
-    // But if there is one, the current best passer will be the one that can reach the ball the fastest
-    interceptionInfo = InterceptionComputations::calculateInterceptionInfo(possibleGetBaller, world);
+    if (possibleRobots.empty()) return interceptInfo;
 
-    return interceptionInfo;
+    // But if there is one, the current best passer will be the one that can reach the ball the fastest
+    if (numRobots != possibleRobots.size()) interceptInfo = InterceptionComputations::calculateInterceptionInfo(possibleRobots, world);
+
+    return interceptInfo;
+}
+
+InterceptInfo InterceptionComputations::calculateInterceptionInfoExcludingKeeperAndCarded(const world::World *world) noexcept {
+    auto ourRobots = world->getWorld()->getUs();
+    // Remove the keeper and the robot that has a card from the list
+    auto keeperId = GameStateManager::getCurrentGameState().keeperId;
+    auto cardId = GameStateManager::getCurrentGameState().cardId;
+    ourRobots.erase(std::remove_if(ourRobots.begin(), ourRobots.end(), [keeperId, cardId](const auto &robot) { return robot->getId() == keeperId || robot->getId() == cardId; }),
+                    ourRobots.end());
+
+    return calculateInterceptionInfoForKickingRobots(ourRobots, world);
 }
 }  // namespace rtt::ai::stp

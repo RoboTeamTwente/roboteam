@@ -50,7 +50,7 @@ uint8_t ChippingPass::score(const rtt::Field&) noexcept {
     return 0;
     // passInfo = stp::computations::PassComputations::calculatePass(gen::ChippingPass, world, field);
 
-    // if (passInfo.passLocation == Vector2()) return 0;  // In case no pass is found
+    // if (passInfo.receiverLocation == Vector2()) return 0;  // In case no pass is found
 
     // return passInfo.passScore;
 }
@@ -76,18 +76,18 @@ Dealer::FlagMap ChippingPass::decideRoleFlags() const noexcept {
 void ChippingPass::calculateInfoForRoles() noexcept {
     PositionComputations::calculateInfoForDefendersAndWallers(stpInfos, roles, field, world, true);
     PositionComputations::calculateInfoForAttackers(stpInfos, roles, field, world);
-    PositionComputations::recalculateInfoForNonPassers(stpInfos, field, world, passInfo.passLocation);
+    PositionComputations::recalculateInfoForNonPassers(stpInfos, field, world, passInfo.receiverLocation);
 
     if (!ballKicked()) {
-        stpInfos["receiver"].setPositionToMoveTo(passInfo.passLocation);
-        stpInfos["passer"].setPositionToShootAt(passInfo.passLocation);
+        stpInfos["receiver"].setPositionToMoveTo(passInfo.receiverLocation);
+        stpInfos["passer"].setPositionToShootAt(passInfo.receiverLocation);
         stpInfos["passer"].setShotType(ShotType::PASS);
         stpInfos["passer"].setKickOrChip(KickOrChip::KICK);
     } else {
-        // Receiver goes to the passLocation projected on the trajectory of the ball
+        // Receiver goes to the receiverLocation projected on the trajectory of the ball
         auto ball = world->getWorld()->getBall()->get();
         auto ballTrajectory = LineSegment(ball->position, ball->position + ball->velocity.stretchToLength(field.playArea.width()));
-        Vector2 receiverLocation = FieldComputations::projectPointToValidPositionOnLine(field, passInfo.passLocation, ballTrajectory.start, ballTrajectory.end);
+        Vector2 receiverLocation = FieldComputations::projectPointToValidPositionOnLine(field, passInfo.receiverLocation, ballTrajectory.start, ballTrajectory.end);
         stpInfos["receiver"].setPositionToMoveTo(receiverLocation);
 
         // Passer now goes to a front grid, where the receiver is not
@@ -118,7 +118,7 @@ bool ChippingPass::shouldEndPlay() noexcept {
     // If the passer doesn't have the ball yet and there is a better pass available, we should stop the play
     if (!ballKicked() && stpInfos["passer"].getRobot() && !stpInfos["passer"].getRobot().value()->hasBall() &&
         stp::computations::PassComputations::calculatePass(gen::ChippingPass, world, field).passScore >
-            1.05 * stp::PositionScoring::scorePosition(passInfo.passLocation, gen::ChippingPass, field, world).score)
+            1.05 * stp::PositionScoring::scorePosition(passInfo.receiverLocation, gen::ChippingPass, field, world).score)
         return true;
 
     return false;

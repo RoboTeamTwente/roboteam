@@ -82,7 +82,23 @@ void Attack::calculateInfoForRoles() noexcept {
 }
 
 bool Attack::shouldEndPlay() noexcept {
-    return std::any_of(roles.begin(), roles.end(), [](const std::unique_ptr<Role>& role) { return role != nullptr && role->getName() == "striker" && role->finished(); });
+    // If the striker has finished, the play finished successfully
+    for (const auto& role : roles) {
+        if (role != nullptr && role->getName() == "striker" && role->finished()) {
+            return true;
+        }
+    }
+
+    // Find id of robot with name striker
+    auto strikerId = stpInfos.at("striker");
+    if (strikerId.getRobot() && strikerId.getRobot().value()) {
+        auto strikerRobotId = strikerId.getRobot().value()->getId();
+        if (InterceptionComputations::calculateInterceptionInfoExcludingKeeperAndCarded(world).interceptId != strikerRobotId) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 const char* Attack::getName() const { return "Attack"; }

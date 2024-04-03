@@ -12,7 +12,6 @@
 
 #include "stp/Role.hpp"
 #include "stp/StpInfo.h"
-#include "stp/computations/PassComputations.h"
 #include "stp/constants/GeneralizationConstants.h"
 #include "utilities/Constants.h"
 #include "world/FieldComputations.h"
@@ -56,11 +55,29 @@ class InterceptionComputations {
     static InterceptInfo calculateInterceptionInfo(const std::vector<world::view::RobotView> &ourRobots, const world::World *world);
 
     /**
-     * @brief Calculates the id of the harasser using the calculateInterceptionInfo function
+     * @brief Determines which robot should be the keeper. This is either the robot which id is the keeperId in the GameState. If this keeperId is not in the field, we pick the
+     * robot closest to our goal. This is to make sure that even when keeperId is set incorrectly, we still have the correct robot as keeper and don't assign him another
+     * ball-interception role.
+     * @param possibleRobots vector of robots that could become keeper
+     * @param world current world
+     * @return Id of robot that should become keeper and thus ignored for interception
+     */
+    static int getKeeperId(const std::vector<world::view::RobotView> &possibleRobots, const world::World *world);
+
+    /**
+     * @brief Determines which robot should be the passer (the robot closest to the ball)
+     * @param possibleRobots vector of robots that could become passer
+     * @param world current world
+     * @return Id of robot that should become passer
+     */
+    static InterceptInfo calculateInterceptionInfoForKickingRobots(const std::vector<world::view::RobotView> &possibleRobots, const world::World *world);
+
+    /**
+     * @brief Calculates the interceptionInfo using the calculateInterceptionInfo function, considering robots that can not kick or are the keeper
      * @param world The current world
      * @return HarasserInfo with the id and the time to the ball
      */
-    static InterceptInfo calculateGetBallId(const rtt::world::World *world) noexcept;
+    static InterceptInfo calculateInterceptionInfoExcludingKeeperAndCarded(const rtt::world::World *world) noexcept;
 };
 }  // namespace rtt::ai::stp
 #endif  // RTT_INTERCEPTIONCOMPUTATIONS_H

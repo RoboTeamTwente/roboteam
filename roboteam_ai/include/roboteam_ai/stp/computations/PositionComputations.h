@@ -144,7 +144,7 @@ class PositionComputations {
      * @param world The current world
      * @param passInfo The current passInfo
      */
-    static void recalculateInfoForNonPassers(std::unordered_map<std::string, StpInfo> &stpInfos, const Field &field, world::World *world, Vector2 passLocation) noexcept;
+    static void recalculateInfoForNonPassers(std::unordered_map<std::string, StpInfo> &stpInfos, const Field &field, world::World *world, Vector2 receiverLocation) noexcept;
 
    private:
     /**

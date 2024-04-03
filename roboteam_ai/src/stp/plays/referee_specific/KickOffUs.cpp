@@ -68,8 +68,7 @@ void KickOffUs::calculateInfoForRoles() noexcept {
         stpInfos["kick_off_taker"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.middleRightGrid, gen::AttackingPass, field, world));
         auto ball = world->getWorld()->getBall()->get();
         auto ballTrajectory = LineSegment(ball->position, ball->position + ball->velocity.stretchToLength(field.playArea.width()));
-        Vector2 receiverLocation = FieldComputations::projectPointToValidPositionOnLine(field, receiverLocation, ballTrajectory.start, ballTrajectory.end);
-        stpInfos["receiver"].setPositionToMoveTo(receiverLocation);
+        stpInfos["receiver"].setPositionToMoveTo(FieldComputations::projectPointToValidPositionOnLine(field, receiverLocation, ballTrajectory.start, ballTrajectory.end));
         stpInfos["receiver"].setPidType(ball->velocity.length() > control_constants::BALL_IS_MOVING_SLOW_LIMIT ? PIDType::RECEIVE : PIDType::DEFAULT);
     }
 }

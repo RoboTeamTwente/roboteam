@@ -255,6 +255,7 @@ void PositionComputations::calculateInfoForHarasser(std::unordered_map<std::stri
     // If there is no enemy or we don't have a harasser yet, estimate the position to move to
     if (!stpInfos["harasser"].getRobot() || !enemyClosestToBall) {
         stpInfos["harasser"].setPositionToMoveTo(interceptionLocation);
+        stpInfos["harasser"].setAngle((world->getWorld()->getBall()->get()->position - interceptionLocation).angle());
         return;
     }
     auto enemyAngle = enemyClosestToBall->get()->getAngle();

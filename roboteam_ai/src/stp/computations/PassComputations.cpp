@@ -28,9 +28,9 @@ PassInfo PassComputations::calculatePass(gen::ScoreProfile profile, const rtt::w
     std::erase_if(us, [cardId](auto& bot) { return bot->getId() == cardId; });
 
     // Find which robot should be the passer, store its id and location, and erase from us
-    InterceptInfo interceptInfo = InterceptionComputations::calculateInterceptionInfoForKickingRobots(us, world);
-    passInfo.passerId = interceptInfo.interceptId;
-    passInfo.passLocation = interceptInfo.interceptLocation;
+    InterceptionInfo interceptionInfo = InterceptionComputations::calculateInterceptionInfoForKickingRobots(us, world);
+    passInfo.passerId = interceptionInfo.interceptId;
+    passInfo.passLocation = interceptionInfo.interceptLocation;
     auto passerIt = std::find_if(us.begin(), us.end(), [passInfo](auto& bot) { return bot->getId() == passInfo.passerId; });
 
     Vector2 passerLocation;

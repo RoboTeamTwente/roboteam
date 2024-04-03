@@ -20,13 +20,13 @@
 
 namespace rtt::ai::stp {
 
-struct InterceptInfo {
+struct InterceptionInfo {
     Vector2 interceptLocation;
     int interceptId = -1;
     double timeToIntercept = std::numeric_limits<double>::max();
 };
 
-struct KeeperInterceptInfo {
+struct KeeperInterceptionInfo {
     bool canIntercept = false;
     Vector2 interceptLocation;
 };
@@ -43,7 +43,7 @@ class InterceptionComputations {
      * @param keeper The keeper
      * @return struct with information about the keeper intercept
      */
-    static KeeperInterceptInfo calculateKeeperInterceptionInfo(const world::World *world, const world::view::RobotView &keeper) noexcept;
+    static KeeperInterceptionInfo calculateKeeperInterceptionInfo(const world::World *world, const world::view::RobotView &keeper) noexcept;
 
     /**
      * @brief Calculates the interception info for the passer, will return who can be at the ball first. If no one can reach the ball, will return who can be the closest to the
@@ -52,7 +52,7 @@ class InterceptionComputations {
      * @param world The current world
      * @return struct with information about the interception
      */
-    static InterceptInfo calculateInterceptionInfo(const std::vector<world::view::RobotView> &ourRobots, const world::World *world);
+    static InterceptionInfo calculateInterceptionInfo(const std::vector<world::view::RobotView> &ourRobots, const world::World *world);
 
     /**
      * @brief Determines which robot should be the keeper. This is either the robot which id is the keeperId in the GameState. If this keeperId is not in the field, we pick the
@@ -70,14 +70,14 @@ class InterceptionComputations {
      * @param world current world
      * @return Id of robot that should become passer
      */
-    static InterceptInfo calculateInterceptionInfoForKickingRobots(const std::vector<world::view::RobotView> &possibleRobots, const world::World *world);
+    static InterceptionInfo calculateInterceptionInfoForKickingRobots(const std::vector<world::view::RobotView> &possibleRobots, const world::World *world);
 
     /**
      * @brief Calculates the interceptionInfo using the calculateInterceptionInfo function, considering robots that can not kick or are the keeper
      * @param world The current world
      * @return HarasserInfo with the id and the time to the ball
      */
-    static InterceptInfo calculateInterceptionInfoExcludingKeeperAndCarded(const rtt::world::World *world) noexcept;
+    static InterceptionInfo calculateInterceptionInfoExcludingKeeperAndCarded(const rtt::world::World *world) noexcept;
 };
 }  // namespace rtt::ai::stp
 #endif  // RTT_INTERCEPTIONCOMPUTATIONS_H

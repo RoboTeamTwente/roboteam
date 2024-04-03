@@ -23,7 +23,7 @@ std::optional<StpInfo> GetBall::calculateInfoForSkill(StpInfo const &info) noexc
     Vector2 robotPosition = skillStpInfo.getRobot().value()->getPos();
     Vector2 ballPosition = skillStpInfo.getBall().value()->position;
     auto maxRobotVelocity = GameStateManager::getCurrentGameState().getRuleSet().getMaxRobotVel();
-    InterceptInfo interceptionInfo =
+    InterceptionInfo interceptionInfo =
         InterceptionComputations::calculateInterceptionInfo(std::vector<world::view::RobotView>(1, skillStpInfo.getRobot().value()), skillStpInfo.getCurrentWorld());
     Vector2 interceptionPosition = interceptionInfo.interceptLocation;
     if (skillStpInfo.getRobot()->get()->hasBall()) {

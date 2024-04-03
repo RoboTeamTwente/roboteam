@@ -105,9 +105,9 @@ std::pair<Vector2, PIDType> KeeperBlockBall::calculateTargetPosition(const StpIn
     const auto &world = info.getCurrentWorld();
     const auto &robot = info.getRobot().value();
 
-    KeeperInterceptInfo keeperInterceptInfo = InterceptionComputations::calculateKeeperInterceptionInfo(world, robot);
-    if (keeperInterceptInfo.canIntercept) {
-        return {keeperInterceptInfo.interceptLocation, PIDType::KEEPER};
+    KeeperInterceptionInfo keeperInterceptionInfo = InterceptionComputations::calculateKeeperInterceptionInfo(world, robot);
+    if (keeperInterceptionInfo.canIntercept) {
+        return {keeperInterceptionInfo.interceptLocation, PIDType::KEEPER};
     }
 
     // Get the line on which the keeper should move to

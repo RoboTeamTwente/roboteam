@@ -123,7 +123,12 @@ bool AttackingPass::shouldEndPlay() noexcept {
         newPassInfo.passScore > 1.05 * stp::PositionScoring::scorePosition(passInfo.receiverLocation, gen::AttackingPass, field, world).score)
         return true;
     // If the ball is not kicked yet and the passer id is different, another robot can quicker get the ball, so stop
-    if (!ballKicked() && newPassInfo.passerId != passInfo.passerId) return true;
+    if (!ballKicked() && newPassInfo.passerId != passInfo.passerId) {
+        endPlayCounter++;
+        if (endPlayCounter > 20) return true;
+    } else {
+        endPlayCounter = 0;
+    }
 
     return false;
 }

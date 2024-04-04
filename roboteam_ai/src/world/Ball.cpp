@@ -86,7 +86,7 @@ void Ball::updateBallAtRobotPosition(const world::World* data) noexcept {
     }
 
     auto robotClostestToPoint = world->getRobotClosestToPoint(position, Team::both);
-    if (robotClostestToPoint.has_value() && (robotClostestToPoint->get()->getPos() - position).length() > 0.2) {
+    if (robotClostestToPoint.has_value() && (robotClostestToPoint->get()->getPos() - position).length() > 0.15) {
         return;
     }
 

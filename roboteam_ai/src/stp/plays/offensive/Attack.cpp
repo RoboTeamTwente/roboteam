@@ -15,13 +15,13 @@ Attack::Attack() : Play() {
     // Evaluations that have to be true in order for this play to be considered valid.
     startPlayEvaluation.clear();
     startPlayEvaluation.emplace_back(GlobalEvaluation::NormalPlayGameState);
-    startPlayEvaluation.emplace_back(GlobalEvaluation::WeHaveBall);
+    startPlayEvaluation.emplace_back(GlobalEvaluation::WeWillHaveBall);
     startPlayEvaluation.emplace_back(GlobalEvaluation::BallNotInOurDefenseAreaAndStill);
 
     // Evaluations that have to be true to allow the play to continue, otherwise the play will change. Plays can also end using the shouldEndPlay().
     keepPlayEvaluation.clear();
     keepPlayEvaluation.emplace_back(GlobalEvaluation::NormalPlayGameState);
-    keepPlayEvaluation.emplace_back(GlobalEvaluation::WeHaveBall);
+    keepPlayEvaluation.emplace_back(GlobalEvaluation::WeWillHaveBall);
     keepPlayEvaluation.emplace_back(GlobalEvaluation::BallNotInOurDefenseAreaAndStill);
 
     // Role creation, the names should be unique. The names are used in the stpInfos-map.
@@ -82,7 +82,23 @@ void Attack::calculateInfoForRoles() noexcept {
 }
 
 bool Attack::shouldEndPlay() noexcept {
-    return std::any_of(roles.begin(), roles.end(), [](const std::unique_ptr<Role>& role) { return role != nullptr && role->getName() == "striker" && role->finished(); });
+    // If the striker has finished, the play finished successfully
+    for (const auto& role : roles) {
+        if (role != nullptr && role->getName() == "striker" && role->finished()) {
+            return true;
+        }
+    }
+
+    // Find id of robot with name striker
+    auto strikerId = stpInfos.at("striker");
+    if (strikerId.getRobot() && strikerId.getRobot().value()) {
+        auto strikerRobotId = strikerId.getRobot().value()->getId();
+        if (InterceptionComputations::calculateInterceptionInfoExcludingKeeperAndCarded(world).interceptId != strikerRobotId) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 const char* Attack::getName() const { return "Attack"; }

@@ -14,7 +14,7 @@ DefendPass::DefendPass() : Play() {
     // Evaluations that have to be true in order for this play to be considered valid.
     startPlayEvaluation.clear();
     startPlayEvaluation.emplace_back(GlobalEvaluation::NormalPlayGameState);
-    startPlayEvaluation.emplace_back(GlobalEvaluation::WeDoNotHaveBall);
+    startPlayEvaluation.emplace_back(GlobalEvaluation::WeWillNotHaveBall);
     startPlayEvaluation.emplace_back(GlobalEvaluation::BallOnTheirSide);
     startPlayEvaluation.emplace_back(GlobalEvaluation::BallNotInOurDefenseAreaAndStill);
 
@@ -69,7 +69,7 @@ Dealer::FlagMap DefendPass::decideRoleFlags() const noexcept {
 }
 
 void DefendPass::calculateInfoForRoles() noexcept {
-    harasserInfo = PositionComputations::calculateHarasserId(world, field);
+    harasserInfo = InterceptionComputations::calculateInterceptionInfoExcludingKeeperAndCarded(world);
     PositionComputations::calculateInfoForHarasser(stpInfos, &roles, field, world, harasserInfo.interceptLocation);
     PositionComputations::calculateInfoForDefendersAndWallers(stpInfos, roles, field, world, false);
     PositionComputations::calculateInfoForAttackers(stpInfos, roles, field, world);

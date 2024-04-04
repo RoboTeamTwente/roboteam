@@ -2,6 +2,7 @@
 #define RTT_PASSCOMPUTATIONS_H
 
 #include <roboteam_utils/LineSegment.h>
+#include <stp/computations/InterceptionComputations.h>
 #include <stp/constants/GeneralizationConstants.h>
 
 #include <roboteam_utils/Field.hpp>
@@ -19,7 +20,8 @@ struct PassInfo {
     int keeperId = -1;
     int passerId = -1;
     int receiverId = -1;
-    Vector2 passLocation;
+    Vector2 passLocation;      // The location where the ball will be passed from, towards the receiver
+    Vector2 receiverLocation;  // The location of the receiver, who will receive the ball from the passer
     uint8_t passScore = 0;
 };
 
@@ -52,36 +54,17 @@ class PassComputations {
     /**
      * @brief Indicates whether the given point 1) a valid point to pass to in terms of ssl-rules and 2) whether it is feasible ot pass there
      * @param point the point to check for validity
-     * @param ballLocation the current ball location
      * @param possibleReceiverLocations the locations of all robots that could receive the ball
      * @param possibleReceiverVelocities the velocities of all robots that could receive the ball
+     * @param passLocation the location where the ball will be passed from
      * @param passerLocation the location of the robot that will pass the ball
      * @param passerVelocity the velocity of the robot that will pass the ball
      * @param field the current field
      * @param world the current world
      * @return bool indicating whether this point is (likely) possible to pass to
      */
-    static bool pointIsValidPassLocation(Vector2 point, Vector2 ballLocation, const std::vector<Vector2>& possibleReceiverLocations,
-                                         const std::vector<Vector2>& possibleReceiverVelocities, Vector2 passerLocation, Vector2 passerVelocity, const Field& field,
-                                         const world::World* world);
-
-    /**
-     * @brief Determines which robot should be the keeper (either previous keeper, or robot closest to goal if there was no keeper)
-     * @param possibleRobots vector of robots that could become keeper
-     * @param world current world
-     * @param field current field
-     * @return Id of robot that should become keeper
-     */
-    static int getKeeperId(const std::vector<world::view::RobotView>& possibleRobots, const world::World* world, const Field& field);
-
-    /**
-     * @brief Determines which robot should be the passer (the robot closest to the ball)
-     * @param possibleRobots vector of robots that could become passer
-     * @param world current world
-     * @param field current field
-     * @return Id of robot that should become passer
-     */
-    static int getPasserId(Vector2 ballLocation, const std::vector<world::view::RobotView>& possibleRobots, const world::World* world);
+    static bool pointIsValidReceiverLocation(Vector2 point, const std::vector<Vector2>& possibleReceiverLocations, const std::vector<Vector2>& possibleReceiverVelocities,
+                                             Vector2 passLocation, Vector2 passerLocation, Vector2 passerVelocity, const Field& field, const world::World* world);
 
     /**
      * @brief Approximate the time it takes a robot to reach a point
@@ -94,13 +77,13 @@ class PassComputations {
 
     /**
      * Approximate the time it takes the ball to reach a point
-     * @param ballLocation current location of the ball
+     * @param passLocation the location where the ball will be passed from
      * @param passerLocation current location of the passer
      * @param robotVelocity current velocity of robot
      * @param targetPosition position to calculate travel time to
      * @return approximated time for ball to reach target position
      */
-    static double calculateBallTravelTime(Vector2 ballLocation, Vector2 passerLocation, Vector2 passerVelocity, Vector2 targetPosition);
+    static double calculateBallTravelTime(Vector2 passLocation, Vector2 passerLocation, Vector2 passerVelocity, Vector2 targetPosition);
 };
 }  // namespace rtt::ai::stp::computations
 #endif  // RTT_PASSCOMPUTATIONS_H

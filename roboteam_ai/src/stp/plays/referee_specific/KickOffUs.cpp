@@ -57,19 +57,17 @@ Dealer::FlagMap KickOffUs::decideRoleFlags() const noexcept {
 }
 
 void KickOffUs::calculateInfoForRoles() noexcept {
-    // Kicker
-    Vector2 passLocation = Vector2(-field.playArea.width() / 5, 0);
-    stpInfos["kick_off_taker"].setPositionToShootAt(passLocation);
+    Vector2 receiverLocation = Vector2(-field.playArea.width() / 5, 0);
+    stpInfos["kick_off_taker"].setPositionToShootAt(receiverLocation);
     stpInfos["kick_off_taker"].setShotType(ShotType::PASS);
     stpInfos["kick_off_taker"].setKickOrChip(KickOrChip::KICK);
     if (!ballKicked()) {
-        stpInfos["receiver"].setPositionToMoveTo(passLocation);
+        stpInfos["receiver"].setPositionToMoveTo(receiverLocation);
     } else {
         stpInfos["kick_off_taker"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.middleRightGrid, gen::AttackingPass, field, world));
         auto ball = world->getWorld()->getBall()->get();
         auto ballTrajectory = LineSegment(ball->position, ball->position + ball->velocity.stretchToLength(field.playArea.width()));
-        Vector2 receiverLocation = FieldComputations::projectPointToValidPositionOnLine(field, passLocation, ballTrajectory.start, ballTrajectory.end);
-        stpInfos["receiver"].setPositionToMoveTo(receiverLocation);
+        stpInfos["receiver"].setPositionToMoveTo(FieldComputations::projectPointToValidPositionOnLine(field, receiverLocation, ballTrajectory.start, ballTrajectory.end));
         stpInfos["receiver"].setPidType(ball->velocity.length() > control_constants::BALL_IS_MOVING_SLOW_LIMIT ? PIDType::RECEIVE : PIDType::DEFAULT);
     }
 }

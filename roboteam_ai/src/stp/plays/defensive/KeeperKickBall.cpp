@@ -68,19 +68,19 @@ Dealer::FlagMap KeeperKickBall::decideRoleFlags() const noexcept {
 void KeeperKickBall::calculateInfoForRoles() noexcept {
     PositionComputations::calculateInfoForDefendersAndWallers(stpInfos, roles, field, world, true);
     PositionComputations::calculateInfoForAttackers(stpInfos, roles, field, world);
-    PositionComputations::recalculateInfoForNonPassers(stpInfos, field, world, passInfo.passLocation);
+    PositionComputations::recalculateInfoForNonPassers(stpInfos, field, world, passInfo.receiverLocation);
     stpInfos["keeper"].setShouldAvoidTheirRobots(false);
     stpInfos["keeper"].setShouldAvoidOurRobots(false);
 
     if (!ballKicked()) {
-        stpInfos["receiver"].setPositionToMoveTo(passInfo.passLocation);
-        stpInfos["keeper"].setPositionToShootAt(passInfo.passLocation);
+        stpInfos["receiver"].setPositionToMoveTo(passInfo.receiverLocation);
+        stpInfos["keeper"].setPositionToShootAt(passInfo.receiverLocation);
         stpInfos["keeper"].setShotType(ShotType::PASS);
     } else {
         auto ball = world->getWorld()->getBall().value();
-        // Receiver goes to the passLocation projected on the trajectory of the ball
+        // Receiver goes to the receiverLocation projected on the trajectory of the ball
         auto ballTrajectory = LineSegment(ball->position, ball->position + ball->velocity.stretchToLength(field.playArea.width()));
-        Vector2 receiverLocation = FieldComputations::projectPointToValidPositionOnLine(field, passInfo.passLocation, ballTrajectory.start, ballTrajectory.end);
+        Vector2 receiverLocation = FieldComputations::projectPointToValidPositionOnLine(field, passInfo.receiverLocation, ballTrajectory.start, ballTrajectory.end);
         stpInfos["receiver"].setPositionToMoveTo(receiverLocation);
         stpInfos["receiver"].setPidType(ball->velocity.length() > control_constants::BALL_IS_MOVING_SLOW_LIMIT ? PIDType::RECEIVE : PIDType::DEFAULT);
     }
@@ -102,11 +102,11 @@ bool KeeperKickBall::shouldEndPlay() noexcept {
     // If the keeper doesn't have the ball yet and there is a better pass available, we should stop the play
     if (!ballKicked() && stpInfos["keeper"].getRobot() && !stpInfos["keeper"].getRobot().value()->hasBall() &&
         stp::computations::PassComputations::calculatePass(gen::SafePass, world, field).passScore >
-            1.05 * stp::PositionScoring::scorePosition(passInfo.passLocation, gen::SafePass, field, world).score)
+            1.05 * stp::PositionScoring::scorePosition(passInfo.receiverLocation, gen::SafePass, field, world).score)
         return true;
 
-    // If the ball is outside our defense area the keeper should not go after it so we should stop this play
-    // if (!field.leftDefenseArea.contains(world->getWorld()->getBall()->get()->position)) return true;
+    // If the keeper is outside of our defense area, we should stop the play
+    if (stpInfos["keeper"].getRobot() && !field.leftDefenseArea.contains(stpInfos["keeper"].getRobot().value()->getPos())) return true;
 
     return false;
 }

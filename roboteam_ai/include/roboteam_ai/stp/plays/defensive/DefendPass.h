@@ -1,6 +1,8 @@
 #ifndef RTT_DEFENDPASS_H
 #define RTT_DEFENDPASS_H
 
+#include <stp/computations/InterceptionComputations.h>
+
 #include "stp/Play.hpp"
 
 namespace rtt::ai::stp::play {
@@ -41,7 +43,7 @@ class DefendPass : public Play {
      */
     const char* getName() const override;
 
-    InterceptInfo harasserInfo;
+    InterceptionInfo harasserInfo;
 };
 }  // namespace rtt::ai::stp::play
 

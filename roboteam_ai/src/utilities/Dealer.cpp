@@ -197,8 +197,10 @@ void Dealer::distributeFixedIds(std::vector<v::RobotView> &robots, FlagMap &flag
             }
         }
 
-        if (!robot_found) RTT_ERROR("Could not find robot with required id ", required_id, " for role ", role->first, ". This forced assignment will be ignored.");
-        role++;
+        if (!robot_found) {
+            RTT_ERROR("Could not find robot with required id ", required_id, " for role ", role->first, ". This forced assignment will be ignored.");
+            role++;
+        }
     }
 }
 

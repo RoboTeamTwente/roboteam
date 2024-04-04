@@ -2,6 +2,7 @@
 
 #include <roboteam_utils/HalfLine.h>
 #include <roboteam_utils/Mathematics.h>
+#include <stp/computations/InterceptionComputations.h>
 
 #include "control/ControlUtils.h"
 #include "roboteam_utils/LineSegment.h"
@@ -32,11 +33,8 @@ std::optional<StpInfo> KeeperBlockBall::calculateInfoForSkill(StpInfo const &inf
     if (!skillStpInfo.getField() || !skillStpInfo.getBall() || !skillStpInfo.getRobot() || !skillStpInfo.getCurrentWorld()) return std::nullopt;
 
     skillStpInfo.setShouldAvoidOutOfField(false);
-    auto targetPosition = calculateTargetPosition(info.getBall().value(), info.getField().value(), info.getEnemyRobot());
-    int keeperId = skillStpInfo.getRobot()->get()->getId();
+    auto targetPosition = calculateTargetPosition(info);
     Vector2 newBallPos;
-    InterceptInfo interceptionInfo = PositionComputations::calculateInterceptionInfo(skillStpInfo.getField().value(), skillStpInfo.getCurrentWorld(), keeperId);
-    if (interceptionInfo.interceptId == keeperId) targetPosition.first = interceptionInfo.interceptLocation;
     skillStpInfo.setPositionToMoveTo(targetPosition.first);
     skillStpInfo.setPidType(targetPosition.second);
 
@@ -100,8 +98,18 @@ bool KeeperBlockBall::isBallHeadingTowardsOurGoal(const HalfLine &ballTrajectory
     return intersectionWithGoalLine.has_value() && goalLineSegment.distanceToLine(intersectionWithGoalLine.value()) < MAX_DISTANCE_HEADING_TOWARDS_GOAL;
 }
 
-std::pair<Vector2, PIDType> KeeperBlockBall::calculateTargetPosition(const world::view::BallView &ball, const Field &field,
-                                                                     const std::optional<world::view::RobotView> &enemyRobot) noexcept {
+std::pair<Vector2, PIDType> KeeperBlockBall::calculateTargetPosition(const StpInfo info) noexcept {
+    const auto &field = info.getField().value();
+    const auto &ball = info.getBall().value();
+    const auto &enemyRobot = info.getEnemyRobot();
+    const auto &world = info.getCurrentWorld();
+    const auto &robot = info.getRobot().value();
+
+    KeeperInterceptionInfo keeperInterceptionInfo = InterceptionComputations::calculateKeeperInterceptionInfo(world, robot);
+    if (keeperInterceptionInfo.canIntercept) {
+        return {keeperInterceptionInfo.interceptLocation, PIDType::KEEPER};
+    }
+
     // Get the line on which the keeper should move to
     auto keepersLineSegment = getKeepersLineSegment(field);
 

@@ -27,7 +27,7 @@ Play* PlayDecider::decideBestPlay(const rtt::world::World* world, const std::vec
         return getPlayForName(playLock.playName.value(), plays);
     }
 
-    // If there are no valid plays, default to defend pass
+    // If there are no valid plays, default to defend shot
     if (playsWithScores.empty()) {
         RTT_WARNING("No valid plays found!");
         return getPlayForName("Defend Shot", plays);

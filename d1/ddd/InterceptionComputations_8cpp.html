@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Roboteam AI: roboteam_ai/src/stp/evaluations/global/BallNotInOurDefenseAreaAndStillGlobalEvaluation.cpp File Reference</title>
+<title>Roboteam AI: roboteam_ai/src/stp/computations/InterceptionComputations.cpp File Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -65,7 +65,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
-$(document).ready(function(){initNavTree('dd/d8c/BallNotInOurDefenseAreaAndStillGlobalEvaluation_8cpp.html','../../'); initResizable(); });
+$(document).ready(function(){initNavTree('d1/ddd/InterceptionComputations_8cpp.html','../../'); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -87,12 +87,18 @@ $(document).ready(function(){initNavTree('dd/d8c/BallNotInOurDefenseAreaAndStill
   <div class="summary">
 <a href="#namespaces">Namespaces</a>  </div>
   <div class="headertitle">
-<div class="title">BallNotInOurDefenseAreaAndStillGlobalEvaluation.cpp File Reference</div>  </div>
+<div class="title">InterceptionComputations.cpp File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="../../d0/db3/BallNotInOurDefenseAreaAndStillGlobalEvaluation_8h_source.html">stp/evaluations/global/BallNotInOurDefenseAreaAndStillGlobalEvaluation.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d4/de4/ControlConstants_8h_source.html">stp/constants/ControlConstants.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d6/dc0/FieldComputations_8h_source.html">world/FieldComputations.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="../../d9/de3/InterceptionComputations_8h_source.html">stp/computations/InterceptionComputations.h</a>&quot;</code><br />
+<code>#include &lt;roboteam_utils/Grid.h&gt;</code><br />
+<code>#include &lt;roboteam_utils/Tube.h&gt;</code><br />
+<code>#include &lt;roboteam_utils/Field.hpp&gt;</code><br />
+<code>#include &quot;roboteam_utils/Hungarian.h&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../dd/dcc/Play_8hpp_source.html">stp/Play.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d4/d24/ComputationManager_8h_source.html">stp/computations/ComputationManager.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../db/d9a/PositionScoring_8h_source.html">stp/computations/PositionScoring.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d0/dbb/World_8hpp_source.html">world/World.hpp</a>&quot;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
 Namespaces</h2></td></tr>
@@ -102,15 +108,13 @@ Namespaces</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:d5/d14/namespacertt_1_1ai_1_1stp"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html">rtt::ai::stp</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:dc/d81/namespacertt_1_1ai_1_1stp_1_1evaluation"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d81/namespacertt_1_1ai_1_1stp_1_1evaluation.html">rtt::ai::stp::evaluation</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="../../dir_50f0153f528c810051dffd2bb4bf2701.html">roboteam_ai</a></li><li class="navelem"><a class="el" href="../../dir_5733d7042189ba3c2a676fedaf910e20.html">src</a></li><li class="navelem"><a class="el" href="../../dir_ff7bab2f878481c7f00fafbde64f720d.html">stp</a></li><li class="navelem"><a class="el" href="../../dir_80ba2d7f2592fa2343403c3ea648ac4d.html">evaluations</a></li><li class="navelem"><a class="el" href="../../dir_262e8bcc8ddf41433c52a4108a784e43.html">global</a></li><li class="navelem"><a class="el" href="../../dd/d8c/BallNotInOurDefenseAreaAndStillGlobalEvaluation_8cpp.html">BallNotInOurDefenseAreaAndStillGlobalEvaluation.cpp</a></li>
+    <li class="navelem"><a class="el" href="../../dir_50f0153f528c810051dffd2bb4bf2701.html">roboteam_ai</a></li><li class="navelem"><a class="el" href="../../dir_5733d7042189ba3c2a676fedaf910e20.html">src</a></li><li class="navelem"><a class="el" href="../../dir_ff7bab2f878481c7f00fafbde64f720d.html">stp</a></li><li class="navelem"><a class="el" href="../../dir_2c258284a58395a6d8d54575e0f40eb3.html">computations</a></li><li class="navelem"><a class="el" href="../../d1/ddd/InterceptionComputations_8cpp.html">InterceptionComputations.cpp</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>

@@ -19,6 +19,7 @@ var classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass =
     [ "shouldEndPlay", "df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass.html#a69c151bdcb58496794b8ef9fa46a2286", null ],
     [ "update", "df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass.html#a52fc8b6075367b48ae05021829ebcc8f", null ],
     [ "updateField", "df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass.html#a805621fd748e3dfd6399ff69570f7e56", null ],
+    [ "endPlayCounter", "df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass.html#a6b27e33e152967817184155a3d11a892", null ],
     [ "field", "df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass.html#a1dc216d51c90eb0e6ddb0298e1ad034e", null ],
     [ "keepPlayEvaluation", "df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass.html#a17fc7a716064d918aa29c072832c2ef8", null ],
     [ "lastScore", "df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass.html#a81d204e55bab023d2937c1420abd04ad", null ],

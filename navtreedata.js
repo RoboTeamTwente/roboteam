@@ -76,19 +76,19 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"d1/d71/classrtt_1_1ai_1_1gui_1_1net_1_1InterfacePublisher.html#aae6b38aa7b4a9cd2f88ddc643422a3da",
+"d1/d9a/GoalShotEvaluation_8h_source.html",
 "d3/da6/classrtt_1_1ai_1_1stp_1_1role_1_1PassReceiver.html#a0575952e375783fee4350fcb97be888c",
-"d4/d99/classrtt_1_1world_1_1robot_1_1Robot.html#a8aeb56889e7c35ddf29ece162d7bd332",
-"d5/d1a/KickOffThemGameStateEvaluation_8cpp.html",
-"d6/d0f/classrtt_1_1ai_1_1stp_1_1tactic_1_1Formation.html#a0dd3439d999970125264ce7fccadff49",
-"d7/d82/Harasser_8cpp.html",
-"d8/d8e/classrtt_1_1ai_1_1stp_1_1tactic_1_1GetBall.html#ab7650037eb092459aca7247ea77f2ad4",
-"d9/df0/classrtt_1_1ai_1_1stp_1_1play_1_1KickOffUsPrepare.html#a58560de6d2d6ca91e467deb1071aadbd",
-"db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#acd30b6326a0e8f8a387db14972abac0d",
-"dc/d3c/roboteam__ai_8cpp.html#af83cb9d0425aa42b49f97853b42a1598",
-"dd/daf/classrtt_1_1ai_1_1stp_1_1play_1_1DefendPass.html#aa0405b45c69fc25464bec621fbcbe0cc",
-"de/dc0/PathTrackingAlgorithm_8h_source.html",
-"dir_bf0f7225efb39e9cfe3c212029116a7c.html"
+"d4/d99/classrtt_1_1world_1_1robot_1_1Robot.html#a97437af3584cf8be229aca8658681e39",
+"d5/d14/namespacertt_1_1ai_1_1stp.html#d9/d71/structrtt_1_1ai_1_1stp_1_1InterceptionInfo",
+"d6/d08/classrtt_1_1world_1_1view_1_1WorldDataView.html#ab41aa608b2e0f97399de74f361adbe15",
+"d7/d73/namespacertt_1_1ai_1_1stp_1_1gen.html#ad3d0ebb02049b8fc34765bd5a265b854",
+"d8/d8e/classrtt_1_1ai_1_1stp_1_1tactic_1_1GetBall.html#a0dd3439d999970125264ce7fccadff49",
+"d9/df0/classrtt_1_1ai_1_1stp_1_1play_1_1KickOffUsPrepare.html",
+"db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#aacd087121e51233fb24c4dcb4c00161a",
+"dc/d3c/roboteam__ai_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627",
+"dd/daf/classrtt_1_1ai_1_1stp_1_1play_1_1DefendPass.html#aa20291b5cee34414dfb81aa0fd33713f",
+"de/dc9/Orbit_8h_source.html",
+"dir_c3efef42c838d1c090db289b109ed89c.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

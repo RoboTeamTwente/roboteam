@@ -124,6 +124,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a9c6ade582624ee7321c5fcd038bea748"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#a9c6ade582624ee7321c5fcd038bea748">handleBallPlacementCollision</a> (const <a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">rtt::world::World</a> *world, const rtt::Field &amp;field, <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> currentPosition, <a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#d8/dcb/structrtt_1_1ai_1_1stp_1_1AvoidObjects">stp::AvoidObjects</a> avoidObjects)</td></tr>
 <tr class="memdesc:a9c6ade582624ee7321c5fcd038bea748"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handles the collision with the ball placement at the current position, will move away from the ball placement location to ball line as quickly as possible.  <a href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#a9c6ade582624ee7321c5fcd038bea748">More...</a><br /></td></tr>
 <tr class="separator:a9c6ade582624ee7321c5fcd038bea748"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abaec8a236e3d2ce218f5133402c43df5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#abaec8a236e3d2ce218f5133402c43df5">handleDefenseAreaCollision</a> (const rtt::Field &amp;field, <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> currentPosition)</td></tr>
+<tr class="memdesc:abaec8a236e3d2ce218f5133402c43df5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handles the collision with the defense area at the current position, will move away from the defense area as quickly as possible.  <a href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#abaec8a236e3d2ce218f5133402c43df5">More...</a><br /></td></tr>
+<tr class="separator:abaec8a236e3d2ce218f5133402c43df5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad87d3b2a2c7882f45c8a0ee21effd8e7"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#ad87d3b2a2c7882f45c8a0ee21effd8e7">calculateScore</a> (const <a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">rtt::world::World</a> *world, const rtt::Field &amp;field, std::optional&lt; <a class="el" href="../../d0/dde/namespacertt_1_1BB.html#de/d62/structrtt_1_1BB_1_1CollisionData">BB::CollisionData</a> &gt; &amp;firstCollision, <a class="el" href="../../d9/da4/classrtt_1_1Trajectory2D.html">Trajectory2D</a> &amp;trajectoryAroundCollision, <a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#d8/dcb/structrtt_1_1ai_1_1stp_1_1AvoidObjects">stp::AvoidObjects</a> avoidObjects, double startTime=0)</td></tr>
 <tr class="memdesc:ad87d3b2a2c7882f45c8a0ee21effd8e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates a score for a trajectory. The score is based on the distance to the target and the distance to the first collision on the path.  <a href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#ad87d3b2a2c7882f45c8a0ee21effd8e7">More...</a><br /></td></tr>
 <tr class="separator:ad87d3b2a2c7882f45c8a0ee21effd8e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -602,7 +605,7 @@ Static Private Attributes</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A new trajectory to the target </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A new target position </dd></dl>
 
 </div>
 </div>
@@ -654,7 +657,45 @@ Static Private Attributes</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A new trajectory to the target </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A new target position </dd></dl>
+
+</div>
+</div>
+<a id="abaec8a236e3d2ce218f5133402c43df5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abaec8a236e3d2ce218f5133402c43df5">&#9670;&nbsp;</a></span>handleDefenseAreaCollision()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../dd/d6d/ControlUtilsTest_8cpp.html#acfb8903fac5809ad6180aee41b325f82">rtt::Vector2</a> rtt::ai::control::PositionControl::handleDefenseAreaCollision </td>
+          <td>(</td>
+          <td class="paramtype">const rtt::Field &amp;&#160;</td>
+          <td class="paramname"><em>field</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a>&#160;</td>
+          <td class="paramname"><em>currentPosition</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Handles the collision with the defense area at the current position, will move away from the defense area as quickly as possible. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">field</td><td>the field object, used onwards by the collision detector </td></tr>
+    <tr><td class="paramname">currentPosition</td><td>the current position of the robot </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A new target position </dd></dl>
 
 </div>
 </div>

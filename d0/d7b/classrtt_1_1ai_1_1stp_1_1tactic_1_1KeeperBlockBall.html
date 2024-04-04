@@ -169,9 +169,9 @@ Static Private Member Functions</h2></td></tr>
 <tr class="memitem:adf2d88cf5c448bdd7badea70cf0faf69"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#adf2d88cf5c448bdd7badea70cf0faf69">isBallHeadingTowardsOurGoal</a> (const HalfLine &amp;ballTrajectory, const Field &amp;field)</td></tr>
 <tr class="memdesc:adf2d88cf5c448bdd7badea70cf0faf69"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if the given trajectory goes towards our goal.  <a href="../../d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#adf2d88cf5c448bdd7badea70cf0faf69">More...</a><br /></td></tr>
 <tr class="separator:adf2d88cf5c448bdd7badea70cf0faf69"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1f70fc575beee700a7a99ba27b595550"><td class="memItemLeft" align="right" valign="top">static std::pair&lt; <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a>, <a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#ac154a8e7620c1e24b70f641afcf2c5eb">PIDType</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#a1f70fc575beee700a7a99ba27b595550">calculateTargetPosition</a> (const <a class="el" href="../../d8/d17/classrtt_1_1world_1_1view_1_1BallView.html">world::view::BallView</a> &amp;ball, const Field &amp;field, const std::optional&lt; <a class="el" href="../../d3/de7/classrtt_1_1world_1_1view_1_1RobotView.html">world::view::RobotView</a> &gt; &amp;enemyRobot) noexcept</td></tr>
-<tr class="memdesc:a1f70fc575beee700a7a99ba27b595550"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates the position for the keeper and the PID type with which that position should be achieved PID type is different for intercepting and kicking (coarse and fast or fine and slower control)  <a href="../../d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#a1f70fc575beee700a7a99ba27b595550">More...</a><br /></td></tr>
-<tr class="separator:a1f70fc575beee700a7a99ba27b595550"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3bddca74e7df91a3cb79b19bd7215200"><td class="memItemLeft" align="right" valign="top">static std::pair&lt; <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a>, <a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#ac154a8e7620c1e24b70f641afcf2c5eb">PIDType</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#a3bddca74e7df91a3cb79b19bd7215200">calculateTargetPosition</a> (const <a class="el" href="../../d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html">StpInfo</a> info) noexcept</td></tr>
+<tr class="memdesc:a3bddca74e7df91a3cb79b19bd7215200"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates the position for the keeper and the PID type with which that position should be achieved PID type is different for intercepting and kicking (coarse and fast or fine and slower control)  <a href="../../d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#a3bddca74e7df91a3cb79b19bd7215200">More...</a><br /></td></tr>
+<tr class="separator:a3bddca74e7df91a3cb79b19bd7215200"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abd5f3fa2fb0f1ec7158adfbe4830067f"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="../../d5/df1/ControlUtils_8h.html#a190e260c90ed557590c2ca7d74a4e490">Angle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#abd5f3fa2fb0f1ec7158adfbe4830067f">calculateTargetAngle</a> (const <a class="el" href="../../d8/d17/classrtt_1_1world_1_1view_1_1BallView.html">world::view::BallView</a> &amp;ball, const <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;targetKeeperPosition)</td></tr>
 <tr class="memdesc:abd5f3fa2fb0f1ec7158adfbe4830067f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates the angle the robot should have.  <a href="../../d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#abd5f3fa2fb0f1ec7158adfbe4830067f">More...</a><br /></td></tr>
 <tr class="separator:abd5f3fa2fb0f1ec7158adfbe4830067f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -282,8 +282,8 @@ Static Private Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a1f70fc575beee700a7a99ba27b595550"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1f70fc575beee700a7a99ba27b595550">&#9670;&nbsp;</a></span>calculateTargetPosition()</h2>
+<a id="a3bddca74e7df91a3cb79b19bd7215200"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3bddca74e7df91a3cb79b19bd7215200">&#9670;&nbsp;</a></span>calculateTargetPosition()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -294,25 +294,9 @@ Static Private Member Functions</h2></td></tr>
         <tr>
           <td class="memname">std::pair&lt; <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a>, <a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#ac154a8e7620c1e24b70f641afcf2c5eb">PIDType</a> &gt; rtt::ai::stp::tactic::KeeperBlockBall::calculateTargetPosition </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="../../d8/d17/classrtt_1_1world_1_1view_1_1BallView.html">world::view::BallView</a> &amp;&#160;</td>
-          <td class="paramname"><em>ball</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramtype">const <a class="el" href="../../d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html">StpInfo</a>&#160;</td>
+          <td class="paramname"><em>info</em></td><td>)</td>
           <td></td>
-          <td class="paramtype">const Field &amp;&#160;</td>
-          <td class="paramname"><em>field</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::optional&lt; <a class="el" href="../../d3/de7/classrtt_1_1world_1_1view_1_1RobotView.html">world::view::RobotView</a> &gt; &amp;&#160;</td>
-          <td class="paramname"><em>enemyRobot</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -325,9 +309,7 @@ Static Private Member Functions</h2></td></tr>
 <p>Calculates the position for the keeper and the PID type with which that position should be achieved PID type is different for intercepting and kicking (coarse and fast or fine and slower control) </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">ball</td><td>is the current ball for which the keeper should defend </td></tr>
-    <tr><td class="paramname">field</td><td>is the field on which the keeper should defend </td></tr>
-    <tr><td class="paramname">enemyRobot</td><td>Enemy robot closest to ball </td></tr>
+    <tr><td class="paramname">info</td><td>the <a class="el" href="../../d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html">StpInfo</a> struct </td></tr>
   </table>
   </dd>
 </dl>

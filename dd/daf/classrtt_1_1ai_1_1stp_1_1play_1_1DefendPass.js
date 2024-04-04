@@ -19,7 +19,7 @@ var classrtt_1_1ai_1_1stp_1_1play_1_1DefendPass =
     [ "update", "dd/daf/classrtt_1_1ai_1_1stp_1_1play_1_1DefendPass.html#a52fc8b6075367b48ae05021829ebcc8f", null ],
     [ "updateField", "dd/daf/classrtt_1_1ai_1_1stp_1_1play_1_1DefendPass.html#a805621fd748e3dfd6399ff69570f7e56", null ],
     [ "field", "dd/daf/classrtt_1_1ai_1_1stp_1_1play_1_1DefendPass.html#a1dc216d51c90eb0e6ddb0298e1ad034e", null ],
-    [ "harasserInfo", "dd/daf/classrtt_1_1ai_1_1stp_1_1play_1_1DefendPass.html#a30394374f64d11628dfac7e4b7cd16f2", null ],
+    [ "harasserInfo", "dd/daf/classrtt_1_1ai_1_1stp_1_1play_1_1DefendPass.html#a51f52bf4f692e12580e50006feda82b9", null ],
     [ "keepPlayEvaluation", "dd/daf/classrtt_1_1ai_1_1stp_1_1play_1_1DefendPass.html#a17fc7a716064d918aa29c072832c2ef8", null ],
     [ "lastScore", "dd/daf/classrtt_1_1ai_1_1stp_1_1play_1_1DefendPass.html#a81d204e55bab023d2937c1420abd04ad", null ],
     [ "previousKeeperId", "dd/daf/classrtt_1_1ai_1_1stp_1_1play_1_1DefendPass.html#a7164f241b13b1aa59b6e6b5c30a3094b", null ],

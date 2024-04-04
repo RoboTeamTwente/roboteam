@@ -199,6 +199,8 @@ Private Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
+<tr class="memitem:a6b27e33e152967817184155a3d11a892"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass.html#a6b27e33e152967817184155a3d11a892">endPlayCounter</a> = 0</td></tr>
+<tr class="separator:a6b27e33e152967817184155a3d11a892"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a811a29f3adf24138908bbea183e2430b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#dd/d7d/structrtt_1_1ai_1_1stp_1_1PassInfo">PassInfo</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass.html#a811a29f3adf24138908bbea183e2430b">passInfo</a></td></tr>
 <tr class="separator:a811a29f3adf24138908bbea183e2430b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afc2268677ee563a2f0a7efa4acff465e"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#afc2268677ee563a2f0a7efa4acff465e">previousRobotNum</a> {}</td></tr>
@@ -758,6 +760,29 @@ Private Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
+<a id="a6b27e33e152967817184155a3d11a892"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6b27e33e152967817184155a3d11a892">&#9670;&nbsp;</a></span>endPlayCounter</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int rtt::ai::stp::play::AttackingPass::endPlayCounter = 0</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Counter that keeps track of how long another robot has a better interception. We need this counter. If not, as soon as we kicked the ball, another robot has a better intercept, while <a class="el" href="../../df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass.html#a79c96620d8b394a6682729b43e06f63f" title="Check if the ball has been kicked. True if passer is done with KickAtPos tactic, False if it is still...">ballKicked()</a> is still false, resulting in switching just after kicking the ball </p>
+
+</div>
+</div>
 <a id="a1dc216d51c90eb0e6ddb0298e1ad034e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1dc216d51c90eb0e6ddb0298e1ad034e">&#9670;&nbsp;</a></span>field</h2>
 

@@ -8,26 +8,6 @@
 namespace rtt::ai::control {
 std::vector<Vector2> PositionControl::getComputedPath(int ID) { return computedPaths[ID]; }
 
-RobotCommand PositionControl::computeAndTrackPath(const rtt::Field &field, int robotId, const Vector2 &currentPosition, const Vector2 &currentVelocity, Vector2 &targetPosition,
-                                                  stp::PIDType pidType) {
-    collisionDetector.setField(field);
-
-    // if the robot is close to the final position and can't get there, stop
-    if ((currentPosition - targetPosition).length() < FINAL_AVOIDANCE_DISTANCE && collisionDetector.getRobotCollisionBetweenPoints(currentPosition, targetPosition)) {
-        RTT_INFO("Path collides with something close to the target position for robot ID ", robotId)
-        return {};
-    }
-    if (shouldRecalculatePath(currentPosition, targetPosition, currentVelocity, robotId)) {
-        computedPaths[robotId] = pathPlanningAlgorithm.computePath(currentPosition, targetPosition);
-    }
-
-    RobotCommand command = {};
-    Position trackingVelocity = pathTrackingAlgorithm.trackPathDefaultAngle(currentPosition, currentVelocity, computedPaths[robotId], robotId, pidType);
-    command.velocity = Vector2(trackingVelocity.x, trackingVelocity.y);
-    command.targetAngle = trackingVelocity.rot;
-    return command;
-}
-
 bool PositionControl::shouldRecalculatePath(const Vector2 &currentPosition, const Vector2 &targetPos, const Vector2 &currentVelocity, int robotId) {
     return computedPaths[robotId].empty() || PositionControlUtils::isTargetChanged(targetPos, computedPaths[robotId].back()) ||
            (currentVelocity != Vector2(0, 0) && collisionDetector.isCollisionBetweenPoints(currentPosition, computedPaths[robotId].front()));
@@ -108,7 +88,6 @@ rtt::BB::CommandCollision PositionControl::computeAndTrackTrajectory(const rtt::
         completedTimeSteps[robotId]++;
     }
 
-    // Position trackingVelocity = pathTrackingAlgorithm.trackPathDefaultAngle(currentPosition, currentVelocity,computedPaths[robotId], robotId, pidType);
     Position trackingVelocity = pathTrackingAlgorithmBBT.trackPathForwardAngle(currentPosition, currentVelocity, computedPathsPosVel[robotId], robotId, pidType);
     Vector2 trackingVelocityVector = {trackingVelocity.x, trackingVelocity.y};
 

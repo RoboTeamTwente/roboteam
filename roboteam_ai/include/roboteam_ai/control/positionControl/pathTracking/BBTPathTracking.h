@@ -21,8 +21,6 @@ class BBTPathTracking {
     /**
      * Generates an output velocity and angle according to the implemented algorithm.
      * After reaching a certain distance to the closest path point, it will go to the next one. <br><br>
-     * DensePathTracking looks at the target position after N steps and follows that
-     * using a PID controller (the PidTracking). It is assumed that the path is dense.
      * @param currentPosition current position of the robot
      * @param currentVelocity current velocity of the robot
      * @param pathPoints the path as a list of points

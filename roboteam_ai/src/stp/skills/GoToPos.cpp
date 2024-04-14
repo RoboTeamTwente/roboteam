@@ -1,6 +1,6 @@
 #include "stp/skills/GoToPos.h"
 
-#include "control/positionControl/BBTrajectories/WorldObjects.h"
+#include "control/positionControl/WorldObjects.h"
 #include "stp/computations/PositionComputations.h"
 #include "world/World.hpp"
 
@@ -21,7 +21,7 @@ Status GoToPos::onUpdate(const StpInfo &info) noexcept {
         targetPos = PositionComputations::calculateAvoidBallPosition(targetPos, ballLocation, info.getField().value());
     }
 
-    rtt::BB::CommandCollision commandCollision;
+    rtt::ai::control::CommandCollision commandCollision;
 
     commandCollision = info.getCurrentWorld()->getRobotPositionController()->computeAndTrackTrajectory(
         info.getCurrentWorld(), info.getField().value(), info.getRobot().value()->getId(), info.getRobot().value()->getPos(), info.getRobot().value()->getVel(), targetPos,

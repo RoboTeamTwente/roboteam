@@ -1,7 +1,7 @@
 #include <control/positionControl/BBTrajectories/BBTrajectory1D.h>
 #include <gtest/gtest.h>
 
-namespace rtt::BB {
+namespace rtt::ai::control {
 // A profile that only decellerates from the start
 TEST(BBTrajectories, onlyDecelerate) {
     BBTrajectory1D test;
@@ -47,4 +47,4 @@ TEST(BBTrajectories, onlyDecelerateOtherWay) {
     EXPECT_FALSE(test.inLastPart(0.000));
     EXPECT_TRUE(test.inLastPart(2.5));
 }
-}  // namespace rtt::BB
+}  // namespace rtt::ai::control

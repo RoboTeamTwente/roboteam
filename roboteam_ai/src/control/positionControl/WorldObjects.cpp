@@ -1,4 +1,4 @@
-#include "control/positionControl/BBTrajectories/WorldObjects.h"
+#include "control/positionControl/WorldObjects.h"
 
 #include <algorithm>
 
@@ -6,7 +6,7 @@
 #include "world/World.hpp"
 #include "world/WorldData.hpp"
 
-namespace rtt::BB {
+namespace rtt::ai::control {
 
 WorldObjects::WorldObjects() = default;
 
@@ -65,7 +65,7 @@ void WorldObjects::calculateFieldCollisions(const rtt::Field &field, std::vector
             // Don't care about the field if the robot is already outside the field (i == 0 is the first point of the robot's path, so almost the currentPosition).
             if (i == 0) return;
 
-            insertCollisionData(collisionDatas, CollisionData{pathPoints[i], timeStep * (i - completedTimeSteps), BB::CollisionType::FIELD});
+            insertCollisionData(collisionDatas, CollisionData{pathPoints[i], timeStep * (i - completedTimeSteps), rtt::ai::control::CollisionType::FIELD});
             return;
         }
     }
@@ -82,7 +82,7 @@ void WorldObjects::calculateDefenseAreaCollisions(const rtt::Field &field, std::
             // Don't care about the defense area if the robot is already in the defense area. It should just get out as fast as possible :)
             // if (i == 0) return;
 
-            insertCollisionData(collisionDatas, CollisionData{pathPoints[i], timeStep * (i - completedTimeSteps), BB::CollisionType::DEFENSEAREA});
+            insertCollisionData(collisionDatas, CollisionData{pathPoints[i], timeStep * (i - completedTimeSteps), rtt::ai::control::CollisionType::DEFENSEAREA});
             return;
         }
     }
@@ -128,7 +128,7 @@ void WorldObjects::calculateBallCollisions(const rtt::world::World *world, std::
         double distance = (ourLocationAtMinTime - theirLocationAtMinTime).length();
 
         if (distance < dist) {
-            insertCollisionData(collisionDatas, CollisionData{pathPoints[completedTimeSteps], loopTime, BB::CollisionType::BALL});
+            insertCollisionData(collisionDatas, CollisionData{pathPoints[completedTimeSteps], loopTime, rtt::ai::control::CollisionType::BALL});
             return;
         }
     }
@@ -180,7 +180,7 @@ void WorldObjects::calculateEnemyRobotCollisions(const rtt::world::World *world,
                 Vector2(startPointX_OpponentRobot, startPointY_OpponentRobot) + Vector2(velocityX_OpponentRobot, velocityY_OpponentRobot) * minTime;
             const double distance = (ourLocationAtMinTime - theirLocationAtMinTime).length();
             if (distance < avoidanceDistance) {
-                insertCollisionData(collisionDatas, CollisionData{ourLocationAtMinTime, loopTime, BB::CollisionType::ENEMYROBOT});
+                insertCollisionData(collisionDatas, CollisionData{ourLocationAtMinTime, loopTime, rtt::ai::control::CollisionType::ENEMYROBOT});
                 return;
             }
         }
@@ -255,7 +255,7 @@ void WorldObjects::calculateOurRobotCollisions(const rtt::world::World *world, s
             const Vector2 otherRobotLocationAtMinTime = Vector2(startPointX_OtherRobot, startPointY_OtherRobot) + Vector2(velocityX_OtherRobot, velocityY_OtherRobot) * minTime;
             const double distanceSquared = (ourLocationAtMinTime - otherRobotLocationAtMinTime).length();
             if (distanceSquared < avoidanceDistance) {
-                insertCollisionData(collisionDatas, CollisionData{ourLocationAtMinTime, loopTime, BB::CollisionType::OWNROBOT});
+                insertCollisionData(collisionDatas, CollisionData{ourLocationAtMinTime, loopTime, rtt::ai::control::CollisionType::OWNROBOT});
                 return;
             }
         }
@@ -270,7 +270,7 @@ void WorldObjects::calculateBallPlacementCollision(const rtt::world::World *worl
 
     for (size_t i = completedTimeSteps; i < pathPoints.size(); i++) {
         if (ballPlacementLine.distanceToLine(pathPoints[i]) < ai::stp::control_constants::AVOID_BALL_DISTANCE) {
-            insertCollisionData(collisionDatas, CollisionData{pathPoints[i], timeStep * (i - completedTimeSteps), BB::CollisionType::BALLPLACEMENT});
+            insertCollisionData(collisionDatas, CollisionData{pathPoints[i], timeStep * (i - completedTimeSteps), rtt::ai::control::CollisionType::BALLPLACEMENT});
             return;
         }
     }
@@ -282,4 +282,4 @@ void WorldObjects::insertCollisionData(std::vector<CollisionData> &collisionData
                                            [](CollisionData const &data, CollisionData const &compare) { return data.collisionTime < compare.collisionTime; }),
                           collisionData);
 }
-}  // namespace rtt::BB
+}  // namespace rtt::ai::control

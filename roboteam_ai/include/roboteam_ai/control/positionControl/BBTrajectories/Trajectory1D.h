@@ -15,7 +15,7 @@ class Trajectory1D {
      * @param newParts Trajectory which needs to be stored
      * @param addFromTime Time the trajectory was created
      */
-    void addTrajectory(const std::vector<BB::BBTrajectoryPart> &newParts, double addFromTime);
+    void addTrajectory(const std::vector<rtt::ai::control::BBTrajectoryPart> &newParts, double addFromTime);
 
     /**
      * @brief Gets the position at time t
@@ -44,7 +44,7 @@ class Trajectory1D {
      */
     [[nodiscard]] double getTotalTime() const;
 
-    std::vector<BB::BBTrajectoryPart> parts; /**< Vector containing all parts of the trajectory */
+    std::vector<rtt::ai::control::BBTrajectoryPart> parts; /**< Vector containing all parts of the trajectory */
     double finalPos;                         /**< Target position to go to */
     double maxVel;                           /**< Maximum allowed velocity */
 };

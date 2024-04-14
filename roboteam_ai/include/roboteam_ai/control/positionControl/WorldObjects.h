@@ -8,7 +8,7 @@
 #include "utilities/StpInfoEnums.h"
 #include "world/FieldComputations.h"
 
-namespace rtt::BB {
+namespace rtt::ai::control {
 
 /**
  * @brief Enum that stores the different types of collisions
@@ -60,7 +60,7 @@ class WorldObjects {
      * @param avoidObjects a struct with if it should avoid certain objects
      * @param completedTimeSteps Number of completed time steps of the trajectory
      * @param startTime Start time of the current trajectory part that is being checked. This is the time that it takes for the robot to reach the first point of the trajectory
-     * @return optional with rtt::BB::CollisionData
+     * @return optional with rtt::ai::control::CollisionData
      */
     std::optional<CollisionData> getFirstCollision(const rtt::world::World *world, const rtt::Field &field, const rtt::Trajectory2D &Trajectory,
                                                    const std::unordered_map<int, std::vector<Vector2>> &computedPaths, int robotId, ai::stp::AvoidObjects avoidObjects,
@@ -71,7 +71,7 @@ class WorldObjects {
      * including the part that might already be completed. Only call this function for a new trajectory
      * @param field used for checking collisions with the field
      * @param BBTrajectory the trajectory to check for collisions
-     * @return optional with rtt::BB::CollisionData
+     * @return optional with rtt::ai::control::CollisionData
      */
     std::optional<CollisionData> getFirstDefenseAreaCollision(const rtt::Field &field, const rtt::Trajectory2D &Trajectory);
 
@@ -79,7 +79,7 @@ class WorldObjects {
      * @brief Takes a calculated path of a robot and checks points along the path if they are outside the
      * fieldlines if not allowed there. Adds these points and the time to collisionDatas and collisionTimes
      * @param field Used for information about the field
-     * @param collisionDatas std::vector which rtt::BB::CollisionData can be added to
+     * @param collisionDatas std::vector which rtt::ai::control::CollisionData can be added to
      * @param pathPoints std::vector with path points
      * @param timeStep Time between pathpoints
      * @param completedTimeSteps Number of completed time steps
@@ -91,7 +91,7 @@ class WorldObjects {
      * @brief Takes a calculated path and checks points along the path if they are inside the defensearea if
      * the robot is not allowed to be there. Adds these points and the time to collisionDatas and collisionTimes
      * @param field Used for information about the field
-     * @param collisionDatas std::vector which rtt::BB::CollisionData can be added to
+     * @param collisionDatas std::vector which rtt::ai::control::CollisionData can be added to
      * @param pathPoints std::vector with path points
      * @param timeStep Time between pathpoints
      * @param completedTimeSteps Number of completed time steps
@@ -104,7 +104,7 @@ class WorldObjects {
      * approximation of the ball trajactory. If the play is "ball_placement_them" also checks for the path
      * being inside the balltube. Adds these points and the time to collisionDatas and collisionTimes
      * @param world Used for information about the ball
-     * @param collisionDatas std::vector which rtt::BB::CollisionData can be added to
+     * @param collisionDatas std::vector which rtt::ai::control::CollisionData can be added to
      * @param pathPoints std::vector with path points
      * @param timeStep Time between pathpoints
      * @param dist Distance to the ball
@@ -119,7 +119,7 @@ class WorldObjects {
      * approximation of the enemy robot paths. Adds these points and the time to collisionDatas and collisionTimes if
      * the difference in velocity between the two robots is more than 1.5 ms/s and we are driving faster
      * @param world Used for information about the enemy robots
-     * @param collisionDatas std::vector which rtt::BB::CollisionData can be added to
+     * @param collisionDatas std::vector which rtt::ai::control::CollisionData can be added to
      * @param pathPoints std::vector with path points
      * @param timeStep Time between pathpoints
      * @param completedTimeSteps Amount of seconds of the trajectory already completed by the robot
@@ -134,7 +134,7 @@ class WorldObjects {
      * where our robots are calculated to be at that point in time. Adds these points and the time to collisionDatas
      * and collisionTimes
      * @param world Used for information about our robots
-     * @param collisionDatas std::vector which rtt::BB::CollisionData can be added to
+     * @param collisionDatas std::vector which rtt::ai::control::CollisionData can be added to
      * @param pathPoints std::vector with path points
      * @param computedPaths The paths of our own robots
      * @param robotId ID of the robot
@@ -151,7 +151,7 @@ class WorldObjects {
      * approximation of the ball trajactory. If the play is "ball_placement_them" also checks for the path
      * being inside the balltube. Adds these points and the time to collisionDatas and collisionTimes
      * @param world Used for information about the ball
-     * @param collisionDatas std::vector which rtt::BB::CollisionData can be added to
+     * @param collisionDatas std::vector which rtt::ai::control::CollisionData can be added to
      * @param pathPoints std::vector with path points
      * @param timeStep Time between pathpoints
      * @param completedTimeSteps Number of completed time steps
@@ -166,6 +166,6 @@ class WorldObjects {
      */
     void insertCollisionData(std::vector<CollisionData> &collisionDatas, const CollisionData &collisionData);
 };
-}  // namespace rtt::BB
+}  // namespace rtt::ai::control
 
 #endif  // RTT_WORLDOBJECTS_H

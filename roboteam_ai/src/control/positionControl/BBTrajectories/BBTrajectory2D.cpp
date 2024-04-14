@@ -3,7 +3,7 @@
 #include <cmath>
 
 #include "utilities/Constants.h"
-namespace rtt::BB {
+namespace rtt::ai::control {
 
 BBTrajectory2D::BBTrajectory2D(const Vector2 &initialPos, const Vector2 &initialVel, const Vector2 &finalPos, double maxVel, double maxAcc) {
     generateSyncedTrajectory(initialPos, initialVel, finalPos, maxVel, maxAcc);
@@ -44,5 +44,5 @@ Vector2 BBTrajectory2D::getAcceleration(double t) const { return Vector2(x.getAc
 
 [[maybe_unused]] double BBTrajectory2D::getTotalTime() const { return std::max(x.getTotalTime(), y.getTotalTime()); }
 
-std::pair<std::vector<BB::BBTrajectoryPart>, std::vector<BB::BBTrajectoryPart>> BBTrajectory2D::getParts() { return std::make_pair(x.getParts(), y.getParts()); }
-}  // namespace rtt::BB
+std::pair<std::vector<rtt::ai::control::BBTrajectoryPart>, std::vector<rtt::ai::control::BBTrajectoryPart>> BBTrajectory2D::getParts() { return std::make_pair(x.getParts(), y.getParts()); }
+}  // namespace rtt::ai::control

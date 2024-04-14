@@ -15,11 +15,11 @@ bool PositionControl::shouldRecalculatePath(const Vector2 &currentPosition, cons
 
 void PositionControl::setRobotPositions(std::vector<Vector2> &robotPositions) { collisionDetector.setRobotPositions(robotPositions); }
 
-rtt::BB::CommandCollision PositionControl::computeAndTrackTrajectory(const rtt::world::World *world, const rtt::Field &field, int robotId, Vector2 currentPosition,
+rtt::ai::control::CommandCollision PositionControl::computeAndTrackTrajectory(const rtt::world::World *world, const rtt::Field &field, int robotId, Vector2 currentPosition,
                                                                      Vector2 currentVelocity, Vector2 targetPosition, double maxRobotVelocity, stp::PIDType pidType,
                                                                      stp::AvoidObjects avoidObjects) {
-    std::optional<BB::CollisionData> firstCollision;
-    rtt::BB::CommandCollision commandCollision = {};
+    std::optional<rtt::ai::control::CollisionData> firstCollision;
+    rtt::ai::control::CommandCollision commandCollision = {};
 
     if (shouldRecalculateTrajectory(world, field, robotId, targetPosition, currentPosition, avoidObjects)) {
         double timeStep = 0.1;
@@ -36,15 +36,15 @@ rtt::BB::CommandCollision PositionControl::computeAndTrackTrajectory(const rtt::
             if (firstCollision.has_value()) {
                 commandCollision.collisionData = firstCollision;
 
-                if ((firstCollision.value().collisionType == BB::CollisionType::BALL) && firstCollision.value().collisionTime <= 0.11) {
+                if ((firstCollision.value().collisionType == rtt::ai::control::CollisionType::BALL) && firstCollision.value().collisionTime <= 0.11) {
                     targetPosition = handleBallCollision(world, field, currentPosition, avoidObjects);
                     computedTrajectories[robotId] = Trajectory2D(currentPosition, currentVelocity, targetPosition, 1.0, ai::Constants::MAX_ACC_UPPER());
                 }
-                if ((firstCollision.value().collisionType == BB::CollisionType::BALLPLACEMENT) && firstCollision.value().collisionTime <= 0.11) {
+                if ((firstCollision.value().collisionType == rtt::ai::control::CollisionType::BALLPLACEMENT) && firstCollision.value().collisionTime <= 0.11) {
                     targetPosition = handleBallPlacementCollision(world, field, currentPosition, avoidObjects);
                     computedTrajectories[robotId] = Trajectory2D(currentPosition, currentVelocity, targetPosition, 1.0, ai::Constants::MAX_ACC_UPPER());
                 }
-                if ((firstCollision.value().collisionType == BB::CollisionType::DEFENSEAREA) && firstCollision.value().collisionTime <= 0.11) {
+                if ((firstCollision.value().collisionType == rtt::ai::control::CollisionType::DEFENSEAREA) && firstCollision.value().collisionTime <= 0.11) {
                     targetPosition = handleDefenseAreaCollision(field, currentPosition);
                     computedTrajectories[robotId] = Trajectory2D(currentPosition, currentVelocity, targetPosition, 1.0, ai::Constants::MAX_ACC_UPPER());
                 }
@@ -92,8 +92,8 @@ rtt::BB::CommandCollision PositionControl::computeAndTrackTrajectory(const rtt::
     Vector2 trackingVelocityVector = {trackingVelocity.x, trackingVelocity.y};
 
     // Break if all paths result in collision and we will collide with a robot
-    if (commandCollision.collisionData.has_value() && (commandCollision.collisionData.value().collisionType == BB::CollisionType::ENEMYROBOT ||
-                                                       commandCollision.collisionData.value().collisionType == BB::CollisionType::OWNROBOT)) {
+    if (commandCollision.collisionData.has_value() && (commandCollision.collisionData.value().collisionType == rtt::ai::control::CollisionType::ENEMYROBOT ||
+                                                       commandCollision.collisionData.value().collisionType == rtt::ai::control::CollisionType::OWNROBOT)) {
         if (trackingVelocityVector.length() > 0.1) trackingVelocityVector = trackingVelocityVector.stretchToLength(0.1);
     }
 
@@ -168,7 +168,7 @@ rtt::Vector2 PositionControl::handleDefenseAreaCollision(const rtt::Field &field
     return targetPosition;
 }
 
-double PositionControl::calculateScore(const rtt::world::World *world, const rtt::Field &field, std::optional<BB::CollisionData> &firstCollision,
+double PositionControl::calculateScore(const rtt::world::World *world, const rtt::Field &field, std::optional<rtt::ai::control::CollisionData> &firstCollision,
                                        Trajectory2D &trajectoryAroundCollision, stp::AvoidObjects avoidObjects, double startTime) {
     double totalTime = trajectoryAroundCollision.getTotalTime();
     double score = totalTime + startTime;
@@ -209,7 +209,7 @@ double PositionControl::calculateScore(const rtt::world::World *world, const rtt
 }
 
 std::optional<Trajectory2D> PositionControl::findNewTrajectory(const rtt::world::World *world, const rtt::Field &field, int robotId, Vector2 &currentPosition,
-                                                               Vector2 &currentVelocity, std::optional<BB::CollisionData> &firstCollision, Vector2 &targetPosition,
+                                                               Vector2 &currentVelocity, std::optional<rtt::ai::control::CollisionData> &firstCollision, Vector2 &targetPosition,
                                                                double maxRobotVelocity, double timeStep, stp::AvoidObjects avoidObjects) {
     auto intermediatePoints = createIntermediatePoints(field, firstCollision, targetPosition);
     std::sort(intermediatePoints.begin(), intermediatePoints.end(),
@@ -246,7 +246,7 @@ std::optional<Trajectory2D> PositionControl::findNewTrajectory(const rtt::world:
     return bestTrajectory;
 }
 
-std::vector<Vector2> PositionControl::createIntermediatePoints(const rtt::Field &field, std::optional<BB::CollisionData> &firstCollision, Vector2 &targetPosition) {
+std::vector<Vector2> PositionControl::createIntermediatePoints(const rtt::Field &field, std::optional<rtt::ai::control::CollisionData> &firstCollision, Vector2 &targetPosition) {
     float angleBetweenIntermediatePoints = M_PI_4 / 2;
     float fieldHeight = field.playArea.height();
     float pointExtension = fieldHeight / 18;

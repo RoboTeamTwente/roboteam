@@ -3,19 +3,19 @@
 
 #include <unordered_map>
 
-#include "PathTrackingAlgorithm.h"
 #include "control/positionControl/PositionControlUtils.h"
 #include "roboteam_utils/Position.h"
 #include "roboteam_utils/Vector2.h"
 #include "roboteam_utils/pid.h"
 #include "utilities/Constants.h"
+#include <utilities/StpInfoEnums.h>
 
 namespace rtt::ai::control {
 
 /**
  * Path tracking algorithm. See method computePath for details.
  */
-class PidTracking : public PathTrackingAlgorithm {
+class PidTracking {
    private:
     static constexpr double MAX_VELOCITY = Constants::MAX_VEL();  /**< Maximum allowed velocity */
     std::unordered_map<int, std::pair<PID, PID>> pidMapping = {}; /**< Map of PID controllers for each robot */
@@ -24,7 +24,7 @@ class PidTracking : public PathTrackingAlgorithm {
     /**
      * @brief Default constructor for the PidTracking class
      */
-    ~PidTracking() override = default;
+    ~PidTracking() = default;
     /**
      * Generates an output velocity and angle according to the implemented algorithm.
      * After reaching a certain distance to the closest path point, it will go to the next one. <br><br>
@@ -38,7 +38,7 @@ class PidTracking : public PathTrackingAlgorithm {
      * @param pidType The desired PID type (intercept, regular, keeper etc.)
      * @return a structure containing the tracking velocity and the orientation angle
      */
-    Position trackPath(const Vector2 &currentPosition, const Vector2 &currentVelocity, std::vector<Vector2> &pathPoints, int robotId, double angle, stp::PIDType pidType) override;
+    Position trackPath(const Vector2 &currentPosition, const Vector2 &currentVelocity, std::vector<Vector2> &pathPoints, int robotId, double angle, stp::PIDType pidType);
     /**
      * Update the PID values for a specific robot
      * @param pidType The desired PID type (intercept, regular, keeper etc.)

@@ -5,9 +5,8 @@
 
 #include "BBTrajectories/Trajectory2D.h"
 #include "CollisionDetector.h"
-#include "control/positionControl/BBTrajectories/WorldObjects.h"
+#include "control/positionControl/WorldObjects.h"
 #include "control/positionControl/pathTracking/BBTPathTracking.h"
-#include "control/positionControl/pathTracking/PidTracking.h"
 #include "utilities/StpInfoEnums.h"
 
 namespace rtt::ai::control {
@@ -19,7 +18,7 @@ class PositionControl {
    private:
     static constexpr double FINAL_AVOIDANCE_DISTANCE = 4 * Constants::ROBOT_RADIUS(); /**< Minimum distance the robot will keep to avoid collisions */
     CollisionDetector collisionDetector;                                              /**< Detects collisions on the trajectory */
-    rtt::BB::WorldObjects worldObjects;                                               /**< Calculates collisions */
+    rtt::ai::control::WorldObjects worldObjects;                                               /**< Calculates collisions */
     BBTPathTracking pathTrackingAlgorithmBBT;                                         /**< Tracks the BBT path */
 
     std::unordered_map<int, Trajectory2D> computedTrajectories;                            /**< Map of computed trajectories for each robot */
@@ -79,7 +78,7 @@ class PositionControl {
      * @param pidType The desired PID type (intercept, regular, keeper etc.)
      * @return A RobotCommand and optional with the location of the first collision on the path
      */
-    rtt::BB::CommandCollision computeAndTrackTrajectory(const rtt::world::World *world, const rtt::Field &field, int robotId, Vector2 currentPosition, Vector2 currentVelocity,
+    rtt::ai::control::CommandCollision computeAndTrackTrajectory(const rtt::world::World *world, const rtt::Field &field, int robotId, Vector2 currentPosition, Vector2 currentVelocity,
                                                         Vector2 targetPosition, double maxRobotVelocity, stp::PIDType pidType, stp::AvoidObjects avoidObjects);
 
     /**
@@ -121,7 +120,7 @@ class PositionControl {
      * @param startTime the time at which the trajectory starts
      * @return A score for the trajectory
      */
-    double calculateScore(const rtt::world::World *world, const rtt::Field &field, std::optional<BB::CollisionData> &firstCollision, Trajectory2D &trajectoryAroundCollision,
+    double calculateScore(const rtt::world::World *world, const rtt::Field &field, std::optional<rtt::ai::control::CollisionData> &firstCollision, Trajectory2D &trajectoryAroundCollision,
                           stp::AvoidObjects avoidObjects, double startTime = 0);
 
     /**
@@ -140,7 +139,7 @@ class PositionControl {
      * @return An optional with a new path
      */
     std::optional<Trajectory2D> findNewTrajectory(const rtt::world::World *world, const rtt::Field &field, int robotId, Vector2 &currentPosition, Vector2 &currentVelocity,
-                                                  std::optional<BB::CollisionData> &firstCollision, Vector2 &targetPosition, double maxRobotVelocity, double timeStep,
+                                                  std::optional<rtt::ai::control::CollisionData> &firstCollision, Vector2 &targetPosition, double maxRobotVelocity, double timeStep,
                                                   stp::AvoidObjects AvoidObjects);
 
     /**
@@ -151,7 +150,7 @@ class PositionControl {
      * @param targetPosition the desired position that the robot has to reach
      * @return A vector with coordinates of the intermediate points
      */
-    std::vector<Vector2> createIntermediatePoints(const rtt::Field &field, std::optional<BB::CollisionData> &firstCollision, Vector2 &targetPosition);
+    std::vector<Vector2> createIntermediatePoints(const rtt::Field &field, std::optional<rtt::ai::control::CollisionData> &firstCollision, Vector2 &targetPosition);
 };
 
 }  // namespace rtt::ai::control

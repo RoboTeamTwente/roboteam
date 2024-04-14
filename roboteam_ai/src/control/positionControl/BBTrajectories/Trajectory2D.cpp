@@ -8,8 +8,8 @@
 namespace rtt {
 
 Trajectory2D::Trajectory2D(const Vector2 &initialPos, const Vector2 &initialVel, const Vector2 &finalPos, double maxVel, double maxAcc) {
-    BB::BBTrajectory2D BBTNoCollision = BB::BBTrajectory2D(initialPos, initialVel, finalPos, maxVel, maxAcc);
-    std::pair<std::vector<BB::BBTrajectoryPart>, std::vector<BB::BBTrajectoryPart>> parts = BBTNoCollision.getParts();
+    rtt::ai::control::BBTrajectory2D BBTNoCollision = rtt::ai::control::BBTrajectory2D(initialPos, initialVel, finalPos, maxVel, maxAcc);
+    std::pair<std::vector<rtt::ai::control::BBTrajectoryPart>, std::vector<rtt::ai::control::BBTrajectoryPart>> parts = BBTNoCollision.getParts();
     x.parts = parts.first;
     x.finalPos = finalPos.x;
     y.parts = parts.second;

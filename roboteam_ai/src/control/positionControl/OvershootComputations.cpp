@@ -1,3 +1,4 @@
+// The implementation of this is based on Sumatra/modules/common/src/main/java/edu/tigers/sumatra/trajectory/DestinationForTimedPositionCalc.java
 #include "control/positionControl/OvershootComputations.h"
 
 #include <cmath>
@@ -38,109 +39,97 @@ Vector2 OvershootComputations::overshootingDestination(Vector2& startPosition, V
     return Vector2(x.pos + startPosition.x, y.pos + startPosition.y);
 }
 
-double OvershootComputations::calcSlowestDirectTime(double s, double v0, double aMax) {
-    double aDec = (v0 >= 0.0) ? -aMax : aMax;
-    double sqrt = std::sqrt(v0 * v0 + 2.0 * aDec * s);
-    return (v0 >= 0.0) ? ((-v0 + sqrt) / aDec) : ((-v0 - sqrt) / aDec);
+double OvershootComputations::slowestDirectTime(double distance, double initialVelocity, double maxAcceleration) {
+    double deceleration = (initialVelocity >= 0.0) ? -maxAcceleration : maxAcceleration;
+    double squareRoot = std::sqrt(initialVelocity * initialVelocity + 2.0 * deceleration * distance);
+    return (initialVelocity >= 0.0) ? ((-initialVelocity + squareRoot) / deceleration) : ((-initialVelocity - squareRoot) / deceleration);
 }
 
-std::optional<TimedPos1D> OvershootComputations::calcFastestDirectTrapezoidal(
-    double s, double v0, double v1Max, double aMax, double aDec, double tt
+std::optional<TimedPos1D> OvershootComputations::fastestDirectTrapezoidal(
+    double distance, double initialVelocity, double maxVelocity, double maxAcceleration, double deceleration, double targetTime
 ) {
-    // Full acceleration for s01 to reach v1Max
-    double aAcc = (v0 >= v1Max) ? -aMax : aMax;
-    double t01 = (v1Max - v0) / aAcc;
-    double s01 = 0.5 * (v1Max + v0) * t01;
+    double acceleration = (initialVelocity >= maxVelocity) ? -maxAcceleration : maxAcceleration;
+    double accelerationTime = (maxVelocity - initialVelocity) / acceleration;
+    double accelerationDistance = 0.5 * (maxVelocity + initialVelocity) * accelerationTime;
 
-    if ((s >= 0.0) == (s <= s01)) {
-        // We are not able to accel to v1Max before reaching s -> No Trapezoidal form possible
+    if ((distance >= 0.0) == (distance <= accelerationDistance)) {
         return std::nullopt;
     }
 
-    double s13 = s - s01;
-    double t23 = -v1Max / aDec;
-    double s23 = 0.5 * v1Max * t23;
+    double remainingDistance = distance - accelerationDistance;
+    double decelerationTime = -maxVelocity / deceleration;
+    double decelerationDistance = 0.5 * maxVelocity * decelerationTime;
 
-    double t12TooSlow = (s13) / v1Max;
-    if (t01 + t12TooSlow >= tt) {
-        return std::make_optional(TimedPos1D(s + s23, t01 + t12TooSlow + t23));
+    double constantVelocityTimeTooSlow = remainingDistance / maxVelocity;
+    if (accelerationTime + constantVelocityTimeTooSlow >= targetTime) {
+        return std::make_optional(TimedPos1D(distance + decelerationDistance, accelerationTime + constantVelocityTimeTooSlow + decelerationTime));
     }
 
-    // Determine if "Trapezoidal finishing early"
-    double s12Early = s13 - s23;
-    double t12Early = s12Early / v1Max;
-    if (t12Early >= 0.0 && t01 + t12Early + t23 <= tt) {
-        return std::make_optional(TimedPos1D(s, t01 + t12Early + t23));
+    double constantVelocityDistanceEarly = remainingDistance - decelerationDistance;
+    double constantVelocityTimeEarly = constantVelocityDistanceEarly / maxVelocity;
+    if (constantVelocityTimeEarly >= 0.0 && accelerationTime + constantVelocityTimeEarly + decelerationTime <= targetTime) {
+        return std::make_optional(TimedPos1D(distance, accelerationTime + constantVelocityTimeEarly + decelerationTime));
     }
 
-    // Determine if "Trapezoidal direct hit"
-    double t13 = tt - t01;
-    double t23Direct = std::sqrt(2.0 * (s13 - t13 * v1Max) / aDec);
-    double t12Direct = t13 - t23Direct;
-    if (t12Direct > 0.0 && t23Direct < t23) {
-        double v3 = v1Max + aDec * t23Direct;
-        double t34 = -v3 / aDec;
-        return std::make_optional(TimedPos1D(s + 0.5 * v3 * t34, tt + t34));
+    double remainingTime = targetTime - accelerationTime;
+    double decelerationTimeDirect = std::sqrt(2.0 * (remainingDistance - remainingTime * maxVelocity) / deceleration);
+    double constantVelocityTimeDirect = remainingTime - decelerationTimeDirect;
+    if (constantVelocityTimeDirect > 0.0 && decelerationTimeDirect < decelerationTime) {
+        double finalVelocity = maxVelocity + deceleration * decelerationTimeDirect;
+        double finalDecelerationTime = -finalVelocity / deceleration;
+        return std::make_optional(TimedPos1D(distance + 0.5 * finalVelocity * finalDecelerationTime, targetTime + finalDecelerationTime));
     }
     return std::nullopt;
 }
 
-TimedPos1D OvershootComputations::calcFastestDirectTriangular(
-    double s, double v0, double v1Max, double aMax, double aDec, double tt
+TimedPos1D OvershootComputations::fastestDirectTriangular(
+    double distance, double initialVelocity, double maxVelocity, double maxAcceleration, double deceleration, double targetTime
 ) {
-    // Determining if "Straight too slow"
-    if ((v1Max >= 0.0) == (v0 >= v1Max)) {
-        double t = -v0 / aDec;
-        return TimedPos1D(0.5 * v0 * t, t);
+    if ((maxVelocity >= 0.0) == (initialVelocity >= maxVelocity)) {
+        double time = -initialVelocity / deceleration;
+        return TimedPos1D(0.5 * initialVelocity * time, time);
     }
-    double aAcc = -aDec;
+    double acceleration = -deceleration;
 
-    // Determining if "Triangular too slow"
-    double sqrtTooSlow = std::sqrt(2.0 * aAcc * s + v0 * v0);
-    double t01TooSLow = (v1Max >= 0.0) ? ((-v0 + sqrtTooSlow) / aAcc) : ((-v0 - sqrtTooSlow) / aAcc);
-    if (t01TooSLow >= tt) {
-        double v1TooSlow = v0 + aAcc * t01TooSLow;
-        double t12TooSlow = std::abs(v1TooSlow / aAcc);
-        return TimedPos1D(s + 0.5 * v1TooSlow * t12TooSlow, t01TooSLow + t12TooSlow);
+    double sqrtTooSlow = std::sqrt(2.0 * acceleration * distance + initialVelocity * initialVelocity);
+    double accelerationTimeTooSlow = (maxVelocity >= 0.0) ? ((-initialVelocity + sqrtTooSlow) / acceleration) : ((-initialVelocity - sqrtTooSlow) / acceleration);
+    if (accelerationTimeTooSlow >= targetTime) {
+        double finalVelocityTooSlow = initialVelocity + acceleration * accelerationTimeTooSlow;
+        double decelerationTimeTooSlow = std::abs(finalVelocityTooSlow / acceleration);
+        return TimedPos1D(distance + 0.5 * finalVelocityTooSlow * decelerationTimeTooSlow, accelerationTimeTooSlow + decelerationTimeTooSlow);
     }
 
-    // Determining if "Triangular finishing early"
-    double sqEarly = ((s * aAcc) + (0.5 * v0 * v0)) / (aMax * aMax);
-    double t12Early = sqEarly > 0.0 ? std::sqrt(sqEarly) : 0.0;
-    double v1Early = aAcc * t12Early;
-    double t01Early = (v1Early - v0) / aAcc;
-    if (t01Early + t12Early <= tt) {
-        return TimedPos1D(s, t01Early + t12Early);
+    double sqEarly = ((distance * acceleration) + (0.5 * initialVelocity * initialVelocity)) / (maxAcceleration * maxAcceleration);
+    double decelerationTimeEarly = sqEarly > 0.0 ? std::sqrt(sqEarly) : 0.0;
+    double finalVelocityEarly = acceleration * decelerationTimeEarly;
+    double accelerationTimeEarly = (finalVelocityEarly - initialVelocity) / acceleration;
+    if (accelerationTimeEarly + decelerationTimeEarly <= targetTime) {
+        return TimedPos1D(distance, accelerationTimeEarly + decelerationTimeEarly);
     }
 
-    // Determining if "Triangular direct hit"
-    double sqDirect = std::sqrt(2.0 * aAcc * (aAcc * tt * tt - 2.0 * s + 2.0 * tt * v0));
-    double t01Direct = tt - sqDirect / (2.0 * aMax);
-    double v1Direct = v0 + aAcc * t01Direct;
-    double t13Direct = v1Direct / aAcc;
-    double s01Direct = 0.5 * (v0 + v1Direct) * t01Direct;
-    double s13Direct = 0.5 * v1Direct * t13Direct;
-    return TimedPos1D(s01Direct + s13Direct, t01Direct + t13Direct);
+    double sqDirect = std::sqrt(2.0 * acceleration * (acceleration * targetTime * targetTime - 2.0 * distance + 2.0 * targetTime * initialVelocity));
+    double accelerationTimeDirect = targetTime - sqDirect / (2.0 * maxAcceleration);
+    double finalVelocityDirect = initialVelocity + acceleration * accelerationTimeDirect;
+    double remainingTimeDirect = finalVelocityDirect / acceleration;
+    double accelerationDistanceDirect = 0.5 * (initialVelocity + finalVelocityDirect) * accelerationTimeDirect;
+    double remainingDistanceDirect = 0.5 * finalVelocityDirect * remainingTimeDirect;
+    return TimedPos1D(accelerationDistanceDirect + remainingDistanceDirect, accelerationTimeDirect + remainingTimeDirect);
 }
 
-TimedPos1D OvershootComputations::getTimedPos1D(double s, double v0, double vMax, double aMax, double tt) {
-    tt = std::min(tt, 10.0);
-    double aDec = (v0 >= 0.0) ? -aMax : aMax;
-    double sZeroVel = 0.5 * v0 * (-v0 / aDec);
-    double v1Max = (s >= 0.0) ? vMax : -vMax;
+TimedPos1D OvershootComputations::getTimedPos1D(double distance, double initialVelocity, double maxVelocity, double maxAcceleration, double targetTime) {
+    targetTime = std::min(targetTime, 10.0);
+    double deceleration = (initialVelocity >= 0.0) ? -maxAcceleration : maxAcceleration;
+    double zeroVelocityDistance = 0.5 * initialVelocity * (-initialVelocity / deceleration);
+    double maxFinalVelocity = (distance >= 0.0) ? maxVelocity : -maxVelocity;
 
-    if ((s >= 0.0) != (v0 > 0.0) || (s >= 0.0) == (sZeroVel < s) || calcSlowestDirectTime(s, v0, aMax) >= tt) {
-        // We can directly hit the timed target position
-        return calcFastestDirectTrapezoidal(s, v0, v1Max, aMax, aDec, tt).value_or(
-            calcFastestDirectTriangular(s, v0, v1Max, aMax, aDec, tt)
+    if ((distance >= 0.0) != (initialVelocity > 0.0) || (distance >= 0.0) == (zeroVelocityDistance < distance) || slowestDirectTime(distance, initialVelocity, maxAcceleration) >= targetTime) {
+        return fastestDirectTrapezoidal(distance, initialVelocity, maxFinalVelocity, maxAcceleration, deceleration, targetTime).value_or(
+            fastestDirectTriangular(distance, initialVelocity, maxFinalVelocity, maxAcceleration, deceleration, targetTime)
         );
     } else {
-        // Calculate necessary time to break to zero
-        double tBreaking = std::abs(v0 / aMax);
-        // Calc the fastest overshoot by starting at sZeroVel in opposed direction with v0=0.0
-        TimedPos1D timed = calcFastestDirectTriangular(s - sZeroVel, 0.0, -v1Max, aMax, aDec, tt - tBreaking);
-        // Extend TimedPos1D to accommodate breaking
-        return TimedPos1D(timed.pos + sZeroVel, timed.time + tBreaking);
+        double breakingTime = std::abs(initialVelocity / maxAcceleration);
+        TimedPos1D timed = fastestDirectTriangular(distance - zeroVelocityDistance, 0.0, -maxFinalVelocity, maxAcceleration, deceleration, targetTime - breakingTime);
+        return TimedPos1D(timed.pos + zeroVelocityDistance, timed.time + breakingTime);
     }
 }
 }  // namespace rtt::ai::control

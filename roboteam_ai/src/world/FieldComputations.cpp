@@ -48,16 +48,15 @@ Vector2 FieldComputations::getBallPositionAtTime(const rtt::world::ball::Ball &b
 }
 
 double FieldComputations::getBallTimeAtPosition(const rtt::world::ball::Ball &ball, const Vector2 &targetPoint) {
-    const double frictionCoefficient = GameSettings::getRobotHubMode() == net::RobotHubMode::SIMULATOR 
-        ? ai::stp::control_constants::SIMULATION_FRICTION 
-        : ai::stp::control_constants::REAL_FRICTION;
+    const double frictionCoefficient =
+        GameSettings::getRobotHubMode() == net::RobotHubMode::SIMULATOR ? ai::stp::control_constants::SIMULATION_FRICTION : ai::stp::control_constants::REAL_FRICTION;
 
     Vector2 direction = targetPoint - ball.position;
     Vector2 velocityUnit = ball.velocity.normalize();
     Vector2 projectedPoint = ball.position + velocityUnit * (direction.dot(velocityUnit));
 
     double distanceToTarget = (projectedPoint - ball.position).length();
-    
+
     // distance = initialVelocity * time - 0.5 * frictionCoefficient * time^2
     double a = -0.5 * frictionCoefficient;
     double b = ball.velocity.length();

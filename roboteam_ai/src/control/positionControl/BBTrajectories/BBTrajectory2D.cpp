@@ -43,5 +43,7 @@ Vector2 BBTrajectory2D::getAcceleration(double t) const { return Vector2(x.getAc
 
 [[maybe_unused]] double BBTrajectory2D::getTotalTime() const { return std::max(x.getTotalTime(), y.getTotalTime()); }
 
-std::pair<std::vector<rtt::ai::control::BBTrajectoryPart>, std::vector<rtt::ai::control::BBTrajectoryPart>> BBTrajectory2D::getParts() { return std::make_pair(x.getParts(), y.getParts()); }
+std::pair<std::vector<rtt::ai::control::BBTrajectoryPart>, std::vector<rtt::ai::control::BBTrajectoryPart>> BBTrajectory2D::getParts() {
+    return std::make_pair(x.getParts(), y.getParts());
+}
 }  // namespace rtt::ai::control

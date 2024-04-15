@@ -45,8 +45,8 @@ class Trajectory1D {
     [[nodiscard]] double getTotalTime() const;
 
     std::vector<rtt::ai::control::BBTrajectoryPart> parts; /**< Vector containing all parts of the trajectory */
-    double finalPos;                         /**< Target position to go to */
-    double maxVel;                           /**< Maximum allowed velocity */
+    double finalPos;                                       /**< Target position to go to */
+    double maxVel;                                         /**< Maximum allowed velocity */
 };
 
 }  // namespace rtt

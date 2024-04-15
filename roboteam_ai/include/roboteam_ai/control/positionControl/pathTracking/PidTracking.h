@@ -1,6 +1,8 @@
 #ifndef RTT_PIDTRACKING_H
 #define RTT_PIDTRACKING_H
 
+#include <utilities/StpInfoEnums.h>
+
 #include <unordered_map>
 
 #include "control/positionControl/PositionControlUtils.h"
@@ -8,7 +10,6 @@
 #include "roboteam_utils/Vector2.h"
 #include "roboteam_utils/pid.h"
 #include "utilities/Constants.h"
-#include <utilities/StpInfoEnums.h>
 
 namespace rtt::ai::control {
 

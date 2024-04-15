@@ -16,8 +16,8 @@ bool PositionControl::shouldRecalculatePath(const Vector2 &currentPosition, cons
 void PositionControl::setRobotPositions(std::vector<Vector2> &robotPositions) { collisionDetector.setRobotPositions(robotPositions); }
 
 rtt::ai::control::CommandCollision PositionControl::computeAndTrackTrajectory(const rtt::world::World *world, const rtt::Field &field, int robotId, Vector2 currentPosition,
-                                                                     Vector2 currentVelocity, Vector2 targetPosition, double maxRobotVelocity, stp::PIDType pidType,
-                                                                     stp::AvoidObjects avoidObjects) {
+                                                                              Vector2 currentVelocity, Vector2 targetPosition, double maxRobotVelocity, stp::PIDType pidType,
+                                                                              stp::AvoidObjects avoidObjects) {
     std::optional<rtt::ai::control::CollisionData> firstCollision;
     rtt::ai::control::CommandCollision commandCollision = {};
 

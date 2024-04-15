@@ -52,7 +52,7 @@ class FieldComputations {
      * @brief Get the expected time it takes for the ball to reach a certain position
      * @param ball The current ball position
      * @param point The point for which the time is calculated
-    */
+     */
     static double getBallTimeAtPosition(const rtt::world::ball::Ball &ball, const Vector2 &point);
 
     /**

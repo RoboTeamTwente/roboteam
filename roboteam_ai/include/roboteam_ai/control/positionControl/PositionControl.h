@@ -18,7 +18,7 @@ class PositionControl {
    private:
     static constexpr double FINAL_AVOIDANCE_DISTANCE = 4 * Constants::ROBOT_RADIUS(); /**< Minimum distance the robot will keep to avoid collisions */
     CollisionDetector collisionDetector;                                              /**< Detects collisions on the trajectory */
-    rtt::ai::control::WorldObjects worldObjects;                                               /**< Calculates collisions */
+    rtt::ai::control::WorldObjects worldObjects;                                      /**< Calculates collisions */
     BBTPathTracking pathTrackingAlgorithmBBT;                                         /**< Tracks the BBT path */
 
     std::unordered_map<int, Trajectory2D> computedTrajectories;                            /**< Map of computed trajectories for each robot */
@@ -78,8 +78,9 @@ class PositionControl {
      * @param pidType The desired PID type (intercept, regular, keeper etc.)
      * @return A RobotCommand and optional with the location of the first collision on the path
      */
-    rtt::ai::control::CommandCollision computeAndTrackTrajectory(const rtt::world::World *world, const rtt::Field &field, int robotId, Vector2 currentPosition, Vector2 currentVelocity,
-                                                        Vector2 targetPosition, double maxRobotVelocity, stp::PIDType pidType, stp::AvoidObjects avoidObjects);
+    rtt::ai::control::CommandCollision computeAndTrackTrajectory(const rtt::world::World *world, const rtt::Field &field, int robotId, Vector2 currentPosition,
+                                                                 Vector2 currentVelocity, Vector2 targetPosition, double maxRobotVelocity, stp::PIDType pidType,
+                                                                 stp::AvoidObjects avoidObjects);
 
     /**
      * @brief Handles the collision with the ball at the current position. This function will calculate a new target, moving away from the ball as quickly as possible.
@@ -120,8 +121,8 @@ class PositionControl {
      * @param startTime the time at which the trajectory starts
      * @return A score for the trajectory
      */
-    double calculateScore(const rtt::world::World *world, const rtt::Field &field, std::optional<rtt::ai::control::CollisionData> &firstCollision, Trajectory2D &trajectoryAroundCollision,
-                          stp::AvoidObjects avoidObjects, double startTime = 0);
+    double calculateScore(const rtt::world::World *world, const rtt::Field &field, std::optional<rtt::ai::control::CollisionData> &firstCollision,
+                          Trajectory2D &trajectoryAroundCollision, stp::AvoidObjects avoidObjects, double startTime = 0);
 
     /**
      * @brief Tries to find a new trajectory when the current path has a collision on it. It tries this by

@@ -117,9 +117,8 @@ std::pair<Vector2, PIDType> KeeperBlockBall::calculateTargetPosition(const StpIn
             auto startVelocity = robot->getVel();
             auto maxVelocity = info.getMaxRobotVelocity();
             auto maxAcceleration = Constants::MAX_ACC_UPPER();
-            auto newTarget = control::OvershootComputations::overshootingDestination(
-                startPosition, targetPosition.value(), startVelocity, maxVelocity, maxAcceleration, targetTime
-            );
+            auto newTarget =
+                control::OvershootComputations::overshootingDestination(startPosition, targetPosition.value(), startVelocity, maxVelocity, maxAcceleration, targetTime);
             if (ball->velocity.length() > control_constants::BALL_IS_MOVING_SLOW_LIMIT) {
                 return {newTarget, PIDType::KEEPER};
             }

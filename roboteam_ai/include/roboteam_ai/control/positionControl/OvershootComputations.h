@@ -26,7 +26,7 @@ class OvershootComputations {
    public:
     /**
      * @brief Calculate the overshooting destination of the robot.
-     * 
+     *
      * @param startPosition The start position of the robot.
      * @param endPosition The target position of the robot.
      * @param startVelocity The start velocity of the robot.
@@ -34,13 +34,13 @@ class OvershootComputations {
      * @param maxAcceleration The maximum acceleration of the robot.
      * @param targetTime The time it takes to reach the target position.
      * @return Vector2 The overshooting destination of the robot.
-    */
+     */
     static Vector2 overshootingDestination(Vector2 &startPosition, Vector2 &endPosition, Vector2 &startVelocity, double maxVelocity, double maxAcceleration, double targetTime);
 
    private:
     /**
      * @brief Calculate the time it takes to reach the target position with the slowest possible direct movement.
-     * 
+     *
      * @param distance The distance to the target position.
      * @param initialVelocity The initial velocity of the robot.
      * @param maxAcceleration The maximum acceleration of the robot.
@@ -50,7 +50,7 @@ class OvershootComputations {
 
     /**
      * @brief Calculate the fastest possible direct movement with a trapezoidal form.
-     * 
+     *
      * @param distance The distance to the target position.
      * @param initialVelocity The initial velocity of the robot.
      * @param maxVelocity The maximum velocity of the robot.
@@ -58,12 +58,13 @@ class OvershootComputations {
      * @param deceleration The maximum deceleration of the robot.
      * @param targetTime The time it takes to reach the target position.
      * @return std::optional<TimedPos1D> The fastest possible direct movement with a trapezoidal form.
-    */
-    static std::optional<TimedPos1D> fastestDirectTrapezoidal(double distance, double initialVelocity, double maxVelocity, double maxAcceleration, double deceleration, double targetTime);
+     */
+    static std::optional<TimedPos1D> fastestDirectTrapezoidal(double distance, double initialVelocity, double maxVelocity, double maxAcceleration, double deceleration,
+                                                              double targetTime);
 
     /**
      * @brief Calculate the fastest possible direct movement with a triangular form.
-     * 
+     *
      * @param distance The distance to the target position.
      * @param initialVelocity The initial velocity of the robot.
      * @param maxVelocity The maximum velocity of the robot.
@@ -71,19 +72,19 @@ class OvershootComputations {
      * @param deceleration The maximum deceleration of the robot.
      * @param targetTime The time it takes to reach the target position.
      * @return TimedPos1D The fastest possible direct movement with a triangular form.
-    */
+     */
     static TimedPos1D fastestDirectTriangular(double distance, double initialVelocity, double maxVelocity, double maxAcceleration, double deceleration, double targetTime);
 
     /**
      * @brief Calculate the fastest possible direct movement with a triangular form.
-     * 
+     *
      * @param distance The distance to the target position.
      * @param initialVelocity The initial velocity of the robot.
      * @param maxVelocity The maximum velocity of the robot.
      * @param maxAcceleration The maximum acceleration of the robot.
      * @param targetTime The time it takes to reach the target position.
      * @return TimedPos1D The fastest possible direct movement with a triangular form.
-    */
+     */
     static TimedPos1D getTimedPos1D(double distance, double initialVelocity, double maxVelocity, double maxAcceleration, double targetTime);
 };
 

@@ -47,6 +47,34 @@ Vector2 FieldComputations::getBallPositionAtTime(const rtt::world::ball::Ball &b
     return expectedEndPosition;
 }
 
+double FieldComputations::getBallTimeAtPosition(const rtt::world::ball::Ball &ball, const Vector2 &targetPoint) {
+    const double frictionCoefficient = GameSettings::getRobotHubMode() == net::RobotHubMode::SIMULATOR 
+        ? ai::stp::control_constants::SIMULATION_FRICTION 
+        : ai::stp::control_constants::REAL_FRICTION;
+
+    Vector2 direction = targetPoint - ball.position;
+    Vector2 velocityUnit = ball.velocity.normalize();
+    Vector2 projectedPoint = ball.position + velocityUnit * (direction.dot(velocityUnit));
+
+    double distanceToTarget = (projectedPoint - ball.position).length();
+    
+    // distance = initialVelocity * time - 0.5 * frictionCoefficient * time^2
+    double a = -0.5 * frictionCoefficient;
+    double b = ball.velocity.length();
+    double c = -distanceToTarget;
+
+    double discriminant = b * b - 4 * a * c;
+    if (discriminant < 0) {
+        return std::numeric_limits<double>::infinity();
+    }
+
+    double root1 = (-b + std::sqrt(discriminant)) / (2 * a);
+    double root2 = (-b - std::sqrt(discriminant)) / (2 * a);
+    double minPositiveRoot = std::min({root1, root2});
+
+    return minPositiveRoot < 0 ? std::numeric_limits<double>::infinity() : minPositiveRoot;
+}
+
 bool FieldComputations::pointIsValidPosition(const rtt::Field &field, const Vector2 &point, stp::AvoidObjects avoidObjects, double fieldMargin) {
     auto [theirDefenseAreaMargin, ourDefenseAreaMargin] = getDefenseAreaMargin();
     if (avoidObjects.shouldAvoidOutOfField && !field.playArea.contains(point, fieldMargin)) return false;

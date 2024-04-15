@@ -1,5 +1,6 @@
 #include "stp/tactics/KeeperBlockBall.h"
 
+#include <control/positionControl/OvershootComputations.h>
 #include <roboteam_utils/HalfLine.h>
 #include <roboteam_utils/Mathematics.h>
 #include <stp/computations/InterceptionComputations.h>
@@ -97,7 +98,6 @@ bool KeeperBlockBall::isBallHeadingTowardsOurGoal(const HalfLine &ballTrajectory
     // Ball heads towards goal if the intersection is near our goal
     return intersectionWithGoalLine.has_value() && goalLineSegment.distanceToLine(intersectionWithGoalLine.value()) < MAX_DISTANCE_HEADING_TOWARDS_GOAL;
 }
-
 std::pair<Vector2, PIDType> KeeperBlockBall::calculateTargetPosition(const StpInfo info) noexcept {
     const auto &field = info.getField().value();
     const auto &ball = info.getBall().value();
@@ -105,40 +105,42 @@ std::pair<Vector2, PIDType> KeeperBlockBall::calculateTargetPosition(const StpIn
     const auto &world = info.getCurrentWorld();
     const auto &robot = info.getRobot().value();
 
+    auto keepersLineSegment = getKeepersLineSegment(field);
+    auto ballTrajectory = estimateBallTrajectory(ball, enemyRobot);
+    bool ballHeadsTowardsOurGoal = ballTrajectory.has_value() && isBallHeadingTowardsOurGoal(ballTrajectory.value(), field);
+
+    if (ballHeadsTowardsOurGoal) {
+        auto targetPosition = keepersLineSegment.getClosestPointToLine(ballTrajectory->toLine());
+        if (targetPosition.has_value()) {
+            auto targetTime = FieldComputations::getBallTimeAtPosition(*ball.get(), targetPosition.value());
+            auto startPosition = robot->getPos();
+            auto startVelocity = robot->getVel();
+            auto maxVelocity = info.getMaxRobotVelocity();
+            auto maxAcceleration = Constants::MAX_ACC_UPPER();
+            auto newTarget = control::OvershootComputations::overshootingDestination(
+                startPosition, targetPosition.value(), startVelocity, maxVelocity, maxAcceleration, targetTime
+            );
+            if (ball->velocity.length() > control_constants::BALL_IS_MOVING_SLOW_LIMIT) {
+                return {newTarget, PIDType::KEEPER};
+            }
+            return {newTarget, PIDType::DEFAULT};
+        }
+    }
+
     KeeperInterceptionInfo keeperInterceptionInfo = InterceptionComputations::calculateKeeperInterceptionInfo(world, robot);
     if (keeperInterceptionInfo.canIntercept) {
         return {keeperInterceptionInfo.interceptLocation, PIDType::KEEPER};
     }
 
-    // Get the line on which the keeper should move to
-    auto keepersLineSegment = getKeepersLineSegment(field);
-
-    // Find out what the trajectory of the ball will be
-    auto ballTrajectory = estimateBallTrajectory(ball, enemyRobot);
-
-    // If the ball will go towards our goal, try and block it
-    bool ballHeadsTowardsOurGoal = ballTrajectory.has_value() && isBallHeadingTowardsOurGoal(ballTrajectory.value(), field);
-    if (ballHeadsTowardsOurGoal) {
-        // Get the keeper as close as possible to the trajectory of the ball
-        auto targetPosition = keepersLineSegment.getClosestPointToLine(ballTrajectory->toLine());
+    if (ball->position.x >= field.leftGoalArea.rightLine().center().x - MAX_DISTANCE_BALL_BEHIND_GOAL) {
+        auto ballGoalLine = Line(ball->position, field.leftGoalArea.rightLine().center() - Vector2(PROJECT_BALL_DISTANCE_TO_GOAL, 0));
+        auto targetPosition = keepersLineSegment.getClosestPointToLine(ballGoalLine);
         if (targetPosition.has_value()) {
-            if (ball->velocity.length() > control_constants::BALL_IS_MOVING_SLOW_LIMIT) {
-                return {targetPosition.value(), PIDType::KEEPER};
-            }
             return {targetPosition.value(), PIDType::DEFAULT};
         }
     }
 
-    // Otherwise, the ball probably will not move towards the goal any time soon
-    if (ball->position.x >= field.leftGoalArea.rightLine().center().x - MAX_DISTANCE_BALL_BEHIND_GOAL) {
-        // This will pick a position somewhat between the ball and the goal,
-        // but only if the ball is not too far behind the goal
-        auto ballGoalLine = Line(ball->position, field.leftGoalArea.rightLine().center() - Vector2(PROJECT_BALL_DISTANCE_TO_GOAL, 0));
-        auto targetPosition = keepersLineSegment.getClosestPointToLine(ballGoalLine);
-        if (targetPosition.has_value()) return {targetPosition.value(), PIDType::DEFAULT};
-    }
-
-    // If that fails too, just go to the center of the goal
+    // Default case: go to the center of the goal
     return {Vector2(keepersLineSegment.start.x, 0), PIDType::DEFAULT};
 }
 

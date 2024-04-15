@@ -26,9 +26,9 @@ double Constants::MIN_ANGLE() { return -M_PI; }
 
 double Constants::MAX_ANGLE() { return M_PI; }
 
-double Constants::MAX_ACC_UPPER() { return 10.0; }
+double Constants::MAX_ACC_UPPER() { return 6.0; }
 
-double Constants::MAX_ACC_LOWER() { return 10.0; }
+double Constants::MAX_ACC_LOWER() { return 6.0; }
 
 double Constants::MAX_DEC_UPPER() { return MAX_ACC_UPPER() * 1.2; }  // magic number
 

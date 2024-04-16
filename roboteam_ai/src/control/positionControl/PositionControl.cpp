@@ -3,6 +3,7 @@
 #include "control/positionControl/BBTrajectories/BBTrajectory2D.h"
 #include "gui/Out.h"
 #include "roboteam_utils/Print.h"
+#include "roboteam_utils/Random.h"
 #include "world/World.hpp"
 
 namespace rtt::ai::control {
@@ -211,15 +212,14 @@ double PositionControl::calculateScore(const rtt::world::World *world, const rtt
 std::optional<Trajectory2D> PositionControl::findNewTrajectory(const rtt::world::World *world, const rtt::Field &field, int robotId, Vector2 &currentPosition,
                                                                Vector2 &currentVelocity, std::optional<rtt::ai::control::CollisionData> &firstCollision, Vector2 &targetPosition,
                                                                double maxRobotVelocity, double timeStep, stp::AvoidObjects avoidObjects) {
-    auto intermediatePoints = createIntermediatePoints(field, firstCollision, targetPosition);
-    std::sort(intermediatePoints.begin(), intermediatePoints.end(),
-              [&targetPosition](const Vector2 &a, const Vector2 &b) { return (a - targetPosition).length() < (b - targetPosition).length(); });
+    std::vector<Vector2> normalizedPoints = generateNormalizedPoints(robotId);
     timeStep *= 3;
-
     double bestScore = std::numeric_limits<double>::max();
     std::optional<Trajectory2D> bestTrajectory = std::nullopt;
+    Vector2 startToDest = targetPosition - currentPosition;
 
-    for (const auto &intermediatePoint : intermediatePoints) {
+    for (const auto &normalizedPoint : normalizedPoints) {
+        auto intermediatePoint = startToDest.rotate(normalizedPoint.angle()) * normalizedPoint.length() + currentPosition;
         Trajectory2D trajectoryToIntermediatePoint(currentPosition, currentVelocity, intermediatePoint, maxRobotVelocity, ai::Constants::MAX_ACC_UPPER());
 
         auto intermediatePathCollision = worldObjects.getFirstCollision(world, field, trajectoryToIntermediatePoint, computedPaths, robotId, avoidObjects, completedTimeSteps);
@@ -233,10 +233,12 @@ std::optional<Trajectory2D> PositionControl::findNewTrajectory(const rtt::world:
             auto firstCollision = worldObjects.getFirstCollision(world, field, trajectoryAroundCollision, computedPaths, robotId, avoidObjects, completedTimeSteps, loopTime);
             if (!firstCollision.has_value()) {
                 trajectoryToIntermediatePoint.addTrajectory(trajectoryAroundCollision, loopTime);
+                lastUsedNormalizedPoints[robotId] = normalizedPoint;
                 return trajectoryToIntermediatePoint;
             } else {
                 double score = calculateScore(world, field, firstCollision, trajectoryAroundCollision, avoidObjects, loopTime);
                 if (score < bestScore) {
+                    lastUsedNormalizedPoints[robotId] = normalizedPoint;
                     bestScore = score;
                     bestTrajectory = trajectoryToIntermediatePoint;
                 }
@@ -246,28 +248,20 @@ std::optional<Trajectory2D> PositionControl::findNewTrajectory(const rtt::world:
     return bestTrajectory;
 }
 
-std::vector<Vector2> PositionControl::createIntermediatePoints(const rtt::Field &field, std::optional<rtt::ai::control::CollisionData> &firstCollision, Vector2 &targetPosition) {
-    float angleBetweenIntermediatePoints = M_PI_4 / 2;
-    float fieldHeight = field.playArea.height();
-    float pointExtension = fieldHeight / 18;
-    Vector2 collisionToTargetNormalized = (targetPosition - firstCollision->collisionPosition).normalize();
-    Vector2 pointToDrawFrom = firstCollision->collisionPosition + collisionToTargetNormalized * pointExtension;
-
-    std::vector<Vector2> intermediatePoints;
-    float intermediatePointRadius = fieldHeight / 4;
-    Vector2 pointToRotate = pointToDrawFrom + collisionToTargetNormalized * intermediatePointRadius;
-    for (int i = -6; i < 7; i++) {
-        if (i != 0) {
-            // The slight offset to the angle makes sure the points are not symmetrically placed, this means we don't keep on switching between two points that are equally good
-            // when there is a collision at time 0ss
-            Vector2 intermediatePoint = pointToRotate.rotateAroundPoint(i * angleBetweenIntermediatePoints - 0.01, pointToDrawFrom);
-
-            if (field.playArea.contains(intermediatePoint)) {
-                intermediatePoints.emplace_back(intermediatePoint);
-            }
-        }
+std::vector<Vector2> PositionControl::generateNormalizedPoints(int robotId) {
+    std::vector<Vector2> normalizedPoints;
+    for (int i = 0; i < NUM_SUB_DESTINATIONS; i++) {
+        double angleRange = MAX_ANGLE - MIN_ANGLE;
+        double angle = SimpleRandom::getDouble(-angleRange, angleRange);
+        angle += std::copysign(1.0, angle) * MIN_ANGLE;
+        double scale = SimpleRandom::getDouble(MIN_SCALE, MAX_SCALE);
+        normalizedPoints.push_back(Vector2(scale * cos(angle), scale * sin(angle)));
     }
-    return intermediatePoints;
+    if (lastUsedNormalizedPoints.contains(robotId)) {
+        normalizedPoints.push_back(lastUsedNormalizedPoints[robotId]);
+    }
+    std::sort(normalizedPoints.begin(), normalizedPoints.end(), [](const Vector2 &a, const Vector2 &b) { return std::abs(a.angle()) < std::abs(b.angle()); });
+    return normalizedPoints;
 }
 
 bool PositionControl::shouldRecalculateTrajectory(const rtt::world::World *world, const rtt::Field &field, int robotId, Vector2 targetPosition, const Vector2 &currentPosition,

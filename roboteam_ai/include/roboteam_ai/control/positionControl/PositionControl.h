@@ -16,16 +16,21 @@ namespace rtt::ai::control {
  */
 class PositionControl {
    private:
-    static constexpr double FINAL_AVOIDANCE_DISTANCE = 4 * Constants::ROBOT_RADIUS(); /**< Minimum distance the robot will keep to avoid collisions */
-    CollisionDetector collisionDetector;                                              /**< Detects collisions on the trajectory */
-    rtt::ai::control::WorldObjects worldObjects;                                      /**< Calculates collisions */
-    BBTPathTracking pathTrackingAlgorithmBBT;                                         /**< Tracks the BBT path */
+    static constexpr double MIN_ANGLE = 20 / M_PI;  /**< The minimum angle between the target and the intermediate point */
+    static constexpr double MAX_ANGLE = 140 / M_PI; /**< The maximum angle between the target and the intermediate point */
+    static constexpr double MIN_SCALE = 0.5;        /**< The minimum scale of the intermediate point with respect to start target distance */
+    static constexpr double MAX_SCALE = 1.5;        /**< The maximum scale of the intermediate point with respect to start target distance */
+    static constexpr int NUM_SUB_DESTINATIONS = 5;  /**< The number of sub destinations to create */
+    CollisionDetector collisionDetector;            /**< Detects collisions on the trajectory */
+    rtt::ai::control::WorldObjects worldObjects;    /**< Calculates collisions */
+    BBTPathTracking pathTrackingAlgorithmBBT;       /**< Tracks the BBT path */
 
     std::unordered_map<int, Trajectory2D> computedTrajectories;                            /**< Map of computed trajectories for each robot */
     std::unordered_map<int, std::vector<Vector2>> computedPaths;                           /**< Map of computed paths for each robot */
     std::unordered_map<int, std::vector<Vector2>> computedPathsVel;                        /**< Map of computed velocities for each robot */
     std::unordered_map<int, std::vector<std::pair<Vector2, Vector2>>> computedPathsPosVel; /**< Map of pairs containing position and velocity for each robot */
     std::unordered_map<int, int> completedTimeSteps;                                       /**< Map of completed time steps for each robot */
+    std::unordered_map<int, Vector2> lastUsedNormalizedPoints;                             /**< Map of last used normalized points for each robot */
 
     /**
      * @brief Checks if the current path should be recalculated:
@@ -144,14 +149,11 @@ class PositionControl {
                                                   stp::AvoidObjects AvoidObjects);
 
     /**
-     * @brief Creates intermediate points to make a path to. These points all have equal distance to the
-     * collision point
-     * @param field the field object, used onwards by the collision detector
-     * @param firstCollision location of the first collision on the current path
-     * @param targetPosition the desired position that the robot has to reach
-     * @return A vector with coordinates of the intermediate points
+     * @brief Creates normalized random points, which will be used to create intermediate points
+     * @param robotId the ID of the robot for which the path is calculated
+     * @return A vector with Vector2 of the normalized random points
      */
-    std::vector<Vector2> createIntermediatePoints(const rtt::Field &field, std::optional<rtt::ai::control::CollisionData> &firstCollision, Vector2 &targetPosition);
+    std::vector<Vector2> generateNormalizedPoints(int robotId);
 };
 
 }  // namespace rtt::ai::control

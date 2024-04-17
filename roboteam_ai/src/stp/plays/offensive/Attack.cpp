@@ -55,15 +55,15 @@ Dealer::FlagMap Attack::decideRoleFlags() const noexcept {
 
     flagMap.insert({"keeper", {DealerFlagPriority::KEEPER, {keeperFlag}}});
     flagMap.insert({"striker", {DealerFlagPriority::REQUIRED, {kickerFlag, detectionFlag}}});
+    flagMap.insert({"waller_0", {DealerFlagPriority::HIGH_PRIORITY, {}}});
+    flagMap.insert({"waller_1", {DealerFlagPriority::HIGH_PRIORITY, {}}});
     flagMap.insert({"defender_0", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
     flagMap.insert({"defender_1", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
     flagMap.insert({"defender_2", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
-    flagMap.insert({"waller_0", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"waller_1", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"attacker_0", {DealerFlagPriority::HIGH_PRIORITY, {}}});
-    flagMap.insert({"attacker_1", {DealerFlagPriority::HIGH_PRIORITY, {}}});
-    flagMap.insert({"attacker_2", {DealerFlagPriority::HIGH_PRIORITY, {}}});
-    flagMap.insert({"attacker_3", {DealerFlagPriority::HIGH_PRIORITY, {}}});
+    flagMap.insert({"attacker_0", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"attacker_1", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"attacker_2", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"attacker_3", {DealerFlagPriority::LOW_PRIORITY, {}}});
 
     return flagMap;
 }

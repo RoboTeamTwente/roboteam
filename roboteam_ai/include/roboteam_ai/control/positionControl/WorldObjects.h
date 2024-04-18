@@ -67,15 +67,6 @@ class WorldObjects {
                                                    std::unordered_map<int, int> completedTimeSteps, double startTime = 0);
 
     /**
-     * @brief Calculates the position of the first collision with the defense area, note that this functions assumes the entire trajectory,
-     * including the part that might already be completed. Only call this function for a new trajectory
-     * @param field used for checking collisions with the field
-     * @param BBTrajectory the trajectory to check for collisions
-     * @return optional with rtt::ai::control::CollisionData
-     */
-    std::optional<CollisionData> getFirstDefenseAreaCollision(const rtt::Field &field, const rtt::Trajectory2D &Trajectory);
-
-    /**
      * @brief Takes a calculated path of a robot and checks points along the path if they are outside the
      * fieldlines if not allowed there. Adds these points and the time to collisionDatas and collisionTimes
      * @param field Used for information about the field

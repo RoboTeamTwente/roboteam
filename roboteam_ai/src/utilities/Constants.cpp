@@ -26,13 +26,13 @@ double Constants::MIN_ANGLE() { return -M_PI; }
 
 double Constants::MAX_ANGLE() { return M_PI; }
 
-double Constants::MAX_ACC_UPPER() { return 6.0; }
+double Constants::MAX_ACC_UPPER() { return 3.5; }
 
-double Constants::MAX_ACC_LOWER() { return 6.0; }
+double Constants::MAX_ACC_LOWER() { return 3.5; }
 
-double Constants::MAX_DEC_UPPER() { return MAX_ACC_UPPER() * 1.2; }  // magic number
+double Constants::MAX_DEC_UPPER() { return MAX_ACC_UPPER(); }  // magic number
 
-double Constants::MAX_DEC_LOWER() { return MAX_ACC_LOWER() * 1.2; }  // magic number
+double Constants::MAX_DEC_LOWER() { return MAX_ACC_LOWER(); }  // magic number
 
 // The max distance the ball can be from the robot for the robot to have the ball
 double Constants::HAS_BALL_DISTANCE() { return (GameSettings::getRobotHubMode() == net::RobotHubMode::BASESTATION) ? 0.11 : 0.12; }
@@ -172,7 +172,7 @@ pidVals Constants::standardKeeperPID() { return GameSettings::getRobotHubMode() 
 
 pidVals Constants::standardKeeperInterceptPID() { return GameSettings::getRobotHubMode() == net::RobotHubMode::BASESTATION ? pidVals(6, 0, 1) : pidVals(6, 0, 1); }
 
-RuleSet Constants::RULESET_DEFAULT() { return {RuleSetName::DEFAULT, 2}; }
+RuleSet Constants::RULESET_DEFAULT() { return {RuleSetName::DEFAULT, 4.0}; }
 RuleSet Constants::RULESET_HALT() { return {RuleSetName::HALT, 0.0}; }
 RuleSet Constants::RULESET_STOP() { return {RuleSetName::STOP, 1.3}; }
 

@@ -116,20 +116,6 @@ class PositionControl {
     Vector2 handleDefenseAreaCollision(const rtt::Field &field, Vector2 currentPosition);
 
     /**
-     * @brief Calculates a score for a trajectory. The score is based on the distance to the target and the
-     * distance to the first collision on the path
-     * @param world a pointer to the current world
-     * @param field the field object, used onwards by the collision detector
-     * @param firstCollision location of the first collision on the current path
-     * @param trajectoryAroundCollision the trajectory to the intermediate point
-     * @param avoidObjects whether or not to avoid objects
-     * @param startTime the time at which the trajectory starts
-     * @return A score for the trajectory
-     */
-    double calculateScore(const rtt::world::World *world, const rtt::Field &field, std::optional<rtt::ai::control::CollisionData> &firstCollision,
-                          Trajectory2D &trajectoryAroundCollision, stp::AvoidObjects avoidObjects, double startTime = 0);
-
-    /**
      * @brief Tries to find a new trajectory when the current path has a collision on it. It tries this by
      * looking for trajectories which go to intermediate points in the area of the collision and from these
      * paths again to the target
@@ -144,9 +130,9 @@ class PositionControl {
      * @param timeStep the time between path points when approaching the path
      * @return An optional with a new path
      */
-    std::optional<Trajectory2D> findNewTrajectory(const rtt::world::World *world, const rtt::Field &field, int robotId, Vector2 &currentPosition, Vector2 &currentVelocity,
-                                                  std::optional<rtt::ai::control::CollisionData> &firstCollision, Vector2 &targetPosition, double maxRobotVelocity, double timeStep,
-                                                  stp::AvoidObjects AvoidObjects);
+    Trajectory2D findNewTrajectory(const rtt::world::World *world, const rtt::Field &field, int robotId, Vector2 &currentPosition, Vector2 &currentVelocity,
+                                   std::optional<rtt::ai::control::CollisionData> &firstCollision, Vector2 &targetPosition, double maxRobotVelocity, double timeStep,
+                                   stp::AvoidObjects AvoidObjects);
 
     /**
      * @brief Creates normalized random points, which will be used to create intermediate points

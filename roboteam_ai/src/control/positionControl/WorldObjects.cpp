@@ -44,20 +44,6 @@ std::optional<CollisionData> WorldObjects::getFirstCollision(const rtt::world::W
     }
 }
 
-std::optional<CollisionData> WorldObjects::getFirstDefenseAreaCollision(const rtt::Field &field, const Trajectory2D &Trajectory) {
-    double timeStep = 0.1;
-    auto pathPoints = Trajectory.getPathApproach(timeStep);
-
-    std::vector<CollisionData> collisionDatas;
-    calculateDefenseAreaCollisions(field, collisionDatas, pathPoints, timeStep, 0);
-
-    if (!collisionDatas.empty()) {
-        return collisionDatas[0];
-    } else {
-        return std::nullopt;
-    }
-}
-
 void WorldObjects::calculateFieldCollisions(const rtt::Field &field, std::vector<CollisionData> &collisionDatas, const std::vector<Vector2> &pathPoints, double timeStep,
                                             size_t completedTimeSteps) {
     for (size_t i = completedTimeSteps; i < pathPoints.size(); i++) {

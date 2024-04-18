@@ -24,31 +24,27 @@ rtt::ai::control::CommandCollision PositionControl::computeAndTrackTrajectory(co
 
     if (shouldRecalculateTrajectory(world, field, robotId, targetPosition, currentPosition, avoidObjects)) {
         double timeStep = 0.1;
-        computedTrajectories[robotId] = Trajectory2D(currentPosition, currentVelocity, targetPosition, maxRobotVelocity, ai::Constants::MAX_ACC_UPPER());
         completedTimeSteps[robotId] = 0;
-        firstCollision = worldObjects.getFirstCollision(world, field, computedTrajectories[robotId], computedPaths, robotId, avoidObjects, completedTimeSteps);
-        if (firstCollision.has_value()) {
-            auto newTrajectory =
-                findNewTrajectory(world, field, robotId, currentPosition, currentVelocity, firstCollision, targetPosition, maxRobotVelocity, timeStep, avoidObjects);
-            if (newTrajectory.has_value()) {
-                computedTrajectories[robotId] = newTrajectory.value();
-            }
+        if (avoidObjects.shouldAvoidBall && (currentPosition - world->getWorld()->getBall()->get()->position).length() < avoidObjects.avoidBallDist) {
+            targetPosition = handleBallCollision(world, field, currentPosition, avoidObjects);
+            computedTrajectories[robotId] = Trajectory2D(currentPosition, currentVelocity, targetPosition, maxRobotVelocity, ai::Constants::MAX_ACC_UPPER());
+        } else if ((rtt::ai::GameStateManager::getCurrentGameState().getCommandId() == RefCommand::BALL_PLACEMENT_THEM ||
+                    rtt::ai::GameStateManager::getCurrentGameState().getCommandId() == RefCommand::PREPARE_FORCED_START) &&
+                   LineSegment(world->getWorld()->getBall()->get()->position, rtt::ai::GameStateManager::getRefereeDesignatedPosition()).distanceToLine(currentPosition) <
+                       ai::stp::control_constants::AVOID_BALL_DISTANCE) {
+            targetPosition = handleBallPlacementCollision(world, field, currentPosition, avoidObjects);
+            computedTrajectories[robotId] = Trajectory2D(currentPosition, currentVelocity, targetPosition, maxRobotVelocity, ai::Constants::MAX_ACC_UPPER());
+        } else if (avoidObjects.shouldAvoidDefenseArea &&
+                   (rtt::ai::FieldComputations::getDefenseArea(field, true, std::get<1>(rtt::ai::FieldComputations::getDefenseAreaMargin()), 1).contains(currentPosition) ||
+                    rtt::ai::FieldComputations::getDefenseArea(field, false, std::get<1>(rtt::ai::FieldComputations::getDefenseAreaMargin()), 1).contains(currentPosition))) {
+            targetPosition = handleDefenseAreaCollision(field, currentPosition);
+            computedTrajectories[robotId] = Trajectory2D(currentPosition, currentVelocity, targetPosition, maxRobotVelocity, ai::Constants::MAX_ACC_UPPER());
+        } else {
+            computedTrajectories[robotId] = Trajectory2D(currentPosition, currentVelocity, targetPosition, maxRobotVelocity, ai::Constants::MAX_ACC_UPPER());
             firstCollision = worldObjects.getFirstCollision(world, field, computedTrajectories[robotId], computedPaths, robotId, avoidObjects, completedTimeSteps);
             if (firstCollision.has_value()) {
-                commandCollision.collisionData = firstCollision;
-
-                if ((firstCollision.value().collisionType == rtt::ai::control::CollisionType::BALL) && firstCollision.value().collisionTime <= 0.11) {
-                    targetPosition = handleBallCollision(world, field, currentPosition, avoidObjects);
-                    computedTrajectories[robotId] = Trajectory2D(currentPosition, currentVelocity, targetPosition, 1.0, ai::Constants::MAX_ACC_UPPER());
-                }
-                if ((firstCollision.value().collisionType == rtt::ai::control::CollisionType::BALLPLACEMENT) && firstCollision.value().collisionTime <= 0.11) {
-                    targetPosition = handleBallPlacementCollision(world, field, currentPosition, avoidObjects);
-                    computedTrajectories[robotId] = Trajectory2D(currentPosition, currentVelocity, targetPosition, 1.0, ai::Constants::MAX_ACC_UPPER());
-                }
-                if ((firstCollision.value().collisionType == rtt::ai::control::CollisionType::DEFENSEAREA) && firstCollision.value().collisionTime <= 0.11) {
-                    targetPosition = handleDefenseAreaCollision(field, currentPosition);
-                    computedTrajectories[robotId] = Trajectory2D(currentPosition, currentVelocity, targetPosition, 1.0, ai::Constants::MAX_ACC_UPPER());
-                }
+                computedTrajectories[robotId] =
+                    findNewTrajectory(world, field, robotId, currentPosition, currentVelocity, firstCollision, targetPosition, maxRobotVelocity, timeStep, avoidObjects);
             }
         }
 
@@ -90,15 +86,7 @@ rtt::ai::control::CommandCollision PositionControl::computeAndTrackTrajectory(co
     }
 
     Position trackingVelocity = pathTrackingAlgorithmBBT.trackPathForwardAngle(currentPosition, currentVelocity, computedPathsPosVel[robotId], robotId, pidType);
-    Vector2 trackingVelocityVector = {trackingVelocity.x, trackingVelocity.y};
-
-    // Break if all paths result in collision and we will collide with a robot
-    if (commandCollision.collisionData.has_value() && (commandCollision.collisionData.value().collisionType == rtt::ai::control::CollisionType::ENEMYROBOT ||
-                                                       commandCollision.collisionData.value().collisionType == rtt::ai::control::CollisionType::OWNROBOT)) {
-        if (trackingVelocityVector.length() > 0.1) trackingVelocityVector = trackingVelocityVector.stretchToLength(0.1);
-    }
-
-    commandCollision.robotCommand.velocity = trackingVelocityVector;
+    commandCollision.robotCommand.velocity = {trackingVelocity.x, trackingVelocity.y};
     commandCollision.robotCommand.targetAngle = trackingVelocity.rot;
 
     return commandCollision;
@@ -130,12 +118,7 @@ rtt::Vector2 PositionControl::handleBallPlacementCollision(const rtt::world::Wor
     auto placementPos = rtt::ai::GameStateManager::getRefereeDesignatedPosition();
     auto ballPos = world->getWorld()->getBall()->get()->position;
     auto direction = (placementPos - ballPos).stretchToLength(stp::control_constants::AVOID_BALL_DISTANCE * 2);
-    double distance = (placementPos - ballPos).length();
-    if (distance > 0.10) {  // distance is more than 10cm
-        direction = direction.rotate((currentPosition - ballPos).cross(placementPos - ballPos) < 0 ? M_PI / 2 : -M_PI / 2);
-    } else {  // distance is less than or equal to 10cm
-        direction = (currentPosition - ballPos).stretchToLength(stp::control_constants::AVOID_BALL_DISTANCE * 2);
-    }
+    direction = direction.rotate((currentPosition - ballPos).cross(placementPos - ballPos) < 0 ? M_PI / 2 : -M_PI / 2);
     Vector2 targetPosition = currentPosition + direction;
     if (FieldComputations::pointIsValidPosition(field, targetPosition, avoidObjects, stp::control_constants::OUT_OF_FIELD_MARGIN)) {
         return targetPosition;
@@ -156,72 +139,22 @@ rtt::Vector2 PositionControl::handleBallPlacementCollision(const rtt::world::Wor
 }
 
 rtt::Vector2 PositionControl::handleDefenseAreaCollision(const rtt::Field &field, Vector2 currentPosition) {
-    // check if the current Position is closer to our goal or the enemy goal
-    double distanceToOurGoal = (currentPosition - field.leftGoalArea.rightLine().center()).length();
-    double distanceToTheirGoal = (currentPosition - field.rightGoalArea.leftLine().center()).length();
-
-    Vector2 targetPosition;
-    if (distanceToOurGoal < distanceToTheirGoal) {
-        targetPosition = currentPosition + (currentPosition - field.leftGoalArea.rightLine().center()).stretchToLength(stp::control_constants::AVOID_BALL_DISTANCE * 2);
-    } else {
-        targetPosition = currentPosition + (currentPosition - field.rightGoalArea.leftLine().center()).stretchToLength(stp::control_constants::AVOID_BALL_DISTANCE * 2);
-    }
+    Vector2 ourGoalCenter = field.leftGoalArea.rightLine().center();
+    Vector2 theirGoalCenter = field.rightGoalArea.leftLine().center();
+    Vector2 closestGoalCenter = (currentPosition - ourGoalCenter).length() < (currentPosition - theirGoalCenter).length() ? ourGoalCenter : theirGoalCenter;
+    Vector2 targetPosition = currentPosition + (currentPosition - closestGoalCenter).stretchToLength(stp::control_constants::AVOID_BALL_DISTANCE * 2);
     return targetPosition;
 }
 
-double PositionControl::calculateScore(const rtt::world::World *world, const rtt::Field &field, std::optional<rtt::ai::control::CollisionData> &firstCollision,
-                                       Trajectory2D &trajectoryAroundCollision, stp::AvoidObjects avoidObjects, double startTime) {
-    double totalTime = trajectoryAroundCollision.getTotalTime();
-    double score = totalTime + startTime;
-    if (!firstCollision.has_value()) {
-        return score;
-    }
-
-    score += 5;
-    score += std::max(0.0, 3 - firstCollision.value().collisionTime - startTime);
-
-    if (avoidObjects.shouldAvoidDefenseArea) {
-        auto defenseAreaCollision = worldObjects.getFirstDefenseAreaCollision(field, trajectoryAroundCollision);
-        if (defenseAreaCollision.has_value()) {
-            score += std::max(0.0, 1 - defenseAreaCollision.value().collisionTime - startTime) * 10;
-            score += 5;
-        }
-    }
-
-    auto currentStrategyName = rtt::ai::GameStateManager::getCurrentGameState().getCommandId();
-    if (currentStrategyName == RefCommand::BALL_PLACEMENT_THEM) {
-        auto ballPlacementPos = rtt::ai::GameStateManager::getRefereeDesignatedPosition();
-        auto startPositionBall = world->getWorld()->getBall()->get()->position;
-        if ((startPositionBall - ballPlacementPos).length() < stp::control_constants::BALL_PLACEMENT_ALMOST_DONE_DISTANCE) {
-            return score;
-        }
-        Line ballPlacementLine(startPositionBall, ballPlacementPos);
-        Vector2 p1 = firstCollision.value().collisionPosition;
-        Vector2 p2 = trajectoryAroundCollision.getPosition(totalTime);
-        if (ballPlacementLine.arePointsOnOppositeSides(p1, p2)) {
-            double d1 = (p1 - ballPlacementPos).length() + (p2 - ballPlacementPos).length();
-            double d2 = (p1 - startPositionBall).length() + (p2 - startPositionBall).length();
-            score += std::min(d1, d2) * 10;
-            score += 10;
-        }
-    }
-
-    return score;
-}
-
-std::optional<Trajectory2D> PositionControl::findNewTrajectory(const rtt::world::World *world, const rtt::Field &field, int robotId, Vector2 &currentPosition,
-                                                               Vector2 &currentVelocity, std::optional<rtt::ai::control::CollisionData> &firstCollision, Vector2 &targetPosition,
-                                                               double maxRobotVelocity, double timeStep, stp::AvoidObjects avoidObjects) {
+Trajectory2D PositionControl::findNewTrajectory(const rtt::world::World *world, const rtt::Field &field, int robotId, Vector2 &currentPosition, Vector2 &currentVelocity,
+                                                std::optional<rtt::ai::control::CollisionData> &firstCollision, Vector2 &targetPosition, double maxRobotVelocity, double timeStep,
+                                                stp::AvoidObjects avoidObjects) {
     std::vector<Vector2> normalizedPoints = generateNormalizedPoints(robotId);
-    timeStep *= 3;
-    double bestScore = std::numeric_limits<double>::max();
-    std::optional<Trajectory2D> bestTrajectory = std::nullopt;
+    timeStep *= 2;
     Vector2 startToDest = targetPosition - currentPosition;
-
     for (const auto &normalizedPoint : normalizedPoints) {
         auto intermediatePoint = startToDest.rotate(normalizedPoint.angle()) * normalizedPoint.length() + currentPosition;
         Trajectory2D trajectoryToIntermediatePoint(currentPosition, currentVelocity, intermediatePoint, maxRobotVelocity, ai::Constants::MAX_ACC_UPPER());
-
         auto intermediatePathCollision = worldObjects.getFirstCollision(world, field, trajectoryToIntermediatePoint, computedPaths, robotId, avoidObjects, completedTimeSteps);
         double maxLoopTime = intermediatePathCollision.has_value() ? intermediatePathCollision.value().collisionTime : trajectoryToIntermediatePoint.getTotalTime();
         int numSteps = static_cast<int>(maxLoopTime / timeStep);
@@ -229,23 +162,19 @@ std::optional<Trajectory2D> PositionControl::findNewTrajectory(const rtt::world:
             double loopTime = i * timeStep;
             Vector2 newStartPosition = trajectoryToIntermediatePoint.getPosition(loopTime);
             Vector2 newStartVelocity = trajectoryToIntermediatePoint.getVelocity(loopTime);
-            Trajectory2D trajectoryAroundCollision(newStartPosition, newStartVelocity, targetPosition, maxRobotVelocity, ai::Constants::MAX_ACC_UPPER());
-            auto firstCollision = worldObjects.getFirstCollision(world, field, trajectoryAroundCollision, computedPaths, robotId, avoidObjects, completedTimeSteps, loopTime);
+            Trajectory2D trajectoryFromIntermediateToTarget(newStartPosition, newStartVelocity, targetPosition, maxRobotVelocity, ai::Constants::MAX_ACC_UPPER());
+            auto firstCollision =
+                worldObjects.getFirstCollision(world, field, trajectoryFromIntermediateToTarget, computedPaths, robotId, avoidObjects, completedTimeSteps, loopTime);
             if (!firstCollision.has_value()) {
-                trajectoryToIntermediatePoint.addTrajectory(trajectoryAroundCollision, loopTime);
+                trajectoryToIntermediatePoint.addTrajectory(trajectoryFromIntermediateToTarget, loopTime);
                 lastUsedNormalizedPoints[robotId] = normalizedPoint;
                 return trajectoryToIntermediatePoint;
-            } else {
-                double score = calculateScore(world, field, firstCollision, trajectoryAroundCollision, avoidObjects, loopTime);
-                if (score < bestScore) {
-                    lastUsedNormalizedPoints[robotId] = normalizedPoint;
-                    bestScore = score;
-                    bestTrajectory = trajectoryToIntermediatePoint;
-                }
             }
         }
     }
-    return bestTrajectory;
+    lastUsedNormalizedPoints.erase(robotId);
+    return Trajectory2D(currentPosition, currentVelocity, currentPosition, maxRobotVelocity, ai::Constants::MAX_ACC_UPPER());
+    ;
 }
 
 std::vector<Vector2> PositionControl::generateNormalizedPoints(int robotId) {
@@ -269,13 +198,8 @@ bool PositionControl::shouldRecalculateTrajectory(const rtt::world::World *world
     if (!computedTrajectories.contains(robotId) ||
         (computedPaths.contains(robotId) && !computedPaths[robotId].empty() &&
          (targetPosition - computedPaths[robotId][computedPaths[robotId].size() - 1]).length() > stp::control_constants::GO_TO_POS_ERROR_MARGIN) ||
-        worldObjects.getFirstCollision(world, field, computedTrajectories[robotId], computedPaths, robotId, avoidObjects, completedTimeSteps).has_value()) {
-        return true;
-    }
-
-    // FIXME: Bankonk hotfix. Mere the new BBT from PR.
-    // If next point on path is too far away from the robot
-    if ((computedPaths[robotId][0] - currentPosition).length() > 0.5) {
+        worldObjects.getFirstCollision(world, field, computedTrajectories[robotId], computedPaths, robotId, avoidObjects, completedTimeSteps).has_value() ||
+        ((computedPaths[robotId][0] - currentPosition).length() > 0.5)) {
         return true;
     }
 

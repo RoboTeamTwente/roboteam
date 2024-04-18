@@ -77,8 +77,8 @@ double FieldComputations::getBallTimeAtPosition(const rtt::world::ball::Ball &ba
 bool FieldComputations::pointIsValidPosition(const rtt::Field &field, const Vector2 &point, stp::AvoidObjects avoidObjects, double fieldMargin) {
     auto [theirDefenseAreaMargin, ourDefenseAreaMargin] = getDefenseAreaMargin();
     if (avoidObjects.shouldAvoidOutOfField && !field.playArea.contains(point, fieldMargin)) return false;
-    if (avoidObjects.shouldAvoidDefenseArea && (field.leftDefenseArea.contains(point, ourDefenseAreaMargin) || field.rightDefenseArea.contains(point, theirDefenseAreaMargin)))
-        return false;
+    if (avoidObjects.shouldAvoidOurDefenseArea && (field.leftDefenseArea.contains(point, ourDefenseAreaMargin))) return false;
+    if (avoidObjects.shouldAvoidTheirDefenseArea && (field.rightDefenseArea.contains(point, theirDefenseAreaMargin))) return false;
     return true;
 }
 
@@ -293,9 +293,10 @@ Vector2 FieldComputations::projectPointInField(const Field &field, Vector2 point
     return projectedPoint;
 }
 
-Vector2 FieldComputations::projectPointOutOfDefenseArea(const Field &field, Vector2 point) {
+Vector2 FieldComputations::projectPointOutOfDefenseArea(const Field &field, Vector2 point, bool outOurDefenseArea, bool outTheirDefenseArea) {
     auto [theirDefenseAreaMargin, ourDefenseAreaMargin] = getDefenseAreaMargin();
-    if (field.playArea.contains(point) && !field.rightDefenseArea.contains(point, theirDefenseAreaMargin) && !field.leftDefenseArea.contains(point, ourDefenseAreaMargin))
+    if (field.playArea.contains(point) && (!field.rightDefenseArea.contains(point, theirDefenseAreaMargin) || !outTheirDefenseArea) &&
+        (!field.leftDefenseArea.contains(point, ourDefenseAreaMargin) || !outOurDefenseArea))
         return point;
 
     // If the point is not in the field yet, project it into the field
@@ -324,7 +325,9 @@ Vector2 FieldComputations::projectPointOutOfDefenseArea(const Field &field, Vect
 Vector2 FieldComputations::projectPointToValidPosition(const Field &field, Vector2 point, stp::AvoidObjects avoidObjects) {
     Vector2 projectedPos = point;
     if (avoidObjects.shouldAvoidOutOfField) projectedPos = projectPointInField(field, projectedPos);
-    if (avoidObjects.shouldAvoidDefenseArea) projectedPos = projectPointOutOfDefenseArea(field, projectedPos);
+    if (avoidObjects.shouldAvoidOurDefenseArea) projectedPos = projectPointOutOfDefenseArea(field, projectedPos);
+    if (avoidObjects.shouldAvoidOurDefenseArea) projectedPos = projectPointOutOfDefenseArea(field, projectedPos);
+
     return projectedPos;
 }
 

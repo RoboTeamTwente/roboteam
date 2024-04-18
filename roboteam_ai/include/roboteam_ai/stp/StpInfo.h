@@ -77,17 +77,47 @@ struct StpInfo {
 
     AvoidObjects getObjectsToAvoid() const { return avoidObjects; }
 
-    void setShouldAvoidDefenseArea(bool shouldAvoidDefenseArea) { avoidObjects.shouldAvoidDefenseArea = shouldAvoidDefenseArea; }
+    void setShouldAvoidGoalPosts(bool shouldAvoidGoalPosts) {
+        if (shouldAvoidGoalPosts != avoidObjects.shouldAvoidGoalPosts) {
+            avoidObjects.shouldAvoidGoalPosts = shouldAvoidGoalPosts;
+        }
+    }
 
-    void setShouldAvoidBall(bool shouldAvoidBall) { avoidObjects.shouldAvoidBall = shouldAvoidBall; }
+    void setShouldAvoidOutOfField(bool shouldAvoidOutOfField) {
+        if (shouldAvoidOutOfField != avoidObjects.shouldAvoidOutOfField) {
+            avoidObjects.shouldAvoidOutOfField = shouldAvoidOutOfField;
+        }
+    }
 
-    void setShouldAvoidOutOfField(bool shouldAvoidOutOfField) { avoidObjects.shouldAvoidOutOfField = shouldAvoidOutOfField; }
+    void setShouldAvoidOurDefenseArea(bool shouldAvoidOurDefenseArea) {
+        if (shouldAvoidOurDefenseArea != avoidObjects.shouldAvoidOurDefenseArea) {
+            avoidObjects.shouldAvoidOurDefenseArea = shouldAvoidOurDefenseArea;
+        }
+    }
 
-    void setShouldAvoidOurRobots(bool shouldAvoidOurRobots) { avoidObjects.shouldAvoidOurRobots = shouldAvoidOurRobots; }
+    void setShouldAvoidTheirDefenseArea(bool shouldAvoidTheirDefenseArea) {
+        if (shouldAvoidTheirDefenseArea != avoidObjects.shouldAvoidTheirDefenseArea) {
+            avoidObjects.shouldAvoidTheirDefenseArea = shouldAvoidTheirDefenseArea;
+        }
+    }
 
-    void setShouldAvoidTheirRobots(bool shouldAvoidTheirRobots) { avoidObjects.shouldAvoidTheirRobots = shouldAvoidTheirRobots; }
+    void setShouldAvoidOurRobots(bool shouldAvoidOurRobots) {
+        if (shouldAvoidOurRobots != avoidObjects.shouldAvoidOurRobots) {
+            avoidObjects.shouldAvoidOurRobots = shouldAvoidOurRobots;
+        }
+    }
 
-    void setNotAvoidTheirRobotId(int notAvoidTheirRobotId) { avoidObjects.notAvoidTheirRobotId = notAvoidTheirRobotId; }
+    void setShouldAvoidTheirRobots(bool shouldAvoidTheirRobots) {
+        if (shouldAvoidTheirRobots != avoidObjects.shouldAvoidTheirRobots) {
+            avoidObjects.shouldAvoidTheirRobots = shouldAvoidTheirRobots;
+        }
+    }
+
+    void setShouldAvoidBall(bool shouldAvoidBall) {
+        if (shouldAvoidBall != avoidObjects.shouldAvoidBall) {
+            avoidObjects.shouldAvoidBall = shouldAvoidBall;
+        }
+    }
 
    private:
     /**

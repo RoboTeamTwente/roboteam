@@ -109,7 +109,7 @@ void Play::refreshData() noexcept {
             }
 
             // The keeper does not need to avoid our defense area
-            if (stpInfo->second.getRoleName() == "keeper") stpInfo->second.setShouldAvoidDefenseArea(false);
+            if (stpInfo->second.getRoleName() == "keeper") stpInfo->second.setShouldAvoidOurDefenseArea(false);
 
             // Assign the new BallView and field
             stpInfo->second.setBall(newBallView);

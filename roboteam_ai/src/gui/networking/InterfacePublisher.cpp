@@ -1,5 +1,7 @@
 #include "gui/networking/InterfacePublisher.h"
 
+#include <utilities/GameStateManager.hpp>
+
 #include "STPManager.h"
 #include "gui/Out.h"
 #include "stp/Play.hpp"

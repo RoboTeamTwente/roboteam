@@ -5,9 +5,10 @@
 
 #include "BBTrajectories/Trajectory2D.h"
 #include "CollisionDetector.h"
-#include "control/positionControl/WorldObjects.h"
 #include "control/positionControl/pathTracking/BBTPathTracking.h"
+#include "utilities/GameStateManager.hpp"
 #include "utilities/StpInfoEnums.h"
+#include "world/FieldComputations.h"
 
 namespace rtt::ai::control {
 
@@ -22,7 +23,6 @@ class PositionControl {
     static constexpr double MAX_SCALE = 1.5;        /**< The maximum scale of the intermediate point with respect to start target distance */
     static constexpr int NUM_SUB_DESTINATIONS = 5;  /**< The number of sub destinations to create */
     CollisionDetector collisionDetector;            /**< Detects collisions on the trajectory */
-    rtt::ai::control::WorldObjects worldObjects;    /**< Calculates collisions */
     BBTPathTracking pathTrackingAlgorithmBBT;       /**< Tracks the BBT path */
 
     std::unordered_map<int, Trajectory2D> computedTrajectories;                            /**< Map of computed trajectories for each robot */
@@ -83,9 +83,8 @@ class PositionControl {
      * @param pidType The desired PID type (intercept, regular, keeper etc.)
      * @return A RobotCommand and optional with the location of the first collision on the path
      */
-    rtt::ai::control::CommandCollision computeAndTrackTrajectory(const rtt::world::World *world, const rtt::Field &field, int robotId, Vector2 currentPosition,
-                                                                 Vector2 currentVelocity, Vector2 targetPosition, double maxRobotVelocity, stp::PIDType pidType,
-                                                                 stp::AvoidObjects avoidObjects);
+    RobotCommand computeAndTrackTrajectory(const rtt::world::World *world, const rtt::Field &field, int robotId, Vector2 currentPosition, Vector2 currentVelocity,
+                                           Vector2 targetPosition, double maxRobotVelocity, stp::PIDType pidType, stp::AvoidObjects avoidObjects);
 
     /**
      * @brief Handles the collision with the ball at the current position. This function will calculate a new target, moving away from the ball as quickly as possible.
@@ -124,15 +123,13 @@ class PositionControl {
      * @param robotId the ID of the robot for which the path is calculated
      * @param currentPosition the current position of the aforementioned robot
      * @param currentVelocity its velocity
-     * @param firstCollision location of the first collision on the current path
      * @param targetPosition the desired position that the robot has to reach
      * @param maxRobotVelocity the maximum velocity the robot is allowed to have
      * @param timeStep the time between path points when approaching the path
      * @return An optional with a new path
      */
     Trajectory2D findNewTrajectory(const rtt::world::World *world, const rtt::Field &field, int robotId, Vector2 &currentPosition, Vector2 &currentVelocity,
-                                   std::optional<rtt::ai::control::CollisionData> &firstCollision, Vector2 &targetPosition, double maxRobotVelocity, double timeStep,
-                                   stp::AvoidObjects AvoidObjects);
+                                   Vector2 &targetPosition, double maxRobotVelocity, double timeStep, stp::AvoidObjects AvoidObjects);
 
     /**
      * @brief Creates normalized random points, which will be used to create intermediate points

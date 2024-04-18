@@ -2,13 +2,14 @@
 
 #include "control/ControlUtils.h"
 #include "stp/skills/Kick.h"
-#include "stp/skills/OrbitAngular.h"
+// #include "stp/skills/OrbitAngular.h"
+#include "stp/skills/Rotate.h"
 
 namespace rtt::ai::stp::tactic {
 
 OrbitKick::OrbitKick() {
     // Create state machine of skills and initialize first skill
-    skills = rtt::collections::state_machine<Skill, Status, StpInfo>{skill::OrbitAngular(), skill::Kick()};
+    skills = rtt::collections::state_machine<Skill, Status, StpInfo>{skill::Rotate(), skill::Kick()};
 }
 
 std::optional<StpInfo> OrbitKick::calculateInfoForSkill(StpInfo const &info) noexcept {

@@ -62,6 +62,14 @@ class LineSegment {
     [[nodiscard]] double distanceToLine(const Vector2 &point) const;
 
     /**
+     * Get the Euclidean distance from this LineSegment to another LineSegment.
+     *
+     * @param line The other LineSegment to which the distance is measured.
+     * @return A double value >= 0.0 which represents the distance to the other LineSegment.
+     */
+    [[nodiscard]] double closestDistanceToLineSegment(const LineSegment &line) const;
+
+    /**
      * Checks whether a point lies on this LineSegment.
      *
      * @param point Point which being checked if it lies at this LineSegment.

@@ -82,7 +82,8 @@ void BallPlacementUsFreeKick::calculateInfoForRoles() noexcept {
     stpInfos["ball_placer"].setShouldAvoidOutOfField(false);
     stpInfos["ball_placer"].setShouldAvoidBall(false);
     for (auto& stpInfo : stpInfos) {
-        stpInfo.second.setShouldAvoidDefenseArea(false);
+        stpInfo.second.setShouldAvoidOurDefenseArea(false);
+        stpInfo.second.setShouldAvoidTheirDefenseArea(false);
     }
     if ((world->getWorld()->get()->getBall()->get()->position - rtt::ai::GameStateManager::getRefereeDesignatedPosition()).length() < control_constants::BALL_PLACEMENT_MARGIN) {
         for (auto& role : roles)

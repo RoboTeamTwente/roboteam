@@ -178,11 +178,9 @@ Vector2 PositionComputations::calculateAvoidRobotsPosition(Vector2 targetPositio
             }
         }
     }
-    if (avoidObj.shouldAvoidTheirRobots || avoidObj.notAvoidTheirRobotId != -1) {
+    if (avoidObj.shouldAvoidTheirRobots) {
         for (auto &robot : world->getWorld()->getThem()) {
-            if (robot->getId() != avoidObj.notAvoidTheirRobotId) {
-                pointsToAvoid.push_back(robot->getPos());
-            }
+            pointsToAvoid.push_back(robot->getPos());
         }
     }
 
@@ -265,11 +263,9 @@ void PositionComputations::calculateInfoForHarasser(std::unordered_map<std::stri
         auto enemyPos = enemyClosestToBall->get()->getPos();
         auto targetPos =
             enemyPos + (field.leftGoalArea.leftLine().center() - enemyPos).stretchToLength(control_constants::ROBOT_RADIUS * 4 + control_constants::GO_TO_POS_ERROR_MARGIN);
-        stpInfos["harasser"].setNotAvoidTheirRobotId(-1);
         stpInfos["harasser"].setPositionToMoveTo(targetPos);
         stpInfos["harasser"].setAngle((world->getWorld()->getBall()->get()->position - targetPos).angle());
     } else {
-        stpInfos["harasser"].setNotAvoidTheirRobotId(enemyClosestToBall->get()->getId());
         auto harasser = std::find_if(roles->begin(), roles->end(), [](const std::unique_ptr<Role> &role) { return role != nullptr && role->getName() == "harasser"; });
         if (harasser != roles->end() && !harasser->get()->finished() && strcmp(harasser->get()->getCurrentTactic()->getName(), "Formation") == 0)
             harasser->get()->forceNextTactic();

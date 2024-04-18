@@ -1,6 +1,5 @@
 #include "stp/skills/GoToPos.h"
 
-#include "control/positionControl/WorldObjects.h"
 #include "stp/computations/PositionComputations.h"
 #include "world/World.hpp"
 
@@ -14,20 +13,20 @@ Status GoToPos::onUpdate(const StpInfo &info) noexcept {
     if (!FieldComputations::pointIsValidPosition(info.getField().value(), targetPos, avoidObj) && roleName != "ball_placer") {
         targetPos = FieldComputations::projectPointToValidPosition(info.getField().value(), targetPos, avoidObj);
     }
-    if (avoidObj.shouldAvoidOurRobots || avoidObj.shouldAvoidTheirRobots || avoidObj.notAvoidTheirRobotId != -1) {
+    if (avoidObj.shouldAvoidOurRobots || avoidObj.shouldAvoidTheirRobots) {
         targetPos = PositionComputations::calculateAvoidRobotsPosition(targetPos, info.getCurrentWorld(), info.getRobot().value()->getId(), avoidObj, info.getField().value());
     }
     if (avoidObj.shouldAvoidBall) {
         targetPos = PositionComputations::calculateAvoidBallPosition(targetPos, ballLocation, info.getField().value());
     }
 
-    rtt::ai::control::CommandCollision commandCollision;
+    RobotCommand robotCommand;
 
-    commandCollision = info.getCurrentWorld()->getRobotPositionController()->computeAndTrackTrajectory(
+    robotCommand = info.getCurrentWorld()->getRobotPositionController()->computeAndTrackTrajectory(
         info.getCurrentWorld(), info.getField().value(), info.getRobot().value()->getId(), info.getRobot().value()->getPos(), info.getRobot().value()->getVel(), targetPos,
         info.getMaxRobotVelocity(), info.getPidType().value(), avoidObj);
 
-    auto &velocity = commandCollision.robotCommand.velocity;
+    auto &velocity = robotCommand.velocity;
     command.velocity = velocity.stretchToLength(std::clamp(velocity.length(), 0.0, info.getMaxRobotVelocity()));
 
     command.targetAngle = info.getAngle();

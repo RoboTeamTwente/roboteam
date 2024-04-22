@@ -514,11 +514,8 @@ void PositionComputations::recalculateInfoForNonPassers(std::unordered_map<std::
 void PositionComputations::calculateInfoForAvoidBallHarasser(std::unordered_map<std::string, StpInfo> &stpInfos, world::World *world) noexcept {
     if (!world->getWorld()->getBall()) return;
     auto ballPos = world->getWorld()->getBall()->get()->position;
-    auto ourGoalPos = world->getField().value().leftGoalArea.rightLine().center();
-
-    auto goalToBall = (ballPos - world->getField().value().leftGoalArea.rightLine().center());
-    auto targetPos = ballPos + (ourGoalPos).stretchToLength(control_constants::AVOID_BALL_DISTANCE);
-    stpInfos["harasser"].setPositionToMoveTo(targetPos);
+    auto goalToBall = ballPos - world->getField().value().leftGoalArea.rightLine().center();
+    stpInfos["harasser"].setPositionToMoveTo(ballPos - goalToBall.stretchToLength(control_constants::AVOID_BALL_DISTANCE));
 }
 
 }  // namespace rtt::ai::stp

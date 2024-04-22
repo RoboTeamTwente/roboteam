@@ -37,7 +37,6 @@ class PrepareForcedStart : public Play {
      * @return The name of the play
      */
     const char *getName() const override;
-
 };
 }  // namespace rtt::ai::stp::play
 

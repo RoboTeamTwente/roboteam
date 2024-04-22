@@ -39,7 +39,7 @@ RobotCommand PositionControl::computeAndTrackTrajectory(const world::World *worl
             computedTrajectories[robotId] = Trajectory2D(currentPosition, currentVelocity, targetPosition, maxRobotVelocity, ai::Constants::MAX_ACC_UPPER());
         } else {
             computedTrajectories[robotId] = Trajectory2D(currentPosition, currentVelocity, targetPosition, maxRobotVelocity, ai::Constants::MAX_ACC_UPPER());
-            auto hasCollsion = CollisionCalculations::isCollidingWithMotionlessObject(computedTrajectories[robotId], avoidObjects, field, robotId, completedTimeSteps[robotId]);
+            auto hasCollsion = CollisionCalculations::isColliding(computedTrajectories[robotId], avoidObjects, field, robotId, completedTimeSteps[robotId], world, computedPaths);
             if (hasCollsion) {
                 computedTrajectories[robotId] =
                     findNewTrajectory(world, field, robotId, currentPosition, currentVelocity, targetPosition, maxRobotVelocity, timeStep, avoidObjects);
@@ -154,7 +154,7 @@ Trajectory2D PositionControl::findNewTrajectory(const world::World *world, const
         auto intermediatePoint = startToDest.rotate(normalizedPoint.angle()) * normalizedPoint.length() + currentPosition;
         Trajectory2D trajectoryToIntermediatePoint(currentPosition, currentVelocity, intermediatePoint, maxRobotVelocity, ai::Constants::MAX_ACC_UPPER());
         auto timeTillFirstCollision =
-            CollisionCalculations::getFirstCollisionTimeMotionlessObject(trajectoryToIntermediatePoint, avoidObjects, field, robotId, completedTimeSteps[robotId]);
+            CollisionCalculations::getFirstCollisionTime(trajectoryToIntermediatePoint, avoidObjects, field, robotId, completedTimeSteps[robotId], world, computedPaths);
         double maxLoopTime = timeTillFirstCollision != -1 ? timeTillFirstCollision - 0.1 : trajectoryToIntermediatePoint.getTotalTime();
         int numSteps = static_cast<int>(maxLoopTime / timeStep);
         for (int i = 0; i <= numSteps; ++i) {
@@ -163,7 +163,7 @@ Trajectory2D PositionControl::findNewTrajectory(const world::World *world, const
             Vector2 newStartVelocity = trajectoryToIntermediatePoint.getVelocity(loopTime);
             Trajectory2D trajectoryFromIntermediateToTarget(newStartPosition, newStartVelocity, targetPosition, maxRobotVelocity, ai::Constants::MAX_ACC_UPPER());
             auto hasCollision =
-                CollisionCalculations::isCollidingWithMotionlessObject(trajectoryFromIntermediateToTarget, avoidObjects, field, robotId, completedTimeSteps[robotId]);
+                CollisionCalculations::isColliding(trajectoryFromIntermediateToTarget, avoidObjects, field, robotId, completedTimeSteps[robotId], world, computedPaths);
             if (!hasCollision) {
                 trajectoryToIntermediatePoint.addTrajectory(trajectoryFromIntermediateToTarget, loopTime);
                 lastUsedNormalizedPoints[robotId] = normalizedPoint;
@@ -197,7 +197,7 @@ bool PositionControl::shouldRecalculateTrajectory(const world::World *world, con
     if (!computedTrajectories.contains(robotId) ||
         (computedPaths.contains(robotId) && !computedPaths[robotId].empty() &&
          (targetPosition - computedPaths[robotId][computedPaths[robotId].size() - 1]).length() > stp::control_constants::GO_TO_POS_ERROR_MARGIN) ||
-        CollisionCalculations::isCollidingWithMotionlessObject(computedTrajectories[robotId], avoidObjects, field, robotId, completedTimeSteps[robotId]) ||
+        CollisionCalculations::isColliding(computedTrajectories[robotId], avoidObjects, field, robotId, completedTimeSteps[robotId], world, computedPaths) ||
         ((computedPaths[robotId][0] - currentPosition).length() > 0.5)) {
         return true;
     }

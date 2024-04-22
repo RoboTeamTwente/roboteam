@@ -17,6 +17,7 @@
 #include <stp/evaluations/game_states/PenaltyThemPrepareGameStateEvaluation.h>
 #include <stp/evaluations/game_states/PenaltyUsGameStateEvaluation.h>
 #include <stp/evaluations/game_states/PenaltyUsPrepareGameStateEvaluation.h>
+#include <stp/evaluations/game_states/PrepareForcedStartGameStateEvaluation.h>
 #include <stp/evaluations/game_states/StopGameStateEvaluation.h>
 #include <stp/evaluations/game_states/TimeOutGameStateEvaluation.h>
 #include <stp/evaluations/global/BallInOurDefenseAreaAndStillGlobalEvaluation.h>
@@ -34,6 +35,8 @@ uint8_t PlayEvaluator::getGlobalEvaluation(GlobalEvaluation evaluation, const rt
 uint8_t PlayEvaluator::updateGlobalEvaluation(GlobalEvaluation& evaluation, const rtt::world::World* world) {
     auto field = world->getField().value();
     switch (evaluation) {
+        case GlobalEvaluation::PrepareForcedStartGameState:
+            return evaluation::PrepareForcedStartGameStateEvaluation().metricCheck(world, &field);
         case GlobalEvaluation::BallPlacementThemGameState:
             return evaluation::BallPlacementThemGameStateEvaluation().metricCheck(world, &field);
         case GlobalEvaluation::BallPlacementUsGameState:

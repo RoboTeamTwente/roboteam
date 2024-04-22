@@ -1,25 +1,25 @@
-#ifndef RTT_DEFENSIVESTOPFORMATION_H
-#define RTT_DEFENSIVESTOPFORMATION_H
+#ifndef RTT_PREPAREFORCEDSTART_H
+#define RTT_PREPAREFORCEDSTART_H
 
 #include "stp/Play.hpp"
 
 namespace rtt::ai::stp::play {
 /**
- * @brief The defensive stop formation is executed when we want to defend after the stop game state has ended
+ * @brief The prepare forced start play is executed when the prepare forced start game state is selected
  */
-class DefensiveStopFormation : public Play {
+class PrepareForcedStart : public Play {
    public:
     /**
      * @brief Constructor that initializes roles with roles that are necessary for this play
      */
-    DefensiveStopFormation();
+    PrepareForcedStart();
 
     /**
      * @brief Calculates the score of this play to determine which play is best in this situation
      * @param field The current Field
      * @return The score of this play (0-255)
      */
-    uint8_t score(const rtt::Field& field) noexcept override;
+    uint8_t score(const rtt::Field &field) noexcept override;
 
     /**
      * @brief Assigns robots to roles of this play
@@ -34,10 +34,11 @@ class DefensiveStopFormation : public Play {
 
     /**
      * @brief Retrieves the name of the play
-     * @return The name of the play as a string
+     * @return The name of the play
      */
-    const char* getName() const override;
+    const char *getName() const override;
+
 };
 }  // namespace rtt::ai::stp::play
 
-#endif  // RTT_DEFENSIVESTOPFORMATION_H
+#endif  // RTT_PREPAREFORCEDSTART_H

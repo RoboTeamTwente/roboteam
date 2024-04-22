@@ -1,10 +1,8 @@
 #ifndef RTT_POSITIONCONTROL_H
 #define RTT_POSITIONCONTROL_H
 
-#include <roboteam_utils/RobotCommands.hpp>
 
 #include "BBTrajectories/Trajectory2D.h"
-#include "CollisionDetector.h"
 #include "control/positionControl/pathTracking/BBTPathTracking.h"
 #include "utilities/GameStateManager.hpp"
 #include "utilities/StpInfoEnums.h"
@@ -22,7 +20,6 @@ class PositionControl {
     static constexpr double MIN_SCALE = 0.5;        /**< The minimum scale of the intermediate point with respect to start target distance */
     static constexpr double MAX_SCALE = 1.5;        /**< The maximum scale of the intermediate point with respect to start target distance */
     static constexpr int NUM_SUB_DESTINATIONS = 5;  /**< The number of sub destinations to create */
-    CollisionDetector collisionDetector;            /**< Detects collisions on the trajectory */
     BBTPathTracking pathTrackingAlgorithmBBT;       /**< Tracks the BBT path */
 
     std::unordered_map<int, Trajectory2D> computedTrajectories;                            /**< Map of computed trajectories for each robot */
@@ -32,19 +29,6 @@ class PositionControl {
     std::unordered_map<int, int> completedTimeSteps;                                       /**< Map of completed time steps for each robot */
     std::unordered_map<int, Vector2> lastUsedNormalizedPoints;                             /**< Map of last used normalized points for each robot */
 
-    /**
-     * @brief Checks if the current path should be recalculated:
-     * @param world a pointer to the current world
-     * @param field the field object, used onwards by the collision detector
-     * @param robotId the ID of the robot for which the path is calculated
-     * @param currentPosition the current position of the aforementioned robot
-     * @param currentVelocity its velocity
-     * @param targetPosition the desired position that the robot has to reachsho
-     * @return Boolean that is 1 if the path needs to be recalculated
-     */
-    bool shouldRecalculateTrajectory(const rtt::world::World *world, const rtt::Field &field, int robotId, Vector2 targetPosition, const Vector2 &currentPosition,
-                                     ai::stp::AvoidObjects);
-
    public:
     /**
      * @brief Retrieves the computed path of the given robot
@@ -52,12 +36,6 @@ class PositionControl {
      * @return Path that of the given robot
      */
     std::vector<Vector2> getComputedPath(int ID);
-
-    /**
-     * @brief Updates the robot view vector
-     * @param robotPositions the position vector of the robots
-     */
-    void setRobotPositions(std::vector<Vector2> &robotPositions);
 
     /**
      * @brief Generates a collision-free trajectory and tracks it. Returns also possibly
@@ -72,7 +50,7 @@ class PositionControl {
      * @param pidType The desired PID type (intercept, regular, keeper etc.)
      * @return A RobotCommand and optional with the location of the first collision on the path
      */
-    RobotCommand computeAndTrackTrajectory(const rtt::world::World *world, const rtt::Field &field, int robotId, Vector2 currentPosition, Vector2 currentVelocity,
+    Vector2 computeAndTrackTrajectory(const rtt::world::World *world, const rtt::Field &field, int robotId, Vector2 currentPosition, Vector2 currentVelocity,
                                            Vector2 targetPosition, double maxRobotVelocity, stp::PIDType pidType, stp::AvoidObjects avoidObjects);
 
     /**

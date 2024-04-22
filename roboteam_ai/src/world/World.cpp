@@ -109,13 +109,6 @@ void World::updateTickTime() noexcept {
     lastTick = (*getWorld())->getTime();
 }
 
-void World::updatePositionControl() {
-    std::vector<Vector2> robotPositions(getWorld()->getRobotsNonOwning().size());
-    std::transform(getWorld()->getRobotsNonOwning().begin(), getWorld()->getRobotsNonOwning().end(), robotPositions.begin(),
-                   [](const auto &robot) -> Vector2 { return (robot->getPos()); });
-    positionControl.setRobotPositions(robotPositions);
-}
-
 ai::control::PositionControl *World::getRobotPositionController() noexcept { return &positionControl; }
 
 size_t World::getHistorySize() const noexcept { return history.size(); }

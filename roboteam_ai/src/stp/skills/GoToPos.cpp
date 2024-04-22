@@ -20,16 +20,19 @@ Status GoToPos::onUpdate(const StpInfo &info) noexcept {
         targetPos = PositionComputations::calculateAvoidBallPosition(targetPos, ballLocation, info.getField().value());
     }
 
-    RobotCommand robotCommand;
 
-    robotCommand = info.getCurrentWorld()->getRobotPositionController()->computeAndTrackTrajectory(
+    command.velocity = info.getCurrentWorld()->getRobotPositionController()->computeAndTrackTrajectory(
         info.getCurrentWorld(), info.getField().value(), info.getRobot().value()->getId(), info.getRobot().value()->getPos(), info.getRobot().value()->getVel(), targetPos,
         info.getMaxRobotVelocity(), info.getPidType().value(), avoidObj);
 
-    auto &velocity = robotCommand.velocity;
-    command.velocity = velocity.stretchToLength(std::clamp(velocity.length(), 0.0, info.getMaxRobotVelocity()));
-
-    command.targetAngle = info.getAngle();
+    auto distanceToTarget = (info.getRobot().value()->getPos() - targetPos).length();
+    if (distanceToTarget <= 0.5) {
+        command.targetAngle = info.getAngle();
+    } else {
+        auto diffToTargetAngle = (info.getAngle() - info.getRobot().value()->getAngle());
+        rtt::Angle diffAngle = rtt::Angle(0.5 / distanceToTarget * diffToTargetAngle);
+        command.targetAngle = info.getRobot().value()->getAngle() + diffAngle;
+    }
 
     // Clamp and set dribbler speed
     int targetDribblerPercentage = std::clamp(info.getDribblerSpeed(), 0, 100);

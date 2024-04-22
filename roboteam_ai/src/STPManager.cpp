@@ -157,7 +157,6 @@ void STPManager::runOneLoopCycle() {
             if (!robotsInitialized) {
                 RTT_SUCCESS("Received robots, starting STP!")
             }
-            world->updatePositionControl();
             decidePlay(world);
             robotsInitialized = true;
 

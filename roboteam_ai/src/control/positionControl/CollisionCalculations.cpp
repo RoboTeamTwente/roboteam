@@ -8,9 +8,9 @@
 
 namespace rtt::ai::control {
 
-double CollisionCalculations::getFirstCollisionTimeMotionlessObject(const Trajectory2D &Trajectory, stp::AvoidObjects avoidObjects, const Field &field, int &completedTimeSteps) {
+double CollisionCalculations::getFirstCollisionTimeMotionlessObject(const Trajectory2D &Trajectory, stp::AvoidObjects avoidObjects, const Field &field) {
     auto pathPoints = Trajectory.getPathApproach(0.1);
-    auto maxCheckPoints = std::min(pathPoints.size(), static_cast<size_t>(7) + completedTimeSteps);
+    auto maxCheckPoints = std::min(pathPoints.size(), static_cast<size_t>(7));
 
     auto [theirDefenseAreaMargin, ourDefenseAreaMargin] = FieldComputations::getDefenseAreaMargin();
     const auto &ourDefenseArea = FieldComputations::getDefenseArea(field, true, ourDefenseAreaMargin, 1);
@@ -23,7 +23,7 @@ double CollisionCalculations::getFirstCollisionTimeMotionlessObject(const Trajec
     auto rightGoalBottomPost = LineSegment(field.rightGoalArea.bottomLeft(), field.rightGoalArea.bottomRight());
     auto rightGoalBackPost = LineSegment(field.rightGoalArea.topRight(), field.rightGoalArea.bottomRight());
 
-    for (int checkPoint = 1 + completedTimeSteps; checkPoint <= static_cast<int>(maxCheckPoints); checkPoint += 1) {
+    for (int checkPoint = 1; checkPoint <= static_cast<int>(maxCheckPoints); checkPoint += 1) {
         auto pathLine = LineSegment(pathPoints[checkPoint - 1], pathPoints[checkPoint]);
         if (avoidObjects.shouldAvoidGoalPosts) {
             if (pathLine.closestDistanceToLineSegment(leftGoalTopPost) < Constants::ROBOT_RADIUS() ||
@@ -54,22 +54,22 @@ double CollisionCalculations::getFirstCollisionTimeMotionlessObject(const Trajec
     return -1.0;  // Return -1 if no collision occurred
 }
 
-bool CollisionCalculations::isCollidingWithMotionlessObject(const Trajectory2D &Trajectory, stp::AvoidObjects avoidObjects, const Field &field, int &completedTimeSteps) {
-    double collisionTime = getFirstCollisionTimeMotionlessObject(Trajectory, avoidObjects, field, completedTimeSteps);
+bool CollisionCalculations::isCollidingWithMotionlessObject(const Trajectory2D &Trajectory, stp::AvoidObjects avoidObjects, const Field &field) {
+    double collisionTime = getFirstCollisionTimeMotionlessObject(Trajectory, avoidObjects, field);
     return collisionTime != -1.0;
 }
 
-double CollisionCalculations::getFirstCollisionTimeMovingObject(const Trajectory2D &Trajectory, stp::AvoidObjects avoidObjects, int &robotId, int &completedTimeSteps,
+double CollisionCalculations::getFirstCollisionTimeMovingObject(const Trajectory2D &Trajectory, stp::AvoidObjects avoidObjects, int &robotId,
                                                                 const world::World *world, const std::unordered_map<int, std::vector<Vector2>> &computedPaths) {
     auto pathPoints = Trajectory.getPathApproach(0.1);
-    auto maxCheckPoints = std::min(pathPoints.size(), static_cast<size_t>(7) + completedTimeSteps);
+    auto maxCheckPoints = std::min(pathPoints.size(), static_cast<size_t>(7));
 
     const std::vector<world::view::RobotView> &theirRobots = world->getWorld()->getThem();
     const std::vector<world::view::RobotView> &ourRobots = world->getWorld()->getUs();
 
     double maxVel = GameStateManager::getCurrentGameState().getRuleSet().getMaxRobotVel();
 
-    for (int checkPoint = 1 + completedTimeSteps; checkPoint <= static_cast<int>(maxCheckPoints); checkPoint += 1) {
+    for (int checkPoint = 1; checkPoint <= static_cast<int>(maxCheckPoints); checkPoint += 1) {
         auto pathLine = LineSegment(pathPoints[checkPoint - 1], pathPoints[checkPoint]);
         double velocityOurRobot = Trajectory.getVelocity(checkPoint * 0.1).length();
         auto positionOurRobot = Trajectory.getPosition(checkPoint * 0.1);
@@ -126,25 +126,25 @@ double CollisionCalculations::getFirstCollisionTimeMovingObject(const Trajectory
     return -1.0;  // Return -1 if no collision occurred
 }
 
-bool CollisionCalculations::isCollidingWithMovingObject(const Trajectory2D &Trajectory, stp::AvoidObjects avoidObjects, int &robotId, int &completedTimeSteps,
+bool CollisionCalculations::isCollidingWithMovingObject(const Trajectory2D &Trajectory, stp::AvoidObjects avoidObjects, int &robotId,
                                                         const world::World *world, const std::unordered_map<int, std::vector<Vector2>> &computedPaths) {
-    double collisionTime = getFirstCollisionTimeMovingObject(Trajectory, avoidObjects, robotId, completedTimeSteps, world, computedPaths);
+    double collisionTime = getFirstCollisionTimeMovingObject(Trajectory, avoidObjects, robotId, world, computedPaths);
     return collisionTime != -1.0;
 }
 
-double CollisionCalculations::getFirstCollisionTime(const Trajectory2D &Trajectory, stp::AvoidObjects avoidObjects, const Field &field, int &robotId, int &completedTimeSteps,
+double CollisionCalculations::getFirstCollisionTime(const Trajectory2D &Trajectory, stp::AvoidObjects avoidObjects, const Field &field, int &robotId,
                                                     const world::World *world, const std::unordered_map<int, std::vector<Vector2>> &computedPaths) {
-    double collisionTime = getFirstCollisionTimeMotionlessObject(Trajectory, avoidObjects, field, completedTimeSteps);
+    double collisionTime = getFirstCollisionTimeMotionlessObject(Trajectory, avoidObjects, field);
     if (collisionTime != -1.0) {
         return collisionTime;
     }
-    return getFirstCollisionTimeMovingObject(Trajectory, avoidObjects, robotId, completedTimeSteps, world, computedPaths);
+    return getFirstCollisionTimeMovingObject(Trajectory, avoidObjects, robotId, world, computedPaths);
 }
 
-bool CollisionCalculations::isColliding(const Trajectory2D &Trajectory, stp::AvoidObjects avoidObjects, const Field &field, int &robotId, int &completedTimeSteps,
+bool CollisionCalculations::isColliding(const Trajectory2D &Trajectory, stp::AvoidObjects avoidObjects, const Field &field, int &robotId,
                                         const world::World *world, const std::unordered_map<int, std::vector<Vector2>> &computedPaths) {
-    return isCollidingWithMotionlessObject(Trajectory, avoidObjects, field, completedTimeSteps) ||
-           isCollidingWithMovingObject(Trajectory, avoidObjects, robotId, completedTimeSteps, world, computedPaths);
+    return isCollidingWithMotionlessObject(Trajectory, avoidObjects, field) ||
+           isCollidingWithMovingObject(Trajectory, avoidObjects, robotId, world, computedPaths);
 }
 
 }  // namespace rtt::ai::control

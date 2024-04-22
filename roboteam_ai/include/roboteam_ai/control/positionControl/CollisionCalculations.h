@@ -20,32 +20,29 @@ class CollisionCalculations {
      * @param Trajectory The trajectory to check.
      * @param avoidObjects The objects to avoid.
      * @param field The field on which the trajectory is.
-     * @param completedTimeSteps The number of completed time steps.
      * @return True if the trajectory collides with a motionless object, false otherwise.
      */
-    static bool isCollidingWithMotionlessObject(const Trajectory2D &Trajectory, stp::AvoidObjects avoidObjects, const Field &field, int &completedTimeSteps);
+    static bool isCollidingWithMotionlessObject(const Trajectory2D &Trajectory, stp::AvoidObjects avoidObjects, const Field &field);
 
     /**
      * @brief Gets the first collision time with a motionless object.
      * @param Trajectory The trajectory to check.
      * @param avoidObjects The objects to avoid.
      * @param field The field on which the trajectory is.
-     * @param completedTimeSteps The number of completed time steps.
      * @return The first collision time with a motionless object.
      */
-    static double getFirstCollisionTimeMotionlessObject(const Trajectory2D &Trajectory, stp::AvoidObjects avoidObjects, const Field &field, int &completedTimeSteps);
+    static double getFirstCollisionTimeMotionlessObject(const Trajectory2D &Trajectory, stp::AvoidObjects avoidObjects, const Field &field);
 
     /**
      * @brief Checks if a trajectory collides with a moving object.
      * @param Trajectory The trajectory to check.
      * @param avoidObjects The objects to avoid.
      * @param robotId The ID of the robot.
-     * @param completedTimeSteps The number of completed time steps.
      * @param world The world in which the trajectory and objects are.
      * @param computedPaths The computed paths of the robots.
      * @return True if the trajectory collides with a moving object, false otherwise.
      */
-    static bool isCollidingWithMovingObject(const Trajectory2D &Trajectory, stp::AvoidObjects avoidObjects, int &robotId, int &completedTimeSteps, const world::World *world,
+    static bool isCollidingWithMovingObject(const Trajectory2D &Trajectory, stp::AvoidObjects avoidObjects, int &robotId, const world::World *world,
                                             const std::unordered_map<int, std::vector<Vector2>> &computedPaths);
 
     /**
@@ -53,12 +50,11 @@ class CollisionCalculations {
      * @param Trajectory The trajectory to check.
      * @param avoidObjects The objects to avoid.
      * @param robotId The ID of the robot.
-     * @param completedTimeSteps The number of completed time steps.
      * @param world The world in which the trajectory and objects are.
      * @param computedPaths The computed paths of the robots.
      * @return The first collision time with a moving object.
      */
-    static double getFirstCollisionTimeMovingObject(const Trajectory2D &Trajectory, stp::AvoidObjects avoidObjects, int &robotId, int &completedTimeSteps,
+    static double getFirstCollisionTimeMovingObject(const Trajectory2D &Trajectory, stp::AvoidObjects avoidObjects, int &robotId,
                                                     const world::World *world, const std::unordered_map<int, std::vector<Vector2>> &computedPaths);
 
     /**
@@ -67,12 +63,11 @@ class CollisionCalculations {
      * @param avoidObjects The objects to avoid.
      * @param field The field on which the trajectory is.
      * @param robotId The ID of the robot.
-     * @param completedTimeSteps The number of completed time steps.
      * @param world The world in which the trajectory and objects are.
      * @param computedPaths The computed paths of the robots.
      * @return The first collision time with any object.
      */
-    static double getFirstCollisionTime(const Trajectory2D &Trajectory, stp::AvoidObjects avoidObjects, const Field &field, int &robotId, int &completedTimeSteps,
+    static double getFirstCollisionTime(const Trajectory2D &Trajectory, stp::AvoidObjects avoidObjects, const Field &field, int &robotId,
                                         const world::World *world, const std::unordered_map<int, std::vector<Vector2>> &computedPaths);
 
     /**
@@ -81,12 +76,11 @@ class CollisionCalculations {
      * @param avoidObjects The objects to avoid.
      * @param field The field on which the trajectory is.
      * @param robotId The ID of the robot.
-     * @param completedTimeSteps The number of completed time steps.
      * @param world The world in which the trajectory and objects are.
      * @param computedPaths The computed paths of the robots.
      * @return True if the trajectory collides with any object, false otherwise.
      */
-    static bool isColliding(const Trajectory2D &Trajectory, stp::AvoidObjects avoidObjects, const Field &field, int &robotId, int &completedTimeSteps, const world::World *world,
+    static bool isColliding(const Trajectory2D &Trajectory, stp::AvoidObjects avoidObjects, const Field &field, int &robotId, const world::World *world,
                             const std::unordered_map<int, std::vector<Vector2>> &computedPaths);
 };
 }  // namespace rtt::ai::control

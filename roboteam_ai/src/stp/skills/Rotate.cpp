@@ -11,6 +11,10 @@ Status Rotate::onUpdate(const StpInfo &info) noexcept {
     // Set angle command
     command.targetAngle = targetAngle;
 
+    if (info.getRobot().value()->hasBall()) {
+        command.velocity = Vector2(0.3, 0).rotate(info.getRobot().value()->getAngle());
+    }
+
     // Clamp and set dribbler speed
     int targetDribblerPercentage = std::clamp(info.getDribblerSpeed(), 0, 100);
     double targetDribblerSpeed = targetDribblerPercentage / 100.0 * stp::control_constants::MAX_DRIBBLER_CMD;

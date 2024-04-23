@@ -38,14 +38,14 @@ constexpr double ENEMY_CLOSE_TO_BALL_DISTANCE = 1.0;                /**< Distanc
 /// RobotCommand limits
 constexpr double MAX_DRIBBLER_CMD = 1; /**< Maximum allowed dribbler velocity that can be send to the robot */
 // Angle increment per tick
-constexpr double ANGLE_RATE = 0.5 * M_PI;     /**< Maximum allowed angular velocity that can be send to the robot */
+constexpr double ANGLE_RATE = 0.2 * M_PI;     /**< Maximum allowed angular velocity that can be send to the robot */
 constexpr double MAX_VEL_WHEN_HAS_BALL = 3.0; /**< Maximum allowed velocity that can be send to the robot when that robot has the ball */
 
 /// GoToPos Constants
 // Distance margin for 'goToPos'. If the robot is within this margin, goToPos is successful
 constexpr double GO_TO_POS_ERROR_MARGIN = 0.01; /**< Distance error for a robot to be considered to have reached a position */
 // Angle margin for 'goToPos'. If the robot is within this margin, goToPos is successful
-constexpr double GO_TO_POS_ANGLE_ERROR_MARGIN = 0.04; /**< Angle error for a robot to be considered to have reached a position */
+constexpr double GO_TO_POS_ANGLE_ERROR_MARGIN = 0.01; /**< Angle error for a robot to be considered to have reached a position */
 // Maximum inaccuracy during ballplacement
 constexpr double BALL_PLACEMENT_MARGIN = 0.15 - BALL_RADIUS - 0.02; /**< Distance error for the ball to be considered to have reached the ball placement position*/
 constexpr double ENEMY_ALREADY_ASSIGNED_MULTIPLIER = 0.9;           /**< Multiplication factor for the distance to goal used by the dealer when the enemy is already assigned */
@@ -53,7 +53,6 @@ constexpr double ENEMY_ALREADY_ASSIGNED_MULTIPLIER = 0.9;           /**< Multipl
 /// Invariant constants
 constexpr uint8_t FUZZY_TRUE = 255;          /**< Value at which the fuzzy logic is considered 100% true */
 constexpr uint8_t FUZZY_FALSE = 0;           /**< Value at which the fuzzy logic is considered 0% true */
-constexpr double FUZZY_MARGIN = 0.1;         /**< Error margin of the fuzzy logic */
 constexpr double FUZZY_DEFAULT_CUTOFF = 127; /**< Value at which the fuzzy logic is considered 50% true */
 
 /// Distance constants

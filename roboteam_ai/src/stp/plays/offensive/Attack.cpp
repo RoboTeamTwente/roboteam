@@ -74,7 +74,7 @@ void Attack::calculateInfoForRoles() noexcept {
 
     // Striker
     auto goalTarget = computations::GoalComputations::calculateGoalTarget(world, field);
-    goalTarget.y = std::clamp(goalTarget.y, field.rightGoalArea.bottom() + 0.4, field.rightGoalArea.top() - 0.4);
+    goalTarget.y = std::clamp(goalTarget.y, field.rightGoalArea.bottom() + 0.2, field.rightGoalArea.top() - 0.2);
     stpInfos["striker"].setPositionToShootAt(goalTarget);
     stpInfos["striker"].setKickOrChip(KickOrChip::KICK);
     stpInfos["striker"].setShotType(ShotType::MAX);

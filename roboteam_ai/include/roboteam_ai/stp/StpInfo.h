@@ -21,9 +21,6 @@ struct StpInfo {
     const std::optional<world::view::RobotView>& getRobot() const { return robot; }
     void setRobot(const std::optional<world::view::RobotView>& robot) { this->robot = robot; }
 
-    const std::optional<world::view::RobotView>& getEnemyRobot() const { return enemyRobot; }
-    void setEnemyRobot(const std::optional<world::view::RobotView>& enemyRobot) { this->enemyRobot = enemyRobot; }
-
     const std::optional<Field>& getField() const { return field; }
     void setField(const std::optional<Field>& field) { this->field = field; }
 
@@ -32,10 +29,7 @@ struct StpInfo {
 
     const std::optional<Vector2>& getPositionToMoveTo() const { return positionToMoveTo; }
     void setPositionToMoveTo(const std::optional<Vector2>& position) { this->positionToMoveTo = position; }
-    void setPositionToMoveTo(const std::optional<gen::ScoredPosition>& scoredPosition) {
-        setRoleScore(scoredPosition->score);
-        setPositionToMoveTo(scoredPosition->position);
-    }
+    void setPositionToMoveTo(const std::optional<gen::ScoredPosition>& scoredPosition) { setPositionToMoveTo(scoredPosition->position); }
 
     const std::optional<Vector2>& getPositionToShootAt() const { return positionToShootAt; }
     void setPositionToShootAt(const std::optional<Vector2>& position) { this->positionToShootAt = position; }
@@ -52,9 +46,6 @@ struct StpInfo {
     int getDribblerSpeed() const { return dribblerSpeed; }
     void setDribblerSpeed(int dribblerSpeed) { this->dribblerSpeed = dribblerSpeed; }
 
-    BlockDistance getBlockDistance() const { return blockDistance; }
-    void setBlockDistance(BlockDistance blockDistance) { this->blockDistance = blockDistance; }
-
     ShotType getShotType() const { return shotType; }
     void setShotType(ShotType shotType) { this->shotType = shotType; }
 
@@ -63,8 +54,6 @@ struct StpInfo {
     world::World* getCurrentWorld() const { return currentWorld; }
     /// This function is used in a lambda, [[maybe_unused]] is to suppress 'unused' warnings
     [[maybe_unused]] void setCurrentWorld(world::World* world) { currentWorld = world; }
-
-    void setRoleScore(const std::optional<uint8_t>& RoleScore) { roleScore = RoleScore; }
 
     double getMaxRobotVelocity() const { return maxRobotVelocity; }
     void setMaxRobotVelocity(double maxVelocity) { maxRobotVelocity = maxVelocity; }
@@ -128,11 +117,6 @@ struct StpInfo {
     std::optional<world::view::RobotView> robot;
 
     /**
-     * EnemyRobot this tactic applies to
-     */
-    std::optional<world::view::RobotView> enemyRobot;
-
-    /**
      * Field
      */
     std::optional<Field> field;
@@ -178,19 +162,9 @@ struct StpInfo {
     int dribblerSpeed = 0;
 
     /**
-     * The distance of our robot to a to-be-blocked target
-     */
-    BlockDistance blockDistance = BlockDistance::CLOSE;
-
-    /**
      * Set the shot to be a kick or chip
      */
     std::optional<KickOrChip> kickOrChip;
-
-    /**
-     * Optional roleScore value to be used in play score determination
-     */
-    std::optional<uint8_t> roleScore;
 
     /**
      * The maximum velocity the robot is allowed to have

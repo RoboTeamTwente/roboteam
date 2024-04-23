@@ -101,9 +101,9 @@ bool KeeperBlockBall::isBallHeadingTowardsOurGoal(const HalfLine &ballTrajectory
 Vector2 KeeperBlockBall::calculateTargetPosition(const StpInfo info) noexcept {
     const auto &field = info.getField().value();
     const auto &ball = info.getBall().value();
-    const auto &enemyRobot = info.getEnemyRobot();
     const auto &world = info.getCurrentWorld();
     const auto &robot = info.getRobot().value();
+    const auto enemyRobot = world->getWorld()->getRobotClosestToBall(world::them);
 
     auto keepersLineSegment = getKeepersLineSegment(field);
     auto ballTrajectory = estimateBallTrajectory(ball, enemyRobot);

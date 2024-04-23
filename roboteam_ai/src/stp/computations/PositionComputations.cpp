@@ -354,7 +354,6 @@ void PositionComputations::calculateInfoForDefendersAndWallers(std::unordered_ma
                 additionalWallerNames.emplace_back(activeDefenderNames[i]);
             } else {
                 stpInfos[activeDefenderNames[i]].setPositionToDefend(enemies[assignments[i]]);
-                stpInfos[activeDefenderNames[i]].setBlockDistance(BlockDistance::ROBOTRADIUS);
             }
         }
     }

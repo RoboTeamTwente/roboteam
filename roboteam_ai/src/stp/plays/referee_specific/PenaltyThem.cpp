@@ -49,10 +49,7 @@ Dealer::FlagMap PenaltyThem::decideRoleFlags() const noexcept {
     return flagMap;
 }
 
-void PenaltyThem::calculateInfoForRoles() noexcept {
-    stpInfos["keeper"].setPositionToMoveTo(field.leftGoalArea.rightLine().center());
-    stpInfos["keeper"].setEnemyRobot(world->getWorld()->getRobotClosestToBall(world::them));
-}
+void PenaltyThem::calculateInfoForRoles() noexcept { stpInfos["keeper"].setPositionToMoveTo(field.leftGoalArea.rightLine().center()); }
 
 const char* PenaltyThem::getName() const { return "Penalty Them"; }
 }  // namespace rtt::ai::stp::play

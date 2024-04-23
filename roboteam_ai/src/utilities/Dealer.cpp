@@ -249,8 +249,7 @@ double Dealer::getRobotScoreForDistance(const stp::StpInfo &stpInfo, const v::Ro
     if (stpInfo.getRoleName().find("halt") != std::string::npos || stpInfo.getRoleName() == "keeper") return 0;
 
     std::optional<Vector2> target_position;
-    // Search for position in getEnemyRobot, getPositionToDefend, and getPositionToMoveTo
-    if (stpInfo.getEnemyRobot().has_value()) target_position = stpInfo.getEnemyRobot().value()->getPos();
+    // Search for position in getPositionToDefend, and getPositionToMoveTo
     if (stpInfo.getPositionToDefend().has_value()) target_position = stpInfo.getPositionToDefend().value();
     if (stpInfo.getPositionToShootAt().has_value()) target_position = world.getBall()->get()->position;
     if (stpInfo.getPositionToMoveTo().has_value()) target_position = stpInfo.getPositionToMoveTo().value();

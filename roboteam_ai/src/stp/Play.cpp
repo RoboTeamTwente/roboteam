@@ -114,10 +114,6 @@ void Play::refreshData() noexcept {
             // Assign the new BallView and field
             stpInfo->second.setBall(newBallView);
             stpInfo->second.setField(field);
-
-            if (stpInfo->second.getEnemyRobot().has_value()) {
-                stpInfo->second.setEnemyRobot(world->getWorld()->getRobotForId(stpInfo->second.getEnemyRobot()->get()->getId(), false));
-            }
         }
     }
 }

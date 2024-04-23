@@ -15,11 +15,6 @@ enum class BlockDistance { ROBOTRADIUS, CLOSE, PARTWAY, HALFWAY, FAR };
 enum class KickOrChip { KICK, CHIP };
 
 /**
- * @brief The PIDType to be used by this robot for path planning/tracking
- */
-enum class PIDType { DEFAULT, RECEIVE, INTERCEPT, KEEPER, KEEPER_INTERCEPT };
-
-/**
  * @brief The type of shot this robot should use. Used for determining kick/chip velocity
  */
 enum class ShotType { PASS, TARGET, MAX };

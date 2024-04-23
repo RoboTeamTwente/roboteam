@@ -162,16 +162,6 @@ bool Constants::ROBOT_HAS_KICKER(int id) { return ROBOTS_WITH_KICKER()[id]; }
 
 int Constants::ROBOT_MAXIMUM_KICK_TIME(int id) { return ROBOTS_MAXIMUM_KICK_TIME()[id]; }
 
-pidVals Constants::standardNumTreePID() { return GameSettings::getRobotHubMode() == net::RobotHubMode::BASESTATION ? pidVals(2.5, 0.0, 0) : pidVals(2.5, 0.0, 0); }
-
-pidVals Constants::standardReceivePID() { return GameSettings::getRobotHubMode() == net::RobotHubMode::BASESTATION ? pidVals(4, 0, 0) : pidVals(4, 0, 0); }
-
-pidVals Constants::standardInterceptPID() { return GameSettings::getRobotHubMode() == net::RobotHubMode::BASESTATION ? pidVals(6, 0, 1) : pidVals(6, 0, 1); }
-
-pidVals Constants::standardKeeperPID() { return GameSettings::getRobotHubMode() == net::RobotHubMode::BASESTATION ? pidVals(2.5, 0.0, 0) : pidVals(2.5, 0.0, 0); }
-
-pidVals Constants::standardKeeperInterceptPID() { return GameSettings::getRobotHubMode() == net::RobotHubMode::BASESTATION ? pidVals(6, 0, 1) : pidVals(6, 0, 1); }
-
 RuleSet Constants::RULESET_DEFAULT() { return {RuleSetName::DEFAULT, 4.0}; }
 RuleSet Constants::RULESET_HALT() { return {RuleSetName::HALT, 0.0}; }
 RuleSet Constants::RULESET_STOP() { return {RuleSetName::STOP, 1.3}; }

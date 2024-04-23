@@ -54,8 +54,8 @@ class CollisionCalculations {
      * @param computedPaths The computed paths of the robots.
      * @return The first collision time with a moving object.
      */
-    static double getFirstCollisionTimeMovingObject(const Trajectory2D &Trajectory, stp::AvoidObjects avoidObjects, int &robotId,
-                                                    const world::World *world, const std::unordered_map<int, std::vector<Vector2>> &computedPaths);
+    static double getFirstCollisionTimeMovingObject(const Trajectory2D &Trajectory, stp::AvoidObjects avoidObjects, int &robotId, const world::World *world,
+                                                    const std::unordered_map<int, std::vector<Vector2>> &computedPaths);
 
     /**
      * @brief Gets the first collision time with any object.
@@ -67,8 +67,8 @@ class CollisionCalculations {
      * @param computedPaths The computed paths of the robots.
      * @return The first collision time with any object.
      */
-    static double getFirstCollisionTime(const Trajectory2D &Trajectory, stp::AvoidObjects avoidObjects, const Field &field, int &robotId,
-                                        const world::World *world, const std::unordered_map<int, std::vector<Vector2>> &computedPaths);
+    static double getFirstCollisionTime(const Trajectory2D &Trajectory, stp::AvoidObjects avoidObjects, const Field &field, int &robotId, const world::World *world,
+                                        const std::unordered_map<int, std::vector<Vector2>> &computedPaths);
 
     /**
      * @brief Checks if a trajectory collides with any object.

@@ -34,12 +34,11 @@ std::optional<StpInfo> KeeperBlockBall::calculateInfoForSkill(StpInfo const &inf
     if (!skillStpInfo.getField() || !skillStpInfo.getBall() || !skillStpInfo.getRobot() || !skillStpInfo.getCurrentWorld()) return std::nullopt;
 
     skillStpInfo.setShouldAvoidOutOfField(false);
-    auto targetPosition = calculateTargetPosition(info);
+    Vector2 targetPosition = calculateTargetPosition(info);
     Vector2 newBallPos;
-    skillStpInfo.setPositionToMoveTo(targetPosition.first);
-    skillStpInfo.setPidType(targetPosition.second);
+    skillStpInfo.setPositionToMoveTo(targetPosition);
 
-    auto targetAngle = calculateTargetAngle(info.getBall().value(), targetPosition.first);
+    auto targetAngle = calculateTargetAngle(info.getBall().value(), targetPosition);
     skillStpInfo.setAngle(targetAngle);
 
     return skillStpInfo;
@@ -98,7 +97,8 @@ bool KeeperBlockBall::isBallHeadingTowardsOurGoal(const HalfLine &ballTrajectory
     // Ball heads towards goal if the intersection is near our goal
     return intersectionWithGoalLine.has_value() && goalLineSegment.distanceToLine(intersectionWithGoalLine.value()) < MAX_DISTANCE_HEADING_TOWARDS_GOAL;
 }
-std::pair<Vector2, PIDType> KeeperBlockBall::calculateTargetPosition(const StpInfo info) noexcept {
+
+Vector2 KeeperBlockBall::calculateTargetPosition(const StpInfo info) noexcept {
     const auto &field = info.getField().value();
     const auto &ball = info.getBall().value();
     const auto &enemyRobot = info.getEnemyRobot();
@@ -119,28 +119,25 @@ std::pair<Vector2, PIDType> KeeperBlockBall::calculateTargetPosition(const StpIn
             auto maxAcceleration = Constants::MAX_ACC_UPPER();
             auto newTarget =
                 control::OvershootComputations::overshootingDestination(startPosition, targetPosition.value(), startVelocity, maxVelocity, maxAcceleration, targetTime);
-            if (ball->velocity.length() > control_constants::BALL_IS_MOVING_SLOW_LIMIT) {
-                return {newTarget, PIDType::KEEPER};
-            }
-            return {newTarget, PIDType::DEFAULT};
+            return newTarget;
         }
     }
 
     KeeperInterceptionInfo keeperInterceptionInfo = InterceptionComputations::calculateKeeperInterceptionInfo(world, robot);
     if (keeperInterceptionInfo.canIntercept) {
-        return {keeperInterceptionInfo.interceptLocation, PIDType::KEEPER};
+        return keeperInterceptionInfo.interceptLocation;
     }
 
     if (ball->position.x >= field.leftGoalArea.rightLine().center().x - MAX_DISTANCE_BALL_BEHIND_GOAL) {
         auto ballGoalLine = Line(ball->position, field.leftGoalArea.rightLine().center() - Vector2(PROJECT_BALL_DISTANCE_TO_GOAL, 0));
         auto targetPosition = keepersLineSegment.getClosestPointToLine(ballGoalLine);
         if (targetPosition.has_value()) {
-            return {targetPosition.value(), PIDType::DEFAULT};
+            return targetPosition.value();
         }
     }
 
     // Default case: go to the center of the goal
-    return {Vector2(keepersLineSegment.start.x, 0), PIDType::DEFAULT};
+    return Vector2(keepersLineSegment.start.x, 0);
 }
 
 Angle KeeperBlockBall::calculateTargetAngle(const world::view::BallView &ball, const Vector2 &targetKeeperPosition) {

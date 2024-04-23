@@ -20,10 +20,9 @@ Status GoToPos::onUpdate(const StpInfo &info) noexcept {
         targetPos = PositionComputations::calculateAvoidBallPosition(targetPos, ballLocation, info.getField().value());
     }
 
-
     command.velocity = info.getCurrentWorld()->getRobotPositionController()->computeAndTrackTrajectory(
         info.getCurrentWorld(), info.getField().value(), info.getRobot().value()->getId(), info.getRobot().value()->getPos(), info.getRobot().value()->getVel(), targetPos,
-        info.getMaxRobotVelocity(), info.getPidType().value(), avoidObj);
+        info.getMaxRobotVelocity(), avoidObj);
 
     auto distanceToTarget = (info.getRobot().value()->getPos() - targetPos).length();
     if (distanceToTarget <= 0.5) {

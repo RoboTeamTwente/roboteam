@@ -64,9 +64,6 @@ struct StpInfo {
     /// This function is used in a lambda, [[maybe_unused]] is to suppress 'unused' warnings
     [[maybe_unused]] void setCurrentWorld(world::World* world) { currentWorld = world; }
 
-    const std::optional<PIDType>& getPidType() const { return PidType; }
-    void setPidType(const std::optional<PIDType>& pidType) { PidType = pidType; }
-
     void setRoleScore(const std::optional<uint8_t>& RoleScore) { roleScore = RoleScore; }
 
     double getMaxRobotVelocity() const { return maxRobotVelocity; }
@@ -189,11 +186,6 @@ struct StpInfo {
      * Set the shot to be a kick or chip
      */
     std::optional<KickOrChip> kickOrChip;
-
-    /**
-     * Enum for deciding which PID should be chosen
-     */
-    std::optional<PIDType> PidType{PIDType::DEFAULT};
 
     /**
      * Optional roleScore value to be used in play score determination

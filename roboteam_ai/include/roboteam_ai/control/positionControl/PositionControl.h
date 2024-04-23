@@ -1,9 +1,7 @@
 #ifndef RTT_POSITIONCONTROL_H
 #define RTT_POSITIONCONTROL_H
 
-
 #include "BBTrajectories/Trajectory2D.h"
-#include "control/positionControl/pathTracking/BBTPathTracking.h"
 #include "utilities/GameStateManager.hpp"
 #include "utilities/StpInfoEnums.h"
 #include "world/FieldComputations.h"
@@ -20,14 +18,10 @@ class PositionControl {
     static constexpr double MIN_SCALE = 0.5;        /**< The minimum scale of the intermediate point with respect to start target distance */
     static constexpr double MAX_SCALE = 1.5;        /**< The maximum scale of the intermediate point with respect to start target distance */
     static constexpr int NUM_SUB_DESTINATIONS = 5;  /**< The number of sub destinations to create */
-    BBTPathTracking pathTrackingAlgorithmBBT;       /**< Tracks the BBT path */
 
-    std::unordered_map<int, Trajectory2D> computedTrajectories;                            /**< Map of computed trajectories for each robot */
-    std::unordered_map<int, std::vector<Vector2>> computedPaths;                           /**< Map of computed paths for each robot */
-    std::unordered_map<int, std::vector<Vector2>> computedPathsVel;                        /**< Map of computed velocities for each robot */
-    std::unordered_map<int, std::vector<std::pair<Vector2, Vector2>>> computedPathsPosVel; /**< Map of pairs containing position and velocity for each robot */
-    std::unordered_map<int, int> completedTimeSteps;                                       /**< Map of completed time steps for each robot */
-    std::unordered_map<int, Vector2> lastUsedNormalizedPoints;                             /**< Map of last used normalized points for each robot */
+    std::unordered_map<int, Trajectory2D> computedTrajectories;  /**< Map of computed trajectories for each robot */
+    std::unordered_map<int, std::vector<Vector2>> computedPaths; /**< Map of computed paths for each robot */
+    std::unordered_map<int, Vector2> lastUsedNormalizedPoints;   /**< Map of last used normalized points for each robot */
 
    public:
     /**
@@ -47,11 +41,10 @@ class PositionControl {
      * @param currentVelocity its velocity
      * @param targetPosition the desired position that the robot has to reach
      * @param maxRobotVelocity the maximum velocity that the robot is allowed to have
-     * @param pidType The desired PID type (intercept, regular, keeper etc.)
      * @return A RobotCommand and optional with the location of the first collision on the path
      */
     Vector2 computeAndTrackTrajectory(const rtt::world::World *world, const rtt::Field &field, int robotId, Vector2 currentPosition, Vector2 currentVelocity,
-                                           Vector2 targetPosition, double maxRobotVelocity, stp::PIDType pidType, stp::AvoidObjects avoidObjects);
+                                      Vector2 targetPosition, double maxRobotVelocity, stp::AvoidObjects avoidObjects);
 
     /**
      * @brief Handles the collision with the ball at the current position. This function will calculate a new target, moving away from the ball as quickly as possible.

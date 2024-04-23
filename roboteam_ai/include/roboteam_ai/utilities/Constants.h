@@ -9,8 +9,6 @@
 
 namespace rtt::ai {
 
-typedef std::tuple<double, double, double> pidVals; /**< Defenition of the pidVals tuple. This is used for storing and using pid values. Do not ask me why it has to be a tuple. */
-
 /**
  * @brief Class that defines the constants used in this code.
  * These constants are stored here so that we don't have to redefine them everytime we use them. Having them in one place also gives a lot of consistency.
@@ -62,7 +60,7 @@ class Constants {
     static double HAS_BALL_ANGLE();                               /** The angle at which the robot is considered to have the ball */
 
     /// REF STATES ///
-    static constexpr double MAX_VEL() { return 1.5; }; /**< Maximum allowed velocity */
+    static constexpr double MAX_VEL() { return 4.0; }; /**< Maximum allowed velocity */
     static int DEFAULT_KEEPER_ID();                    /**< Default ID of the keeper */
     static double PENALTY_DISTANCE_BEHIND_BALL();      /**< The minimum distance the robots have to be behind the ball during a penalty */
 
@@ -77,13 +75,6 @@ class Constants {
     static bool ROBOT_HAS_WORKING_DRIBBLER_ENCODER(int id); /**< Checks whether the given robot has a working dribbler encoder */
     static bool ROBOT_HAS_KICKER(int id);                   /**< Checks whether the given robot has a working kicker */
     static int ROBOT_MAXIMUM_KICK_TIME(int id);             /**< Checks the time the given robot need to charge the kicker */
-
-    // Default PID values for the gotoposses/interface
-    static pidVals standardNumTreePID();         /**< The standard PID values for NumTree */
-    static pidVals standardReceivePID();         /**< The standard PID values for Receive */
-    static pidVals standardInterceptPID();       /**< The standard PID values for Intercept */
-    static pidVals standardKeeperPID();          /**< The standard PID values for Keeper*/
-    static pidVals standardKeeperInterceptPID(); /**< The standard PID values for KeeperIntercept */
 
     static RuleSet RULESET_DEFAULT();
     static RuleSet RULESET_HALT();

@@ -75,12 +75,12 @@ class KeeperBlockBall : public Tactic {
     static bool isBallHeadingTowardsOurGoal(const HalfLine &ballTrajectory, const Field &field);
 
     /**
-     * @brief Calculates the position for the keeper and the PID type with which that position should be achieved
+     * @brief Calculates the position for the keeper
      * PID type is different for intercepting and kicking (coarse and fast or fine and slower control)
      * @param info the StpInfo struct
-     * @return Target position for the keeper and the corresponding PID type
+     * @return Target position for the keeper
      */
-    static std::pair<Vector2, PIDType> calculateTargetPosition(const StpInfo info) noexcept;
+    static Vector2 calculateTargetPosition(const StpInfo info) noexcept;
 
     /**
      * @brief Calculates the angle the robot should have

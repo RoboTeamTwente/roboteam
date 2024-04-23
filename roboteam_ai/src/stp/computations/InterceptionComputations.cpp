@@ -36,7 +36,7 @@ KeeperInterceptionInfo InterceptionComputations::calculateKeeperInterceptionInfo
                 return keeperInterceptionInfo;
             }
             // If we can reach the ball in time, we will intercept
-            if (Trajectory2D(keeper->getPos(), keeper->getVel(), futureBallPosition, maxRobotVelocity, ai::Constants::MAX_ACC_UPPER()).getTotalTime() < loopTime) {
+            if (Trajectory2D(keeper->getPos(), keeper->getVel(), futureBallPosition, maxRobotVelocity, ai::Constants::MAX_ACC()).getTotalTime() < loopTime) {
                 keeperInterceptionInfo.interceptLocation = futureBallPosition;
                 keeperInterceptionInfo.canIntercept = true;
                 return keeperInterceptionInfo;
@@ -71,7 +71,7 @@ InterceptionInfo InterceptionComputations::calculateInterceptionInfo(const std::
 
         double minTimeToTarget = std::numeric_limits<double>::max();
         for (const auto &robot : ourRobots) {
-            auto trajectory = Trajectory2D(robot->getPos(), robot->getVel(), targetPosition, maxRobotVelocity, ai::Constants::MAX_ACC_UPPER());
+            auto trajectory = Trajectory2D(robot->getPos(), robot->getVel(), targetPosition, maxRobotVelocity, ai::Constants::MAX_ACC());
             if (trajectory.getTotalTime() < minTimeToTarget) {
                 minTimeToTarget = trajectory.getTotalTime();
                 interceptionInfo.interceptId = robot->getId();

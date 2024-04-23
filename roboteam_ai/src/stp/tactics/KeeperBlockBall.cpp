@@ -116,7 +116,7 @@ Vector2 KeeperBlockBall::calculateTargetPosition(const StpInfo info) noexcept {
             auto startPosition = robot->getPos();
             auto startVelocity = robot->getVel();
             auto maxVelocity = info.getMaxRobotVelocity();
-            auto maxAcceleration = Constants::MAX_ACC_UPPER();
+            auto maxAcceleration = Constants::MAX_ACC();
             auto newTarget =
                 control::OvershootComputations::overshootingDestination(startPosition, targetPosition.value(), startVelocity, maxVelocity, maxAcceleration, targetTime);
             return newTarget;

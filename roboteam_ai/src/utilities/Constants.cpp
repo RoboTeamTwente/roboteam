@@ -26,13 +26,7 @@ double Constants::MIN_ANGLE() { return -M_PI; }
 
 double Constants::MAX_ANGLE() { return M_PI; }
 
-double Constants::MAX_ACC_UPPER() { return 3.5; }
-
-double Constants::MAX_ACC_LOWER() { return 3.5; }
-
-double Constants::MAX_DEC_UPPER() { return MAX_ACC_UPPER(); }  // magic number
-
-double Constants::MAX_DEC_LOWER() { return MAX_ACC_LOWER(); }  // magic number
+double Constants::MAX_ACC() { return 3.5; }
 
 // The max distance the ball can be from the robot for the robot to have the ball
 double Constants::HAS_BALL_DISTANCE() { return (GameSettings::getRobotHubMode() == net::RobotHubMode::BASESTATION) ? 0.11 : 0.12; }
@@ -130,28 +124,6 @@ std::map<int, bool> Constants::ROBOTS_WITH_KICKER() {
     return kickerRobots;
 }
 
-std::map<int, float> Constants::ROBOTS_MAXIMUM_KICK_TIME() {
-    static std::map<int, float> maximumKickTimes;
-    maximumKickTimes[0] = 25.0;
-    maximumKickTimes[1] = 35.0;  // Tested: 6.1
-    maximumKickTimes[2] = 25.0;  // Tested
-    maximumKickTimes[3] = 25.0;
-    maximumKickTimes[4] = 25.0;
-    maximumKickTimes[5] = 25.0;  // Tested
-    maximumKickTimes[6] = 25.0;
-    maximumKickTimes[7] = 20.0;  // Tested: 5.5
-    maximumKickTimes[8] = 40.0;  // Tested: 5 is actualy 60
-    maximumKickTimes[9] = 25.0;  // Tested: idk
-    maximumKickTimes[10] = 25.0;
-    maximumKickTimes[11] = 25.0;
-    maximumKickTimes[12] = 25.0;
-    maximumKickTimes[13] = 40.0;  // Tested: 4.8 is actually 60
-    maximumKickTimes[14] = 25.0;
-    maximumKickTimes[15] = 25.0;
-
-    return maximumKickTimes;
-}
-
 bool Constants::ROBOT_HAS_WORKING_BALL_SENSOR(int id) { return ROBOTS_WITH_WORKING_BALL_SENSOR()[id]; }
 
 bool Constants::ROBOT_HAS_WORKING_DRIBBLER(int id) { return ROBOTS_WITH_WORKING_DRIBBLER()[id]; }
@@ -159,8 +131,6 @@ bool Constants::ROBOT_HAS_WORKING_DRIBBLER(int id) { return ROBOTS_WITH_WORKING_
 bool Constants::ROBOT_HAS_WORKING_DRIBBLER_ENCODER(int id) { return ROBOTS_WITH_WORKING_DRIBBLER_ENCODER()[id]; }
 
 bool Constants::ROBOT_HAS_KICKER(int id) { return ROBOTS_WITH_KICKER()[id]; }
-
-int Constants::ROBOT_MAXIMUM_KICK_TIME(int id) { return ROBOTS_MAXIMUM_KICK_TIME()[id]; }
 
 RuleSet Constants::RULESET_DEFAULT() { return {RuleSetName::DEFAULT, 4.0}; }
 RuleSet Constants::RULESET_HALT() { return {RuleSetName::HALT, 0.0}; }

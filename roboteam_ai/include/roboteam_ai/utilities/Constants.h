@@ -47,17 +47,13 @@ class Constants {
     static double MIN_ANGLE();            /**< The minimum angle the robot can have */
     static double MAX_ANGLE();            /**< The maximum angle the robot can have */
     static double MAX_ANGULAR_VELOCITY(); /**< The maximum angular velocity of the robot */
-    static double MAX_ACC_UPPER();        /**< Maximum acceleration for moving in the forward direction */
-    static double MAX_ACC_LOWER();        /**< Maximum acceleration for moving in the sideways direction */
-    static double MAX_DEC_UPPER();        /**< Maximum deceleration for moving in the forward direction */
-    static double MAX_DEC_LOWER();        /**< Maximum deceleration for moving in the sideways direction */
+    static double MAX_ACC();              /**< Maximum acceleration of the robot */
 
     /// ROBOT GEOMETRY ///
-    static constexpr double ROBOT_RADIUS() { return 0.089; };     /**< Radius of the robot */
-    static constexpr double ROBOT_RADIUS_MAX() { return 0.091; }; /**< The maximum radius any robot can have */
-    static constexpr double BALL_RADIUS() { return 0.0215; };     /**< Radius of the ball */
-    static double HAS_BALL_DISTANCE();                            /** The distance at which the robot is considered to have the ball */
-    static double HAS_BALL_ANGLE();                               /** The angle at which the robot is considered to have the ball */
+    static constexpr double ROBOT_RADIUS() { return 0.089; }; /**< Radius of the robot */
+    static constexpr double BALL_RADIUS() { return 0.0215; }; /**< Radius of the ball */
+    static double HAS_BALL_DISTANCE();                        /** The distance at which the robot is considered to have the ball */
+    static double HAS_BALL_ANGLE();                           /** The angle at which the robot is considered to have the ball */
 
     /// REF STATES ///
     static constexpr double MAX_VEL() { return 4.0; }; /**< Maximum allowed velocity */
@@ -74,7 +70,6 @@ class Constants {
     static bool ROBOT_HAS_WORKING_BALL_SENSOR(int id);      /**< Checks whether the given robot has a working ball sensor */
     static bool ROBOT_HAS_WORKING_DRIBBLER_ENCODER(int id); /**< Checks whether the given robot has a working dribbler encoder */
     static bool ROBOT_HAS_KICKER(int id);                   /**< Checks whether the given robot has a working kicker */
-    static int ROBOT_MAXIMUM_KICK_TIME(int id);             /**< Checks the time the given robot need to charge the kicker */
 
     static RuleSet RULESET_DEFAULT();
     static RuleSet RULESET_HALT();

@@ -101,10 +101,10 @@ double CollisionCalculations::getFirstCollisionTimeMovingObject(const Trajectory
             }
         }
         if (velocityOurRobot > 0.7 && avoidObjects.shouldAvoidTheirRobots) {
-            for (const auto &theirRobot : theirRobots) {
-                if ((theirRobot->getPos() + theirRobot->getVel() * 0.1 * checkPoint - positionOurRobot).length() < 2 * Constants::ROBOT_RADIUS() + additionalMargin) {
-                    return checkPoint * 0.1;
-                }
+            if (std::any_of(theirRobots.begin(), theirRobots.end(), [&](const auto& theirRobot) {
+                return (theirRobot->getPos() + theirRobot->getVel() * 0.1 * checkPoint - positionOurRobot).length() < 2 * Constants::ROBOT_RADIUS() + additionalMargin;
+            })) {
+                return checkPoint * 0.1;
             }
         }
         if (avoidObjects.shouldAvoidBall) {

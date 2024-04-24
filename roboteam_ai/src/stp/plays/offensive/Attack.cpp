@@ -83,10 +83,10 @@ void Attack::calculateInfoForRoles() noexcept {
 
 bool Attack::shouldEndPlay() noexcept {
     // If the striker has finished, the play finished successfully
-    for (const auto& role : roles) {
-        if (role != nullptr && role->getName() == "striker" && role->finished()) {
-            return true;
-        }
+    if (std::any_of(roles.begin(), roles.end(), [](const auto& role) {
+        return role != nullptr && role->getName() == "striker" && role->finished();
+    })) {
+        return true;
     }
 
     // Find id of robot with name striker

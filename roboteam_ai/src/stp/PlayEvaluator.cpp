@@ -85,8 +85,6 @@ uint8_t PlayEvaluator::updateGlobalEvaluation(GlobalEvaluation& evaluation, cons
             return stp::control_constants::FUZZY_TRUE - evaluation::BallInOurDefenseAreaAndStillGlobalEvaluation().metricCheck(world, &field);
         case GlobalEvaluation::WeHaveBall:
             return evaluation::WeHaveBallGlobalEvaluation().metricCheck(world, &field);
-        case GlobalEvaluation::WeDoNotHaveBall:
-            return stp::control_constants::FUZZY_TRUE - evaluation::WeHaveBallGlobalEvaluation().metricCheck(world, &field);
         case GlobalEvaluation::WeWillHaveBall:
             return evaluation::WeWillHaveBallGlobalEvaluation().metricCheck(world, &field);
         case GlobalEvaluation::WeWillNotHaveBall:

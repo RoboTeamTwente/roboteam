@@ -295,7 +295,7 @@ Vector2 FieldComputations::projectPointInField(const Field &field, Vector2 point
 
 Vector2 FieldComputations::projectPointOutOfDefenseArea(const Field &field, Vector2 point, bool outOurDefenseArea, bool outTheirDefenseArea) {
     auto [theirDefenseAreaMargin, ourDefenseAreaMargin] = getDefenseAreaMargin();
-    if (field.playArea.contains(point) && (!field.rightDefenseArea.contains(point, theirDefenseAreaMargin) || !outTheirDefenseArea) &&
+    if ((!field.rightDefenseArea.contains(point, theirDefenseAreaMargin) || !outTheirDefenseArea) &&
         (!field.leftDefenseArea.contains(point, ourDefenseAreaMargin) || !outOurDefenseArea))
         return point;
 
@@ -325,9 +325,7 @@ Vector2 FieldComputations::projectPointOutOfDefenseArea(const Field &field, Vect
 Vector2 FieldComputations::projectPointToValidPosition(const Field &field, Vector2 point, stp::AvoidObjects avoidObjects) {
     Vector2 projectedPos = point;
     if (avoidObjects.shouldAvoidOutOfField) projectedPos = projectPointInField(field, projectedPos);
-    if (avoidObjects.shouldAvoidOurDefenseArea) projectedPos = projectPointOutOfDefenseArea(field, projectedPos);
-    if (avoidObjects.shouldAvoidOurDefenseArea) projectedPos = projectPointOutOfDefenseArea(field, projectedPos);
-
+    projectedPos = projectPointOutOfDefenseArea(field, projectedPos, avoidObjects.shouldAvoidOurDefenseArea, avoidObjects.shouldAvoidTheirDefenseArea);
     return projectedPos;
 }
 

@@ -23,7 +23,7 @@ double CollisionCalculations::getFirstCollisionTimeMotionlessObject(const Trajec
     auto rightGoalBottomPost = LineSegment(field.rightGoalArea.bottomLeft(), field.rightGoalArea.bottomRight());
     auto rightGoalBackPost = LineSegment(field.rightGoalArea.topRight(), field.rightGoalArea.bottomRight());
 
-    for (int checkPoint = 1; checkPoint <= static_cast<int>(maxCheckPoints); checkPoint += 1) {
+    for (int checkPoint = 1; checkPoint < static_cast<int>(maxCheckPoints); checkPoint += 1) {
         auto pathLine = LineSegment(pathPoints[checkPoint - 1], pathPoints[checkPoint]);
         if (avoidObjects.shouldAvoidGoalPosts) {
             if (pathLine.closestDistanceToLineSegment(leftGoalTopPost) < Constants::ROBOT_RADIUS() ||
@@ -69,7 +69,7 @@ double CollisionCalculations::getFirstCollisionTimeMovingObject(const Trajectory
 
     double maxVel = GameStateManager::getCurrentGameState().getRuleSet().getMaxRobotVel();
 
-    for (int checkPoint = 1; checkPoint <= static_cast<int>(maxCheckPoints); checkPoint += 1) {
+    for (int checkPoint = 1; checkPoint < static_cast<int>(maxCheckPoints); checkPoint += 1) {
         auto pathLine = LineSegment(pathPoints[checkPoint - 1], pathPoints[checkPoint]);
         double velocityOurRobot = Trajectory.getVelocity(checkPoint * 0.1).length();
         auto positionOurRobot = Trajectory.getPosition(checkPoint * 0.1);

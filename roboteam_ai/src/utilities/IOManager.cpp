@@ -136,9 +136,15 @@ proto::State IOManager::getState() {
     return copy;
 }
 
-uint64_t IOManager::getStateTimeMs() { return stateTimeMs; }
+uint64_t IOManager::getStateTimeMs() { 
+    std::lock_guard<std::mutex> lock(stateMutex);  // read lock
+    return stateTimeMs; 
+}
 
-uint64_t IOManager::getStateAgeMs() { return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count() - stateTimeMs; }
+uint64_t IOManager::getStateAgeMs() { 
+    std::lock_guard<std::mutex> lock(stateMutex);  // read lock
+    return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count() - stateTimeMs; 
+}
 
 bool IOManager::obtainTeamColorChannel(bool toYellowChannel) {
     bool obtainedChannel;

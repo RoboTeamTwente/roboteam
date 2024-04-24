@@ -8,6 +8,7 @@
 namespace rtt::robothub {
 
 RobotHubStatistics::RobotHubStatistics() {
+    std::lock_guard<std::mutex> lock(robotStatsMutex);
     this->startTime = std::chrono::steady_clock::now();
 
     // Fill arrays with 0
@@ -25,6 +26,7 @@ RobotHubStatistics::RobotHubStatistics() {
 }
 
 void RobotHubStatistics::resetValues() {
+    std::lock_guard<std::mutex> lock(robotStatsMutex);
     this->yellowCommandsSent.fill(0);
     this->yellowFeedbackReceived.fill(0);
     this->blueCommandsSent.fill(0);
@@ -39,6 +41,7 @@ void RobotHubStatistics::resetValues() {
 }
 
 void RobotHubStatistics::print() const {
+    std::lock_guard<std::mutex> lock(robotStatsMutex);
     std::array<std::string, MAX_ROBOT_STATISTICS> y;  // Contains the strings for yellow robots
     std::array<std::string, MAX_ROBOT_STATISTICS> b;  // Contains the strings for blue robots
 
@@ -75,10 +78,12 @@ void RobotHubStatistics::print() const {
 }
 
 void RobotHubStatistics::incrementCommandsReceivedCounter(int id, rtt::Team color) {
+    std::lock_guard<std::mutex> lock(robotStatsMutex);
     auto& arrayToIncrement = color == rtt::Team::YELLOW ? this->yellowCommandsSent : this->blueCommandsSent;
     arrayToIncrement[id]++;
 }
 void RobotHubStatistics::incrementFeedbackReceivedCounter(int id, rtt::Team color) {
+    std::lock_guard<std::mutex> lock(robotStatsMutex);
     auto& arrayToIncrement = color == rtt::Team::YELLOW ? this->yellowFeedbackReceived : this->blueFeedbackReceived;
     arrayToIncrement[id]++;
 }

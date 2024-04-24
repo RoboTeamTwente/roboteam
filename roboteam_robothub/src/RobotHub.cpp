@@ -41,7 +41,8 @@ RobotHub::RobotHub(bool shouldLog, bool logInMarpleFormat) {
         std::scoped_lock<std::mutex> lock(this->basestationManagerMutex);
         this->basestationManager = std::make_unique<basestation::BasestationManager>();
         this->basestationManager->setFeedbackCallback([&](const REM_RobotFeedback &feedback, rtt::Team color) { this->handleRobotFeedbackFromBasestation(feedback, color); });
-        // this->basestationManager->setRobotStateInfoCallback([&](const REM_RobotStateInfo &robotStateInfo, rtt::Team color) { this->handleRobotStateInfo(robotStateInfo, color); });
+        // this->basestationManager->setRobotStateInfoCallback([&](const REM_RobotStateInfo &robotStateInfo, rtt::Team color) { this->handleRobotStateInfo(robotStateInfo, color);
+        // }); 
         // this->basestationManager->setBasestationLogCallback([&](const std::string &log, rtt::Team color) { this->handleBasestationLog(log, color); });
     }
 
@@ -80,7 +81,7 @@ bool RobotHub::initializeNetworkers() {
 
 void RobotHub::sendCommandsToSimulator(const rtt::RobotCommands &commands, rtt::Team color) {
     std::lock_guard<std::mutex> lock(simulatorManagerMutex);
-    
+
     if (this->simulatorManager == nullptr) return;
 
     simulation::RobotControlCommand simCommand;
@@ -108,18 +109,22 @@ void RobotHub::sendCommandsToSimulator(const rtt::RobotCommands &commands, rtt::
     auto bytesSent = this->simulatorManager->sendRobotControlCommand(simCommand, color);
 
     // Update bytes sent/packets dropped statistics
-    if (bytesSent > 0) {
-        if (color == rtt::Team::YELLOW) {
-            this->statistics.yellowTeamBytesSent += bytesSent;
+    {
+        this->statistics.lockRobotStatsMutex();
+        if (bytesSent > 0) {
+            if (color == rtt::Team::YELLOW) {
+                this->statistics.yellowTeamBytesSent += bytesSent;
+            } else {
+                this->statistics.blueTeamBytesSent += bytesSent;
+            }
         } else {
-            this->statistics.blueTeamBytesSent += bytesSent;
+            if (color == rtt::Team::YELLOW) {
+                this->statistics.yellowTeamPacketsDropped++;
+            } else {
+                this->statistics.blueTeamPacketsDropped++;
+            }
         }
-    } else {
-        if (color == rtt::Team::YELLOW) {
-            this->statistics.yellowTeamPacketsDropped++;
-        } else {
-            this->statistics.blueTeamPacketsDropped++;
-        }
+        this->statistics.unlockRobotStatsMutex();
     }
 }
 
@@ -169,19 +174,23 @@ void RobotHub::sendCommandsToBasestation(const rtt::RobotCommands &commands, rtt
 
         // Update statistics
         this->statistics.incrementCommandsReceivedCounter(robotCommand.id, color);
+        {
+            this->statistics.lockRobotStatsMutex();
 
-        if (bytesSent > 0) {
-            if (color == rtt::Team::YELLOW) {
-                this->statistics.yellowTeamBytesSent += bytesSent;
+            if (bytesSent > 0) {
+                if (color == rtt::Team::YELLOW) {
+                    this->statistics.yellowTeamBytesSent += bytesSent;
+                } else {
+                    this->statistics.blueTeamBytesSent += bytesSent;
+                }
             } else {
-                this->statistics.blueTeamBytesSent += bytesSent;
+                if (color == rtt::Team::YELLOW) {
+                    this->statistics.yellowTeamPacketsDropped++;
+                } else {
+                    this->statistics.blueTeamPacketsDropped++;
+                }
             }
-        } else {
-            if (color == rtt::Team::YELLOW) {
-                this->statistics.yellowTeamPacketsDropped++;
-            } else {
-                this->statistics.blueTeamPacketsDropped++;
-            }
+            this->statistics.unlockRobotStatsMutex();
         }
     }
 }
@@ -281,8 +290,10 @@ void RobotHub::handleRobotFeedbackFromBasestation(const REM_RobotFeedback &feedb
 }
 
 bool RobotHub::sendRobotFeedback(const rtt::RobotsFeedback &feedback) {
+    this->statistics.lockRobotStatsMutex();
     auto bytesSent = this->robotFeedbackPublisher->publish(feedback);
     this->statistics.feedbackBytesSent += bytesSent;
+    this->statistics.unlockRobotStatsMutex();
     return bytesSent > 0;
 }
 
@@ -330,7 +341,9 @@ int main(int argc, char *argv[]) {
 
     while (true) {
         std::this_thread::sleep_for(std::chrono::seconds(1));
-        app.getStatistics().print();
-        app.resetStatistics();
+        {
+            app.getStatistics().print();
+            app.resetStatistics();
+        }
     }
 }

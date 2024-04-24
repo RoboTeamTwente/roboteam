@@ -52,7 +52,7 @@ class RobotHub {
     void sendCommandsToBasestation(const rtt::RobotCommands &commands, rtt::Team color);
 
     std::mutex onRobotCommandsMutex;  // Guards the onRobotCommands function, as this can be called from two callback threads
-    std::mutex modeMutex; // Guards the mode variable
+    std::mutex modeMutex;             // Guards the mode variable
     std::mutex simulatorManagerMutex;
     std::mutex basestationManagerMutex;
     void onRobotCommands(const rtt::RobotCommands &commands, rtt::Team color);

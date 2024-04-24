@@ -27,21 +27,29 @@ RobotHub::RobotHub(bool shouldLog, bool logInMarpleFormat) {
     if (!this->initializeNetworkers()) {
         throw FailedToInitializeNetworkersException();
     }
+    {
+        std::scoped_lock<std::mutex> lock(this->modeMutex);
+        this->mode = rtt::net::RobotHubMode::UNKNOWN;
+    }
 
-    this->mode = rtt::net::RobotHubMode::UNKNOWN;
-
-    this->simulatorManager = std::make_unique<simulation::SimulatorManager>(config);
-    this->simulatorManager->setRobotControlFeedbackCallback([&](const simulation::RobotControlFeedback &feedback) { this->handleRobotFeedbackFromSimulator(feedback); });
-
-    this->basestationManager = std::make_unique<basestation::BasestationManager>();
-    this->basestationManager->setFeedbackCallback([&](const REM_RobotFeedback &feedback, rtt::Team color) { this->handleRobotFeedbackFromBasestation(feedback, color); });
-    // this->basestationManager->setRobotStateInfoCallback([&](const REM_RobotStateInfo &robotStateInfo, rtt::Team color) { this->handleRobotStateInfo(robotStateInfo, color); });
-    // this->basestationManager->setBasestationLogCallback([&](const std::string &log, rtt::Team color) { this->handleBasestationLog(log, color); });
+    {
+        std::scoped_lock<std::mutex> lock(this->simulatorManagerMutex);
+        this->simulatorManager = std::make_unique<simulation::SimulatorManager>(config);
+        this->simulatorManager->setRobotControlFeedbackCallback([&](const simulation::RobotControlFeedback &feedback) { this->handleRobotFeedbackFromSimulator(feedback); });
+    }
+    {
+        std::scoped_lock<std::mutex> lock(this->basestationManagerMutex);
+        this->basestationManager = std::make_unique<basestation::BasestationManager>();
+        this->basestationManager->setFeedbackCallback([&](const REM_RobotFeedback &feedback, rtt::Team color) { this->handleRobotFeedbackFromBasestation(feedback, color); });
+        // this->basestationManager->setRobotStateInfoCallback([&](const REM_RobotStateInfo &robotStateInfo, rtt::Team color) { this->handleRobotStateInfo(robotStateInfo, color); });
+        // this->basestationManager->setBasestationLogCallback([&](const std::string &log, rtt::Team color) { this->handleBasestationLog(log, color); });
+    }
 
     // if (shouldLog) { this->logger = RobotHubLogger(logInMarpleFormat); }
 }
 
 const RobotHubStatistics &RobotHub::getStatistics() {
+    std::lock_guard<std::mutex> lock(basestationManagerMutex);
     this->statistics.basestationManagerStatus = this->basestationManager->getStatus();
     return this->statistics;
 }
@@ -71,6 +79,8 @@ bool RobotHub::initializeNetworkers() {
 }
 
 void RobotHub::sendCommandsToSimulator(const rtt::RobotCommands &commands, rtt::Team color) {
+    std::lock_guard<std::mutex> lock(simulatorManagerMutex);
+    
     if (this->simulatorManager == nullptr) return;
 
     simulation::RobotControlCommand simCommand;
@@ -151,7 +161,11 @@ void RobotHub::sendCommandsToBasestation(const rtt::RobotCommands &commands, rtt
         // command.angularVelocity = 1;
         // command.useAbsoluteAngle = 0;
 
-        int bytesSent = this->basestationManager->sendRobotCommand(command, color);
+        int bytesSent = 0;
+        {
+            std::lock_guard<std::mutex> lock(basestationManagerMutex);
+            bytesSent = this->basestationManager->sendRobotCommand(command, color);
+        }
 
         // Update statistics
         this->statistics.incrementCommandsReceivedCounter(robotCommand.id, color);
@@ -173,7 +187,8 @@ void RobotHub::sendCommandsToBasestation(const rtt::RobotCommands &commands, rtt
 }
 
 void RobotHub::onRobotCommands(const rtt::RobotCommands &commands, rtt::Team color) {
-    std::scoped_lock<std::mutex> lock(this->onRobotCommandsMutex);
+    std::lock_guard<std::mutex> lock(this->onRobotCommandsMutex);
+    std::lock_guard<std::mutex> lockMode(this->modeMutex);
 
     switch (this->mode) {
         case rtt::net::RobotHubMode::SIMULATOR:
@@ -196,6 +211,10 @@ void RobotHub::onRobotCommands(const rtt::RobotCommands &commands, rtt::Team col
 void RobotHub::onSettings(const proto::GameSettings &_settings) {
     this->settings = _settings;
     rtt::net::RobotHubMode newMode = rtt::net::robotHubModeFromProto(_settings.robot_hub_mode());
+    {
+        std::lock_guard<std::mutex> lock(this->modeMutex);
+        this->mode = newMode;
+    }
     {
         std::lock_guard<std::mutex> lock(this->statistics.robotHubModeMutex);
         this->statistics.robotHubMode = newMode;

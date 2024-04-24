@@ -20,7 +20,7 @@ class RobotHubStatistics {
     basestation::BasestationManagerStatus basestationManagerStatus{};
 
     rtt::net::RobotHubMode robotHubMode;
-    mutable std::mutex robotHubModeMutex; // Mutex to protect the robotHubMode
+    mutable std::mutex robotHubModeMutex;  // Mutex to protect the robotHubMode
 
     std::size_t yellowTeamBytesSent;
     std::size_t blueTeamBytesSent;

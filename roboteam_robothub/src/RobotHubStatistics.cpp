@@ -125,6 +125,7 @@ std::string RobotHubStatistics::getRunTime() const {
 }
 
 std::string RobotHubStatistics::getRobotHubMode() const {
+    std::lock_guard<std::mutex> lock(robotHubModeMutex);
     std::string mode = std::string(rtt::net::robotHubModeToString(this->robotHubMode));
     std::string text = formatString("%-11s", mode.c_str());
     return text;

@@ -92,12 +92,6 @@ class IOManager {
     proto::State getState();
 
     /**
-     * @brief Get the time of the last state update in milliseconds since epoch
-     * @return The time
-     */
-    uint64_t getStateTimeMs();
-
-    /**
      * @brief Get the age of the last state update in milliseconds
      * @return The age
      */

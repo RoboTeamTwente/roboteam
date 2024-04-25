@@ -55,6 +55,7 @@ class RobotHub {
     std::mutex modeMutex;             // Guards the mode variable
     std::mutex simulatorManagerMutex;
     std::mutex basestationManagerMutex;
+    std::mutex robotFeedbackPublisherMutex;
     void onRobotCommands(const rtt::RobotCommands &commands, rtt::Team color);
 
     void onSettings(const proto::GameSettings &setting);

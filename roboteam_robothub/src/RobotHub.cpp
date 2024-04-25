@@ -68,8 +68,10 @@ bool RobotHub::initializeNetworkers() {
             std::make_unique<rtt::net::RobotCommandsYellowSubscriber>([&](const rtt::RobotCommands &commands) { this->onRobotCommands(commands, rtt::Team::YELLOW); });
 
         this->settingsSubscriber = std::make_unique<rtt::net::SettingsSubscriber>([&](const proto::GameSettings &_settings) { this->onSettings(_settings); });
-
-        this->robotFeedbackPublisher = std::make_unique<rtt::net::RobotFeedbackPublisher>();
+        {
+            std::lock_guard<std::mutex> lock(this->robotFeedbackPublisherMutex);
+            this->robotFeedbackPublisher = std::make_unique<rtt::net::RobotFeedbackPublisher>();
+        }
 
         successfullyInitialized = true;
     } catch (const std::exception &e) {  // TODO: Figure out the exception
@@ -291,7 +293,11 @@ void RobotHub::handleRobotFeedbackFromBasestation(const REM_RobotFeedback &feedb
 
 bool RobotHub::sendRobotFeedback(const rtt::RobotsFeedback &feedback) {
     this->statistics.lockRobotStatsMutex();
-    auto bytesSent = this->robotFeedbackPublisher->publish(feedback);
+    std::size_t bytesSent = 0;
+    {
+        std::lock_guard<std::mutex> lock(this->robotFeedbackPublisherMutex);
+        bytesSent = this->robotFeedbackPublisher->publish(feedback);
+    }
     this->statistics.feedbackBytesSent += bytesSent;
     this->statistics.unlockRobotStatsMutex();
     return bytesSent > 0;

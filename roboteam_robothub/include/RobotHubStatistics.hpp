@@ -22,8 +22,8 @@ class RobotHubStatistics {
     rtt::net::RobotHubMode robotHubMode;
     mutable std::mutex robotHubModeMutex;  // Mutex to protect the robotHubMode
 
-    void unlockRobotStatsMutex() { robotStatsMutex.unlock();}
-    void lockRobotStatsMutex() { robotStatsMutex.lock();}
+    void unlockRobotStatsMutex() { robotStatsMutex.unlock(); }
+    void lockRobotStatsMutex() { robotStatsMutex.lock(); }
 
     std::size_t yellowTeamBytesSent;
     std::size_t blueTeamBytesSent;
@@ -39,7 +39,7 @@ class RobotHubStatistics {
 
    private:
     std::chrono::time_point<std::chrono::steady_clock> startTime;
-    mutable std::mutex robotStatsMutex; // Mutex to protect the robotStats
+    mutable std::mutex robotStatsMutex;  // Mutex to protect the robotStats
     std::array<int, MAX_ROBOT_STATISTICS> yellowCommandsSent{};
     std::array<int, MAX_ROBOT_STATISTICS> yellowFeedbackReceived{};
 

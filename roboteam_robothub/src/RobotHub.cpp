@@ -42,7 +42,7 @@ RobotHub::RobotHub(bool shouldLog, bool logInMarpleFormat) {
         this->basestationManager = std::make_unique<basestation::BasestationManager>();
         this->basestationManager->setFeedbackCallback([&](const REM_RobotFeedback &feedback, rtt::Team color) { this->handleRobotFeedbackFromBasestation(feedback, color); });
         // this->basestationManager->setRobotStateInfoCallback([&](const REM_RobotStateInfo &robotStateInfo, rtt::Team color) { this->handleRobotStateInfo(robotStateInfo, color);
-        // }); 
+        // });
         // this->basestationManager->setBasestationLogCallback([&](const std::string &log, rtt::Team color) { this->handleBasestationLog(log, color); });
     }
 

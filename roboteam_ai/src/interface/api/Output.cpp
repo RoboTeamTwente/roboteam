@@ -19,14 +19,14 @@ void Output::setUseRefereeCommands(bool useRefereeCommands) {
     Output::useRefereeCommands = useRefereeCommands;
 }
 
-void Output::setRuleSetName(std::string name) { 
+void Output::setRuleSetName(std::string name) {
     std::lock_guard<std::mutex> lock(interfaceGameStateMutex);
-    Output::interfaceGameState.ruleSet.toString() = std::move(name); 
+    Output::interfaceGameState.ruleSet.toString() = std::move(name);
 }
 
-void Output::setKeeperId(int id) { 
+void Output::setKeeperId(int id) {
     std::lock_guard<std::mutex> lock(interfaceGameStateMutex);
-    Output::interfaceGameState.keeperId = id; 
+    Output::interfaceGameState.keeperId = id;
 }
 
 const GameState &Output::getInterfaceGameState() {

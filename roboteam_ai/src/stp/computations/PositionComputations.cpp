@@ -183,9 +183,8 @@ Vector2 PositionComputations::calculateAvoidRobotsPosition(Vector2 targetPositio
             pointsToAvoid.push_back(robot->getPos());
         }
     }
-
-    if (std::all_of(pointsToAvoid.begin(), pointsToAvoid.end(),
-                    [&](const Vector2 &avoidPoint) { return avoidPoint.dist(targetPosition) >= 2 * control_constants::ROBOT_RADIUS; })) {
+    // We use robot radius instead of 2 * robot radius to make sure we are not overly cautious
+    if (std::all_of(pointsToAvoid.begin(), pointsToAvoid.end(), [&](const Vector2 &avoidPoint) { return avoidPoint.dist(targetPosition) >= control_constants::ROBOT_RADIUS; })) {
         return targetPosition;
     }
 
@@ -194,9 +193,8 @@ Vector2 PositionComputations::calculateAvoidRobotsPosition(Vector2 targetPositio
         auto possiblePoints = Grid(targetPosition.x - distance / 2.0, targetPosition.y - distance / 2.0, distance, distance, 3, 3).getPoints();
         for (auto &pointVector : possiblePoints) {
             for (auto &point : pointVector) {
-                if (FieldComputations::pointIsValidPosition(field, point) && std::all_of(pointsToAvoid.begin(), pointsToAvoid.end(), [&](const Vector2 &avoidPoint) {
-                        return avoidPoint.dist(point) >= 2 * control_constants::ROBOT_RADIUS;
-                    })) {
+                if (FieldComputations::pointIsValidPosition(field, point) &&
+                    std::all_of(pointsToAvoid.begin(), pointsToAvoid.end(), [&](const Vector2 &avoidPoint) { return avoidPoint.dist(point) >= control_constants::ROBOT_RADIUS; })) {
                     return point;
                 }
             }

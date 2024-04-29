@@ -81,20 +81,20 @@ double CollisionCalculations::getFirstCollisionTimeMovingObject(const Trajectory
                     continue;
                 }
                 const auto computedPathsIt = computedPaths.find(ourOtherRobotId);
+                // If the path of the other robot is not computed, we assume it is not moving
                 if (computedPathsIt == computedPaths.end()) {
                     const Vector2 &ourOtherRobotPos = ourOtherRobot->getPos();
                     if ((ourOtherRobotPos - positionOurRobot).length() < 2 * Constants::ROBOT_RADIUS() + additionalMargin) {
                         return checkPoint * 0.1;
                     }
                 } else {
-                    Vector2 ourOtherRobotPos;
+                    LineSegment pathLineOtherRobot;
                     if (checkPoint < static_cast<int>(computedPathsIt->second.size())) {
-                        // This should be their checkPoint instead of ours
-                        ourOtherRobotPos = computedPathsIt->second[checkPoint];
+                        pathLineOtherRobot = LineSegment(computedPathsIt->second[checkPoint - 1], computedPathsIt->second[checkPoint]);
                     } else {
-                        ourOtherRobotPos = computedPathsIt->second.back();
+                        pathLineOtherRobot = LineSegment(computedPathsIt->second.back(), computedPathsIt->second.back());
                     }
-                    if ((ourOtherRobotPos - positionOurRobot).length() < 2 * Constants::ROBOT_RADIUS()) {
+                    if (pathLineOtherRobot.closestDistanceToLineSegment(pathLine) < 2 * Constants::ROBOT_RADIUS()) {
                         return checkPoint * 0.1;
                     }
                 }
@@ -102,7 +102,8 @@ double CollisionCalculations::getFirstCollisionTimeMovingObject(const Trajectory
         }
         if (velocityOurRobot > 0.7 && avoidObjects.shouldAvoidTheirRobots) {
             if (std::any_of(theirRobots.begin(), theirRobots.end(), [&](const auto &theirRobot) {
-                    return (theirRobot->getPos() + theirRobot->getVel() * 0.1 * checkPoint - positionOurRobot).length() < 2 * Constants::ROBOT_RADIUS() + additionalMargin;
+                    return LineSegment(theirRobot->getPos() + theirRobot->getVel() * 0.1 * (checkPoint - 1), theirRobot->getPos() + theirRobot->getVel() * 0.1 * checkPoint)
+                               .closestDistanceToLineSegment(pathLine) < 2 * Constants::ROBOT_RADIUS() + additionalMargin;
                 })) {
                 return checkPoint * 0.1;
             }

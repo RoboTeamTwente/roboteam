@@ -60,9 +60,10 @@ class StrategyManager {
         GameState(RefCommand::TIMEOUT_THEM, Constants::RULESET_HALT()),
 
         GameState(RefCommand::STOP, Constants::RULESET_STOP()),
-        GameState(RefCommand::BALL_PLACEMENT_THEM, Constants::RULESET_STOP()),
-        GameState(RefCommand::BALL_PLACEMENT_US, Constants::RULESET_STOP()),
-        GameState(RefCommand::BALL_PLACEMENT_US_DIRECT, Constants::RULESET_STOP()),
+        // Default to have a higher max velocity. Ball will still be avoided by ballplacementarea avoidance
+        GameState(RefCommand::BALL_PLACEMENT_THEM, Constants::RULESET_DEFAULT()),
+        GameState(RefCommand::BALL_PLACEMENT_US, Constants::RULESET_DEFAULT()),
+        GameState(RefCommand::BALL_PLACEMENT_US_DIRECT, Constants::RULESET_DEFAULT()),
         GameState(RefCommand::DIRECT_FREE_THEM_STOP, Constants::RULESET_STOP()),
         GameState(RefCommand::DIRECT_FREE_US_STOP, Constants::RULESET_STOP()),
         GameState(RefCommand::PREPARE_KICKOFF_US, Constants::RULESET_STOP(), false, RefCommand::KICKOFF_US),

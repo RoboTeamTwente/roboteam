@@ -74,6 +74,10 @@ void FreeKickUsPass::calculateInfoForRoles() noexcept {
         stpInfos["free_kick_taker"].setPositionToShootAt(passInfo.receiverLocation);
         stpInfos["free_kick_taker"].setShotType(ShotType::PASS);
         stpInfos["free_kick_taker"].setKickOrChip(KickOrChip::KICK);
+        if (GameStateManager::getCurrentGameState().timeLeft < 1.5) {
+            stpInfos["free_kick_taker"].setPositionToShootAt(field.rightDefenseArea.rightLine().center());
+            stpInfos["free_kick_taker"].setShotType(ShotType::MAX);
+        }
     } else {
         // Receiver goes to the receiverLocation projected on the trajectory of the ball
         auto ball = world->getWorld()->getBall()->get();
@@ -110,7 +114,8 @@ bool FreeKickUsPass::shouldEndPlay() noexcept {
     // target when we're in the process of shooting
     if (!ballKicked() && stpInfos["free_kick_taker"].getRobot() && !stpInfos["free_kick_taker"].getRobot().value()->hasBall() &&
         stp::computations::PassComputations::calculatePass(gen::AttackingPass, world, field).passScore >
-            1.05 * stp::PositionScoring::scorePosition(passInfo.receiverLocation, gen::AttackingPass, field, world).score)
+            1.05 * stp::PositionScoring::scorePosition(passInfo.receiverLocation, gen::AttackingPass, field, world).score &&
+        GameStateManager::getCurrentGameState().timeLeft > 1.5)
         return true;
 
     return false;

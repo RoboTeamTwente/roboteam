@@ -10,6 +10,7 @@
 
 namespace rtt::ai {
 int GameState::cardId = -1;
+double GameState::timeLeft = 1;
 
 proto::Referee_TeamInfo GameStateManager::yellowTeam;
 proto::Referee_TeamInfo GameStateManager::blueTeam;
@@ -63,6 +64,7 @@ void GameStateManager::setRefereeData(proto::Referee refMsg, const rtt::world::W
     bool isYellow = GameSettings::isYellow();
     RefCommand command = getCommandFromRefMsg(refMsg.command(), isYellow);
     RefCommand nextCommand = refMsg.has_next_command() ? getCommandFromRefMsg(refMsg.next_command(), isYellow) : RefCommand::UNDEFINED;
+    GameState::timeLeft = static_cast<double>(refMsg.current_action_time_remaining()) / 1000000;
 
     auto world = data->getWorld();
     if (world.has_value()) {

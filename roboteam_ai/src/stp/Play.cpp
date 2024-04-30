@@ -228,8 +228,7 @@ void Play::DrawMargins() noexcept {
                 rightDefenseAreaMargin);
         }
         proto::Drawing::Color color;
-        if (currentGameState == RefCommand::BALL_PLACEMENT_THEM || currentGameState == RefCommand::DIRECT_FREE_THEM || currentGameState == RefCommand::KICKOFF_THEM ||
-            currentGameState == RefCommand::PREPARE_FORCED_START)
+        if (currentGameState == RefCommand::BALL_PLACEMENT_THEM || currentGameState == RefCommand::DIRECT_FREE_THEM || currentGameState == RefCommand::KICKOFF_THEM)
             color = GameSettings::isYellow() ? proto::Drawing::YELLOW : proto::Drawing::BLUE;
         else if (currentGameState == RefCommand::BALL_PLACEMENT_US || currentGameState == RefCommand::BALL_PLACEMENT_US_DIRECT || currentGameState == RefCommand::DIRECT_FREE_US ||
                  currentGameState == RefCommand::KICKOFF_US)

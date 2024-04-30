@@ -9,7 +9,7 @@ Status Orbit::onUpdate(const StpInfo &info) noexcept {
     double normalAngle = directionVector.rotate(M_PI).rotate(M_PI_2).angle();
     Angle targetAngle = (info.getPositionToShootAt().value() - info.getBall()->get()->position).toAngle();
 
-    double margin = control_constants::ROBOT_RADIUS + 1.5 * stp::control_constants::BALL_RADIUS;
+    double margin = 1.5 * control_constants::ROBOT_RADIUS + stp::control_constants::BALL_RADIUS;
     double adjustDistance = (info.getRobot()->get()->getDistanceToBall() - margin);
 
     // Get the direction of movement, counterclockwise or clockwise

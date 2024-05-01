@@ -22,7 +22,7 @@ std::optional<StpInfo> GetBehindBallInDirection::calculateInfoForSkill(StpInfo c
     skillStpInfo.setAngle((info.getPositionToShootAt().value() - info.getRobot()->get()->getPos()).angle());
 
     // If the robot is far from the ball, go to the target position
-    if ((info.getBall()->get()->position - info.getRobot()->get()->getPos()).length() > 0.5) {
+    if ((info.getBall()->get()->position - info.getRobot()->get()->getPos()).length() > 0.5 || info.getObjectsToAvoid().shouldAvoidBall) {
         auto targetPos = GetBehindBallInDirection::calculateTargetPosition(info.getBall()->get()->position, info.getRobot()->get()->getPos(), info.getPositionToShootAt().value());
         skillStpInfo.setPositionToMoveTo(targetPos);
     }

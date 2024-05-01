@@ -3,6 +3,7 @@
 #include <roboteam_utils/Print.h>
 
 #include "stp/tactics/KeeperBlockBall.h"
+#include "stp/tactics/active/GetBall.h"
 #include "stp/tactics/passive/Formation.h"
 
 namespace rtt::ai::stp::role {

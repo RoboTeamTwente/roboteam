@@ -38,8 +38,7 @@ FreeKickUsAtGoal::FreeKickUsAtGoal() : Play() {
 
 uint8_t FreeKickUsAtGoal::score(const rtt::Field& field) noexcept {
     // If we are in the FreeKickUsAtGoal gameState, we always want to execute this play
-    shotScore = PositionScoring::scorePosition(world->getWorld()->getBall().value()->position, gen::GoalShot, field, world).score;
-    return shotScore;
+    return PositionScoring::scorePosition(world->getWorld()->getBall().value()->position, gen::GoalShot, field, world).score;
 }
 
 Dealer::FlagMap FreeKickUsAtGoal::decideRoleFlags() const noexcept {
@@ -75,19 +74,10 @@ void FreeKickUsAtGoal::calculateInfoForRoles() noexcept {
     stpInfos["free_kick_taker"].setShotType(ShotType::MAX);
 }
 
-bool FreeKickUsAtGoal::ballKicked() {
+bool FreeKickUsAtGoal::shouldEndPlay() noexcept {
     return std::any_of(roles.begin(), roles.end(), [](const std::unique_ptr<Role>& role) {
         return role != nullptr && role->getName() == "free_kick_taker" && strcmp(role->getCurrentTactic()->getName(), "Formation") == 0;
     });
-}
-
-bool FreeKickUsAtGoal::shouldEndPlay() noexcept {
-    if (!ballKicked() && stpInfos["free_kick_taker"].getRobot() && !stpInfos["free_kick_taker"].getRobot().value()->hasBall() &&
-        PositionScoring::scorePosition(world->getWorld()->getBall().value()->position, gen::GoalShot, field, world).score > 1.2 * shotScore &&
-        GameStateManager::getCurrentGameState().timeLeft > 1.5)
-        return true;
-
-    return ballKicked();
 }
 
 const char* FreeKickUsAtGoal::getName() const { return "Free Kick Us At Goal"; }

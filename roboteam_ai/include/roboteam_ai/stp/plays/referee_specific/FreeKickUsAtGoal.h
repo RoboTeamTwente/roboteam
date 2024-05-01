@@ -42,15 +42,6 @@ class FreeKickUsAtGoal : public Play {
      * @return The name of the play as a string
      */
     const char* getName() const override;
-
-   private:
-    /**
-     * @brief Return true if passer is done with KickAtPos tactic
-     * @return Boolean that tells whether the ball has been kicked
-     */
-    bool ballKicked();
-
-    uint8_t shotScore;
 };
 
 }  // namespace rtt::ai::stp::play

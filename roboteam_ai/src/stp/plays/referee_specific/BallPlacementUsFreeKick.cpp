@@ -78,13 +78,15 @@ void BallPlacementUsFreeKick::calculateInfoForRoles() noexcept {
     }
 
     // stpInfos["ball_placer"].setPositionToShootAt(ballTarget);
-    stpInfos["ball_placer"].setPositionToMoveTo(ballTarget);
-    stpInfos["ball_placer"].setShouldAvoidOutOfField(false);
-    stpInfos["ball_placer"].setShouldAvoidBall(false);
     for (auto& stpInfo : stpInfos) {
         stpInfo.second.setShouldAvoidOurDefenseArea(false);
         stpInfo.second.setShouldAvoidTheirDefenseArea(false);
+        stpInfo.second.setShouldAvoidBall(true);
     }
+    stpInfos["ball_placer"].setPositionToMoveTo(ballTarget);
+    stpInfos["ball_placer"].setShouldAvoidOutOfField(false);
+    stpInfos["ball_placer"].setShouldAvoidBall(false);
+    
     if ((world->getWorld()->get()->getBall()->get()->position - rtt::ai::GameStateManager::getRefereeDesignatedPosition()).length() < control_constants::BALL_PLACEMENT_MARGIN) {
         for (auto& role : roles)
             if (role->getName() == "ball_placer") role->forceLastTactic();

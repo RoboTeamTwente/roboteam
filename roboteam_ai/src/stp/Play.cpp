@@ -203,9 +203,9 @@ void Play::DrawMargins() noexcept {
     // Drawing all figures regarding states robots have to avoid certain area's (stop, ball placement, free kick, kick off)
     if (ruleSetTitle == RuleSetName::STOP || currentGameState == RefCommand::DIRECT_FREE_THEM || currentGameState == RefCommand::DIRECT_FREE_THEM_STOP ||
         currentGameState == RefCommand::DIRECT_FREE_US || currentGameState == RefCommand::KICKOFF_US || currentGameState == RefCommand::KICKOFF_THEM ||
-        currentGameState == RefCommand::PREPARE_FORCED_START) {
-        if (currentGameState != RefCommand::BALL_PLACEMENT_THEM && currentGameState != RefCommand::BALL_PLACEMENT_US && currentGameState != RefCommand::BALL_PLACEMENT_US_DIRECT &&
-            currentGameState != RefCommand::PREPARE_FORCED_START) {
+        currentGameState == RefCommand::PREPARE_FORCED_START || currentGameState == RefCommand::BALL_PLACEMENT_THEM || currentGameState == RefCommand::BALL_PLACEMENT_US || 
+        currentGameState == RefCommand::BALL_PLACEMENT_US_DIRECT) {
+        if (currentGameState != RefCommand::PREPARE_FORCED_START) {
             rtt::ai::gui::Out::draw(
                 {
                     .label = "Left defense area to avoid",

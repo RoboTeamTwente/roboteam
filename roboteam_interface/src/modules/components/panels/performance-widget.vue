@@ -176,11 +176,11 @@ export default defineComponent({
       is_there_passer: false, 
       is_there_passer_fkick: false,
 
-      offensive_plays: ['Attack', 'Attacking Pass', 'Chipping Pass', 'Keeper Kick Ball'],
+      offensive_plays: ['Attack', 'Attacking Pass', 'Chipping Pass', 'Keeper Kick Ball', 'Free Kick Us Pass', 'Ball Placement Us Free Kick'],
       defensive_plays: ['Defend Shot', 'Defend Pass'],
       starting_plays: ['Kick Off Us', 'Kick Off Them'],
       previous_play: "None", 
-      /*neutral_plays: ['Halt', 'BallPlacementUs', 'BallPlacementThem', 'PenaltyThemPrepare', 'PenaltyUsPrepare', 'PenaltyThem', 'DefensiveStopFormation', 'AggressiveStopFormation',
+      /*neutral_plays: ['Halt', 'BallPlacementUsFreeKick', 'BallPlacementThem', 'PenaltyThemPrepare', 'PenaltyUsPrepare', 'PenaltyThem', 'DefensiveStopFormation', 'AggressiveStopFormation',
       'PenaltyUs', 'KickOffUsPrepare', 'KickOffThemPrepare', 'FreeKickThem', 'FreeKickUsAtGoal', 'FreeKickUsPass', 'KickOffUs', 'KickOffThem'],*/
       offensive_counter: 0,
       defensive_counter: 0, 
@@ -228,6 +228,7 @@ export default defineComponent({
       ball_y_coordinate: 0.0,
       previous_passer_id: 0,
       previous_receiver_id: 0,
+      passer_id: 0,
       receiver_id: 0, 
       passer_x: 0.0, 
       passer_y: 0.0,
@@ -301,7 +302,7 @@ export default defineComponent({
               this.is_there_passer = true; 
               const passer_id = counter; 
 
-              /*if (passer_id === this.previous_passer_id) { // If receiver is the same as in the previous iter, put his coordinates to zero
+              /*if (passer_id === this.passer_id) { // If receiver is the same as in the previous iter, put his coordinates to zero
                 this.is_there_passer = false; 
                 this.passer_x = 0;
                 this.passer_y = 0;
@@ -311,7 +312,7 @@ export default defineComponent({
               this.passer_x = robots_on_vision[passer_id].pos?.x!;
               this.passer_y = robots_on_vision[passer_id].pos?.y!;
 
-              this.previous_passer_id = passer_id;
+              this.passer_id = passer_id;
               return
 
             } else {
@@ -324,6 +325,7 @@ export default defineComponent({
             counter = counter + 1;
           }
         }  
+      } else {
         this.is_there_passer = false; 
         return
       }
@@ -346,12 +348,12 @@ export default defineComponent({
 
           this.robots_roles[counter] = list_of_robots[key].role?.name!;
 
-          if (list_of_robots[key].role?.name! === "free_kick_taker") { //keeper_kick_ball -> PLAY & free_kick_taker -> ROLE
+          if (list_of_robots[key].role?.name! === "free_kick_taker") { //The logic thing is free_kick_taker, but i have seen that the passer takes the role harasser
 
             this.is_there_passer_fkick = true; 
             const passer_id = counter; 
 
-            /*if (passer_id === this.previous_passer_id) { // If receiver is the same as in the previous iter, put his coordinates to zero
+            /*if (passer_id === this.passer_id) { // If receiver is the same as in the previous iter, put his coordinates to zero
               this.is_there_passer_fkick = false; 
               this.passer_x_fkick = 0;
               this.passer_y_fkick = 0;
@@ -361,7 +363,7 @@ export default defineComponent({
             this.passer_x_fkick = robots_on_vision[passer_id].pos?.x!;
             this.passer_y_fkick = robots_on_vision[passer_id].pos?.y!;
 
-            this.previous_passer_id = passer_id;
+            this.passer_id = passer_id;
             return
 
           } else {
@@ -374,7 +376,8 @@ export default defineComponent({
           counter = counter + 1;
         }
       }  
-      this.is_there_passer_fkick = false; 
+    } else {
+      this.is_there_passer = false; 
       return
     }
     },
@@ -396,20 +399,15 @@ export default defineComponent({
     },
 
     check_is_pass_fkick_tried() {
-      if (this.is_there_passer_fkick) { // If there is a passer check if he executes the pass (not if the pass arrives to the passer)
-        const ball_passer_distance = Math.sqrt((this.ball_x_coordinate-this.passer_x) ** 2 + (this.ball_y_coordinate-this.passer_y) ** 2); 
-        if (ball_passer_distance > 0.05) {
-          this.is_pass_tried = true; 
-          this.number_of_tried_passes_fkick = this.number_of_tried_passes_fkick + 1;
-        }
-      }
+      this.is_pass_fkick_tried = true; 
+      this.number_of_tried_passes_fkick = this.number_of_tried_passes_fkick + 1;
     },
 
     check_is_gk_pass_tried() { // Directly check the plays and if the current one is Keeper Kick Ball, assume that a pass has been tried
       const playName = this.stpData.latest?.currentPlay?.playName;
       if (playName === 'Keeper Kick Ball' && playName !== this.previous_play) { 
           this.is_pass_gk_tried = true; 
-          this.number_of_tried_gk_passes = this.number_of_tried_passes_fkick + 1;
+          this.number_of_tried_gk_passes = this.number_of_tried_gk_passes + 1;
       }
       if (playName !== null && playName !== undefined) {
           this.previous_play = playName;
@@ -466,23 +464,32 @@ export default defineComponent({
 
     },
 
-    check_is_still_receiver() { // Check if a robot (id) still has the role of receiver (for passing accuracy)
+    check_is_still_receiver() { // Check if a robot (id) still has the role of receiver (this function is used during pass evaluation)
 
       let robot_id = this.receiver_id; // The robot we have to check whether it is still a receiver
       let list_of_robots = this.stpData.latest?.robots
       let robots_on_vision = this.visionData.ourRobots || []
+      let counter = 0;
 
 
       for (let key in list_of_robots ) { 
 
       if (key === String(this.receiver_id) && Object.prototype.hasOwnProperty.call(list_of_robots, robot_id)) {
+
+        // Update the roles list 
+        this.robots_roles[counter] = list_of_robots[key].role?.name!;
+        counter = counter + 1;
+
         if (list_of_robots[robot_id].role?.name! === "receiver" || list_of_robots[robot_id].role?.name! === "harasser") {
           // If the receiver is still a receiver, update its position
           this.receiver_changed_role = false; 
           this.receiver_x = robots_on_vision[this.receiver_id].pos?.x!;
           this.receiver_y = robots_on_vision[this.receiver_id].pos?.y!;
+
         } else {
+
           this.receiver_changed_role = true; 
+
         }
       }
 
@@ -620,7 +627,6 @@ export default defineComponent({
 
     passing_accuracy_block() {
 
-      this.is_pass_being_assessed = false;
       let is_pass_1_being_assessed = false;
       let is_pass_2_being_assessed = false;
 
@@ -628,16 +634,18 @@ export default defineComponent({
 
         if (this.is_pass_being_assessed === false) { // If no pass is being processed to determine if it is successful, wait (look) for a passer
 
-          this.get_passer_position(); 
+          this.get_passer_position(); // Here we also check if there is actually a passer (the boolean is_there_passer is set to true)
           
           // Look for a passer
-          if (this.is_match_started && this.is_there_passer) { // Only if there is a passer, check if the pass has been tried
+          if (this.is_match_started && this.is_there_passer && this.previous_passer_id !== this.passer_id) { 
+            // Only if there is a passer (and it is not the same as the previous pass), check if the pass has been tried
             this.get_ball_position();
             this.look_4_receiver() // Assume that there is going to be a receiver -> get its position
             this.check_is_pass_tried(); // Need to have the updated position of the ball
 
             if (this.is_pass_tried) {
               is_pass_1_being_assessed = true;
+              this.previous_passer_id = this.passer_id;
             }
 
           } else {
@@ -650,13 +658,14 @@ export default defineComponent({
           this.get_passer_position_fkick(); 
 
           // Look for a passer from free kick
-          if (this.is_match_started && this.is_there_passer_fkick) { // Only if there is a passer, check if the pass has been tried
+          if (this.is_match_started && this.is_there_passer_fkick && this.previous_passer_id !== this.passer_id) { // Only if there is a passer, check if the pass has been tried
             this.get_ball_position();
-            this.look_4_receiver() // Assume that there is going to be a receiver -> get its position
-            this.check_is_pass_fkick_tried();
+            this.look_4_receiver(); // Assume that there is going to be a receiver -> get its position
+            this.check_is_pass_fkick_tried(); // It is actually not checking, just incrementing the counter
 
             if (this.is_pass_fkick_tried) {
               is_pass_2_being_assessed = true;
+              this.previous_passer_id = this.passer_id;
             }
 
           } else {
@@ -685,10 +694,17 @@ export default defineComponent({
               // Compare it with the last known position of the receiver
               const ball_receiver_distance = Math.sqrt((this.ball_x_coordinate-this.passer_x) ** 2 + (this.ball_y_coordinate-this.passer_y) ** 2); 
 
-              if (ball_receiver_distance < 0.5 && this.previous_receiver_id !== this.receiver_id) { 
+              if (ball_receiver_distance < 0.2 && this.previous_receiver_id !== this.receiver_id) { 
+
                 this.number_of_successful_passes = this.number_of_successful_passes + 1;
                 this.previous_receiver_id = this.receiver_id;
                 this.is_pass_being_assessed = false; // Pass has been sucessful, assessment finished, look for another pass.
+
+              } else { // Distance is still high still, but we are offensive and the receiver is still the receiver, have to keep evaluating the pass
+
+                this.previous_receiver_id = this.receiver_id;
+                this.is_pass_being_assessed = true;
+
               }
 
             } else {
@@ -699,7 +715,7 @@ export default defineComponent({
           
           else {
 
-            this.is_pass_being_assessed = false; // The pass has not been sucessful
+            this.is_pass_being_assessed = false; // The pass has not been sucessful because we changed to a defensive play
 
           }
 

@@ -7,7 +7,7 @@ bool Output::useRefereeCommands = false;
 std::mutex Output::refMutex;
 std::mutex Output::interfaceGameStateMutex;
 
-GameState Output::interfaceGameState(RefCommand::HALT, Constants::RULESET_DEFAULT());
+GameState Output::interfaceGameState(RefCommand::HALT, Constants::RULESET_HALT());
 
 bool Output::usesRefereeCommands() {
     std::lock_guard<std::mutex> lock(refMutex);

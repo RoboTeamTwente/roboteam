@@ -58,6 +58,29 @@ InterceptionInfo InterceptionComputations::calculateInterceptionInfo(const std::
 
     // Helper function to calculate the intercept info for a given target position
     auto calculateIntercept = [&](const Vector2 &targetPosition) {
+        // If the LoS score is too low
+        if (PositionScoring::scorePosition(futureBallPosition, gen::LineOfSight, world->getField().value(), world).score < LineOfSightScore) {
+            auto interceptPosition = futureBallPosition;
+            auto minDistance = std::numeric_limits<double>::max();
+            auto theirRobots = world->getWorld()->getThem();
+            Vector2 robotCloseToBallPos;
+            for (const auto &theirRobot : theirRobots) {
+                auto distance = LineSegment(futureBallPosition, pastBallPosition).distanceToLine(theirRobot->getPos());
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    robotCloseToBallPos = theirRobot->getPos();
+                }
+            }
+            if ((world->getWorld()->getRobotClosestToBall(world::us)->get()->getPos() - pastBallPosition).length() < minDistance) {
+                interceptionInfo.interceptLocation =
+                    LineSegment(futureBallPosition, pastBallPosition).project(world->getWorld()->getRobotClosestToBall(world::us)->get()->getPos());
+            } else {
+                interceptionInfo.interceptLocation =
+                    robotCloseToBallPos + (world->getWorld()->getBall()->get()->position - robotCloseToBallPos).stretchToLength(control_constants::ROBOT_RADIUS * 3);
+            }
+            return;
+        }
+
         for (const auto &robot : ourRobots) {
             // If the robot is already close to the line, project it's position onto the line to prevent always moving to the 0.1 second mark
             if (LineSegment(pastBallPosition, futureBallPosition).distanceToLine(robot->getPos()) < 1.5 * control_constants::ROBOT_RADIUS) {
@@ -110,22 +133,6 @@ InterceptionInfo InterceptionComputations::calculateInterceptionInfo(const std::
             if (intersections.size() == 1) {
                 pastBallPosition = intersections.at(0);
             }
-        }
-
-        // If the LoS score is too low
-        if (PositionScoring::scorePosition(futureBallPosition, gen::LineOfSight, world->getField().value(), world).score < LineOfSightScore) {
-            auto interceptPosition = futureBallPosition;
-            auto minDistance = std::numeric_limits<double>::max();
-            auto theirRobots = world->getWorld()->getThem();
-            for (const auto &theirRobot : theirRobots) {
-                auto distance = LineSegment(futureBallPosition, pastBallPosition).distanceToLine(theirRobot->getPos());
-                if (distance < minDistance) {
-                    minDistance = distance;
-                    interceptPosition = LineSegment(futureBallPosition, pastBallPosition).project(theirRobot->getPos());
-                }
-            }
-            calculateIntercept(interceptPosition);
-            return interceptionInfo;
         }
 
         // If the ball is out of the field, we intercept at the projected position in the field, unless the ball is already out of the field

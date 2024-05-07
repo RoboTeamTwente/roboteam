@@ -70,6 +70,10 @@ void GameStateManager::setRefereeData(proto::Referee refMsg, const rtt::world::W
     if (world.has_value()) {
         strategymanager.setCurrentGameState(command, nextCommand, world->getBall());
     }
+    } else {
+        RTT_INFO("No world when setting Game State, ignoring ball")
+        strategymanager.setCurrentGameState(command, nextCommand, std::nullopt);
+    }
 }
 
 // Initialize static variables

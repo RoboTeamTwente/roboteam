@@ -35,7 +35,8 @@ class OvershootComputations {
      * @param targetTime The time it takes to reach the target position.
      * @return Vector2 The overshooting destination of the robot.
      */
-    static Vector2 overshootingDestination(Vector2 &startPosition, Vector2 &endPosition, Vector2 &startVelocity, double maxVelocity, double maxAcceleration, double targetTime);
+    static Vector2 overshootingDestination(const Vector2 &startPosition, const Vector2 &endPosition, const Vector2 &startVelocity, double maxVelocity, double maxAcceleration,
+                                           double targetTime);
 
    private:
     /**

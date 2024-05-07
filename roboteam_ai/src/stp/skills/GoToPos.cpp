@@ -6,50 +6,45 @@
 namespace rtt::ai::stp::skill {
 
 Status GoToPos::onUpdate(const StpInfo &info) noexcept {
-    Vector2 targetPos = info.getPositionToMoveTo().value();
+    auto robot = info.getRobot().value();
+    auto field = info.getField().value();
     auto avoidObj = info.getObjectsToAvoid();
-    std::string roleName = info.getRoleName();
-    Vector2 ballLocation = info.getBall()->get()->position;
-    if (!FieldComputations::pointIsValidPosition(info.getField().value(), targetPos, avoidObj) && roleName != "ball_placer") {
-        targetPos = FieldComputations::projectPointToValidPosition(info.getField().value(), targetPos, avoidObj);
+    auto targetPos = info.getPositionToMoveTo().value();
+    auto roleName = info.getRoleName();
+    auto ballLocation = info.getBall()->get()->position;
+
+    if (!FieldComputations::pointIsValidPosition(field, targetPos, avoidObj) && roleName != "ball_placer") {
+        targetPos = FieldComputations::projectPointToValidPosition(field, targetPos, avoidObj);
     }
+
     if (avoidObj.shouldAvoidOurRobots || avoidObj.shouldAvoidTheirRobots) {
-        targetPos = PositionComputations::calculateAvoidRobotsPosition(targetPos, info.getCurrentWorld(), info.getRobot().value()->getId(), avoidObj, info.getField().value());
+        targetPos = PositionComputations::calculateAvoidRobotsPosition(targetPos, info.getCurrentWorld(), robot->getId(), avoidObj, field);
     }
+
     if (avoidObj.shouldAvoidBall) {
-        targetPos = PositionComputations::calculateAvoidBallPosition(targetPos, ballLocation, info.getField().value());
+        targetPos = PositionComputations::calculateAvoidBallPosition(targetPos, ballLocation, field);
     }
 
-    command.velocity = info.getCurrentWorld()->getRobotPositionController()->computeAndTrackTrajectory(
-        info.getCurrentWorld(), info.getField().value(), info.getRobot().value()->getId(), info.getRobot().value()->getPos(), info.getRobot().value()->getVel(), targetPos,
-        info.getMaxRobotVelocity(), avoidObj);
+    command.velocity = info.getCurrentWorld()->getRobotPositionController()->computeAndTrackTrajectory(info.getCurrentWorld(), field, robot->getId(), robot->getPos(),
+                                                                                                       robot->getVel(), targetPos, info.getMaxRobotVelocity(), avoidObj);
 
-    auto distanceToTarget = (info.getRobot().value()->getPos() - targetPos).length();
-    if (distanceToTarget <= 0.5) {
-        command.targetAngle = info.getAngle();
-    } else {
-        auto diffToTargetAngle = (info.getAngle() - info.getRobot().value()->getAngle());
-        rtt::Angle diffAngle = rtt::Angle(0.5 / distanceToTarget * diffToTargetAngle);
-        command.targetAngle = info.getRobot().value()->getAngle() + diffAngle;
-    }
+    auto distanceToTarget = (robot->getPos() - targetPos).length();
+    command.targetAngle = distanceToTarget <= 0.5 ? info.getAngle() : robot->getAngle() + rtt::Angle(0.5 / distanceToTarget * (info.getAngle() - robot->getAngle()));
 
     // Clamp and set dribbler speed
     int targetDribblerPercentage = std::clamp(info.getDribblerSpeed(), 0, 100);
-    double targetDribblerSpeed = targetDribblerPercentage / 100.0 * stp::control_constants::MAX_DRIBBLER_CMD;
-
-    // Set dribbler speed command
-    command.dribblerSpeed = targetDribblerSpeed;
+    command.dribblerSpeed = targetDribblerPercentage / 100.0 * stp::control_constants::MAX_DRIBBLER_CMD;
 
     // set command ID
-    command.id = info.getRobot().value()->getId();
+    command.id = robot->getId();
 
     // forward the generated command to the ControlModule, for checking and limiting
     forwardRobotCommand();
 
     // Check if successful
-    if ((info.getRobot().value()->getPos() - targetPos).length() <= stp::control_constants::GO_TO_POS_ERROR_MARGIN ||
-        (info.getRobot().value()->hasBall() &&
-         (info.getRobot().value()->getPos() - targetPos).length() <= stp::control_constants::BALL_PLACEMENT_MARGIN - stp::control_constants::GO_TO_POS_ERROR_MARGIN)) {
+    auto distanceError = (robot->getPos() - targetPos).length();
+    if (distanceError <= stp::control_constants::GO_TO_POS_ERROR_MARGIN ||
+        (robot->hasBall() && distanceError <= stp::control_constants::BALL_PLACEMENT_MARGIN - stp::control_constants::GO_TO_POS_ERROR_MARGIN)) {
         return Status::Success;
     } else {
         return Status::Running;

@@ -6,8 +6,8 @@
 #include "utilities/Constants.h"
 namespace rtt::ai::control {
 
-Vector2 OvershootComputations::overshootingDestination(Vector2& startPosition, Vector2& endPosition, Vector2& startVelocity, double maxVelocity, double maxAcceleration,
-                                                       double targetTime) {
+Vector2 OvershootComputations::overshootingDestination(const Vector2& startPosition, const Vector2& endPosition, const Vector2& startVelocity, const double maxVelocity,
+                                                       const double maxAcceleration, const double targetTime) {
     Vector2 distance = endPosition - startPosition;
     double increment = M_PI_4 * 0.5;
     double alpha = M_PI_4;

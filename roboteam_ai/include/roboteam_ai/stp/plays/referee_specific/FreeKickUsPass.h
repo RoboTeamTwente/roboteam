@@ -49,7 +49,7 @@ class FreeKickUsPass : public Play {
 
    private:
     /**
-     * @brief Return true if passer is done with KickAtPos tactic
+     * @brief Return true if passer is done with kicking
      * @return Boolean that tells whether the ball has been kicked
      */
     bool ballKicked();

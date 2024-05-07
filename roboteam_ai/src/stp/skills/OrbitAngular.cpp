@@ -1,26 +1,30 @@
 #include "stp/skills/OrbitAngular.h"
 
-#include "roboteam_utils/Print.h"
 #include "stp/constants/ControlConstants.h"
 
 namespace rtt::ai::stp::skill {
 
 Status OrbitAngular::onUpdate(const StpInfo &info) noexcept {
-    // initialization of local variables
-    Angle currentAngle = info.getRobot().value()->getAngle();                                               // Angle the robot is currently facing
-    Angle targetAngle = (info.getPositionToShootAt().value() - info.getBall()->get()->position).toAngle();  // targetAngle the robot should have
-    int direction = targetAngle.rotateDirection(currentAngle) ? -1 : 1;                                     // Direction in which the robot should move
-    double speedFactor = std::clamp(currentAngle.shortestAngleDiff(targetAngle) * 2 * M_PI, 0.0, M_PI);     // Speed at which the robot should orbit
+    auto robot = info.getRobot().value();
+    auto ball = info.getBall()->get();
 
-    double targetAngularVelocity = direction * speedFactor;  // Set the target angular velocity of the robot
+    // Calculate target and current angles
+    Angle currentAngle = robot->getAngle();
+    Angle targetAngle = (info.getPositionToShootAt().value() - ball->position).toAngle();
 
-    Vector2 normalVector = info.getRobot().value()->getAngle().toVector2().rotate(-direction * M_PI_2);                              // Vector the robot should move to
-    Vector2 targetVelocity;                                                                                                          // Absolute velocity the robot should have
-    targetVelocity.x = speedFactor * normalVector.x * (stp::control_constants::BALL_RADIUS + stp::control_constants::ROBOT_RADIUS);  // X-Velocity
-    targetVelocity.y = speedFactor * normalVector.y * (stp::control_constants::BALL_RADIUS + stp::control_constants::ROBOT_RADIUS);  // Y-velocity
+    // Determine direction and speed factor
+    int direction = targetAngle.rotateDirection(currentAngle) ? -1 : 1;
+    double speedFactor = std::clamp(currentAngle.shortestAngleDiff(targetAngle) * 2 * M_PI, 0.0, M_PI);
+
+    // Calculate target angular velocity and normal vector
+    double targetAngularVelocity = direction * speedFactor;
+    Vector2 normalVector = currentAngle.toVector2().rotate(-direction * M_PI_2);
+
+    // Calculate target velocity
+    Vector2 targetVelocity = normalVector * speedFactor * (stp::control_constants::BALL_RADIUS + stp::control_constants::ROBOT_RADIUS);
 
     // Construct the robot command
-    command.id = info.getRobot().value()->getId();
+    command.id = robot->getId();
     command.velocity = targetVelocity;
     // Commented for the control code before the Schubert open on 3 April 2024. Possible wise to use again somewhere in the distant future.
     // command.useAngularVelocity = true;

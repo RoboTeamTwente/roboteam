@@ -4,10 +4,7 @@
 
 namespace rtt::ai::stp {
 
-TestTactic::TestTactic() {
-    // Create state machine of skills and initialize first skill
-    skills = rtt::collections::state_machine<Skill, Status, StpInfo>{skill::TestSkill()};
-}
+TestTactic::TestTactic() { skills = rtt::collections::state_machine<Skill, Status, StpInfo>{skill::TestSkill()}; }
 
 std::optional<StpInfo> TestTactic::calculateInfoForSkill(StpInfo const &info) noexcept {
     StpInfo skillStpInfo = info;
@@ -19,10 +16,7 @@ bool TestTactic::isTacticFailing(const StpInfo &) noexcept { return false; }
 
 bool TestTactic::shouldTacticReset(const StpInfo &) noexcept { return false; }
 
-bool TestTactic::isEndTactic() noexcept {
-    // This is not an end tactic
-    return false;
-}
+bool TestTactic::isEndTactic() noexcept { return false; }
 
 const char *TestTactic::getName() { return "Test Tactic"; }
 

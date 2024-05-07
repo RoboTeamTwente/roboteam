@@ -16,12 +16,10 @@ std::optional<StpInfo> BlockBall::calculateInfoForSkill(StpInfo const &info) noe
         return std::nullopt;
 
     if (!skillStpInfo.getPositionToMoveTo()) {
-        auto defendPos = info.getPositionToDefend().value();
-        auto targetPosition = calculateTargetPosition(info.getBall().value(), defendPos);
+        auto positionToDefend = info.getPositionToDefend().value();
+        auto targetPosition = calculateTargetPosition(info.getBall().value(), positionToDefend);
 
-        // Make sure this position is valid
-        targetPosition = FieldComputations::projectPointToValidPositionOnLine(info.getField().value(), targetPosition, defendPos, info.getBall()->get()->position);
-        // targetPosition.x = std::min(0.0, targetPosition.x);
+        targetPosition = FieldComputations::projectPointToValidPositionOnLine(info.getField().value(), targetPosition, positionToDefend, info.getBall()->get()->position);
 
         skillStpInfo.setPositionToMoveTo(targetPosition);
 

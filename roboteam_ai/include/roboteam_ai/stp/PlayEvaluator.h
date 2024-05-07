@@ -36,11 +36,9 @@ enum class GlobalEvaluation {
     BallOnTheirSide,
     BallInOurDefenseAreaAndStill,
     BallNotInOurDefenseAreaAndStill,
-    WeHaveBall,
     WeWillHaveBall,
     WeWillNotHaveBall,
     TheyHaveBall,
-    TheyDoNotHaveBall,
 };
 
 /**

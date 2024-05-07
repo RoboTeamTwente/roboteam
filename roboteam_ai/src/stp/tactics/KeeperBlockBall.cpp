@@ -38,7 +38,7 @@ std::optional<StpInfo> KeeperBlockBall::calculateInfoForSkill(StpInfo const &inf
     Vector2 newBallPos;
     skillStpInfo.setPositionToMoveTo(targetPosition);
 
-    auto targetAngle = calculateTargetAngle(info.getBall().value(), targetPosition);
+    auto targetAngle = calculateTargetAngle(info.getBall().value(), targetPosition) / 1.6;
     skillStpInfo.setAngle(targetAngle);
 
     return skillStpInfo;
@@ -123,10 +123,10 @@ Vector2 KeeperBlockBall::calculateTargetPosition(const StpInfo info) noexcept {
         }
     }
 
-    KeeperInterceptionInfo keeperInterceptionInfo = InterceptionComputations::calculateKeeperInterceptionInfo(world, robot);
-    if (keeperInterceptionInfo.canIntercept) {
-        return keeperInterceptionInfo.interceptLocation;
-    }
+    // KeeperInterceptionInfo keeperInterceptionInfo = InterceptionComputations::calculateKeeperInterceptionInfo(world, robot);
+    // if (keeperInterceptionInfo.canIntercept) {
+    //     return keeperInterceptionInfo.interceptLocation;
+    // }
 
     if (ball->position.x >= field.leftGoalArea.rightLine().center().x - MAX_DISTANCE_BALL_BEHIND_GOAL) {
         auto ballGoalLine = Line(ball->position, field.leftGoalArea.rightLine().center() - Vector2(PROJECT_BALL_DISTANCE_TO_GOAL, 0));

@@ -100,6 +100,10 @@ InterceptionInfo InterceptionComputations::calculateInterceptionInfo(const std::
                 interceptionInfo.interceptId = robot->getId();
                 interceptionInfo.interceptLocation = targetPosition;
                 interceptionInfo.timeToIntercept = minTimeToTarget;
+                auto theirClosestToBall = world->getWorld()->getRobotClosestToBall(world::them);
+                if (!theirClosestToBall || (robot->getPos() - targetPosition).length() < (theirClosestToBall->get()->getPos() - targetPosition).length()) {
+                    interceptionInfo.isInterceptable = true;
+                }
             }
         }
     };

@@ -10,7 +10,7 @@ void StrategyManager::setCurrentGameState(RefCommand command, RefCommand nextCom
         lastCommand = command;
         return;
     }
-    
+
     if (command == RefCommand::STOP && (nextCommand == RefCommand::PREPARE_KICKOFF_THEM || nextCommand == RefCommand::PREPARE_KICKOFF_US ||
                                         nextCommand == RefCommand::PREPARE_PENALTY_THEM || nextCommand == RefCommand::PREPARE_PENALTY_US)) {
         command = nextCommand;

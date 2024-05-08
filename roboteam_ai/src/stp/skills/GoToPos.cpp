@@ -21,7 +21,9 @@ Status GoToPos::onUpdate(const StpInfo &info) noexcept {
         targetPos = PositionComputations::calculateAvoidRobotsPosition(targetPos, info.getCurrentWorld(), robot->getId(), avoidObj, field);
     }
 
-    if (avoidObj.shouldAvoidBall) {
+    RefCommand currentGameState = GameStateManager::getCurrentGameState().getCommandId();
+
+    if (roleName != "ball_placer" && (avoidObj.shouldAvoidBall || currentGameState == RefCommand::BALL_PLACEMENT_US || currentGameState == RefCommand::BALL_PLACEMENT_THEM || currentGameState == RefCommand::BALL_PLACEMENT_US_DIRECT)) {
         targetPos = PositionComputations::calculateAvoidBallPosition(targetPos, ballLocation, field);
     }
 

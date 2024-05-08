@@ -12,6 +12,9 @@
 #include "utilities/GameStateManager.hpp"
 #include "world/FieldComputations.h"
 
+// The minimum distance we set the target position away from the robot
+const double MIN_DISTANCE_TO_TARGET = 0.03;
+
 namespace rtt::ai::stp::tactic {
 GetBall::GetBall() { skills = collections::state_machine<Skill, Status, StpInfo>{skill::GoToPos()}; }
 
@@ -39,7 +42,7 @@ std::optional<StpInfo> GetBall::calculateInfoForSkill(const StpInfo &info) noexc
     if (info.getRobot()->get()->getAngleDiffToBall() > Constants::HAS_BALL_ANGLE() && distanceToBall < control_constants::ROBOT_CLOSE_TO_POINT) {
         skillStpInfo.setPositionToMoveTo(FieldComputations::projectPointToValidPosition(info.getField().value(), info.getRobot()->get()->getPos(), info.getObjectsToAvoid()));
     } else {
-        auto getBallDistance = std::max(distanceToInterception, control_constants::ROBOT_RADIUS);
+        auto getBallDistance = std::max(distanceToInterception - control_constants::CENTER_TO_FRONT, MIN_DISTANCE_TO_TARGET);
         Vector2 newRobotPosition = robotPosition + (interceptionPosition - robotPosition).stretchToLength(getBallDistance);
         newRobotPosition = FieldComputations::projectPointToValidPosition(info.getField().value(), newRobotPosition, info.getObjectsToAvoid());
         skillStpInfo.setPositionToMoveTo(newRobotPosition);

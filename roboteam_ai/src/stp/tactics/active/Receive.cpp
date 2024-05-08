@@ -22,7 +22,7 @@ std::optional<StpInfo> Receive::calculateInfoForSkill(StpInfo const &info) noexc
 bool Receive::isTacticFailing(const StpInfo &info) noexcept { return !info.getPositionToMoveTo(); }
 
 bool Receive::shouldTacticReset(const StpInfo &info) noexcept {
-    double errorMargin = stp::control_constants::GO_TO_POS_ERROR_MARGIN;
+    double errorMargin = stp::control_constants::GO_TO_POS_ERROR_MARGIN * M_PI;
     return (info.getRobot().value()->getPos() - info.getPositionToMoveTo().value()).length() > errorMargin;
 }
 

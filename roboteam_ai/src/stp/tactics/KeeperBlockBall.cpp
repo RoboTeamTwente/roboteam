@@ -51,7 +51,7 @@ bool KeeperBlockBall::isEndTactic() noexcept { return true; }
 bool KeeperBlockBall::isTacticFailing(const StpInfo &) noexcept { return false; }
 
 bool KeeperBlockBall::shouldTacticReset(const StpInfo &info) noexcept {
-    const double errorMargin = control_constants::GO_TO_POS_ERROR_MARGIN;
+    const double errorMargin = control_constants::GO_TO_POS_ERROR_MARGIN * M_PI;
     const auto distanceToTarget = (info.getRobot().value()->getPos() - info.getPositionToMoveTo().value()).length();
     return distanceToTarget > errorMargin;
 }

@@ -12,11 +12,6 @@ Status Rotate::onUpdate(const StpInfo &info) noexcept {
     // Set angle command
     command.targetAngle = targetAngle;
 
-    // Set velocity if robot has the ball
-    if (robot->hasBall()) {
-        command.velocity = Vector2(0.3, 0).rotate(robot->getAngle());
-    }
-
     // Set dribbler speed command
     command.dribblerSpeed = std::clamp(info.getDribblerSpeed(), 0, 100) / 100.0 * stp::control_constants::MAX_DRIBBLER_CMD;
 
@@ -35,7 +30,7 @@ Status Rotate::onUpdate(const StpInfo &info) noexcept {
     }
 
     // Check whether the robot has been within the margin
-    return (withinMarginCount > 5) ? Status::Success : Status::Running;
+    return (withinMarginCount > 3) ? Status::Success : Status::Running;
 }
 
 const char *Rotate::getName() { return "Rotate"; }

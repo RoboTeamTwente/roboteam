@@ -15,7 +15,7 @@ void StrategyManager::setCurrentGameState(RefCommand command, RefCommand nextCom
                                         nextCommand == RefCommand::PREPARE_PENALTY_THEM || nextCommand == RefCommand::PREPARE_PENALTY_US)) {
         command = nextCommand;
     }
-    if (command != RefCommand::BALL_PLACEMENT_US && nextCommand == RefCommand::FORCED_START) {
+    if (command != RefCommand::BALL_PLACEMENT_US && command != RefCommand::BALL_PLACEMENT_THEM && nextCommand == RefCommand::FORCED_START) {
         command = RefCommand::PREPARE_FORCED_START;
     }
     if (command == RefCommand::FORCED_START) {

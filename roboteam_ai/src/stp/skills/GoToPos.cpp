@@ -12,6 +12,19 @@ Status GoToPos::onUpdate(const StpInfo &info) noexcept {
     auto targetPos = info.getPositionToMoveTo().value();
     auto roleName = info.getRoleName();
     auto ballLocation = info.getBall()->get()->position;
+    RefCommand currentGameState = GameStateManager::getCurrentGameState().getCommandId();
+
+    if (currentGameState == RefCommand::BALL_PLACEMENT_THEM) {
+        auto ballPlacementPos = GameStateManager::getRefereeDesignatedPosition();
+        auto robotToTarget = LineSegment(robot->getPos(), targetPos);
+        auto ballToReferee = LineSegment(ballLocation, ballPlacementPos);
+        if (robotToTarget.doesIntersect(ballToReferee)) {
+            double distance1 = (robot->getPos() - ballLocation).length() + (ballLocation - targetPos).length();
+            double distance2 = (robot->getPos() - ballPlacementPos).length() + (ballPlacementPos - targetPos).length();
+            targetPos = (distance1 < distance2) ? ballLocation - (ballPlacementPos - ballLocation).stretchToLength(0.8) : ballPlacementPos - (robot->getPos() - ballPlacementPos).stretchToLength(0.8);
+            targetPos = targetPos - (robot->getPos() - targetPos).stretchToLength(0.8);
+        }
+    }
 
     if (!FieldComputations::pointIsValidPosition(field, targetPos, avoidObj) && roleName != "ball_placer") {
         targetPos = FieldComputations::projectPointToValidPosition(field, targetPos, avoidObj);
@@ -21,9 +34,8 @@ Status GoToPos::onUpdate(const StpInfo &info) noexcept {
         targetPos = PositionComputations::calculateAvoidRobotsPosition(targetPos, info.getCurrentWorld(), robot->getId(), avoidObj, field);
     }
 
-    RefCommand currentGameState = GameStateManager::getCurrentGameState().getCommandId();
-
-    if (roleName != "ball_placer" && (avoidObj.shouldAvoidBall || currentGameState == RefCommand::BALL_PLACEMENT_US || currentGameState == RefCommand::BALL_PLACEMENT_THEM || currentGameState == RefCommand::BALL_PLACEMENT_US_DIRECT)) {
+    if (roleName != "ball_placer" && (avoidObj.shouldAvoidBall || currentGameState == RefCommand::BALL_PLACEMENT_US || currentGameState == RefCommand::BALL_PLACEMENT_THEM ||
+                                      currentGameState == RefCommand::BALL_PLACEMENT_US_DIRECT)) {
         targetPos = PositionComputations::calculateAvoidBallPosition(targetPos, ballLocation, field);
     }
 

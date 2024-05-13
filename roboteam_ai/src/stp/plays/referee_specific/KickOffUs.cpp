@@ -73,7 +73,7 @@ void KickOffUs::calculateInfoForRoles() noexcept {
 
 bool KickOffUs::shouldEndPlay() noexcept {
     if (stpInfos["receiver"].getRobot() && stpInfos["receiver"].getRobot().value()->hasBall()) return true;
-    if (ballKicked() && world->getWorld()->getBall()->get()->velocity.length() < control_constants::BALL_IS_MOVING_SLOW_LIMIT) return true;
+    if (ballKicked()) return true;
     if (stpInfos["receiver"].getRobot() && world->getWorld()->getBall()->get()->position.x < stpInfos["receiver"].getRobot()->get()->getPos().x) return true;
 
     return false;

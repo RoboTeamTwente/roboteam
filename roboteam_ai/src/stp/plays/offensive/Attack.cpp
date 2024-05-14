@@ -44,7 +44,7 @@ Attack::Attack() : Play() {
 
 uint8_t Attack::score(const rtt::Field& field) noexcept {
     // Score the position of the ball based on the odds of scoring
-    return PositionScoring::scorePosition(world->getWorld()->getBall().value()->position, gen::GoalShot, field, world).score;
+    return PositionScoring::scorePosition(world->getWorld()->getBall().value()->position, gen::GoalShot, field, world).score * rand()%(2) + 1;
 }
 
 Dealer::FlagMap Attack::decideRoleFlags() const noexcept {

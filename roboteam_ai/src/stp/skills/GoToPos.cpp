@@ -21,7 +21,8 @@ Status GoToPos::onUpdate(const StpInfo &info) noexcept {
         if (robotToTarget.doesIntersect(ballToReferee)) {
             double distance1 = (robot->getPos() - ballLocation).length() + (ballLocation - targetPos).length();
             double distance2 = (robot->getPos() - ballPlacementPos).length() + (ballPlacementPos - targetPos).length();
-            targetPos = (distance1 < distance2) ? ballLocation - (ballPlacementPos - ballLocation).stretchToLength(0.8) : ballPlacementPos - (robot->getPos() - ballPlacementPos).stretchToLength(0.8);
+            targetPos = (distance1 < distance2) ? ballLocation - (ballPlacementPos - ballLocation).stretchToLength(0.8)
+                                                : ballPlacementPos - (robot->getPos() - ballPlacementPos).stretchToLength(0.8);
             targetPos = targetPos - (robot->getPos() - targetPos).stretchToLength(0.8);
         }
     }

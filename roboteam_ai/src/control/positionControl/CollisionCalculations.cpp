@@ -18,7 +18,7 @@ double CollisionCalculations::getFirstCollisionTimeMotionlessObject(const Trajec
 
     auto leftGoalTopPost = LineSegment(field.leftGoalArea.topLeft(), field.leftGoalArea.topRight());
     auto leftGoalBottomPost = LineSegment(field.leftGoalArea.bottomLeft(), field.leftGoalArea.bottomRight());
-    auto leftGoalBackPost = LineSegment(field.rightGoalArea.topLeft(), field.rightGoalArea.bottomLeft());
+    auto leftGoalBackPost = LineSegment(field.leftGoalArea.topLeft(), field.leftGoalArea.bottomLeft());
     auto rightGoalTopPost = LineSegment(field.rightGoalArea.topLeft(), field.rightGoalArea.topRight());
     auto rightGoalBottomPost = LineSegment(field.rightGoalArea.bottomLeft(), field.rightGoalArea.bottomRight());
     auto rightGoalBackPost = LineSegment(field.rightGoalArea.topRight(), field.rightGoalArea.bottomRight());

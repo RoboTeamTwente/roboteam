@@ -284,7 +284,8 @@ export default defineComponent({
 
       const playName = this.stpData.latest?.currentPlay?.playName;
 
-      if (this.defensive_plays.includes(String(playName)) || this.offensive_plays.includes(String(playName))) { // Only look for passers when we are attacking (have the)
+      if ((this.defensive_plays.includes(String(playName)) || this.offensive_plays.includes(String(playName))) && playName !== 'Free Kick Us Pass') { 
+        // Only look for passers when we are attacking
 
         let list_of_robots = this.stpData.latest?.robots
         let robots_on_vision = this.visionData.ourRobots || []
@@ -390,11 +391,9 @@ export default defineComponent({
 
     check_is_pass_tried() {
       if (this.is_there_passer) { // If there is a passer check if he executes the pass (not if the pass arrives to the passer)
-        const ball_passer_distance = Math.sqrt((this.ball_x_coordinate-this.passer_x) ** 2 + (this.ball_y_coordinate-this.passer_y) ** 2); 
-        if (ball_passer_distance > 0.05) {
-          this.is_pass_tried = true; 
-          this.number_of_tried_passes = this.number_of_tried_passes + 1;
-        }
+        //const ball_passer_distance = Math.sqrt((this.ball_x_coordinate-this.passer_x) ** 2 + (this.ball_y_coordinate-this.passer_y) ** 2); 
+        this.is_pass_tried = true; 
+        this.number_of_tried_passes = this.number_of_tried_passes + 1;
       }
     },
 
@@ -720,7 +719,7 @@ export default defineComponent({
           }
 
         }
-      }, 100);
+      }, 200);
       
     }, 
 

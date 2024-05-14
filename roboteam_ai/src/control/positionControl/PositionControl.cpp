@@ -13,7 +13,7 @@ std::vector<Vector2> PositionControl::getComputedPath(int ID) { return computedP
 Vector2 PositionControl::computeAndTrackTrajectory(const world::World *world, const Field &field, int robotId, Vector2 currentPosition, Vector2 currentVelocity,
                                                    Vector2 targetPosition, double maxRobotVelocity, stp::AvoidObjects avoidObjects) {
     double timeStep = 0.1;
-    // if the target position is change
+    auto [theirDefenseAreaMargin, ourDefenseAreaMargin] = FieldComputations::getDefenseAreaMargin();
     if (avoidObjects.shouldAvoidBall && (currentPosition - world->getWorld()->getBall()->get()->position).length() < ai::stp::control_constants::AVOID_BALL_DISTANCE) {
         targetPosition = handleBallCollision(world, field, currentPosition, avoidObjects);
         computedTrajectories[robotId] = Trajectory2D(currentPosition, currentVelocity, targetPosition, maxRobotVelocity, ai::Constants::MAX_ACC());
@@ -23,10 +23,9 @@ Vector2 PositionControl::computeAndTrackTrajectory(const world::World *world, co
                    ai::stp::control_constants::AVOID_BALL_DISTANCE) {
         targetPosition = handleBallPlacementCollision(world, field, currentPosition, avoidObjects);
         computedTrajectories[robotId] = Trajectory2D(currentPosition, currentVelocity, targetPosition, maxRobotVelocity, ai::Constants::MAX_ACC());
-    } else if ((avoidObjects.shouldAvoidOurDefenseArea &&
-                FieldComputations::getDefenseArea(field, true, std::get<1>(FieldComputations::getDefenseAreaMargin()), 1).contains(currentPosition)) ||
-               (avoidObjects.shouldAvoidTheirDefenseArea &&
-                FieldComputations::getDefenseArea(field, false, std::get<0>(FieldComputations::getDefenseAreaMargin()), 1).contains(currentPosition))) {
+    } else if ((avoidObjects.shouldAvoidOurDefenseArea && FieldComputations::getDefenseArea(field, true, ourDefenseAreaMargin, 1).contains(currentPosition)) ||
+               (avoidObjects.shouldAvoidTheirDefenseArea && theirDefenseAreaMargin > stp::control_constants::ROBOT_RADIUS + stp::control_constants::GO_TO_POS_ERROR_MARGIN &&
+                FieldComputations::getDefenseArea(field, false, theirDefenseAreaMargin, 1).contains(currentPosition))) {
         targetPosition = handleDefenseAreaCollision(field, currentPosition);
         computedTrajectories[robotId] = Trajectory2D(currentPosition, currentVelocity, targetPosition, maxRobotVelocity, ai::Constants::MAX_ACC());
     } else {

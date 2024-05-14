@@ -40,7 +40,7 @@ double CollisionCalculations::getFirstCollisionTimeMotionlessObject(const Trajec
                 return checkPoint * 0.1;
             }
         }
-        if (avoidObjects.shouldAvoidTheirDefenseArea) {
+        if (avoidObjects.shouldAvoidTheirDefenseArea && theirDefenseAreaMargin > stp::control_constants::ROBOT_RADIUS + stp::control_constants::GO_TO_POS_ERROR_MARGIN) {
             if (theirDefenseArea.contains(pathPoints[checkPoint]) || theirDefenseArea.contains(pathPoints[checkPoint - 1]) || theirDefenseArea.doesIntersect(pathLine)) {
                 return checkPoint * 0.1;
             }

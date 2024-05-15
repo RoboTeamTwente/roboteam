@@ -41,7 +41,7 @@ const ballToCenter = {
 const shootOnLeftGoal = {
   'control' : {
     'teleportBall' : {
-      'x' : 0, 'y' : 0, 'z' : 0, 'vx' : -6, 'vy' : 0, 'vz' : 0
+      'x' : -3.5, 'y' : 0, 'z' : 0, 'vx' : -3.3, 'vy' : -1, 'vz' : 0
     }
   }
 }

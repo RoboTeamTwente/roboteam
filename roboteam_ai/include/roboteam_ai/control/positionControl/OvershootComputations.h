@@ -50,6 +50,18 @@ class OvershootComputations {
     static double slowestDirectTime(double distance, double initialVelocity, double maxAcceleration);
 
     /**
+     * @brief Calculate the fastest possible direct movement with any form.
+     *
+     * @param distance The distance to the target position.
+     * @param initialVelocity The initial velocity of the robot.
+     * @param maxVelocity The maximum velocity of the robot.
+     * @param maxAcceleration The maximum acceleration of the robot.
+     * @param targetTime The time it takes to reach the target position.
+     * @return The fastest possible direct movement with any form.
+     */
+    static TimedPos1D fastestDirect(double distance, double initialVelocity, double maxVelocity, double maxAcceleration, double targetTime);
+
+    /**
      * @brief Calculate the fastest possible direct movement with a trapezoidal form.
      *
      * @param distance The distance to the target position.

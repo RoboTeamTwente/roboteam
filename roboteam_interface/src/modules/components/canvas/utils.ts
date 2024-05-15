@@ -72,7 +72,7 @@ export const useMoveBall = (
     { pressed } = useMousePressed()
 
   const onMouseMove = useThrottleFn((e: FederatedPointerEvent) => {
-    if (!keys.b.value || !pressed.value) return
+    if (!(keys.b.value || keys.shift.value) || !pressed.value) return
     const pos = transformCoordinates(e.getLocalPosition(app.value!.layers.objects))
     aiController.sendSimulatorCommand({
       control: { teleportBall: { x: pos.x, y: pos.y, z: 0.0, vx: 0.0, vy: 0.0, vz: 0.0 } }
@@ -90,20 +90,17 @@ export const useShootBall = (
     aiController = useAiController(),
     keys = useMagicKeys(),
     { pressed } = useMousePressed()
-
-
-
   const onClick = useThrottleFn((e: FederatedPointerEvent) => {
-    if (!keys.s.value || !pressed.value) return
-
     let speed = 6;
+    let numberKeyPressed = false;
     for (let i = 1; i <= 9; i++) {
-      if (keys[i.toString()].value) {
-        speed = i;
-        break;
-      }
+        if (keys[i.toString()].value) {
+            speed = i;
+            numberKeyPressed = true;
+            break;
+        }
     }
-
+    if (!numberKeyPressed && (!keys.s.value || !pressed.value)) return
     const pos = transformCoordinates(e.getLocalPosition(app.value!.layers.objects))
     const visionData = useVisionDataStore()
     const world = visionData.latestWorld
@@ -135,7 +132,7 @@ export const useMoveRobots = (
     { pressed } = useMousePressed()
 
   const onClick = useThrottleFn((e: FederatedPointerEvent) => {
-    if (!keys.r.value || !pressed.value) return
+    if (!(keys.r.value || keys.alt.value) || !pressed.value) return
 
     const pos = transformCoordinates(e.getLocalPosition(app.value!.layers.objects))
 

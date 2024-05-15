@@ -33,7 +33,7 @@ const props = defineProps<{
         <ul class="flex flex-col gap-2">
           <li>
             Place ball:
-            <div class="kbd kbd-sm font-mono">b</div>
+            <div class="kbd kbd-sm font-mono">b / shift</div>
             +
             <div class="kbd kbd-sm font-mono">left click / click and drag</div>
           </li>
@@ -45,17 +45,15 @@ const props = defineProps<{
           </li>
           <li>
             Shoot to mouse with [1-9] m/s:
-            <div class="kbd kbd-sm font-mono">s</div>
-            +
             <div class="kbd kbd-sm font-mono">[1-9]</div>
             +
             <div class="kbd kbd-sm font-mono">left click</div>
           </li>
           <li>
             Place selected robots:
-            <div class="kbd kbd-rsm font-mono">r</div>
+            <div class="kbd kbd-rsm font-mono">r / alt</div>
             +
-            <div class="kbd kbd-sm font-mono">right click / click and drag</div>
+            <div class="kbd kbd-sm font-mono">left click / click and drag</div>
           </li>
           <li>
             Zoom in/out:

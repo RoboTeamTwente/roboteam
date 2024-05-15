@@ -38,7 +38,7 @@ double OvershootComputations::slowestDirectTime(double distance, double initialV
 }
 
 TimedPos1D OvershootComputations::fastestDirect(double distance, double initialVelocity, double maxVelocity, double maxAcceleration, double targetTime) {
-    double deceleration = (initialVelocity >= 0.0) ? -maxAcceleration : maxAcceleration;
+    double deceleration = (maxVelocity >= 0.0) ? -maxAcceleration : maxAcceleration;
     return fastestDirectTrapezoidal(distance, initialVelocity, maxVelocity, maxAcceleration, deceleration, targetTime)
         .value_or(fastestDirectTriangular(distance, initialVelocity, maxVelocity, maxAcceleration, deceleration, targetTime));
 }

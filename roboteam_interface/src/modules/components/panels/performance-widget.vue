@@ -42,12 +42,12 @@ const stpData = useSTPDataStore()
       <p v-else>List of roles: None</p>
     </div>
     <div>
-      <p v-if="is_match_started">Is there a passer? {{is_there_passer}}</p>
-      <p v-else>Is there a passer?: None</p>
+      <p v-if="is_match_started">Passer ID: {{passer_id}}</p>
+      <p v-else>Passer ID: None</p>
     </div>
     <div>
-      <p v-if="is_match_started">Is there a kick passer? {{is_there_passer_fkick}}</p>
-      <p v-else>Is there a kick passer?: None</p>
+      <p v-if="is_match_started">Receiver ID: {{receiver_id}}</p>
+      <p v-else>Receiver ID: None</p>
     </div>
     <div>
       <p v-if="is_match_started || (is_pass_tried || is_pass_fkick_tried || is_pass_gk_tried)">Receiver: ({{receiver_x}}, {{receiver_y}})</p>
@@ -171,10 +171,12 @@ export default defineComponent({
       stpData: useSTPDataStore(),
       visionData: useVisionDataStore(),
 
-      is_match_started: false, 
+      is_match_started: true, 
       is_kick_off: false, 
       is_there_passer: false, 
       is_there_passer_fkick: false,
+      is_there_receiver: false,
+      is_receiver_found: false, // This one is used in the loop through the list of robots to look for a receiver
 
       offensive_plays: ['Attack', 'Attacking Pass', 'Chipping Pass', 'Keeper Kick Ball', 'Free Kick Us Pass', 'Ball Placement Us Free Kick'],
       defensive_plays: ['Defend Shot', 'Defend Pass'],
@@ -287,27 +289,21 @@ export default defineComponent({
       if ((this.defensive_plays.includes(String(playName)) || this.offensive_plays.includes(String(playName))) && playName !== 'Free Kick Us Pass') { 
         // Only look for passers when we are attacking
 
-        let list_of_robots = this.stpData.latest?.robots
+        let list_of_robots = this.robots_roles
         let robots_on_vision = this.visionData.ourRobots || []
         let counter = 0; // Let's assume that the position of each robot on the list list_of_robots is always the same
         // And use the counter to update the role of each robot
 
         for (let key in list_of_robots ) { // Go through the IDs of the robots
 
-          if (Object.prototype.hasOwnProperty.call(list_of_robots, key)) {
+          //if (Object.prototype.hasOwnProperty.call(list_of_robots, key)) {
 
-            this.robots_roles[counter] = list_of_robots[key].role?.name!;
+            //this.robots_roles[counter] = list_of_robots[key].role?.name!;
 
-            if (list_of_robots[key].role?.name! === "passer") { //keeper_kick_ball -> PLAY & free_kick_taker -> ROLE
+            if (list_of_robots[counter] === "passer") { //keeper_kick_ball -> PLAY & free_kick_taker -> ROLE
 
               this.is_there_passer = true; 
               const passer_id = counter; 
-
-              /*if (passer_id === this.passer_id) { // If receiver is the same as in the previous iter, put his coordinates to zero
-                this.is_there_passer = false; 
-                this.passer_x = 0;
-                this.passer_y = 0;
-              }*/
 
               // Get the coordinates of the passer
               this.passer_x = robots_on_vision[passer_id].pos?.x!;
@@ -323,8 +319,10 @@ export default defineComponent({
               this.passer_y = 0;
 
             }
+
             counter = counter + 1;
-          }
+
+          //}
         }  
       } else {
         this.is_there_passer = false; 
@@ -338,18 +336,18 @@ export default defineComponent({
 
     if (this.defensive_plays.includes(String(playName)) || this.offensive_plays.includes(String(playName))) { // Only look for passers when we are attacking (have the)
 
-      let list_of_robots = this.stpData.latest?.robots
+      let list_of_robots = this.robots_roles
       let robots_on_vision = this.visionData.ourRobots || []
       let counter = 0; // Let's assume that the position of each robot on the list list_of_robots is always the same
       // And use the counter to update the role of each robot
 
       for (let key in list_of_robots ) { // Go through the IDs of the robots
 
-        if (Object.prototype.hasOwnProperty.call(list_of_robots, key)) {
+        //if (Object.prototype.hasOwnProperty.call(list_of_robots, key)) {
 
-          this.robots_roles[counter] = list_of_robots[key].role?.name!;
+          //this.robots_roles[counter] = list_of_robots[key].role?.name!;
 
-          if (list_of_robots[key].role?.name! === "free_kick_taker") { //The logic thing is free_kick_taker, but i have seen that the passer takes the role harasser
+          if (list_of_robots[key] === "free_kick_taker") { //The logic thing is free_kick_taker, but i have seen that the passer takes the role harasser
 
             this.is_there_passer_fkick = true; 
             const passer_id = counter; 
@@ -375,7 +373,7 @@ export default defineComponent({
 
           }
           counter = counter + 1;
-        }
+        //}
       }  
     } else {
       this.is_there_passer = false; 
@@ -390,7 +388,7 @@ export default defineComponent({
     },
 
     check_is_pass_tried() {
-      if (this.is_there_passer) { // If there is a passer check if he executes the pass (not if the pass arrives to the passer)
+      if (this.is_there_receiver) { // If there is a passer check if he executes the pass (not if the pass arrives to the passer)
         //const ball_passer_distance = Math.sqrt((this.ball_x_coordinate-this.passer_x) ** 2 + (this.ball_y_coordinate-this.passer_y) ** 2); 
         this.is_pass_tried = true; 
         this.number_of_tried_passes = this.number_of_tried_passes + 1;
@@ -419,36 +417,28 @@ export default defineComponent({
       // When this function is executed we already know there is a passer, look for him
       // (The booleans about whether a pass has been tried are in the "main" loop (function))
 
-      let list_of_robots = this.stpData.latest?.robots
+      let list_of_robots = this.robots_roles
       let robots_on_vision = this.visionData.ourRobots || []
       let counter = 0;
+      this.is_receiver_found = false; 
 
       for (let key in list_of_robots ) { // Go through the IDs of the robots
 
-        if (Object.prototype.hasOwnProperty.call(list_of_robots, key)) {
+        //if (Object.prototype.hasOwnProperty.call(list_of_robots, key)) {
 
           //this.robots_roles[counter] = list_of_robots[key].role?.name!; // Now don't update the list of robots (already done in get_passer_position())
 
-          if (list_of_robots[key].role?.name! === "receiver" || list_of_robots[key].role?.name! === "harasser") { 
+          if (list_of_robots[counter] === "receiver") { // || list_of_robots[key].role?.name! === "harasser") { 
 
             // No need to ask whether there's a receiver, we assume there is one (whether pass_receiver or harasser)
             const receiver_id = counter; 
-
-            /*
-            Sometimes there is a harasser but not a receiver. We don't care, because in the "main" we would only compute this structure
-            when actually there is a passer
-            */
-
-            /*if (receiver_id === this.previous_receiver_id) { // If receiver is the same as in the previous iter, put his coordinates to zero
-              this.receiver_x = 0;
-              this.receiver_y = 0;
-            }*/
 
             // Get the coordinates of the passer
             this.receiver_x = robots_on_vision[receiver_id].pos?.x!;
             this.receiver_y = robots_on_vision[receiver_id].pos?.y!;
 
             this.receiver_id = receiver_id;
+            this.is_receiver_found = true; 
             return
 
           } else {
@@ -458,7 +448,7 @@ export default defineComponent({
 
           }
           counter = counter + 1;
-        }
+        //}
       } 
 
     },
@@ -466,20 +456,21 @@ export default defineComponent({
     check_is_still_receiver() { // Check if a robot (id) still has the role of receiver (this function is used during pass evaluation)
 
       let robot_id = this.receiver_id; // The robot we have to check whether it is still a receiver
-      let list_of_robots = this.stpData.latest?.robots
+      let list_of_robots = this.robots_roles
       let robots_on_vision = this.visionData.ourRobots || []
-      let counter = 0;
+      //let counter = 0;
 
 
-      for (let key in list_of_robots ) { 
+      //for (let key in list_of_robots ) { 
 
-      if (key === String(this.receiver_id) && Object.prototype.hasOwnProperty.call(list_of_robots, robot_id)) {
+      //if (key === String(this.receiver_id) && Object.prototype.hasOwnProperty.call(list_of_robots, robot_id)) {
 
         // Update the roles list 
-        this.robots_roles[counter] = list_of_robots[key].role?.name!;
-        counter = counter + 1;
+        //this.robots_roles[counter] = list_of_robots[key].role?.name!;
+        //counter = counter + 1;
 
-        if (list_of_robots[robot_id].role?.name! === "receiver" || list_of_robots[robot_id].role?.name! === "harasser") {
+        //if (list_of_robots[robot_id].role?.name! === "receiver" || list_of_robots[robot_id].role?.name! === "passer" || list_of_robots[robot_id].role?.name! === "striker") {
+        if (list_of_robots[robot_id] === "receiver" || list_of_robots[robot_id] === "passer" || list_of_robots[robot_id] === "striker") {
           // If the receiver is still a receiver, update its position
           this.receiver_changed_role = false; 
           this.receiver_x = robots_on_vision[this.receiver_id].pos?.x!;
@@ -490,9 +481,9 @@ export default defineComponent({
           this.receiver_changed_role = true; 
 
         }
-      }
+      //}
 
-      }
+      //}
 
     },
 
@@ -624,6 +615,25 @@ export default defineComponent({
       
     }, 
 
+    update_roles() {
+
+      setInterval(() => {
+
+      let list_of_robots = this.stpData.latest?.robots
+      let counter = 0; 
+
+      for (let key in list_of_robots ) { // Go through the IDs of the robots
+
+        if (Object.prototype.hasOwnProperty.call(list_of_robots, key)) {
+
+          this.robots_roles[counter] = list_of_robots[key].role?.name!;
+          counter = counter + 1;
+
+        }
+      }
+      }, 50);
+    },
+
     passing_accuracy_block() {
 
       let is_pass_1_being_assessed = false;
@@ -637,10 +647,19 @@ export default defineComponent({
           
           // Look for a passer
           if (this.is_match_started && this.is_there_passer && this.previous_passer_id !== this.passer_id) { 
+
             // Only if there is a passer (and it is not the same as the previous pass), check if the pass has been tried
             this.get_ball_position();
+
             this.look_4_receiver() // Assume that there is going to be a receiver -> get its position
-            this.check_is_pass_tried(); // Need to have the updated position of the ball
+
+            if (this.is_receiver_found) {
+              this.is_there_receiver = true;
+            } else {
+              this.is_there_receiver = false;
+            }
+
+            this.check_is_pass_tried(); // This function acknowledges that a pass has been tried if there is a receiver
 
             if (this.is_pass_tried) {
               is_pass_1_being_assessed = true;
@@ -658,9 +677,18 @@ export default defineComponent({
 
           // Look for a passer from free kick
           if (this.is_match_started && this.is_there_passer_fkick && this.previous_passer_id !== this.passer_id) { // Only if there is a passer, check if the pass has been tried
+            
             this.get_ball_position();
+
             this.look_4_receiver(); // Assume that there is going to be a receiver -> get its position
-            this.check_is_pass_fkick_tried(); // It is actually not checking, just incrementing the counter
+
+            if (this.is_receiver_found) {
+              this.is_there_receiver = true;
+            } else {
+              this.is_there_receiver = false;
+            }
+
+            this.check_is_pass_fkick_tried(); // This function acknowledges that a pass has been tried if there is a receiver
 
             if (this.is_pass_fkick_tried) {
               is_pass_2_being_assessed = true;
@@ -687,11 +715,11 @@ export default defineComponent({
           if (this.offensive_plays.includes(String(this.current_play))) { // If we are still in an ofensive play (haven't lost the ball)
 
             this.get_ball_position(); // Update the ball position
-            this.check_is_still_receiver(); // If it is, update the receiver position
+            this.check_is_still_receiver(); // Check receiver is still a receiver, a passer or a striker
 
             if (this.receiver_changed_role === false) { // If the receiver is still the receiver
               // Compare it with the last known position of the receiver
-              const ball_receiver_distance = Math.sqrt((this.ball_x_coordinate-this.passer_x) ** 2 + (this.ball_y_coordinate-this.passer_y) ** 2); 
+              const ball_receiver_distance = Math.sqrt((this.ball_x_coordinate-this.receiver_x) ** 2 + (this.ball_y_coordinate-this.receiver_y) ** 2); 
 
               if (ball_receiver_distance < 0.2 && this.previous_receiver_id !== this.receiver_id) { 
 
@@ -719,7 +747,7 @@ export default defineComponent({
           }
 
         }
-      }, 200);
+      }, 100);
       
     }, 
 
@@ -749,6 +777,7 @@ export default defineComponent({
   created() {
     this.define_event(); // Init when the script is run
     this.is_started();
+    this.update_roles();
     this.passing_accuracy_block();
   },
 

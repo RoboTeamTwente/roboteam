@@ -1,8 +1,3 @@
-//
-// Created by jordi on 08-04-20.
-// Modified by timovdk on 4/29/20.
-//
-
 #include "stp/roles/PenaltyKeeper.h"
 
 #include <roboteam_utils/Print.h>

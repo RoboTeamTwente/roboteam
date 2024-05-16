@@ -1,7 +1,3 @@
-//
-// Created by jessevw on 24.03.20.
-//
-
 #include "stp/plays/referee_specific/BallPlacementThem.h"
 
 #include "stp/roles/Keeper.h"
@@ -22,7 +18,7 @@ BallPlacementThem::BallPlacementThem() : Play() {
     // Role creation, the names should be unique. The names are used in the stpInfos-map.
     roles = std::array<std::unique_ptr<Role>, rtt::ai::Constants::ROBOT_COUNT()>{
         // Roles is we play 6v6
-        std::make_unique<role::Formation>("keeper"),
+        std::make_unique<role::Keeper>("keeper"),
         std::make_unique<role::Formation>("harasser"),
         std::make_unique<role::Formation>("waller_0"),
         std::make_unique<role::Formation>("waller_1"),
@@ -62,7 +58,6 @@ Dealer::FlagMap BallPlacementThem::decideRoleFlags() const noexcept {
 }
 
 void BallPlacementThem::calculateInfoForRoles() noexcept {
-    PositionComputations::calculateInfoForKeeper(stpInfos, field, world);
     PositionComputations::calculateInfoForDefendersAndWallers(stpInfos, roles, field, world, false);
     PositionComputations::calculateInfoForAttackers(stpInfos, roles, field, world);
     calculateInfoForHarasser();

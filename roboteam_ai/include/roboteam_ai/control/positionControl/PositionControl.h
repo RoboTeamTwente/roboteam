@@ -1,7 +1,3 @@
-//
-// Created by ratoone on 18-11-19.
-//
-
 #ifndef RTT_POSITIONCONTROL_H
 #define RTT_POSITIONCONTROL_H
 
@@ -111,7 +107,7 @@ class PositionControl {
      * @param field the field object, used onwards by the collision detector
      * @param currentPosition the current position of the robot
      * @param avoidObjects whether or not to avoid objects
-     * @return A new trajectory to the target
+     * @return A new target position
      */
     Vector2 handleBallCollision(const rtt::world::World *world, const rtt::Field &field, Vector2 currentPosition, stp::AvoidObjects avoidObjects);
 
@@ -121,9 +117,17 @@ class PositionControl {
      * @param field the field object, used onwards by the collision detector
      * @param currentPosition the current position of the robot
      * @param avoidObjects whether or not to avoid objects
-     * @return A new trajectory to the target
+     * @return A new target position
      */
     Vector2 handleBallPlacementCollision(const rtt::world::World *world, const rtt::Field &field, Vector2 currentPosition, stp::AvoidObjects avoidObjects);
+
+    /**
+     * @brief Handles the collision with the defense area at the current position, will move away from the defense area as quickly as possible.
+     * @param field the field object, used onwards by the collision detector
+     * @param currentPosition the current position of the robot
+     * @return A new target position
+     */
+    Vector2 handleDefenseAreaCollision(const rtt::Field &field, Vector2 currentPosition);
 
     /**
      * @brief Calculates a score for a trajectory. The score is based on the distance to the target and the

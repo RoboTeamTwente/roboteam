@@ -261,4 +261,171 @@ TEST(AngleTest, addition_substraction) {
     EXPECT_DOUBLE_EQ(y, 0);
 }
 
+TEST(AngleTest, ConstructorTest) {
+    // Test with positive double value
+    rtt::Angle a1(1.0);
+    EXPECT_DOUBLE_EQ(a1.getValue(), 1.0);
+
+    // Test with negative double value
+    rtt::Angle a2(-1.0);
+    EXPECT_DOUBLE_EQ(a2.getValue(), -1.0);
+
+    // Test with zero double value
+    rtt::Angle a3(0.0);
+    EXPECT_DOUBLE_EQ(a3.getValue(), 0.0);
+
+    // Test with Vector2 where x > 0 and y = 0
+    rtt::Vector2 vec1(1.0, 0.0);
+    rtt::Angle a4(vec1);
+    EXPECT_DOUBLE_EQ(a4.getValue(), 0.0);
+
+    // Test with Vector2 where x = 0 and y > 0
+    rtt::Vector2 vec2(0.0, 1.0);
+    rtt::Angle a5(vec2);
+    EXPECT_DOUBLE_EQ(a5.getValue(), M_PI / 2.0);
+
+    // Test with Vector2 where x = 0 and y < 0
+    rtt::Vector2 vec3(0.0, -1.0);
+    rtt::Angle a6(vec3);
+    EXPECT_DOUBLE_EQ(a6.getValue(), -M_PI / 2.0);
+
+    // Test with Vector2 where x = 0 and y = 0
+    rtt::Vector2 vec4(0.0, 0.0);
+    rtt::Angle a7(vec4);
+    EXPECT_DOUBLE_EQ(a7.getValue(), 0.0);
+}
+
+TEST(AngleTest, NormalizeTest) {
+    // Test with angle > π
+    rtt::Angle a(4 * M_PI);
+    EXPECT_TRUE(a.getValue() == 0.0);
+
+    // Test with angle < -π
+    a = rtt::Angle(-4 * M_PI);
+    EXPECT_TRUE(a.getValue() == 0.0);
+
+    // Test with angle = π
+    a = rtt::Angle(M_PI);
+    EXPECT_TRUE(a.getValue() == -M_PI);
+
+    // Test with angle = -π
+    a = rtt::Angle(-M_PI);
+    EXPECT_TRUE(a.getValue() == -M_PI);
+
+    // Test with angle = 0
+    a = rtt::Angle(0);
+    EXPECT_TRUE(a.getValue() == 0.0);
+}
+
+TEST(AngleTest, RotateDirectionTest) {
+    rtt::Angle a1(1.0);
+    rtt::Angle a2(-3.0);
+    EXPECT_TRUE(a1.rotateDirection(a2));
+
+    a1 = rtt::Angle(1.0);
+    a2 = rtt::Angle(2.0);
+    EXPECT_TRUE(a1.rotateDirection(a2));
+
+    a1 = rtt::Angle(2.0);
+    a2 = rtt::Angle(1.0);
+    EXPECT_FALSE(a1.rotateDirection(a2));
+
+    a1 = rtt::Angle(-1.0);
+    a2 = rtt::Angle(-2.0);
+    EXPECT_FALSE(a1.rotateDirection(a2));
+
+    a1 = rtt::Angle(-2.0);
+    a2 = rtt::Angle(-1.0);
+    EXPECT_TRUE(a1.rotateDirection(a2));
+
+    a1 = rtt::Angle(1.0);
+    a2 = rtt::Angle(-1.0);
+    EXPECT_FALSE(a1.rotateDirection(a2));
+
+    a1 = rtt::Angle(-1.0);
+    a2 = rtt::Angle(1.0);
+    EXPECT_TRUE(a1.rotateDirection(a2));
+}
+
+TEST(AngleTest, ShortestAngleDiffTest) {
+    // Test with a1 > a2
+    rtt::Angle a1(1.0);
+    rtt::Angle a2(-1.0);
+    EXPECT_DOUBLE_EQ(a1.shortestAngleDiff(a2), 2.0);
+
+    // Test with a1 < a2
+    a1 = rtt::Angle(-1.0);
+    a2 = rtt::Angle(1.0);
+    EXPECT_DOUBLE_EQ(a1.shortestAngleDiff(a2), 2.0);
+
+    // Test with a1 = a2
+    a1 = rtt::Angle(1.0);
+    a2 = rtt::Angle(1.0);
+    EXPECT_DOUBLE_EQ(a1.shortestAngleDiff(a2), 0.0);
+
+    // Test with a1 and a2 both > 0
+    a1 = rtt::Angle(1.0);
+    a2 = rtt::Angle(0.5);
+    EXPECT_DOUBLE_EQ(a1.shortestAngleDiff(a2), 0.5);
+
+    // Test with a1 and a2 both < 0
+    a1 = rtt::Angle(-0.5);
+    a2 = rtt::Angle(-1.0);
+    EXPECT_DOUBLE_EQ(a1.shortestAngleDiff(a2), 0.5);
+}
+TEST(AngleTest, ToVector2Test) {
+    // Test with angle = 0
+    rtt::Angle a(0.0);
+    rtt::Vector2 vec = a.toVector2(1.0);
+    EXPECT_DOUBLE_EQ(vec.x, 1.0);
+    EXPECT_DOUBLE_EQ(vec.y, 0.0);
+
+    // Test with angle = π/2
+    a = rtt::Angle(M_PI / 2.0);
+    vec = a.toVector2(1.0);
+    EXPECT_NEAR(vec.x, 0.0, 1e-9);
+    EXPECT_NEAR(vec.y, 1.0, 1e-9);
+
+    // Test with angle = π
+    a = rtt::Angle(M_PI);
+    vec = a.toVector2(1.0);
+    EXPECT_NEAR(vec.x, -1.0, 1e-9);
+    EXPECT_NEAR(vec.y, 0.0, 1e-9);
+
+    // Test with angle = -π/2
+    a = rtt::Angle(-M_PI / 2.0);
+    vec = a.toVector2(1.0);
+    EXPECT_NEAR(vec.x, 0.0, 1e-9);
+    EXPECT_NEAR(vec.y, -1.0, 1e-9);
+
+    // Test with angle = -π
+    a = rtt::Angle(-M_PI);
+    vec = a.toVector2(1.0);
+    EXPECT_NEAR(vec.x, -1.0, 1e-9);
+    EXPECT_NEAR(vec.y, 0.0, 1e-9);
+}
+
+TEST(AngleTest, OperatorTest) {
+    rtt::Angle a1(1.0);
+    rtt::Angle a2(-1.0);
+
+    EXPECT_TRUE(a1 != a2);
+    EXPECT_FALSE(a1 == a2);
+
+    rtt::Angle a3 = a1 + a2;
+    EXPECT_DOUBLE_EQ(a3.getValue(), 0.0);
+
+    rtt::Angle a4 = a1 - a2;
+    EXPECT_DOUBLE_EQ(a4.getValue(), 2.0);
+
+    a1 += a2;
+    EXPECT_DOUBLE_EQ(a1.getValue(), 0.0);
+
+    a1 -= a2;
+    EXPECT_DOUBLE_EQ(a1.getValue(), 1.0);
+
+    a1 = 2.0;
+    EXPECT_DOUBLE_EQ(a1.getValue(), 2.0);
+}
+
 }  // namespace rtt

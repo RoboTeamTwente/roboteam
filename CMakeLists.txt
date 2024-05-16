@@ -19,6 +19,7 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${RTT_BUILD_FOLDER}/lib)
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules)
 include(ccache) # For faster compiling
 include(GetZmqpp) # For networking between AI, RobotHub and World
+include(BuildLibusb) # USB library for RobotHub
 include(CheckCXXCompilerFlag) # For testing compiler cxx standard support
 include(LocateQt5) # For GUI and some networking
 include(GetGoogleTest) # For testing
@@ -95,12 +96,10 @@ endif()
 
 find_package(Qt5Network REQUIRED)
 
-
-
 # internal projects
 add_subdirectory(roboteam_networking)
 add_subdirectory(roboteam_utils)
 add_subdirectory(roboteam_logging)
 add_subdirectory(roboteam_ai)
 add_subdirectory(roboteam_robothub)
-add_subdirectory(roboteam_world)
+add_subdirectory(roboteam_observer)

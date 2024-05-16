@@ -1,10 +1,3 @@
-//
-// Created by timovdk on 3/16/20.
-/// Rotates the target position and drives towards it
-
-/// ACTIVE
-//
-
 #include "stp/tactics/active/DriveWithBall.h"
 
 #include "stp/skills/GoToPos.h"

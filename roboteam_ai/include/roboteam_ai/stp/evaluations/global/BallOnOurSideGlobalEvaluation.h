@@ -1,7 +1,3 @@
-//
-// Created by timovdk on 4/14/20.
-//
-
 #ifndef RTT_BALLONOURSIDEGLOBALEVALUATION_H
 #define RTT_BALLONOURSIDEGLOBALEVALUATION_H
 

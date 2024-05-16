@@ -1,7 +1,3 @@
-//
-// Created by jordi on 28-04-20.
-//
-
 #include "stp/evaluations/game_states/FreeKickThemGameStateEvaluation.h"
 
 #include "utilities/GameStateManager.hpp"

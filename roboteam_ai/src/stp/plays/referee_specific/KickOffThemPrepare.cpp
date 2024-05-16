@@ -1,9 +1,6 @@
-//
-// Created by jordi on 30-04-20.
-//
-
 #include "stp/plays/referee_specific/KickOffThemPrepare.h"
 
+#include "stp/roles/Keeper.h"
 #include "stp/roles/passive/Formation.h"
 
 namespace rtt::ai::stp::play {
@@ -20,7 +17,7 @@ KickOffThemPrepare::KickOffThemPrepare() : Play() {
     // Role creation, the names should be unique. The names are used in the stpInfos-map.
     roles = std::array<std::unique_ptr<Role>, rtt::ai::Constants::ROBOT_COUNT()>{
         // Roles is we play 6v6
-        std::make_unique<role::Formation>("keeper"),
+        std::make_unique<role::Keeper>("keeper"),
         std::make_unique<role::Formation>("formation_back_0"),
         std::make_unique<role::Formation>("formation_mid_0"),
         std::make_unique<role::Formation>("formation_front_0"),
@@ -59,10 +56,7 @@ Dealer::FlagMap KickOffThemPrepare::decideRoleFlags() const noexcept {
     return flagMap;
 }
 
-void KickOffThemPrepare::calculateInfoForRoles() noexcept {
-    PositionComputations::calculateInfoForKeeper(stpInfos, field, world);
-    PositionComputations::calculateInfoForFormationOurSide(stpInfos, roles, field, world);
-}
+void KickOffThemPrepare::calculateInfoForRoles() noexcept { PositionComputations::calculateInfoForFormationOurSide(stpInfos, roles, field, world); }
 
 const char* KickOffThemPrepare::getName() const { return "Kick Off Them Prepare"; }
 

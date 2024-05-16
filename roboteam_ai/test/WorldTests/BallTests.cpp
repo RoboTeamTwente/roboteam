@@ -1,6 +1,3 @@
-//
-// Created by john on 1/22/20.
-//
 #include <gtest/gtest.h>
 
 #include "world/Ball.hpp"

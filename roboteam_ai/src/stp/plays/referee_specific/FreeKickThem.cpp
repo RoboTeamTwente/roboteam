@@ -1,7 +1,3 @@
-//
-// Created by jordi on 07-05-20.
-//
-
 #include "stp/plays/referee_specific/FreeKickThem.h"
 
 #include "stp/computations/PositionComputations.h"
@@ -65,7 +61,6 @@ Dealer::FlagMap FreeKickThem::decideRoleFlags() const noexcept {
 }
 
 void FreeKickThem::calculateInfoForRoles() noexcept {
-    PositionComputations::calculateInfoForKeeper(stpInfos, field, world);
     PositionComputations::calculateInfoForDefendersAndWallers(stpInfos, roles, field, world, false);
     PositionComputations::calculateInfoForAttackers(stpInfos, roles, field, world);
     calculateInfoForHarasser();

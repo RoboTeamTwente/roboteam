@@ -1,7 +1,3 @@
-//
-// Created by rolf on 28-05-22.
-//
-
 #include "LogFileWriter.h"
 
 bool rtt::LogFileWriter::open(const std::string &file_name) {

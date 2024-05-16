@@ -1,7 +1,3 @@
-//
-// Created by jordi on 30-04-20.
-//
-
 #include "stp/plays/referee_specific/KickOffUsPrepare.h"
 
 #include "stp/roles/Keeper.h"
@@ -21,7 +17,7 @@ KickOffUsPrepare::KickOffUsPrepare() : Play() {
     // Role creation, the names should be unique. The names are used in the stpInfos-map.
     roles = std::array<std::unique_ptr<Role>, rtt::ai::Constants::ROBOT_COUNT()>{
         // Roles is we play 6v6
-        std::make_unique<role::Formation>("keeper"),
+        std::make_unique<role::Keeper>("keeper"),
         std::make_unique<role::Formation>("kicker"),
         std::make_unique<role::Formation>("formation_mid_0"),
         std::make_unique<role::Formation>("formation_front_0"),
@@ -64,11 +60,10 @@ Dealer::FlagMap KickOffUsPrepare::decideRoleFlags() const noexcept {
 }
 
 void KickOffUsPrepare::calculateInfoForRoles() noexcept {
-    PositionComputations::calculateInfoForKeeper(stpInfos, field, world);
     PositionComputations::calculateInfoForFormationOurSide(stpInfos, roles, field, world);
 
     // The "kicker" will go to the ball
-    stpInfos["kicker"].setPositionToMoveTo(Vector2(-0.5, 0.0));
+    stpInfos["kicker"].setPositionToMoveTo(Vector2(-control_constants::AVOID_BALL_DISTANCE, 0.0));
 }
 
 const char* KickOffUsPrepare::getName() const { return "Kick Off Us Prepare"; }

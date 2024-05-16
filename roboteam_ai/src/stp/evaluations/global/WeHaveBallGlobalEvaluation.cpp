@@ -1,8 +1,3 @@
-//
-// Created by ratoone on 27-03-20.
-/// T/F Invariant if FRIENDLY has BALL
-//
-
 #include "stp/evaluations/global/WeHaveBallGlobalEvaluation.h"
 
 namespace rtt::ai::stp::evaluation {

@@ -1,7 +1,3 @@
-//
-// Created by Floris Hoek on 22-06-21.
-//
-
 #include "stp/plays/referee_specific/FreeKickUsAtGoal.h"
 
 #include "stp/computations/GoalComputations.h"
@@ -68,7 +64,6 @@ Dealer::FlagMap FreeKickUsAtGoal::decideRoleFlags() const noexcept {
 }
 
 void FreeKickUsAtGoal::calculateInfoForRoles() noexcept {
-    PositionComputations::calculateInfoForKeeper(stpInfos, field, world);
     PositionComputations::calculateInfoForDefendersAndWallers(stpInfos, roles, field, world, true);
     PositionComputations::calculateInfoForAttackers(stpInfos, roles, field, world);
 

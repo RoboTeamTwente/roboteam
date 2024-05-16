@@ -1,7 +1,3 @@
-//
-// Created by jordi on 30-04-20.
-//
-
 #ifndef RTT_KICKOFFTHEMPREPARE_H
 #define RTT_KICKOFFTHEMPREPARE_H
 

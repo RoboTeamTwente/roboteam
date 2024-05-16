@@ -1,7 +1,3 @@
-//
-// Created by doormat on 22-11-22.
-//
-
 #ifndef RTT_CHIPPER_H
 #define RTT_CHIPPER_H
 

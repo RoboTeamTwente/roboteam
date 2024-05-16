@@ -1,7 +1,3 @@
-//
-// Created by tijmen on 16-12-21.
-//
-
 #include "control/positionControl/BBTrajectories/Trajectory2D.h"
 
 #include <cmath>

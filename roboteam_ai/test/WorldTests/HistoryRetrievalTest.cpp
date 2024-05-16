@@ -1,7 +1,3 @@
-//
-// Created by emiel on 12-02-20.
-//
-
 #include <gtest/gtest.h>
 #include <helpers/FieldHelper.h>
 #include <helpers/WorldHelper.h>

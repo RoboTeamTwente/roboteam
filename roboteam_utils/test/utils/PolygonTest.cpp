@@ -1,9 +1,7 @@
-//
-// Created by rolf on 14-5-19.
-//
-
 #include <gtest/gtest.h>
 #include <math.h>
+
+#include <numeric>
 
 #include "roboteam_utils/Line.h"
 #include "roboteam_utils/Polygon.h"
@@ -52,10 +50,9 @@ TEST(basicFunctions, PolygonTest) {
     }
 }
 
-/*
 TEST(isSimple, PolygonTest) {
     Vector2 leftCorner(1.0, 1.0), rightBottom(3.0, 1.0), rightTop(3.0, 4.0), leftTop(1.0, 4.0);
-    //should be simple
+    // should be simple
     Polygon rect(leftCorner, 2.0, 3.0);
     Polygon rect2({leftCorner, rightBottom, rightTop, leftTop});
     Polygon rect3({leftCorner, leftTop, rightTop, rightBottom});
@@ -76,7 +73,6 @@ TEST(isSimple, PolygonTest) {
     EXPECT_FALSE(rect6.isSimple());
     EXPECT_FALSE(rect7.isSimple());
 }
-*/
 
 TEST(isConvex, PolygonTest) {
     Vector2 leftCorner(1.0, 1.0), rightBottom(3.0, 1.0), rightTop(3.0, 4.0), leftTop(1.0, 4.0), convexPoint(4.0, 2.0), nonConvexPoint(2.0, 2.0);
@@ -120,7 +116,7 @@ TEST(boundaryTests, PolygonTest) {
     Polygon rect(leftCorner, width, height);
     Polygon rect2({leftCorner, rightBottom, rightTop, leftTop});
     Polygon triangle({leftCorner, rightBottom, leftTop});
-    std::vector<Polygon> objects;
+    std::vector<Polygon> objects = {rect, rect2, triangle};
     for (const Polygon &obj : objects) {
         std::vector<LineSegment> lines = obj.getBoundary();
         for (size_t i = 0; i < lines.size(); ++i) {
@@ -132,10 +128,7 @@ TEST(boundaryTests, PolygonTest) {
             EXPECT_TRUE(obj.isOnBoundary(line.end));
             EXPECT_TRUE(obj.isOnBoundary((line.start + line.end) * 0.5));
         }
-        double lenSum = 0;
-        for (const LineSegment &line : lines) {
-            lenSum += line.length();
-        }
+        double lenSum = std::accumulate(lines.begin(), lines.end(), 0.0, [](double sum, const LineSegment &line) { return sum + line.length(); });
         EXPECT_EQ(lenSum, obj.perimeterLength());
     }
     EXPECT_EQ(rect.perimeterLength(), 2 * (width + height));

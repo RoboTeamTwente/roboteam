@@ -1,7 +1,3 @@
-//
-// Created by john on 12/18/19.
-//
-
 #include "world/Ball.hpp"
 
 #include "gui/Out.h"
@@ -20,7 +16,7 @@ Ball::Ball(const proto::WorldBall& copy, const World* data) : position{copy.pos(
         initBallAtExpectedPosition(data);
     }
     updateBallAtRobotPosition(data);
-    updateExpectedBallEndPosition(data);
+    updateExpectedBallEndPosition();
 
     if (position != Vector2()) {
         std::array<rtt::Vector2, 1> point = {position};
@@ -43,17 +39,11 @@ void Ball::initBallAtExpectedPosition(const world::World* data) noexcept {
     position = previousWorld->getBall().value()->position;
 }
 
-void Ball::updateExpectedBallEndPosition(const world::World* data) noexcept {
-    auto previousWorld = data->getHistoryWorld(1);
-    if (!previousWorld || !previousWorld->getBall()) {
-        return;
-    }
-
-    auto ball = previousWorld->getBall().value();
-    const double ballVelSquared = ball->velocity.length2();
+void Ball::updateExpectedBallEndPosition() noexcept {
+    const double ballVelSquared = velocity.length2();
     const double frictionCoefficient =
         GameSettings::getRobotHubMode() == net::RobotHubMode::SIMULATOR ? ai::stp::control_constants::SIMULATION_FRICTION : ai::stp::control_constants::REAL_FRICTION;
-    expectedEndPosition = ball->position + ball->velocity.stretchToLength(ballVelSquared / frictionCoefficient);
+    expectedEndPosition = position + velocity.stretchToLength(ballVelSquared / frictionCoefficient);
 
     // Uncomment the following lines to calculate the friction coefficient
     // auto currentTime = std::chrono::steady_clock::now();
@@ -69,7 +59,7 @@ void Ball::updateExpectedBallEndPosition(const world::World* data) noexcept {
     // std::cout << "Expected friction coefficient: " << maxVelocity.length2() / (posAtMaxVelocity - ball->position).length() << std::endl;
     // std::cout << "Time till next reset: " << 30.0 - std::chrono::duration<double>(currentTime - timeOfLastReset).count() << std::endl;
 
-    std::array<rtt::Vector2, 2> ballPoints = {expectedEndPosition, ball->position};
+    std::array<rtt::Vector2, 2> ballPoints = {expectedEndPosition, position};
     rtt::ai::gui::Out::draw(
         {
             .label = "expected_end_position_ball",
@@ -96,7 +86,7 @@ void Ball::updateBallAtRobotPosition(const world::World* data) noexcept {
     }
 
     auto robotClostestToPoint = world->getRobotClosestToPoint(position, Team::both);
-    if (robotClostestToPoint.has_value() && (robotClostestToPoint->get()->getPos() - position).length() > 0.2) {
+    if (robotClostestToPoint.has_value() && (robotClostestToPoint->get()->getPos() - position).length() > 0.15) {
         return;
     }
 

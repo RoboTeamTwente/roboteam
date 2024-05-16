@@ -1,4 +1,3 @@
-// By: Floris Heinen
 #pragma once
 
 #include <google/protobuf/message.h>

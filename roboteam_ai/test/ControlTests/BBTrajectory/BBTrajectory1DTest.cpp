@@ -1,7 +1,3 @@
-//
-// Created by rolf on 26-09-20.
-//
-
 #include <control/positionControl/BBTrajectories/BBTrajectory1D.h>
 #include <gtest/gtest.h>
 

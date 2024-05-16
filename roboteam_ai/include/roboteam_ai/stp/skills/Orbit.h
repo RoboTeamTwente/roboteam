@@ -1,7 +1,3 @@
-//
-// Created by mamiksik on 22-04-21.
-//
-
 #ifndef RTT_ORBIT_H
 #define RTT_ORBIT_H
 

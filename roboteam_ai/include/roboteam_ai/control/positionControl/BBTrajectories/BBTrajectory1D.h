@@ -1,7 +1,3 @@
-//
-// Created by rolf on 26-09-20.
-//
-
 #ifndef RTT_BBTRAJECTORY1D_H
 #define RTT_BBTRAJECTORY1D_H
 

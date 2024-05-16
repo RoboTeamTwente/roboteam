@@ -1,7 +1,3 @@
-//
-// Created by john on 3/9/20.
-//
-
 #include "stp/PlayDecider.hpp"
 
 #include <roboteam_utils/Print.h>
@@ -31,13 +27,13 @@ Play* PlayDecider::decideBestPlay(const rtt::world::World* world, const std::vec
         return getPlayForName(playLock.playName.value(), plays);
     }
 
-    // If there are no valid plays, default to defend pass
+    // If there are no valid plays, default to defend shot
     if (playsWithScores.empty()) {
         RTT_WARNING("No valid plays found!");
         return getPlayForName("Defend Shot", plays);
     }
 
-    return std::max_element(playsWithScores.begin(), playsWithScores.end(), [](auto& lhs, auto& rhs) { return lhs.second < rhs.second; })->first;
+    return std::max_element(playsWithScores.begin(), playsWithScores.end(), [](const auto& lhs, const auto& rhs) { return lhs.second < rhs.second; })->first;
 }
 
 bool PlayDecider::didLockPlay() noexcept { return playLock.didChange.exchange(false); }
@@ -47,6 +43,12 @@ void PlayDecider::lockPlay(const std::optional<std::string> playName) {
     playLock.playName = playName;
 
     playLock.isSet = playName.has_value();
+    playLock.didChange = true;
+}
+
+void PlayDecider::unlockPlay() {
+    std::scoped_lock lock(playLock.lock);
+    playLock.isSet = false;
     playLock.didChange = true;
 }
 

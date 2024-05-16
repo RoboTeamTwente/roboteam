@@ -1,7 +1,3 @@
-//
-// Created by john on 1/13/20.
-//
-
 #include "world/views/BallView.hpp"
 
 namespace rtt::world::view {

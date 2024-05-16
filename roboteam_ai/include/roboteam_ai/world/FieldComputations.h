@@ -22,9 +22,6 @@ namespace rtt::ai {
 
 /**
  * The Field Computation class does all kind of computations on the Field based on the Field class variables.
- * @author Created by: Lukas Bos <br>
- *         Documented and refactored by: Haico Dorenbos
- * @since 2019-08-30
  */
 class FieldComputations {
    private:

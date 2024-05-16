@@ -1,13 +1,6 @@
-//
-// Created by jesse on 18-05-20.
-//
-
-//
-// Created by rolf on 22-01-20.
-//
-
 #include <gtest/gtest.h>
 #include <roboteam_utils/Grid.h>
+#include <roboteam_utils/Random.h>
 
 namespace rtt {
 
@@ -76,6 +69,36 @@ TEST(Grid, equals) {
     Grid g7(0, 1, 10, 10, 10, 10);
     ASSERT_NE(g1, g7);
     Grid g8(-1, 0, 10, 10, 10, 10);
+}
+
+TEST(Grid, edgeCases) {
+    // Zero width and height
+    Grid zeroGrid = Grid(0, 0, 0, 0, 0, 0);
+    EXPECT_EQ(zeroGrid.getPoints().size(), 1);
+
+    // Negative width and height
+    Grid negativeGrid = Grid(0, 0, -1, -1, -1, -1);
+    EXPECT_EQ(negativeGrid.getPoints().size(), 0);
+}
+
+TEST(Grid, randomizedTesting) {
+    for (int i = 0; i < 50; i++) {
+        double offsetX = SimpleRandom::getDouble(-20, 20);
+        double offsetY = SimpleRandom::getDouble(-20, 20);
+        double regionWidth = SimpleRandom::getDouble(-20, 20);
+        double regionHeight = SimpleRandom::getDouble(-20, 20);
+        int numPointsX = SimpleRandom::getInt(-20, 20);
+        int numPointsY = SimpleRandom::getInt(-20, 20);
+
+        Grid grid(offsetX, offsetY, regionWidth, regionHeight, numPointsX, numPointsY);
+
+        EXPECT_EQ(grid.getOffSetX(), offsetX);
+        EXPECT_EQ(grid.getOffSetY(), offsetY);
+        EXPECT_EQ(grid.getRegionWidth(), regionWidth);
+        EXPECT_EQ(grid.getRegionHeight(), regionHeight);
+        EXPECT_EQ(grid.getNumPointsX(), numPointsX);
+        EXPECT_EQ(grid.getNumPointsY(), numPointsY);
+    }
 }
 
 }  // namespace rtt

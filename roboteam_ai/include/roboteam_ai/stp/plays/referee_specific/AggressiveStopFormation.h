@@ -1,7 +1,3 @@
-//
-// Created by timo on 3/30/20.
-//
-
 #ifndef RTT_AGGRESSIVESTOPFORMATION_H
 #define RTT_AGGRESSIVESTOPFORMATION_H
 

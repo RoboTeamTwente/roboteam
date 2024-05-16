@@ -1,7 +1,3 @@
-//
-// Created by floris on 15-11-20.
-//
-
 #ifndef RTT_WORLDOBJECTS_H
 #define RTT_WORLDOBJECTS_H
 

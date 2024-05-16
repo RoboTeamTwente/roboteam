@@ -1,7 +1,3 @@
-//
-// Created by jessevw on 17.03.20.
-//
-
 #include "stp/roles/active/PassReceiver.h"
 
 #include "stp/tactics/active/Receive.h"

@@ -1,7 +1,3 @@
-//
-// Created by maxl on 19-03-21.
-//
-
 #include "stp/evaluations/position/LineOfSightEvaluation.h"
 
 #include <algorithm>

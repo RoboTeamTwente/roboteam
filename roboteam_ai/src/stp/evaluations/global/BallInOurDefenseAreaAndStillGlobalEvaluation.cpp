@@ -1,8 +1,3 @@
-//
-// Created by Alexander on 29-01-2022
-/// T/F Invariant if the ball is in our defense area and not moving
-//
-
 #include "stp/evaluations/global/BallInOurDefenseAreaAndStillGlobalEvaluation.h"
 
 #include "stp/constants/ControlConstants.h"

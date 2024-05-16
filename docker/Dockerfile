@@ -31,7 +31,7 @@ RUN apk add --no-cache bash build-base cmake make musl-dev libtool \
     clang ninja-build autoconf automake pkgconfig \
     python3 py3-pip git ccache sudo \
     libzmq zeromq-dev libzmq-static eigen-dev gtest-dev \
-    libtbb-dev boost-dev curl unzip wget zlib-dev zip nodejs npm \
+    libtbb-dev curl unzip wget zlib-dev zip nodejs npm \
     openssl-dev sdl2-dev libudev-zero libudev-zero-dev libusb libusb-dev \
     qt5-qtbase-dev qt5-qtcharts-dev qt5-qtdeclarative-dev qt5-qtsvg-dev
 RUN npm install -g yarn
@@ -64,7 +64,7 @@ ENV USER=$USERNAME
 RUN apk add --no-cache \
     libtool libzmq libzmq-static libudev-zero libusb \
     zeromq-dev eigen-dev gtest-dev \
-    libtbb-dev boost-dev zlib-dev \
+    libtbb-dev zlib-dev \
     openssl-dev sdl2-dev  \
     qt5-qtbase-dev qt5-qtcharts-dev qt5-qtdeclarative-dev qt5-qtsvg-dev \
     sudo nodejs npm

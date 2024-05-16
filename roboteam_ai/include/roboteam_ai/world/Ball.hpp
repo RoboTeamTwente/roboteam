@@ -1,7 +1,3 @@
-//
-// Created by john on 12/18/19.
-//
-
 #ifndef RTT_BALL_HPP
 #define RTT_BALL_HPP
 
@@ -33,9 +29,8 @@ class Ball {
 
     /**
      * @brief Updates the expected ball end position
-     * @param data The current world
      */
-    void updateExpectedBallEndPosition(const world::World *data) noexcept;
+    void updateExpectedBallEndPosition() noexcept;
 
     /**
      * @brief Places the ball in front of the robot that has the ball, if any

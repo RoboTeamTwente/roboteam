@@ -1,7 +1,3 @@
-//
-// Created by timo on 3/27/20.
-//
-
 #ifndef RTT_DEFENSIVESTOPFORMATION_H
 #define RTT_DEFENSIVESTOPFORMATION_H
 

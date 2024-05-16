@@ -1,7 +1,3 @@
-//
-// Created by Haico Dorenbos on 20-03-2020
-//
-
 #include <gtest/gtest.h>
 #include <helpers/FieldHelper.h>
 #include <roboteam_utils/Random.h>
@@ -191,7 +187,8 @@ TEST(FieldComputationTest, projectionTests) {
     EXPECT_TRUE(field.leftDefenseArea.contains(pointInDefenseArea));
 
     auto projectedPoint = FieldComputations::projectPointOutOfDefenseArea(field, pointInDefenseArea);
-    EXPECT_FALSE(field.leftDefenseArea.contains(projectedPoint));
+    // Since the projectedPoint can be inside the defense area with ROBOT_RADIUS, we use that as margin
+    EXPECT_FALSE(field.leftDefenseArea.contains(projectedPoint, -stp::control_constants::ROBOT_RADIUS));
 
     auto pointOutsideField = Vector2(field.playArea.left() - 0.05, field.playArea.top() + 0.05);
     EXPECT_FALSE(field.playArea.contains(pointOutsideField));

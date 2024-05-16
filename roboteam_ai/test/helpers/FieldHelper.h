@@ -1,7 +1,3 @@
-//
-// Created by robzelluf on 4/16/19.
-//
-
 #ifndef ROBOTEAM_AI_FIELDHELPER_H
 #define ROBOTEAM_AI_FIELDHELPER_H
 

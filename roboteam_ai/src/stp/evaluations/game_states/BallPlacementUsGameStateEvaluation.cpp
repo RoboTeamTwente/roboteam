@@ -1,7 +1,3 @@
-//
-// Created by timovdk on 4/14/20.
-//
-
 #include "stp/evaluations/game_states/BallPlacementUsGameStateEvaluation.h"
 
 #include "utilities/GameStateManager.hpp"

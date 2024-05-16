@@ -1,4 +1,3 @@
-
 #include <utils/Channels.hpp>
 
 namespace rtt::net::utils {

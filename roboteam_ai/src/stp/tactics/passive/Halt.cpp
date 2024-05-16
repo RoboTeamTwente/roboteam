@@ -1,8 +1,3 @@
-//
-// Created by jessevw on 24.03.20.
-/// ROTATES robot to face forwards
-//
-
 #include "stp/tactics/passive/Halt.h"
 
 #include "stp/skills/Rotate.h"

@@ -1,7 +1,3 @@
-//
-// Created by tijmen on 01-07-22.
-//
-
 #include "stp/tactics/active/OrbitKick.h"
 
 #include "control/ControlUtils.h"

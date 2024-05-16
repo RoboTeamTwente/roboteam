@@ -1,7 +1,3 @@
-//
-// Created by timovdk on 3/16/20.
-//
-
 #ifndef RTT_DRIVEWITHBALL_H
 #define RTT_DRIVEWITHBALL_H
 

@@ -1,9 +1,7 @@
-//
-// Created by agata on 14/01/2022.
-//
-
 #ifndef RTT_DEFENDPASS_H
 #define RTT_DEFENDPASS_H
+
+#include <stp/computations/InterceptionComputations.h>
 
 #include "stp/Play.hpp"
 
@@ -45,7 +43,7 @@ class DefendPass : public Play {
      */
     const char* getName() const override;
 
-    HarasserInfo harasserInfo;
+    InterceptionInfo harasserInfo;
 };
 }  // namespace rtt::ai::stp::play
 

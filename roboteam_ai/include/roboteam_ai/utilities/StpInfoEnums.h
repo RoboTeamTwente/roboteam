@@ -1,7 +1,3 @@
-//
-// Created by alexander on 03-12-21.
-//
-
 #ifndef RTT_STPINFOENUMS_H
 #define RTT_STPINFOENUMS_H
 

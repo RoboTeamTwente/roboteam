@@ -1,7 +1,3 @@
-//
-// Created by maxl on 22-03-21.
-//
-
 #ifndef RTT_LINEOFSIGHTEVALUATION_H
 #define RTT_LINEOFSIGHTEVALUATION_H
 

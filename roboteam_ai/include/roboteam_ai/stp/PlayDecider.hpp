@@ -1,7 +1,3 @@
-//
-// Created by john on 3/9/20.
-//
-
 #ifndef RTT_PLAYDECIDER_HPP
 #define RTT_PLAYDECIDER_HPP
 
@@ -39,6 +35,11 @@ class PlayDecider {
      * @param playName playName to lock to
      */
     static void lockPlay(const std::optional<std::string> playName);
+
+    /**
+     * @brief Unlocks the play
+     */
+    static void unlockPlay();
 
     /**
      * @brief This function checks if there is a locked play. If there is, pick that play.

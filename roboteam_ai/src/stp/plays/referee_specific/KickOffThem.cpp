@@ -1,7 +1,3 @@
-//
-// Created by timovdk on 5/1/20.
-//
-
 #include "stp/plays/referee_specific/KickOffThem.h"
 
 #include "stp/roles/Keeper.h"
@@ -61,7 +57,7 @@ Dealer::FlagMap KickOffThem::decideRoleFlags() const noexcept {
     return flagMap;
 }
 
-void KickOffThem::calculateInfoForRoles() noexcept { PositionComputations::calculateInfoForKeeper(stpInfos, field, world); }
+void KickOffThem::calculateInfoForRoles() noexcept {}
 
 bool KickOffThem::shouldEndPlay() noexcept { return false; }
 

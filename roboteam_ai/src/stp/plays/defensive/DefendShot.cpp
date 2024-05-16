@@ -1,7 +1,3 @@
-//
-// Created by agata on 14/01/2022.
-//
-
 #include "stp/plays/defensive/DefendShot.h"
 
 #include <stp/roles/passive/Formation.h>
@@ -16,7 +12,7 @@ DefendShot::DefendShot() : Play() {
     // Evaluations that have to be true in order for this play to be considered valid.
     startPlayEvaluation.clear();
     startPlayEvaluation.emplace_back(GlobalEvaluation::NormalPlayGameState);
-    startPlayEvaluation.emplace_back(GlobalEvaluation::WeDoNotHaveBall);
+    startPlayEvaluation.emplace_back(GlobalEvaluation::WeWillNotHaveBall);
     startPlayEvaluation.emplace_back(GlobalEvaluation::BallOnOurSide);
     startPlayEvaluation.emplace_back(GlobalEvaluation::BallNotInOurDefenseAreaAndStill);
 
@@ -55,7 +51,7 @@ Dealer::FlagMap DefendShot::decideRoleFlags() const noexcept {
     Dealer::DealerFlag keeperFlag(DealerFlagTitle::KEEPER);
 
     flagMap.insert({"keeper", {DealerFlagPriority::KEEPER, {keeperFlag}}});
-    flagMap.insert({"harasser", {DealerFlagPriority::REQUIRED, {}, harasserInfo.harasserId}});
+    flagMap.insert({"harasser", {DealerFlagPriority::REQUIRED, {}, harasserInfo.interceptId}});
     flagMap.insert({"waller_0", {DealerFlagPriority::HIGH_PRIORITY, {}}});
     flagMap.insert({"waller_1", {DealerFlagPriority::HIGH_PRIORITY, {}}});
     flagMap.insert({"waller_2", {DealerFlagPriority::HIGH_PRIORITY, {}}});
@@ -70,9 +66,8 @@ Dealer::FlagMap DefendShot::decideRoleFlags() const noexcept {
 }
 
 void DefendShot::calculateInfoForRoles() noexcept {
-    harasserInfo = PositionComputations::calculateHarasserId(world, field);
-    PositionComputations::calculateInfoForKeeper(stpInfos, field, world);
-    PositionComputations::calculateInfoForHarasser(stpInfos, &roles, field, world, harasserInfo.timeToBall);
+    harasserInfo = InterceptionComputations::calculateInterceptionInfoExcludingKeeperAndCarded(world);
+    PositionComputations::calculateInfoForHarasser(stpInfos, &roles, field, world, harasserInfo.interceptLocation);
     PositionComputations::calculateInfoForDefendersAndWallers(stpInfos, roles, field, world, false);
     PositionComputations::calculateInfoForAttackers(stpInfos, roles, field, world);
 }

@@ -1,7 +1,3 @@
-//
-// Created by john on 12/16/19.
-//
-
 #include "world/World.hpp"
 
 namespace rtt::world {

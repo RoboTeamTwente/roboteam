@@ -1,7 +1,3 @@
-//
-// Created by timovdk on 3/27/20.
-//
-
 #ifndef RTT_FORMATION_H
 #define RTT_FORMATION_H
 

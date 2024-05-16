@@ -1,7 +1,3 @@
-//
-// Created by timovdk on 5/1/20.
-//
-
 #ifndef RTT_PENALTYUS_H
 #define RTT_PENALTYUS_H
 

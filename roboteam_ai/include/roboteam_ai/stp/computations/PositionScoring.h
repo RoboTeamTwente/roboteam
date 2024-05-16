@@ -1,7 +1,3 @@
-//
-// Created by alexander on 02-12-21.
-//
-
 #ifndef RTT_POSITIONSCORING_H
 #define RTT_POSITIONSCORING_H
 

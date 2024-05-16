@@ -1,7 +1,3 @@
-//
-// Created by maxl on 18-02-21.
-//
-
 #ifndef RTT_PLAYEVALUATOR_H
 #define RTT_PLAYEVALUATOR_H
 
@@ -40,7 +36,9 @@ enum class GlobalEvaluation {
     BallInOurDefenseAreaAndStill,
     BallNotInOurDefenseAreaAndStill,
     WeHaveBall,
+    WeWillHaveBall,
     WeDoNotHaveBall,
+    WeWillNotHaveBall,
     TheyHaveBall,
     TheyDoNotHaveBall,
 };

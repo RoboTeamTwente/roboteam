@@ -1,7 +1,3 @@
-//
-// Created by tijmen on 27-10-21.
-//
-
 #ifndef RTT_BBTPATHTRACKING_H
 #define RTT_BBTPATHTRACKING_H
 

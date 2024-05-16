@@ -1,7 +1,3 @@
-//
-// Created by tijmen on 15-12-21.
-//
-
 #ifndef RTT_TRAJECTORY2D_H
 #define RTT_TRAJECTORY2D_H
 

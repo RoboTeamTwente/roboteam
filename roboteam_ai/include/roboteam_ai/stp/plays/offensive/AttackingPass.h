@@ -1,7 +1,3 @@
-//
-// Created by jessevw on 17.03.20.
-//
-
 #ifndef RTT_ATTACKING_PASS_PLAY_H
 #define RTT_ATTACKING_PASS_PLAY_H
 
@@ -53,6 +49,12 @@ class AttackingPass : public Play {
     bool shouldEndPlay() noexcept override;
 
    private:
+    /**
+     * Counter that keeps track of how long another robot has a better interception. We need this counter. If not, as soon as we kicked the ball, another robot has a better
+     * intercept, while ballKicked() is still false, resulting in switching just after kicking the ball
+     */
+    int endPlayCounter = 0;
+
     /**
      * @brief Check if the ball has been kicked. True if passer is done with KickAtPos tactic, False if it is still ongoing
      * @return Boolean that tells whether the ball has been kicked

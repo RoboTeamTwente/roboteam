@@ -1,7 +1,3 @@
-//
-// Created by agata on 14/01/2022.
-//
-
 #include "stp/plays/defensive/DefendPass.h"
 
 #include <world/views/RobotView.hpp>
@@ -18,7 +14,7 @@ DefendPass::DefendPass() : Play() {
     // Evaluations that have to be true in order for this play to be considered valid.
     startPlayEvaluation.clear();
     startPlayEvaluation.emplace_back(GlobalEvaluation::NormalPlayGameState);
-    startPlayEvaluation.emplace_back(GlobalEvaluation::WeDoNotHaveBall);
+    startPlayEvaluation.emplace_back(GlobalEvaluation::WeWillNotHaveBall);
     startPlayEvaluation.emplace_back(GlobalEvaluation::BallOnTheirSide);
     startPlayEvaluation.emplace_back(GlobalEvaluation::BallNotInOurDefenseAreaAndStill);
 
@@ -58,7 +54,7 @@ Dealer::FlagMap DefendPass::decideRoleFlags() const noexcept {
     Dealer::DealerFlag keeperFlag(DealerFlagTitle::KEEPER);
 
     flagMap.insert({"keeper", {DealerFlagPriority::KEEPER, {keeperFlag}}});
-    flagMap.insert({"harasser", {DealerFlagPriority::REQUIRED, {}, harasserInfo.harasserId}});
+    flagMap.insert({"harasser", {DealerFlagPriority::REQUIRED, {}, harasserInfo.interceptId}});
     flagMap.insert({"defender_0", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
     flagMap.insert({"defender_1", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
     flagMap.insert({"defender_2", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
@@ -73,9 +69,8 @@ Dealer::FlagMap DefendPass::decideRoleFlags() const noexcept {
 }
 
 void DefendPass::calculateInfoForRoles() noexcept {
-    harasserInfo = PositionComputations::calculateHarasserId(world, field);
-    PositionComputations::calculateInfoForKeeper(stpInfos, field, world);
-    PositionComputations::calculateInfoForHarasser(stpInfos, &roles, field, world, harasserInfo.timeToBall);
+    harasserInfo = InterceptionComputations::calculateInterceptionInfoExcludingKeeperAndCarded(world);
+    PositionComputations::calculateInfoForHarasser(stpInfos, &roles, field, world, harasserInfo.interceptLocation);
     PositionComputations::calculateInfoForDefendersAndWallers(stpInfos, roles, field, world, false);
     PositionComputations::calculateInfoForAttackers(stpInfos, roles, field, world);
 }

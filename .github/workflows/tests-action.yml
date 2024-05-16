@@ -12,7 +12,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout repository and submodules
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive    
       
       - name: Restored cached build
         id: cache-build-restore
@@ -52,7 +55,8 @@ jobs:
         
       - name: Install tests
         run: |
-             cmake --build build --target all -j $(nproc)
+             cmake --build build --target all
+            #  cmake --build build --target all -j $(nproc)
              
       - name: Run
         run: find ./build/debug/bin/ -type f -iname "*test*" -exec {} \;

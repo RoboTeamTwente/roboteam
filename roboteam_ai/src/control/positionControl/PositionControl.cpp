@@ -1,7 +1,3 @@
-//
-// Created by ratoone on 18-11-19.
-//
-
 #include "control/positionControl/PositionControl.h"
 
 #include "control/positionControl/BBTrajectories/BBTrajectory2D.h"
@@ -42,12 +38,11 @@ void PositionControl::setRobotPositions(std::vector<Vector2> &robotPositions) { 
 rtt::BB::CommandCollision PositionControl::computeAndTrackTrajectory(const rtt::world::World *world, const rtt::Field &field, int robotId, Vector2 currentPosition,
                                                                      Vector2 currentVelocity, Vector2 targetPosition, double maxRobotVelocity, stp::PIDType pidType,
                                                                      stp::AvoidObjects avoidObjects) {
-    double timeStep = 0.1;
-
     std::optional<BB::CollisionData> firstCollision;
     rtt::BB::CommandCollision commandCollision = {};
 
     if (shouldRecalculateTrajectory(world, field, robotId, targetPosition, currentPosition, avoidObjects)) {
+        double timeStep = 0.1;
         computedTrajectories[robotId] = Trajectory2D(currentPosition, currentVelocity, targetPosition, maxRobotVelocity, ai::Constants::MAX_ACC_UPPER());
         completedTimeSteps[robotId] = 0;
         firstCollision = worldObjects.getFirstCollision(world, field, computedTrajectories[robotId], computedPaths, robotId, avoidObjects, completedTimeSteps);
@@ -67,6 +62,10 @@ rtt::BB::CommandCollision PositionControl::computeAndTrackTrajectory(const rtt::
                 }
                 if ((firstCollision.value().collisionType == BB::CollisionType::BALLPLACEMENT) && firstCollision.value().collisionTime <= 0.11) {
                     targetPosition = handleBallPlacementCollision(world, field, currentPosition, avoidObjects);
+                    computedTrajectories[robotId] = Trajectory2D(currentPosition, currentVelocity, targetPosition, 1.0, ai::Constants::MAX_ACC_UPPER());
+                }
+                if ((firstCollision.value().collisionType == BB::CollisionType::DEFENSEAREA) && firstCollision.value().collisionTime <= 0.11) {
+                    targetPosition = handleDefenseAreaCollision(field, currentPosition);
                     computedTrajectories[robotId] = Trajectory2D(currentPosition, currentVelocity, targetPosition, 1.0, ai::Constants::MAX_ACC_UPPER());
                 }
             }
@@ -172,6 +171,20 @@ rtt::Vector2 PositionControl::handleBallPlacementCollision(const rtt::world::Wor
                 return potentialTargetPosition;
             }
         }
+    }
+    return targetPosition;
+}
+
+rtt::Vector2 PositionControl::handleDefenseAreaCollision(const rtt::Field &field, Vector2 currentPosition) {
+    // check if the current Position is closer to our goal or the enemy goal
+    double distanceToOurGoal = (currentPosition - field.leftGoalArea.rightLine().center()).length();
+    double distanceToTheirGoal = (currentPosition - field.rightGoalArea.leftLine().center()).length();
+
+    Vector2 targetPosition;
+    if (distanceToOurGoal < distanceToTheirGoal) {
+        targetPosition = currentPosition + (currentPosition - field.leftGoalArea.rightLine().center()).stretchToLength(stp::control_constants::AVOID_BALL_DISTANCE * 2);
+    } else {
+        targetPosition = currentPosition + (currentPosition - field.rightGoalArea.leftLine().center()).stretchToLength(stp::control_constants::AVOID_BALL_DISTANCE * 2);
     }
     return targetPosition;
 }

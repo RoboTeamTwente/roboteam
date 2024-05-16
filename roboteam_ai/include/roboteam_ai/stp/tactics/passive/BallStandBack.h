@@ -1,7 +1,3 @@
-//
-// Created by agata on 29/06/2022.
-//
-
 #ifndef RTT_BALLSTANDBACK_H
 #define RTT_BALLSTANDBACK_H
 

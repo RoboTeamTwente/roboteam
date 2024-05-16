@@ -11,9 +11,6 @@ class LineSegment;
 /**
  * The Line class represents an infinite length line, it is encoded by two different points through which the line is infinitely extended in both directions. If you want to use
  * a finite length line instead then use LineSegment class instead.
- * @author Created by: Rolf van der Hulst <br>
- *         Documented and redesigned by: Haico Dorenbos
- * @since 2019-04-18
  */
 class Line {
    public:

@@ -1,7 +1,3 @@
-//
-// Created by alexander on 02-12-21.
-//
-
 #include "stp/computations/PositionScoring.h"
 
 #include "stp/computations/ComputationManager.h"
@@ -65,9 +61,13 @@ double PositionScoring::determineLineOfSightScore(Vector2 &point, const rtt::wor
 double PositionScoring::determineGoalShotScore(Vector2 &point, const rtt::Field &field, const rtt::world::World *world, gen::PositionScores &scores) {
     double visibility = FieldComputations::getPercentageOfGoalVisibleFromPoint(field, false, point, world->getWorld().value(), -1, true) / 100;
     double goalAngle = FieldComputations::getTotalGoalAngle(field, false, point);
+    double distanceToGoal = point.dist(field.rightDefenseArea.rightLine().center());
+    double minDistanceToGoal = field.rightDefenseArea.rightLine().center().dist(field.rightDefenseArea.leftLine().center());
+    double maxDistanceToGoal = field.rightDefenseArea.rightLine().center().dist(field.playArea.topLeft());
+    double normalizedDistanceToGoal = (distanceToGoal - minDistanceToGoal) / (maxDistanceToGoal - minDistanceToGoal);
 
     // The goal angle from right in front of their defense area- i.e. the "best" goal angle
     double maxGoalAngle = FieldComputations::getTotalGoalAngle(field, false, field.rightDefenseArea.leftLine().center());
-    return (scores.scoreGoalShot = stp::evaluation::GoalShotEvaluation::metricCheck(visibility, goalAngle / maxGoalAngle)).value();
+    return (scores.scoreGoalShot = stp::evaluation::GoalShotEvaluation::metricCheck(visibility, goalAngle / maxGoalAngle, normalizedDistanceToGoal)).value();
 }
 }  // namespace rtt::ai::stp

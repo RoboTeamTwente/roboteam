@@ -1,7 +1,3 @@
-//
-// Created by john on 3/2/20.
-//
-
 #ifndef RTT_SKILL_H
 #define RTT_SKILL_H
 

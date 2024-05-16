@@ -1,7 +1,3 @@
-//
-// Created by jesse on 07-04-20.
-//
-
 #include "stp/roles/active/BallPlacer.h"
 
 #include <roboteam_utils/Print.h>

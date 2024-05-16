@@ -1,11 +1,7 @@
-//
-// Created by emiel on 25-02-20.
-//
-
 #include <gtest/gtest.h>
 
 #include <cmath>
-#include <roboteam_utils/LazyRectangle.hpp>
+#include <roboteam_utils/FastRectangle.hpp>
 
 #include "roboteam_utils/Circle.h"
 #include "roboteam_utils/Random.h"
@@ -90,25 +86,35 @@ TEST(CircleTests, doesIntersectOrContainCircle) {
 TEST(CircleTests, doesIntersectOrContainRectangle) {
     Circle circle({0, 0}, 1);
     // Around the circle
-    LazyRectangle rectAround({2, 2}, {-2, -2});
+    FastRectangle rectAround({2, 2}, {-2, -2});
     EXPECT_TRUE(circle.doesIntersectOrContain(rectAround));
     EXPECT_TRUE(circle.doesIntersectOrContain2(rectAround));
     // In the circle
-    LazyRectangle rectIn({.2, .2}, {-.2, -.2});
+    FastRectangle rectIn({.2, .2}, {-.2, -.2});
     EXPECT_TRUE(circle.doesIntersectOrContain(rectIn));
     EXPECT_TRUE(circle.doesIntersectOrContain2(rectIn));
     // Through the circle
-    LazyRectangle rectThrough({2, 2}, {0, 0});
+    FastRectangle rectThrough({2, 2}, {0, 0});
     EXPECT_TRUE(circle.doesIntersectOrContain(rectThrough));
     EXPECT_TRUE(circle.doesIntersectOrContain2(rectThrough));
     // On the circle
-    LazyRectangle rectOn({1, 1}, {2, 0});
+    FastRectangle rectOn({1, 1}, {2, 0});
     EXPECT_TRUE(circle.doesIntersectOrContain(rectOn));
     EXPECT_TRUE(circle.doesIntersectOrContain2(rectOn));
     // Outside the circle
-    LazyRectangle rectOutside({4, 4}, {2, 2});
+    FastRectangle rectOutside({4, 4}, {2, 2});
     EXPECT_FALSE(circle.doesIntersectOrContain(rectOutside));
     EXPECT_FALSE(circle.doesIntersectOrContain2(rectOutside));
+}
+
+TEST(CircleTests, doesIntersectOrContainVector2Test) {
+    Circle circle({0, 0}, 1);
+    Vector2 pointInside(0, 0);
+    Vector2 pointOnEdge(1, 0);
+    Vector2 pointOutside(2, 0);
+    EXPECT_TRUE(circle.doesIntersectOrContain(pointInside));
+    EXPECT_TRUE(circle.doesIntersectOrContain(pointOnEdge));
+    EXPECT_FALSE(circle.doesIntersectOrContain(pointOutside));
 }
 
 TEST(CircleTests, projectTest) {
@@ -181,8 +187,6 @@ TEST(CircleTests, operatorDivide) {
 }
 
 TEST(CircleTests, intersectionsTest) {
-    // There are two intersection functions... Lets test individually
-    // intersects
     Circle circle({0, 0}, 1);
     LineSegment noIntersectLine({-2, 2}, {2, 2});
     ASSERT_TRUE(circle.intersects(noIntersectLine).empty());
@@ -211,7 +215,22 @@ TEST(CircleTests, intersectionsTest) {
     ASSERT_TRUE(circle.intersects(containsTwoEnds).empty());
 
     LineSegment diagonalLineSegment({-2, -2}, {2, 2});
-    auto intersectionsDiagonal = circle.intersects(twoIntersectLine);
-    auto possibilityDiagonal1 = std::vector<Vector2>{Vector2(-0.71, -0.71), Vector2(0.71, 0.71)};
-    auto possibilityDiagonal2 = std::vector<Vector2>{Vector2(0.71, 0.71), Vector2(-0.71, -0.71)};
+    auto intersectionsDiagonal = circle.intersects(diagonalLineSegment);
+    auto possibilityDiagonal1 = std::vector<Vector2>{Vector2(-sqrt(2) / 2, -sqrt(2) / 2), Vector2(sqrt(2) / 2, sqrt(2) / 2)};
+    auto possibilityDiagonal2 = std::vector<Vector2>{Vector2(sqrt(2) / 2, sqrt(2) / 2), Vector2(-sqrt(2) / 2, -sqrt(2) / 2)};
+    ASSERT_TRUE(intersectionsDiagonal == possibilityDiagonal1 || intersectionsDiagonal == possibilityDiagonal2);
+}
+
+TEST(CircleTests, moveTest) {
+    Circle circle({0, 0}, 1);
+    // Move by a positive vector
+    Vector2 vector1(1, 1);
+    circle.move(vector1);
+    EXPECT_DOUBLE_EQ(circle.center.x, 1);
+    EXPECT_DOUBLE_EQ(circle.center.y, 1);
+    // Move by a negative vector
+    Vector2 vector2(-2, -2);
+    circle.move(vector2);
+    EXPECT_DOUBLE_EQ(circle.center.x, -1);
+    EXPECT_DOUBLE_EQ(circle.center.y, -1);
 }

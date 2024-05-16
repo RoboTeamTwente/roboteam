@@ -1,7 +1,3 @@
-//
-// Created by timovdk on 5/1/20.
-//
-
 #include "stp/plays/referee_specific/PenaltyUs.h"
 
 #include "stp/computations/GoalComputations.h"
@@ -60,8 +56,6 @@ Dealer::FlagMap PenaltyUs::decideRoleFlags() const noexcept {
 }
 
 void PenaltyUs::calculateInfoForRoles() noexcept {
-    PositionComputations::calculateInfoForKeeper(stpInfos, field, world);
-
     auto positionTarget = PositionComputations::getPosition(std::nullopt, field.middleRightGrid, gen::GoalShot, field, world);
     stpInfos["kicker"].setPositionToMoveTo(positionTarget);
     auto goalTarget = computations::GoalComputations::calculateGoalTarget(world, field);

@@ -196,6 +196,25 @@ void Play::DrawMargins() noexcept {
     std::array<rtt::Vector2, 1> cardId = {rtt::Vector2(0.0, -field.playArea.height() / 2)};
     std::array<rtt::Vector2, 1> placementLocation = {rtt::ai::GameStateManager::getRefereeDesignatedPosition()};
     std::array<rtt::Vector2, 2> pathToPlacementLocation = {world->getWorld()->getBall()->get()->position, world->getWorld()->getBall()->get()->position};
+
+    if (currentGameState == RefCommand::PENALTY_US || currentGameState == RefCommand::PENALTY_THEM || currentGameState == RefCommand::PREPARE_PENALTY_THEM ||
+        currentGameState == RefCommand::PREPARE_PENALTY_US) {
+        std::array<rtt::Vector2, 1> penaltyUs = {rtt::Vector2(2.0, 0.0)};
+        if (currentGameState == RefCommand::PENALTY_US || currentGameState == RefCommand::PREPARE_PENALTY_US) {
+            penaltyUs = {rtt::Vector2(-2.0, 0.0)};
+        }
+        rtt::ai::gui::Out::draw(
+            {
+                .label = "Penalty Place",
+                .color = proto::Drawing::BLACK,
+                .method = proto::Drawing::CIRCLES,
+                .category = proto::Drawing::MARGINS,
+                .size = 12,
+                .thickness = 4,
+            },
+            penaltyUs);
+    }
+
     if (currentGameState == RefCommand::BALL_PLACEMENT_THEM || currentGameState == RefCommand::BALL_PLACEMENT_US || currentGameState == RefCommand::BALL_PLACEMENT_US_DIRECT ||
         currentGameState == RefCommand::PREPARE_FORCED_START)
         pathToPlacementLocation = {world->getWorld()->getBall()->get()->position, rtt::ai::GameStateManager::getRefereeDesignatedPosition()};
@@ -234,7 +253,7 @@ void Play::DrawMargins() noexcept {
                  currentGameState == RefCommand::KICKOFF_US)
             color = GameSettings::isYellow() ? proto::Drawing::BLUE : proto::Drawing::YELLOW;
         else
-            color = proto::Drawing::GREEN;
+            color = proto::Drawing::RED;
         for (auto method : {proto::Drawing::CIRCLES, proto::Drawing::LINES_CONNECTED}) {
             rtt::ai::gui::Out::draw(
                 {

@@ -42,23 +42,6 @@ class ControlUtils {
     static Vector2 velocityLimiter(const Vector2 &vel, double maxVel = Constants::MAX_VEL(), double minVel = 0.0, bool listenToReferee = true);
 
     /**
-     * @brief Limits the acceleration
-     * @param targetVel velocity the robot should be at
-     * @param prevVel velocity of the robot in the previous tick
-     * @param targetAngle the angle the robot should be at
-     * @param sidewaysAcceleration maximum sideways acceleration
-     * @param forwardsAcceleration maximum forward acceleration
-     * @param sidewaysDeceleration maximum sideways deceleration
-     * @param forwardsDeceleration maximum forward deceleration
-     * @return limited acceleration
-     */
-    static Vector2 accelerationLimiter(const Vector2 &targetVel, const Vector2 &prevVel, const Angle &targetAngle,
-                                       double sidewaysAcceleration = Constants::MAX_ACC_LOWER() / Constants::STP_TICK_RATE(),
-                                       double forwardsAcceleration = Constants::MAX_ACC_UPPER() / Constants::STP_TICK_RATE(),
-                                       double sidewaysDeceleration = Constants::MAX_DEC_LOWER() / Constants::STP_TICK_RATE(),
-                                       double forwardsDeceleration = Constants::MAX_DEC_UPPER() / Constants::STP_TICK_RATE());
-
-    /**
      * @brief calculates whether the object velocity will collide with a point
      * @param objectPosition position of the object
      * @param velocity velocity vector

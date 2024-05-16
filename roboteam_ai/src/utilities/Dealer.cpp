@@ -249,8 +249,7 @@ double Dealer::getRobotScoreForDistance(const stp::StpInfo &stpInfo, const v::Ro
     if (stpInfo.getRoleName().find("halt") != std::string::npos || stpInfo.getRoleName() == "keeper") return 0;
 
     std::optional<Vector2> target_position;
-    // Search for position in getEnemyRobot, getPositionToDefend, and getPositionToMoveTo
-    if (stpInfo.getEnemyRobot().has_value()) target_position = stpInfo.getEnemyRobot().value()->getPos();
+    // Search for position in getPositionToDefend, and getPositionToMoveTo
     if (stpInfo.getPositionToDefend().has_value()) target_position = stpInfo.getPositionToDefend().value();
     if (stpInfo.getPositionToShootAt().has_value()) target_position = world.getBall()->get()->position;
     if (stpInfo.getPositionToMoveTo().has_value()) target_position = stpInfo.getPositionToMoveTo().value();
@@ -296,7 +295,7 @@ void Dealer::setGameStateRoleIds(std::unordered_map<std::string, v::RobotView> o
 
 // Calculate the cost for distance. The further away the target, the higher the cost for that distance.
 double Dealer::costForDistance(const v::RobotView &robot, const rtt::Vector2 target_position, const double MaxRobotVelocity) {
-    return Trajectory2D(robot->getPos(), robot->getVel(), target_position, MaxRobotVelocity, ai::Constants::MAX_ACC_UPPER()).getTotalTime();
+    return Trajectory2D(robot->getPos(), robot->getVel(), target_position, MaxRobotVelocity, ai::Constants::MAX_ACC()).getTotalTime();
 }
 
 double Dealer::costForProperty(bool property) { return property ? 0.0 : 1.0; }

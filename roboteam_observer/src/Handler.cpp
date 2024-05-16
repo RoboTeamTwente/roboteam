@@ -165,7 +165,12 @@ std::vector<proto::Referee> Handler::receiveRefereePackets() {
     std::vector<proto::Referee> receivedPackets;
     bool ok = referee_client->receive(receivedPackets);
     if (!ok) {
-        std::cout << "error receiving referee messages" << std::endl;
+        std::cout << "error receiving referee messages. Pretending it's a halt for safety. " << std::endl;
+        proto::Referee ref;
+        ref.set_command(proto::Referee_Command_HALT);
+        receivedPackets.clear();
+        receivedPackets.push_back(ref);
+        referee_client->receive(receivedPackets);
     }
     return receivedPackets;
 }

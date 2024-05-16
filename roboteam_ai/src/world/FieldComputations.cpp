@@ -47,11 +47,38 @@ Vector2 FieldComputations::getBallPositionAtTime(const rtt::world::ball::Ball &b
     return expectedEndPosition;
 }
 
+double FieldComputations::getBallTimeAtPosition(const rtt::world::ball::Ball &ball, const Vector2 &targetPoint) {
+    const double frictionCoefficient =
+        GameSettings::getRobotHubMode() == net::RobotHubMode::SIMULATOR ? ai::stp::control_constants::SIMULATION_FRICTION : ai::stp::control_constants::REAL_FRICTION;
+
+    Vector2 direction = targetPoint - ball.position;
+    Vector2 velocityUnit = ball.velocity.normalize();
+    Vector2 projectedPoint = ball.position + velocityUnit * (direction.dot(velocityUnit));
+
+    double distanceToTarget = (projectedPoint - ball.position).length();
+
+    // distance = initialVelocity * time - 0.5 * frictionCoefficient * time^2
+    double a = -0.5 * frictionCoefficient;
+    double b = ball.velocity.length();
+    double c = -distanceToTarget;
+
+    double discriminant = b * b - 4 * a * c;
+    if (discriminant < 0) {
+        return std::numeric_limits<double>::infinity();
+    }
+
+    double root1 = (-b + std::sqrt(discriminant)) / (2 * a);
+    double root2 = (-b - std::sqrt(discriminant)) / (2 * a);
+    double minPositiveRoot = std::min({root1, root2});
+
+    return minPositiveRoot < 0 ? std::numeric_limits<double>::infinity() : minPositiveRoot;
+}
+
 bool FieldComputations::pointIsValidPosition(const rtt::Field &field, const Vector2 &point, stp::AvoidObjects avoidObjects, double fieldMargin) {
     auto [theirDefenseAreaMargin, ourDefenseAreaMargin] = getDefenseAreaMargin();
     if (avoidObjects.shouldAvoidOutOfField && !field.playArea.contains(point, fieldMargin)) return false;
-    if (avoidObjects.shouldAvoidDefenseArea && (field.leftDefenseArea.contains(point, ourDefenseAreaMargin) || field.rightDefenseArea.contains(point, theirDefenseAreaMargin)))
-        return false;
+    if (avoidObjects.shouldAvoidOurDefenseArea && (field.leftDefenseArea.contains(point, ourDefenseAreaMargin))) return false;
+    if (avoidObjects.shouldAvoidTheirDefenseArea && (field.rightDefenseArea.contains(point, theirDefenseAreaMargin))) return false;
     return true;
 }
 
@@ -266,9 +293,10 @@ Vector2 FieldComputations::projectPointInField(const Field &field, Vector2 point
     return projectedPoint;
 }
 
-Vector2 FieldComputations::projectPointOutOfDefenseArea(const Field &field, Vector2 point) {
+Vector2 FieldComputations::projectPointOutOfDefenseArea(const Field &field, Vector2 point, bool outOurDefenseArea, bool outTheirDefenseArea) {
     auto [theirDefenseAreaMargin, ourDefenseAreaMargin] = getDefenseAreaMargin();
-    if (field.playArea.contains(point) && !field.rightDefenseArea.contains(point, theirDefenseAreaMargin) && !field.leftDefenseArea.contains(point, ourDefenseAreaMargin))
+    if ((!field.rightDefenseArea.contains(point, theirDefenseAreaMargin) || !outTheirDefenseArea) &&
+        (!field.leftDefenseArea.contains(point, ourDefenseAreaMargin) || !outOurDefenseArea))
         return point;
 
     // If the point is not in the field yet, project it into the field
@@ -297,7 +325,7 @@ Vector2 FieldComputations::projectPointOutOfDefenseArea(const Field &field, Vect
 Vector2 FieldComputations::projectPointToValidPosition(const Field &field, Vector2 point, stp::AvoidObjects avoidObjects) {
     Vector2 projectedPos = point;
     if (avoidObjects.shouldAvoidOutOfField) projectedPos = projectPointInField(field, projectedPos);
-    if (avoidObjects.shouldAvoidDefenseArea) projectedPos = projectPointOutOfDefenseArea(field, projectedPos);
+    projectedPos = projectPointOutOfDefenseArea(field, projectedPos, avoidObjects.shouldAvoidOurDefenseArea, avoidObjects.shouldAvoidTheirDefenseArea);
     return projectedPos;
 }
 

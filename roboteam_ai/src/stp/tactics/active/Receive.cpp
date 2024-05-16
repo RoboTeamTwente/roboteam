@@ -6,42 +6,27 @@
 
 namespace rtt::ai::stp::tactic {
 
-Receive::Receive() {
-    // Create state machine of skills and initialize first skill
-    skills = rtt::collections::state_machine<Skill, Status, StpInfo>{skill::GoToPos()};
-}
+Receive::Receive() { skills = rtt::collections::state_machine<Skill, Status, StpInfo>{skill::GoToPos()}; }
 
 std::optional<StpInfo> Receive::calculateInfoForSkill(StpInfo const &info) noexcept {
     StpInfo skillStpInfo = info;
 
     if (!skillStpInfo.getRobot() || !skillStpInfo.getBall()) return std::nullopt;
 
-    // Rotate robot towards the ball
     skillStpInfo.setAngle(calculateAngle(info.getRobot().value(), info.getBall().value()));
-
-    if (skillStpInfo.getPidType() == PIDType::INTERCEPT) skillStpInfo.setPositionToMoveTo(skillStpInfo.getBall().value()->position);
-
-    // If ball is close to robot, turn on dribbler
     skillStpInfo.setDribblerSpeed(100);
 
     return skillStpInfo;
 }
 
-bool Receive::isTacticFailing(const StpInfo &info) noexcept {
-    // Receive tactic fails if targetType is not a receiveTarget
-    return !info.getPositionToMoveTo();
-}
+bool Receive::isTacticFailing(const StpInfo &info) noexcept { return !info.getPositionToMoveTo(); }
 
 bool Receive::shouldTacticReset(const StpInfo &info) noexcept {
-    // Receive tactic resets when robot position is not close enough to the target position for receiving
-    double errorMargin = stp::control_constants::GO_TO_POS_ERROR_MARGIN;
+    double errorMargin = stp::control_constants::GO_TO_POS_ERROR_MARGIN * M_PI;
     return (info.getRobot().value()->getPos() - info.getPositionToMoveTo().value()).length() > errorMargin;
 }
 
-bool Receive::isEndTactic() noexcept {
-    // Receive tactic is an end tactic
-    return true;
-}
+bool Receive::isEndTactic() noexcept { return true; }
 
 double Receive::calculateAngle(const world::view::RobotView &robot, const world::view::BallView &ball) { return (ball->position - robot->getPos()).angle(); }
 

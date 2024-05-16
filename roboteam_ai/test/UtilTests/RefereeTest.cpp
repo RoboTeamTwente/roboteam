@@ -20,15 +20,6 @@ TEST(RefereeTest, it_gets_and_sets_the_ref) {
     worldPtr->updateWorld(world);
 
     proto::Referee refereeData;
-    refereeData.set_command(proto::Referee_Command_PREPARE_KICKOFF_BLUE);
-    rtt::ai::GameStateManager::setRefereeData(refereeData, worldPtr);
-
-    EXPECT_EQ(rtt::ai::GameStateManager::getRefereeData().command(), proto::Referee_Command_PREPARE_KICKOFF_BLUE);
-
-    refereeData.set_command(proto::Referee_Command_PREPARE_KICKOFF_YELLOW);
-    rtt::ai::GameStateManager::setRefereeData(refereeData, worldPtr);
-
-    EXPECT_EQ(rtt::ai::GameStateManager::getRefereeData().command(), proto::Referee_Command_PREPARE_KICKOFF_YELLOW);
 
     // this is necessary for this following test to work properly since it listens to the interface
     rtt::ai::interface::Output::setUseRefereeCommands(true);

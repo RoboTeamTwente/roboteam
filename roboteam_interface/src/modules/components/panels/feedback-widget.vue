@@ -73,9 +73,6 @@ const uiStore = useUIStore()
           Ball detected: {{ robot.feedbackInfo?.ballSensorSeesBall }}
         </div>
         <div class="text-no-wrap text-sm font-mono">
-          Ball position: {{ robot.feedbackInfo?.ballPosition }}
-        </div>
-        <div class="text-no-wrap text-sm font-mono">
           Dribbler sees ball: {{ robot.feedbackInfo?.dribblerSeesBall }}
         </div>
       </div>

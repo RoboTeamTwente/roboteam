@@ -7,7 +7,7 @@
 
 #include "BBTrajectory1D.h"
 
-namespace rtt::BB {
+namespace rtt::ai::control {
 
 /**
  * @author Rolf
@@ -73,7 +73,7 @@ class BBTrajectory2D {
     /**
      * @brief Returns all the trajectory parts in both dimensions to use in the Trajectory2D class
      */
-    [[nodiscard]] std::pair<std::vector<BB::BBTrajectoryPart>, std::vector<BB::BBTrajectoryPart>> getParts();
+    [[nodiscard]] std::pair<std::vector<rtt::ai::control::BBTrajectoryPart>, std::vector<rtt::ai::control::BBTrajectoryPart>> getParts();
 
    private:
     /**
@@ -93,5 +93,5 @@ class BBTrajectory2D {
     BBTrajectory1D x; /**< 1D x component of the 2D BBT */
     BBTrajectory1D y; /**< 1D y component of the 2D BBT */
 };
-}  // namespace rtt::BB
+}  // namespace rtt::ai::control
 #endif  // RTT_BBTRAJECTORY2D_H

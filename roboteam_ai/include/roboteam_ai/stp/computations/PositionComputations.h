@@ -146,6 +146,12 @@ class PositionComputations {
      */
     static void recalculateInfoForNonPassers(std::unordered_map<std::string, StpInfo> &stpInfos, const Field &field, world::World *world, Vector2 receiverLocation) noexcept;
 
+    /**
+     * @brief Calculates info for the harasser if he has to avoid the ball (prepare forced start, stopstate)
+     * @param world The current world
+     */
+    static void calculateInfoForAvoidBallHarasser(std::unordered_map<std::string, StpInfo> &stpInfos, world::World *world) noexcept;
+
    private:
     /**
      * @brief Calculates a position outside of a given shape

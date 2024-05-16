@@ -109,9 +109,6 @@ if (currentWorld.has_value()) {
 the internal world accordingly. Takes ownership of the original data.
 Ownership will be explained in a lecture about move semantics.
 
-`updatePositionControl` -> Updates the internal `positionControl` using the new robot positions
-in the current world data representation.
-
 `getWorld` -> Gets an optional pointer to `currentWorld`.
 
 `getField` -> Returns `this->currentField`

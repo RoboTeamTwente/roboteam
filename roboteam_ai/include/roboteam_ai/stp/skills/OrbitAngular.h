@@ -22,10 +22,7 @@ class OrbitAngular : public Skill {
      */
     const char* getName() override;
 
-    /**
-     * Counter for how many ticks the robot is within the error margin
-     */
-    int counter = 0;
+    int withinMarginCount = 0; /**< Counts how long the robot is within the yaw error margin */
 };
 }  // namespace rtt::ai::stp::skill
 

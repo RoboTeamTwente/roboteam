@@ -30,50 +30,6 @@ TEST(ControlUtils, velocityLimiter) {
     }
 }
 
-TEST(ControlUtils, accelerationLimiter) {
-    Vector2 prevVel;
-    Vector2 targetVel;
-    Angle targetAngle;
-    const double sA = Constants::MAX_ACC_LOWER() / Constants::STP_TICK_RATE();
-    const double fA = Constants::MAX_ACC_UPPER() / Constants::STP_TICK_RATE();
-    const double sD = Constants::MAX_DEC_LOWER() / Constants::STP_TICK_RATE();
-    const double fD = Constants::MAX_DEC_UPPER() / Constants::STP_TICK_RATE();
-    const double error = 0.0001;
-
-    prevVel = Vector2(1.0, 0.0);
-    targetVel = Vector2(2.0, 0.0);
-    EXPECT_NEAR((ControlUtils::accelerationLimiter(targetVel, prevVel, 0.0) - prevVel).length(), fA, error);
-    EXPECT_NEAR((ControlUtils::accelerationLimiter(targetVel, prevVel, M_PI_2) - prevVel).length(), sA, error);
-    EXPECT_NEAR((ControlUtils::accelerationLimiter(targetVel, prevVel, M_PI) - prevVel).length(), fA, error);
-    EXPECT_NEAR((ControlUtils::accelerationLimiter(targetVel, prevVel, M_PI_2 * 3.0) - prevVel).length(), sA, error);
-
-    targetVel = Vector2(0.0, 0.0);
-    EXPECT_NEAR((ControlUtils::accelerationLimiter(targetVel, prevVel, 0.0) - prevVel).length(), fD, error);
-    EXPECT_NEAR((ControlUtils::accelerationLimiter(targetVel, prevVel, M_PI_2) - prevVel).length(), sD, error);
-    EXPECT_NEAR((ControlUtils::accelerationLimiter(targetVel, prevVel, M_PI) - prevVel).length(), fD, error);
-    EXPECT_NEAR((ControlUtils::accelerationLimiter(targetVel, prevVel, M_PI_2 * 3.0) - prevVel).length(), sD, error);
-
-    targetVel = Vector2(1.01, 0.01);
-    EXPECT_EQ(cr::ControlUtils::accelerationLimiter(targetVel, prevVel, 0.0), targetVel);
-    prevVel = Vector2(-1.0, 0.8);
-    targetVel = Vector2(-0.99, 0.81);
-    EXPECT_EQ(ControlUtils::accelerationLimiter(targetVel, prevVel, 0.0), targetVel);
-    targetVel = Vector2(-1.01, 0.80);
-    EXPECT_EQ(ControlUtils::accelerationLimiter(targetVel, prevVel, 0.0), targetVel);
-
-    double maxAcceleration = std::max(sA, std::max(fA, std::max(sD, fD)));
-    double acceleration;
-    for (int i = 0; i < 20; i++) {
-        for (int j = 0; j < 50; j++) {
-            targetVel = {-0.01 * i + 0.14 * j - 12.0, 0.2 * i - 0.02 * j + 1.0};
-            prevVel = {-0.01 * i + 0.14 * j - 12.0, 0.2 * i - 0.02 * j + 1.0};
-            targetAngle = 0.004 * i + 0.12 * j - 2.0;
-            acceleration = (ControlUtils::accelerationLimiter(targetVel, prevVel, targetAngle) - prevVel).length();
-            EXPECT_TRUE(acceleration <= maxAcceleration);
-        }
-    }
-}
-
 // the function should return weight/distance^2 * normalized vector IF within minDistance, otherwise 0.
 TEST(ControlUtils, it_calculates_forces) {
     Vector2 force;

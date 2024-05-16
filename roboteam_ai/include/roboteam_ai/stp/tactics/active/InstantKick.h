@@ -1,5 +1,5 @@
-#ifndef RTT_KICKATPOS_H
-#define RTT_KICKATPOS_H
+#ifndef RTT_INSTANTKICK_H
+#define RTT_INSTANTKICK_H
 
 #include "stp/Tactic.h"
 
@@ -7,12 +7,12 @@ namespace rtt::ai::stp::tactic {
 /**
  * @brief Class that defines the kick at position tactic. This tactic is used for kicking the ball towards a given position
  */
-class KickAtPos : public Tactic {
+class InstantKick : public Tactic {
    public:
     /**
      * @brief Constructor for the tactic, it constructs the state machine of skills
      */
-    KickAtPos();
+    InstantKick();
 
    private:
     /**
@@ -52,4 +52,4 @@ class KickAtPos : public Tactic {
 };
 }  // namespace rtt::ai::stp::tactic
 
-#endif  // RTT_KICKATPOS_H
+#endif  // RTT_INSTANTKICK_H

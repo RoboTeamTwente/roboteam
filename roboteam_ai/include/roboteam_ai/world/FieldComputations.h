@@ -49,6 +49,13 @@ class FieldComputations {
     static Vector2 getBallPositionAtTime(const rtt::world::ball::Ball &ball, double time);
 
     /**
+     * @brief Get the expected time it takes for the ball to reach a certain position
+     * @param ball The current ball position
+     * @param point The point for which the time is calculated
+     */
+    static double getBallTimeAtPosition(const rtt::world::ball::Ball &ball, const Vector2 &point);
+
+    /**
      * @brief Check whether a given point is a valid position given which parts of the field should be avoided (note that shouldAvoidBall is not taken into consideration)
      * @param field The field class which is used to determine the boundaries of the field.
      * @param point The point for which it is checked whether it is valid or not
@@ -71,11 +78,13 @@ class FieldComputations {
      * @brief Project given position to outside the defense areas with a certain margin
      * @param field The field class used to determine where the defense area is
      * @param point The position to be projected to outside of the defense area
+     * @param outOurDefenseArea True if the point should be projected outside of our defense area, false if the point should be projected outside of the opponents defense area
+     * @param outTheirDefenseArea True if the point should be projected outside of the opponents defense area, false if the point should be projected outside of our defense area
      * @return The position closest to the given point that is outside of either defense area with the given margin and within the field.
      * Note that the returned position will always be within the field, even if this is not the closest position that is out of the defense area.
      * If the given point is already out of the defense area, this same point is returned.
      */
-    static Vector2 projectPointOutOfDefenseArea(const rtt::Field &field, Vector2 point);
+    static Vector2 projectPointOutOfDefenseArea(const rtt::Field &field, Vector2 point, bool outOurDefenseArea = true, bool outTheirDefenseArea = true);
 
     /**
      * @brief Project given position to a valid position given which parts of the field should be avoided (note that shouldAvoidBall is not taken into consideration)

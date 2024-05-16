@@ -24,11 +24,9 @@
 #include "stp/plays/offensive/Attack.h"
 #include "stp/plays/offensive/AttackingPass.h"
 #include "stp/plays/offensive/ChippingPass.h"
-#include "stp/plays/referee_specific/AggressiveStopFormation.h"
 #include "stp/plays/referee_specific/BallPlacementThem.h"
 #include "stp/plays/referee_specific/BallPlacementUsForceStart.h"
 #include "stp/plays/referee_specific/BallPlacementUsFreeKick.h"
-#include "stp/plays/referee_specific/DefensiveStopFormation.h"
 #include "stp/plays/referee_specific/FreeKickThem.h"
 #include "stp/plays/referee_specific/FreeKickUsAtGoal.h"
 #include "stp/plays/referee_specific/FreeKickUsPass.h"
@@ -41,6 +39,8 @@
 #include "stp/plays/referee_specific/PenaltyThemPrepare.h"
 #include "stp/plays/referee_specific/PenaltyUs.h"
 #include "stp/plays/referee_specific/PenaltyUsPrepare.h"
+#include "stp/plays/referee_specific/PrepareForcedStart.h"
+#include "stp/plays/referee_specific/StopFormation.h"
 
 namespace io = rtt::ai::io;
 namespace ai = rtt::ai;
@@ -59,8 +59,8 @@ const STPManager::PlaysVec STPManager::plays = ([] {
     plays.emplace_back(std::make_unique<plays::DefendShot>());
     plays.emplace_back(std::make_unique<plays::DefendPass>());
     plays.emplace_back(std::make_unique<plays::KeeperKickBall>());
-    plays.emplace_back(std::make_unique<plays::DefensiveStopFormation>());
-    plays.emplace_back(std::make_unique<plays::AggressiveStopFormation>());
+    plays.emplace_back(std::make_unique<plays::PrepareForcedStart>());
+    plays.emplace_back(std::make_unique<plays::StopFormation>());
     plays.emplace_back(std::make_unique<plays::BallPlacementUsFreeKick>());
     plays.emplace_back(std::make_unique<plays::BallPlacementUsForceStart>());
     plays.emplace_back(std::make_unique<plays::BallPlacementThem>());
@@ -157,7 +157,6 @@ void STPManager::runOneLoopCycle() {
             if (!robotsInitialized) {
                 RTT_SUCCESS("Received robots, starting STP!")
             }
-            world->updatePositionControl();
             decidePlay(world);
             robotsInitialized = true;
 

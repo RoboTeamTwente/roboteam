@@ -18,6 +18,7 @@ struct GameState {
     int keeperId = Constants::DEFAULT_KEEPER_ID();
     int maxAllowedRobots = stp::control_constants::MAX_ROBOT_COUNT;
     static int cardId;
+    static double timeLeft;
 
     GameState() = default;
 

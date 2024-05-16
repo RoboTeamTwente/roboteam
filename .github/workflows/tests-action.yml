@@ -13,13 +13,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository and submodules
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           submodules: recursive    
       
       - name: Restored cached build
         id: cache-build-restore
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@v4
         with:
           path: .
           key: ${{ runner.os }}-build

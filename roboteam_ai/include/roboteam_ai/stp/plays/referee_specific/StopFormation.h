@@ -1,19 +1,18 @@
-#ifndef RTT_AGGRESSIVESTOPFORMATION_H
-#define RTT_AGGRESSIVESTOPFORMATION_H
+#ifndef RTT_STOPFORMATION_H
+#define RTT_STOPFORMATION_H
 
 #include "stp/Play.hpp"
 
 namespace rtt::ai::stp::play {
-
 /**
- * @brief The aggressive stop play is executed when we want to attack after the stop game state has ended.
+ * @brief The stop formation is executed when a stop state is called
  */
-class AggressiveStopFormation : public Play {
+class StopFormation : public Play {
    public:
     /**
      * @brief Constructor that initializes roles with roles that are necessary for this play
      */
-    AggressiveStopFormation();
+    StopFormation();
 
     /**
      * @brief Calculates the score of this play to determine which play is best in this situation
@@ -29,16 +28,18 @@ class AggressiveStopFormation : public Play {
     Dealer::FlagMap decideRoleFlags() const noexcept override;
 
     /**
-     * Calculates info for the roles
+     * @brief Calculates info for the roles
      */
     void calculateInfoForRoles() noexcept override;
 
     /**
      * @brief Retrieves the name of the play
-     * @return The name of the play as string
+     * @return The name of the play as a string
      */
     const char* getName() const override;
+
+    InterceptionInfo harasserInfo;
 };
 }  // namespace rtt::ai::stp::play
 
-#endif  // RTT_AGGRESSIVESTOPFORMATION_H
+#endif  // RTT_STOPFORMATION_H

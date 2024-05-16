@@ -8,7 +8,7 @@ Halt::Halt() { skills = collections::state_machine<Skill, Status, StpInfo>{skill
 
 std::optional<StpInfo> Halt::calculateInfoForSkill(StpInfo const &info) noexcept {
     StpInfo skillInfo = info;
-    skillInfo.setAngle(0.00001);
+    skillInfo.setAngle(0.0);
 
     return skillInfo;
 }
@@ -17,10 +17,7 @@ bool Halt::isTacticFailing(const StpInfo &) noexcept { return false; }
 
 bool Halt::shouldTacticReset(const StpInfo &) noexcept { return false; }
 
-bool Halt::isEndTactic() noexcept {
-    // This is an end tactic
-    return true;
-}
+bool Halt::isEndTactic() noexcept { return true; }
 
 const char *Halt::getName() { return "Halt"; }
 

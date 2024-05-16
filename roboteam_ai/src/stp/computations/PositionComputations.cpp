@@ -178,16 +178,13 @@ Vector2 PositionComputations::calculateAvoidRobotsPosition(Vector2 targetPositio
             }
         }
     }
-    if (avoidObj.shouldAvoidTheirRobots || avoidObj.notAvoidTheirRobotId != -1) {
+    if (avoidObj.shouldAvoidTheirRobots) {
         for (auto &robot : world->getWorld()->getThem()) {
-            if (robot->getId() != avoidObj.notAvoidTheirRobotId) {
-                pointsToAvoid.push_back(robot->getPos());
-            }
+            pointsToAvoid.push_back(robot->getPos());
         }
     }
-
-    if (std::all_of(pointsToAvoid.begin(), pointsToAvoid.end(),
-                    [&](const Vector2 &avoidPoint) { return avoidPoint.dist(targetPosition) >= 2 * control_constants::ROBOT_RADIUS; })) {
+    // We use robot radius instead of 2 * robot radius to make sure we are not overly cautious
+    if (std::all_of(pointsToAvoid.begin(), pointsToAvoid.end(), [&](const Vector2 &avoidPoint) { return avoidPoint.dist(targetPosition) >= control_constants::ROBOT_RADIUS; })) {
         return targetPosition;
     }
 
@@ -196,9 +193,8 @@ Vector2 PositionComputations::calculateAvoidRobotsPosition(Vector2 targetPositio
         auto possiblePoints = Grid(targetPosition.x - distance / 2.0, targetPosition.y - distance / 2.0, distance, distance, 3, 3).getPoints();
         for (auto &pointVector : possiblePoints) {
             for (auto &point : pointVector) {
-                if (FieldComputations::pointIsValidPosition(field, point) && std::all_of(pointsToAvoid.begin(), pointsToAvoid.end(), [&](const Vector2 &avoidPoint) {
-                        return avoidPoint.dist(point) >= 2 * control_constants::ROBOT_RADIUS;
-                    })) {
+                if (FieldComputations::pointIsValidPosition(field, point) &&
+                    std::all_of(pointsToAvoid.begin(), pointsToAvoid.end(), [&](const Vector2 &avoidPoint) { return avoidPoint.dist(point) >= control_constants::ROBOT_RADIUS; })) {
                     return point;
                 }
             }
@@ -265,11 +261,9 @@ void PositionComputations::calculateInfoForHarasser(std::unordered_map<std::stri
         auto enemyPos = enemyClosestToBall->get()->getPos();
         auto targetPos =
             enemyPos + (field.leftGoalArea.leftLine().center() - enemyPos).stretchToLength(control_constants::ROBOT_RADIUS * 4 + control_constants::GO_TO_POS_ERROR_MARGIN);
-        stpInfos["harasser"].setNotAvoidTheirRobotId(-1);
         stpInfos["harasser"].setPositionToMoveTo(targetPos);
         stpInfos["harasser"].setAngle((world->getWorld()->getBall()->get()->position - targetPos).angle());
     } else {
-        stpInfos["harasser"].setNotAvoidTheirRobotId(enemyClosestToBall->get()->getId());
         auto harasser = std::find_if(roles->begin(), roles->end(), [](const std::unique_ptr<Role> &role) { return role != nullptr && role->getName() == "harasser"; });
         if (harasser != roles->end() && !harasser->get()->finished() && strcmp(harasser->get()->getCurrentTactic()->getName(), "Formation") == 0)
             harasser->get()->forceNextTactic();
@@ -358,7 +352,6 @@ void PositionComputations::calculateInfoForDefendersAndWallers(std::unordered_ma
                 additionalWallerNames.emplace_back(activeDefenderNames[i]);
             } else {
                 stpInfos[activeDefenderNames[i]].setPositionToDefend(enemies[assignments[i]]);
-                stpInfos[activeDefenderNames[i]].setBlockDistance(BlockDistance::ROBOTRADIUS);
             }
         }
     }
@@ -493,7 +486,8 @@ void PositionComputations::recalculateInfoForNonPassers(std::unordered_map<std::
     for (auto &role : stpInfos) {
         if (role.second.getRobot().has_value()) {
             auto robotName = role.first;
-            if (robotName != "keeper" && robotName != "passer" && robotName != "receiver" && robotName != "striker" && robotName != "free_kick_taker") {
+            if (robotName != "keeper" && robotName != "passer" && robotName != "receiver" && robotName != "striker" && robotName != "free_kick_taker" &&
+                robotName.find("waller") == std::string::npos) {
                 toBeCheckedRobots.emplace_back(role.first);
             }
         }
@@ -513,4 +507,12 @@ void PositionComputations::recalculateInfoForNonPassers(std::unordered_map<std::
         stpInfos[robot].setPositionToMoveTo(newRobotPositionToMoveTo);
     }
 }
+
+void PositionComputations::calculateInfoForAvoidBallHarasser(std::unordered_map<std::string, StpInfo> &stpInfos, world::World *world) noexcept {
+    if (!world->getWorld()->getBall()) return;
+    auto ballPos = world->getWorld()->getBall()->get()->position;
+    auto goalToBall = ballPos - world->getField().value().leftGoalArea.rightLine().center();
+    stpInfos["harasser"].setPositionToMoveTo(ballPos - goalToBall.stretchToLength(control_constants::AVOID_BALL_DISTANCE));
+}
+
 }  // namespace rtt::ai::stp

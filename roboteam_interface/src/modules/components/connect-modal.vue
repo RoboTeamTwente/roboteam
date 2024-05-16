@@ -29,6 +29,7 @@ const props = defineProps<{
         />
         {{ props.status }}
       </span>
+    <form @submit.prevent="() => emit('connect', 'ws://' + url)">
       <div class="form-control w-full max-w">
         <label class="label">
           <span class="label-text">AI InterfaceGateway url</span>
@@ -38,7 +39,10 @@ const props = defineProps<{
           <input class="input input-bordered w-full" v-model="url" />
         </label>
       </div>
-      <button class="btn btn-primary" @click="() => emit('connect', 'ws://' + url)">Connect</button>
+      <div class="form-control w-full max-w">
+        <button class="btn btn-primary w-full" type="submit">Connect</button>
+      </div>
+    </form>
     </div>
   </div>
 </template>

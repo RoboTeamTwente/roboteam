@@ -7,25 +7,18 @@
 
 namespace rtt::ai::stp::tactic {
 
-ChipAtPos::ChipAtPos() {
-    // Create state machine of skills and initialize first skill
-    skills = rtt::collections::state_machine<Skill, Status, StpInfo>{skill::OrbitAngular(), skill::Chip()};
-}
+ChipAtPos::ChipAtPos() { skills = rtt::collections::state_machine<Skill, Status, StpInfo>{skill::OrbitAngular(), skill::Chip()}; }
 
-std::optional<StpInfo> ChipAtPos::calculateInfoForSkill(StpInfo const &info) noexcept {
+std::optional<StpInfo> ChipAtPos::calculateInfoForSkill(const StpInfo &info) noexcept {
+    if (!info.getPositionToShootAt() || !info.getRobot() || !info.getBall()) return std::nullopt;
+
     StpInfo skillStpInfo = info;
-
-    if (!skillStpInfo.getPositionToShootAt() || !skillStpInfo.getRobot() || !skillStpInfo.getBall()) return std::nullopt;
-
-    // Calculate the angle the robot needs to aim
-    double angleToTarget = (info.getPositionToShootAt().value() - info.getRobot().value()->getPos()).angle();
+    auto angleToTarget = (info.getPositionToShootAt().value() - info.getRobot().value()->getPos()).angle();
     skillStpInfo.setAngle(angleToTarget);
 
-    // Calculate the distance and the chip force
-    double distanceBallToTarget = (info.getBall()->get()->position - info.getPositionToShootAt().value()).length();
+    auto distanceBallToTarget = (info.getBall()->get()->position - info.getPositionToShootAt().value()).length();
     skillStpInfo.setKickChipVelocity(control::ControlUtils::determineChipForce(distanceBallToTarget));
 
-    // When rotating, we need to dribble to keep the ball, but when chipping we don't
     if (skills.current_num() == 0) {
         skillStpInfo.setDribblerSpeed(100);
     }
@@ -33,25 +26,18 @@ std::optional<StpInfo> ChipAtPos::calculateInfoForSkill(StpInfo const &info) noe
     return skillStpInfo;
 }
 
-bool ChipAtPos::isEndTactic() noexcept {
-    // This is not an end tactic
-    return false;
-}
+bool ChipAtPos::isEndTactic() noexcept { return false; }
 
 bool ChipAtPos::isTacticFailing(const StpInfo &info) noexcept {
-    // Fail tactic if:
-    // robot doesn't have the ball or if there is no shootTarget
-    // But only check when we are not chipping
     if (skills.current_num() != 1) {
-        return !info.getRobot().value()->hasBall() || !info.getPositionToShootAt();
+        return info.getRobot().value()->hasBall() && !info.getPositionToShootAt();
     }
     return false;
 }
 
 bool ChipAtPos::shouldTacticReset(const StpInfo &info) noexcept {
-    // Reset when angle is wrong outside of the rotate skill, reset to rotate again
     if (skills.current_num() != 0) {
-        double errorMargin = stp::control_constants::GO_TO_POS_ANGLE_ERROR_MARGIN * M_PI;
+        auto errorMargin = stp::control_constants::GO_TO_POS_ANGLE_ERROR_MARGIN * M_PI;
         return info.getRobot().value()->getAngle().shortestAngleDiff(info.getAngle()) > errorMargin;
     }
     return false;

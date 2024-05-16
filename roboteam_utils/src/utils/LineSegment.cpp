@@ -53,6 +53,13 @@ std::optional<Vector2> LineSegment::intersects(const LineSegment &line) const {
 
 double LineSegment::distanceToLine(const Vector2 &point) const { return (project(point) - point).length(); }
 
+double LineSegment::closestDistanceToLineSegment(const LineSegment &line) const {
+    if (doesIntersect(line)) {
+        return 0;
+    }
+    return std::min({distanceToLine(line.start), distanceToLine(line.end), line.distanceToLine(start), line.distanceToLine(end)});
+}
+
 Vector2 LineSegment::project(const Vector2 &point) const {
     if (isPoint()) {
         return start;

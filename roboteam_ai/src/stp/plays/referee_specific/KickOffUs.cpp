@@ -15,8 +15,8 @@ KickOffUs::KickOffUs() : Play() {
 
     // Evaluations that have to be true to allow the play to continue, otherwise the play will change. Plays can also end using the shouldEndPlay().
     keepPlayEvaluation.clear();
-    keepPlayEvaluation.emplace_back(GlobalEvaluation::TheyDoNotHaveBall);
     keepPlayEvaluation.emplace_back(GlobalEvaluation::KickOffUsOrNormalGameState);
+    keepPlayEvaluation.emplace_back(GlobalEvaluation::WeWillHaveBall);
 
     // Role creation, the names should be unique. The names are used in the stpInfos-map.
     roles = std::array<std::unique_ptr<Role>, rtt::ai::Constants::ROBOT_COUNT()>{
@@ -68,13 +68,12 @@ void KickOffUs::calculateInfoForRoles() noexcept {
         auto ball = world->getWorld()->getBall()->get();
         auto ballTrajectory = LineSegment(ball->position, ball->position + ball->velocity.stretchToLength(field.playArea.width()));
         stpInfos["receiver"].setPositionToMoveTo(FieldComputations::projectPointToValidPositionOnLine(field, receiverLocation, ballTrajectory.start, ballTrajectory.end));
-        stpInfos["receiver"].setPidType(ball->velocity.length() > control_constants::BALL_IS_MOVING_SLOW_LIMIT ? PIDType::RECEIVE : PIDType::DEFAULT);
     }
 }
 
 bool KickOffUs::shouldEndPlay() noexcept {
     if (stpInfos["receiver"].getRobot() && stpInfos["receiver"].getRobot().value()->hasBall()) return true;
-    if (ballKicked() && world->getWorld()->getBall()->get()->velocity.length() < control_constants::BALL_IS_MOVING_SLOW_LIMIT) return true;
+    if (ballKicked()) return true;
     if (stpInfos["receiver"].getRobot() && world->getWorld()->getBall()->get()->position.x < stpInfos["receiver"].getRobot()->get()->getPos().x) return true;
 
     return false;

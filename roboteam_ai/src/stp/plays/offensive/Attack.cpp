@@ -44,7 +44,7 @@ Attack::Attack() : Play() {
 
 uint8_t Attack::score(const rtt::Field& field) noexcept {
     // Score the position of the ball based on the odds of scoring
-    return PositionScoring::scorePosition(world->getWorld()->getBall().value()->position, gen::GoalShot, field, world).score;
+    return PositionScoring::scorePosition(world->getWorld()->getBall().value()->position, gen::GoalShot, field, world).score * rand()%(2) + 1;
 }
 
 Dealer::FlagMap Attack::decideRoleFlags() const noexcept {
@@ -55,15 +55,15 @@ Dealer::FlagMap Attack::decideRoleFlags() const noexcept {
 
     flagMap.insert({"keeper", {DealerFlagPriority::KEEPER, {keeperFlag}}});
     flagMap.insert({"striker", {DealerFlagPriority::REQUIRED, {kickerFlag, detectionFlag}}});
+    flagMap.insert({"waller_0", {DealerFlagPriority::HIGH_PRIORITY, {}}});
+    flagMap.insert({"waller_1", {DealerFlagPriority::HIGH_PRIORITY, {}}});
     flagMap.insert({"defender_0", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
     flagMap.insert({"defender_1", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
     flagMap.insert({"defender_2", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
-    flagMap.insert({"waller_0", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"waller_1", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"attacker_0", {DealerFlagPriority::HIGH_PRIORITY, {}}});
-    flagMap.insert({"attacker_1", {DealerFlagPriority::HIGH_PRIORITY, {}}});
-    flagMap.insert({"attacker_2", {DealerFlagPriority::HIGH_PRIORITY, {}}});
-    flagMap.insert({"attacker_3", {DealerFlagPriority::HIGH_PRIORITY, {}}});
+    flagMap.insert({"attacker_0", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"attacker_1", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"attacker_2", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"attacker_3", {DealerFlagPriority::LOW_PRIORITY, {}}});
 
     return flagMap;
 }
@@ -74,7 +74,7 @@ void Attack::calculateInfoForRoles() noexcept {
 
     // Striker
     auto goalTarget = computations::GoalComputations::calculateGoalTarget(world, field);
-    goalTarget.y = std::clamp(goalTarget.y, field.rightGoalArea.bottom() + 0.4, field.rightGoalArea.top() - 0.4);
+    goalTarget.y = std::clamp(goalTarget.y, field.rightGoalArea.bottom() + 0.2, field.rightGoalArea.top() - 0.2);
     stpInfos["striker"].setPositionToShootAt(goalTarget);
     stpInfos["striker"].setKickOrChip(KickOrChip::KICK);
     stpInfos["striker"].setShotType(ShotType::MAX);
@@ -83,10 +83,8 @@ void Attack::calculateInfoForRoles() noexcept {
 
 bool Attack::shouldEndPlay() noexcept {
     // If the striker has finished, the play finished successfully
-    for (const auto& role : roles) {
-        if (role != nullptr && role->getName() == "striker" && role->finished()) {
-            return true;
-        }
+    if (std::any_of(roles.begin(), roles.end(), [](const auto& role) { return role != nullptr && role->getName() == "striker" && role->finished(); })) {
+        return true;
     }
 
     // Find id of robot with name striker

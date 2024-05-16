@@ -7,6 +7,8 @@ import { useAiController } from '../../composables/ai-controller'
 import { useUIStore } from '../../stores/ui-store'
 import { useAIDataStore } from '../../stores/data-stores/ai-data-store'
 import { proto } from '../../../generated/proto'
+import { useVisionDataStore } from '../../stores/data-stores/vision-data-store'
+import { useMagicKeys } from '@vueuse/core'
 
 export const appSymbol = Symbol() as InjectionKey<ShallowRef<CustomPixiApplication>>
 export const stageSymbol = Symbol() as InjectionKey<ShallowRef<Container<DisplayObject>>>
@@ -66,18 +68,56 @@ export const useMoveBall = (
 ) => {
   const
     aiController = useAiController(),
-    shiftKey = useKeyModifier('Shift'),
+    keys = useMagicKeys(),
     { pressed } = useMousePressed()
 
   const onMouseMove = useThrottleFn((e: FederatedPointerEvent) => {
-    if (!shiftKey.value || !pressed.value) return
+    if (!(keys.b.value || keys.shift.value) || !pressed.value) return
     const pos = transformCoordinates(e.getLocalPosition(app.value!.layers.objects))
     aiController.sendSimulatorCommand({
-      control: { teleportBall: { ...pos } }
+      control: { teleportBall: { x: pos.x, y: pos.y, z: 0.0, vx: 0.0, vy: 0.0, vz: 0.0 } }
     })
   }, 50)
 
   useEventListener(stage, 'pointermove', onMouseMove)
+}
+
+export const useShootBall = (
+  app: ShallowRef<CustomPixiApplication>,
+  stage: ShallowRef<Container<DisplayObject>>
+) => {
+  const
+    aiController = useAiController(),
+    keys = useMagicKeys(),
+    { pressed } = useMousePressed()
+  const onClick = useThrottleFn((e: FederatedPointerEvent) => {
+    let speed = 6;
+    let numberKeyPressed = false;
+    for (let i = 1; i <= 9; i++) {
+        if (keys[i.toString()].value) {
+            speed = i;
+            numberKeyPressed = true;
+            break;
+        }
+    }
+    if (!numberKeyPressed && (!keys.s.value || !pressed.value)) return
+    const pos = transformCoordinates(e.getLocalPosition(app.value!.layers.objects))
+    const visionData = useVisionDataStore()
+    const world = visionData.latestWorld
+    if (!world) return
+    const ball = world.ball
+    if (!ball || !ball.pos || !ball.pos.x || !ball.pos.y) return
+    const dx = pos.x - ball.pos.x
+    const dy = pos.y - ball.pos.y
+    const distance = Math.sqrt(dx * dx + dy * dy)
+    const time = distance / speed
+    const vx = dx / time
+    const vy = dy / time
+    aiController.sendSimulatorCommand({
+      control: { teleportBall: { x: ball.pos.x, y: ball.pos.y, z: 0.0, vx: vx, vy: vy, vz: 0.0 } }
+    })
+  }, 50)
+  useEventListener(stage, 'click', onClick)
 }
 
 export const useMoveRobots = (
@@ -88,11 +128,12 @@ export const useMoveRobots = (
     aiController = useAiController(),
     uiStore = useUIStore(),
     aiData = useAIDataStore(),
-    shiftKey = useKeyModifier('Alt'),
+    keys = useMagicKeys(),
     { pressed } = useMousePressed()
 
-  const onMouseMove = useThrottleFn((e: FederatedPointerEvent) => {
-    if (!shiftKey.value || !pressed.value) return
+  const onClick = useThrottleFn((e: FederatedPointerEvent) => {
+    if (!(keys.r.value || keys.alt.value) || !pressed.value) return
+
     const pos = transformCoordinates(e.getLocalPosition(app.value!.layers.objects))
 
     const robots = [...uiStore.selectedRobots].map(id => ({
@@ -108,7 +149,8 @@ export const useMoveRobots = (
     })
   }, 50)
 
-  useEventListener(stage, 'pointermove', onMouseMove)
+  useEventListener(stage, 'click', onClick)
+  useEventListener(stage, 'pointermove', onClick)
 }
 
 export const usePointerLocation = (

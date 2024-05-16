@@ -109,15 +109,11 @@ void Play::refreshData() noexcept {
             }
 
             // The keeper does not need to avoid our defense area
-            if (stpInfo->second.getRoleName() == "keeper") stpInfo->second.setShouldAvoidDefenseArea(false);
+            if (stpInfo->second.getRoleName() == "keeper") stpInfo->second.setShouldAvoidOurDefenseArea(false);
 
             // Assign the new BallView and field
             stpInfo->second.setBall(newBallView);
             stpInfo->second.setField(field);
-
-            if (stpInfo->second.getEnemyRobot().has_value()) {
-                stpInfo->second.setEnemyRobot(world->getWorld()->getRobotForId(stpInfo->second.getEnemyRobot()->get()->getId(), false));
-            }
         }
     }
 }
@@ -207,9 +203,9 @@ void Play::DrawMargins() noexcept {
     // Drawing all figures regarding states robots have to avoid certain area's (stop, ball placement, free kick, kick off)
     if (ruleSetTitle == RuleSetName::STOP || currentGameState == RefCommand::DIRECT_FREE_THEM || currentGameState == RefCommand::DIRECT_FREE_THEM_STOP ||
         currentGameState == RefCommand::DIRECT_FREE_US || currentGameState == RefCommand::KICKOFF_US || currentGameState == RefCommand::KICKOFF_THEM ||
-        currentGameState == RefCommand::PREPARE_FORCED_START) {
-        if (currentGameState != RefCommand::BALL_PLACEMENT_THEM && currentGameState != RefCommand::BALL_PLACEMENT_US && currentGameState != RefCommand::BALL_PLACEMENT_US_DIRECT &&
-            currentGameState != RefCommand::PREPARE_FORCED_START) {
+        currentGameState == RefCommand::PREPARE_FORCED_START || currentGameState == RefCommand::BALL_PLACEMENT_THEM || currentGameState == RefCommand::BALL_PLACEMENT_US ||
+        currentGameState == RefCommand::BALL_PLACEMENT_US_DIRECT) {
+        if (currentGameState != RefCommand::PREPARE_FORCED_START) {
             rtt::ai::gui::Out::draw(
                 {
                     .label = "Left defense area to avoid",
@@ -232,8 +228,7 @@ void Play::DrawMargins() noexcept {
                 rightDefenseAreaMargin);
         }
         proto::Drawing::Color color;
-        if (currentGameState == RefCommand::BALL_PLACEMENT_THEM || currentGameState == RefCommand::DIRECT_FREE_THEM || currentGameState == RefCommand::KICKOFF_THEM ||
-            currentGameState == RefCommand::PREPARE_FORCED_START)
+        if (currentGameState == RefCommand::BALL_PLACEMENT_THEM || currentGameState == RefCommand::DIRECT_FREE_THEM || currentGameState == RefCommand::KICKOFF_THEM)
             color = GameSettings::isYellow() ? proto::Drawing::YELLOW : proto::Drawing::BLUE;
         else if (currentGameState == RefCommand::BALL_PLACEMENT_US || currentGameState == RefCommand::BALL_PLACEMENT_US_DIRECT || currentGameState == RefCommand::DIRECT_FREE_US ||
                  currentGameState == RefCommand::KICKOFF_US)

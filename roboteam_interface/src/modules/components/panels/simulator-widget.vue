@@ -5,7 +5,6 @@ import { useAiController } from '../../composables/ai-controller'
 import { proto } from '../../../generated/proto'
 
 const aiController = useAiController()
-const disabled = computed(() => aiController.useReferee)
 
 // Move all robots from both teams to side of field
 // TODO take field size into account. Currently assumes field size is 12x9
@@ -38,9 +37,19 @@ const ballToCenter = {
   }
 }
 
+// Shoot on left goal
+const shootOnLeftGoal = {
+  'control' : {
+    'teleportBall' : {
+      'x' : -3.5, 'y' : 0, 'z' : 0, 'vx' : -3.3, 'vy' : -1, 'vz' : 0
+    }
+  }
+}
+
 const commandMap = new Map<string, Object>([
   ['robotsToSide', robotsToSide],
   ['ballToCenter', ballToCenter],
+  ['shootOnLeftGoal', shootOnLeftGoal]
 ])
 
 const sendSimulatorCommand = (command: string) => {
@@ -52,7 +61,6 @@ const sendSimulatorCommand = (command: string) => {
 <template>
   <div class="mt-4 flex flex-col gap-4 max-w-md">
     <button
-    :disabled='disabled'
     class="btn btn-sm btn-secondary gap-2"
         @click="sendSimulatorCommand('robotsToSide')"
     >
@@ -61,12 +69,19 @@ const sendSimulatorCommand = (command: string) => {
     </button>
     
     <button
-        :disabled='disabled'
         class="btn btn-sm btn-secondary gap-2"
         @click="sendSimulatorCommand('ballToCenter')"
     >
         <font-awesome-icon icon="fa-crosshairs" />
         Move ball to center
+    </button>
+
+    <button
+        class="btn btn-sm btn-secondary gap-2"
+        @click="sendSimulatorCommand('shootOnLeftGoal')"
+    >
+        <font-awesome-icon icon="fa-football-ball" />
+        Shoot on left goal
     </button>
     
 

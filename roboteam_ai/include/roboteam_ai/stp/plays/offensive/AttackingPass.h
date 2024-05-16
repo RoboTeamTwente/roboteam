@@ -56,7 +56,7 @@ class AttackingPass : public Play {
     int endPlayCounter = 0;
 
     /**
-     * @brief Check if the ball has been kicked. True if passer is done with KickAtPos tactic, False if it is still ongoing
+     * @brief Check if the ball has been kicked. True if passer is done with kicking, False if it is still ongoing
      * @return Boolean that tells whether the ball has been kicked
      */
     bool ballKicked();

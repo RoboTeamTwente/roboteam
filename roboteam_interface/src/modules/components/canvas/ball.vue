@@ -5,7 +5,7 @@ import { useVisionDataStore } from '../../stores/data-stores/vision-data-store'
 import { OUT_OF_CANVAS_COORDINATES } from '../../../utils'
 import { useAIDataStore } from '../../stores/data-stores/ai-data-store'
 import { useUIStore } from '../../stores/ui-store'
-import { appSymbol, stageSymbol, useMoveBall } from './utils'
+import { appSymbol, stageSymbol, useMoveBall, useShootBall } from './utils'
 import { BallDrawing } from './field-objects'
 
 
@@ -18,6 +18,7 @@ const
   uiStore = useUIStore()
 
 useMoveBall(app, stage)
+useShootBall(app, stage)
 
 const onPixiTick = () => {
   const world = visionData.latestWorld

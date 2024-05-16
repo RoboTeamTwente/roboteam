@@ -4,7 +4,7 @@
 
 #include "roboteam_utils/Print.h"
 
-namespace rtt::BB {
+namespace rtt::ai::control {
 double BBTrajectory1D::fullBrakePos(double pos, double vel, double accMax) {
     double acc = vel <= 0 ? accMax : -accMax;
     double t = -vel / acc;       // (inverted) time needed to break to zero velocity
@@ -178,12 +178,12 @@ double BBTrajectory1D::getPosition(double t) const {
 
 bool BBTrajectory1D::inLastPart(double t) const { return t >= parts[numParts - 2].tEnd; }
 
-std::vector<BB::BBTrajectoryPart> BBTrajectory1D::getParts() {
-    std::vector<BB::BBTrajectoryPart> partsVector;
+std::vector<BBTrajectoryPart> BBTrajectory1D::getParts() {
+    std::vector<BBTrajectoryPart> partsVector;
     partsVector.reserve(numParts);
     for (int i = 0; i < numParts; i++) {
         partsVector.push_back(parts[i]);
     }
     return partsVector;
 }
-}  // namespace rtt::BB
+}  // namespace rtt::ai::control

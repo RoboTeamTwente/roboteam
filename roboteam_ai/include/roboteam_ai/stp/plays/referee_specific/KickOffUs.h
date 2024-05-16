@@ -45,7 +45,7 @@ class KickOffUs : public Play {
     const char* getName() const override;
 
     /**
-     * @brief Checks if the passer has finished kickAtPos
+     * @brief Checks if the passer has finished kicking the ball
      * @return Boolean that tells whether the ball has been kicked
      */
     bool ballKicked();

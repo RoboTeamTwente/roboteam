@@ -24,7 +24,7 @@ AttackingPass::AttackingPass() : Play() {
     // Evaluations that have to be true to allow the play to continue, otherwise the play will change. Plays can also end using the shouldEndPlay().
     keepPlayEvaluation.clear();
     keepPlayEvaluation.emplace_back(GlobalEvaluation::NormalPlayGameState);
-    keepPlayEvaluation.emplace_back(GlobalEvaluation::TheyDoNotHaveBall);
+    keepPlayEvaluation.emplace_back(GlobalEvaluation::WeWillHaveBall);
     keepPlayEvaluation.emplace_back(GlobalEvaluation::BallNotInOurDefenseAreaAndStill);
 
     // Role creation, the names should be unique. The names are used in the stpInfos-map.
@@ -59,14 +59,14 @@ Dealer::FlagMap AttackingPass::decideRoleFlags() const noexcept {
     flagMap.insert({"keeper", {DealerFlagPriority::KEEPER, {}, passInfo.keeperId}});
     flagMap.insert({"passer", {DealerFlagPriority::REQUIRED, {}, passInfo.passerId}});
     flagMap.insert({"receiver", {DealerFlagPriority::REQUIRED, {}, passInfo.receiverId}});
-    flagMap.insert({"waller_0", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"waller_1", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"waller_0", {DealerFlagPriority::HIGH_PRIORITY, {}}});
+    flagMap.insert({"waller_1", {DealerFlagPriority::HIGH_PRIORITY, {}}});
     flagMap.insert({"defender_0", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
     flagMap.insert({"defender_1", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
     flagMap.insert({"defender_2", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
-    flagMap.insert({"attacker_0", {DealerFlagPriority::HIGH_PRIORITY, {}}});
-    flagMap.insert({"attacker_1", {DealerFlagPriority::HIGH_PRIORITY, {}}});
-    flagMap.insert({"attacker_2", {DealerFlagPriority::HIGH_PRIORITY, {}}});
+    flagMap.insert({"attacker_0", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"attacker_1", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"attacker_2", {DealerFlagPriority::LOW_PRIORITY, {}}});
 
     return flagMap;
 }
@@ -87,7 +87,6 @@ void AttackingPass::calculateInfoForRoles() noexcept {
         auto ballTrajectory = LineSegment(ball->position, ball->position + ball->velocity.stretchToLength(field.playArea.width()));
         Vector2 receiverLocation = FieldComputations::projectPointToValidPositionOnLine(field, passInfo.receiverLocation, ballTrajectory.start, ballTrajectory.end);
         stpInfos["receiver"].setPositionToMoveTo(receiverLocation);
-        stpInfos["receiver"].setPidType(ball->velocity.length() > control_constants::BALL_IS_MOVING_SLOW_LIMIT ? PIDType::RECEIVE : PIDType::DEFAULT);
 
         // Passer now goes to a front grid, where the receiver is not
         if (receiverLocation.y > field.topRightGrid.getOffSetY()) {  // Receiver is going to left of the field
@@ -112,7 +111,7 @@ bool AttackingPass::shouldEndPlay() noexcept {
     if (stpInfos["receiver"].getRobot() && stpInfos["receiver"].getRobot().value()->hasBall()) return true;
 
     // If the ball is moving too slow after we have kicked it, we should stop the play to get the ball
-    if (ballKicked() && world->getWorld()->getBall()->get()->velocity.length() < control_constants::BALL_IS_MOVING_SLOW_LIMIT) return true;
+    if (ballKicked()) return true;
 
     // If the ball is rolling away from the receiver
     if (ballKicked() && (world->getWorld()->getBall()->get()->position - passInfo.receiverLocation).dot(world->getWorld()->getBall()->get()->velocity) > 0) return true;

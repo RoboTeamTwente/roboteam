@@ -35,12 +35,14 @@ std::optional<StpInfo> KeeperBlockBall::calculateInfoForSkill(const StpInfo &inf
         return std::nullopt;
     }
 
-    skillStpInfo.setShouldAvoidOutOfField(false);
-
     const auto targetPosition = calculateTargetPosition(info);
-    skillStpInfo.setPositionToMoveTo(targetPosition);
+    skillStpInfo.setPositionToMoveTo(targetPosition.first);
+    skillStpInfo.setShouldAvoidGoalPosts(targetPosition.second);
+    skillStpInfo.setShouldAvoidOutOfField(targetPosition.second);
+    skillStpInfo.setShouldAvoidOurRobots(targetPosition.second);
+    skillStpInfo.setShouldAvoidTheirRobots(targetPosition.second);
 
-    const auto targetAngle = calculateTargetAngle(info.getBall().value(), targetPosition);
+    const auto targetAngle = calculateTargetAngle(info.getBall().value(), targetPosition.first);
     skillStpInfo.setAngle(targetAngle);
 
     return skillStpInfo;
@@ -99,7 +101,8 @@ bool KeeperBlockBall::isBallHeadingTowardsOurGoal(const HalfLine &ballTrajectory
     return intersectionWithGoalLine.has_value() && goalLineSegment.distanceToLine(intersectionWithGoalLine.value()) < MAX_DISTANCE_HEADING_TOWARDS_GOAL;
 }
 
-Vector2 KeeperBlockBall::calculateTargetPosition(const StpInfo info) noexcept {
+std::pair<Vector2, bool> KeeperBlockBall::calculateTargetPosition(const StpInfo info) noexcept {
+    bool shouldAvoidGoalPosts = true;
     const auto &field = info.getField().value();
     const auto &ball = info.getBall().value();
     const auto &world = info.getCurrentWorld();
@@ -113,6 +116,7 @@ Vector2 KeeperBlockBall::calculateTargetPosition(const StpInfo info) noexcept {
     if (ballHeadsTowardsOurGoal) {
         const auto targetPosition = keepersLineSegment.getClosestPointToLine(ballTrajectory->toLine());
         if (targetPosition.has_value()) {
+            shouldAvoidGoalPosts = false;
             const auto targetTime = FieldComputations::getBallTimeAtPosition(*ball.get(), targetPosition.value());
             const auto startPosition = robot->getPos();
             const auto startVelocity = robot->getVel();
@@ -120,7 +124,7 @@ Vector2 KeeperBlockBall::calculateTargetPosition(const StpInfo info) noexcept {
             const auto maxAcceleration = Constants::MAX_ACC();
             const auto newTarget =
                 control::OvershootComputations::overshootingDestination(startPosition, targetPosition.value(), startVelocity, maxVelocity, maxAcceleration, targetTime);
-            return newTarget;
+            return {newTarget, shouldAvoidGoalPosts};
         }
     }
 
@@ -133,12 +137,12 @@ Vector2 KeeperBlockBall::calculateTargetPosition(const StpInfo info) noexcept {
         const auto ballGoalLine = Line(ball->position, field.leftGoalArea.rightLine().center() - Vector2(PROJECT_BALL_DISTANCE_TO_GOAL, 0));
         const auto targetPosition = keepersLineSegment.getClosestPointToLine(ballGoalLine);
         if (targetPosition.has_value()) {
-            return targetPosition.value();
+            return {targetPosition.value(), shouldAvoidGoalPosts};
         }
     }
 
     // Default case: go to the center of the goal
-    return Vector2(keepersLineSegment.start.x, 0);
+    return {Vector2(keepersLineSegment.start.x, 0), shouldAvoidGoalPosts};
 }
 
 Angle KeeperBlockBall::calculateTargetAngle(const world::view::BallView &ball, const Vector2 &targetKeeperPosition) {

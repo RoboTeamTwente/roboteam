@@ -21,9 +21,6 @@ struct StpInfo {
     const std::optional<world::view::RobotView>& getRobot() const { return robot; }
     void setRobot(const std::optional<world::view::RobotView>& robot) { this->robot = robot; }
 
-    const std::optional<world::view::RobotView>& getEnemyRobot() const { return enemyRobot; }
-    void setEnemyRobot(const std::optional<world::view::RobotView>& enemyRobot) { this->enemyRobot = enemyRobot; }
-
     const std::optional<Field>& getField() const { return field; }
     void setField(const std::optional<Field>& field) { this->field = field; }
 
@@ -32,10 +29,7 @@ struct StpInfo {
 
     const std::optional<Vector2>& getPositionToMoveTo() const { return positionToMoveTo; }
     void setPositionToMoveTo(const std::optional<Vector2>& position) { this->positionToMoveTo = position; }
-    void setPositionToMoveTo(const std::optional<gen::ScoredPosition>& scoredPosition) {
-        setRoleScore(scoredPosition->score);
-        setPositionToMoveTo(scoredPosition->position);
-    }
+    void setPositionToMoveTo(const std::optional<gen::ScoredPosition>& scoredPosition) { setPositionToMoveTo(scoredPosition->position); }
 
     const std::optional<Vector2>& getPositionToShootAt() const { return positionToShootAt; }
     void setPositionToShootAt(const std::optional<Vector2>& position) { this->positionToShootAt = position; }
@@ -52,9 +46,6 @@ struct StpInfo {
     int getDribblerSpeed() const { return dribblerSpeed; }
     void setDribblerSpeed(int dribblerSpeed) { this->dribblerSpeed = dribblerSpeed; }
 
-    BlockDistance getBlockDistance() const { return blockDistance; }
-    void setBlockDistance(BlockDistance blockDistance) { this->blockDistance = blockDistance; }
-
     ShotType getShotType() const { return shotType; }
     void setShotType(ShotType shotType) { this->shotType = shotType; }
 
@@ -64,11 +55,6 @@ struct StpInfo {
     /// This function is used in a lambda, [[maybe_unused]] is to suppress 'unused' warnings
     [[maybe_unused]] void setCurrentWorld(world::World* world) { currentWorld = world; }
 
-    const std::optional<PIDType>& getPidType() const { return PidType; }
-    void setPidType(const std::optional<PIDType>& pidType) { PidType = pidType; }
-
-    void setRoleScore(const std::optional<uint8_t>& RoleScore) { roleScore = RoleScore; }
-
     double getMaxRobotVelocity() const { return maxRobotVelocity; }
     void setMaxRobotVelocity(double maxVelocity) { maxRobotVelocity = maxVelocity; }
 
@@ -77,17 +63,47 @@ struct StpInfo {
 
     AvoidObjects getObjectsToAvoid() const { return avoidObjects; }
 
-    void setShouldAvoidDefenseArea(bool shouldAvoidDefenseArea) { avoidObjects.shouldAvoidDefenseArea = shouldAvoidDefenseArea; }
+    void setShouldAvoidGoalPosts(bool shouldAvoidGoalPosts) {
+        if (shouldAvoidGoalPosts != avoidObjects.shouldAvoidGoalPosts) {
+            avoidObjects.shouldAvoidGoalPosts = shouldAvoidGoalPosts;
+        }
+    }
 
-    void setShouldAvoidBall(bool shouldAvoidBall) { avoidObjects.shouldAvoidBall = shouldAvoidBall; }
+    void setShouldAvoidOutOfField(bool shouldAvoidOutOfField) {
+        if (shouldAvoidOutOfField != avoidObjects.shouldAvoidOutOfField) {
+            avoidObjects.shouldAvoidOutOfField = shouldAvoidOutOfField;
+        }
+    }
 
-    void setShouldAvoidOutOfField(bool shouldAvoidOutOfField) { avoidObjects.shouldAvoidOutOfField = shouldAvoidOutOfField; }
+    void setShouldAvoidOurDefenseArea(bool shouldAvoidOurDefenseArea) {
+        if (shouldAvoidOurDefenseArea != avoidObjects.shouldAvoidOurDefenseArea) {
+            avoidObjects.shouldAvoidOurDefenseArea = shouldAvoidOurDefenseArea;
+        }
+    }
 
-    void setShouldAvoidOurRobots(bool shouldAvoidOurRobots) { avoidObjects.shouldAvoidOurRobots = shouldAvoidOurRobots; }
+    void setShouldAvoidTheirDefenseArea(bool shouldAvoidTheirDefenseArea) {
+        if (shouldAvoidTheirDefenseArea != avoidObjects.shouldAvoidTheirDefenseArea) {
+            avoidObjects.shouldAvoidTheirDefenseArea = shouldAvoidTheirDefenseArea;
+        }
+    }
 
-    void setShouldAvoidTheirRobots(bool shouldAvoidTheirRobots) { avoidObjects.shouldAvoidTheirRobots = shouldAvoidTheirRobots; }
+    void setShouldAvoidOurRobots(bool shouldAvoidOurRobots) {
+        if (shouldAvoidOurRobots != avoidObjects.shouldAvoidOurRobots) {
+            avoidObjects.shouldAvoidOurRobots = shouldAvoidOurRobots;
+        }
+    }
 
-    void setNotAvoidTheirRobotId(int notAvoidTheirRobotId) { avoidObjects.notAvoidTheirRobotId = notAvoidTheirRobotId; }
+    void setShouldAvoidTheirRobots(bool shouldAvoidTheirRobots) {
+        if (shouldAvoidTheirRobots != avoidObjects.shouldAvoidTheirRobots) {
+            avoidObjects.shouldAvoidTheirRobots = shouldAvoidTheirRobots;
+        }
+    }
+
+    void setShouldAvoidBall(bool shouldAvoidBall) {
+        if (shouldAvoidBall != avoidObjects.shouldAvoidBall) {
+            avoidObjects.shouldAvoidBall = shouldAvoidBall;
+        }
+    }
 
    private:
     /**
@@ -99,11 +115,6 @@ struct StpInfo {
      * Robot this tactic applies to
      */
     std::optional<world::view::RobotView> robot;
-
-    /**
-     * EnemyRobot this tactic applies to
-     */
-    std::optional<world::view::RobotView> enemyRobot;
 
     /**
      * Field
@@ -151,24 +162,9 @@ struct StpInfo {
     int dribblerSpeed = 0;
 
     /**
-     * The distance of our robot to a to-be-blocked target
-     */
-    BlockDistance blockDistance = BlockDistance::CLOSE;
-
-    /**
      * Set the shot to be a kick or chip
      */
     std::optional<KickOrChip> kickOrChip;
-
-    /**
-     * Enum for deciding which PID should be chosen
-     */
-    std::optional<PIDType> PidType{PIDType::DEFAULT};
-
-    /**
-     * Optional roleScore value to be used in play score determination
-     */
-    std::optional<uint8_t> roleScore;
 
     /**
      * The maximum velocity the robot is allowed to have

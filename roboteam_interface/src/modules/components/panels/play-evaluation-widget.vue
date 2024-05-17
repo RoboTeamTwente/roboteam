@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, defineProps } from 'vue';
+import { ref, watch } from 'vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { useSTPDataStore } from '../../stores/data-stores/stp-data-store'
 

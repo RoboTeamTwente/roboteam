@@ -4,21 +4,13 @@
 
 #include "stp/tactics/KeeperBlockBall.h"
 #include "stp/tactics/active/GetBall.h"
-#include "stp/tactics/active/KickAtPos.h"
 #include "stp/tactics/passive/Formation.h"
-#include "world/FieldComputations.h"
 
 namespace rtt::ai::stp::role {
 
-//
-// PenaltyKeeper is a subclass of Keeper and therefore inherit all its functions
-// The difference between a normal Keeper and PenaltyKeeper is that the PenaltyKeeper
-// has to stay on the goal line until the ball has moved 0.05 meters, afterwards it
-// can move freely.
-// Since calculating exactly when the ball has moved 0.05 meters takes too long, we
-// let the PenaltyKeeper move after the ball has moved. If this requirement is fullfilled
-// the keeper will behave as a normal keeper
-//
+// The PenaltyKeeper is a specialized version of the Keeper class, inheriting all its functions. The key difference lies in the initial movement restrictions during a penalty. The
+// PenaltyKeeper must remain on the goal line until the ball has moved at least 0.05 meters. After this, the PenaltyKeeper can move freely. To avoid computational delays, we allow
+// the PenaltyKeeper to move as soon as the ball starts moving. Once this condition is met, the PenaltyKeeper behaves like a regular Keeper.
 
 PenaltyKeeper::PenaltyKeeper(std::string name) : Keeper(std::move(name)) {
     // create state machine and initializes the first state

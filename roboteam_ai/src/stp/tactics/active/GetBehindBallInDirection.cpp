@@ -9,61 +9,53 @@
 
 namespace rtt::ai::stp::tactic {
 
+constexpr double DISTANCE_THRESHOLD = 0.5;
+constexpr double BALL_AVOID_DISTANCE = 4 * control_constants::ROBOT_RADIUS;
+
 GetBehindBallInDirection::GetBehindBallInDirection() { skills = collections::state_machine<Skill, Status, StpInfo>{skill::GoToPos(), skill::Orbit()}; }
 
-std::optional<StpInfo> GetBehindBallInDirection::calculateInfoForSkill(StpInfo const &info) noexcept {
+std::optional<StpInfo> GetBehindBallInDirection::calculateInfoForSkill(const StpInfo &info) noexcept {
+    if (!info.getRobot() || !info.getBall() || !info.getPositionToShootAt()) return std::nullopt;
+
     StpInfo skillStpInfo = info;
+    Vector2 robotPosition = info.getRobot()->get()->getPos();
+    Vector2 ballPosition = info.getBall()->get()->position;
+    Vector2 positionToShootAt = info.getPositionToShootAt().value();
 
-    if (!skillStpInfo.getRobot() || !skillStpInfo.getBall() || !skillStpInfo.getPositionToShootAt()) {
-        return std::nullopt;
-    }
+    skillStpInfo.setAngle((positionToShootAt - robotPosition).angle());
 
-    // Look at the position to shoot at
-    skillStpInfo.setAngle((info.getPositionToShootAt().value() - info.getRobot()->get()->getPos()).angle());
-
-    // If the robot is far from the ball, go to the target position
-    if ((info.getBall()->get()->position - info.getRobot()->get()->getPos()).length() > 0.5) {
-        auto targetPos = GetBehindBallInDirection::calculateTargetPosition(info.getBall()->get()->position, info.getRobot()->get()->getPos(), info.getPositionToShootAt().value());
+    if ((ballPosition - robotPosition).length() > DISTANCE_THRESHOLD || info.getObjectsToAvoid().shouldAvoidBall) {
+        Vector2 targetPos = calculateTargetPosition(ballPosition, robotPosition, positionToShootAt);
         skillStpInfo.setPositionToMoveTo(targetPos);
-    }
-
-    // If the robot is close to the ball, use orbit to get behind it
-    else {
-        if (skills.current_num() == 0) {
-            skills.skip_to(1);
-        }
+    } else if (skills.current_num() == 0) {
+        skills.skip_to(1);
     }
 
     return skillStpInfo;
 }
 
 Vector2 GetBehindBallInDirection::calculateTargetPosition(Vector2 ballPosition, Vector2 robotPosition, Vector2 positionToShootAt) {
-    auto ballAvoidDistance = 4 * control_constants::ROBOT_RADIUS;
-    auto ballToTarget = positionToShootAt - ballPosition;
+    Vector2 ballToTarget = positionToShootAt - ballPosition;
+    Vector2 targetPos = ballPosition - ballToTarget.stretchToLength(BALL_AVOID_DISTANCE);
 
-    // The inital target position is behind the ball in the direction to shoot at, at a distance of ballAvoidDistance
-    auto targetPos = ballPosition - ballToTarget.stretchToLength(ballAvoidDistance);
-
-    // If the line from the robot to the target brings the robot closer to the ball than the avoid distance, adjust the target position to prevent this
-    auto robotToTarget = targetPos - robotPosition;
-    if (!Circle(ballPosition, ballAvoidDistance).intersects(LineSegment(robotPosition, targetPos)).empty()) {
-        auto direction = ballToTarget.toAngle().rotateDirection(robotToTarget) ? 1.0 : -1.0;
-        auto finalPos = ballPosition + robotToTarget.rotate(M_PI_2).stretchToLength(ballAvoidDistance) * direction;
+    Vector2 robotToTarget = targetPos - robotPosition;
+    if (!Circle(ballPosition, BALL_AVOID_DISTANCE).intersects(LineSegment(robotPosition, targetPos)).empty()) {
+        double direction = ballToTarget.toAngle().rotateDirection(robotToTarget) ? 1.0 : -1.0;
+        Vector2 finalPos = ballPosition + robotToTarget.rotate(M_PI_2).stretchToLength(BALL_AVOID_DISTANCE) * direction;
         return finalPos;
-    } else {
-        return targetPos;
     }
+
+    return targetPos;
 }
+
 bool GetBehindBallInDirection::isTacticFailing(const StpInfo &info) noexcept { return !info.getPositionToShootAt(); }
 
 bool GetBehindBallInDirection::shouldTacticReset(const StpInfo &info) noexcept {
-    return ((info.getBall()->get()->position - info.getRobot()->get()->getPos()).length() > 0.5) && (skills.current_num() == 1);
+    return ((info.getBall()->get()->position - info.getRobot()->get()->getPos()).length() > DISTANCE_THRESHOLD) && (skills.current_num() == 1);
 }
 
-bool GetBehindBallInDirection::isEndTactic() noexcept {
-    // This is not an end tactic
-    return false;
-}
+bool GetBehindBallInDirection::isEndTactic() noexcept { return false; }
 
 const char *GetBehindBallInDirection::getName() { return "Get Ball In Direction"; }
+
 }  // namespace rtt::ai::stp::tactic

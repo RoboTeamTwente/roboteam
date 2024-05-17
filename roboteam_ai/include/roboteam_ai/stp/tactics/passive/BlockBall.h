@@ -18,11 +18,10 @@ class BlockBall : public Tactic {
     /**
      * @brief Calculates the position for the blocker
      * @param ball Ball
-     * @param field Field
-     * @param enemyRobot Enemy robot closest to ball
+     * @param defendPos Position to defend
      * @return Target position for the blocker
      */
-    static Vector2 calculateTargetPosition(const world::view::BallView &ball, Vector2 defendPos, BlockDistance blockDistance) noexcept;
+    static Vector2 calculateTargetPosition(const world::view::BallView &ball, Vector2 defendPos) noexcept;
 
    private:
     /**

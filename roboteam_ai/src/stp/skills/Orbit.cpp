@@ -5,12 +5,15 @@
 namespace rtt::ai::stp::skill {
 
 Status Orbit::onUpdate(const StpInfo &info) noexcept {
-    Vector2 directionVector = (info.getBall()->get()->position - info.getRobot()->get()->getPos());
-    double normalAngle = directionVector.rotate(M_PI).rotate(M_PI_2).angle();
-    Angle targetAngle = (info.getPositionToShootAt().value() - info.getBall()->get()->position).toAngle();
+    auto robot = info.getRobot().value();
+    auto ball = info.getBall()->get();
 
-    double margin = control_constants::ROBOT_RADIUS + 1.5 * stp::control_constants::BALL_RADIUS;
-    double adjustDistance = (info.getRobot()->get()->getDistanceToBall() - margin);
+    Vector2 directionVector = ball->position - robot->getPos();
+    double normalAngle = directionVector.rotate(M_PI).rotate(M_PI_2).angle();
+    Angle targetAngle = (info.getPositionToShootAt().value() - ball->position).toAngle();
+
+    double margin = 1.5 * control_constants::ROBOT_RADIUS + stp::control_constants::BALL_RADIUS;
+    double adjustDistance = robot->getDistanceToBall() - margin;
 
     // Get the direction of movement, counterclockwise or clockwise
     auto direction = Angle(directionVector).rotateDirection(targetAngle) ? -1.0 : 1.0;
@@ -27,15 +30,12 @@ Status Orbit::onUpdate(const StpInfo &info) noexcept {
     targetVelocity.y = sin(normalAngle) * multiplier + 3 * sin(directionVector.toAngle()) * adjustDistance;
 
     auto maxVel = directionVector.length() * 4;
-    if (maxVel < 0.65) maxVel = 0.65;
+    maxVel = std::max(maxVel, 0.65);
     if (targetVelocity.length() > maxVel) targetVelocity = targetVelocity.stretchToLength(maxVel);
 
-    command.velocity = targetVelocity * 0.5;
-
+    command.velocity = targetVelocity;
     command.targetAngle = targetAngle;
-
-    // set command ID
-    command.id = info.getRobot().value()->getId();
+    command.id = robot->getId();
 
     // forward the generated command to the ControlModule, for checking and limiting
     forwardRobotCommand();
@@ -49,10 +49,7 @@ Status Orbit::onUpdate(const StpInfo &info) noexcept {
     }
 
     // If the robot is within the error margin for 5 consecutive ticks, return success
-    if (counter > 5)
-        return Status::Success;
-    else
-        return Status::Running;
+    return (counter > 5) ? Status::Success : Status::Running;
 }
 
 const char *Orbit::getName() { return "Orbit"; }

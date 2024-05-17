@@ -6,38 +6,31 @@
 namespace rtt::ai::stp::skill {
 
 Status Rotate::onUpdate(const StpInfo &info) noexcept {
+    auto robot = info.getRobot().value();
     auto targetAngle = info.getAngle();
 
     // Set angle command
     command.targetAngle = targetAngle;
 
-    // Clamp and set dribbler speed
-    int targetDribblerPercentage = std::clamp(info.getDribblerSpeed(), 0, 100);
-    double targetDribblerSpeed = targetDribblerPercentage / 100.0 * stp::control_constants::MAX_DRIBBLER_CMD;
-
     // Set dribbler speed command
-    command.dribblerSpeed = targetDribblerSpeed;
+    command.dribblerSpeed = std::clamp(info.getDribblerSpeed(), 0, 100) / 100.0 * stp::control_constants::MAX_DRIBBLER_CMD;
 
-    // set command ID
-    command.id = info.getRobot().value()->getId();
+    // Set command ID
+    command.id = robot->getId();
 
-    // forward the generated command to the ControlModule, for checking and limiting
+    // Forward the generated command to the ControlModule, for checking and limiting
     forwardRobotCommand();
 
     // Check if the robot is within the error margin
     double errorMargin = stp::control_constants::GO_TO_POS_ANGLE_ERROR_MARGIN * M_PI;
-    if (info.getRobot().value()->getAngle().shortestAngleDiff(targetAngle) < errorMargin) {
-        withinMarginCount += 1;
+    if (robot->getAngle().shortestAngleDiff(targetAngle) < errorMargin) {
+        withinMarginCount++;
     } else {
         withinMarginCount = 0;
     }
 
     // Check whether the robot has been within the margin
-    if (withinMarginCount > 5) {
-        return Status::Success;
-    } else {
-        return Status::Running;
-    }
+    return (withinMarginCount > 3) ? Status::Success : Status::Running;
 }
 
 const char *Rotate::getName() { return "Rotate"; }

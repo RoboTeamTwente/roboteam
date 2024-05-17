@@ -30,17 +30,15 @@ enum class GlobalEvaluation {
     PenaltyUsGameState,
     PenaltyUsPrepareGameState,
     StopGameState,
+    PrepareForcedStartGameState,
     /// Global Evaluations
     BallOnOurSide,
     BallOnTheirSide,
     BallInOurDefenseAreaAndStill,
     BallNotInOurDefenseAreaAndStill,
-    WeHaveBall,
     WeWillHaveBall,
-    WeDoNotHaveBall,
     WeWillNotHaveBall,
     TheyHaveBall,
-    TheyDoNotHaveBall,
 };
 
 /**

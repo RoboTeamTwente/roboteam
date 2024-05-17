@@ -3,7 +3,7 @@
 #include <cmath>
 
 #include "utilities/Constants.h"
-namespace rtt::BB {
+namespace rtt::ai::control {
 
 BBTrajectory2D::BBTrajectory2D(const Vector2 &initialPos, const Vector2 &initialVel, const Vector2 &finalPos, double maxVel, double maxAcc) {
     generateSyncedTrajectory(initialPos, initialVel, finalPos, maxVel, maxAcc);
@@ -17,9 +17,8 @@ void BBTrajectory2D::generateSyncedTrajectory(const Vector2 &initialPos, const V
     // The idea is to do a binary search over alpha to find a trajectory in x and y direction (which is minimal time)
     double inc = M_PI_4 * 0.5;
     double alpha = M_PI_4;
-    // TODO: tune convergence numbers
     constexpr double iterationLimit = 1e-7;
-    constexpr double timeDiffLimit = 0.001;
+    constexpr double timeDiffLimit = 1e-3;
     while (inc > iterationLimit) {
         generateTrajectory(initialPos, initialVel, finalPos, maxVel, maxAcc, alpha);
         double diff = abs(x.getTotalTime() - y.getTotalTime());
@@ -44,5 +43,7 @@ Vector2 BBTrajectory2D::getAcceleration(double t) const { return Vector2(x.getAc
 
 [[maybe_unused]] double BBTrajectory2D::getTotalTime() const { return std::max(x.getTotalTime(), y.getTotalTime()); }
 
-std::pair<std::vector<BB::BBTrajectoryPart>, std::vector<BB::BBTrajectoryPart>> BBTrajectory2D::getParts() { return std::make_pair(x.getParts(), y.getParts()); }
-}  // namespace rtt::BB
+std::pair<std::vector<rtt::ai::control::BBTrajectoryPart>, std::vector<rtt::ai::control::BBTrajectoryPart>> BBTrajectory2D::getParts() {
+    return std::make_pair(x.getParts(), y.getParts());
+}
+}  // namespace rtt::ai::control

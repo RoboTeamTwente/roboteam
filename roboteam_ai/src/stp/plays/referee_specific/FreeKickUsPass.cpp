@@ -18,7 +18,7 @@ FreeKickUsPass::FreeKickUsPass() : Play() {
     // Evaluations that have to be true to allow the play to continue, otherwise the play will change. Plays can also end using the shouldEndPlay().
     keepPlayEvaluation.clear();
     keepPlayEvaluation.emplace_back(GlobalEvaluation::NormalOrFreeKickUsGameState);
-    keepPlayEvaluation.emplace_back(GlobalEvaluation::TheyDoNotHaveBall);
+    keepPlayEvaluation.emplace_back(GlobalEvaluation::WeWillHaveBall);
 
     // Role creation, the names should be unique. The names are used in the stpInfos-map.
     roles = std::array<std::unique_ptr<Role>, rtt::ai::Constants::ROBOT_COUNT()>{
@@ -74,13 +74,16 @@ void FreeKickUsPass::calculateInfoForRoles() noexcept {
         stpInfos["free_kick_taker"].setPositionToShootAt(passInfo.receiverLocation);
         stpInfos["free_kick_taker"].setShotType(ShotType::PASS);
         stpInfos["free_kick_taker"].setKickOrChip(KickOrChip::KICK);
+        if (GameStateManager::getCurrentGameState().timeLeft < 1.5) {
+            stpInfos["free_kick_taker"].setPositionToShootAt(field.rightDefenseArea.rightLine().center());
+            stpInfos["free_kick_taker"].setShotType(ShotType::MAX);
+        }
     } else {
         // Receiver goes to the receiverLocation projected on the trajectory of the ball
         auto ball = world->getWorld()->getBall()->get();
         auto ballTrajectory = LineSegment(ball->position, ball->position + ball->velocity.stretchToLength(field.playArea.width()));
         Vector2 receiverLocation = FieldComputations::projectPointToValidPositionOnLine(field, passInfo.receiverLocation, ballTrajectory.start, ballTrajectory.end);
         stpInfos["receiver"].setPositionToMoveTo(receiverLocation);
-        stpInfos["receiver"].setPidType(ball->velocity.length() > control_constants::BALL_IS_MOVING_SLOW_LIMIT ? PIDType::RECEIVE : PIDType::DEFAULT);
 
         // free_kick_taker now goes to a front grid, where the receiver is not
         if (receiverLocation.y > field.topRightGrid.getOffSetY()) {  // Receiver is going to left of the field
@@ -105,13 +108,14 @@ bool FreeKickUsPass::shouldEndPlay() noexcept {
     if (stpInfos["receiver"].getRobot() && stpInfos["receiver"].getRobot().value()->hasBall()) return true;
 
     // If the ball is moving too slow after we have kicked it, we should stop the play to get the ball
-    if (ballKicked() && world->getWorld()->getBall()->get()->velocity.length() < control_constants::BALL_IS_MOVING_SLOW_LIMIT) return true;
+    if (ballKicked()) return true;
 
     // True if a different pass has a higher score than the current pass (by some margin)- only if the passer is not already close to the ball (since we don't want to adjust our
     // target when we're in the process of shooting
     if (!ballKicked() && stpInfos["free_kick_taker"].getRobot() && !stpInfos["free_kick_taker"].getRobot().value()->hasBall() &&
         stp::computations::PassComputations::calculatePass(gen::AttackingPass, world, field).passScore >
-            1.05 * stp::PositionScoring::scorePosition(passInfo.receiverLocation, gen::AttackingPass, field, world).score)
+            1.05 * stp::PositionScoring::scorePosition(passInfo.receiverLocation, gen::AttackingPass, field, world).score &&
+        GameStateManager::getCurrentGameState().timeLeft > 1.5)
         return true;
 
     return false;

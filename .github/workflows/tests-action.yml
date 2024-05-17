@@ -13,16 +13,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository and submodules
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           submodules: recursive    
       
-      - name: Restored cached build
-        id: cache-build-restore
-        uses: actions/cache/restore@v3
-        with:
-          path: .
-          key: ${{ runner.os }}-build
+      # - name: Restored cached build
+      #   id: cache-build-restore
+      #   uses: actions/cache/restore@v4
+      #   with:
+      #     path: .
+      #     key: ${{ runner.os }}-build
       
       - name: Install dependecies
         run: |
@@ -40,7 +40,7 @@ jobs:
               ./autogen.sh
               ./autogen.sh
               ./configure
-              make
+              make -j $(nproc)
               make check
               
       - name: Install Protobuf
@@ -55,8 +55,7 @@ jobs:
         
       - name: Install tests
         run: |
-             cmake --build build --target all
-            #  cmake --build build --target all -j $(nproc)
+             cmake --build build --target all -j $(nproc)
              
       - name: Run
         run: find ./build/debug/bin/ -type f -iname "*test*" -exec {} \;

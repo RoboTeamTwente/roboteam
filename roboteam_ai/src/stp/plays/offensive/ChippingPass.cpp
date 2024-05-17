@@ -18,13 +18,13 @@ ChippingPass::ChippingPass() : Play() {
     // Evaluations that have to be true in order for this play to be considered valid.
     startPlayEvaluation.clear();
     startPlayEvaluation.emplace_back(GlobalEvaluation::NormalPlayGameState);
-    startPlayEvaluation.emplace_back(GlobalEvaluation::WeHaveBall);
+    startPlayEvaluation.emplace_back(GlobalEvaluation::WeWillHaveBall);
     startPlayEvaluation.emplace_back(GlobalEvaluation::BallNotInOurDefenseAreaAndStill);
 
     // Evaluations that have to be true to allow the play to continue, otherwise the play will change. Plays can also end using the shouldEndPlay().
     keepPlayEvaluation.clear();
     keepPlayEvaluation.emplace_back(GlobalEvaluation::NormalPlayGameState);
-    keepPlayEvaluation.emplace_back(GlobalEvaluation::TheyDoNotHaveBall);
+    keepPlayEvaluation.emplace_back(GlobalEvaluation::WeWillHaveBall);
     keepPlayEvaluation.emplace_back(GlobalEvaluation::BallNotInOurDefenseAreaAndStill);
 
     // Role creation, the names should be unique. The names are used in the stpInfos-map.
@@ -113,7 +113,7 @@ bool ChippingPass::shouldEndPlay() noexcept {
     if (stpInfos["receiver"].getRobot() && stpInfos["receiver"].getRobot().value()->hasBall()) return true;
 
     // If the ball is moving too slow after we have kicked it, we should stop the play to get the ball
-    if (ballKicked() && world->getWorld()->getBall()->get()->velocity.length() < control_constants::BALL_IS_MOVING_SLOW_LIMIT) return true;
+    if (ballKicked()) return true;
 
     // If the passer doesn't have the ball yet and there is a better pass available, we should stop the play
     if (!ballKicked() && stpInfos["passer"].getRobot() && !stpInfos["passer"].getRobot().value()->hasBall() &&

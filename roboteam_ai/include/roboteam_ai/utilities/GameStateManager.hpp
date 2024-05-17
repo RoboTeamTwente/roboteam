@@ -19,11 +19,6 @@ class GameStateManager {
      */
     static void setRefereeData(proto::Referee refMsg, const rtt::world::World* data);
     /**
-     * @brief Getter for the referee data
-     * @return The referee data
-     */
-    static proto::Referee getRefereeData();
-    /**
      * @brief Converts the referee command to a RefCommand
      * @param command The command received from the referee
      * @param isYellow Whether our team is the yellow team
@@ -52,9 +47,11 @@ class GameStateManager {
     static void updateInterfaceGameState(const char* name);
 
    private:
-    static proto::Referee refMsg;           /**< Data from the referee */
-    static StrategyManager strategymanager; /**< Manager that updates the play according to the game state */
-    static std::mutex refMsgLock;           /**< Synchronizer for referee data */
+    static proto::Referee_TeamInfo yellowTeam;             /**< Team info for the yellow team */
+    static proto::Referee_TeamInfo blueTeam;               /**< Team info for the blue team */
+    static proto::Referee_Point refereeDesignatedPosition; /**< Designated position from the referee */
+    static StrategyManager strategymanager;                /**< Manager that updates the play according to the game state */
+    static std::mutex refMsgLock;                          /**< Synchronizer for referee data */
 };
 
 }  // namespace rtt::ai

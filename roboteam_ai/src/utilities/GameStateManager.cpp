@@ -10,15 +10,13 @@
 
 namespace rtt::ai {
 int GameState::cardId = -1;
+double GameState::timeLeft = 1;
 
-proto::Referee GameStateManager::refMsg;
+proto::Referee_TeamInfo GameStateManager::yellowTeam;
+proto::Referee_TeamInfo GameStateManager::blueTeam;
+proto::Referee_Point GameStateManager::refereeDesignatedPosition;
 StrategyManager GameStateManager::strategymanager;
 std::mutex GameStateManager::refMsgLock;
-
-proto::Referee GameStateManager::getRefereeData() {
-    std::lock_guard<std::mutex> lock(refMsgLock);
-    return GameStateManager::refMsg;
-}
 
 RefCommand GameStateManager::getCommandFromRefMsg(proto::Referee_Command command, bool isYellow) {
     switch (command) {
@@ -57,8 +55,13 @@ RefCommand GameStateManager::getCommandFromRefMsg(proto::Referee_Command command
 }
 
 void GameStateManager::setRefereeData(proto::Referee refMsg, const rtt::world::World* data) {
-    std::lock_guard<std::mutex> lock(refMsgLock);
-    GameStateManager::refMsg = refMsg;
+    {
+        std::lock_guard<std::mutex> lock(refMsgLock);
+        GameStateManager::yellowTeam = refMsg.yellow();
+        GameStateManager::blueTeam = refMsg.blue();
+        GameStateManager::refereeDesignatedPosition = refMsg.designated_position();
+        GameState::timeLeft = static_cast<double>(refMsg.current_action_time_remaining()) / 1000000;
+    }
     bool isYellow = GameSettings::isYellow();
     RefCommand command = getCommandFromRefMsg(refMsg.command(), isYellow);
     RefCommand nextCommand = refMsg.has_next_command() ? getCommandFromRefMsg(refMsg.next_command(), isYellow) : RefCommand::UNDEFINED;
@@ -66,6 +69,9 @@ void GameStateManager::setRefereeData(proto::Referee refMsg, const rtt::world::W
     auto world = data->getWorld();
     if (world.has_value()) {
         strategymanager.setCurrentGameState(command, nextCommand, world->getBall());
+    } else {
+        RTT_INFO("No world when setting Game State, ignoring ball")
+        strategymanager.setCurrentGameState(command, nextCommand, std::nullopt);
     }
 }
 
@@ -74,15 +80,16 @@ GameState GameStateManager::getCurrentGameState() {
     GameState newGameState;
     if (RuntimeConfig::useReferee) {
         newGameState = strategymanager.getCurrentGameState();
-
-        if (GameSettings::isYellow()) {
-            newGameState.keeperId = getRefereeData().yellow().goalkeeper();
-            newGameState.maxAllowedRobots = getRefereeData().yellow().max_allowed_bots();
-        } else {
-            newGameState.keeperId = getRefereeData().blue().goalkeeper();
-            newGameState.maxAllowedRobots = getRefereeData().blue().max_allowed_bots();
+        {
+            std::lock_guard<std::mutex> lock(refMsgLock);
+            if (GameSettings::isYellow()) {
+                newGameState.keeperId = GameStateManager::yellowTeam.goalkeeper();
+                newGameState.maxAllowedRobots = GameStateManager::yellowTeam.max_allowed_bots();
+            } else {
+                newGameState.keeperId = GameStateManager::blueTeam.goalkeeper();
+                newGameState.maxAllowedRobots = GameStateManager::blueTeam.max_allowed_bots();
+            }
         }
-
         interface::Output::setInterfaceGameState(newGameState);
     } else {
         newGameState = interface::Output::getInterfaceGameState();
@@ -97,17 +104,21 @@ void GameStateManager::forceNewGameState(RefCommand cmd) {
 }
 
 Vector2 GameStateManager::getRefereeDesignatedPosition() {
-    auto designatedPos = rtt::ai::GameStateManager::getRefereeData().designated_position();
+    proto::Referee_Point designatedPos;
+    {
+        std::lock_guard<std::mutex> lock(refMsgLock);
+        designatedPos = GameStateManager::refereeDesignatedPosition;
+    }
     return Vector2(designatedPos.x() / 1000, designatedPos.y() / 1000);
 }
 
 void GameStateManager::updateInterfaceGameState(const char* name) {
     static const std::map<std::string, std::pair<RefCommand, rtt::ai::RuleSet>> nameToGameState = {
-        {"Aggressive Stop Formation", {RefCommand::STOP, Constants::RULESET_STOP()}},
-        {"Defensive Stop Formation", {RefCommand::STOP, Constants::RULESET_STOP()}},
-        {"Ball Placement Us Free Kick", {RefCommand::BALL_PLACEMENT_US_DIRECT, Constants::RULESET_STOP()}},
-        {"Ball Placement Us Force Start", {RefCommand::BALL_PLACEMENT_US, Constants::RULESET_STOP()}},
-        {"Ball Placement Them", {RefCommand::BALL_PLACEMENT_THEM, Constants::RULESET_STOP()}},
+        {"Stop Formation", {RefCommand::STOP, Constants::RULESET_STOP()}},
+        {"Prepare Forced Start", {RefCommand::STOP, Constants::RULESET_STOP()}},
+        {"Ball Placement Us Free Kick", {RefCommand::BALL_PLACEMENT_US_DIRECT, Constants::RULESET_DEFAULT()}},
+        {"Ball Placement Us Force Start", {RefCommand::BALL_PLACEMENT_US, Constants::RULESET_DEFAULT()}},
+        {"Ball Placement Them", {RefCommand::BALL_PLACEMENT_THEM, Constants::RULESET_DEFAULT()}},
         {"Halt", {RefCommand::HALT, Constants::RULESET_HALT()}},
         {"Free Kick Them", {RefCommand::DIRECT_FREE_THEM, Constants::RULESET_DEFAULT()}},
         {"Free Kick Us At Goal", {RefCommand::DIRECT_FREE_US, Constants::RULESET_DEFAULT()}},

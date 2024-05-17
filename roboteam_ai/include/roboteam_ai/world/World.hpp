@@ -115,11 +115,6 @@ class World {
     void updateField(Field &protoField);
 
     /**
-     * @brief Update the position control using the new robot position
-     */
-    void updatePositionControl();
-
-    /**
      * @brief Gets the current world
      * @return std::nullopt if there is no currentWorld, otherwise Some with the value
      */

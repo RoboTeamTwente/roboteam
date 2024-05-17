@@ -25,11 +25,11 @@ BallPlacementThem::BallPlacementThem() : Play() {
         std::make_unique<role::Defender>("defender_0"),
         std::make_unique<role::Defender>("defender_1"),
         // Additional roles if we play 11v11
-        std::make_unique<role::Formation>("waller_2"),
         std::make_unique<role::Defender>("defender_2"),
-        std::make_unique<role::Defender>("defender_3"),
-        std::make_unique<role::Formation>("waller_3"),
+        std::make_unique<role::Formation>("waller_2"),
         std::make_unique<role::Formation>("attacker_0"),
+        std::make_unique<role::Formation>("waller_3"),
+        std::make_unique<role::Defender>("defender_3"),
     };
 }
 
@@ -62,7 +62,8 @@ void BallPlacementThem::calculateInfoForRoles() noexcept {
     PositionComputations::calculateInfoForAttackers(stpInfos, roles, field, world);
     calculateInfoForHarasser();
     for (auto& stpInfo : stpInfos) {
-        stpInfo.second.setShouldAvoidDefenseArea(false);
+        stpInfo.second.setShouldAvoidOurDefenseArea(false);
+        stpInfo.second.setShouldAvoidTheirDefenseArea(false);
     }
 }
 

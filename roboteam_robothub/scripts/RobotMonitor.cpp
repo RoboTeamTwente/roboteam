@@ -90,6 +90,7 @@ void onFeedback(const rtt::RobotsFeedback& feedbacks) {
 
 int main() {
     auto feedbackSub = net::RobotFeedbackSubscriber(onFeedback);
+    (void)feedbackSub;
 
     while (true) {
         auto now = std::chrono::steady_clock::now();

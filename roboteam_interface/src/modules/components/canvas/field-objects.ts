@@ -19,11 +19,11 @@ import { useAIDataStore } from '../../stores/data-stores/ai-data-store'
 import { NoUndefinedField } from '../../../utils'
 
 export const Colors = {
-  yellow: '#feff00',
-  blue: '#9793ff',
-  robotSelected: '#1aad1a',
+  yellow: '#ffff00',
+  blue: '#0000ff',
+  robotSelected: '#9a1c74',
   ball: '#FF6600',
-  backgroundColor: '#224922',
+  backgroundColor: '#00a01e',
   fieldLines: '#ffffff'
 }
 
@@ -127,10 +127,11 @@ export class RobotDrawing extends Container {
       this.on('click', (event) => onClick(this, event))
     }
 
-    if (text !== undefined) {
-      this.textElem = this.addChild(new Text(text, { fontSize: 14 }))
-      this.textElem.anchor.set(0.5)
-    }
+  if (text !== undefined) {
+    const textColor = isYellow ? 0x000000 : 0xffffff;
+    this.textElem = this.addChild(new Text(text, { fontSize: 14, fill: textColor }))
+    this.textElem.anchor.set(0.5)
+  }
   }
 
   update(
@@ -201,24 +202,44 @@ export class FieldDrawing extends Graphics {
     const fieldColors = isYellow
       ? { leftGoal: Colors.yellow, rightGoal: Colors.blue }
       : { leftGoal: Colors.blue, rightGoal: Colors.yellow }
+    const kGoalWidth = fieldGeometry.goalWidth;
+    const kGoalDepth = fieldGeometry.goalDepth;
+    const kXMax = fieldGeometry.fieldLength / 2;
 
-    fieldGeometry.fieldLines?.forEach((line) => {
+    const derivedLines = [
+      { name: 'LeftGoalTopLine', p1: { x: -kXMax, y: kGoalWidth / 2 }, p2: { x: -kXMax - kGoalDepth, y: kGoalWidth / 2 } },
+      { name: 'LeftGoalBottomLine', p1: { x: -kXMax, y: -kGoalWidth / 2 }, p2: { x: -kXMax - kGoalDepth, y: -kGoalWidth / 2 } },
+      { name: 'LeftGoalDepthLine', p1: { x: -kXMax - kGoalDepth, y: -kGoalWidth / 2 }, p2: { x: -kXMax - kGoalDepth, y: kGoalWidth / 2 } },
+      { name: 'RightGoalTopLine', p1: { x: kXMax, y: kGoalWidth / 2 }, p2: { x: kXMax + kGoalDepth, y: kGoalWidth / 2 } },
+      { name: 'RightGoalBottomLine', p1: { x: kXMax, y: -kGoalWidth / 2 }, p2: { x: kXMax + kGoalDepth, y: -kGoalWidth / 2 } },
+      { name: 'RightGoalDepthLine', p1: { x: kXMax + kGoalDepth, y: -kGoalWidth / 2 }, p2: { x: kXMax + kGoalDepth, y: kGoalWidth / 2 } },
+    ];
+
+const allLines = [
+  ...(Array.isArray(derivedLines) ? derivedLines : []),
+  ...(Array.isArray(fieldGeometry.fieldLines) ? fieldGeometry.fieldLines : [])
+];
+    allLines.forEach((line) => {
       switch (line.name) {
         case 'LeftGoalDepthLine':
-          this.lineStyle(4, fieldColors.leftGoal)
-          break
+        case 'LeftGoalTopLine':
+        case 'LeftGoalBottomLine':
+          this.lineStyle(4, fieldColors.leftGoal);
+          break;
         case 'RightGoalDepthLine':
-          this.lineStyle(4, fieldColors.rightGoal)
-          break
+        case 'RightGoalTopLine':
+        case 'RightGoalBottomLine':
+          this.lineStyle(4, fieldColors.rightGoal);
+          break;
         default:
-          this.lineStyle(2, Colors.fieldLines)
+          this.lineStyle(2, Colors.fieldLines);
       }
 
-      this.moveTo(mmToPx(line.p1!.x!), mmToPx(line.p1!.y!)).lineTo(
-        mmToPx(line.p2!.x!),
-        mmToPx(line.p2!.y!)
-      )
-    })
+      this.moveTo(mmToPx(line.p1.x), mmToPx(line.p1.y)).lineTo(
+        mmToPx(line.p2.x),
+        mmToPx(line.p2.y)
+      );
+    });
 
     fieldGeometry.fieldArcs?.forEach((arc) => {
       this.lineStyle(2, Colors.fieldLines, 1)

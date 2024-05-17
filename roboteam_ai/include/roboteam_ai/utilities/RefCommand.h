@@ -41,6 +41,65 @@ enum class RefCommand {
 };
 
 /**
+ * @brief Convert a RefCommand into a string
+ * @param command The RefCommand to print
+ * @return A string of the RefCommand
+ */
+
+inline std::string getNameOfRefCommand(const RefCommand &command) {
+    switch (command) {
+        case RefCommand::HALT:
+            return "HALT";
+        case RefCommand::STOP:
+            return "STOP";
+        case RefCommand::NORMAL_START:
+            return "NORMAL_START";
+        case RefCommand::FORCED_START:
+            return "FORCED_START";
+        case RefCommand::PREPARE_KICKOFF_US:
+            return "PREPARE_KICKOFF_US";
+        case RefCommand::PREPARE_KICKOFF_THEM:
+            return "PREPARE_KICKOFF_THEM";
+        case RefCommand::PREPARE_PENALTY_US:
+            return "PREPARE_PENALTY_US";
+        case RefCommand::PREPARE_PENALTY_THEM:
+            return "PREPARE_PENALTY_THEM";
+        case RefCommand::DIRECT_FREE_US:
+            return "DIRECT_FREE_US";
+        case RefCommand::DIRECT_FREE_THEM:
+            return "DIRECT_FREE_THEM";
+        case RefCommand::DIRECT_FREE_US_STOP:
+            return "DIRECT_FREE_US_STOP";
+        case RefCommand::DIRECT_FREE_THEM_STOP:
+            return "DIRECT_FREE_THEM_STOP";
+        case RefCommand::TIMEOUT_US:
+            return "TIMEOUT_US";
+        case RefCommand::TIMEOUT_THEM:
+            return "TIMEOUT_THEM";
+        case RefCommand::BALL_PLACEMENT_US:
+            return "BALL_PLACEMENT_US";
+        case RefCommand::BALL_PLACEMENT_US_DIRECT:
+            return "BALL_PLACEMENT_US_DIRECT";
+        case RefCommand::BALL_PLACEMENT_THEM:
+            return "BALL_PLACEMENT_THEM";
+        case RefCommand::KICKOFF_US:
+            return "KICKOFF_US";
+        case RefCommand::KICKOFF_THEM:
+            return "KICKOFF_THEM";
+        case RefCommand::PENALTY_US:
+            return "PENALTY_US";
+        case RefCommand::PENALTY_THEM:
+            return "PENALTY_THEM";
+        case RefCommand::PREPARE_FORCED_START:
+            return "PREPARE_FORCED_START";
+        case RefCommand::UNDEFINED:
+            return "UNDEFINED";
+        default:
+            return "WARNING";
+    }
+};
+
+/**
  * @brief Overload the << operator for the RefCommand enum
  * @param os The output stream
  * @param command The RefCommand to print
@@ -48,77 +107,7 @@ enum class RefCommand {
  */
 
 inline std::ostream &operator<<(std::ostream &os, const RefCommand &command) {
-    switch (command) {
-        case RefCommand::HALT:
-            os << "HALT";
-            break;
-        case RefCommand::STOP:
-            os << "STOP";
-            break;
-        case RefCommand::NORMAL_START:
-            os << "NORMAL_START";
-            break;
-        case RefCommand::FORCED_START:
-            os << "FORCED_START";
-            break;
-        case RefCommand::PREPARE_KICKOFF_US:
-            os << "PREPARE_KICKOFF_US";
-            break;
-        case RefCommand::PREPARE_KICKOFF_THEM:
-            os << "PREPARE_KICKOFF_THEM";
-            break;
-        case RefCommand::PREPARE_PENALTY_US:
-            os << "PREPARE_PENALTY_US";
-            break;
-        case RefCommand::PREPARE_PENALTY_THEM:
-            os << "PREPARE_PENALTY_THEM";
-            break;
-        case RefCommand::DIRECT_FREE_US:
-            os << "DIRECT_FREE_US";
-            break;
-        case RefCommand::DIRECT_FREE_THEM:
-            os << "DIRECT_FREE_THEM";
-            break;
-        case RefCommand::DIRECT_FREE_US_STOP:
-            os << "DIRECT_FREE_US_STOP";
-            break;
-        case RefCommand::DIRECT_FREE_THEM_STOP:
-            os << "DIRECT_FREE_THEM_STOP";
-            break;
-        case RefCommand::TIMEOUT_US:
-            os << "TIMEOUT_US";
-            break;
-        case RefCommand::TIMEOUT_THEM:
-            os << "TIMEOUT_THEM";
-            break;
-        case RefCommand::BALL_PLACEMENT_US:
-            os << "BALL_PLACEMENT_US";
-            break;
-        case RefCommand::BALL_PLACEMENT_US_DIRECT:
-            os << "BALL_PLACEMENT_US_DIRECT";
-            break;
-        case RefCommand::BALL_PLACEMENT_THEM:
-            os << "BALL_PLACEMENT_THEM";
-            break;
-        case RefCommand::KICKOFF_US:
-            os << "KICKOFF_US";
-            break;
-        case RefCommand::KICKOFF_THEM:
-            os << "KICKOFF_THEM";
-            break;
-        case RefCommand::PENALTY_US:
-            os << "PENALTY_US";
-            break;
-        case RefCommand::PENALTY_THEM:
-            os << "PENALTY_THEM";
-            break;
-        case RefCommand::PREPARE_FORCED_START:
-            os << "PREPARE_FORCED_START";
-            break;
-        case RefCommand::UNDEFINED:
-            os << "UNDEFINED";
-            break;
-    }
+    os << getNameOfRefCommand(command);
     return os;
 }
 }  // namespace rtt

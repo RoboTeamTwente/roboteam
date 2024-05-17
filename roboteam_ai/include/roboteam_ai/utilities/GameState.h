@@ -11,10 +11,14 @@
 namespace rtt::ai {
 
 struct GameState {
+    // Commands received from the ref
+    static RefCommand commandFromRef;
+    static RefCommand followUpCommandFromRef;
+    // Processed commands
     RefCommand commandId;
+    RefCommand followUpCommandId;
     RuleSet ruleSet;
     bool isFollowUpCommand;
-    RefCommand followUpCommandId;
     int keeperId = Constants::DEFAULT_KEEPER_ID();
     int maxAllowedRobots = stp::control_constants::MAX_ROBOT_COUNT;
     static int cardId;
@@ -30,6 +34,10 @@ struct GameState {
     RuleSet getRuleSet() const { return ruleSet; }
 
     RefCommand getCommandId() const { return commandId; }
+
+    RefCommand getCommandFromRef() const { return commandFromRef; }
+
+    RefCommand getFollowUpCommandFromRef() const { return followUpCommandFromRef; }
 };
 
 }  // namespace rtt::ai

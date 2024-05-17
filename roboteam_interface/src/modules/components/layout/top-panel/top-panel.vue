@@ -103,7 +103,9 @@ const togglePause = () => {
     <span
         class="font-mono"
       >
-        <font-awesome-icon icon="" /> time left : <span>{{stpData.latest?.currentPlay!.timeLeft}}</span> 
+      Time left: <span class="btn btn-sm btn- gap-2">{{stpData.latest?.currentPlay!.timeLeft}}</span> 
+      Current ref command: <span class="btn btn-sm gap-2"> {{stpData.latest?.currentPlay!.commandFromRef}}</span> 
+      Next ref command: <span class="btn btn-sm gap-2"> {{stpData.latest?.currentPlay!.followUpCommandFromRef}}</span> 
     </span>
     <div class="flex grow" />
     <div class="flex w-20 justify-end">

@@ -3791,7 +3791,11 @@ export const proto = $root.proto = (() => {
             if (message.keeperId != null && Object.hasOwnProperty.call(message, "keeperId"))
                 writer.uint32(/* id 3, wireType 0 =*/24).int32(message.keeperId);
             if (message.timeLeft != null && Object.hasOwnProperty.call(message, "timeLeft"))
-                writer.uint32(/* id 3, wireType 0 =*/24).double(message.timeLeft);
+                writer.uint32(/* id 4, wireType 0 =*/30).double(message.timeLeft);
+            if (message.commandFromRef != null && Object.hasOwnProperty.call(message, "commandFromRef"))
+                writer.uint32(/* id 5, wireType 2 =*/36).string(message.commandFromRef);
+            if (message.followUpCommandFromRef != null && Object.hasOwnProperty.call(message, "followUpCommandFromRef"))
+                writer.uint32(/* id 6, wireType 2 =*/42).string(message.followUpCommandFromRef);
             return writer;
         };
 
@@ -3836,6 +3840,18 @@ export const proto = $root.proto = (() => {
                     }
                 case 3: {
                         message.keeperId = reader.int32();
+                        break;
+                    }
+                case 4: {
+                        message.timeLeft = reader.double();
+                        break;
+                    }
+                case 5: {
+                        message.followUpCommandFromRef = reader.string();
+                        break;
+                    }
+                case 6: {
+                        message.commandFromRef = reader.string();
                         break;
                     }
                 default:

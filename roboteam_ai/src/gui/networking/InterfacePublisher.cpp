@@ -27,9 +27,16 @@ InterfacePublisher& InterfacePublisher::publishStpStatus(stp::Play* selectedPlay
     currentPlay->set_play_name(selectedPlay->getName());
 
     auto gameState = GameStateManager::getCurrentGameState();
+    auto commandFromRef = rtt::getNameOfRefCommand(gameState.getCommandFromRef());
+    auto followUpCommandFromRef = rtt::getNameOfRefCommand(gameState.getFollowUpCommandFromRef());
+    if (followUpCommandFromRef == "UNDEFINED") {
+        followUpCommandFromRef = "-";
+    }
     currentPlay->set_ruleset_name(gameState.getRuleSet().toString());
     currentPlay->set_keeper_id(gameState.keeperId);
     currentPlay->set_timeleft(gameState.timeLeft);
+    currentPlay->set_commandfromref_name(commandFromRef);
+    currentPlay->set_followupcommandfromref_name(followUpCommandFromRef);
 
     for (const auto& play : plays) {
         auto scoredPlay = stpStatus->add_scored_plays();

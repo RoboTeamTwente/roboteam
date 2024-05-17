@@ -11,6 +11,8 @@
 namespace rtt::ai {
 int GameState::cardId = -1;
 double GameState::timeLeft;
+RefCommand GameState::commandFromRef;
+RefCommand GameState::followUpCommandFromRef;
 
 proto::Referee_TeamInfo GameStateManager::yellowTeam;
 proto::Referee_TeamInfo GameStateManager::blueTeam;
@@ -55,17 +57,19 @@ RefCommand GameStateManager::getCommandFromRefMsg(proto::Referee_Command command
 }
 
 void GameStateManager::setRefereeData(proto::Referee refMsg, const rtt::world::World* data) {
+    bool isYellow = GameSettings::isYellow();
     {
         std::lock_guard<std::mutex> lock(refMsgLock);
         GameStateManager::yellowTeam = refMsg.yellow();
         GameStateManager::blueTeam = refMsg.blue();
         GameStateManager::refereeDesignatedPosition = refMsg.designated_position();
         GameState::timeLeft = (static_cast<double>(refMsg.current_action_time_remaining()) / 1000000);
+        GameState::commandFromRef = getCommandFromRefMsg(refMsg.command(), isYellow);
+        GameState::followUpCommandFromRef = refMsg.has_next_command() ? getCommandFromRefMsg(refMsg.next_command(), isYellow) : RefCommand::UNDEFINED;
     }
     if (GameState::timeLeft < 0.0 || getCurrentGameState().commandId == RefCommand::NORMAL_START) {
-            GameState::timeLeft = 0.0;
+        GameState::timeLeft = 0.0;
     }
-    bool isYellow = GameSettings::isYellow();
     RefCommand command = getCommandFromRefMsg(refMsg.command(), isYellow);
     RefCommand nextCommand = refMsg.has_next_command() ? getCommandFromRefMsg(refMsg.next_command(), isYellow) : RefCommand::UNDEFINED;
 

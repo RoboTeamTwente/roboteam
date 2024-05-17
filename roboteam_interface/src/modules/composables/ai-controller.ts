@@ -6,7 +6,6 @@ import { useSTPDataStore } from '../stores/data-stores/stp-data-store'
 import { useVisionDataStore } from '../stores/data-stores/vision-data-store'
 import { useVisualizationStore } from '../stores/data-stores/visualization-store'
 import { useProtoWebSocket } from './proto-websocket'
-import { rand } from '@vueuse/core'
 
 export const useAiController = defineStore('aiController', () => {
   // Dependencies

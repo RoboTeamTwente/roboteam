@@ -18,17 +18,8 @@ Vector2 OvershootComputations::overshootingDestination(const Vector2& startPosit
     while (increment > 1e-7) {
         auto cosAlpha = std::cos(alpha);
         auto sinAlpha = std::sin(alpha);
-        // If for example the keeper is already at the correct y coordinate, y.time will be almost 0. Decreasing won't make this increase.
-        // This will prevent laggy computations. Maybe implement in the normal stuff as well??
-        // No clue why we need this, tigers doesnt ? :{}
-        // TODO: FIgure out what is happening
-        if (cosAlpha <= 0.01 || sinAlpha <= 0.01) {
-            break;
-        }
-
         x = getTimedPos1D(distance.x, startVelocity.x, maxVelocity * cosAlpha, maxAcceleration * cosAlpha, targetTime);
         y = getTimedPos1D(distance.y, startVelocity.y, maxVelocity * sinAlpha, maxAcceleration * sinAlpha, targetTime);
-
         double diff = abs(x.time - y.time);
         if (diff < 1e-3) {
             break;
@@ -44,6 +35,12 @@ double OvershootComputations::slowestDirectTime(double distance, double initialV
     double deceleration = (initialVelocity >= 0.0) ? -maxAcceleration : maxAcceleration;
     double squareRoot = std::sqrt(initialVelocity * initialVelocity + 2.0 * deceleration * distance);
     return (initialVelocity >= 0.0) ? ((-initialVelocity + squareRoot) / deceleration) : ((-initialVelocity - squareRoot) / deceleration);
+}
+
+TimedPos1D OvershootComputations::fastestDirect(double distance, double initialVelocity, double maxVelocity, double maxAcceleration, double targetTime) {
+    double deceleration = (maxVelocity >= 0.0) ? -maxAcceleration : maxAcceleration;
+    return fastestDirectTrapezoidal(distance, initialVelocity, maxVelocity, maxAcceleration, deceleration, targetTime)
+        .value_or(fastestDirectTriangular(distance, initialVelocity, maxVelocity, maxAcceleration, deceleration, targetTime));
 }
 
 std::optional<TimedPos1D> OvershootComputations::fastestDirectTrapezoidal(double distance, double initialVelocity, double maxVelocity, double maxAcceleration, double deceleration,
@@ -123,11 +120,10 @@ TimedPos1D OvershootComputations::getTimedPos1D(double distance, double initialV
 
     if ((distance >= 0.0) != (initialVelocity > 0.0) || (distance >= 0.0) == (zeroVelocityDistance < distance) ||
         slowestDirectTime(distance, initialVelocity, maxAcceleration) >= targetTime) {
-        return fastestDirectTrapezoidal(distance, initialVelocity, maxFinalVelocity, maxAcceleration, deceleration, targetTime)
-            .value_or(fastestDirectTriangular(distance, initialVelocity, maxFinalVelocity, maxAcceleration, deceleration, targetTime));
+        return fastestDirect(distance, initialVelocity, maxFinalVelocity, maxAcceleration, targetTime);
     } else {
         double breakingTime = std::abs(initialVelocity / maxAcceleration);
-        TimedPos1D timed = fastestDirectTriangular(distance - zeroVelocityDistance, 0.0, -maxFinalVelocity, maxAcceleration, deceleration, targetTime - breakingTime);
+        TimedPos1D timed = fastestDirect(distance - zeroVelocityDistance, 0.0, -maxFinalVelocity, maxAcceleration, targetTime - breakingTime);
         return TimedPos1D(timed.pos + zeroVelocityDistance, timed.time + breakingTime);
     }
 }

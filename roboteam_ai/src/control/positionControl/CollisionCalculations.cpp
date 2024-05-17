@@ -18,7 +18,7 @@ double CollisionCalculations::getFirstCollisionTimeMotionlessObject(const Trajec
 
     auto leftGoalTopPost = LineSegment(field.leftGoalArea.topLeft(), field.leftGoalArea.topRight());
     auto leftGoalBottomPost = LineSegment(field.leftGoalArea.bottomLeft(), field.leftGoalArea.bottomRight());
-    auto leftGoalBackPost = LineSegment(field.rightGoalArea.topLeft(), field.rightGoalArea.bottomLeft());
+    auto leftGoalBackPost = LineSegment(field.leftGoalArea.topLeft(), field.leftGoalArea.bottomLeft());
     auto rightGoalTopPost = LineSegment(field.rightGoalArea.topLeft(), field.rightGoalArea.topRight());
     auto rightGoalBottomPost = LineSegment(field.rightGoalArea.bottomLeft(), field.rightGoalArea.bottomRight());
     auto rightGoalBackPost = LineSegment(field.rightGoalArea.topRight(), field.rightGoalArea.bottomRight());
@@ -40,7 +40,7 @@ double CollisionCalculations::getFirstCollisionTimeMotionlessObject(const Trajec
                 return checkPoint * 0.1;
             }
         }
-        if (avoidObjects.shouldAvoidTheirDefenseArea) {
+        if (avoidObjects.shouldAvoidTheirDefenseArea && theirDefenseAreaMargin > stp::control_constants::ROBOT_RADIUS + stp::control_constants::GO_TO_POS_ERROR_MARGIN) {
             if (theirDefenseArea.contains(pathPoints[checkPoint]) || theirDefenseArea.contains(pathPoints[checkPoint - 1]) || theirDefenseArea.doesIntersect(pathLine)) {
                 return checkPoint * 0.1;
             }

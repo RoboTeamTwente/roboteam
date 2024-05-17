@@ -3,50 +3,6 @@ import { computed } from 'vue'
 import { proto } from '../../../../generated/proto'
 import STPRobot = proto.STPStatus.STPRobot
 
-export type Skill = 'Chip' | 'Go To Position' | 'Rotate' | 'Orbit' | 'Kick' | 'Orbit Angular'
-
-export type Role =
-  | 'Attacker'
-  | 'Ball Placer'
-  | 'Chipper'
-  | 'Free Kick Taker'
-  | 'Harasser'
-  | 'Keeper Passer'
-  | 'Passer'
-  | 'Pass Receiver'
-  | 'passive'
-  | 'Ball Avoider'
-  | 'Ball Defender'
-  | 'Formation'
-  | 'Halt'
-  | 'Robot Defender'
-  | 'Keeper'
-  | 'Penalty Keeper'
-  | 'Test Role'
-
-export type Tactics =
-  | 'Chip At Position'
-  | 'Drive With Ball'
-  | 'Get Ball'
-  | 'Get Behind Ball In Direction'
-  | 'Kick At Pos'
-  | 'Orbit Kick'
-  | 'Receive'
-  | 'Avoid Ball'
-  | 'Ball Stand Back'
-  | 'Block Ball'
-  | 'Block Robot'
-  | 'Formation'
-  | 'Halt'
-  | 'Keeper Block Ball'
-  | 'Test Tactic'
-
-// export type Status =
-//     | 'Finished'
-//     | 'Running'
-//     | 'Error'
-//     | 'Waiting';
-
 const props = defineProps<{
   status: STPRobot.Status | 'Unknown'
   name: string | 'Unknown'
@@ -61,55 +17,10 @@ const statusIcon = computed(() => {
     Unknown: 'fa-question'
   }[props.status]
 })
-
-const icon = computed(() => {
-  return (
-    {
-      Chip: 'fa-arrow-up-right',
-      'Go To Position': 'fa-arrow-right',
-      Rotate: 'fa-undo',
-      Orbit: 'fa-circle',
-      Kick: 'fa-futbol',
-      'Orbit Angular': 'fa-circle',
-      Attacker: 'fa-crosshairs',
-      'Ball Placer': 'fa-bullseye',
-      Chipper: 'fa-arrow-up-right',
-      'Free Kick Taker': 'fa-futbol',
-      Harasser: 'fa-hand-rock',
-      'Keeper Passer': 'fa-hands-helping',
-      Passer: 'fa-long-arrow-alt-right',
-      'Pass Receiver': 'fa-circle',
-      passive: 'fa-dizzy',
-      'Ball Avoider': 'fa-stop',
-      'Ball Defender': 'fa-shield-alt',
-      'Robot Defender': 'fa-robot',
-      Keeper: 'fa-grip-vertical',
-      'Penalty Keeper': 'fa-grin-beam-sweat',
-      'Test Role': 'fa-flask',
-      'Get Behind Ball In Direction': 'fa-chevron-circle-down',
-      'Chip At Position': 'fa-arrow-up-right',
-      'Drive With Ball': 'fa-forward',
-      'Get Ball': 'fa-dot-circle',
-      'Kick At Pos': 'fa-futbol',
-      'Orbit Kick': 'fa-circle',
-      Receive: 'fa-circle',
-      'Avoid Ball': 'fa-exclamation-triangle',
-      'Ball Stand Back': 'fa-reply',
-      'Block Ball': 'fa-hand-paper',
-      'Block Robot': 'fa-shield-alt',
-      Formation: 'fa-sitemap',
-      Halt: 'fa-stop-circle',
-      'Keeper Block Ball': 'fa-hand-rock',
-      'Test Tactic': 'fa-cogs',
-      Unknown: 'fa-question'
-    }[props.name] || 'fa-hashtag'
-  )
-})
 </script>
 
 <template>
-  <div class="kbd gap-2 text-sm md:text-base flex justify-between">
-    <font-awesome-icon :icon="icon" class="w-3 h-3" />
+  <div class="kbd gap-2 text-sm md:text-base flex items-center justify-center">
     {{ props.name }}
     <font-awesome-icon
       :icon="statusIcon"

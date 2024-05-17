@@ -100,6 +100,11 @@ const togglePause = () => {
         <font-awesome-icon icon="fa-hand" /> Halt
       </button>
     </div>
+    <span
+        class="font-mono"
+      >
+        <font-awesome-icon icon="" /> time left : <span>{{stpData.latest?.currentPlay!.timeLeft}}</span> 
+    </span>
     <div class="flex grow" />
     <div class="flex w-20 justify-end">
       <info-dropdown

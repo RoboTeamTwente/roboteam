@@ -3790,6 +3790,8 @@ export const proto = $root.proto = (() => {
                 writer.uint32(/* id 2, wireType 2 =*/18).string(message.rulesetName);
             if (message.keeperId != null && Object.hasOwnProperty.call(message, "keeperId"))
                 writer.uint32(/* id 3, wireType 0 =*/24).int32(message.keeperId);
+            if (message.timeLeft != null && Object.hasOwnProperty.call(message, "timeLeft"))
+                writer.uint32(/* id 3, wireType 0 =*/24).double(message.timeLeft);
             return writer;
         };
 

@@ -29,6 +29,7 @@ InterfacePublisher& InterfacePublisher::publishStpStatus(stp::Play* selectedPlay
     auto gameState = GameStateManager::getCurrentGameState();
     currentPlay->set_ruleset_name(gameState.getRuleSet().toString());
     currentPlay->set_keeper_id(gameState.keeperId);
+    currentPlay->set_timeleft(gameState.timeLeft);
 
     for (const auto& play : plays) {
         auto scoredPlay = stpStatus->add_scored_plays();

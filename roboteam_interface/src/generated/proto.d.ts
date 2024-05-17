@@ -1433,6 +1433,9 @@ export namespace proto {
 
         /** PlayInfo keeperId */
         keeperId?: (number|null);
+
+        /** PlayInfo timeLeft */
+        timeLeft?: (number|null);
     }
 
     /** Represents a PlayInfo. */

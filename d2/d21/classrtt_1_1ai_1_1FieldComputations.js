@@ -2,6 +2,7 @@ var classrtt_1_1ai_1_1FieldComputations =
 [
     [ "getBallAvoidance", "d2/d21/classrtt_1_1ai_1_1FieldComputations.html#a956e75cd5b56896215f2fa117882ca68", null ],
     [ "getBallPositionAtTime", "d2/d21/classrtt_1_1ai_1_1FieldComputations.html#a714e1656650ae507cb3729297ca19e76", null ],
+    [ "getBallTimeAtPosition", "d2/d21/classrtt_1_1ai_1_1FieldComputations.html#afaf2328f2ad95c4dcc4216bf2c54b8f3", null ],
     [ "getBlockadesMappedToGoal", "d2/d21/classrtt_1_1ai_1_1FieldComputations.html#ac983ba299fa63555dc2edc12cae3634f", null ],
     [ "getDefenseArea", "d2/d21/classrtt_1_1ai_1_1FieldComputations.html#ac2270396778173e5041011109176fd6c", null ],
     [ "getDefenseAreaMargin", "d2/d21/classrtt_1_1ai_1_1FieldComputations.html#a2b91936d7a902cafabaec8aa5e9709c9", null ],
@@ -17,7 +18,7 @@ var classrtt_1_1ai_1_1FieldComputations =
     [ "pointIsValidPosition", "d2/d21/classrtt_1_1ai_1_1FieldComputations.html#abbbe5c1834f2376283ab30952150c3d1", null ],
     [ "projectPointInField", "d2/d21/classrtt_1_1ai_1_1FieldComputations.html#ac6ac44afce2362338e2881d0c729a9d8", null ],
     [ "projectPointIntoFieldOnLine", "d2/d21/classrtt_1_1ai_1_1FieldComputations.html#a1b17e8ab50d4a97f646dbfec38ad6047", null ],
-    [ "projectPointOutOfDefenseArea", "d2/d21/classrtt_1_1ai_1_1FieldComputations.html#acf272ead928f66a149f405724e4ad13c", null ],
+    [ "projectPointOutOfDefenseArea", "d2/d21/classrtt_1_1ai_1_1FieldComputations.html#a3c618d4aa00d28bb4748c91ab4bdfc88", null ],
     [ "projectPointToValidPosition", "d2/d21/classrtt_1_1ai_1_1FieldComputations.html#ae6d292f855e7dadb89b1303a51b2a71f", null ],
     [ "projectPointToValidPositionOnLine", "d2/d21/classrtt_1_1ai_1_1FieldComputations.html#a14bd2f5407afdeaecf7fe1d2d43f7916", null ],
     [ "robotBlockade", "d2/d21/classrtt_1_1ai_1_1FieldComputations.html#a041c2ff7840d89ec3c588ce2101e723f", null ],

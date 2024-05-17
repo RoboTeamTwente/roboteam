@@ -1,8 +1,5 @@
 var dir_4eacba08721ac3b0e1d4b27ca96b0fbb =
 [
-    [ "AggressiveStopFormation.h", "da/db3/AggressiveStopFormation_8h.html", [
-      [ "AggressiveStopFormation", "dd/dff/classrtt_1_1ai_1_1stp_1_1play_1_1AggressiveStopFormation.html", "dd/dff/classrtt_1_1ai_1_1stp_1_1play_1_1AggressiveStopFormation" ]
-    ] ],
     [ "BallPlacementThem.h", "d2/d09/BallPlacementThem_8h.html", [
       [ "BallPlacementThem", "d7/d43/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementThem.html", "d7/d43/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementThem" ]
     ] ],
@@ -11,9 +8,6 @@ var dir_4eacba08721ac3b0e1d4b27ca96b0fbb =
     ] ],
     [ "BallPlacementUsFreeKick.h", "db/ddc/BallPlacementUsFreeKick_8h.html", [
       [ "BallPlacementUsFreeKick", "d9/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsFreeKick.html", "d9/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsFreeKick" ]
-    ] ],
-    [ "DefensiveStopFormation.h", "d2/d2a/DefensiveStopFormation_8h.html", [
-      [ "DefensiveStopFormation", "df/de3/classrtt_1_1ai_1_1stp_1_1play_1_1DefensiveStopFormation.html", "df/de3/classrtt_1_1ai_1_1stp_1_1play_1_1DefensiveStopFormation" ]
     ] ],
     [ "FreeKickThem.h", "df/d23/FreeKickThem_8h.html", [
       [ "FreeKickThem", "dc/d7b/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickThem.html", "dc/d7b/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickThem" ]
@@ -50,5 +44,11 @@ var dir_4eacba08721ac3b0e1d4b27ca96b0fbb =
     ] ],
     [ "PenaltyUsPrepare.h", "d2/db5/PenaltyUsPrepare_8h.html", [
       [ "PenaltyUsPrepare", "d6/d47/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUsPrepare.html", "d6/d47/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUsPrepare" ]
+    ] ],
+    [ "PrepareForcedStart.h", "d9/d8b/PrepareForcedStart_8h.html", [
+      [ "PrepareForcedStart", "d6/daa/classrtt_1_1ai_1_1stp_1_1play_1_1PrepareForcedStart.html", "d6/daa/classrtt_1_1ai_1_1stp_1_1play_1_1PrepareForcedStart" ]
+    ] ],
+    [ "StopFormation.h", "df/db4/StopFormation_8h.html", [
+      [ "StopFormation", "d0/d1d/classrtt_1_1ai_1_1stp_1_1play_1_1StopFormation.html", "d0/d1d/classrtt_1_1ai_1_1stp_1_1play_1_1StopFormation" ]
     ] ]
 ];

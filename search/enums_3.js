@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['globalevaluation_2668',['GlobalEvaluation',['../d5/d14/namespacertt_1_1ai_1_1stp.html#a9b1a79ba58c1300d9f6f0e073f9d7db2',1,'rtt::ai::stp']]]
+  ['possession_2407',['Possession',['../d7/d54/classrtt_1_1ai_1_1BallPossession.html#aac3b04b1d08a6333049eba6c02d5ebc9',1,'rtt::ai::BallPossession']]]
 ];

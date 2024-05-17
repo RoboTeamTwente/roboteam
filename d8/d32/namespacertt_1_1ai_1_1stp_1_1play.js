@@ -6,11 +6,9 @@ var namespacertt_1_1ai_1_1stp_1_1play =
     [ "Attack", "db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html", "db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack" ],
     [ "AttackingPass", "df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass.html", "df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass" ],
     [ "ChippingPass", "dc/d26/classrtt_1_1ai_1_1stp_1_1play_1_1ChippingPass.html", "dc/d26/classrtt_1_1ai_1_1stp_1_1play_1_1ChippingPass" ],
-    [ "AggressiveStopFormation", "dd/dff/classrtt_1_1ai_1_1stp_1_1play_1_1AggressiveStopFormation.html", "dd/dff/classrtt_1_1ai_1_1stp_1_1play_1_1AggressiveStopFormation" ],
     [ "BallPlacementThem", "d7/d43/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementThem.html", "d7/d43/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementThem" ],
     [ "BallPlacementUsForceStart", "de/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsForceStart.html", "de/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsForceStart" ],
     [ "BallPlacementUsFreeKick", "d9/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsFreeKick.html", "d9/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsFreeKick" ],
-    [ "DefensiveStopFormation", "df/de3/classrtt_1_1ai_1_1stp_1_1play_1_1DefensiveStopFormation.html", "df/de3/classrtt_1_1ai_1_1stp_1_1play_1_1DefensiveStopFormation" ],
     [ "FreeKickThem", "dc/d7b/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickThem.html", "dc/d7b/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickThem" ],
     [ "FreeKickUsAtGoal", "dd/dc8/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsAtGoal.html", "dd/dc8/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsAtGoal" ],
     [ "FreeKickUsPass", "d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html", "d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass" ],
@@ -23,6 +21,8 @@ var namespacertt_1_1ai_1_1stp_1_1play =
     [ "PenaltyThemPrepare", "d4/dfe/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThemPrepare.html", "d4/dfe/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThemPrepare" ],
     [ "PenaltyUs", "db/d03/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUs.html", "db/d03/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUs" ],
     [ "PenaltyUsPrepare", "d6/d47/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUsPrepare.html", "d6/d47/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUsPrepare" ],
+    [ "PrepareForcedStart", "d6/daa/classrtt_1_1ai_1_1stp_1_1play_1_1PrepareForcedStart.html", "d6/daa/classrtt_1_1ai_1_1stp_1_1play_1_1PrepareForcedStart" ],
+    [ "StopFormation", "d0/d1d/classrtt_1_1ai_1_1stp_1_1play_1_1StopFormation.html", "d0/d1d/classrtt_1_1ai_1_1stp_1_1play_1_1StopFormation" ],
     [ "PENALTY_MARK_THEM_X", "d8/d32/namespacertt_1_1ai_1_1stp_1_1play.html#a073cfb0dcce27c69a198183f4eccad10", null ],
     [ "PENALTY_MARK_US_X", "d8/d32/namespacertt_1_1ai_1_1stp_1_1play.html#ac50631db44841dd08ab8857eb1955735", null ]
 ];

@@ -51,6 +51,9 @@ var dir_319020dd40c89deb6cd7eba6429fada4 =
     [ "PenaltyUsPrepareGameStateEvaluation.h", "de/ded/PenaltyUsPrepareGameStateEvaluation_8h.html", [
       [ "PenaltyUsPrepareGameStateEvaluation", "dc/dc0/classrtt_1_1ai_1_1stp_1_1evaluation_1_1PenaltyUsPrepareGameStateEvaluation.html", "dc/dc0/classrtt_1_1ai_1_1stp_1_1evaluation_1_1PenaltyUsPrepareGameStateEvaluation" ]
     ] ],
+    [ "PrepareForcedStartGameStateEvaluation.h", "d2/d99/PrepareForcedStartGameStateEvaluation_8h.html", [
+      [ "PrepareForcedStartGameStateEvaluation", "d4/d9e/classrtt_1_1ai_1_1stp_1_1evaluation_1_1PrepareForcedStartGameStateEvaluation.html", "d4/d9e/classrtt_1_1ai_1_1stp_1_1evaluation_1_1PrepareForcedStartGameStateEvaluation" ]
+    ] ],
     [ "StopGameStateEvaluation.h", "d6/da9/StopGameStateEvaluation_8h.html", [
       [ "StopGameStateEvaluation", "dd/d4b/classrtt_1_1ai_1_1stp_1_1evaluation_1_1StopGameStateEvaluation.html", "dd/d4b/classrtt_1_1ai_1_1stp_1_1evaluation_1_1StopGameStateEvaluation" ]
     ] ],

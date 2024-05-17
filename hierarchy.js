@@ -26,20 +26,17 @@ var hierarchy =
       [ "rtt::ai::stp::evaluation::PenaltyThemPrepareGameStateEvaluation", "d2/d1d/classrtt_1_1ai_1_1stp_1_1evaluation_1_1PenaltyThemPrepareGameStateEvaluation.html", null ],
       [ "rtt::ai::stp::evaluation::PenaltyUsGameStateEvaluation", "de/d02/classrtt_1_1ai_1_1stp_1_1evaluation_1_1PenaltyUsGameStateEvaluation.html", null ],
       [ "rtt::ai::stp::evaluation::PenaltyUsPrepareGameStateEvaluation", "dc/dc0/classrtt_1_1ai_1_1stp_1_1evaluation_1_1PenaltyUsPrepareGameStateEvaluation.html", null ],
+      [ "rtt::ai::stp::evaluation::PrepareForcedStartGameStateEvaluation", "d4/d9e/classrtt_1_1ai_1_1stp_1_1evaluation_1_1PrepareForcedStartGameStateEvaluation.html", null ],
       [ "rtt::ai::stp::evaluation::StopGameStateEvaluation", "dd/d4b/classrtt_1_1ai_1_1stp_1_1evaluation_1_1StopGameStateEvaluation.html", null ],
       [ "rtt::ai::stp::evaluation::TheyHaveBallGlobalEvaluation", "da/d0e/classrtt_1_1ai_1_1stp_1_1evaluation_1_1TheyHaveBallGlobalEvaluation.html", null ],
       [ "rtt::ai::stp::evaluation::TimeOutGameStateEvaluation", "d9/d4d/classrtt_1_1ai_1_1stp_1_1evaluation_1_1TimeOutGameStateEvaluation.html", null ],
-      [ "rtt::ai::stp::evaluation::WeHaveBallGlobalEvaluation", "d5/d80/classrtt_1_1ai_1_1stp_1_1evaluation_1_1WeHaveBallGlobalEvaluation.html", null ],
       [ "rtt::ai::stp::evaluation::WeWillHaveBallGlobalEvaluation", "d1/dcf/classrtt_1_1ai_1_1stp_1_1evaluation_1_1WeWillHaveBallGlobalEvaluation.html", null ]
     ] ],
-    [ "rtt::BB::BBPosVel", "da/d73/structrtt_1_1BB_1_1BBPosVel.html", null ],
-    [ "rtt::ai::control::BBTPathTracking", "d3/daa/classrtt_1_1ai_1_1control_1_1BBTPathTracking.html", null ],
-    [ "rtt::BB::BBTrajectory1D", "de/d4c/classrtt_1_1BB_1_1BBTrajectory1D.html", null ],
-    [ "rtt::BB::BBTrajectory2D", "d7/dbe/classrtt_1_1BB_1_1BBTrajectory2D.html", null ],
-    [ "rtt::BB::BBTrajectoryPart", "d0/dde/namespacertt_1_1BB.html#dd/d94/structrtt_1_1BB_1_1BBTrajectoryPart", null ],
-    [ "rtt::BB::CollisionData", "d0/dde/namespacertt_1_1BB.html#de/d62/structrtt_1_1BB_1_1CollisionData", null ],
-    [ "rtt::ai::control::CollisionDetector", "df/dcf/classrtt_1_1ai_1_1control_1_1CollisionDetector.html", null ],
-    [ "rtt::BB::CommandCollision", "d0/dde/namespacertt_1_1BB.html#d0/d57/structrtt_1_1BB_1_1CommandCollision", null ],
+    [ "rtt::ai::control::BBPosVel", "d4/de2/structrtt_1_1ai_1_1control_1_1BBPosVel.html", null ],
+    [ "rtt::ai::control::BBTrajectory1D", "d8/d5c/classrtt_1_1ai_1_1control_1_1BBTrajectory1D.html", null ],
+    [ "rtt::ai::control::BBTrajectory2D", "dd/dd0/classrtt_1_1ai_1_1control_1_1BBTrajectory2D.html", null ],
+    [ "rtt::ai::control::BBTrajectoryPart", "d0/d4f/namespacertt_1_1ai_1_1control.html#dc/d46/structrtt_1_1ai_1_1control_1_1BBTrajectoryPart", null ],
+    [ "rtt::ai::control::CollisionCalculations", "d8/daf/classrtt_1_1ai_1_1control_1_1CollisionCalculations.html", null ],
     [ "rtt::ai::stp::ComputationManager", "df/d7d/classrtt_1_1ai_1_1stp_1_1ComputationManager.html", null ],
     [ "rtt::ai::Constants", "d9/dc5/classrtt_1_1ai_1_1Constants.html", null ],
     [ "rtt::ai::control::ControlModule", "dd/d16/classrtt_1_1ai_1_1control_1_1ControlModule.html", null ],
@@ -68,18 +65,10 @@ var hierarchy =
     [ "rtt::ai::stp::evaluation::OpennessEvaluation", "d6/d61/classrtt_1_1ai_1_1stp_1_1evaluation_1_1OpennessEvaluation.html", null ],
     [ "rtt::ai::gui::Out", "d2/de6/classrtt_1_1ai_1_1gui_1_1Out.html", null ],
     [ "rtt::ai::interface::Output", "d7/d9e/classrtt_1_1ai_1_1interface_1_1Output.html", null ],
+    [ "rtt::ai::control::OvershootComputations", "de/df8/classrtt_1_1ai_1_1control_1_1OvershootComputations.html", null ],
     [ "rtt::ai::stp::computations::PassComputations", "d3/db6/classrtt_1_1ai_1_1stp_1_1computations_1_1PassComputations.html", null ],
     [ "rtt::ai::stp::PassInfo", "d5/d14/namespacertt_1_1ai_1_1stp.html#dd/d7d/structrtt_1_1ai_1_1stp_1_1PassInfo", null ],
-    [ "rtt::ai::control::PathPlanningAlgorithm", "d8/d58/classrtt_1_1ai_1_1control_1_1PathPlanningAlgorithm.html", [
-      [ "rtt::ai::control::NumTreesPlanning", "d4/df6/classrtt_1_1ai_1_1control_1_1NumTreesPlanning.html", null ]
-    ] ],
-    [ "rtt::ai::control::PathPointNode", "d6/deb/classrtt_1_1ai_1_1control_1_1PathPointNode.html", null ],
-    [ "rtt::ai::control::PathTrackingAlgorithm", "d2/d88/classrtt_1_1ai_1_1control_1_1PathTrackingAlgorithm.html", [
-      [ "rtt::ai::control::DensePathTracking", "d6/d48/classrtt_1_1ai_1_1control_1_1DensePathTracking.html", null ],
-      [ "rtt::ai::control::PidTracking", "d8/d38/classrtt_1_1ai_1_1control_1_1PidTracking.html", null ]
-    ] ],
     [ "rtt::ai::stp::Play", "d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html", [
-      [ "rtt::ai::stp::play::AggressiveStopFormation", "dd/dff/classrtt_1_1ai_1_1stp_1_1play_1_1AggressiveStopFormation.html", null ],
       [ "rtt::ai::stp::play::Attack", "db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html", null ],
       [ "rtt::ai::stp::play::AttackingPass", "df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass.html", null ],
       [ "rtt::ai::stp::play::BallPlacementThem", "d7/d43/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementThem.html", null ],
@@ -88,7 +77,6 @@ var hierarchy =
       [ "rtt::ai::stp::play::ChippingPass", "dc/d26/classrtt_1_1ai_1_1stp_1_1play_1_1ChippingPass.html", null ],
       [ "rtt::ai::stp::play::DefendPass", "dd/daf/classrtt_1_1ai_1_1stp_1_1play_1_1DefendPass.html", null ],
       [ "rtt::ai::stp::play::DefendShot", "d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot.html", null ],
-      [ "rtt::ai::stp::play::DefensiveStopFormation", "df/de3/classrtt_1_1ai_1_1stp_1_1play_1_1DefensiveStopFormation.html", null ],
       [ "rtt::ai::stp::play::FreeKickThem", "dc/d7b/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickThem.html", null ],
       [ "rtt::ai::stp::play::FreeKickUsAtGoal", "dd/dc8/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsAtGoal.html", null ],
       [ "rtt::ai::stp::play::FreeKickUsPass", "d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html", null ],
@@ -101,7 +89,9 @@ var hierarchy =
       [ "rtt::ai::stp::play::PenaltyThem", "d9/dd3/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThem.html", null ],
       [ "rtt::ai::stp::play::PenaltyThemPrepare", "d4/dfe/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThemPrepare.html", null ],
       [ "rtt::ai::stp::play::PenaltyUs", "db/d03/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUs.html", null ],
-      [ "rtt::ai::stp::play::PenaltyUsPrepare", "d6/d47/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUsPrepare.html", null ]
+      [ "rtt::ai::stp::play::PenaltyUsPrepare", "d6/d47/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUsPrepare.html", null ],
+      [ "rtt::ai::stp::play::PrepareForcedStart", "d6/daa/classrtt_1_1ai_1_1stp_1_1play_1_1PrepareForcedStart.html", null ],
+      [ "rtt::ai::stp::play::StopFormation", "d0/d1d/classrtt_1_1ai_1_1stp_1_1play_1_1StopFormation.html", null ]
     ] ],
     [ "rtt::ai::stp::PlayDecider", "d1/d54/classrtt_1_1ai_1_1stp_1_1PlayDecider.html", null ],
     [ "rtt::ai::stp::PlayEvaluator", "dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html", null ],
@@ -109,7 +99,6 @@ var hierarchy =
     [ "rtt::ai::stp::PlayEvaluator::PlayScoring", "dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#d9/dd7/structrtt_1_1ai_1_1stp_1_1PlayEvaluator_1_1PlayScoring", null ],
     [ "rtt::ai::stp::PositionComputations", "dd/d2c/classrtt_1_1ai_1_1stp_1_1PositionComputations.html", null ],
     [ "rtt::ai::control::PositionControl", "dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html", null ],
-    [ "rtt::ai::control::PositionControlUtils", "dd/d4f/classrtt_1_1ai_1_1control_1_1PositionControlUtils.html", null ],
     [ "rtt::ai::stp::gen::PositionScores", "d7/d73/namespacertt_1_1ai_1_1stp_1_1gen.html#da/d40/structrtt_1_1ai_1_1stp_1_1gen_1_1PositionScores", null ],
     [ "rtt::ai::stp::PositionScoring", "de/de9/classrtt_1_1ai_1_1stp_1_1PositionScoring.html", null ],
     [ "rtt::world::robot::Robot", "d4/d99/classrtt_1_1world_1_1robot_1_1Robot.html", null ],
@@ -161,19 +150,19 @@ var hierarchy =
       [ "rtt::ai::stp::tactic::GetBall", "d8/d8e/classrtt_1_1ai_1_1stp_1_1tactic_1_1GetBall.html", null ],
       [ "rtt::ai::stp::tactic::GetBehindBallInDirection", "d9/d65/classrtt_1_1ai_1_1stp_1_1tactic_1_1GetBehindBallInDirection.html", null ],
       [ "rtt::ai::stp::tactic::Halt", "d5/dc3/classrtt_1_1ai_1_1stp_1_1tactic_1_1Halt.html", null ],
+      [ "rtt::ai::stp::tactic::InstantKick", "d0/df3/classrtt_1_1ai_1_1stp_1_1tactic_1_1InstantKick.html", null ],
       [ "rtt::ai::stp::tactic::KeeperBlockBall", "d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html", null ],
-      [ "rtt::ai::stp::tactic::KickAtPos", "db/d9e/classrtt_1_1ai_1_1stp_1_1tactic_1_1KickAtPos.html", null ],
       [ "rtt::ai::stp::tactic::OrbitKick", "d5/d3d/classrtt_1_1ai_1_1stp_1_1tactic_1_1OrbitKick.html", null ],
       [ "rtt::ai::stp::tactic::Receive", "d3/d66/classrtt_1_1ai_1_1stp_1_1tactic_1_1Receive.html", null ]
     ] ],
     [ "testing::Test", null, [
       [ "RTT_AI_Tests", "d6/d69/classRTT__AI__Tests.html", null ]
     ] ],
+    [ "rtt::ai::control::TimedPos1D", "dd/d66/structrtt_1_1ai_1_1control_1_1TimedPos1D.html", null ],
     [ "rtt::Trajectory1D", "d0/d62/classrtt_1_1Trajectory1D.html", null ],
     [ "rtt::Trajectory2D", "d9/da4/classrtt_1_1Trajectory2D.html", null ],
     [ "rtt::world::World", "da/d39/classrtt_1_1world_1_1World.html", null ],
     [ "rtt::world::WorldData", "d5/db9/classrtt_1_1world_1_1WorldData.html", null ],
     [ "rtt::world::view::WorldDataView", "d6/d08/classrtt_1_1world_1_1view_1_1WorldDataView.html", null ],
-    [ "testhelpers::WorldHelper", "d6/d74/classtesthelpers_1_1WorldHelper.html", null ],
-    [ "rtt::BB::WorldObjects", "de/d06/classrtt_1_1BB_1_1WorldObjects.html", null ]
+    [ "testhelpers::WorldHelper", "d6/d74/classtesthelpers_1_1WorldHelper.html", null ]
 ];

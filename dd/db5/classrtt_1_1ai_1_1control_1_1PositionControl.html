@@ -86,7 +86,6 @@ $(document).ready(function(){initNavTree('dd/db5/classrtt_1_1ai_1_1control_1_1Po
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="#pri-static-attribs">Static Private Attributes</a> &#124;
 <a href="../../d0/d29/classrtt_1_1ai_1_1control_1_1PositionControl-members.html">List of all members</a>  </div>
@@ -105,215 +104,58 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:abf40e5bec88c3741b9d17eaf8ca0ecd3"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#abf40e5bec88c3741b9d17eaf8ca0ecd3">getComputedPath</a> (int ID)</td></tr>
 <tr class="memdesc:abf40e5bec88c3741b9d17eaf8ca0ecd3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the computed path of the given robot.  <a href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#abf40e5bec88c3741b9d17eaf8ca0ecd3">More...</a><br /></td></tr>
 <tr class="separator:abf40e5bec88c3741b9d17eaf8ca0ecd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9d2a27bd0f710250eb75312c5e851a2c"><td class="memItemLeft" align="right" valign="top">RobotCommand&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#a9d2a27bd0f710250eb75312c5e851a2c">computeAndTrackPath</a> (const rtt::Field &amp;field, int robotId, const <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;currentPosition, const <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;currentVelocity, <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;targetPosition, <a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#ac154a8e7620c1e24b70f641afcf2c5eb">stp::PIDType</a> pidType)</td></tr>
-<tr class="memdesc:a9d2a27bd0f710250eb75312c5e851a2c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a path according to the selected planning algorithm, and tracks it using the selected tracking algorithm. In the case a collision is detected (using the collision detector), the path is recalculated.  <a href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#a9d2a27bd0f710250eb75312c5e851a2c">More...</a><br /></td></tr>
-<tr class="separator:a9d2a27bd0f710250eb75312c5e851a2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aebe89d070c772826f309714387686315"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#aebe89d070c772826f309714387686315">setRobotPositions</a> (std::vector&lt; <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &gt; &amp;robotPositions)</td></tr>
-<tr class="memdesc:aebe89d070c772826f309714387686315"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the robot view vector.  <a href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#aebe89d070c772826f309714387686315">More...</a><br /></td></tr>
-<tr class="separator:aebe89d070c772826f309714387686315"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a544d739feb3aea71d107b801e2a4054d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#a544d739feb3aea71d107b801e2a4054d">shouldRecalculatePath</a> (const <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;currentPosition, const <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;targetPos, const <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;currentVelocity, int robotId)</td></tr>
-<tr class="memdesc:a544d739feb3aea71d107b801e2a4054d"><td class="mdescLeft">&#160;</td><td class="mdescRight">The computed path should be recalculated if: <br  />
-  <a href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#a544d739feb3aea71d107b801e2a4054d">More...</a><br /></td></tr>
-<tr class="separator:a544d739feb3aea71d107b801e2a4054d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a664e1d190e12c59dc7ff985f6e481e6f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d0/dde/namespacertt_1_1BB.html#d0/d57/structrtt_1_1BB_1_1CommandCollision">rtt::BB::CommandCollision</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#a664e1d190e12c59dc7ff985f6e481e6f">computeAndTrackTrajectory</a> (const <a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">rtt::world::World</a> *world, const rtt::Field &amp;field, int robotId, <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> currentPosition, <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> currentVelocity, <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> targetPosition, double maxRobotVelocity, <a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#ac154a8e7620c1e24b70f641afcf2c5eb">stp::PIDType</a> pidType, <a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#d8/dcb/structrtt_1_1ai_1_1stp_1_1AvoidObjects">stp::AvoidObjects</a> avoidObjects)</td></tr>
-<tr class="memdesc:a664e1d190e12c59dc7ff985f6e481e6f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a collision-free trajectory and tracks it. Returns also possibly the location of a collision on the path if no correct path can be found.  <a href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#a664e1d190e12c59dc7ff985f6e481e6f">More...</a><br /></td></tr>
-<tr class="separator:a664e1d190e12c59dc7ff985f6e481e6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3721fa6e6d6d348e9b23cd3153123e07"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#a3721fa6e6d6d348e9b23cd3153123e07">handleBallCollision</a> (const <a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">rtt::world::World</a> *world, const rtt::Field &amp;field, <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> currentPosition, <a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#d8/dcb/structrtt_1_1ai_1_1stp_1_1AvoidObjects">stp::AvoidObjects</a> avoidObjects)</td></tr>
-<tr class="memdesc:a3721fa6e6d6d348e9b23cd3153123e07"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handles the collision with the ball at the current position. This function will calculate a new target, moving away from the ball as quickly as possible.  <a href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#a3721fa6e6d6d348e9b23cd3153123e07">More...</a><br /></td></tr>
-<tr class="separator:a3721fa6e6d6d348e9b23cd3153123e07"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9c6ade582624ee7321c5fcd038bea748"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#a9c6ade582624ee7321c5fcd038bea748">handleBallPlacementCollision</a> (const <a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">rtt::world::World</a> *world, const rtt::Field &amp;field, <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> currentPosition, <a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#d8/dcb/structrtt_1_1ai_1_1stp_1_1AvoidObjects">stp::AvoidObjects</a> avoidObjects)</td></tr>
-<tr class="memdesc:a9c6ade582624ee7321c5fcd038bea748"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handles the collision with the ball placement at the current position, will move away from the ball placement location to ball line as quickly as possible.  <a href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#a9c6ade582624ee7321c5fcd038bea748">More...</a><br /></td></tr>
-<tr class="separator:a9c6ade582624ee7321c5fcd038bea748"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abaec8a236e3d2ce218f5133402c43df5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#abaec8a236e3d2ce218f5133402c43df5">handleDefenseAreaCollision</a> (const rtt::Field &amp;field, <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> currentPosition)</td></tr>
-<tr class="memdesc:abaec8a236e3d2ce218f5133402c43df5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handles the collision with the defense area at the current position, will move away from the defense area as quickly as possible.  <a href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#abaec8a236e3d2ce218f5133402c43df5">More...</a><br /></td></tr>
-<tr class="separator:abaec8a236e3d2ce218f5133402c43df5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad87d3b2a2c7882f45c8a0ee21effd8e7"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#ad87d3b2a2c7882f45c8a0ee21effd8e7">calculateScore</a> (const <a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">rtt::world::World</a> *world, const rtt::Field &amp;field, std::optional&lt; <a class="el" href="../../d0/dde/namespacertt_1_1BB.html#de/d62/structrtt_1_1BB_1_1CollisionData">BB::CollisionData</a> &gt; &amp;firstCollision, <a class="el" href="../../d9/da4/classrtt_1_1Trajectory2D.html">Trajectory2D</a> &amp;trajectoryAroundCollision, <a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#d8/dcb/structrtt_1_1ai_1_1stp_1_1AvoidObjects">stp::AvoidObjects</a> avoidObjects, double startTime=0)</td></tr>
-<tr class="memdesc:ad87d3b2a2c7882f45c8a0ee21effd8e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates a score for a trajectory. The score is based on the distance to the target and the distance to the first collision on the path.  <a href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#ad87d3b2a2c7882f45c8a0ee21effd8e7">More...</a><br /></td></tr>
-<tr class="separator:ad87d3b2a2c7882f45c8a0ee21effd8e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac9638fba08efe07a287281836d812ba4"><td class="memItemLeft" align="right" valign="top">std::optional&lt; <a class="el" href="../../d9/da4/classrtt_1_1Trajectory2D.html">Trajectory2D</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#ac9638fba08efe07a287281836d812ba4">findNewTrajectory</a> (const <a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">rtt::world::World</a> *world, const rtt::Field &amp;field, int robotId, <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;currentPosition, <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;currentVelocity, std::optional&lt; <a class="el" href="../../d0/dde/namespacertt_1_1BB.html#de/d62/structrtt_1_1BB_1_1CollisionData">BB::CollisionData</a> &gt; &amp;firstCollision, <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;targetPosition, double maxRobotVelocity, double timeStep, <a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#d8/dcb/structrtt_1_1ai_1_1stp_1_1AvoidObjects">stp::AvoidObjects</a> AvoidObjects)</td></tr>
-<tr class="memdesc:ac9638fba08efe07a287281836d812ba4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tries to find a new trajectory when the current path has a collision on it. It tries this by looking for trajectories which go to intermediate points in the area of the collision and from these paths again to the target.  <a href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#ac9638fba08efe07a287281836d812ba4">More...</a><br /></td></tr>
-<tr class="separator:ac9638fba08efe07a287281836d812ba4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aab4649868f0db44769263f1896c485f4"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#aab4649868f0db44769263f1896c485f4">createIntermediatePoints</a> (const rtt::Field &amp;field, std::optional&lt; <a class="el" href="../../d0/dde/namespacertt_1_1BB.html#de/d62/structrtt_1_1BB_1_1CollisionData">BB::CollisionData</a> &gt; &amp;firstCollision, <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;targetPosition)</td></tr>
-<tr class="memdesc:aab4649868f0db44769263f1896c485f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates intermediate points to make a path to. These points all have equal distance to the collision point.  <a href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#aab4649868f0db44769263f1896c485f4">More...</a><br /></td></tr>
-<tr class="separator:aab4649868f0db44769263f1896c485f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
-Private Member Functions</h2></td></tr>
-<tr class="memitem:a943e607deec6a84daf68f313adad7ee9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#a943e607deec6a84daf68f313adad7ee9">shouldRecalculateTrajectory</a> (const <a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">rtt::world::World</a> *world, const rtt::Field &amp;field, int robotId, <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> targetPosition, const <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;currentPosition, <a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#d8/dcb/structrtt_1_1ai_1_1stp_1_1AvoidObjects">ai::stp::AvoidObjects</a>)</td></tr>
-<tr class="memdesc:a943e607deec6a84daf68f313adad7ee9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if the current path should be recalculated:  <a href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#a943e607deec6a84daf68f313adad7ee9">More...</a><br /></td></tr>
-<tr class="separator:a943e607deec6a84daf68f313adad7ee9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5c1e7be14e823a4062cff155dcd259cd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#a5c1e7be14e823a4062cff155dcd259cd">computeAndTrackTrajectory</a> (const <a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">rtt::world::World</a> *world, const rtt::Field &amp;field, int robotId, <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> currentPosition, <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> currentVelocity, <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> targetPosition, double maxRobotVelocity, <a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#d8/dcb/structrtt_1_1ai_1_1stp_1_1AvoidObjects">stp::AvoidObjects</a> avoidObjects)</td></tr>
+<tr class="memdesc:a5c1e7be14e823a4062cff155dcd259cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a collision-free trajectory and tracks it. Returns also possibly the location of a collision on the path if no correct path can be found.  <a href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#a5c1e7be14e823a4062cff155dcd259cd">More...</a><br /></td></tr>
+<tr class="separator:a5c1e7be14e823a4062cff155dcd259cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7943031e42b3ac839733a4271f5eeebb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#a7943031e42b3ac839733a4271f5eeebb">handleBallCollision</a> (const <a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">rtt::world::World</a> *world, const rtt::Field &amp;field, <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> currentPosition, <a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#d8/dcb/structrtt_1_1ai_1_1stp_1_1AvoidObjects">stp::AvoidObjects</a> avoidObjects)</td></tr>
+<tr class="memdesc:a7943031e42b3ac839733a4271f5eeebb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handles the collision with the ball at the current position. This function will calculate a new target, moving away from the ball as quickly as possible.  <a href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#a7943031e42b3ac839733a4271f5eeebb">More...</a><br /></td></tr>
+<tr class="separator:a7943031e42b3ac839733a4271f5eeebb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a382cb072b09b462d51832902820c80ea"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#a382cb072b09b462d51832902820c80ea">handleBallPlacementCollision</a> (const <a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">rtt::world::World</a> *world, const rtt::Field &amp;field, <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> currentPosition, <a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#d8/dcb/structrtt_1_1ai_1_1stp_1_1AvoidObjects">stp::AvoidObjects</a> avoidObjects)</td></tr>
+<tr class="memdesc:a382cb072b09b462d51832902820c80ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handles the collision with the ball placement at the current position, will move away from the ball placement location to ball line as quickly as possible.  <a href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#a382cb072b09b462d51832902820c80ea">More...</a><br /></td></tr>
+<tr class="separator:a382cb072b09b462d51832902820c80ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a37c161a1008a079ba389e286de7a8516"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#a37c161a1008a079ba389e286de7a8516">handleDefenseAreaCollision</a> (const rtt::Field &amp;field, <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> currentPosition)</td></tr>
+<tr class="memdesc:a37c161a1008a079ba389e286de7a8516"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handles the collision with the defense area at the current position, will move away from the defense area as quickly as possible.  <a href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#a37c161a1008a079ba389e286de7a8516">More...</a><br /></td></tr>
+<tr class="separator:a37c161a1008a079ba389e286de7a8516"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a57bc97198120edc88ef5143a7d66d524"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d9/da4/classrtt_1_1Trajectory2D.html">Trajectory2D</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#a57bc97198120edc88ef5143a7d66d524">findNewTrajectory</a> (const <a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">rtt::world::World</a> *world, const rtt::Field &amp;field, int robotId, <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;currentPosition, <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;currentVelocity, <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;targetPosition, double maxRobotVelocity, double timeStep, <a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#d8/dcb/structrtt_1_1ai_1_1stp_1_1AvoidObjects">stp::AvoidObjects</a> AvoidObjects)</td></tr>
+<tr class="memdesc:a57bc97198120edc88ef5143a7d66d524"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tries to find a new trajectory when the current path has a collision on it. It tries this by looking for trajectories which go to intermediate points in the area of the collision and from these paths again to the target.  <a href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#a57bc97198120edc88ef5143a7d66d524">More...</a><br /></td></tr>
+<tr class="separator:a57bc97198120edc88ef5143a7d66d524"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a13095d31e027fd9c335befd29855d3a4"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#a13095d31e027fd9c335befd29855d3a4">generateNormalizedPoints</a> (int robotId)</td></tr>
+<tr class="memdesc:a13095d31e027fd9c335befd29855d3a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates normalized random points, which will be used to create intermediate points.  <a href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#a13095d31e027fd9c335befd29855d3a4">More...</a><br /></td></tr>
+<tr class="separator:a13095d31e027fd9c335befd29855d3a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
-<tr class="memitem:ae29ec26006b41330c2d0de07dacd9adf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../df/dcf/classrtt_1_1ai_1_1control_1_1CollisionDetector.html">CollisionDetector</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#ae29ec26006b41330c2d0de07dacd9adf">collisionDetector</a></td></tr>
-<tr class="separator:ae29ec26006b41330c2d0de07dacd9adf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a51bcfe99ceaa453d48a4aa9791ccb9d2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../de/d06/classrtt_1_1BB_1_1WorldObjects.html">rtt::BB::WorldObjects</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#a51bcfe99ceaa453d48a4aa9791ccb9d2">worldObjects</a></td></tr>
-<tr class="separator:a51bcfe99ceaa453d48a4aa9791ccb9d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaf80121f8f99fc76196fc6fb649a37a6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d4/df6/classrtt_1_1ai_1_1control_1_1NumTreesPlanning.html">NumTreesPlanning</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#aaf80121f8f99fc76196fc6fb649a37a6">pathPlanningAlgorithm</a> = <a class="el" href="../../d4/df6/classrtt_1_1ai_1_1control_1_1NumTreesPlanning.html">NumTreesPlanning</a>(<a class="el" href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#ae29ec26006b41330c2d0de07dacd9adf">collisionDetector</a>)</td></tr>
-<tr class="separator:aaf80121f8f99fc76196fc6fb649a37a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4b743b296e7be029adea3c752d39d582"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d6/d48/classrtt_1_1ai_1_1control_1_1DensePathTracking.html">DensePathTracking</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#a4b743b296e7be029adea3c752d39d582">pathTrackingAlgorithm</a></td></tr>
-<tr class="separator:a4b743b296e7be029adea3c752d39d582"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6000397519f7174f3816fc710eefb7ad"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d3/daa/classrtt_1_1ai_1_1control_1_1BBTPathTracking.html">BBTPathTracking</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#a6000397519f7174f3816fc710eefb7ad">pathTrackingAlgorithmBBT</a></td></tr>
-<tr class="separator:a6000397519f7174f3816fc710eefb7ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a77ba3daf9363867a7d4a9ae7007e2334"><td class="memItemLeft" align="right" valign="top">std::unordered_map&lt; int, <a class="el" href="../../d9/da4/classrtt_1_1Trajectory2D.html">Trajectory2D</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#a77ba3daf9363867a7d4a9ae7007e2334">computedTrajectories</a></td></tr>
 <tr class="separator:a77ba3daf9363867a7d4a9ae7007e2334"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa9066927016e6dcb348d694da2d9bbab"><td class="memItemLeft" align="right" valign="top">std::unordered_map&lt; int, std::vector&lt; <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#aa9066927016e6dcb348d694da2d9bbab">computedPaths</a></td></tr>
 <tr class="separator:aa9066927016e6dcb348d694da2d9bbab"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abf0ba3ba56d70da646d1d864e6dfbce7"><td class="memItemLeft" align="right" valign="top">std::unordered_map&lt; int, std::vector&lt; <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#abf0ba3ba56d70da646d1d864e6dfbce7">computedPathsVel</a></td></tr>
-<tr class="separator:abf0ba3ba56d70da646d1d864e6dfbce7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a321a38a458ea4da0ea07c5fcec2c3571"><td class="memItemLeft" align="right" valign="top">std::unordered_map&lt; int, std::vector&lt; std::pair&lt; <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a>, <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &gt; &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#a321a38a458ea4da0ea07c5fcec2c3571">computedPathsPosVel</a></td></tr>
-<tr class="separator:a321a38a458ea4da0ea07c5fcec2c3571"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a69db7be600467ff4ee4c008ac678e677"><td class="memItemLeft" align="right" valign="top">std::unordered_map&lt; int, int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#a69db7be600467ff4ee4c008ac678e677">completedTimeSteps</a></td></tr>
-<tr class="separator:a69db7be600467ff4ee4c008ac678e677"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd51e839c50d77c3fa998f12db0d3b32"><td class="memItemLeft" align="right" valign="top">std::unordered_map&lt; int, <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#afd51e839c50d77c3fa998f12db0d3b32">lastUsedNormalizedPoints</a></td></tr>
+<tr class="separator:afd51e839c50d77c3fa998f12db0d3b32"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-static-attribs"></a>
 Static Private Attributes</h2></td></tr>
-<tr class="memitem:ac6c21f863f6ccb19984e9c5b8a78c6e1"><td class="memItemLeft" align="right" valign="top">static constexpr double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#ac6c21f863f6ccb19984e9c5b8a78c6e1">FINAL_AVOIDANCE_DISTANCE</a> = 4 * <a class="el" href="../../d9/dc5/classrtt_1_1ai_1_1Constants.html#af98ade4368626149da14fd9c2ed2a3c2">Constants::ROBOT_RADIUS</a>()</td></tr>
-<tr class="separator:ac6c21f863f6ccb19984e9c5b8a78c6e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad3ac5466db88e328f61a7113eea3318d"><td class="memItemLeft" align="right" valign="top">static constexpr double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#ad3ac5466db88e328f61a7113eea3318d">MIN_ANGLE</a> = 20 / M_PI</td></tr>
+<tr class="separator:ad3ac5466db88e328f61a7113eea3318d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a51e62dd54ea5784bfae49d3170fb6bf4"><td class="memItemLeft" align="right" valign="top">static constexpr double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#a51e62dd54ea5784bfae49d3170fb6bf4">MAX_ANGLE</a> = 140 / M_PI</td></tr>
+<tr class="separator:a51e62dd54ea5784bfae49d3170fb6bf4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a52d4ba2d7651d51d865885d30b9de3b1"><td class="memItemLeft" align="right" valign="top">static constexpr double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#a52d4ba2d7651d51d865885d30b9de3b1">MIN_SCALE</a> = 0.5</td></tr>
+<tr class="separator:a52d4ba2d7651d51d865885d30b9de3b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4b0398fe8579ffa63af3389c8d1d3d80"><td class="memItemLeft" align="right" valign="top">static constexpr double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#a4b0398fe8579ffa63af3389c8d1d3d80">MAX_SCALE</a> = 1.5</td></tr>
+<tr class="separator:a4b0398fe8579ffa63af3389c8d1d3d80"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afa1b612537b32cc9ec3641575bc95480"><td class="memItemLeft" align="right" valign="top">static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#afa1b612537b32cc9ec3641575bc95480">NUM_SUB_DESTINATIONS</a> = 5</td></tr>
+<tr class="separator:afa1b612537b32cc9ec3641575bc95480"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The main position control class. Use this for your robot position control requirements. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="ad87d3b2a2c7882f45c8a0ee21effd8e7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad87d3b2a2c7882f45c8a0ee21effd8e7">&#9670;&nbsp;</a></span>calculateScore()</h2>
+<a id="a5c1e7be14e823a4062cff155dcd259cd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5c1e7be14e823a4062cff155dcd259cd">&#9670;&nbsp;</a></span>computeAndTrackTrajectory()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">double rtt::ai::control::PositionControl::calculateScore </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">rtt::world::World</a> *&#160;</td>
-          <td class="paramname"><em>world</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const rtt::Field &amp;&#160;</td>
-          <td class="paramname"><em>field</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::optional&lt; <a class="el" href="../../d0/dde/namespacertt_1_1BB.html#de/d62/structrtt_1_1BB_1_1CollisionData">BB::CollisionData</a> &gt; &amp;&#160;</td>
-          <td class="paramname"><em>firstCollision</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="../../d9/da4/classrtt_1_1Trajectory2D.html">Trajectory2D</a> &amp;&#160;</td>
-          <td class="paramname"><em>trajectoryAroundCollision</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#d8/dcb/structrtt_1_1ai_1_1stp_1_1AvoidObjects">stp::AvoidObjects</a>&#160;</td>
-          <td class="paramname"><em>avoidObjects</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>startTime</em> = <code>0</code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Calculates a score for a trajectory. The score is based on the distance to the target and the distance to the first collision on the path. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">world</td><td>a pointer to the current world </td></tr>
-    <tr><td class="paramname">field</td><td>the field object, used onwards by the collision detector </td></tr>
-    <tr><td class="paramname">firstCollision</td><td>location of the first collision on the current path </td></tr>
-    <tr><td class="paramname">trajectoryAroundCollision</td><td>the trajectory to the intermediate point </td></tr>
-    <tr><td class="paramname">avoidObjects</td><td>whether or not to avoid objects </td></tr>
-    <tr><td class="paramname">startTime</td><td>the time at which the trajectory starts </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>A score for the trajectory </dd></dl>
-
-</div>
-</div>
-<a id="a9d2a27bd0f710250eb75312c5e851a2c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9d2a27bd0f710250eb75312c5e851a2c">&#9670;&nbsp;</a></span>computeAndTrackPath()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">RobotCommand rtt::ai::control::PositionControl::computeAndTrackPath </td>
-          <td>(</td>
-          <td class="paramtype">const rtt::Field &amp;&#160;</td>
-          <td class="paramname"><em>field</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>robotId</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;&#160;</td>
-          <td class="paramname"><em>currentPosition</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;&#160;</td>
-          <td class="paramname"><em>currentVelocity</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;&#160;</td>
-          <td class="paramname"><em>targetPosition</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#ac154a8e7620c1e24b70f641afcf2c5eb">stp::PIDType</a>&#160;</td>
-          <td class="paramname"><em>pidType</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Generates a path according to the selected planning algorithm, and tracks it using the selected tracking algorithm. In the case a collision is detected (using the collision detector), the path is recalculated. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">field</td><td>the field object, used onwards by the collision detector </td></tr>
-    <tr><td class="paramname">robotId</td><td>the ID of the robot for which the path is calculated </td></tr>
-    <tr><td class="paramname">currentPosition</td><td>the current position of the aforementioned robot </td></tr>
-    <tr><td class="paramname">currentVelocity</td><td>its velocity </td></tr>
-    <tr><td class="paramname">targetPosition</td><td>the desired position that the robot has to reach </td></tr>
-    <tr><td class="paramname">pidType</td><td>The desired PID type (intercept, regular, keeper etc.) </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>a RobotCommand, which can be fed directly in the output </dd></dl>
-
-</div>
-</div>
-<a id="a664e1d190e12c59dc7ff985f6e481e6f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a664e1d190e12c59dc7ff985f6e481e6f">&#9670;&nbsp;</a></span>computeAndTrackTrajectory()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="../../d0/dde/namespacertt_1_1BB.html#d0/d57/structrtt_1_1BB_1_1CommandCollision">rtt::BB::CommandCollision</a> rtt::ai::control::PositionControl::computeAndTrackTrajectory </td>
+          <td class="memname"><a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> rtt::ai::control::PositionControl::computeAndTrackTrajectory </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">rtt::world::World</a> *&#160;</td>
           <td class="paramname"><em>world</em>, </td>
@@ -357,12 +199,6 @@ Static Private Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#ac154a8e7620c1e24b70f641afcf2c5eb">stp::PIDType</a>&#160;</td>
-          <td class="paramname"><em>pidType</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
           <td class="paramtype"><a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#d8/dcb/structrtt_1_1ai_1_1stp_1_1AvoidObjects">stp::AvoidObjects</a>&#160;</td>
           <td class="paramname"><em>avoidObjects</em>&#160;</td>
         </tr>
@@ -384,7 +220,6 @@ Static Private Attributes</h2></td></tr>
     <tr><td class="paramname">currentVelocity</td><td>its velocity </td></tr>
     <tr><td class="paramname">targetPosition</td><td>the desired position that the robot has to reach </td></tr>
     <tr><td class="paramname">maxRobotVelocity</td><td>the maximum velocity that the robot is allowed to have </td></tr>
-    <tr><td class="paramname">pidType</td><td>The desired PID type (intercept, regular, keeper etc.) </td></tr>
   </table>
   </dd>
 </dl>
@@ -392,59 +227,14 @@ Static Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="aab4649868f0db44769263f1896c485f4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aab4649868f0db44769263f1896c485f4">&#9670;&nbsp;</a></span>createIntermediatePoints()</h2>
+<a id="a57bc97198120edc88ef5143a7d66d524"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a57bc97198120edc88ef5143a7d66d524">&#9670;&nbsp;</a></span>findNewTrajectory()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt; <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &gt; rtt::ai::control::PositionControl::createIntermediatePoints </td>
-          <td>(</td>
-          <td class="paramtype">const rtt::Field &amp;&#160;</td>
-          <td class="paramname"><em>field</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::optional&lt; <a class="el" href="../../d0/dde/namespacertt_1_1BB.html#de/d62/structrtt_1_1BB_1_1CollisionData">BB::CollisionData</a> &gt; &amp;&#160;</td>
-          <td class="paramname"><em>firstCollision</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;&#160;</td>
-          <td class="paramname"><em>targetPosition</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Creates intermediate points to make a path to. These points all have equal distance to the collision point. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">field</td><td>the field object, used onwards by the collision detector </td></tr>
-    <tr><td class="paramname">firstCollision</td><td>location of the first collision on the current path </td></tr>
-    <tr><td class="paramname">targetPosition</td><td>the desired position that the robot has to reach </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>A vector with coordinates of the intermediate points </dd></dl>
-
-</div>
-</div>
-<a id="ac9638fba08efe07a287281836d812ba4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac9638fba08efe07a287281836d812ba4">&#9670;&nbsp;</a></span>findNewTrajectory()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::optional&lt; <a class="el" href="../../d9/da4/classrtt_1_1Trajectory2D.html">Trajectory2D</a> &gt; rtt::ai::control::PositionControl::findNewTrajectory </td>
+          <td class="memname"><a class="el" href="../../d9/da4/classrtt_1_1Trajectory2D.html">Trajectory2D</a> rtt::ai::control::PositionControl::findNewTrajectory </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">rtt::world::World</a> *&#160;</td>
           <td class="paramname"><em>world</em>, </td>
@@ -472,12 +262,6 @@ Static Private Attributes</h2></td></tr>
           <td></td>
           <td class="paramtype"><a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;&#160;</td>
           <td class="paramname"><em>currentVelocity</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::optional&lt; <a class="el" href="../../d0/dde/namespacertt_1_1BB.html#de/d62/structrtt_1_1BB_1_1CollisionData">BB::CollisionData</a> &gt; &amp;&#160;</td>
-          <td class="paramname"><em>firstCollision</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -519,7 +303,6 @@ Static Private Attributes</h2></td></tr>
     <tr><td class="paramname">robotId</td><td>the ID of the robot for which the path is calculated </td></tr>
     <tr><td class="paramname">currentPosition</td><td>the current position of the aforementioned robot </td></tr>
     <tr><td class="paramname">currentVelocity</td><td>its velocity </td></tr>
-    <tr><td class="paramname">firstCollision</td><td>location of the first collision on the current path </td></tr>
     <tr><td class="paramname">targetPosition</td><td>the desired position that the robot has to reach </td></tr>
     <tr><td class="paramname">maxRobotVelocity</td><td>the maximum velocity the robot is allowed to have </td></tr>
     <tr><td class="paramname">timeStep</td><td>the time between path points when approaching the path </td></tr>
@@ -527,6 +310,33 @@ Static Private Attributes</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>An optional with a new path </dd></dl>
+
+</div>
+</div>
+<a id="a13095d31e027fd9c335befd29855d3a4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a13095d31e027fd9c335befd29855d3a4">&#9670;&nbsp;</a></span>generateNormalizedPoints()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &gt; rtt::ai::control::PositionControl::generateNormalizedPoints </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>robotId</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Creates normalized random points, which will be used to create intermediate points. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">robotId</td><td>the ID of the robot for which the path is calculated </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A vector with Vector2 of the normalized random points </dd></dl>
 
 </div>
 </div>
@@ -557,14 +367,14 @@ Static Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a3721fa6e6d6d348e9b23cd3153123e07"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3721fa6e6d6d348e9b23cd3153123e07">&#9670;&nbsp;</a></span>handleBallCollision()</h2>
+<a id="a7943031e42b3ac839733a4271f5eeebb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7943031e42b3ac839733a4271f5eeebb">&#9670;&nbsp;</a></span>handleBallCollision()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="../../dd/d6d/ControlUtilsTest_8cpp.html#acfb8903fac5809ad6180aee41b325f82">rtt::Vector2</a> rtt::ai::control::PositionControl::handleBallCollision </td>
+          <td class="memname"><a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> rtt::ai::control::PositionControl::handleBallCollision </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">rtt::world::World</a> *&#160;</td>
           <td class="paramname"><em>world</em>, </td>
@@ -609,14 +419,14 @@ Static Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a9c6ade582624ee7321c5fcd038bea748"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9c6ade582624ee7321c5fcd038bea748">&#9670;&nbsp;</a></span>handleBallPlacementCollision()</h2>
+<a id="a382cb072b09b462d51832902820c80ea"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a382cb072b09b462d51832902820c80ea">&#9670;&nbsp;</a></span>handleBallPlacementCollision()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="../../dd/d6d/ControlUtilsTest_8cpp.html#acfb8903fac5809ad6180aee41b325f82">rtt::Vector2</a> rtt::ai::control::PositionControl::handleBallPlacementCollision </td>
+          <td class="memname"><a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> rtt::ai::control::PositionControl::handleBallPlacementCollision </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">rtt::world::World</a> *&#160;</td>
           <td class="paramname"><em>world</em>, </td>
@@ -661,14 +471,14 @@ Static Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="abaec8a236e3d2ce218f5133402c43df5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abaec8a236e3d2ce218f5133402c43df5">&#9670;&nbsp;</a></span>handleDefenseAreaCollision()</h2>
+<a id="a37c161a1008a079ba389e286de7a8516"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a37c161a1008a079ba389e286de7a8516">&#9670;&nbsp;</a></span>handleDefenseAreaCollision()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="../../dd/d6d/ControlUtilsTest_8cpp.html#acfb8903fac5809ad6180aee41b325f82">rtt::Vector2</a> rtt::ai::control::PositionControl::handleDefenseAreaCollision </td>
+          <td class="memname"><a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> rtt::ai::control::PositionControl::handleDefenseAreaCollision </td>
           <td>(</td>
           <td class="paramtype">const rtt::Field &amp;&#160;</td>
           <td class="paramname"><em>field</em>, </td>
@@ -699,211 +509,7 @@ Static Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="aebe89d070c772826f309714387686315"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aebe89d070c772826f309714387686315">&#9670;&nbsp;</a></span>setRobotPositions()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void rtt::ai::control::PositionControl::setRobotPositions </td>
-          <td>(</td>
-          <td class="paramtype">std::vector&lt; <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &gt; &amp;&#160;</td>
-          <td class="paramname"><em>robotPositions</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Updates the robot view vector. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">robotPositions</td><td>the position vector of the robots </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="a544d739feb3aea71d107b801e2a4054d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a544d739feb3aea71d107b801e2a4054d">&#9670;&nbsp;</a></span>shouldRecalculatePath()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool rtt::ai::control::PositionControl::shouldRecalculatePath </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;&#160;</td>
-          <td class="paramname"><em>currentPosition</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;&#160;</td>
-          <td class="paramname"><em>targetPos</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;&#160;</td>
-          <td class="paramname"><em>currentVelocity</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>robotId</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>The computed path should be recalculated if: <br  />
- </p>
-<ul>
-<li>it is empty (no path yet) <br  />
-</li>
-<li>the target position changed with at least MAX_TARGET_DEVIATION <br  />
-</li>
-<li>the robot will collide with another one by the next path point (ignored if the robot is not moving) <dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">targetPos</td><td>final target position </td></tr>
-    <tr><td class="paramname">robotId</td><td>the ID of the current robot </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>true if one of the above conditions are true, false otherwise </dd></dl>
-</li>
-</ul>
-
-</div>
-</div>
-<a id="a943e607deec6a84daf68f313adad7ee9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a943e607deec6a84daf68f313adad7ee9">&#9670;&nbsp;</a></span>shouldRecalculateTrajectory()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool rtt::ai::control::PositionControl::shouldRecalculateTrajectory </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">rtt::world::World</a> *&#160;</td>
-          <td class="paramname"><em>world</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const rtt::Field &amp;&#160;</td>
-          <td class="paramname"><em>field</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>robotId</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a>&#160;</td>
-          <td class="paramname"><em>targetPosition</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;&#160;</td>
-          <td class="paramname"><em>currentPosition</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#d8/dcb/structrtt_1_1ai_1_1stp_1_1AvoidObjects">ai::stp::AvoidObjects</a>&#160;</td>
-          <td class="paramname"><em>avoidObjects</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Checks if the current path should be recalculated: </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">world</td><td>a pointer to the current world </td></tr>
-    <tr><td class="paramname">field</td><td>the field object, used onwards by the collision detector </td></tr>
-    <tr><td class="paramname">robotId</td><td>the ID of the robot for which the path is calculated </td></tr>
-    <tr><td class="paramname">currentPosition</td><td>the current position of the aforementioned robot </td></tr>
-    <tr><td class="paramname">currentVelocity</td><td>its velocity </td></tr>
-    <tr><td class="paramname">targetPosition</td><td>the desired position that the robot has to reachsho </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Boolean that is 1 if the path needs to be recalculated </dd></dl>
-
-</div>
-</div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="ae29ec26006b41330c2d0de07dacd9adf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae29ec26006b41330c2d0de07dacd9adf">&#9670;&nbsp;</a></span>collisionDetector</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="../../df/dcf/classrtt_1_1ai_1_1control_1_1CollisionDetector.html">CollisionDetector</a> rtt::ai::control::PositionControl::collisionDetector</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Detects collisions on the trajectory </p>
-
-</div>
-</div>
-<a id="a69db7be600467ff4ee4c008ac678e677"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a69db7be600467ff4ee4c008ac678e677">&#9670;&nbsp;</a></span>completedTimeSteps</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::unordered_map&lt;int, int&gt; rtt::ai::control::PositionControl::completedTimeSteps</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Map of completed time steps for each robot </p>
-
-</div>
-</div>
 <a id="aa9066927016e6dcb348d694da2d9bbab"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa9066927016e6dcb348d694da2d9bbab">&#9670;&nbsp;</a></span>computedPaths</h2>
 
@@ -924,52 +530,6 @@ Static Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <p>Map of computed paths for each robot </p>
-
-</div>
-</div>
-<a id="a321a38a458ea4da0ea07c5fcec2c3571"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a321a38a458ea4da0ea07c5fcec2c3571">&#9670;&nbsp;</a></span>computedPathsPosVel</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::unordered_map&lt;int, std::vector&lt;std::pair&lt;<a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a>, <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a>&gt; &gt; &gt; rtt::ai::control::PositionControl::computedPathsPosVel</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Map of pairs containing position and velocity for each robot </p>
-
-</div>
-</div>
-<a id="abf0ba3ba56d70da646d1d864e6dfbce7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abf0ba3ba56d70da646d1d864e6dfbce7">&#9670;&nbsp;</a></span>computedPathsVel</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::unordered_map&lt;int, std::vector&lt;<a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a>&gt; &gt; rtt::ai::control::PositionControl::computedPathsVel</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Map of computed velocities for each robot </p>
 
 </div>
 </div>
@@ -996,8 +556,8 @@ Static Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ac6c21f863f6ccb19984e9c5b8a78c6e1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac6c21f863f6ccb19984e9c5b8a78c6e1">&#9670;&nbsp;</a></span>FINAL_AVOIDANCE_DISTANCE</h2>
+<a id="afd51e839c50d77c3fa998f12db0d3b32"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afd51e839c50d77c3fa998f12db0d3b32">&#9670;&nbsp;</a></span>lastUsedNormalizedPoints</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1006,7 +566,30 @@ Static Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr double rtt::ai::control::PositionControl::FINAL_AVOIDANCE_DISTANCE = 4 * <a class="el" href="../../d9/dc5/classrtt_1_1ai_1_1Constants.html#af98ade4368626149da14fd9c2ed2a3c2">Constants::ROBOT_RADIUS</a>()</td>
+          <td class="memname">std::unordered_map&lt;int, <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a>&gt; rtt::ai::control::PositionControl::lastUsedNormalizedPoints</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Map of last used normalized points for each robot </p>
+
+</div>
+</div>
+<a id="a51e62dd54ea5784bfae49d3170fb6bf4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a51e62dd54ea5784bfae49d3170fb6bf4">&#9670;&nbsp;</a></span>MAX_ANGLE</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr double rtt::ai::control::PositionControl::MAX_ANGLE = 140 / M_PI</td>
         </tr>
       </table>
   </td>
@@ -1015,35 +598,12 @@ Static Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Minimum distance the robot will keep to avoid collisions </p>
+<p>The maximum angle between the target and the intermediate point </p>
 
 </div>
 </div>
-<a id="aaf80121f8f99fc76196fc6fb649a37a6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaf80121f8f99fc76196fc6fb649a37a6">&#9670;&nbsp;</a></span>pathPlanningAlgorithm</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="../../d4/df6/classrtt_1_1ai_1_1control_1_1NumTreesPlanning.html">NumTreesPlanning</a> rtt::ai::control::PositionControl::pathPlanningAlgorithm = <a class="el" href="../../d4/df6/classrtt_1_1ai_1_1control_1_1NumTreesPlanning.html">NumTreesPlanning</a>(<a class="el" href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#ae29ec26006b41330c2d0de07dacd9adf">collisionDetector</a>)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Creates new trajectories when a collision is detected </p>
-
-</div>
-</div>
-<a id="a4b743b296e7be029adea3c752d39d582"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4b743b296e7be029adea3c752d39d582">&#9670;&nbsp;</a></span>pathTrackingAlgorithm</h2>
+<a id="a4b0398fe8579ffa63af3389c8d1d3d80"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4b0398fe8579ffa63af3389c8d1d3d80">&#9670;&nbsp;</a></span>MAX_SCALE</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1052,21 +612,21 @@ Static Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="../../d6/d48/classrtt_1_1ai_1_1control_1_1DensePathTracking.html">DensePathTracking</a> rtt::ai::control::PositionControl::pathTrackingAlgorithm</td>
+          <td class="memname">constexpr double rtt::ai::control::PositionControl::MAX_SCALE = 1.5</td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span><span class="mlabel">private</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Tracks the path </p>
+<p>The maximum scale of the intermediate point with respect to start target distance </p>
 
 </div>
 </div>
-<a id="a6000397519f7174f3816fc710eefb7ad"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6000397519f7174f3816fc710eefb7ad">&#9670;&nbsp;</a></span>pathTrackingAlgorithmBBT</h2>
+<a id="ad3ac5466db88e328f61a7113eea3318d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad3ac5466db88e328f61a7113eea3318d">&#9670;&nbsp;</a></span>MIN_ANGLE</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1075,21 +635,21 @@ Static Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="../../d3/daa/classrtt_1_1ai_1_1control_1_1BBTPathTracking.html">BBTPathTracking</a> rtt::ai::control::PositionControl::pathTrackingAlgorithmBBT</td>
+          <td class="memname">constexpr double rtt::ai::control::PositionControl::MIN_ANGLE = 20 / M_PI</td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span><span class="mlabel">private</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Tracks the BBT path </p>
+<p>The minimum angle between the target and the intermediate point </p>
 
 </div>
 </div>
-<a id="a51bcfe99ceaa453d48a4aa9791ccb9d2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a51bcfe99ceaa453d48a4aa9791ccb9d2">&#9670;&nbsp;</a></span>worldObjects</h2>
+<a id="a52d4ba2d7651d51d865885d30b9de3b1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a52d4ba2d7651d51d865885d30b9de3b1">&#9670;&nbsp;</a></span>MIN_SCALE</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1098,16 +658,39 @@ Static Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="../../de/d06/classrtt_1_1BB_1_1WorldObjects.html">rtt::BB::WorldObjects</a> rtt::ai::control::PositionControl::worldObjects</td>
+          <td class="memname">constexpr double rtt::ai::control::PositionControl::MIN_SCALE = 0.5</td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span><span class="mlabel">private</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Calculates collisions </p>
+<p>The minimum scale of the intermediate point with respect to start target distance </p>
+
+</div>
+</div>
+<a id="afa1b612537b32cc9ec3641575bc95480"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afa1b612537b32cc9ec3641575bc95480">&#9670;&nbsp;</a></span>NUM_SUB_DESTINATIONS</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr int rtt::ai::control::PositionControl::NUM_SUB_DESTINATIONS = 5</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>The number of sub destinations to create </p>
 
 </div>
 </div>

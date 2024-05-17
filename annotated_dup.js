@@ -5,16 +5,14 @@ var annotated_dup =
         [ "control", "d0/d4f/namespacertt_1_1ai_1_1control.html", [
           [ "ControlModule", "dd/d16/classrtt_1_1ai_1_1control_1_1ControlModule.html", "dd/d16/classrtt_1_1ai_1_1control_1_1ControlModule" ],
           [ "ControlUtils", "d0/d02/classrtt_1_1ai_1_1control_1_1ControlUtils.html", "d0/d02/classrtt_1_1ai_1_1control_1_1ControlUtils" ],
-          [ "CollisionDetector", "df/dcf/classrtt_1_1ai_1_1control_1_1CollisionDetector.html", "df/dcf/classrtt_1_1ai_1_1control_1_1CollisionDetector" ],
-          [ "NumTreesPlanning", "d4/df6/classrtt_1_1ai_1_1control_1_1NumTreesPlanning.html", "d4/df6/classrtt_1_1ai_1_1control_1_1NumTreesPlanning" ],
-          [ "PathPlanningAlgorithm", "d8/d58/classrtt_1_1ai_1_1control_1_1PathPlanningAlgorithm.html", "d8/d58/classrtt_1_1ai_1_1control_1_1PathPlanningAlgorithm" ],
-          [ "PathPointNode", "d6/deb/classrtt_1_1ai_1_1control_1_1PathPointNode.html", "d6/deb/classrtt_1_1ai_1_1control_1_1PathPointNode" ],
-          [ "BBTPathTracking", "d3/daa/classrtt_1_1ai_1_1control_1_1BBTPathTracking.html", "d3/daa/classrtt_1_1ai_1_1control_1_1BBTPathTracking" ],
-          [ "DensePathTracking", "d6/d48/classrtt_1_1ai_1_1control_1_1DensePathTracking.html", "d6/d48/classrtt_1_1ai_1_1control_1_1DensePathTracking" ],
-          [ "PathTrackingAlgorithm", "d2/d88/classrtt_1_1ai_1_1control_1_1PathTrackingAlgorithm.html", "d2/d88/classrtt_1_1ai_1_1control_1_1PathTrackingAlgorithm" ],
-          [ "PidTracking", "d8/d38/classrtt_1_1ai_1_1control_1_1PidTracking.html", "d8/d38/classrtt_1_1ai_1_1control_1_1PidTracking" ],
-          [ "PositionControl", "dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html", "dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl" ],
-          [ "PositionControlUtils", "dd/d4f/classrtt_1_1ai_1_1control_1_1PositionControlUtils.html", "dd/d4f/classrtt_1_1ai_1_1control_1_1PositionControlUtils" ]
+          [ "BBTrajectoryPart", "d0/d4f/namespacertt_1_1ai_1_1control.html#dc/d46/structrtt_1_1ai_1_1control_1_1BBTrajectoryPart", "d0/d4f/namespacertt_1_1ai_1_1control_dc/d46/structrtt_1_1ai_1_1control_1_1BBTrajectoryPart_dup" ],
+          [ "BBPosVel", "d4/de2/structrtt_1_1ai_1_1control_1_1BBPosVel.html", "d4/de2/structrtt_1_1ai_1_1control_1_1BBPosVel" ],
+          [ "BBTrajectory1D", "d8/d5c/classrtt_1_1ai_1_1control_1_1BBTrajectory1D.html", "d8/d5c/classrtt_1_1ai_1_1control_1_1BBTrajectory1D" ],
+          [ "BBTrajectory2D", "dd/dd0/classrtt_1_1ai_1_1control_1_1BBTrajectory2D.html", "dd/dd0/classrtt_1_1ai_1_1control_1_1BBTrajectory2D" ],
+          [ "CollisionCalculations", "d8/daf/classrtt_1_1ai_1_1control_1_1CollisionCalculations.html", "d8/daf/classrtt_1_1ai_1_1control_1_1CollisionCalculations" ],
+          [ "TimedPos1D", "dd/d66/structrtt_1_1ai_1_1control_1_1TimedPos1D.html", "dd/d66/structrtt_1_1ai_1_1control_1_1TimedPos1D" ],
+          [ "OvershootComputations", "de/df8/classrtt_1_1ai_1_1control_1_1OvershootComputations.html", "de/df8/classrtt_1_1ai_1_1control_1_1OvershootComputations" ],
+          [ "PositionControl", "dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html", "dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl" ]
         ] ],
         [ "gui", "db/d19/namespacertt_1_1ai_1_1gui.html", [
           [ "net", "de/d3f/namespacertt_1_1ai_1_1gui_1_1net.html", [
@@ -54,12 +52,12 @@ var annotated_dup =
             [ "PenaltyThemPrepareGameStateEvaluation", "d2/d1d/classrtt_1_1ai_1_1stp_1_1evaluation_1_1PenaltyThemPrepareGameStateEvaluation.html", "d2/d1d/classrtt_1_1ai_1_1stp_1_1evaluation_1_1PenaltyThemPrepareGameStateEvaluation" ],
             [ "PenaltyUsGameStateEvaluation", "de/d02/classrtt_1_1ai_1_1stp_1_1evaluation_1_1PenaltyUsGameStateEvaluation.html", "de/d02/classrtt_1_1ai_1_1stp_1_1evaluation_1_1PenaltyUsGameStateEvaluation" ],
             [ "PenaltyUsPrepareGameStateEvaluation", "dc/dc0/classrtt_1_1ai_1_1stp_1_1evaluation_1_1PenaltyUsPrepareGameStateEvaluation.html", "dc/dc0/classrtt_1_1ai_1_1stp_1_1evaluation_1_1PenaltyUsPrepareGameStateEvaluation" ],
+            [ "PrepareForcedStartGameStateEvaluation", "d4/d9e/classrtt_1_1ai_1_1stp_1_1evaluation_1_1PrepareForcedStartGameStateEvaluation.html", "d4/d9e/classrtt_1_1ai_1_1stp_1_1evaluation_1_1PrepareForcedStartGameStateEvaluation" ],
             [ "StopGameStateEvaluation", "dd/d4b/classrtt_1_1ai_1_1stp_1_1evaluation_1_1StopGameStateEvaluation.html", "dd/d4b/classrtt_1_1ai_1_1stp_1_1evaluation_1_1StopGameStateEvaluation" ],
             [ "TimeOutGameStateEvaluation", "d9/d4d/classrtt_1_1ai_1_1stp_1_1evaluation_1_1TimeOutGameStateEvaluation.html", "d9/d4d/classrtt_1_1ai_1_1stp_1_1evaluation_1_1TimeOutGameStateEvaluation" ],
             [ "BallInOurDefenseAreaAndStillGlobalEvaluation", "dc/d00/classrtt_1_1ai_1_1stp_1_1evaluation_1_1BallInOurDefenseAreaAndStillGlobalEvaluation.html", "dc/d00/classrtt_1_1ai_1_1stp_1_1evaluation_1_1BallInOurDefenseAreaAndStillGlobalEvaluation" ],
             [ "BallOnOurSideGlobalEvaluation", "d9/d25/classrtt_1_1ai_1_1stp_1_1evaluation_1_1BallOnOurSideGlobalEvaluation.html", "d9/d25/classrtt_1_1ai_1_1stp_1_1evaluation_1_1BallOnOurSideGlobalEvaluation" ],
             [ "TheyHaveBallGlobalEvaluation", "da/d0e/classrtt_1_1ai_1_1stp_1_1evaluation_1_1TheyHaveBallGlobalEvaluation.html", "da/d0e/classrtt_1_1ai_1_1stp_1_1evaluation_1_1TheyHaveBallGlobalEvaluation" ],
-            [ "WeHaveBallGlobalEvaluation", "d5/d80/classrtt_1_1ai_1_1stp_1_1evaluation_1_1WeHaveBallGlobalEvaluation.html", "d5/d80/classrtt_1_1ai_1_1stp_1_1evaluation_1_1WeHaveBallGlobalEvaluation" ],
             [ "WeWillHaveBallGlobalEvaluation", "d1/dcf/classrtt_1_1ai_1_1stp_1_1evaluation_1_1WeWillHaveBallGlobalEvaluation.html", "d1/dcf/classrtt_1_1ai_1_1stp_1_1evaluation_1_1WeWillHaveBallGlobalEvaluation" ],
             [ "GoalShotEvaluation", "d3/df8/classrtt_1_1ai_1_1stp_1_1evaluation_1_1GoalShotEvaluation.html", "d3/df8/classrtt_1_1ai_1_1stp_1_1evaluation_1_1GoalShotEvaluation" ],
             [ "LineOfSightEvaluation", "da/dbd/classrtt_1_1ai_1_1stp_1_1evaluation_1_1LineOfSightEvaluation.html", "da/dbd/classrtt_1_1ai_1_1stp_1_1evaluation_1_1LineOfSightEvaluation" ],
@@ -77,11 +75,9 @@ var annotated_dup =
             [ "Attack", "db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html", "db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack" ],
             [ "AttackingPass", "df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass.html", "df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass" ],
             [ "ChippingPass", "dc/d26/classrtt_1_1ai_1_1stp_1_1play_1_1ChippingPass.html", "dc/d26/classrtt_1_1ai_1_1stp_1_1play_1_1ChippingPass" ],
-            [ "AggressiveStopFormation", "dd/dff/classrtt_1_1ai_1_1stp_1_1play_1_1AggressiveStopFormation.html", "dd/dff/classrtt_1_1ai_1_1stp_1_1play_1_1AggressiveStopFormation" ],
             [ "BallPlacementThem", "d7/d43/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementThem.html", "d7/d43/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementThem" ],
             [ "BallPlacementUsForceStart", "de/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsForceStart.html", "de/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsForceStart" ],
             [ "BallPlacementUsFreeKick", "d9/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsFreeKick.html", "d9/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsFreeKick" ],
-            [ "DefensiveStopFormation", "df/de3/classrtt_1_1ai_1_1stp_1_1play_1_1DefensiveStopFormation.html", "df/de3/classrtt_1_1ai_1_1stp_1_1play_1_1DefensiveStopFormation" ],
             [ "FreeKickThem", "dc/d7b/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickThem.html", "dc/d7b/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickThem" ],
             [ "FreeKickUsAtGoal", "dd/dc8/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsAtGoal.html", "dd/dc8/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsAtGoal" ],
             [ "FreeKickUsPass", "d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html", "d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass" ],
@@ -93,7 +89,9 @@ var annotated_dup =
             [ "PenaltyThem", "d9/dd3/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThem.html", "d9/dd3/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThem" ],
             [ "PenaltyThemPrepare", "d4/dfe/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThemPrepare.html", "d4/dfe/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThemPrepare" ],
             [ "PenaltyUs", "db/d03/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUs.html", "db/d03/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUs" ],
-            [ "PenaltyUsPrepare", "d6/d47/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUsPrepare.html", "d6/d47/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUsPrepare" ]
+            [ "PenaltyUsPrepare", "d6/d47/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUsPrepare.html", "d6/d47/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUsPrepare" ],
+            [ "PrepareForcedStart", "d6/daa/classrtt_1_1ai_1_1stp_1_1play_1_1PrepareForcedStart.html", "d6/daa/classrtt_1_1ai_1_1stp_1_1play_1_1PrepareForcedStart" ],
+            [ "StopFormation", "d0/d1d/classrtt_1_1ai_1_1stp_1_1play_1_1StopFormation.html", "d0/d1d/classrtt_1_1ai_1_1stp_1_1play_1_1StopFormation" ]
           ] ],
           [ "role", "d6/dca/namespacertt_1_1ai_1_1stp_1_1role.html", [
             [ "BallPlacer", "dc/d18/classrtt_1_1ai_1_1stp_1_1role_1_1BallPlacer.html", "dc/d18/classrtt_1_1ai_1_1stp_1_1role_1_1BallPlacer" ],
@@ -125,7 +123,7 @@ var annotated_dup =
             [ "DriveWithBall", "d2/d25/classrtt_1_1ai_1_1stp_1_1tactic_1_1DriveWithBall.html", "d2/d25/classrtt_1_1ai_1_1stp_1_1tactic_1_1DriveWithBall" ],
             [ "GetBall", "d8/d8e/classrtt_1_1ai_1_1stp_1_1tactic_1_1GetBall.html", "d8/d8e/classrtt_1_1ai_1_1stp_1_1tactic_1_1GetBall" ],
             [ "GetBehindBallInDirection", "d9/d65/classrtt_1_1ai_1_1stp_1_1tactic_1_1GetBehindBallInDirection.html", "d9/d65/classrtt_1_1ai_1_1stp_1_1tactic_1_1GetBehindBallInDirection" ],
-            [ "KickAtPos", "db/d9e/classrtt_1_1ai_1_1stp_1_1tactic_1_1KickAtPos.html", "db/d9e/classrtt_1_1ai_1_1stp_1_1tactic_1_1KickAtPos" ],
+            [ "InstantKick", "d0/df3/classrtt_1_1ai_1_1stp_1_1tactic_1_1InstantKick.html", "d0/df3/classrtt_1_1ai_1_1stp_1_1tactic_1_1InstantKick" ],
             [ "OrbitKick", "d5/d3d/classrtt_1_1ai_1_1stp_1_1tactic_1_1OrbitKick.html", "d5/d3d/classrtt_1_1ai_1_1stp_1_1tactic_1_1OrbitKick" ],
             [ "Receive", "d3/d66/classrtt_1_1ai_1_1stp_1_1tactic_1_1Receive.html", "d3/d66/classrtt_1_1ai_1_1stp_1_1tactic_1_1Receive" ],
             [ "KeeperBlockBall", "d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html", "d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall" ],
@@ -163,15 +161,6 @@ var annotated_dup =
         [ "StrategyManager", "dc/d52/classrtt_1_1ai_1_1StrategyManager.html", "dc/d52/classrtt_1_1ai_1_1StrategyManager" ],
         [ "BallPossession", "d7/d54/classrtt_1_1ai_1_1BallPossession.html", "d7/d54/classrtt_1_1ai_1_1BallPossession" ],
         [ "FieldComputations", "d2/d21/classrtt_1_1ai_1_1FieldComputations.html", "d2/d21/classrtt_1_1ai_1_1FieldComputations" ]
-      ] ],
-      [ "BB", "d0/dde/namespacertt_1_1BB.html", [
-        [ "BBTrajectoryPart", "d0/dde/namespacertt_1_1BB.html#dd/d94/structrtt_1_1BB_1_1BBTrajectoryPart", "d0/dde/namespacertt_1_1BB_dd/d94/structrtt_1_1BB_1_1BBTrajectoryPart_dup" ],
-        [ "BBPosVel", "da/d73/structrtt_1_1BB_1_1BBPosVel.html", "da/d73/structrtt_1_1BB_1_1BBPosVel" ],
-        [ "BBTrajectory1D", "de/d4c/classrtt_1_1BB_1_1BBTrajectory1D.html", "de/d4c/classrtt_1_1BB_1_1BBTrajectory1D" ],
-        [ "BBTrajectory2D", "d7/dbe/classrtt_1_1BB_1_1BBTrajectory2D.html", "d7/dbe/classrtt_1_1BB_1_1BBTrajectory2D" ],
-        [ "CollisionData", "d0/dde/namespacertt_1_1BB.html#de/d62/structrtt_1_1BB_1_1CollisionData", "d0/dde/namespacertt_1_1BB_de/d62/structrtt_1_1BB_1_1CollisionData_dup" ],
-        [ "CommandCollision", "d0/dde/namespacertt_1_1BB.html#d0/d57/structrtt_1_1BB_1_1CommandCollision", "d0/dde/namespacertt_1_1BB_d0/d57/structrtt_1_1BB_1_1CommandCollision_dup" ],
-        [ "WorldObjects", "de/d06/classrtt_1_1BB_1_1WorldObjects.html", "de/d06/classrtt_1_1BB_1_1WorldObjects" ]
       ] ],
       [ "world", "db/d1b/namespacertt_1_1world.html", [
         [ "ball", "d6/d6f/namespacertt_1_1world_1_1ball.html", [

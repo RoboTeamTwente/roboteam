@@ -154,8 +154,8 @@ Private Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
-<tr class="memitem:a6c6152e21a08243fc140ee63cd49ec8f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d1b/classrtt_1_1ai_1_1stp_1_1skill_1_1OrbitAngular.html#a6c6152e21a08243fc140ee63cd49ec8f">counter</a> = 0</td></tr>
-<tr class="separator:a6c6152e21a08243fc140ee63cd49ec8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a56deb7775ca85df3ec88564a7fc0e0b1"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d1b/classrtt_1_1ai_1_1stp_1_1skill_1_1OrbitAngular.html#a56deb7775ca85df3ec88564a7fc0e0b1">withinMarginCount</a> = 0</td></tr>
+<tr class="separator:a56deb7775ca85df3ec88564a7fc0e0b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class that defines the orbit angular skill. This is a more advanced version of the orbit skill, the biggest difference being that the robot uses both angular and absolute velocities. </p>
@@ -423,29 +423,6 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a6c6152e21a08243fc140ee63cd49ec8f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6c6152e21a08243fc140ee63cd49ec8f">&#9670;&nbsp;</a></span>counter</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">int rtt::ai::stp::skill::OrbitAngular::counter = 0</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Counter for how many ticks the robot is within the error margin </p>
-
-</div>
-</div>
 <a id="a62d571b925906855b84dfc185a0b5ee8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a62d571b925906855b84dfc185a0b5ee8">&#9670;&nbsp;</a></span>currentStatus</h2>
 
@@ -489,6 +466,29 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <p>Robot this skill controls </p>
+
+</div>
+</div>
+<a id="a56deb7775ca85df3ec88564a7fc0e0b1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a56deb7775ca85df3ec88564a7fc0e0b1">&#9670;&nbsp;</a></span>withinMarginCount</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int rtt::ai::stp::skill::OrbitAngular::withinMarginCount = 0</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Counts how long the robot is within the yaw error margin </p>
 
 </div>
 </div>

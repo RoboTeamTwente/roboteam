@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['blockdistance_2664',['BlockDistance',['../d5/d14/namespacertt_1_1ai_1_1stp.html#ab40410d00349ef6102ce3d0fd36a58d3',1,'rtt::ai::stp']]]
+  ['dealerflagpriority_2403',['DealerFlagPriority',['../d4/dcc/namespacertt_1_1ai.html#a749f4888e489115d32ef0cf1417cd617',1,'rtt::ai']]],
+  ['dealerflagtitle_2404',['DealerFlagTitle',['../d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67',1,'rtt::ai']]]
 ];

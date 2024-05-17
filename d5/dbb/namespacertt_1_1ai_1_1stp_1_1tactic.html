@@ -106,8 +106,8 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d65/classrtt_1_1ai_1_1stp_1_1tactic_1_1GetBehindBallInDirection.html">GetBehindBallInDirection</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class that defines the get behind ball in direction tactic. This tactic is used for getting the ball from a certain direction. It has 3 skills: GoToPos, Rotate, and GoToPos. It fails when there is no target to point towards and does not reset. It's not an end tactic, therefore it can succeed.  <a href="../../d9/d65/classrtt_1_1ai_1_1stp_1_1tactic_1_1GetBehindBallInDirection.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d9e/classrtt_1_1ai_1_1stp_1_1tactic_1_1KickAtPos.html">KickAtPos</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class that defines the kick at position tactic. This tactic is used for kicking the ball towards a given position.  <a href="../../db/d9e/classrtt_1_1ai_1_1stp_1_1tactic_1_1KickAtPos.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/df3/classrtt_1_1ai_1_1stp_1_1tactic_1_1InstantKick.html">InstantKick</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class that defines the kick at position tactic. This tactic is used for kicking the ball towards a given position.  <a href="../../d0/df3/classrtt_1_1ai_1_1stp_1_1tactic_1_1InstantKick.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d3d/classrtt_1_1ai_1_1stp_1_1tactic_1_1OrbitKick.html">OrbitKick</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class that defines the orbit kick tactic. This tactic is used when the robot should orbit before kicking the ball.  <a href="../../d5/d3d/classrtt_1_1ai_1_1stp_1_1tactic_1_1OrbitKick.html#details">More...</a><br /></td></tr>
@@ -133,6 +133,10 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
+<tr class="memitem:a945c56cfc6c60c8a72b550bba24402d7"><td class="memItemLeft" align="right" valign="top">constexpr double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/dbb/namespacertt_1_1ai_1_1stp_1_1tactic.html#a945c56cfc6c60c8a72b550bba24402d7">DISTANCE_THRESHOLD</a> = 0.5</td></tr>
+<tr class="separator:a945c56cfc6c60c8a72b550bba24402d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2def88d12071f2fa89f83a57c50c4f76"><td class="memItemLeft" align="right" valign="top">constexpr double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/dbb/namespacertt_1_1ai_1_1stp_1_1tactic.html#a2def88d12071f2fa89f83a57c50c4f76">BALL_AVOID_DISTANCE</a> = 4 * <a class="el" href="../../db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#a6571c4e8f14e7dc072d17dc431f18e48">control_constants::ROBOT_RADIUS</a></td></tr>
+<tr class="separator:a2def88d12071f2fa89f83a57c50c4f76"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1347bfea32205f058b8f6beaaf2f591a"><td class="memItemLeft" align="right" valign="top">const double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/dbb/namespacertt_1_1ai_1_1stp_1_1tactic.html#a1347bfea32205f058b8f6beaaf2f591a">KEEPER_DISTANCE_TO_GOAL_LINE</a> = <a class="el" href="../../d9/dc5/classrtt_1_1ai_1_1Constants.html#af98ade4368626149da14fd9c2ed2a3c2">Constants::ROBOT_RADIUS</a>() * std::sin(toRadians(80.0))</td></tr>
 <tr class="separator:a1347bfea32205f058b8f6beaaf2f591a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaa155577589617b454d8fee2ea755e51"><td class="memItemLeft" align="right" valign="top">const double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/dbb/namespacertt_1_1ai_1_1stp_1_1tactic.html#aaa155577589617b454d8fee2ea755e51">KEEPER_GOAL_DECREASE_AT_ONE_SIDE</a> = <a class="el" href="../../d9/dc5/classrtt_1_1ai_1_1Constants.html#af98ade4368626149da14fd9c2ed2a3c2">Constants::ROBOT_RADIUS</a>() * std::cos(toRadians(80.0)) + 0.01</td></tr>
@@ -143,8 +147,54 @@ Variables</h2></td></tr>
 <tr class="separator:a9e4cffb1bae4ff229b1e0cdfaa1c0bf5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac175fe0237ffc965210b36f9b58ef4e9"><td class="memItemLeft" align="right" valign="top">constexpr double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/dbb/namespacertt_1_1ai_1_1stp_1_1tactic.html#ac175fe0237ffc965210b36f9b58ef4e9">MAX_DISTANCE_BALL_BEHIND_GOAL</a> = 0.3</td></tr>
 <tr class="separator:ac175fe0237ffc965210b36f9b58ef4e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acffd3e77654ac22c44494543015e090b"><td class="memItemLeft" align="right" valign="top">const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/dbb/namespacertt_1_1ai_1_1stp_1_1tactic.html#acffd3e77654ac22c44494543015e090b">STAND_STILL_THRESHOLD</a> = 60</td></tr>
+<tr class="separator:acffd3e77654ac22c44494543015e090b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Variable Documentation</h2>
+<a id="a2def88d12071f2fa89f83a57c50c4f76"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2def88d12071f2fa89f83a57c50c4f76">&#9670;&nbsp;</a></span>BALL_AVOID_DISTANCE</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr double rtt::ai::stp::tactic::BALL_AVOID_DISTANCE = 4 * <a class="el" href="../../db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#a6571c4e8f14e7dc072d17dc431f18e48">control_constants::ROBOT_RADIUS</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a945c56cfc6c60c8a72b550bba24402d7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a945c56cfc6c60c8a72b550bba24402d7">&#9670;&nbsp;</a></span>DISTANCE_THRESHOLD</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr double rtt::ai::stp::tactic::DISTANCE_THRESHOLD = 0.5</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a1347bfea32205f058b8f6beaaf2f591a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1347bfea32205f058b8f6beaaf2f591a">&#9670;&nbsp;</a></span>KEEPER_DISTANCE_TO_GOAL_LINE</h2>
 
@@ -235,6 +285,20 @@ Variables</h2></td></tr>
 <span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
   </tr>
 </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="acffd3e77654ac22c44494543015e090b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acffd3e77654ac22c44494543015e090b">&#9670;&nbsp;</a></span>STAND_STILL_THRESHOLD</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const int rtt::ai::stp::tactic::STAND_STILL_THRESHOLD = 60</td>
+        </tr>
+      </table>
 </div><div class="memdoc">
 
 </div>

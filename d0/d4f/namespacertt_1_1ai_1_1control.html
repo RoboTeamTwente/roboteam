@@ -85,7 +85,8 @@ $(document).ready(function(){initNavTree('d0/d4f/namespacertt_1_1ai_1_1control.h
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a>  </div>
+<a href="#nested-classes">Classes</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">rtt::ai::control Namespace Reference</div>  </div>
 </div><!--header-->
@@ -98,34 +99,141 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d02/classrtt_1_1ai_1_1control_1_1ControlUtils.html">ControlUtils</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/dcf/classrtt_1_1ai_1_1control_1_1CollisionDetector.html">CollisionDetector</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks for collision between points and different components of the field: robots, defence area, etc. Check isCollisionBetweenPoints method for more details.  <a href="../../df/dcf/classrtt_1_1ai_1_1control_1_1CollisionDetector.html#details">More...</a><br /></td></tr>
+<tr class="memitem:dc/d46/structrtt_1_1ai_1_1control_1_1BBTrajectoryPart"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d4f/namespacertt_1_1ai_1_1control.html#dc/d46/structrtt_1_1ai_1_1control_1_1BBTrajectoryPart">BBTrajectoryPart</a></td></tr>
+<tr class="memdesc:dc/d46/structrtt_1_1ai_1_1control_1_1BBTrajectoryPart"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a segment of a one-dimensional bang-bang trajectory.  <a href="../../d0/d4f/namespacertt_1_1ai_1_1control.html#dc/d46/structrtt_1_1ai_1_1control_1_1BBTrajectoryPart">More...</a><br /></td></tr>
+<tr class="separator:dc/d46/structrtt_1_1ai_1_1control_1_1BBTrajectoryPart"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/de2/structrtt_1_1ai_1_1control_1_1BBPosVel.html">BBPosVel</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">small struct to keep Position, Velocity and Acceleration in at once.  <a href="../../d4/de2/structrtt_1_1ai_1_1control_1_1BBPosVel.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/df6/classrtt_1_1ai_1_1control_1_1NumTreesPlanning.html">NumTreesPlanning</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d5c/classrtt_1_1ai_1_1control_1_1BBTrajectory1D.html">BBTrajectory1D</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class that represents 1 dimensional bang bang trajectories. These are time optimal in one dimension given that bang-bang control where you pick an acceleration in (max,0,-max) is possible. In this case the trajectory will have 1-3 segment.  <a href="../../d8/d5c/classrtt_1_1ai_1_1control_1_1BBTrajectory1D.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d58/classrtt_1_1ai_1_1control_1_1PathPlanningAlgorithm.html">PathPlanningAlgorithm</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The base class for the path planning algorithms. All future algorithms should inherit from this.  <a href="../../d8/d58/classrtt_1_1ai_1_1control_1_1PathPlanningAlgorithm.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dd0/classrtt_1_1ai_1_1control_1_1BBTrajectory2D.html">BBTrajectory2D</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class that computes and stores 2 dimensional bang-bang trajectories. These can compute close to time-optimal trajectories in 2 dimensions.  <a href="../../dd/dd0/classrtt_1_1ai_1_1control_1_1BBTrajectory2D.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/deb/classrtt_1_1ai_1_1control_1_1PathPointNode.html">PathPointNode</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/daf/classrtt_1_1ai_1_1control_1_1CollisionCalculations.html">CollisionCalculations</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">This class is responsible for performing collision calculations.  <a href="../../d8/daf/classrtt_1_1ai_1_1control_1_1CollisionCalculations.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/daa/classrtt_1_1ai_1_1control_1_1BBTPathTracking.html">BBTPathTracking</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Path tracking algorithm for BBT.  <a href="../../d3/daa/classrtt_1_1ai_1_1control_1_1BBTPathTracking.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d66/structrtt_1_1ai_1_1control_1_1TimedPos1D.html">TimedPos1D</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class that computes the overshooting destination of the robot when it can not reach the target position in time with a full stop. Based on TIGERs TDP 2023 (<a href="https://tdp.roboteamtwente.nl/static/tdps/144/tdp.html">https://tdp.roboteamtwente.nl/static/tdps/144/tdp.html</a>). Implementation is based on their code release of 2023.  <a href="../../dd/d66/structrtt_1_1ai_1_1control_1_1TimedPos1D.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d48/classrtt_1_1ai_1_1control_1_1DensePathTracking.html">DensePathTracking</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Path tracking algorithm. See method computePath for details.  <a href="../../d6/d48/classrtt_1_1ai_1_1control_1_1DensePathTracking.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d88/classrtt_1_1ai_1_1control_1_1PathTrackingAlgorithm.html">PathTrackingAlgorithm</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Base class of the path tracking algorithms.  <a href="../../d2/d88/classrtt_1_1ai_1_1control_1_1PathTrackingAlgorithm.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d38/classrtt_1_1ai_1_1control_1_1PidTracking.html">PidTracking</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/df8/classrtt_1_1ai_1_1control_1_1OvershootComputations.html">OvershootComputations</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html">PositionControl</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The main position control class. Use this for your robot position control requirements.  <a href="../../dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d4f/classrtt_1_1ai_1_1control_1_1PositionControlUtils.html">PositionControlUtils</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class containing useful functions used in position control.  <a href="../../dd/d4f/classrtt_1_1ai_1_1control_1_1PositionControlUtils.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:a74bc81599aafe16324411bbba7044c83"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d4f/namespacertt_1_1ai_1_1control.html#a74bc81599aafe16324411bbba7044c83">TEST</a> (BBTrajectories, onlyDecelerate)</td></tr>
+<tr class="separator:a74bc81599aafe16324411bbba7044c83"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afbf107facc5ed4f9b5b07be8588c4cfb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d4f/namespacertt_1_1ai_1_1control.html#afbf107facc5ed4f9b5b07be8588c4cfb">TEST</a> (BBTrajectories, onlyDecelerateOtherWay)</td></tr>
+<tr class="separator:afbf107facc5ed4f9b5b07be8588c4cfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<hr/><h2 class="groupheader">Class Documentation</h2>
+<a name="dc/d46/structrtt_1_1ai_1_1control_1_1BBTrajectoryPart" id="dc/d46/structrtt_1_1ai_1_1control_1_1BBTrajectoryPart"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#dc/d46/structrtt_1_1ai_1_1control_1_1BBTrajectoryPart">&#9670;&nbsp;</a></span>rtt::ai::control::BBTrajectoryPart</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct rtt::ai::control::BBTrajectoryPart</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<div class="textblock"><p>Represents a segment of a one-dimensional bang-bang trajectory. </p>
+</div><table class="fieldtable">
+<tr><th colspan="3">Class Members</th></tr>
+<tr><td class="fieldtype">
+<a id="a31377dd128c14b34370d5e782c1b9b5a"></a>double</td>
+<td class="fieldname">
+acc</td>
+<td class="fielddoc">
+<p>Acceleration of the current trajectory part </p>
+</td></tr>
+<tr><td class="fieldtype">
+<a id="aca5cb78b33ca7d01f8212131fdd5b73a"></a>double</td>
+<td class="fieldname">
+startPos</td>
+<td class="fielddoc">
+<p>Position at the start of the trajectory part </p>
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a6c3d0515e19a6c2df5240d5226e0f65c"></a>double</td>
+<td class="fieldname">
+startVel</td>
+<td class="fielddoc">
+<p>Velocity at the start of the trajectory part </p>
+</td></tr>
+<tr><td class="fieldtype">
+<a id="ad99b338fbfa97dfe4abe91c64e7b6b5c"></a>double</td>
+<td class="fieldname">
+tEnd</td>
+<td class="fielddoc">
+<p>Time it takes to get to the end of trajectory part </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="a74bc81599aafe16324411bbba7044c83"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a74bc81599aafe16324411bbba7044c83">&#9670;&nbsp;</a></span>TEST() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">rtt::ai::control::TEST </td>
+          <td>(</td>
+          <td class="paramtype">BBTrajectories&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">onlyDecelerate&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="afbf107facc5ed4f9b5b07be8588c4cfb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afbf107facc5ed4f9b5b07be8588c4cfb">&#9670;&nbsp;</a></span>TEST() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">rtt::ai::control::TEST </td>
+          <td>(</td>
+          <td class="paramtype">BBTrajectories&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">onlyDecelerateOtherWay&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

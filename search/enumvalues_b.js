@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['ourball_2731',['OURBALL',['../d7/d54/classrtt_1_1ai_1_1BallPossession.html#aac3b04b1d08a6333049eba6c02d5ebc9a79139c94ea7f68a34cecaaeb06971635',1,'rtt::ai::BallPossession']]],
-  ['ownrobot_2732',['OWNROBOT',['../d0/dde/namespacertt_1_1BB.html#a90ddec283fc8250879e878c985a14524a0bbf35af9740d687f436ae353842751e',1,'rtt::BB']]]
+  ['required_2471',['REQUIRED',['../d4/dcc/namespacertt_1_1ai.html#a749f4888e489115d32ef0cf1417cd617aebdf9721be38d1fc1cd6db8c737d1be0',1,'rtt::ai']]],
+  ['running_2472',['Running',['../d5/d14/namespacertt_1_1ai_1_1stp.html#a3055c554f88c993b2e023c90717631d3a5bda814c4aedb126839228f1a3d92f09',1,'rtt::ai::stp']]]
 ];

@@ -11,5 +11,6 @@ var structrtt_1_1ai_1_1GameState =
     [ "isFollowUpCommand", "d6/dc7/structrtt_1_1ai_1_1GameState.html#af40285784dad3a8f9bdd4e808c3a8260", null ],
     [ "keeperId", "d6/dc7/structrtt_1_1ai_1_1GameState.html#aa1042727dffb23cf07d39cdd3341375b", null ],
     [ "maxAllowedRobots", "d6/dc7/structrtt_1_1ai_1_1GameState.html#a70b400b1f10460f57578e8b6522f4a4f", null ],
-    [ "ruleSet", "d6/dc7/structrtt_1_1ai_1_1GameState.html#a06b1a3463471e9b53a5a2feaab7ddadb", null ]
+    [ "ruleSet", "d6/dc7/structrtt_1_1ai_1_1GameState.html#a06b1a3463471e9b53a5a2feaab7ddadb", null ],
+    [ "timeLeft", "d6/dc7/structrtt_1_1ai_1_1GameState.html#aecc65cc9081665a780c34551b91d725b", null ]
 ];

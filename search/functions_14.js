@@ -1,9 +1,13 @@
 var searchData=
 [
-  ['whichrobothasball_2319',['whichRobotHasBall',['../d6/d08/classrtt_1_1world_1_1view_1_1WorldDataView.html#a859953f059e33bf9dceb327a8dccd629',1,'rtt::world::view::WorldDataView']]],
-  ['world_2320',['World',['../da/d39/classrtt_1_1world_1_1World.html#aa38b84c189b17e15649a9a58b4dbd346',1,'rtt::world::World::World(World const &amp;)=delete'],['../da/d39/classrtt_1_1world_1_1World.html#a64558ef47d03743ba2b2b61ce97a083b',1,'rtt::world::World::World(World &amp;&amp;)=delete'],['../da/d39/classrtt_1_1world_1_1World.html#a01920a9431542b4cd236dbf26e9b58e1',1,'rtt::world::World::World()']]],
-  ['world_5fmax_5fage_5fmilliseconds_2321',['WORLD_MAX_AGE_MILLISECONDS',['../d9/dc5/classrtt_1_1ai_1_1Constants.html#ab5890b8d3712aa04ba868658d49597da',1,'rtt::ai::Constants']]],
-  ['worlddata_2322',['WorldData',['../d5/db9/classrtt_1_1world_1_1WorldData.html#a5ea8862e190dc68870a8de3d1069c0d3',1,'rtt::world::WorldData::WorldData(const World *data, proto::World &amp;protoMsg) noexcept'],['../d5/db9/classrtt_1_1world_1_1WorldData.html#a9aa66bbdd33aa6a0ba30a63ac1861888',1,'rtt::world::WorldData::WorldData()=default'],['../d5/db9/classrtt_1_1world_1_1WorldData.html#a37cc6a84ed8d108ea24f62c0e5a21ef2',1,'rtt::world::WorldData::WorldData(WorldData const &amp;) noexcept'],['../d5/db9/classrtt_1_1world_1_1WorldData.html#a23004b6389dde87425b9825ec52d135a',1,'rtt::world::WorldData::WorldData(WorldData &amp;&amp;old)=default']]],
-  ['worlddataview_2323',['WorldDataView',['../d6/d08/classrtt_1_1world_1_1view_1_1WorldDataView.html#ab41aa608b2e0f97399de74f361adbe15',1,'rtt::world::view::WorldDataView::WorldDataView(WorldData const *_ptr) noexcept'],['../d6/d08/classrtt_1_1world_1_1view_1_1WorldDataView.html#a371ea20dca5100cc3d3761104ca40436',1,'rtt::world::view::WorldDataView::WorldDataView(WorldDataView const &amp;o)=default'],['../d6/d08/classrtt_1_1world_1_1view_1_1WorldDataView.html#a5622bfe81caccb8d52fdb375d90654bc',1,'rtt::world::view::WorldDataView::WorldDataView(WorldDataView &amp;&amp;o)=default']]],
-  ['worldobjects_2324',['WorldObjects',['../de/d06/classrtt_1_1BB_1_1WorldObjects.html#a9464deea328dab65431edab4e16d0737',1,'rtt::BB::WorldObjects']]]
+  ['_7eball_2109',['~Ball',['../dd/db7/classrtt_1_1world_1_1ball_1_1Ball.html#abeb10c401264459b3f94ec881cc9b1f4',1,'rtt::world::ball::Ball']]],
+  ['_7eballview_2110',['~BallView',['../d8/d17/classrtt_1_1world_1_1view_1_1BallView.html#a19d0e1e63422ce93ba1c9365941bddb9',1,'rtt::world::view::BallView']]],
+  ['_7ebaseevaluation_2111',['~BaseEvaluation',['../d1/d1a/classrtt_1_1ai_1_1stp_1_1evaluation_1_1BaseEvaluation.html#aaa39077019e69659cd676efc7d871504',1,'rtt::ai::stp::evaluation::BaseEvaluation']]],
+  ['_7edealer_2112',['~Dealer',['../d7/ddc/classrtt_1_1ai_1_1Dealer.html#aad8a4055abc33454fce6cf0966ee3d9e',1,'rtt::ai::Dealer']]],
+  ['_7einterfacegateway_2113',['~InterfaceGateway',['../d5/db9/classrtt_1_1ai_1_1gui_1_1net_1_1InterfaceGateway.html#a978cc49b8539e9e858892bb7ca2dca78',1,'rtt::ai::gui::net::InterfaceGateway']]],
+  ['_7eplay_2114',['~Play',['../d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#ae1fb3941c44c1eed411a838fca110a96',1,'rtt::ai::stp::Play']]],
+  ['_7erobotview_2115',['~RobotView',['../d3/de7/classrtt_1_1world_1_1view_1_1RobotView.html#ad02151cd2fd9f53ee480644cbe76ce04',1,'rtt::world::view::RobotView']]],
+  ['_7erole_2116',['~Role',['../d2/d9f/classrtt_1_1ai_1_1stp_1_1Role.html#a38530309ce59741b0017ef85e9a3c836',1,'rtt::ai::stp::Role']]],
+  ['_7eskill_2117',['~Skill',['../da/da2/classrtt_1_1ai_1_1stp_1_1Skill.html#a3de2039fccd695e7d389e01b678ceaba',1,'rtt::ai::stp::Skill']]],
+  ['_7etactic_2118',['~Tactic',['../d6/db5/classrtt_1_1ai_1_1stp_1_1Tactic.html#a7592dfaa2c50f9f638bc9739175614ac',1,'rtt::ai::stp::Tactic']]]
 ];

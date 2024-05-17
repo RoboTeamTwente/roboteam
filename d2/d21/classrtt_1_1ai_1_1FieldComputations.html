@@ -107,15 +107,18 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a714e1656650ae507cb3729297ca19e76"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d21/classrtt_1_1ai_1_1FieldComputations.html#a714e1656650ae507cb3729297ca19e76">getBallPositionAtTime</a> (const <a class="el" href="../../dd/db7/classrtt_1_1world_1_1ball_1_1Ball.html">rtt::world::ball::Ball</a> &amp;ball, double time)</td></tr>
 <tr class="memdesc:a714e1656650ae507cb3729297ca19e76"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the expected ball position after a certain amount of time.  <a href="../../d2/d21/classrtt_1_1ai_1_1FieldComputations.html#a714e1656650ae507cb3729297ca19e76">More...</a><br /></td></tr>
 <tr class="separator:a714e1656650ae507cb3729297ca19e76"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afaf2328f2ad95c4dcc4216bf2c54b8f3"><td class="memItemLeft" align="right" valign="top">static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d21/classrtt_1_1ai_1_1FieldComputations.html#afaf2328f2ad95c4dcc4216bf2c54b8f3">getBallTimeAtPosition</a> (const <a class="el" href="../../dd/db7/classrtt_1_1world_1_1ball_1_1Ball.html">rtt::world::ball::Ball</a> &amp;ball, const <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;point)</td></tr>
+<tr class="memdesc:afaf2328f2ad95c4dcc4216bf2c54b8f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the expected time it takes for the ball to reach a certain position.  <a href="../../d2/d21/classrtt_1_1ai_1_1FieldComputations.html#afaf2328f2ad95c4dcc4216bf2c54b8f3">More...</a><br /></td></tr>
+<tr class="separator:afaf2328f2ad95c4dcc4216bf2c54b8f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abbbe5c1834f2376283ab30952150c3d1"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d21/classrtt_1_1ai_1_1FieldComputations.html#abbbe5c1834f2376283ab30952150c3d1">pointIsValidPosition</a> (const rtt::Field &amp;field, const <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;point, <a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#d8/dcb/structrtt_1_1ai_1_1stp_1_1AvoidObjects">stp::AvoidObjects</a> avoidObjects={}, double fieldMargin=0.0)</td></tr>
 <tr class="memdesc:abbbe5c1834f2376283ab30952150c3d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check whether a given point is a valid position given which parts of the field should be avoided (note that shouldAvoidBall is not taken into consideration)  <a href="../../d2/d21/classrtt_1_1ai_1_1FieldComputations.html#abbbe5c1834f2376283ab30952150c3d1">More...</a><br /></td></tr>
 <tr class="separator:abbbe5c1834f2376283ab30952150c3d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac6ac44afce2362338e2881d0c729a9d8"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d21/classrtt_1_1ai_1_1FieldComputations.html#ac6ac44afce2362338e2881d0c729a9d8">projectPointInField</a> (const rtt::Field &amp;field, <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> point, double margin=0)</td></tr>
 <tr class="memdesc:ac6ac44afce2362338e2881d0c729a9d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Project given position to within the field with a certain margin.  <a href="../../d2/d21/classrtt_1_1ai_1_1FieldComputations.html#ac6ac44afce2362338e2881d0c729a9d8">More...</a><br /></td></tr>
 <tr class="separator:ac6ac44afce2362338e2881d0c729a9d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acf272ead928f66a149f405724e4ad13c"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d21/classrtt_1_1ai_1_1FieldComputations.html#acf272ead928f66a149f405724e4ad13c">projectPointOutOfDefenseArea</a> (const rtt::Field &amp;field, <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> point)</td></tr>
-<tr class="memdesc:acf272ead928f66a149f405724e4ad13c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Project given position to outside the defense areas with a certain margin.  <a href="../../d2/d21/classrtt_1_1ai_1_1FieldComputations.html#acf272ead928f66a149f405724e4ad13c">More...</a><br /></td></tr>
-<tr class="separator:acf272ead928f66a149f405724e4ad13c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3c618d4aa00d28bb4748c91ab4bdfc88"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d21/classrtt_1_1ai_1_1FieldComputations.html#a3c618d4aa00d28bb4748c91ab4bdfc88">projectPointOutOfDefenseArea</a> (const rtt::Field &amp;field, <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> point, bool outOurDefenseArea=true, bool outTheirDefenseArea=true)</td></tr>
+<tr class="memdesc:a3c618d4aa00d28bb4748c91ab4bdfc88"><td class="mdescLeft">&#160;</td><td class="mdescRight">Project given position to outside the defense areas with a certain margin.  <a href="../../d2/d21/classrtt_1_1ai_1_1FieldComputations.html#a3c618d4aa00d28bb4748c91ab4bdfc88">More...</a><br /></td></tr>
+<tr class="separator:a3c618d4aa00d28bb4748c91ab4bdfc88"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae6d292f855e7dadb89b1303a51b2a71f"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d21/classrtt_1_1ai_1_1FieldComputations.html#ae6d292f855e7dadb89b1303a51b2a71f">projectPointToValidPosition</a> (const rtt::Field &amp;field, <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> point, <a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#d8/dcb/structrtt_1_1ai_1_1stp_1_1AvoidObjects">stp::AvoidObjects</a> avoidObjects={})</td></tr>
 <tr class="memdesc:ae6d292f855e7dadb89b1303a51b2a71f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Project given position to a valid position given which parts of the field should be avoided (note that shouldAvoidBall is not taken into consideration)  <a href="../../d2/d21/classrtt_1_1ai_1_1FieldComputations.html#ae6d292f855e7dadb89b1303a51b2a71f">More...</a><br /></td></tr>
 <tr class="separator:ae6d292f855e7dadb89b1303a51b2a71f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -242,6 +245,51 @@ Static Private Attributes</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">ball</td><td>The current ball position </td></tr>
     <tr><td class="paramname">time</td><td>The time in seconds after which the expected ball position should be returned </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="afaf2328f2ad95c4dcc4216bf2c54b8f3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afaf2328f2ad95c4dcc4216bf2c54b8f3">&#9670;&nbsp;</a></span>getBallTimeAtPosition()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">double rtt::ai::FieldComputations::getBallTimeAtPosition </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="../../dd/db7/classrtt_1_1world_1_1ball_1_1Ball.html">rtt::world::ball::Ball</a> &amp;&#160;</td>
+          <td class="paramname"><em>ball</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;&#160;</td>
+          <td class="paramname"><em>point</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the expected time it takes for the ball to reach a certain position. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ball</td><td>The current ball position </td></tr>
+    <tr><td class="paramname">point</td><td>The point for which the time is calculated </td></tr>
   </table>
   </dd>
 </dl>
@@ -1105,8 +1153,8 @@ Static Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="acf272ead928f66a149f405724e4ad13c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acf272ead928f66a149f405724e4ad13c">&#9670;&nbsp;</a></span>projectPointOutOfDefenseArea()</h2>
+<a id="a3c618d4aa00d28bb4748c91ab4bdfc88"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3c618d4aa00d28bb4748c91ab4bdfc88">&#9670;&nbsp;</a></span>projectPointOutOfDefenseArea()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1124,7 +1172,19 @@ Static Private Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a>&#160;</td>
-          <td class="paramname"><em>point</em>&#160;</td>
+          <td class="paramname"><em>point</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>outOurDefenseArea</em> = <code>true</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>outTheirDefenseArea</em> = <code>true</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1144,6 +1204,8 @@ Static Private Attributes</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">field</td><td>The field class used to determine where the defense area is </td></tr>
     <tr><td class="paramname">point</td><td>The position to be projected to outside of the defense area </td></tr>
+    <tr><td class="paramname">outOurDefenseArea</td><td>True if the point should be projected outside of our defense area, false if the point should be projected outside of the opponents defense area </td></tr>
+    <tr><td class="paramname">outTheirDefenseArea</td><td>True if the point should be projected outside of the opponents defense area, false if the point should be projected outside of our defense area </td></tr>
   </table>
   </dd>
 </dl>

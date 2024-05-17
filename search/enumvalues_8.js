@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['looseball_2724',['LOOSEBALL',['../d7/d54/classrtt_1_1ai_1_1BallPossession.html#aac3b04b1d08a6333049eba6c02d5ebc9a239b06392e88c64a790d771786df469c',1,'rtt::ai::BallPossession']]],
-  ['low_5fpriority_2725',['LOW_PRIORITY',['../d4/dcc/namespacertt_1_1ai.html#a749f4888e489115d32ef0cf1417cd617a22fdb5e22079d83faa87d80ea2165e0e',1,'rtt::ai']]]
+  ['normal_5fstart_2454',['NORMAL_START',['../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843abca20722938852a1d96f3ec869b939cc',1,'rtt']]],
+  ['normalorfreekickusgamestate_2455',['NormalOrFreeKickUsGameState',['../d5/d14/namespacertt_1_1ai_1_1stp.html#a9b1a79ba58c1300d9f6f0e073f9d7db2ab3a6430b6ea1e49bb0d83a901f1a5b08',1,'rtt::ai::stp']]],
+  ['normalplaygamestate_2456',['NormalPlayGameState',['../d5/d14/namespacertt_1_1ai_1_1stp.html#a9b1a79ba58c1300d9f6f0e073f9d7db2adcda5e2a3f4ea07543fe7d8d642d027b',1,'rtt::ai::stp']]]
 ];

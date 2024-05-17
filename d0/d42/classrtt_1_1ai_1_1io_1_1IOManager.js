@@ -3,7 +3,6 @@ var classrtt_1_1ai_1_1io_1_1IOManager =
     [ "addCameraAngleToRobotCommands", "d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a72fefaf49186393174f420b3c08d0173", null ],
     [ "getState", "d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a7a60af9ed7afea21381003f92e05c89e", null ],
     [ "getStateAgeMs", "d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a415e63d61ced7bb424317265035fd2e1", null ],
-    [ "getStateTimeMs", "d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a2647280920c888c1d109f3c15350d3b9", null ],
     [ "handleState", "d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#ad06a4509dfdb3f7c6013799b27ed2c20", null ],
     [ "init", "d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#ace78a184eddf90ac0b390bc031c10da0", null ],
     [ "obtainTeamColorChannel", "d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a45d126977bc28dc4321d78c6a3e4fc8c", null ],

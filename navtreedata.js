@@ -76,19 +76,18 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"d1/d9a/GoalShotEvaluation_8h_source.html",
-"d3/da6/classrtt_1_1ai_1_1stp_1_1role_1_1PassReceiver.html#a0575952e375783fee4350fcb97be888c",
-"d4/d99/classrtt_1_1world_1_1robot_1_1Robot.html#a97437af3584cf8be229aca8658681e39",
-"d5/d14/namespacertt_1_1ai_1_1stp.html#d9/d71/structrtt_1_1ai_1_1stp_1_1InterceptionInfo",
-"d6/d08/classrtt_1_1world_1_1view_1_1WorldDataView.html#ab41aa608b2e0f97399de74f361adbe15",
-"d7/d73/namespacertt_1_1ai_1_1stp_1_1gen.html#ad3d0ebb02049b8fc34765bd5a265b854",
-"d8/d8e/classrtt_1_1ai_1_1stp_1_1tactic_1_1GetBall.html#a0dd3439d999970125264ce7fccadff49",
-"d9/df0/classrtt_1_1ai_1_1stp_1_1play_1_1KickOffUsPrepare.html",
-"db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#aacd087121e51233fb24c4dcb4c00161a",
-"dc/d3c/roboteam__ai_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627",
-"dd/daf/classrtt_1_1ai_1_1stp_1_1play_1_1DefendPass.html#aa20291b5cee34414dfb81aa0fd33713f",
-"de/dc9/Orbit_8h_source.html",
-"dir_c3efef42c838d1c090db289b109ed89c.html"
+"d1/d22/classrtt_1_1ai_1_1stp_1_1evaluation_1_1NormalPlayGameStateEvaluation.html#a73444e1b39ab0b39e20dbf6914c5b35a",
+"d3/d66/OrbitKick_8cpp.html",
+"d4/d99/classrtt_1_1world_1_1robot_1_1Robot.html#a81f495905fcfae206971b762bc8aef58",
+"d5/d3d/classrtt_1_1ai_1_1stp_1_1tactic_1_1OrbitKick.html#af773c74e22de969c6e044f88f1ff7cc4",
+"d6/d47/CorrectPlayTest_8cpp.html#a1edb5baaa131732586acb7a2daca34aa",
+"d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#a7439c6149abbc461640c9ecdad2ba8d6",
+"d8/dd4/RefCommand_8h.html#ac458fd2464c54331a04fc2fd54d82843abf2d798abfe8267da4f101692b6cfecd",
+"da/d39/classrtt_1_1world_1_1World.html#a81bed3b562ad2ce5d9974f64551ce24f",
+"db/dd1/classrtt_1_1ai_1_1stp_1_1tactic_1_1ChipAtPos.html#a0dd3439d999970125264ce7fccadff49",
+"dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843abafba8df79d3bc511dadfaf088ca4382",
+"de/d0f/classrtt_1_1ai_1_1stp_1_1TestTactic.html#a2406ddec88191f369b72206849a1d9a4",
+"dir_0d79697be3e420ba6b3bf383eedc626a.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

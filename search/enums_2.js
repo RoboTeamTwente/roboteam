@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['dealerflagpriority_2666',['DealerFlagPriority',['../d4/dcc/namespacertt_1_1ai.html#a749f4888e489115d32ef0cf1417cd617',1,'rtt::ai']]],
-  ['dealerflagtitle_2667',['DealerFlagTitle',['../d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67',1,'rtt::ai']]]
+  ['kickorchip_2406',['KickOrChip',['../d5/d14/namespacertt_1_1ai_1_1stp.html#a8a168b78725926f5901d2f6370784113',1,'rtt::ai::stp']]]
 ];

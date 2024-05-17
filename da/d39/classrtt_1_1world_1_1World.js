@@ -19,7 +19,6 @@ var classrtt_1_1world_1_1World =
     [ "toHistory", "da/d39/classrtt_1_1world_1_1World.html#a2cfed82ae1c49dbbad14faba417c5bfc", null ],
     [ "updateField", "da/d39/classrtt_1_1world_1_1World.html#ac6d5c8cfd2a11317d19dcdb2770785ef", null ],
     [ "updateField", "da/d39/classrtt_1_1world_1_1World.html#a840a30aa25c67c3a11ac7cd003ef22f3", null ],
-    [ "updatePositionControl", "da/d39/classrtt_1_1world_1_1World.html#a2dae5f1da4f100d9b65971a24fdd7229", null ],
     [ "updateTickTime", "da/d39/classrtt_1_1world_1_1World.html#a0529262f6e866fa0b92fe599e42cd0f8", null ],
     [ "updateWorld", "da/d39/classrtt_1_1world_1_1World.html#a7a081491cf90e5710bb464d553ff9790", null ],
     [ "currentField", "da/d39/classrtt_1_1world_1_1World.html#a1a54b6bb7f577d2c218b389e62738b27", null ],

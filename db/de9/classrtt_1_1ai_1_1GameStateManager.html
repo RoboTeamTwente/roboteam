@@ -100,12 +100,9 @@ $(document).ready(function(){initNavTree('db/de9/classrtt_1_1ai_1_1GameStateMana
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a244fc9340e4f2daaa4023f9caa0d883e"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/de9/classrtt_1_1ai_1_1GameStateManager.html#a244fc9340e4f2daaa4023f9caa0d883e">setRefereeData</a> (proto::Referee <a class="el" href="../../db/de9/classrtt_1_1ai_1_1GameStateManager.html#ab607cd02278732ce47b05d9d0126e564">refMsg</a>, const <a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">rtt::world::World</a> *data)</td></tr>
+<tr class="memitem:a244fc9340e4f2daaa4023f9caa0d883e"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/de9/classrtt_1_1ai_1_1GameStateManager.html#a244fc9340e4f2daaa4023f9caa0d883e">setRefereeData</a> (proto::Referee refMsg, const <a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">rtt::world::World</a> *data)</td></tr>
 <tr class="memdesc:a244fc9340e4f2daaa4023f9caa0d883e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Setter for the referee data.  <a href="../../db/de9/classrtt_1_1ai_1_1GameStateManager.html#a244fc9340e4f2daaa4023f9caa0d883e">More...</a><br /></td></tr>
 <tr class="separator:a244fc9340e4f2daaa4023f9caa0d883e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae0a709e5fb0b8622ee7f76fa0cb02be9"><td class="memItemLeft" align="right" valign="top">static proto::Referee&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/de9/classrtt_1_1ai_1_1GameStateManager.html#ae0a709e5fb0b8622ee7f76fa0cb02be9">getRefereeData</a> ()</td></tr>
-<tr class="memdesc:ae0a709e5fb0b8622ee7f76fa0cb02be9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for the referee data.  <a href="../../db/de9/classrtt_1_1ai_1_1GameStateManager.html#ae0a709e5fb0b8622ee7f76fa0cb02be9">More...</a><br /></td></tr>
-<tr class="separator:ae0a709e5fb0b8622ee7f76fa0cb02be9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa66ae0f4cf2b5e87bf889d43b0cda07c"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843">RefCommand</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/de9/classrtt_1_1ai_1_1GameStateManager.html#aa66ae0f4cf2b5e87bf889d43b0cda07c">getCommandFromRefMsg</a> (proto::Referee_Command command, bool isYellow)</td></tr>
 <tr class="memdesc:aa66ae0f4cf2b5e87bf889d43b0cda07c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts the referee command to a RefCommand.  <a href="../../db/de9/classrtt_1_1ai_1_1GameStateManager.html#aa66ae0f4cf2b5e87bf889d43b0cda07c">More...</a><br /></td></tr>
 <tr class="separator:aa66ae0f4cf2b5e87bf889d43b0cda07c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -124,8 +121,12 @@ Static Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-static-attribs"></a>
 Static Private Attributes</h2></td></tr>
-<tr class="memitem:ab607cd02278732ce47b05d9d0126e564"><td class="memItemLeft" align="right" valign="top">static proto::Referee&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/de9/classrtt_1_1ai_1_1GameStateManager.html#ab607cd02278732ce47b05d9d0126e564">refMsg</a></td></tr>
-<tr class="separator:ab607cd02278732ce47b05d9d0126e564"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2fbd62f7488434a218853dfb17f0c36b"><td class="memItemLeft" align="right" valign="top">static proto::Referee_TeamInfo&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/de9/classrtt_1_1ai_1_1GameStateManager.html#a2fbd62f7488434a218853dfb17f0c36b">yellowTeam</a></td></tr>
+<tr class="separator:a2fbd62f7488434a218853dfb17f0c36b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5e46fec9595c0e29ef4a820429b02c1e"><td class="memItemLeft" align="right" valign="top">static proto::Referee_TeamInfo&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/de9/classrtt_1_1ai_1_1GameStateManager.html#a5e46fec9595c0e29ef4a820429b02c1e">blueTeam</a></td></tr>
+<tr class="separator:a5e46fec9595c0e29ef4a820429b02c1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab50a6288d33a0ca53e474b91fef408de"><td class="memItemLeft" align="right" valign="top">static proto::Referee_Point&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/de9/classrtt_1_1ai_1_1GameStateManager.html#ab50a6288d33a0ca53e474b91fef408de">refereeDesignatedPosition</a></td></tr>
+<tr class="separator:ab50a6288d33a0ca53e474b91fef408de"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acee6100d4704ad3654bcac597efcb6e9"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="../../dc/d52/classrtt_1_1ai_1_1StrategyManager.html">StrategyManager</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/de9/classrtt_1_1ai_1_1GameStateManager.html#acee6100d4704ad3654bcac597efcb6e9">strategymanager</a></td></tr>
 <tr class="separator:acee6100d4704ad3654bcac597efcb6e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa6526bff46d12b87ec56028d7dfbffbd"><td class="memItemLeft" align="right" valign="top">static std::mutex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/de9/classrtt_1_1ai_1_1GameStateManager.html#aa6526bff46d12b87ec56028d7dfbffbd">refMsgLock</a></td></tr>
@@ -242,34 +243,6 @@ Static Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ae0a709e5fb0b8622ee7f76fa0cb02be9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae0a709e5fb0b8622ee7f76fa0cb02be9">&#9670;&nbsp;</a></span>getRefereeData()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">proto::Referee rtt::ai::GameStateManager::getRefereeData </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Getter for the referee data. </p>
-<dl class="section return"><dt>Returns</dt><dd>The referee data </dd></dl>
-
-</div>
-</div>
 <a id="a3e4c49fd7aff3554bc992b407bd5912f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3e4c49fd7aff3554bc992b407bd5912f">&#9670;&nbsp;</a></span>getRefereeDesignatedPosition()</h2>
 
@@ -378,8 +351,8 @@ Static Private Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="ab607cd02278732ce47b05d9d0126e564"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab607cd02278732ce47b05d9d0126e564">&#9670;&nbsp;</a></span>refMsg</h2>
+<a id="a5e46fec9595c0e29ef4a820429b02c1e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5e46fec9595c0e29ef4a820429b02c1e">&#9670;&nbsp;</a></span>blueTeam</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -388,7 +361,7 @@ Static Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">proto::Referee rtt::ai::GameStateManager::refMsg</td>
+          <td class="memname">proto::Referee_TeamInfo rtt::ai::GameStateManager::blueTeam</td>
         </tr>
       </table>
   </td>
@@ -397,7 +370,30 @@ Static Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Data from the referee </p>
+<p>Team info for the blue team </p>
+
+</div>
+</div>
+<a id="ab50a6288d33a0ca53e474b91fef408de"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab50a6288d33a0ca53e474b91fef408de">&#9670;&nbsp;</a></span>refereeDesignatedPosition</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">proto::Referee_Point rtt::ai::GameStateManager::refereeDesignatedPosition</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Designated position from the referee </p>
 
 </div>
 </div>
@@ -444,6 +440,29 @@ Static Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <p>Manager that updates the play according to the game state </p>
+
+</div>
+</div>
+<a id="a2fbd62f7488434a218853dfb17f0c36b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2fbd62f7488434a218853dfb17f0c36b">&#9670;&nbsp;</a></span>yellowTeam</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">proto::Referee_TeamInfo rtt::ai::GameStateManager::yellowTeam</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Team info for the yellow team </p>
 
 </div>
 </div>

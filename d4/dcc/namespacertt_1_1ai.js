@@ -14,7 +14,6 @@ var namespacertt_1_1ai =
     [ "StrategyManager", "dc/d52/classrtt_1_1ai_1_1StrategyManager.html", "dc/d52/classrtt_1_1ai_1_1StrategyManager" ],
     [ "BallPossession", "d7/d54/classrtt_1_1ai_1_1BallPossession.html", "d7/d54/classrtt_1_1ai_1_1BallPossession" ],
     [ "FieldComputations", "d2/d21/classrtt_1_1ai_1_1FieldComputations.html", "d2/d21/classrtt_1_1ai_1_1FieldComputations" ],
-    [ "pidVals", "d4/dcc/namespacertt_1_1ai.html#acc65523a472ce38a6f294d661c234725", null ],
     [ "DealerFlagPriority", "d4/dcc/namespacertt_1_1ai.html#a749f4888e489115d32ef0cf1417cd617", [
       [ "CARD", "d4/dcc/namespacertt_1_1ai.html#a749f4888e489115d32ef0cf1417cd617a5a81822ea736ae6bf53dc995d87203df", null ],
       [ "LOW_PRIORITY", "d4/dcc/namespacertt_1_1ai.html#a749f4888e489115d32ef0cf1417cd617a22fdb5e22079d83faa87d80ea2165e0e", null ],

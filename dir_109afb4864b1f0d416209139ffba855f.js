@@ -12,8 +12,8 @@ var dir_109afb4864b1f0d416209139ffba855f =
     [ "GetBehindBallInDirection.h", "db/d51/GetBehindBallInDirection_8h.html", [
       [ "GetBehindBallInDirection", "d9/d65/classrtt_1_1ai_1_1stp_1_1tactic_1_1GetBehindBallInDirection.html", "d9/d65/classrtt_1_1ai_1_1stp_1_1tactic_1_1GetBehindBallInDirection" ]
     ] ],
-    [ "KickAtPos.h", "da/d73/KickAtPos_8h.html", [
-      [ "KickAtPos", "db/d9e/classrtt_1_1ai_1_1stp_1_1tactic_1_1KickAtPos.html", "db/d9e/classrtt_1_1ai_1_1stp_1_1tactic_1_1KickAtPos" ]
+    [ "InstantKick.h", "d7/d5a/InstantKick_8h.html", [
+      [ "InstantKick", "d0/df3/classrtt_1_1ai_1_1stp_1_1tactic_1_1InstantKick.html", "d0/df3/classrtt_1_1ai_1_1stp_1_1tactic_1_1InstantKick" ]
     ] ],
     [ "OrbitKick.h", "da/d2b/OrbitKick_8h.html", [
       [ "OrbitKick", "d5/d3d/classrtt_1_1ai_1_1stp_1_1tactic_1_1OrbitKick.html", "d5/d3d/classrtt_1_1ai_1_1stp_1_1tactic_1_1OrbitKick" ]

@@ -93,12 +93,6 @@ $(document).ready(function(){initNavTree('functions_g.html',''); initResizable()
 <li>GameState()
 : <a class="el" href="d6/dc7/structrtt_1_1ai_1_1GameState.html#a553a6c06f4073342e4e10197c5a459a0">rtt::ai::GameState</a>
 </li>
-<li>gameState
-: <a class="el" href="de/d06/classrtt_1_1BB_1_1WorldObjects.html#a166ea79d07b3379374c3c9a3f0df89fd">rtt::BB::WorldObjects</a>
-</li>
-<li>gameStateManager
-: <a class="el" href="de/d06/classrtt_1_1BB_1_1WorldObjects.html#a1bae573dc843db2d2dc90d2717807ac8">rtt::BB::WorldObjects</a>
-</li>
 <li>gameStates
 : <a class="el" href="dc/d52/classrtt_1_1ai_1_1StrategyManager.html#abf51a0df5b546241a0d653b8966226c1">rtt::ai::StrategyManager</a>
 </li>
@@ -107,6 +101,9 @@ $(document).ready(function(){initNavTree('functions_g.html',''); initResizable()
 </li>
 <li>generateField()
 : <a class="el" href="de/da9/classtesthelpers_1_1FieldHelper.html#a0b90690d01d010bf59891e71a56853e4">testhelpers::FieldHelper</a>
+</li>
+<li>generateNormalizedPoints()
+: <a class="el" href="dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#a13095d31e027fd9c335befd29855d3a4">rtt::ai::control::PositionControl</a>
 </li>
 <li>generateRandomBall()
 : <a class="el" href="d6/d74/classtesthelpers_1_1WorldHelper.html#a208e8e5321b551038959767ffc15c166">testhelpers::WorldHelper</a>
@@ -118,11 +115,11 @@ $(document).ready(function(){initNavTree('functions_g.html',''); initResizable()
 : <a class="el" href="d6/d74/classtesthelpers_1_1WorldHelper.html#ab0fe933bb083e04a9ce4ee772a6ac5b6">testhelpers::WorldHelper</a>
 </li>
 <li>generateSyncedTrajectory()
-: <a class="el" href="d7/dbe/classrtt_1_1BB_1_1BBTrajectory2D.html#a98cb3b6c749009b9ca98648057461df8">rtt::BB::BBTrajectory2D</a>
+: <a class="el" href="dd/dd0/classrtt_1_1ai_1_1control_1_1BBTrajectory2D.html#a4510797e3e3e3e2c289e57034477fdca">rtt::ai::control::BBTrajectory2D</a>
 </li>
 <li>generateTrajectory()
-: <a class="el" href="de/d4c/classrtt_1_1BB_1_1BBTrajectory1D.html#a981aa31eb0041731748bbab7a6658807">rtt::BB::BBTrajectory1D</a>
-, <a class="el" href="d7/dbe/classrtt_1_1BB_1_1BBTrajectory2D.html#ac84df1a3b7f9f6e1401be04832f7f80c">rtt::BB::BBTrajectory2D</a>
+: <a class="el" href="d8/d5c/classrtt_1_1ai_1_1control_1_1BBTrajectory1D.html#acd591d3fdee0f63b1c8c2aa5811f7523">rtt::ai::control::BBTrajectory1D</a>
+, <a class="el" href="dd/dd0/classrtt_1_1ai_1_1control_1_1BBTrajectory2D.html#a8d8a7b33ed9996d826002cac25db70ce">rtt::ai::control::BBTrajectory2D</a>
 </li>
 <li>generateWorld()
 : <a class="el" href="d6/d69/classRTT__AI__Tests.html#a1fced78f7fd2239f032a80f00e73b279">RTT_AI_Tests</a>
@@ -133,8 +130,8 @@ $(document).ready(function(){initNavTree('functions_g.html',''); initResizable()
 , <a class="el" href="d6/d08/classrtt_1_1world_1_1view_1_1WorldDataView.html#a635b29b19a94d83b82ddce400c2c5f29">rtt::world::view::WorldDataView</a>
 </li>
 <li>getAcceleration()
-: <a class="el" href="de/d4c/classrtt_1_1BB_1_1BBTrajectory1D.html#ae27fbb9778792333e48980525e08e7cf">rtt::BB::BBTrajectory1D</a>
-, <a class="el" href="d7/dbe/classrtt_1_1BB_1_1BBTrajectory2D.html#ad485d50284d7e9cbd1af75a98e2c5b68">rtt::BB::BBTrajectory2D</a>
+: <a class="el" href="d8/d5c/classrtt_1_1ai_1_1control_1_1BBTrajectory1D.html#abecf1b37b1d5d57e0b76f4fed94bddee">rtt::ai::control::BBTrajectory1D</a>
+, <a class="el" href="dd/dd0/classrtt_1_1ai_1_1control_1_1BBTrajectory2D.html#aba77e4c565be1b39e81c5faa8c21cbcd">rtt::ai::control::BBTrajectory2D</a>
 , <a class="el" href="d0/d62/classrtt_1_1Trajectory1D.html#aa9e600f6e109aa731f30a411335ffcb9">rtt::Trajectory1D</a>
 , <a class="el" href="d9/da4/classrtt_1_1Trajectory2D.html#a46159c056a6320646b990db73eeb74ba">rtt::Trajectory2D</a>
 </li>
@@ -167,17 +164,14 @@ $(document).ready(function(){initNavTree('functions_g.html',''); initResizable()
 <li>getBallPositionAtTime()
 : <a class="el" href="d2/d21/classrtt_1_1ai_1_1FieldComputations.html#a714e1656650ae507cb3729297ca19e76">rtt::ai::FieldComputations</a>
 </li>
+<li>getBallTimeAtPosition()
+: <a class="el" href="d2/d21/classrtt_1_1ai_1_1FieldComputations.html#afaf2328f2ad95c4dcc4216bf2c54b8f3">rtt::ai::FieldComputations</a>
+</li>
 <li>GetBehindBallInDirection()
 : <a class="el" href="d9/d65/classrtt_1_1ai_1_1stp_1_1tactic_1_1GetBehindBallInDirection.html#a3716131f1a2a53704ba04c1779cece03">rtt::ai::stp::tactic::GetBehindBallInDirection</a>
 </li>
 <li>getBlockadesMappedToGoal()
 : <a class="el" href="d2/d21/classrtt_1_1ai_1_1FieldComputations.html#ac983ba299fa63555dc2edc12cae3634f">rtt::ai::FieldComputations</a>
-</li>
-<li>getBlockDistance()
-: <a class="el" href="d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#afb6cbfaa388a150f1979e1a5d844adfa">rtt::ai::stp::StpInfo</a>
-</li>
-<li>getCollisionBetweenPoints()
-: <a class="el" href="df/dcf/classrtt_1_1ai_1_1control_1_1CollisionDetector.html#a5a0ccc70ab021c5f0f65b7ec77daf76f">rtt::ai::control::CollisionDetector</a>
 </li>
 <li>getCommandFromRefMsg()
 : <a class="el" href="db/de9/classrtt_1_1ai_1_1GameStateManager.html#aa66ae0f4cf2b5e87bf889d43b0cda07c">rtt::ai::GameStateManager</a>
@@ -210,9 +204,6 @@ $(document).ready(function(){initNavTree('functions_g.html',''); initResizable()
 <li>getDefenseArea()
 : <a class="el" href="d2/d21/classrtt_1_1ai_1_1FieldComputations.html#ac2270396778173e5041011109176fd6c">rtt::ai::FieldComputations</a>
 </li>
-<li>getDefenseAreaCollision()
-: <a class="el" href="df/dcf/classrtt_1_1ai_1_1control_1_1CollisionDetector.html#a062aef57fc6e5a26264b1afb1f5ab0b5">rtt::ai::control::CollisionDetector</a>
-</li>
 <li>getDefenseAreaMargin()
 : <a class="el" href="d2/d21/classrtt_1_1ai_1_1FieldComputations.html#a2b91936d7a902cafabaec8aa5e9709c9">rtt::ai::FieldComputations</a>
 </li>
@@ -225,9 +216,6 @@ $(document).ready(function(){initNavTree('functions_g.html',''); initResizable()
 <li>getDribblerSpeed()
 : <a class="el" href="d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#a98d507ed2252761c0cc145db5c204904">rtt::ai::stp::StpInfo</a>
 </li>
-<li>getEnemyRobot()
-: <a class="el" href="d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#a3008bb5a126402244273321a93a3cafd">rtt::ai::stp::StpInfo</a>
-</li>
 <li>getField()
 : <a class="el" href="d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#a10d51dd1f8af72e8971933983fdcc5ce">rtt::ai::stp::StpInfo</a>
 , <a class="el" href="da/d39/classrtt_1_1world_1_1World.html#ae705fc38ff82aabe5bd375ff823bb9c2">rtt::world::World</a>
@@ -235,11 +223,14 @@ $(document).ready(function(){initNavTree('functions_g.html',''); initResizable()
 <li>getFieldEdge()
 : <a class="el" href="d2/d21/classrtt_1_1ai_1_1FieldComputations.html#a412ee62c7bdb20c01c057cca84629a71">rtt::ai::FieldComputations</a>
 </li>
-<li>getFirstCollision()
-: <a class="el" href="de/d06/classrtt_1_1BB_1_1WorldObjects.html#a06c1a5530dc04cd23a0b01cd7801b188">rtt::BB::WorldObjects</a>
+<li>getFirstCollisionTime()
+: <a class="el" href="d8/daf/classrtt_1_1ai_1_1control_1_1CollisionCalculations.html#a89529f7006862099b5ff4543858bf20d">rtt::ai::control::CollisionCalculations</a>
 </li>
-<li>getFirstDefenseAreaCollision()
-: <a class="el" href="de/d06/classrtt_1_1BB_1_1WorldObjects.html#a6616158a8fe9efada57b85b939813650">rtt::BB::WorldObjects</a>
+<li>getFirstCollisionTimeMotionlessObject()
+: <a class="el" href="d8/daf/classrtt_1_1ai_1_1control_1_1CollisionCalculations.html#aefc1047db1203b134361175f2106ea82">rtt::ai::control::CollisionCalculations</a>
+</li>
+<li>getFirstCollisionTimeMovingObject()
+: <a class="el" href="d8/daf/classrtt_1_1ai_1_1control_1_1CollisionCalculations.html#a5abef5eb1d61b66b1ce007c406a978fd">rtt::ai::control::CollisionCalculations</a>
 </li>
 <li>getGameStateForRefCommand()
 : <a class="el" href="dc/d52/classrtt_1_1ai_1_1StrategyManager.html#a2aca6d9e6af7cb7b36495fdbd8595868">rtt::ai::StrategyManager</a>
@@ -259,23 +250,11 @@ $(document).ready(function(){initNavTree('functions_g.html',''); initResizable()
 <li>getId()
 : <a class="el" href="d4/d99/classrtt_1_1world_1_1robot_1_1Robot.html#abe641e59db2be8221416e1495943a905">rtt::world::robot::Robot</a>
 </li>
-<li>getInterceptPid()
-: <a class="el" href="d7/d9e/classrtt_1_1ai_1_1interface_1_1Output.html#ac39a5ef30b0027a5cf1ed07d2084aad6">rtt::ai::interface::Output</a>
-</li>
 <li>getInterfaceGameState()
 : <a class="el" href="d7/d9e/classrtt_1_1ai_1_1interface_1_1Output.html#ae9b91c9c32df6de230c93ae5129f0244">rtt::ai::interface::Output</a>
 </li>
-<li>getInterfaceMarkerPosition()
-: <a class="el" href="d7/d9e/classrtt_1_1ai_1_1interface_1_1Output.html#a2e1f6f3f0de5f9ae5be2cc8de4d672a4">rtt::ai::interface::Output</a>
-</li>
 <li>getKeeperId()
 : <a class="el" href="db/de2/classrtt_1_1ai_1_1stp_1_1InterceptionComputations.html#a4f04a42e5202c24001e61b07a6ac2cb9">rtt::ai::stp::InterceptionComputations</a>
-</li>
-<li>getKeeperInterceptPid()
-: <a class="el" href="d7/d9e/classrtt_1_1ai_1_1interface_1_1Output.html#ab295c496c4a3b8105e6085ed6612574f">rtt::ai::interface::Output</a>
-</li>
-<li>getKeeperPid()
-: <a class="el" href="d7/d9e/classrtt_1_1ai_1_1interface_1_1Output.html#af89acb29ce4f11e2a11fea9fabed7bf6">rtt::ai::interface::Output</a>
 </li>
 <li>getKeepersLineSegment()
 : <a class="el" href="d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#a69444207b9e6d1623afacf9253d4e357">rtt::ai::stp::tactic::KeeperBlockBall</a>
@@ -323,12 +302,11 @@ $(document).ready(function(){initNavTree('functions_g.html',''); initResizable()
 , <a class="el" href="d2/d1d/classrtt_1_1ai_1_1stp_1_1evaluation_1_1PenaltyThemPrepareGameStateEvaluation.html#aa9bf236d326ab3831405c99465e7babd">rtt::ai::stp::evaluation::PenaltyThemPrepareGameStateEvaluation</a>
 , <a class="el" href="de/d02/classrtt_1_1ai_1_1stp_1_1evaluation_1_1PenaltyUsGameStateEvaluation.html#a4a40663f283cfd94c7e68a2c75b3d18c">rtt::ai::stp::evaluation::PenaltyUsGameStateEvaluation</a>
 , <a class="el" href="dc/dc0/classrtt_1_1ai_1_1stp_1_1evaluation_1_1PenaltyUsPrepareGameStateEvaluation.html#a4547f939a61238e83f3e5f6f4261dd5d">rtt::ai::stp::evaluation::PenaltyUsPrepareGameStateEvaluation</a>
+, <a class="el" href="d4/d9e/classrtt_1_1ai_1_1stp_1_1evaluation_1_1PrepareForcedStartGameStateEvaluation.html#a4bd170fe23c3862da33b1371fd6aae73">rtt::ai::stp::evaluation::PrepareForcedStartGameStateEvaluation</a>
 , <a class="el" href="dd/d4b/classrtt_1_1ai_1_1stp_1_1evaluation_1_1StopGameStateEvaluation.html#a9f8cc42698553fc84df4ce7e4b1a68b9">rtt::ai::stp::evaluation::StopGameStateEvaluation</a>
 , <a class="el" href="da/d0e/classrtt_1_1ai_1_1stp_1_1evaluation_1_1TheyHaveBallGlobalEvaluation.html#acd695ec5aaa9b304188f3fce1326c14d">rtt::ai::stp::evaluation::TheyHaveBallGlobalEvaluation</a>
 , <a class="el" href="d9/d4d/classrtt_1_1ai_1_1stp_1_1evaluation_1_1TimeOutGameStateEvaluation.html#a04fc36fc6bed33918655c358a9adc270">rtt::ai::stp::evaluation::TimeOutGameStateEvaluation</a>
-, <a class="el" href="d5/d80/classrtt_1_1ai_1_1stp_1_1evaluation_1_1WeHaveBallGlobalEvaluation.html#a12b991caefddea6420cf16d095716b69">rtt::ai::stp::evaluation::WeHaveBallGlobalEvaluation</a>
 , <a class="el" href="d1/dcf/classrtt_1_1ai_1_1stp_1_1evaluation_1_1WeWillHaveBallGlobalEvaluation.html#adb14c00db01d52122b48f59c777d5bb6">rtt::ai::stp::evaluation::WeWillHaveBallGlobalEvaluation</a>
-, <a class="el" href="dd/dff/classrtt_1_1ai_1_1stp_1_1play_1_1AggressiveStopFormation.html#a7f018f5b5248711a658fa076eb6e480a">rtt::ai::stp::play::AggressiveStopFormation</a>
 , <a class="el" href="db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html#ac7023239c6f9c4fdcd7b863e8b87b01d">rtt::ai::stp::play::Attack</a>
 , <a class="el" href="df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass.html#ae9f0bf19d745b41a516eb30dd7c898ef">rtt::ai::stp::play::AttackingPass</a>
 , <a class="el" href="d7/d43/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementThem.html#afd36854b3fa2fcde6bb75185f898da91">rtt::ai::stp::play::BallPlacementThem</a>
@@ -337,7 +315,6 @@ $(document).ready(function(){initNavTree('functions_g.html',''); initResizable()
 , <a class="el" href="dc/d26/classrtt_1_1ai_1_1stp_1_1play_1_1ChippingPass.html#acb487148454d3f71d7fe8153f7e9c5a9">rtt::ai::stp::play::ChippingPass</a>
 , <a class="el" href="dd/daf/classrtt_1_1ai_1_1stp_1_1play_1_1DefendPass.html#ac31f319dc520b09dc0e52834aa8fa586">rtt::ai::stp::play::DefendPass</a>
 , <a class="el" href="d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot.html#af8495d8ff9e59726b4744fb0cef93207">rtt::ai::stp::play::DefendShot</a>
-, <a class="el" href="df/de3/classrtt_1_1ai_1_1stp_1_1play_1_1DefensiveStopFormation.html#a1cb900cb312f0aea58bfe08a773803a6">rtt::ai::stp::play::DefensiveStopFormation</a>
 , <a class="el" href="dc/d7b/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickThem.html#ac6beffcf942c99fecf124b8be10035bb">rtt::ai::stp::play::FreeKickThem</a>
 , <a class="el" href="dd/dc8/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsAtGoal.html#acfa43f0274ff5cf5f4921b04d07bbfe0">rtt::ai::stp::play::FreeKickUsAtGoal</a>
 , <a class="el" href="d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#a554c384fee1f7d5d689355b3cd9573ee">rtt::ai::stp::play::FreeKickUsPass</a>
@@ -352,6 +329,8 @@ $(document).ready(function(){initNavTree('functions_g.html',''); initResizable()
 , <a class="el" href="d4/dfe/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyThemPrepare.html#af4275579e2e89d8c944ee9993662957a">rtt::ai::stp::play::PenaltyThemPrepare</a>
 , <a class="el" href="db/d03/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUs.html#aa2af3d3d04a32d2ef268858fd6c56922">rtt::ai::stp::play::PenaltyUs</a>
 , <a class="el" href="d6/d47/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUsPrepare.html#a79d5e70d6e069d2616518ebee633611d">rtt::ai::stp::play::PenaltyUsPrepare</a>
+, <a class="el" href="d6/daa/classrtt_1_1ai_1_1stp_1_1play_1_1PrepareForcedStart.html#a60b554f7086156246f35d8fd41ba19d8">rtt::ai::stp::play::PrepareForcedStart</a>
+, <a class="el" href="d0/d1d/classrtt_1_1ai_1_1stp_1_1play_1_1StopFormation.html#a2c7cc3de3219660ab9da00fd1fdef3ed">rtt::ai::stp::play::StopFormation</a>
 , <a class="el" href="d2/d9f/classrtt_1_1ai_1_1stp_1_1Role.html#a4ff09c5a0803236b90ca9e14abb1ae6e">rtt::ai::stp::Role</a>
 , <a class="el" href="db/de8/classrtt_1_1ai_1_1stp_1_1skill_1_1Chip.html#a2984fe2530af5354bbc39e987af40377">rtt::ai::stp::skill::Chip</a>
 , <a class="el" href="da/da2/classrtt_1_1ai_1_1stp_1_1Skill.html#a8efad4f44b27d9d2a8cf2983d9b59d88">rtt::ai::stp::Skill</a>
@@ -370,15 +349,12 @@ $(document).ready(function(){initNavTree('functions_g.html',''); initResizable()
 , <a class="el" href="d9/d65/classrtt_1_1ai_1_1stp_1_1tactic_1_1GetBehindBallInDirection.html#abcac7a65df91d8ea9dee07613c607291">rtt::ai::stp::tactic::GetBehindBallInDirection</a>
 , <a class="el" href="d6/db5/classrtt_1_1ai_1_1stp_1_1Tactic.html#a5e6b74ad95cb4b96e1b3f9fc010bd5c9">rtt::ai::stp::Tactic</a>
 , <a class="el" href="d5/dc3/classrtt_1_1ai_1_1stp_1_1tactic_1_1Halt.html#a1120c6c59b0d0cbf8a8c3f0de5b3cbfd">rtt::ai::stp::tactic::Halt</a>
+, <a class="el" href="d0/df3/classrtt_1_1ai_1_1stp_1_1tactic_1_1InstantKick.html#a9e129c34d1e09605b8621a3565cd0c96">rtt::ai::stp::tactic::InstantKick</a>
 , <a class="el" href="d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#afacaf830284bc5c6dcd7652f0e1bab69">rtt::ai::stp::tactic::KeeperBlockBall</a>
-, <a class="el" href="db/d9e/classrtt_1_1ai_1_1stp_1_1tactic_1_1KickAtPos.html#aa6f92e63b646d2772c2c244b48738cca">rtt::ai::stp::tactic::KickAtPos</a>
 , <a class="el" href="d5/d3d/classrtt_1_1ai_1_1stp_1_1tactic_1_1OrbitKick.html#a69a1fd27f2854ceb733c5b5686aa36bc">rtt::ai::stp::tactic::OrbitKick</a>
 , <a class="el" href="d3/d66/classrtt_1_1ai_1_1stp_1_1tactic_1_1Receive.html#ac6a71e6f9be3a1b80ab8ae66f3e29267">rtt::ai::stp::tactic::Receive</a>
 , <a class="el" href="de/d0f/classrtt_1_1ai_1_1stp_1_1TestTactic.html#a8a1d28595cec987d07345bc4dbd52ed7">rtt::ai::stp::TestTactic</a>
 , <a class="el" href="d4/ded/classTestSkill.html#adadebebfd5aba7ff32d8b0f821a3af0f">TestSkill</a>
-</li>
-<li>getNumTreePid()
-: <a class="el" href="d7/d9e/classrtt_1_1ai_1_1interface_1_1Output.html#a49598c923c197386ac4e5f2c60ff9bfc">rtt::ai::interface::Output</a>
 </li>
 <li>getObjectsToAvoid()
 : <a class="el" href="d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#a23021bd272a9bcc808ca4c3e2630c22e">rtt::ai::stp::StpInfo</a>
@@ -386,12 +362,9 @@ $(document).ready(function(){initNavTree('functions_g.html',''); initResizable()
 <li>getOutput()
 : <a class="el" href="dc/d0b/classrtt_1_1AnglePID.html#a0b5836c99b3f4f7517d59837d65625d8">rtt::AnglePID</a>
 </li>
-<li>getParent()
-: <a class="el" href="d6/deb/classrtt_1_1ai_1_1control_1_1PathPointNode.html#a5a9fcbb545286cf5b19fec3db8c45810">rtt::ai::control::PathPointNode</a>
-</li>
 <li>getParts()
-: <a class="el" href="de/d4c/classrtt_1_1BB_1_1BBTrajectory1D.html#a352197ae1db0b8b32db86008044d728c">rtt::BB::BBTrajectory1D</a>
-, <a class="el" href="d7/dbe/classrtt_1_1BB_1_1BBTrajectory2D.html#a139f60524316e305145a18e4e80c61a8">rtt::BB::BBTrajectory2D</a>
+: <a class="el" href="d8/d5c/classrtt_1_1ai_1_1control_1_1BBTrajectory1D.html#afe0113668b28235f63a5afa3db65c32d">rtt::ai::control::BBTrajectory1D</a>
+, <a class="el" href="dd/dd0/classrtt_1_1ai_1_1control_1_1BBTrajectory2D.html#afe923eaebde84495dea40fab6709f559">rtt::ai::control::BBTrajectory2D</a>
 </li>
 <li>getPassGrid()
 : <a class="el" href="d3/db6/classrtt_1_1ai_1_1stp_1_1computations_1_1PassComputations.html#a6c40cbab959ed7ac73c9f9b7f3733453">rtt::ai::stp::computations::PassComputations</a>
@@ -402,9 +375,6 @@ $(document).ready(function(){initNavTree('functions_g.html',''); initResizable()
 <li>getPercentageOfGoalVisibleFromPoint()
 : <a class="el" href="d2/d21/classrtt_1_1ai_1_1FieldComputations.html#a682e3e6d8eb25eeb8b66ccd167438f01">rtt::ai::FieldComputations</a>
 </li>
-<li>getPidType()
-: <a class="el" href="d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#ac0e3345b44bb02524990a559e84b5995">rtt::ai::stp::StpInfo</a>
-</li>
 <li>getPlayForName()
 : <a class="el" href="d1/d54/classrtt_1_1ai_1_1stp_1_1PlayDecider.html#a467730235935818dbf342e0089d46791">rtt::ai::stp::PlayDecider</a>
 </li>
@@ -412,10 +382,9 @@ $(document).ready(function(){initNavTree('functions_g.html',''); initResizable()
 : <a class="el" href="d4/d99/classrtt_1_1world_1_1robot_1_1Robot.html#a3d780ba184110491414d76df18d1a0ae">rtt::world::robot::Robot</a>
 </li>
 <li>getPosition()
-: <a class="el" href="d6/deb/classrtt_1_1ai_1_1control_1_1PathPointNode.html#afada13c03a31c960cdf202a5630588d2">rtt::ai::control::PathPointNode</a>
+: <a class="el" href="d8/d5c/classrtt_1_1ai_1_1control_1_1BBTrajectory1D.html#a13742e127e52d0bf68e3113131dad245">rtt::ai::control::BBTrajectory1D</a>
+, <a class="el" href="dd/dd0/classrtt_1_1ai_1_1control_1_1BBTrajectory2D.html#a7e55b92abe562b515030882af4538b67">rtt::ai::control::BBTrajectory2D</a>
 , <a class="el" href="dd/d2c/classrtt_1_1ai_1_1stp_1_1PositionComputations.html#af6df7a52892df1c947be8f684ba14d90">rtt::ai::stp::PositionComputations</a>
-, <a class="el" href="de/d4c/classrtt_1_1BB_1_1BBTrajectory1D.html#af073c5d73169926ee80522793cae0c88">rtt::BB::BBTrajectory1D</a>
-, <a class="el" href="d7/dbe/classrtt_1_1BB_1_1BBTrajectory2D.html#a0c938101b52f486e1a7c1f69a2f9a745">rtt::BB::BBTrajectory2D</a>
 , <a class="el" href="d0/d62/classrtt_1_1Trajectory1D.html#a74b84e572380734656d67ec5b9b0c25c">rtt::Trajectory1D</a>
 , <a class="el" href="d9/da4/classrtt_1_1Trajectory2D.html#a1a8087a1b8a11b1f85450a902880e1d0">rtt::Trajectory2D</a>
 </li>
@@ -440,12 +409,6 @@ $(document).ready(function(){initNavTree('functions_g.html',''); initResizable()
 <li>getRandomVelocity()
 : <a class="el" href="d6/d74/classtesthelpers_1_1WorldHelper.html#a9b4c89c1867e9814e20b515ea848511d">testhelpers::WorldHelper</a>
 </li>
-<li>getReceivePid()
-: <a class="el" href="d7/d9e/classrtt_1_1ai_1_1interface_1_1Output.html#aae54fdba73f6389e8a0aaaddb4a5a9ef">rtt::ai::interface::Output</a>
-</li>
-<li>getRefereeData()
-: <a class="el" href="db/de9/classrtt_1_1ai_1_1GameStateManager.html#ae0a709e5fb0b8622ee7f76fa0cb02be9">rtt::ai::GameStateManager</a>
-</li>
 <li>getRefereeDesignatedPosition()
 : <a class="el" href="db/de9/classrtt_1_1ai_1_1GameStateManager.html#a3e4c49fd7aff3554bc992b407bd5912f">rtt::ai::GameStateManager</a>
 </li>
@@ -456,10 +419,7 @@ $(document).ready(function(){initNavTree('functions_g.html',''); initResizable()
 : <a class="el" href="d6/d08/classrtt_1_1world_1_1view_1_1WorldDataView.html#ab2350d86ad487c1abab6d2a7fb10db05">rtt::world::view::WorldDataView</a>
 </li>
 <li>getRobotClosestToPoint()
-: <a class="el" href="d6/d08/classrtt_1_1world_1_1view_1_1WorldDataView.html#aec86dcb7dfc05ca18d5576b6dec73c72">rtt::world::view::WorldDataView</a>
-</li>
-<li>getRobotCollisionBetweenPoints()
-: <a class="el" href="df/dcf/classrtt_1_1ai_1_1control_1_1CollisionDetector.html#a29c7dd8bf66ab0bae06c2964d3816dbf">rtt::ai::control::CollisionDetector</a>
+: <a class="el" href="d6/d08/classrtt_1_1world_1_1view_1_1WorldDataView.html#ade24b9a2c4b91f87d16565645a7957f7">rtt::world::view::WorldDataView</a>
 </li>
 <li>getRobotForId()
 : <a class="el" href="d6/d08/classrtt_1_1world_1_1view_1_1WorldDataView.html#a35c78e7a84b1dfd4ea232de19ab4052a">rtt::world::view::WorldDataView</a>
@@ -504,9 +464,6 @@ $(document).ready(function(){initNavTree('functions_g.html',''); initResizable()
 <li>getStateAgeMs()
 : <a class="el" href="d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a415e63d61ced7bb424317265035fd2e1">rtt::ai::io::IOManager</a>
 </li>
-<li>getStateTimeMs()
-: <a class="el" href="d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a2647280920c888c1d109f3c15350d3b9">rtt::ai::io::IOManager</a>
-</li>
 <li>getStatus()
 : <a class="el" href="da/da2/classrtt_1_1ai_1_1stp_1_1Skill.html#a390cf790dda0b20bdf7428ee3b853d8a">rtt::ai::stp::Skill</a>
 , <a class="el" href="d6/db5/classrtt_1_1ai_1_1stp_1_1Tactic.html#ab7650037eb092459aca7247ea77f2ad4">rtt::ai::stp::Tactic</a>
@@ -521,6 +478,9 @@ $(document).ready(function(){initNavTree('functions_g.html',''); initResizable()
 <li>getTime()
 : <a class="el" href="d5/db9/classrtt_1_1world_1_1WorldData.html#a52a401755b6d57e7ef10cbb36b3b847c">rtt::world::WorldData</a>
 </li>
+<li>getTimedPos1D()
+: <a class="el" href="de/df8/classrtt_1_1ai_1_1control_1_1OvershootComputations.html#aedb2444e1767d0ad7b52846aa778bfab">rtt::ai::control::OvershootComputations</a>
+</li>
 <li>getTitle()
 : <a class="el" href="dd/d26/structrtt_1_1ai_1_1RuleSet.html#a14eb9b95b379f938f7881e9e44bf050a">rtt::ai::RuleSet</a>
 </li>
@@ -528,8 +488,8 @@ $(document).ready(function(){initNavTree('functions_g.html',''); initResizable()
 : <a class="el" href="d2/d21/classrtt_1_1ai_1_1FieldComputations.html#ad794638e13e81e7b94a296f5a9df2f84">rtt::ai::FieldComputations</a>
 </li>
 <li>getTotalTime()
-: <a class="el" href="de/d4c/classrtt_1_1BB_1_1BBTrajectory1D.html#a0603d33e5925737ade7e96b8c84ff25b">rtt::BB::BBTrajectory1D</a>
-, <a class="el" href="d7/dbe/classrtt_1_1BB_1_1BBTrajectory2D.html#a87fd396c2b9a65d7a485016d2d5b9d27">rtt::BB::BBTrajectory2D</a>
+: <a class="el" href="d8/d5c/classrtt_1_1ai_1_1control_1_1BBTrajectory1D.html#a9a34565360482fd78d8434d0986b464d">rtt::ai::control::BBTrajectory1D</a>
+, <a class="el" href="dd/dd0/classrtt_1_1ai_1_1control_1_1BBTrajectory2D.html#aa60de4365b546afe1c5643659a88fdbc">rtt::ai::control::BBTrajectory2D</a>
 , <a class="el" href="d0/d62/classrtt_1_1Trajectory1D.html#ae6a0cb06fc0c4eb6360f80304394dcd0">rtt::Trajectory1D</a>
 , <a class="el" href="d9/da4/classrtt_1_1Trajectory2D.html#a6a2fd5219d7f396b11e4d5dc506be29a">rtt::Trajectory2D</a>
 </li>
@@ -538,14 +498,14 @@ $(document).ready(function(){initNavTree('functions_g.html',''); initResizable()
 , <a class="el" href="d5/db9/classrtt_1_1world_1_1WorldData.html#a491e793f82f16ad9f609a55601c3c5ad">rtt::world::WorldData</a>
 </li>
 <li>getValues()
-: <a class="el" href="de/d4c/classrtt_1_1BB_1_1BBTrajectory1D.html#a227258c68fea5651b1133e4d1cb6010f">rtt::BB::BBTrajectory1D</a>
+: <a class="el" href="d8/d5c/classrtt_1_1ai_1_1control_1_1BBTrajectory1D.html#a8a1e848da23270d00f1d854b60e39494">rtt::ai::control::BBTrajectory1D</a>
 </li>
 <li>getVel()
 : <a class="el" href="d4/d99/classrtt_1_1world_1_1robot_1_1Robot.html#adb1fa3aa90d74e33528dde7df6994114">rtt::world::robot::Robot</a>
 </li>
 <li>getVelocity()
-: <a class="el" href="de/d4c/classrtt_1_1BB_1_1BBTrajectory1D.html#a218a6e4955fa15e521514826bbb5df3a">rtt::BB::BBTrajectory1D</a>
-, <a class="el" href="d7/dbe/classrtt_1_1BB_1_1BBTrajectory2D.html#ae037baa0bfb300499c04aa9e834e0c00">rtt::BB::BBTrajectory2D</a>
+: <a class="el" href="d8/d5c/classrtt_1_1ai_1_1control_1_1BBTrajectory1D.html#ad844e051f1754ca1dafb2a960c216139">rtt::ai::control::BBTrajectory1D</a>
+, <a class="el" href="dd/dd0/classrtt_1_1ai_1_1control_1_1BBTrajectory2D.html#a380c1252be188c6b0cd3fd6b08672390">rtt::ai::control::BBTrajectory2D</a>
 , <a class="el" href="d0/d62/classrtt_1_1Trajectory1D.html#a58a1fbbd0652a7f0defb5c31a3fe0a7a">rtt::Trajectory1D</a>
 , <a class="el" href="d9/da4/classrtt_1_1Trajectory2D.html#aff389f74270302dd1f952308fc40ecca">rtt::Trajectory2D</a>
 </li>

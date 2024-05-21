@@ -197,8 +197,7 @@ void Play::DrawMargins() noexcept {
     std::array<rtt::Vector2, 1> placementLocation = {rtt::ai::GameStateManager::getRefereeDesignatedPosition()};
     std::array<rtt::Vector2, 2> pathToPlacementLocation = {world->getWorld()->getBall()->get()->position, world->getWorld()->getBall()->get()->position};
 
-    if (currentGameState == RefCommand::PENALTY_US || currentGameState == RefCommand::PENALTY_THEM || currentGameState == RefCommand::PREPARE_PENALTY_THEM ||
-        currentGameState == RefCommand::PREPARE_PENALTY_US) {
+    if (currentGameState == RefCommand::PREPARE_PENALTY_THEM || currentGameState == RefCommand::PREPARE_PENALTY_US) {
         std::array<rtt::Vector2, 1> penaltyUs = {rtt::Vector2(2.0, 0.0)};
         if (currentGameState == RefCommand::PENALTY_US || currentGameState == RefCommand::PREPARE_PENALTY_US) {
             penaltyUs = {rtt::Vector2(-2.0, 0.0)};

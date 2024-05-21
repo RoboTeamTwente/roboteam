@@ -57,15 +57,15 @@ Dealer::FlagMap PenaltyUs::decideRoleFlags() const noexcept {
 
 void PenaltyUs::calculateInfoForRoles() noexcept {
     auto positionTarget = PositionComputations::getPosition(std::nullopt, field.middleRightGrid, gen::GoalShot, field, world);
-    stpInfos["kicker"].setPositionToMoveTo(positionTarget);
+    if (GameStateManager::getCurrentGameState().timeLeft > 3.0) {
+        stpInfos["kicker"].setPositionToMoveTo(positionTarget);
+    }
+    else { stpInfos["kicker"].setPositionToMoveTo(stpInfos["kicker"].getRobot()->get()->getPos());}
     auto goalTarget = computations::GoalComputations::calculateGoalTarget(world, field);
     stpInfos["kicker"].setPositionToShootAt(goalTarget);
     stpInfos["kicker"].setShotType(ShotType::MAX);
     if (stpInfos["kicker"].getRobot().has_value() && stpInfos["kicker"].getRobot()->get()->hasBall()) {
-        stpInfos["kicker"].setMaxRobotVelocity(1.0);
-        if ((stpInfos["kicker"].getRobot()->get()->getPos() - positionTarget.position).length() < 0.5) {
-            stpInfos["kicker"].setMaxRobotVelocity(0.7);
-        }
+        stpInfos["kicker"].setMaxRobotVelocity((stpInfos["kicker"].getRobot()->get()->getPos() - positionTarget.position).length() * 4.8);
     }
 }
 

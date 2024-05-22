@@ -81,13 +81,13 @@ var NAVTREEINDEX =
 "d4/d99/classrtt_1_1world_1_1robot_1_1Robot.html#a81f495905fcfae206971b762bc8aef58",
 "d5/d3d/classrtt_1_1ai_1_1stp_1_1tactic_1_1OrbitKick.html#af773c74e22de969c6e044f88f1ff7cc4",
 "d6/d47/CorrectPlayTest_8cpp.html#a1edb5baaa131732586acb7a2daca34aa",
-"d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#a7439c6149abbc461640c9ecdad2ba8d6",
-"d8/dd4/RefCommand_8h.html#ac458fd2464c54331a04fc2fd54d82843abf2d798abfe8267da4f101692b6cfecd",
-"da/d39/classrtt_1_1world_1_1World.html#a81bed3b562ad2ce5d9974f64551ce24f",
-"db/dd1/classrtt_1_1ai_1_1stp_1_1tactic_1_1ChipAtPos.html#a0dd3439d999970125264ce7fccadff49",
-"dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843abafba8df79d3bc511dadfaf088ca4382",
-"de/d0f/classrtt_1_1ai_1_1stp_1_1TestTactic.html#a2406ddec88191f369b72206849a1d9a4",
-"dir_0d79697be3e420ba6b3bf383eedc626a.html"
+"d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#a58560de6d2d6ca91e467deb1071aadbd",
+"d8/dd4/RefCommand_8h.html#ac458fd2464c54331a04fc2fd54d82843aa582f62ddc20516e733b0ce09acc219a",
+"da/d39/classrtt_1_1world_1_1World.html#a4eede1970e8d64b3db0857361d0813ca",
+"db/dbe/FreeKickThem_8cpp.html",
+"dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a7894f3ecc3abad045c2909912bdd5132",
+"de/d0e/PenaltyThem_8h_source.html",
+"df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass.html#ae5f7186f0f7c176decd4e26a6d5fa566"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

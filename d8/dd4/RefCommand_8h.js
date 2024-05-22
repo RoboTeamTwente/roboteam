@@ -25,5 +25,6 @@ var RefCommand_8h =
       [ "PREPARE_FORCED_START", "d8/dd4/RefCommand_8h.html#ac458fd2464c54331a04fc2fd54d82843a7894f3ecc3abad045c2909912bdd5132", null ],
       [ "UNDEFINED", "d8/dd4/RefCommand_8h.html#ac458fd2464c54331a04fc2fd54d82843a0db45d2a4141101bdfe48e3314cfbca3", null ]
     ] ],
+    [ "getNameOfRefCommand", "d8/dd4/RefCommand_8h.html#ab37a854d0426a1f4705295f165f5f8db", null ],
     [ "operator<<", "d8/dd4/RefCommand_8h.html#a348468bc2c2e59d32ab7c1b7d0479f9b", null ]
 ];

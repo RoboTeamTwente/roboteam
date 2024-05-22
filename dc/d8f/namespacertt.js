@@ -35,6 +35,7 @@ var namespacertt =
     [ "createTestField", "dc/d8f/namespacertt.html#a0d98d219a6e2900e4ec939378b987a81", null ],
     [ "generateWorld", "dc/d8f/namespacertt.html#a3c7f39951eb291b23d6f3a06262f365e", null ],
     [ "getMaxScore", "dc/d8f/namespacertt.html#a8847521dcba2851a25b8194ec1379579", null ],
+    [ "getNameOfRefCommand", "dc/d8f/namespacertt.html#ab37a854d0426a1f4705295f165f5f8db", null ],
     [ "operator<<", "dc/d8f/namespacertt.html#a348468bc2c2e59d32ab7c1b7d0479f9b", null ],
     [ "saveBallLocation", "dc/d8f/namespacertt.html#a8b57043eb96f30d3547a04cdfd0d8b5a", null ],
     [ "saveRobotLocations", "dc/d8f/namespacertt.html#a360ef65a1871277001cfcd63e8e11425", null ],

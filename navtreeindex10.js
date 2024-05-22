@@ -1,5 +1,11 @@
 var NAVTREEINDEX10 =
 {
+"dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a7894f3ecc3abad045c2909912bdd5132":[1,0,1,7,21],
+"dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843a7d4f8613628e265b6bf9c674bedad46d":[1,0,1,7,8],
+"dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843aa0e17303d5ddfc03629d114713d8fa7d":[1,0,1,7,19],
+"dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843aa582f62ddc20516e733b0ce09acc219a":[1,0,1,7,7],
+"dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843aaa94a644a66e971a67a1865b6256bda0":[1,0,1,7,12],
+"dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843ab1b09aed356d6152877ff14f116e9e3b":[1,0,1,7,4],
 "dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843abafba8df79d3bc511dadfaf088ca4382":[1,0,1,7,10],
 "dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843abca20722938852a1d96f3ec869b939cc":[1,0,1,7,2],
 "dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843abf2d798abfe8267da4f101692b6cfecd":[1,0,1,7,0],
@@ -8,9 +14,9 @@ var NAVTREEINDEX10 =
 "dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843ae2f4e36957bfefd9000cb5bb950c4dda":[1,0,1,7,3],
 "dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843ae4a42a36109c1c3e473ec1ed275f2809":[1,0,1,7,20],
 "dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843af97cec8038d98ef4a331a5e3ba53a429":[1,0,1,7,17],
-"dc/d8f/namespacertt.html#af4c8aa161a15c716d7371108d6119b6b":[1,0,1,20],
-"dc/d8f/namespacertt.html#af8ad8deff684d028612d473c6fedb6aa":[1,0,1,14],
-"dc/d8f/namespacertt.html#af962cfe6fd7d4a3e152e96f0e1c40e13":[1,0,1,16],
+"dc/d8f/namespacertt.html#af4c8aa161a15c716d7371108d6119b6b":[1,0,1,21],
+"dc/d8f/namespacertt.html#af8ad8deff684d028612d473c6fedb6aa":[1,0,1,15],
+"dc/d8f/namespacertt.html#af962cfe6fd7d4a3e152e96f0e1c40e13":[1,0,1,17],
 "dc/db4/GameState_8h.html":[3,0,0,0,0,4,3],
 "dc/db4/GameState_8h_source.html":[3,0,0,0,0,4,3],
 "dc/dc0/classrtt_1_1ai_1_1stp_1_1evaluation_1_1PenaltyUsPrepareGameStateEvaluation.html":[2,0,0,0,4,1,17],
@@ -243,11 +249,5 @@ var NAVTREEINDEX10 =
 "de/d02/classrtt_1_1ai_1_1stp_1_1evaluation_1_1PenaltyUsGameStateEvaluation.html":[2,0,0,0,4,1,16],
 "de/d02/classrtt_1_1ai_1_1stp_1_1evaluation_1_1PenaltyUsGameStateEvaluation.html#a4a40663f283cfd94c7e68a2c75b3d18c":[2,0,0,0,4,1,16,0],
 "de/d02/classrtt_1_1ai_1_1stp_1_1evaluation_1_1PenaltyUsGameStateEvaluation.html#aa3ee824fdc5e2531c2221077b61c977d":[2,0,0,0,4,1,16,1],
-"de/d0e/PenaltyThem_8h.html":[3,0,0,0,0,3,3,2,11],
-"de/d0e/PenaltyThem_8h_source.html":[3,0,0,0,0,3,3,2,11],
-"de/d0f/Trajectory1D_8h.html":[3,0,0,0,0,0,0,0,2],
-"de/d0f/Trajectory1D_8h_source.html":[3,0,0,0,0,0,0,0,2],
-"de/d0f/classrtt_1_1ai_1_1stp_1_1TestTactic.html":[2,0,0,0,4,24],
-"de/d0f/classrtt_1_1ai_1_1stp_1_1TestTactic.html#a0dd3439d999970125264ce7fccadff49":[2,0,0,0,4,24,12],
-"de/d0f/classrtt_1_1ai_1_1stp_1_1TestTactic.html#a1197153c427e64c749ef9fc57bacfc2e":[2,0,0,0,4,24,9]
+"de/d0e/PenaltyThem_8h.html":[3,0,0,0,0,3,3,2,11]
 };

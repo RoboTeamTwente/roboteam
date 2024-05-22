@@ -1,5 +1,10 @@
 var NAVTREEINDEX8 =
 {
+"da/d39/classrtt_1_1world_1_1World.html#a4eede1970e8d64b3db0857361d0813ca":[2,0,0,1,3,5],
+"da/d39/classrtt_1_1world_1_1World.html#a639e895a7af6abe1c09d3b94b2f99e4b":[2,0,0,1,3,21],
+"da/d39/classrtt_1_1world_1_1World.html#a64558ef47d03743ba2b2b61ce97a083b":[2,0,0,1,3,2],
+"da/d39/classrtt_1_1world_1_1World.html#a67eccfd0e7e13fc4ce20a5dd5df55c31":[2,0,0,1,3,9],
+"da/d39/classrtt_1_1world_1_1World.html#a7a081491cf90e5710bb464d553ff9790":[2,0,0,1,3,17],
 "da/d39/classrtt_1_1world_1_1World.html#a81bed3b562ad2ce5d9974f64551ce24f":[2,0,0,1,3,23],
 "da/d39/classrtt_1_1world_1_1World.html#a840a30aa25c67c3a11ac7cd003ef22f3":[2,0,0,1,3,15],
 "da/d39/classrtt_1_1world_1_1World.html#a96baed371423474a119eb6fd55b5ae59":[2,0,0,1,3,10],
@@ -15,8 +20,8 @@ var NAVTREEINDEX8 =
 "da/d39/classrtt_1_1world_1_1World.html#ae705fc38ff82aabe5bd375ff823bb9c2":[2,0,0,1,3,4],
 "da/d39/classrtt_1_1world_1_1World.html#aef21ad06dd8c0993f12ef3f696d0c22b":[2,0,0,1,3,26],
 "da/d39/classrtt_1_1world_1_1World.html#af64f484d43512bff1fae5ae1fad707e8":[2,0,0,1,3,12],
-"da/d39/classrtt_1_1world_1_1World.html#d6/de5/structrtt_1_1world_1_1World_1_1AcquireInfo":[3,0,0,0,0,5,6,1],
 "da/d39/classrtt_1_1world_1_1World.html#d6/de5/structrtt_1_1world_1_1World_1_1AcquireInfo":[2,0,0,1,3,0],
+"da/d39/classrtt_1_1world_1_1World.html#d6/de5/structrtt_1_1world_1_1World_1_1AcquireInfo":[3,0,0,0,0,5,6,1],
 "da/d65/StopGameStateEvaluation_8cpp.html":[3,0,0,1,3,1,0,18],
 "da/d79/classrtt_1_1ai_1_1stp_1_1TestRole.html":[2,0,0,0,4,20],
 "da/d79/classrtt_1_1ai_1_1stp_1_1TestRole.html#a0575952e375783fee4350fcb97be888c":[2,0,0,0,4,20,11],
@@ -244,10 +249,5 @@ var NAVTREEINDEX8 =
 "db/d9b/LineOfSightEvaluation_8h_source.html":[3,0,0,0,0,3,2,2,1],
 "db/d9c/KeeperKickBall_8cpp.html":[3,0,0,1,3,2,0,2],
 "db/db2/PenaltyThemPrepareGameStateEvaluation_8cpp.html":[3,0,0,1,3,1,0,14],
-"db/dbc/DefendPass_8cpp.html":[3,0,0,1,3,2,0,0],
-"db/dbe/FreeKickThem_8cpp.html":[3,0,0,1,3,2,2,3],
-"db/dc9/PlayEvaluator_8cpp.html":[3,0,0,1,3,8],
-"db/dca/PenaltyThem_8cpp.html":[3,0,0,1,3,2,2,11],
-"db/dca/namespacertt_1_1ai_1_1stp_1_1skill.html":[1,0,1,0,4,6],
-"db/dd1/classrtt_1_1ai_1_1stp_1_1tactic_1_1ChipAtPos.html":[2,0,0,0,4,6,0]
+"db/dbc/DefendPass_8cpp.html":[3,0,0,1,3,2,0,0]
 };

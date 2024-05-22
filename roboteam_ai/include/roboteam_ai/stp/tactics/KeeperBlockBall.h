@@ -80,7 +80,7 @@ class KeeperBlockBall : public Tactic {
      * @param info the StpInfo struct
      * @return Target position for the keeper and a bool indicating if the keeper should avoid goal posts
      */
-    static std::pair<Vector2, bool>  calculateTargetPosition(const StpInfo info) noexcept;
+    static std::pair<Vector2, bool> calculateTargetPosition(const StpInfo info) noexcept;
 
     /**
      * @brief Calculates the angle the robot should have

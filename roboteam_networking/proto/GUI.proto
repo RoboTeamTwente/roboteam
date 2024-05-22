@@ -126,6 +126,9 @@ message PlayInfo {
     string play_name = 1;
     string ruleset_name = 2;
     int32 keeper_id = 3;
+    double timeleft = 4;
+    string followupcommandfromref_name = 5;
+    string commandfromref_name = 6;
 }
 
 message MsgToInterface {

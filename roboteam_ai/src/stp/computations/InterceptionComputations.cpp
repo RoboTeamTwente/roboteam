@@ -60,7 +60,6 @@ InterceptionInfo InterceptionComputations::calculateInterceptionInfo(const std::
     auto calculateIntercept = [&](const Vector2 &targetPosition) {
         // If the LoS score is too low
         if (PositionScoring::scorePosition(futureBallPosition, gen::LineOfSight, world->getField().value(), world).score < LineOfSightScore) {
-            auto interceptPosition = futureBallPosition;
             auto minDistance = std::numeric_limits<double>::max();
             auto theirRobots = world->getWorld()->getThem();
             Vector2 robotCloseToBallPos;

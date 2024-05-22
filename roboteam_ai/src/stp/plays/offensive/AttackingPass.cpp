@@ -49,7 +49,10 @@ uint8_t AttackingPass::score(const rtt::Field& field) noexcept {
     passInfo = stp::computations::PassComputations::calculatePass(gen::AttackingPass, world, field);
 
     if (passInfo.receiverLocation == Vector2()) return 0;  // In case no pass is found
-
+    // We don't want to pass back if we are close to the goal already.
+    if ((passInfo.passLocation - field.rightDefenseArea.rightLine().center()).length() < 3.5 &&
+        (passInfo.receiverLocation - field.rightDefenseArea.rightLine().center()).length() > (passInfo.passLocation - field.rightDefenseArea.rightLine().center()).length())
+        return 0;
     return passInfo.passScore;
 }
 

@@ -59,8 +59,9 @@ void PenaltyUs::calculateInfoForRoles() noexcept {
     auto positionTarget = PositionComputations::getPosition(std::nullopt, field.middleRightGrid, gen::GoalShot, field, world);
     if (GameStateManager::getCurrentGameState().timeLeft > 3.0) {
         stpInfos["kicker"].setPositionToMoveTo(positionTarget);
+    } else {
+        stpInfos["kicker"].setPositionToMoveTo(stpInfos["kicker"].getRobot()->get()->getPos());
     }
-    else { stpInfos["kicker"].setPositionToMoveTo(stpInfos["kicker"].getRobot()->get()->getPos());}
     auto goalTarget = computations::GoalComputations::calculateGoalTarget(world, field);
     stpInfos["kicker"].setPositionToShootAt(goalTarget);
     stpInfos["kicker"].setShotType(ShotType::MAX);

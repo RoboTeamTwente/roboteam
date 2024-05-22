@@ -100,13 +100,28 @@ const togglePause = () => {
         <font-awesome-icon icon="fa-hand" /> Halt
       </button>
     </div>
-    <span
-        class="font-mono"
-      >
-      Time left: <span class="btn btn-sm btn- gap-2">{{stpData.latest?.currentPlay!.timeLeft}}</span> 
-      Current ref command: <span class="btn btn-sm gap-2"> {{stpData.latest?.currentPlay!.commandFromRef}}</span> 
-      Next ref command: <span class="btn btn-sm gap-2"> {{stpData.latest?.currentPlay!.followUpCommandFromRef}}</span> 
-    </span>
+    <template v-if="aiController.useReferee">
+      <span class="font-mono">
+        <template v-if="stpData.latest?.currentPlay?.timeLeft">
+          Time left:
+          <span class="btn btn-sm gap-2" :style="{ backgroundColor: '#583c7c', color: '#ffffff' }">
+            {{stpData.latest.currentPlay.timeLeft}}
+          </span>
+        </template>
+        <template v-if="stpData.latest?.currentPlay?.commandFromRef">
+          Current ref command:
+          <span class="btn btn-sm gap-2" :style="{ backgroundColor: '#583c7c', color: '#ffffff' }">
+            {{stpData.latest.currentPlay.commandFromRef}}
+          </span>
+        </template>
+        <template v-if="stpData.latest?.currentPlay?.followUpCommandFromRef">
+          Next ref command:
+          <span class="btn btn-sm gap-2" :style="{ backgroundColor: '#583c7c', color: '#ffffff' }">
+            {{stpData.latest.currentPlay.followUpCommandFromRef}}
+          </span>
+        </template>
+      </span>
+    </template>
     <div class="flex grow" />
     <div class="flex w-20 justify-end">
       <info-dropdown

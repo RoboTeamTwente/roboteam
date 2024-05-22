@@ -16,9 +16,9 @@ struct GameState {
     static RefCommand followUpCommandFromRef;
     // Processed commands
     RefCommand commandId;
-    RefCommand followUpCommandId;
     RuleSet ruleSet;
     bool isFollowUpCommand;
+    RefCommand followUpCommandId;
     int keeperId = Constants::DEFAULT_KEEPER_ID();
     int maxAllowedRobots = stp::control_constants::MAX_ROBOT_COUNT;
     static int cardId;

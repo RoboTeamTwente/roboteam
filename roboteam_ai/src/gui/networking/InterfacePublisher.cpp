@@ -30,7 +30,7 @@ InterfacePublisher& InterfacePublisher::publishStpStatus(stp::Play* selectedPlay
     auto commandFromRef = rtt::getNameOfRefCommand(gameState.getCommandFromRef());
     auto followUpCommandFromRef = rtt::getNameOfRefCommand(gameState.getFollowUpCommandFromRef());
     if (followUpCommandFromRef == "UNDEFINED") {
-        followUpCommandFromRef = "-";
+        followUpCommandFromRef = "";
     }
     currentPlay->set_ruleset_name(gameState.getRuleSet().toString());
     currentPlay->set_keeper_id(gameState.keeperId);

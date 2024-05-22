@@ -63,7 +63,8 @@ void GameStateManager::setRefereeData(proto::Referee refMsg, const rtt::world::W
         GameStateManager::yellowTeam = refMsg.yellow();
         GameStateManager::blueTeam = refMsg.blue();
         GameStateManager::refereeDesignatedPosition = refMsg.designated_position();
-        GameState::timeLeft = (static_cast<double>(refMsg.current_action_time_remaining()) / 1000000);
+        double rawTime = static_cast<double>(refMsg.current_action_time_remaining()) / 1000000;
+        GameState::timeLeft = round(rawTime * 10) / 10;
         GameState::commandFromRef = getCommandFromRefMsg(refMsg.command(), isYellow);
         GameState::followUpCommandFromRef = refMsg.has_next_command() ? getCommandFromRefMsg(refMsg.next_command(), isYellow) : RefCommand::UNDEFINED;
     }

@@ -33,9 +33,9 @@ typedef struct RobotCommand {
     KickType kickType = KickType::NO_KICK;  // Defines the type of kicking, either normal(horizontal) or chipping(vertical), or no kick
     bool kickAtYaw = false;                 // Makes robot kick once it arrives at the specified yaw, used in combination with angular velocity
 
-    double dribblerOn = 0.0;  // [0, 1] Speed of the dribbler
+    bool dribblerOn = false;  // Robot will turn on the dribbler
 
-    bool wheelsOff = false;  // Robot will ignore packet, but robot will reply with feedback
+    bool wheelsOff = false;  // Robot will turn off the wheels
 
     bool operator==(const RobotCommand &other) const;
 

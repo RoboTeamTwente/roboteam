@@ -15,7 +15,7 @@ TEST(RobotTest, instantiation) {
     ASSERT_FALSE(r.ballSensorSeesBall);
     ASSERT_FALSE(r.ballSensorIsWorking);
     ASSERT_FALSE(r.dribblerSeesBall);
-    ASSERT_DOUBLE_EQ(r.dribblerOn, 0.0);
+    ASSERT_FALSE(r.dribblerOn);
     ASSERT_FALSE(r.xSensIsCalibrated);
     ASSERT_FALSE(r.capacitorIsCharged);
     ASSERT_DOUBLE_EQ(r.batteryLevel, 0.0);
@@ -39,7 +39,7 @@ TEST(RobotTest, equals) {
                    .ballSensorSeesBall = SimpleRandom::getBool(),
                    .ballSensorIsWorking = SimpleRandom::getBool(),
                    .dribblerSeesBall = SimpleRandom::getBool(),
-                   .dribblerOn = SimpleRandom::getDouble(0, 50),
+                   .dribblerOn = SimpleRandom::getBool(),
                    .xSensIsCalibrated = SimpleRandom::getBool(),
                    .capacitorIsCharged = SimpleRandom::getBool(),
                    .batteryLevel = SimpleRandom::getDouble(18, 24),

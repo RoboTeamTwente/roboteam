@@ -25,7 +25,7 @@ TEST(RobotCommandsTest, instantiation) {
     ASSERT_FALSE(robotCommand.waitForBall);
     ASSERT_EQ(robotCommand.kickType, KickType::NO_KICK);
     ASSERT_FALSE(robotCommand.kickAtYaw);
-    ASSERT_DOUBLE_EQ(robotCommand.dribblerOn, 0.0);
+    ASSERT_FALSE(robotCommand.dribblerOn);
 
     ASSERT_FALSE(robotCommand.wheelsOff);
 }
@@ -42,7 +42,7 @@ TEST(RobotCommandsTest, equals) {
                             .waitForBall = SimpleRandom::getBool(),
                             .kickType = randomKickType(),
                             .kickAtYaw = SimpleRandom::getBool(),
-                            .dribblerOn = SimpleRandom::getDouble(0.0, 5.0),
+                            .dribblerOn = SimpleRandom::getBool(),
                             .wheelsOff = SimpleRandom::getBool()};
     RobotCommand copy = command;
     ASSERT_EQ(command, copy);

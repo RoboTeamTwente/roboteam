@@ -98,7 +98,7 @@ rtt::RobotCommand createCommandForRobot(int id) {
                              .waitForBall = false,
                              .kickType = rtt::KickType::NO_KICK,
 
-                             .dribblerOn = useDribbler ? MAX_DRIBBLER_SPEED : 0.0f,
+                             .dribblerOn = useDribbler,
 
                              .wheelsOff = false};
     return cmd;

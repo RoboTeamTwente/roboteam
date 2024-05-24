@@ -15,7 +15,7 @@ std::optional<StpInfo> InstantKick::calculateInfoForSkill(const StpInfo &info) n
     StpInfo skillStpInfo = info;
     double distanceBallToTarget = (info.getBall()->get()->position - info.getPositionToShootAt().value()).length();
     skillStpInfo.setKickChipVelocity(control::ControlUtils::determineKickForce(distanceBallToTarget, skillStpInfo.getShotType()));
-    skillStpInfo.setDribblerSpeed(0);
+    skillStpInfo.setDribblerOn(false);
 
     return skillStpInfo;
 }

@@ -11,7 +11,7 @@
     "build": "VITE_NETWORK_PROCESSOR=tauri vite build && tauri build",
     "preview": "vite preview",
     "ts:check": "vue-tsc --noEmit",
-    "gen:proto": "pbjs --es6 -t static-module -w es6 -o src/generated/proto.js $(ls ../roboteam_networking/proto/* | grep -xv \"../roboteam_networking/proto/CMakeLists.txt\") &&  pbts --pb3-optional -o src/generated/proto.d.ts src/generated/proto.js",
+    "gen:proto": "pbjs --es6 -t static-module -w es6 -o src/generated/proto.js $(ls ../roboteam_networking/proto/*.proto) &&  pbts --pb3-optional -o src/generated/proto.d.ts src/generated/proto.js",
     "lint": "eslint src/ --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix",
     "format": "prettier --write src/"
   },

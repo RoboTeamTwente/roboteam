@@ -44,8 +44,8 @@ class Constants {
 
     /// ROBOT COMMANDS ///
     static double MAX_VEL_CMD();          /**< The maximum allowed velocity of the robot */
-    static double MIN_ANGLE();            /**< The minimum angle the robot can have */
-    static double MAX_ANGLE();            /**< The maximum angle the robot can have */
+    static double MIN_YAW();              /**< The minimum yaw the robot can have */
+    static double MAX_YAW();              /**< The maximum yaw the robot can have */
     static double MAX_ANGULAR_VELOCITY(); /**< The maximum angular velocity of the robot */
     static double MAX_ACC();              /**< Maximum acceleration of the robot */
 

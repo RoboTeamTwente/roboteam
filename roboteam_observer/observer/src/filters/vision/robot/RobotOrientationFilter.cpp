@@ -3,12 +3,12 @@ RobotOrientationFilter::RobotOrientationFilter(const Eigen::Vector2d &initialSta
                                                const Time &timeStamp)
     : PosVelFilter1D(initialState, initialCovariance, modelError, measurementError, timeStamp) {}
 
-double RobotOrientationFilter::limitAngle(double angle) {
-    angle += M_PI;
-    angle = fmod(angle, 2 * M_PI);
-    angle -= M_PI;
+double RobotOrientationFilter::limitAngle(double yaw) {
+    yaw += M_PI;
+    yaw = fmod(yaw, 2 * M_PI);
+    yaw -= M_PI;
 
-    return angle;
+    return yaw;
 }
 
 void RobotOrientationFilter::update(const double &position) {

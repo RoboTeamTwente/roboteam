@@ -90,7 +90,7 @@ void IOManager::publishSettings() {
     }
 }
 
-void IOManager::addCameraAngleToRobotCommands(rtt::RobotCommands& robotCommands) {
+void IOManager::addCameraYawToRobotCommands(rtt::RobotCommands& robotCommands) {
     const auto state = this->getState();
     if (state.has_last_seen_world()) {
         const auto world = getState().last_seen_world();
@@ -98,8 +98,8 @@ void IOManager::addCameraAngleToRobotCommands(rtt::RobotCommands& robotCommands)
         for (auto& robotCommand : robotCommands) {
             for (const auto& robot : robots) {
                 if (robot.id() == static_cast<uint32_t>(robotCommand.id)) {
-                    robotCommand.cameraAngleOfRobot = robot.angle();
-                    robotCommand.cameraAngleOfRobotIsSet = true;
+                    robotCommand.cameraYawOfRobot = robot.yaw();
+                    robotCommand.cameraYawOfRobotIsSet = true;
                 }
             }
         }
@@ -108,7 +108,7 @@ void IOManager::addCameraAngleToRobotCommands(rtt::RobotCommands& robotCommands)
 
 void IOManager::publishAllRobotCommands(rtt::RobotCommands& robotCommands) {
     if (!RuntimeConfig::isPaused && !robotCommands.empty()) {
-        this->addCameraAngleToRobotCommands(robotCommands);
+        this->addCameraYawToRobotCommands(robotCommands);
 
         this->publishRobotCommands(robotCommands, GameSettings::isYellow());
     }

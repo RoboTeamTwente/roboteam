@@ -40,11 +40,11 @@ struct StpInfo {
     double getKickChipVelocity() const { return kickChipVelocity; }
     void setKickChipVelocity(double kickChipVelocity) { this->kickChipVelocity = kickChipVelocity; }
 
-    Angle getAngle() const { return angle; }
-    void setAngle(double angle) { this->angle = Angle(angle); }
+    Angle getYaw() const { return yaw; }
+    void setYaw(double yaw) { this->yaw = Angle(yaw); }
 
-    int getDribblerSpeed() const { return dribblerSpeed; }
-    void setDribblerSpeed(int dribblerSpeed) { this->dribblerSpeed = dribblerSpeed; }
+    bool getDribblerOn() const { return dribblerOn; }
+    void setDribblerOn(bool dribblerOn) { this->dribblerOn = dribblerOn; }
 
     ShotType getShotType() const { return shotType; }
     void setShotType(ShotType shotType) { this->shotType = shotType; }
@@ -152,14 +152,14 @@ struct StpInfo {
     ShotType shotType{};
 
     /**
-     * Reference angle of the robot
+     * Reference yaw of the robot
      */
-    Angle angle = Angle(0.0);
+    Angle yaw = Angle(0.0);
 
     /**
-     * Speed of the dribbler in %
+     * Whether the dribbler should be on
      */
-    int dribblerSpeed = 0;
+    bool dribblerOn;
 
     /**
      * Set the shot to be a kick or chip

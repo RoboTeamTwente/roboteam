@@ -8,7 +8,7 @@ Halt::Halt() { skills = collections::state_machine<Skill, Status, StpInfo>{skill
 
 std::optional<StpInfo> Halt::calculateInfoForSkill(StpInfo const &info) noexcept {
     StpInfo skillInfo = info;
-    skillInfo.setAngle(0.0);
+    skillInfo.setYaw(0.0);
 
     return skillInfo;
 }

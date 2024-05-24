@@ -30,7 +30,7 @@ class RobotShape {
 
     [[nodiscard]] Vector2 pos() const;
 
-    [[nodiscard]] Angle angle() const;
+    [[nodiscard]] Angle yaw() const;
 
     [[nodiscard]] Vector2 centerOfKickerPos() const;
 

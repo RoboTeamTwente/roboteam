@@ -5,7 +5,7 @@
 
 #include "RobotPos.h"
 struct FilteredRobot {
-    explicit FilteredRobot(TeamRobotID id, RobotPos position, RobotVel velocity, double health, double posUncertainty, double velocityUncertainty, double angleUncertainty,
+    explicit FilteredRobot(TeamRobotID id, RobotPos position, RobotVel velocity, double health, double posUncertainty, double velocityUncertainty, double yawUncertainty,
                            double angularVelUncertainty)
         : id{id},
           position{std::move(position)},
@@ -13,13 +13,13 @@ struct FilteredRobot {
           health{health},
           posUncertainty{posUncertainty},
           velocityUncertainty{velocityUncertainty},
-          angleUncertainty{angleUncertainty},
+          yawUncertainty{yawUncertainty},
           angularVelUncertainty{angularVelUncertainty} {}
     [[nodiscard]] proto::WorldRobot asWorldRobot() const {
         proto::WorldRobot robot;
         robot.mutable_pos()->set_x(position.position.x());
         robot.mutable_pos()->set_y(position.position.y());
-        robot.set_angle(position.angle);
+        robot.set_yaw(position.yaw);
         robot.mutable_vel()->set_x(velocity.velocity.x());
         robot.mutable_vel()->set_y(velocity.velocity.y());
         robot.set_w(velocity.angularVelocity);
@@ -32,7 +32,7 @@ struct FilteredRobot {
     double health;
     double posUncertainty;
     double velocityUncertainty;
-    double angleUncertainty;
+    double yawUncertainty;
     double angularVelUncertainty;
 };
 

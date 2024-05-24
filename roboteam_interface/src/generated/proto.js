@@ -16,6 +16,319 @@ export const proto = $root.proto = (() => {
      */
     const proto = {};
 
+    proto.GameSettings = (function() {
+
+        /**
+         * Properties of a GameSettings.
+         * @memberof proto
+         * @interface IGameSettings
+         * @property {boolean|null} [isPrimaryAi] GameSettings isPrimaryAi
+         * @property {boolean|null} [isYellow] GameSettings isYellow
+         * @property {boolean|null} [isLeft] GameSettings isLeft
+         * @property {proto.GameSettings.RobotHubMode|null} [robotHubMode] GameSettings robotHubMode
+         */
+
+        /**
+         * Constructs a new GameSettings.
+         * @memberof proto
+         * @classdesc Represents a GameSettings.
+         * @implements IGameSettings
+         * @constructor
+         * @param {proto.IGameSettings=} [properties] Properties to set
+         */
+        function GameSettings(properties) {
+            if (properties)
+                for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * GameSettings isPrimaryAi.
+         * @member {boolean} isPrimaryAi
+         * @memberof proto.GameSettings
+         * @instance
+         */
+        GameSettings.prototype.isPrimaryAi = false;
+
+        /**
+         * GameSettings isYellow.
+         * @member {boolean} isYellow
+         * @memberof proto.GameSettings
+         * @instance
+         */
+        GameSettings.prototype.isYellow = false;
+
+        /**
+         * GameSettings isLeft.
+         * @member {boolean} isLeft
+         * @memberof proto.GameSettings
+         * @instance
+         */
+        GameSettings.prototype.isLeft = false;
+
+        /**
+         * GameSettings robotHubMode.
+         * @member {proto.GameSettings.RobotHubMode} robotHubMode
+         * @memberof proto.GameSettings
+         * @instance
+         */
+        GameSettings.prototype.robotHubMode = 0;
+
+        /**
+         * Creates a new GameSettings instance using the specified properties.
+         * @function create
+         * @memberof proto.GameSettings
+         * @static
+         * @param {proto.IGameSettings=} [properties] Properties to set
+         * @returns {proto.GameSettings} GameSettings instance
+         */
+        GameSettings.create = function create(properties) {
+            return new GameSettings(properties);
+        };
+
+        /**
+         * Encodes the specified GameSettings message. Does not implicitly {@link proto.GameSettings.verify|verify} messages.
+         * @function encode
+         * @memberof proto.GameSettings
+         * @static
+         * @param {proto.IGameSettings} message GameSettings message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        GameSettings.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.isPrimaryAi != null && Object.hasOwnProperty.call(message, "isPrimaryAi"))
+                writer.uint32(/* id 1, wireType 0 =*/8).bool(message.isPrimaryAi);
+            if (message.isYellow != null && Object.hasOwnProperty.call(message, "isYellow"))
+                writer.uint32(/* id 2, wireType 0 =*/16).bool(message.isYellow);
+            if (message.isLeft != null && Object.hasOwnProperty.call(message, "isLeft"))
+                writer.uint32(/* id 3, wireType 0 =*/24).bool(message.isLeft);
+            if (message.robotHubMode != null && Object.hasOwnProperty.call(message, "robotHubMode"))
+                writer.uint32(/* id 4, wireType 0 =*/32).int32(message.robotHubMode);
+            return writer;
+        };
+
+        /**
+         * Encodes the specified GameSettings message, length delimited. Does not implicitly {@link proto.GameSettings.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof proto.GameSettings
+         * @static
+         * @param {proto.IGameSettings} message GameSettings message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        GameSettings.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a GameSettings message from the specified reader or buffer.
+         * @function decode
+         * @memberof proto.GameSettings
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {proto.GameSettings} GameSettings
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        GameSettings.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            let end = length === undefined ? reader.len : reader.pos + length, message = new $root.proto.GameSettings();
+            while (reader.pos < end) {
+                let tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1: {
+                        message.isPrimaryAi = reader.bool();
+                        break;
+                    }
+                case 2: {
+                        message.isYellow = reader.bool();
+                        break;
+                    }
+                case 3: {
+                        message.isLeft = reader.bool();
+                        break;
+                    }
+                case 4: {
+                        message.robotHubMode = reader.int32();
+                        break;
+                    }
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Decodes a GameSettings message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof proto.GameSettings
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {proto.GameSettings} GameSettings
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        GameSettings.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a GameSettings message.
+         * @function verify
+         * @memberof proto.GameSettings
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        GameSettings.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (message.isPrimaryAi != null && message.hasOwnProperty("isPrimaryAi"))
+                if (typeof message.isPrimaryAi !== "boolean")
+                    return "isPrimaryAi: boolean expected";
+            if (message.isYellow != null && message.hasOwnProperty("isYellow"))
+                if (typeof message.isYellow !== "boolean")
+                    return "isYellow: boolean expected";
+            if (message.isLeft != null && message.hasOwnProperty("isLeft"))
+                if (typeof message.isLeft !== "boolean")
+                    return "isLeft: boolean expected";
+            if (message.robotHubMode != null && message.hasOwnProperty("robotHubMode"))
+                switch (message.robotHubMode) {
+                default:
+                    return "robotHubMode: enum value expected";
+                case 0:
+                case 1:
+                case 2:
+                    break;
+                }
+            return null;
+        };
+
+        /**
+         * Creates a GameSettings message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof proto.GameSettings
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {proto.GameSettings} GameSettings
+         */
+        GameSettings.fromObject = function fromObject(object) {
+            if (object instanceof $root.proto.GameSettings)
+                return object;
+            let message = new $root.proto.GameSettings();
+            if (object.isPrimaryAi != null)
+                message.isPrimaryAi = Boolean(object.isPrimaryAi);
+            if (object.isYellow != null)
+                message.isYellow = Boolean(object.isYellow);
+            if (object.isLeft != null)
+                message.isLeft = Boolean(object.isLeft);
+            switch (object.robotHubMode) {
+            default:
+                if (typeof object.robotHubMode === "number") {
+                    message.robotHubMode = object.robotHubMode;
+                    break;
+                }
+                break;
+            case "UNKNOWN":
+            case 0:
+                message.robotHubMode = 0;
+                break;
+            case "BASESTATION":
+            case 1:
+                message.robotHubMode = 1;
+                break;
+            case "SIMULATOR":
+            case 2:
+                message.robotHubMode = 2;
+                break;
+            }
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a GameSettings message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof proto.GameSettings
+         * @static
+         * @param {proto.GameSettings} message GameSettings
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        GameSettings.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            let object = {};
+            if (options.defaults) {
+                object.isPrimaryAi = false;
+                object.isYellow = false;
+                object.isLeft = false;
+                object.robotHubMode = options.enums === String ? "UNKNOWN" : 0;
+            }
+            if (message.isPrimaryAi != null && message.hasOwnProperty("isPrimaryAi"))
+                object.isPrimaryAi = message.isPrimaryAi;
+            if (message.isYellow != null && message.hasOwnProperty("isYellow"))
+                object.isYellow = message.isYellow;
+            if (message.isLeft != null && message.hasOwnProperty("isLeft"))
+                object.isLeft = message.isLeft;
+            if (message.robotHubMode != null && message.hasOwnProperty("robotHubMode"))
+                object.robotHubMode = options.enums === String ? $root.proto.GameSettings.RobotHubMode[message.robotHubMode] === undefined ? message.robotHubMode : $root.proto.GameSettings.RobotHubMode[message.robotHubMode] : message.robotHubMode;
+            return object;
+        };
+
+        /**
+         * Converts this GameSettings to JSON.
+         * @function toJSON
+         * @memberof proto.GameSettings
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        GameSettings.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        /**
+         * Gets the default type url for GameSettings
+         * @function getTypeUrl
+         * @memberof proto.GameSettings
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        GameSettings.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/proto.GameSettings";
+        };
+
+        /**
+         * RobotHubMode enum.
+         * @name proto.GameSettings.RobotHubMode
+         * @enum {number}
+         * @property {number} UNKNOWN=0 UNKNOWN value
+         * @property {number} BASESTATION=1 BASESTATION value
+         * @property {number} SIMULATOR=2 SIMULATOR value
+         */
+        GameSettings.RobotHubMode = (function() {
+            const valuesById = {}, values = Object.create(valuesById);
+            values[valuesById[0] = "UNKNOWN"] = 0;
+            values[valuesById[1] = "BASESTATION"] = 1;
+            values[valuesById[2] = "SIMULATOR"] = 2;
+            return values;
+        })();
+
+        return GameSettings;
+    })();
+
     proto.Drawing = (function() {
 
         /**
@@ -317,6 +630,7 @@ export const proto = $root.proto = (() => {
                     return "category: enum value expected";
                 case 0:
                 case 1:
+                case 2:
                     break;
                 }
             if (message.forRobotId != null && message.hasOwnProperty("forRobotId"))
@@ -440,7 +754,7 @@ export const proto = $root.proto = (() => {
             case 1:
                 message.category = 1;
                 break;
-            case "MARGIN":
+            case "MARGINS":
             case 2:
                 message.category = 2;
                 break;
@@ -3719,6 +4033,9 @@ export const proto = $root.proto = (() => {
          * @property {string|null} [playName] PlayInfo playName
          * @property {string|null} [rulesetName] PlayInfo rulesetName
          * @property {number|null} [keeperId] PlayInfo keeperId
+         * @property {number|null} [timeleft] PlayInfo timeleft
+         * @property {string|null} [followupcommandfromrefName] PlayInfo followupcommandfromrefName
+         * @property {string|null} [commandfromrefName] PlayInfo commandfromrefName
          */
 
         /**
@@ -3761,6 +4078,30 @@ export const proto = $root.proto = (() => {
         PlayInfo.prototype.keeperId = 0;
 
         /**
+         * PlayInfo timeleft.
+         * @member {number} timeleft
+         * @memberof proto.PlayInfo
+         * @instance
+         */
+        PlayInfo.prototype.timeleft = 0;
+
+        /**
+         * PlayInfo followupcommandfromrefName.
+         * @member {string} followupcommandfromrefName
+         * @memberof proto.PlayInfo
+         * @instance
+         */
+        PlayInfo.prototype.followupcommandfromrefName = "";
+
+        /**
+         * PlayInfo commandfromrefName.
+         * @member {string} commandfromrefName
+         * @memberof proto.PlayInfo
+         * @instance
+         */
+        PlayInfo.prototype.commandfromrefName = "";
+
+        /**
          * Creates a new PlayInfo instance using the specified properties.
          * @function create
          * @memberof proto.PlayInfo
@@ -3790,12 +4131,12 @@ export const proto = $root.proto = (() => {
                 writer.uint32(/* id 2, wireType 2 =*/18).string(message.rulesetName);
             if (message.keeperId != null && Object.hasOwnProperty.call(message, "keeperId"))
                 writer.uint32(/* id 3, wireType 0 =*/24).int32(message.keeperId);
-            if (message.timeLeft != null && Object.hasOwnProperty.call(message, "timeLeft"))
-                writer.uint32(/* id 4, wireType 0 =*/30).double(message.timeLeft);
-            if (message.commandFromRef != null && Object.hasOwnProperty.call(message, "commandFromRef"))
-                writer.uint32(/* id 5, wireType 2 =*/36).string(message.commandFromRef);
-            if (message.followUpCommandFromRef != null && Object.hasOwnProperty.call(message, "followUpCommandFromRef"))
-                writer.uint32(/* id 6, wireType 2 =*/42).string(message.followUpCommandFromRef);
+            if (message.timeleft != null && Object.hasOwnProperty.call(message, "timeleft"))
+                writer.uint32(/* id 4, wireType 1 =*/33).double(message.timeleft);
+            if (message.followupcommandfromrefName != null && Object.hasOwnProperty.call(message, "followupcommandfromrefName"))
+                writer.uint32(/* id 5, wireType 2 =*/42).string(message.followupcommandfromrefName);
+            if (message.commandfromrefName != null && Object.hasOwnProperty.call(message, "commandfromrefName"))
+                writer.uint32(/* id 6, wireType 2 =*/50).string(message.commandfromrefName);
             return writer;
         };
 
@@ -3843,15 +4184,15 @@ export const proto = $root.proto = (() => {
                         break;
                     }
                 case 4: {
-                        message.timeLeft = reader.double();
+                        message.timeleft = reader.double();
                         break;
                     }
                 case 5: {
-                        message.followUpCommandFromRef = reader.string();
+                        message.followupcommandfromrefName = reader.string();
                         break;
                     }
                 case 6: {
-                        message.commandFromRef = reader.string();
+                        message.commandfromrefName = reader.string();
                         break;
                     }
                 default:
@@ -3898,6 +4239,15 @@ export const proto = $root.proto = (() => {
             if (message.keeperId != null && message.hasOwnProperty("keeperId"))
                 if (!$util.isInteger(message.keeperId))
                     return "keeperId: integer expected";
+            if (message.timeleft != null && message.hasOwnProperty("timeleft"))
+                if (typeof message.timeleft !== "number")
+                    return "timeleft: number expected";
+            if (message.followupcommandfromrefName != null && message.hasOwnProperty("followupcommandfromrefName"))
+                if (!$util.isString(message.followupcommandfromrefName))
+                    return "followupcommandfromrefName: string expected";
+            if (message.commandfromrefName != null && message.hasOwnProperty("commandfromrefName"))
+                if (!$util.isString(message.commandfromrefName))
+                    return "commandfromrefName: string expected";
             return null;
         };
 
@@ -3919,6 +4269,12 @@ export const proto = $root.proto = (() => {
                 message.rulesetName = String(object.rulesetName);
             if (object.keeperId != null)
                 message.keeperId = object.keeperId | 0;
+            if (object.timeleft != null)
+                message.timeleft = Number(object.timeleft);
+            if (object.followupcommandfromrefName != null)
+                message.followupcommandfromrefName = String(object.followupcommandfromrefName);
+            if (object.commandfromrefName != null)
+                message.commandfromrefName = String(object.commandfromrefName);
             return message;
         };
 
@@ -3939,6 +4295,9 @@ export const proto = $root.proto = (() => {
                 object.playName = "";
                 object.rulesetName = "";
                 object.keeperId = 0;
+                object.timeleft = 0;
+                object.followupcommandfromrefName = "";
+                object.commandfromrefName = "";
             }
             if (message.playName != null && message.hasOwnProperty("playName"))
                 object.playName = message.playName;
@@ -3946,6 +4305,12 @@ export const proto = $root.proto = (() => {
                 object.rulesetName = message.rulesetName;
             if (message.keeperId != null && message.hasOwnProperty("keeperId"))
                 object.keeperId = message.keeperId;
+            if (message.timeleft != null && message.hasOwnProperty("timeleft"))
+                object.timeleft = options.json && !isFinite(message.timeleft) ? String(message.timeleft) : message.timeleft;
+            if (message.followupcommandfromrefName != null && message.hasOwnProperty("followupcommandfromrefName"))
+                object.followupcommandfromrefName = message.followupcommandfromrefName;
+            if (message.commandfromrefName != null && message.hasOwnProperty("commandfromrefName"))
+                object.commandfromrefName = message.commandfromrefName;
             return object;
         };
 
@@ -4975,319 +5340,6 @@ export const proto = $root.proto = (() => {
         return MsgFromInterface;
     })();
 
-    proto.GameSettings = (function() {
-
-        /**
-         * Properties of a GameSettings.
-         * @memberof proto
-         * @interface IGameSettings
-         * @property {boolean|null} [isPrimaryAi] GameSettings isPrimaryAi
-         * @property {boolean|null} [isYellow] GameSettings isYellow
-         * @property {boolean|null} [isLeft] GameSettings isLeft
-         * @property {proto.GameSettings.RobotHubMode|null} [robotHubMode] GameSettings robotHubMode
-         */
-
-        /**
-         * Constructs a new GameSettings.
-         * @memberof proto
-         * @classdesc Represents a GameSettings.
-         * @implements IGameSettings
-         * @constructor
-         * @param {proto.IGameSettings=} [properties] Properties to set
-         */
-        function GameSettings(properties) {
-            if (properties)
-                for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
-                        this[keys[i]] = properties[keys[i]];
-        }
-
-        /**
-         * GameSettings isPrimaryAi.
-         * @member {boolean} isPrimaryAi
-         * @memberof proto.GameSettings
-         * @instance
-         */
-        GameSettings.prototype.isPrimaryAi = false;
-
-        /**
-         * GameSettings isYellow.
-         * @member {boolean} isYellow
-         * @memberof proto.GameSettings
-         * @instance
-         */
-        GameSettings.prototype.isYellow = false;
-
-        /**
-         * GameSettings isLeft.
-         * @member {boolean} isLeft
-         * @memberof proto.GameSettings
-         * @instance
-         */
-        GameSettings.prototype.isLeft = false;
-
-        /**
-         * GameSettings robotHubMode.
-         * @member {proto.GameSettings.RobotHubMode} robotHubMode
-         * @memberof proto.GameSettings
-         * @instance
-         */
-        GameSettings.prototype.robotHubMode = 0;
-
-        /**
-         * Creates a new GameSettings instance using the specified properties.
-         * @function create
-         * @memberof proto.GameSettings
-         * @static
-         * @param {proto.IGameSettings=} [properties] Properties to set
-         * @returns {proto.GameSettings} GameSettings instance
-         */
-        GameSettings.create = function create(properties) {
-            return new GameSettings(properties);
-        };
-
-        /**
-         * Encodes the specified GameSettings message. Does not implicitly {@link proto.GameSettings.verify|verify} messages.
-         * @function encode
-         * @memberof proto.GameSettings
-         * @static
-         * @param {proto.IGameSettings} message GameSettings message or plain object to encode
-         * @param {$protobuf.Writer} [writer] Writer to encode to
-         * @returns {$protobuf.Writer} Writer
-         */
-        GameSettings.encode = function encode(message, writer) {
-            if (!writer)
-                writer = $Writer.create();
-            if (message.isPrimaryAi != null && Object.hasOwnProperty.call(message, "isPrimaryAi"))
-                writer.uint32(/* id 1, wireType 0 =*/8).bool(message.isPrimaryAi);
-            if (message.isYellow != null && Object.hasOwnProperty.call(message, "isYellow"))
-                writer.uint32(/* id 2, wireType 0 =*/16).bool(message.isYellow);
-            if (message.isLeft != null && Object.hasOwnProperty.call(message, "isLeft"))
-                writer.uint32(/* id 3, wireType 0 =*/24).bool(message.isLeft);
-            if (message.robotHubMode != null && Object.hasOwnProperty.call(message, "robotHubMode"))
-                writer.uint32(/* id 4, wireType 0 =*/32).int32(message.robotHubMode);
-            return writer;
-        };
-
-        /**
-         * Encodes the specified GameSettings message, length delimited. Does not implicitly {@link proto.GameSettings.verify|verify} messages.
-         * @function encodeDelimited
-         * @memberof proto.GameSettings
-         * @static
-         * @param {proto.IGameSettings} message GameSettings message or plain object to encode
-         * @param {$protobuf.Writer} [writer] Writer to encode to
-         * @returns {$protobuf.Writer} Writer
-         */
-        GameSettings.encodeDelimited = function encodeDelimited(message, writer) {
-            return this.encode(message, writer).ldelim();
-        };
-
-        /**
-         * Decodes a GameSettings message from the specified reader or buffer.
-         * @function decode
-         * @memberof proto.GameSettings
-         * @static
-         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-         * @param {number} [length] Message length if known beforehand
-         * @returns {proto.GameSettings} GameSettings
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        GameSettings.decode = function decode(reader, length) {
-            if (!(reader instanceof $Reader))
-                reader = $Reader.create(reader);
-            let end = length === undefined ? reader.len : reader.pos + length, message = new $root.proto.GameSettings();
-            while (reader.pos < end) {
-                let tag = reader.uint32();
-                switch (tag >>> 3) {
-                case 1: {
-                        message.isPrimaryAi = reader.bool();
-                        break;
-                    }
-                case 2: {
-                        message.isYellow = reader.bool();
-                        break;
-                    }
-                case 3: {
-                        message.isLeft = reader.bool();
-                        break;
-                    }
-                case 4: {
-                        message.robotHubMode = reader.int32();
-                        break;
-                    }
-                default:
-                    reader.skipType(tag & 7);
-                    break;
-                }
-            }
-            return message;
-        };
-
-        /**
-         * Decodes a GameSettings message from the specified reader or buffer, length delimited.
-         * @function decodeDelimited
-         * @memberof proto.GameSettings
-         * @static
-         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-         * @returns {proto.GameSettings} GameSettings
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        GameSettings.decodeDelimited = function decodeDelimited(reader) {
-            if (!(reader instanceof $Reader))
-                reader = new $Reader(reader);
-            return this.decode(reader, reader.uint32());
-        };
-
-        /**
-         * Verifies a GameSettings message.
-         * @function verify
-         * @memberof proto.GameSettings
-         * @static
-         * @param {Object.<string,*>} message Plain object to verify
-         * @returns {string|null} `null` if valid, otherwise the reason why it is not
-         */
-        GameSettings.verify = function verify(message) {
-            if (typeof message !== "object" || message === null)
-                return "object expected";
-            if (message.isPrimaryAi != null && message.hasOwnProperty("isPrimaryAi"))
-                if (typeof message.isPrimaryAi !== "boolean")
-                    return "isPrimaryAi: boolean expected";
-            if (message.isYellow != null && message.hasOwnProperty("isYellow"))
-                if (typeof message.isYellow !== "boolean")
-                    return "isYellow: boolean expected";
-            if (message.isLeft != null && message.hasOwnProperty("isLeft"))
-                if (typeof message.isLeft !== "boolean")
-                    return "isLeft: boolean expected";
-            if (message.robotHubMode != null && message.hasOwnProperty("robotHubMode"))
-                switch (message.robotHubMode) {
-                default:
-                    return "robotHubMode: enum value expected";
-                case 0:
-                case 1:
-                case 2:
-                    break;
-                }
-            return null;
-        };
-
-        /**
-         * Creates a GameSettings message from a plain object. Also converts values to their respective internal types.
-         * @function fromObject
-         * @memberof proto.GameSettings
-         * @static
-         * @param {Object.<string,*>} object Plain object
-         * @returns {proto.GameSettings} GameSettings
-         */
-        GameSettings.fromObject = function fromObject(object) {
-            if (object instanceof $root.proto.GameSettings)
-                return object;
-            let message = new $root.proto.GameSettings();
-            if (object.isPrimaryAi != null)
-                message.isPrimaryAi = Boolean(object.isPrimaryAi);
-            if (object.isYellow != null)
-                message.isYellow = Boolean(object.isYellow);
-            if (object.isLeft != null)
-                message.isLeft = Boolean(object.isLeft);
-            switch (object.robotHubMode) {
-            default:
-                if (typeof object.robotHubMode === "number") {
-                    message.robotHubMode = object.robotHubMode;
-                    break;
-                }
-                break;
-            case "UNKNOWN":
-            case 0:
-                message.robotHubMode = 0;
-                break;
-            case "BASESTATION":
-            case 1:
-                message.robotHubMode = 1;
-                break;
-            case "SIMULATOR":
-            case 2:
-                message.robotHubMode = 2;
-                break;
-            }
-            return message;
-        };
-
-        /**
-         * Creates a plain object from a GameSettings message. Also converts values to other types if specified.
-         * @function toObject
-         * @memberof proto.GameSettings
-         * @static
-         * @param {proto.GameSettings} message GameSettings
-         * @param {$protobuf.IConversionOptions} [options] Conversion options
-         * @returns {Object.<string,*>} Plain object
-         */
-        GameSettings.toObject = function toObject(message, options) {
-            if (!options)
-                options = {};
-            let object = {};
-            if (options.defaults) {
-                object.isPrimaryAi = false;
-                object.isYellow = false;
-                object.isLeft = false;
-                object.robotHubMode = options.enums === String ? "UNKNOWN" : 0;
-            }
-            if (message.isPrimaryAi != null && message.hasOwnProperty("isPrimaryAi"))
-                object.isPrimaryAi = message.isPrimaryAi;
-            if (message.isYellow != null && message.hasOwnProperty("isYellow"))
-                object.isYellow = message.isYellow;
-            if (message.isLeft != null && message.hasOwnProperty("isLeft"))
-                object.isLeft = message.isLeft;
-            if (message.robotHubMode != null && message.hasOwnProperty("robotHubMode"))
-                object.robotHubMode = options.enums === String ? $root.proto.GameSettings.RobotHubMode[message.robotHubMode] === undefined ? message.robotHubMode : $root.proto.GameSettings.RobotHubMode[message.robotHubMode] : message.robotHubMode;
-            return object;
-        };
-
-        /**
-         * Converts this GameSettings to JSON.
-         * @function toJSON
-         * @memberof proto.GameSettings
-         * @instance
-         * @returns {Object.<string,*>} JSON object
-         */
-        GameSettings.prototype.toJSON = function toJSON() {
-            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
-        };
-
-        /**
-         * Gets the default type url for GameSettings
-         * @function getTypeUrl
-         * @memberof proto.GameSettings
-         * @static
-         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-         * @returns {string} The default type url
-         */
-        GameSettings.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
-            if (typeUrlPrefix === undefined) {
-                typeUrlPrefix = "type.googleapis.com";
-            }
-            return typeUrlPrefix + "/proto.GameSettings";
-        };
-
-        /**
-         * RobotHubMode enum.
-         * @name proto.GameSettings.RobotHubMode
-         * @enum {number}
-         * @property {number} UNKNOWN=0 UNKNOWN value
-         * @property {number} BASESTATION=1 BASESTATION value
-         * @property {number} SIMULATOR=2 SIMULATOR value
-         */
-        GameSettings.RobotHubMode = (function() {
-            const valuesById = {}, values = Object.create(valuesById);
-            values[valuesById[0] = "UNKNOWN"] = 0;
-            values[valuesById[1] = "BASESTATION"] = 1;
-            values[valuesById[2] = "SIMULATOR"] = 2;
-            return values;
-        })();
-
-        return GameSettings;
-    })();
-
     proto.State = (function() {
 
         /**
@@ -5300,9 +5352,9 @@ export const proto = $root.proto = (() => {
          * @property {proto.ITeamParameters|null} [blueRobotParameters] State blueRobotParameters
          * @property {proto.ITeamParameters|null} [yellowRobotParameters] State yellowRobotParameters
          * @property {proto.ISSL_GeometryData|null} [field] State field
-         * @property {proto.ISSL_Referee|null} [referee] State referee
+         * @property {proto.IReferee|null} [referee] State referee
          * @property {Array.<proto.ISSL_WrapperPacket>|null} [processedVisionPackets] State processedVisionPackets
-         * @property {Array.<proto.ISSL_Referee>|null} [processedRefereePackets] State processedRefereePackets
+         * @property {Array.<proto.IReferee>|null} [processedRefereePackets] State processedRefereePackets
          * @property {Array.<proto.IRobotsFeedback>|null} [processedFeedbackPackets] State processedFeedbackPackets
          */
 
@@ -5374,7 +5426,7 @@ export const proto = $root.proto = (() => {
 
         /**
          * State referee.
-         * @member {proto.ISSL_Referee|null|undefined} referee
+         * @member {proto.IReferee|null|undefined} referee
          * @memberof proto.State
          * @instance
          */
@@ -5390,7 +5442,7 @@ export const proto = $root.proto = (() => {
 
         /**
          * State processedRefereePackets.
-         * @member {Array.<proto.ISSL_Referee>} processedRefereePackets
+         * @member {Array.<proto.IReferee>} processedRefereePackets
          * @memberof proto.State
          * @instance
          */
@@ -5441,13 +5493,13 @@ export const proto = $root.proto = (() => {
             if (message.field != null && Object.hasOwnProperty.call(message, "field"))
                 $root.proto.SSL_GeometryData.encode(message.field, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
             if (message.referee != null && Object.hasOwnProperty.call(message, "referee"))
-                $root.proto.SSL_Referee.encode(message.referee, writer.uint32(/* id 7, wireType 2 =*/58).fork()).ldelim();
+                $root.proto.Referee.encode(message.referee, writer.uint32(/* id 7, wireType 2 =*/58).fork()).ldelim();
             if (message.processedVisionPackets != null && message.processedVisionPackets.length)
                 for (let i = 0; i < message.processedVisionPackets.length; ++i)
                     $root.proto.SSL_WrapperPacket.encode(message.processedVisionPackets[i], writer.uint32(/* id 10, wireType 2 =*/82).fork()).ldelim();
             if (message.processedRefereePackets != null && message.processedRefereePackets.length)
                 for (let i = 0; i < message.processedRefereePackets.length; ++i)
-                    $root.proto.SSL_Referee.encode(message.processedRefereePackets[i], writer.uint32(/* id 11, wireType 2 =*/90).fork()).ldelim();
+                    $root.proto.Referee.encode(message.processedRefereePackets[i], writer.uint32(/* id 11, wireType 2 =*/90).fork()).ldelim();
             if (message.processedFeedbackPackets != null && message.processedFeedbackPackets.length)
                 for (let i = 0; i < message.processedFeedbackPackets.length; ++i)
                     $root.proto.RobotsFeedback.encode(message.processedFeedbackPackets[i], writer.uint32(/* id 12, wireType 2 =*/98).fork()).ldelim();
@@ -5510,7 +5562,7 @@ export const proto = $root.proto = (() => {
                         break;
                     }
                 case 7: {
-                        message.referee = $root.proto.SSL_Referee.decode(reader, reader.uint32());
+                        message.referee = $root.proto.Referee.decode(reader, reader.uint32());
                         break;
                     }
                 case 10: {
@@ -5522,7 +5574,7 @@ export const proto = $root.proto = (() => {
                 case 11: {
                         if (!(message.processedRefereePackets && message.processedRefereePackets.length))
                             message.processedRefereePackets = [];
-                        message.processedRefereePackets.push($root.proto.SSL_Referee.decode(reader, reader.uint32()));
+                        message.processedRefereePackets.push($root.proto.Referee.decode(reader, reader.uint32()));
                         break;
                     }
                 case 12: {
@@ -5597,7 +5649,7 @@ export const proto = $root.proto = (() => {
                     return "field." + error;
             }
             if (message.referee != null && message.hasOwnProperty("referee")) {
-                let error = $root.proto.SSL_Referee.verify(message.referee);
+                let error = $root.proto.Referee.verify(message.referee);
                 if (error)
                     return "referee." + error;
             }
@@ -5614,7 +5666,7 @@ export const proto = $root.proto = (() => {
                 if (!Array.isArray(message.processedRefereePackets))
                     return "processedRefereePackets: array expected";
                 for (let i = 0; i < message.processedRefereePackets.length; ++i) {
-                    let error = $root.proto.SSL_Referee.verify(message.processedRefereePackets[i]);
+                    let error = $root.proto.Referee.verify(message.processedRefereePackets[i]);
                     if (error)
                         return "processedRefereePackets." + error;
                 }
@@ -5676,7 +5728,7 @@ export const proto = $root.proto = (() => {
             if (object.referee != null) {
                 if (typeof object.referee !== "object")
                     throw TypeError(".proto.State.referee: object expected");
-                message.referee = $root.proto.SSL_Referee.fromObject(object.referee);
+                message.referee = $root.proto.Referee.fromObject(object.referee);
             }
             if (object.processedVisionPackets) {
                 if (!Array.isArray(object.processedVisionPackets))
@@ -5695,7 +5747,7 @@ export const proto = $root.proto = (() => {
                 for (let i = 0; i < object.processedRefereePackets.length; ++i) {
                     if (typeof object.processedRefereePackets[i] !== "object")
                         throw TypeError(".proto.State.processedRefereePackets: object expected");
-                    message.processedRefereePackets[i] = $root.proto.SSL_Referee.fromObject(object.processedRefereePackets[i]);
+                    message.processedRefereePackets[i] = $root.proto.Referee.fromObject(object.processedRefereePackets[i]);
                 }
             }
             if (object.processedFeedbackPackets) {
@@ -5751,7 +5803,7 @@ export const proto = $root.proto = (() => {
             if (message.field != null && message.hasOwnProperty("field"))
                 object.field = $root.proto.SSL_GeometryData.toObject(message.field, options);
             if (message.referee != null && message.hasOwnProperty("referee"))
-                object.referee = $root.proto.SSL_Referee.toObject(message.referee, options);
+                object.referee = $root.proto.Referee.toObject(message.referee, options);
             if (message.processedVisionPackets && message.processedVisionPackets.length) {
                 object.processedVisionPackets = [];
                 for (let j = 0; j < message.processedVisionPackets.length; ++j)
@@ -5760,7 +5812,7 @@ export const proto = $root.proto = (() => {
             if (message.processedRefereePackets && message.processedRefereePackets.length) {
                 object.processedRefereePackets = [];
                 for (let j = 0; j < message.processedRefereePackets.length; ++j)
-                    object.processedRefereePackets[j] = $root.proto.SSL_Referee.toObject(message.processedRefereePackets[j], options);
+                    object.processedRefereePackets[j] = $root.proto.Referee.toObject(message.processedRefereePackets[j], options);
             }
             if (message.processedFeedbackPackets && message.processedFeedbackPackets.length) {
                 object.processedFeedbackPackets = [];
@@ -6810,7 +6862,7 @@ export const proto = $root.proto = (() => {
          * @interface IWorldRobot
          * @property {number|null} [id] WorldRobot id
          * @property {proto.IVector2f|null} [pos] WorldRobot pos
-         * @property {number|null} [angle] WorldRobot angle
+         * @property {number|null} [yaw] WorldRobot yaw
          * @property {proto.IVector2f|null} [vel] WorldRobot vel
          * @property {number|null} [w] WorldRobot w
          * @property {proto.IRobotProcessedFeedback|null} [feedbackInfo] WorldRobot feedbackInfo
@@ -6848,12 +6900,12 @@ export const proto = $root.proto = (() => {
         WorldRobot.prototype.pos = null;
 
         /**
-         * WorldRobot angle.
-         * @member {number} angle
+         * WorldRobot yaw.
+         * @member {number} yaw
          * @memberof proto.WorldRobot
          * @instance
          */
-        WorldRobot.prototype.angle = 0;
+        WorldRobot.prototype.yaw = 0;
 
         /**
          * WorldRobot vel.
@@ -6907,8 +6959,8 @@ export const proto = $root.proto = (() => {
                 writer.uint32(/* id 1, wireType 0 =*/8).uint32(message.id);
             if (message.pos != null && Object.hasOwnProperty.call(message, "pos"))
                 $root.proto.Vector2f.encode(message.pos, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-            if (message.angle != null && Object.hasOwnProperty.call(message, "angle"))
-                writer.uint32(/* id 3, wireType 5 =*/29).float(message.angle);
+            if (message.yaw != null && Object.hasOwnProperty.call(message, "yaw"))
+                writer.uint32(/* id 3, wireType 5 =*/29).float(message.yaw);
             if (message.vel != null && Object.hasOwnProperty.call(message, "vel"))
                 $root.proto.Vector2f.encode(message.vel, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
             if (message.w != null && Object.hasOwnProperty.call(message, "w"))
@@ -6958,7 +7010,7 @@ export const proto = $root.proto = (() => {
                         break;
                     }
                 case 3: {
-                        message.angle = reader.float();
+                        message.yaw = reader.float();
                         break;
                     }
                 case 4: {
@@ -7016,9 +7068,9 @@ export const proto = $root.proto = (() => {
                 if (error)
                     return "pos." + error;
             }
-            if (message.angle != null && message.hasOwnProperty("angle"))
-                if (typeof message.angle !== "number")
-                    return "angle: number expected";
+            if (message.yaw != null && message.hasOwnProperty("yaw"))
+                if (typeof message.yaw !== "number")
+                    return "yaw: number expected";
             if (message.vel != null && message.hasOwnProperty("vel")) {
                 let error = $root.proto.Vector2f.verify(message.vel);
                 if (error)
@@ -7054,8 +7106,8 @@ export const proto = $root.proto = (() => {
                     throw TypeError(".proto.WorldRobot.pos: object expected");
                 message.pos = $root.proto.Vector2f.fromObject(object.pos);
             }
-            if (object.angle != null)
-                message.angle = Number(object.angle);
+            if (object.yaw != null)
+                message.yaw = Number(object.yaw);
             if (object.vel != null) {
                 if (typeof object.vel !== "object")
                     throw TypeError(".proto.WorldRobot.vel: object expected");
@@ -7087,7 +7139,7 @@ export const proto = $root.proto = (() => {
             if (options.defaults) {
                 object.id = 0;
                 object.pos = null;
-                object.angle = 0;
+                object.yaw = 0;
                 object.vel = null;
                 object.w = 0;
                 object.feedbackInfo = null;
@@ -7096,8 +7148,8 @@ export const proto = $root.proto = (() => {
                 object.id = message.id;
             if (message.pos != null && message.hasOwnProperty("pos"))
                 object.pos = $root.proto.Vector2f.toObject(message.pos, options);
-            if (message.angle != null && message.hasOwnProperty("angle"))
-                object.angle = options.json && !isFinite(message.angle) ? String(message.angle) : message.angle;
+            if (message.yaw != null && message.hasOwnProperty("yaw"))
+                object.yaw = options.json && !isFinite(message.yaw) ? String(message.yaw) : message.yaw;
             if (message.vel != null && message.hasOwnProperty("vel"))
                 object.vel = $root.proto.Vector2f.toObject(message.vel, options);
             if (message.w != null && message.hasOwnProperty("w"))
@@ -7136,526 +7188,6 @@ export const proto = $root.proto = (() => {
         return WorldRobot;
     })();
 
-    proto.RobotWheel = (function() {
-
-        /**
-         * Properties of a RobotWheel.
-         * @memberof proto
-         * @interface IRobotWheel
-         * @property {boolean|null} [locked] RobotWheel locked
-         * @property {boolean|null} [braking] RobotWheel braking
-         */
-
-        /**
-         * Constructs a new RobotWheel.
-         * @memberof proto
-         * @classdesc Represents a RobotWheel.
-         * @implements IRobotWheel
-         * @constructor
-         * @param {proto.IRobotWheel=} [properties] Properties to set
-         */
-        function RobotWheel(properties) {
-            if (properties)
-                for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
-                        this[keys[i]] = properties[keys[i]];
-        }
-
-        /**
-         * RobotWheel locked.
-         * @member {boolean} locked
-         * @memberof proto.RobotWheel
-         * @instance
-         */
-        RobotWheel.prototype.locked = false;
-
-        /**
-         * RobotWheel braking.
-         * @member {boolean} braking
-         * @memberof proto.RobotWheel
-         * @instance
-         */
-        RobotWheel.prototype.braking = false;
-
-        /**
-         * Creates a new RobotWheel instance using the specified properties.
-         * @function create
-         * @memberof proto.RobotWheel
-         * @static
-         * @param {proto.IRobotWheel=} [properties] Properties to set
-         * @returns {proto.RobotWheel} RobotWheel instance
-         */
-        RobotWheel.create = function create(properties) {
-            return new RobotWheel(properties);
-        };
-
-        /**
-         * Encodes the specified RobotWheel message. Does not implicitly {@link proto.RobotWheel.verify|verify} messages.
-         * @function encode
-         * @memberof proto.RobotWheel
-         * @static
-         * @param {proto.IRobotWheel} message RobotWheel message or plain object to encode
-         * @param {$protobuf.Writer} [writer] Writer to encode to
-         * @returns {$protobuf.Writer} Writer
-         */
-        RobotWheel.encode = function encode(message, writer) {
-            if (!writer)
-                writer = $Writer.create();
-            if (message.locked != null && Object.hasOwnProperty.call(message, "locked"))
-                writer.uint32(/* id 1, wireType 0 =*/8).bool(message.locked);
-            if (message.braking != null && Object.hasOwnProperty.call(message, "braking"))
-                writer.uint32(/* id 2, wireType 0 =*/16).bool(message.braking);
-            return writer;
-        };
-
-        /**
-         * Encodes the specified RobotWheel message, length delimited. Does not implicitly {@link proto.RobotWheel.verify|verify} messages.
-         * @function encodeDelimited
-         * @memberof proto.RobotWheel
-         * @static
-         * @param {proto.IRobotWheel} message RobotWheel message or plain object to encode
-         * @param {$protobuf.Writer} [writer] Writer to encode to
-         * @returns {$protobuf.Writer} Writer
-         */
-        RobotWheel.encodeDelimited = function encodeDelimited(message, writer) {
-            return this.encode(message, writer).ldelim();
-        };
-
-        /**
-         * Decodes a RobotWheel message from the specified reader or buffer.
-         * @function decode
-         * @memberof proto.RobotWheel
-         * @static
-         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-         * @param {number} [length] Message length if known beforehand
-         * @returns {proto.RobotWheel} RobotWheel
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        RobotWheel.decode = function decode(reader, length) {
-            if (!(reader instanceof $Reader))
-                reader = $Reader.create(reader);
-            let end = length === undefined ? reader.len : reader.pos + length, message = new $root.proto.RobotWheel();
-            while (reader.pos < end) {
-                let tag = reader.uint32();
-                switch (tag >>> 3) {
-                case 1: {
-                        message.locked = reader.bool();
-                        break;
-                    }
-                case 2: {
-                        message.braking = reader.bool();
-                        break;
-                    }
-                default:
-                    reader.skipType(tag & 7);
-                    break;
-                }
-            }
-            return message;
-        };
-
-        /**
-         * Decodes a RobotWheel message from the specified reader or buffer, length delimited.
-         * @function decodeDelimited
-         * @memberof proto.RobotWheel
-         * @static
-         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-         * @returns {proto.RobotWheel} RobotWheel
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        RobotWheel.decodeDelimited = function decodeDelimited(reader) {
-            if (!(reader instanceof $Reader))
-                reader = new $Reader(reader);
-            return this.decode(reader, reader.uint32());
-        };
-
-        /**
-         * Verifies a RobotWheel message.
-         * @function verify
-         * @memberof proto.RobotWheel
-         * @static
-         * @param {Object.<string,*>} message Plain object to verify
-         * @returns {string|null} `null` if valid, otherwise the reason why it is not
-         */
-        RobotWheel.verify = function verify(message) {
-            if (typeof message !== "object" || message === null)
-                return "object expected";
-            if (message.locked != null && message.hasOwnProperty("locked"))
-                if (typeof message.locked !== "boolean")
-                    return "locked: boolean expected";
-            if (message.braking != null && message.hasOwnProperty("braking"))
-                if (typeof message.braking !== "boolean")
-                    return "braking: boolean expected";
-            return null;
-        };
-
-        /**
-         * Creates a RobotWheel message from a plain object. Also converts values to their respective internal types.
-         * @function fromObject
-         * @memberof proto.RobotWheel
-         * @static
-         * @param {Object.<string,*>} object Plain object
-         * @returns {proto.RobotWheel} RobotWheel
-         */
-        RobotWheel.fromObject = function fromObject(object) {
-            if (object instanceof $root.proto.RobotWheel)
-                return object;
-            let message = new $root.proto.RobotWheel();
-            if (object.locked != null)
-                message.locked = Boolean(object.locked);
-            if (object.braking != null)
-                message.braking = Boolean(object.braking);
-            return message;
-        };
-
-        /**
-         * Creates a plain object from a RobotWheel message. Also converts values to other types if specified.
-         * @function toObject
-         * @memberof proto.RobotWheel
-         * @static
-         * @param {proto.RobotWheel} message RobotWheel
-         * @param {$protobuf.IConversionOptions} [options] Conversion options
-         * @returns {Object.<string,*>} Plain object
-         */
-        RobotWheel.toObject = function toObject(message, options) {
-            if (!options)
-                options = {};
-            let object = {};
-            if (options.defaults) {
-                object.locked = false;
-                object.braking = false;
-            }
-            if (message.locked != null && message.hasOwnProperty("locked"))
-                object.locked = message.locked;
-            if (message.braking != null && message.hasOwnProperty("braking"))
-                object.braking = message.braking;
-            return object;
-        };
-
-        /**
-         * Converts this RobotWheel to JSON.
-         * @function toJSON
-         * @memberof proto.RobotWheel
-         * @instance
-         * @returns {Object.<string,*>} JSON object
-         */
-        RobotWheel.prototype.toJSON = function toJSON() {
-            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
-        };
-
-        /**
-         * Gets the default type url for RobotWheel
-         * @function getTypeUrl
-         * @memberof proto.RobotWheel
-         * @static
-         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-         * @returns {string} The default type url
-         */
-        RobotWheel.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
-            if (typeUrlPrefix === undefined) {
-                typeUrlPrefix = "type.googleapis.com";
-            }
-            return typeUrlPrefix + "/proto.RobotWheel";
-        };
-
-        return RobotWheel;
-    })();
-
-    proto.RobotWheels = (function() {
-
-        /**
-         * Properties of a RobotWheels.
-         * @memberof proto
-         * @interface IRobotWheels
-         * @property {proto.IRobotWheel|null} [rightFront] RobotWheels rightFront
-         * @property {proto.IRobotWheel|null} [rightBack] RobotWheels rightBack
-         * @property {proto.IRobotWheel|null} [leftBack] RobotWheels leftBack
-         * @property {proto.IRobotWheel|null} [leftFront] RobotWheels leftFront
-         */
-
-        /**
-         * Constructs a new RobotWheels.
-         * @memberof proto
-         * @classdesc Represents a RobotWheels.
-         * @implements IRobotWheels
-         * @constructor
-         * @param {proto.IRobotWheels=} [properties] Properties to set
-         */
-        function RobotWheels(properties) {
-            if (properties)
-                for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
-                        this[keys[i]] = properties[keys[i]];
-        }
-
-        /**
-         * RobotWheels rightFront.
-         * @member {proto.IRobotWheel|null|undefined} rightFront
-         * @memberof proto.RobotWheels
-         * @instance
-         */
-        RobotWheels.prototype.rightFront = null;
-
-        /**
-         * RobotWheels rightBack.
-         * @member {proto.IRobotWheel|null|undefined} rightBack
-         * @memberof proto.RobotWheels
-         * @instance
-         */
-        RobotWheels.prototype.rightBack = null;
-
-        /**
-         * RobotWheels leftBack.
-         * @member {proto.IRobotWheel|null|undefined} leftBack
-         * @memberof proto.RobotWheels
-         * @instance
-         */
-        RobotWheels.prototype.leftBack = null;
-
-        /**
-         * RobotWheels leftFront.
-         * @member {proto.IRobotWheel|null|undefined} leftFront
-         * @memberof proto.RobotWheels
-         * @instance
-         */
-        RobotWheels.prototype.leftFront = null;
-
-        /**
-         * Creates a new RobotWheels instance using the specified properties.
-         * @function create
-         * @memberof proto.RobotWheels
-         * @static
-         * @param {proto.IRobotWheels=} [properties] Properties to set
-         * @returns {proto.RobotWheels} RobotWheels instance
-         */
-        RobotWheels.create = function create(properties) {
-            return new RobotWheels(properties);
-        };
-
-        /**
-         * Encodes the specified RobotWheels message. Does not implicitly {@link proto.RobotWheels.verify|verify} messages.
-         * @function encode
-         * @memberof proto.RobotWheels
-         * @static
-         * @param {proto.IRobotWheels} message RobotWheels message or plain object to encode
-         * @param {$protobuf.Writer} [writer] Writer to encode to
-         * @returns {$protobuf.Writer} Writer
-         */
-        RobotWheels.encode = function encode(message, writer) {
-            if (!writer)
-                writer = $Writer.create();
-            if (message.rightFront != null && Object.hasOwnProperty.call(message, "rightFront"))
-                $root.proto.RobotWheel.encode(message.rightFront, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-            if (message.rightBack != null && Object.hasOwnProperty.call(message, "rightBack"))
-                $root.proto.RobotWheel.encode(message.rightBack, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-            if (message.leftBack != null && Object.hasOwnProperty.call(message, "leftBack"))
-                $root.proto.RobotWheel.encode(message.leftBack, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
-            if (message.leftFront != null && Object.hasOwnProperty.call(message, "leftFront"))
-                $root.proto.RobotWheel.encode(message.leftFront, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
-            return writer;
-        };
-
-        /**
-         * Encodes the specified RobotWheels message, length delimited. Does not implicitly {@link proto.RobotWheels.verify|verify} messages.
-         * @function encodeDelimited
-         * @memberof proto.RobotWheels
-         * @static
-         * @param {proto.IRobotWheels} message RobotWheels message or plain object to encode
-         * @param {$protobuf.Writer} [writer] Writer to encode to
-         * @returns {$protobuf.Writer} Writer
-         */
-        RobotWheels.encodeDelimited = function encodeDelimited(message, writer) {
-            return this.encode(message, writer).ldelim();
-        };
-
-        /**
-         * Decodes a RobotWheels message from the specified reader or buffer.
-         * @function decode
-         * @memberof proto.RobotWheels
-         * @static
-         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-         * @param {number} [length] Message length if known beforehand
-         * @returns {proto.RobotWheels} RobotWheels
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        RobotWheels.decode = function decode(reader, length) {
-            if (!(reader instanceof $Reader))
-                reader = $Reader.create(reader);
-            let end = length === undefined ? reader.len : reader.pos + length, message = new $root.proto.RobotWheels();
-            while (reader.pos < end) {
-                let tag = reader.uint32();
-                switch (tag >>> 3) {
-                case 1: {
-                        message.rightFront = $root.proto.RobotWheel.decode(reader, reader.uint32());
-                        break;
-                    }
-                case 2: {
-                        message.rightBack = $root.proto.RobotWheel.decode(reader, reader.uint32());
-                        break;
-                    }
-                case 3: {
-                        message.leftBack = $root.proto.RobotWheel.decode(reader, reader.uint32());
-                        break;
-                    }
-                case 4: {
-                        message.leftFront = $root.proto.RobotWheel.decode(reader, reader.uint32());
-                        break;
-                    }
-                default:
-                    reader.skipType(tag & 7);
-                    break;
-                }
-            }
-            return message;
-        };
-
-        /**
-         * Decodes a RobotWheels message from the specified reader or buffer, length delimited.
-         * @function decodeDelimited
-         * @memberof proto.RobotWheels
-         * @static
-         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-         * @returns {proto.RobotWheels} RobotWheels
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        RobotWheels.decodeDelimited = function decodeDelimited(reader) {
-            if (!(reader instanceof $Reader))
-                reader = new $Reader(reader);
-            return this.decode(reader, reader.uint32());
-        };
-
-        /**
-         * Verifies a RobotWheels message.
-         * @function verify
-         * @memberof proto.RobotWheels
-         * @static
-         * @param {Object.<string,*>} message Plain object to verify
-         * @returns {string|null} `null` if valid, otherwise the reason why it is not
-         */
-        RobotWheels.verify = function verify(message) {
-            if (typeof message !== "object" || message === null)
-                return "object expected";
-            if (message.rightFront != null && message.hasOwnProperty("rightFront")) {
-                let error = $root.proto.RobotWheel.verify(message.rightFront);
-                if (error)
-                    return "rightFront." + error;
-            }
-            if (message.rightBack != null && message.hasOwnProperty("rightBack")) {
-                let error = $root.proto.RobotWheel.verify(message.rightBack);
-                if (error)
-                    return "rightBack." + error;
-            }
-            if (message.leftBack != null && message.hasOwnProperty("leftBack")) {
-                let error = $root.proto.RobotWheel.verify(message.leftBack);
-                if (error)
-                    return "leftBack." + error;
-            }
-            if (message.leftFront != null && message.hasOwnProperty("leftFront")) {
-                let error = $root.proto.RobotWheel.verify(message.leftFront);
-                if (error)
-                    return "leftFront." + error;
-            }
-            return null;
-        };
-
-        /**
-         * Creates a RobotWheels message from a plain object. Also converts values to their respective internal types.
-         * @function fromObject
-         * @memberof proto.RobotWheels
-         * @static
-         * @param {Object.<string,*>} object Plain object
-         * @returns {proto.RobotWheels} RobotWheels
-         */
-        RobotWheels.fromObject = function fromObject(object) {
-            if (object instanceof $root.proto.RobotWheels)
-                return object;
-            let message = new $root.proto.RobotWheels();
-            if (object.rightFront != null) {
-                if (typeof object.rightFront !== "object")
-                    throw TypeError(".proto.RobotWheels.rightFront: object expected");
-                message.rightFront = $root.proto.RobotWheel.fromObject(object.rightFront);
-            }
-            if (object.rightBack != null) {
-                if (typeof object.rightBack !== "object")
-                    throw TypeError(".proto.RobotWheels.rightBack: object expected");
-                message.rightBack = $root.proto.RobotWheel.fromObject(object.rightBack);
-            }
-            if (object.leftBack != null) {
-                if (typeof object.leftBack !== "object")
-                    throw TypeError(".proto.RobotWheels.leftBack: object expected");
-                message.leftBack = $root.proto.RobotWheel.fromObject(object.leftBack);
-            }
-            if (object.leftFront != null) {
-                if (typeof object.leftFront !== "object")
-                    throw TypeError(".proto.RobotWheels.leftFront: object expected");
-                message.leftFront = $root.proto.RobotWheel.fromObject(object.leftFront);
-            }
-            return message;
-        };
-
-        /**
-         * Creates a plain object from a RobotWheels message. Also converts values to other types if specified.
-         * @function toObject
-         * @memberof proto.RobotWheels
-         * @static
-         * @param {proto.RobotWheels} message RobotWheels
-         * @param {$protobuf.IConversionOptions} [options] Conversion options
-         * @returns {Object.<string,*>} Plain object
-         */
-        RobotWheels.toObject = function toObject(message, options) {
-            if (!options)
-                options = {};
-            let object = {};
-            if (options.defaults) {
-                object.rightFront = null;
-                object.rightBack = null;
-                object.leftBack = null;
-                object.leftFront = null;
-            }
-            if (message.rightFront != null && message.hasOwnProperty("rightFront"))
-                object.rightFront = $root.proto.RobotWheel.toObject(message.rightFront, options);
-            if (message.rightBack != null && message.hasOwnProperty("rightBack"))
-                object.rightBack = $root.proto.RobotWheel.toObject(message.rightBack, options);
-            if (message.leftBack != null && message.hasOwnProperty("leftBack"))
-                object.leftBack = $root.proto.RobotWheel.toObject(message.leftBack, options);
-            if (message.leftFront != null && message.hasOwnProperty("leftFront"))
-                object.leftFront = $root.proto.RobotWheel.toObject(message.leftFront, options);
-            return object;
-        };
-
-        /**
-         * Converts this RobotWheels to JSON.
-         * @function toJSON
-         * @memberof proto.RobotWheels
-         * @instance
-         * @returns {Object.<string,*>} JSON object
-         */
-        RobotWheels.prototype.toJSON = function toJSON() {
-            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
-        };
-
-        /**
-         * Gets the default type url for RobotWheels
-         * @function getTypeUrl
-         * @memberof proto.RobotWheels
-         * @static
-         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-         * @returns {string} The default type url
-         */
-        RobotWheels.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
-            if (typeUrlPrefix === undefined) {
-                typeUrlPrefix = "type.googleapis.com";
-            }
-            return typeUrlPrefix + "/proto.RobotWheels";
-        };
-
-        return RobotWheels;
-    })();
-
     proto.RobotProcessedFeedback = (function() {
 
         /**
@@ -7663,14 +7195,11 @@ export const proto = $root.proto = (() => {
          * @memberof proto
          * @interface IRobotProcessedFeedback
          * @property {boolean|null} [ballSensorSeesBall] RobotProcessedFeedback ballSensorSeesBall
-         * @property {number|null} [ballPosition] RobotProcessedFeedback ballPosition
          * @property {boolean|null} [ballSensorIsWorking] RobotProcessedFeedback ballSensorIsWorking
          * @property {boolean|null} [dribblerSeesBall] RobotProcessedFeedback dribblerSeesBall
          * @property {boolean|null} [xsensIsCalibrated] RobotProcessedFeedback xsensIsCalibrated
          * @property {boolean|null} [capacitorIsCharged] RobotProcessedFeedback capacitorIsCharged
-         * @property {proto.IRobotWheels|null} [wheelInformation] RobotProcessedFeedback wheelInformation
          * @property {number|null} [batteryLevel] RobotProcessedFeedback batteryLevel
-         * @property {number|null} [signalStrength] RobotProcessedFeedback signalStrength
          */
 
         /**
@@ -7695,14 +7224,6 @@ export const proto = $root.proto = (() => {
          * @instance
          */
         RobotProcessedFeedback.prototype.ballSensorSeesBall = false;
-
-        /**
-         * RobotProcessedFeedback ballPosition.
-         * @member {number} ballPosition
-         * @memberof proto.RobotProcessedFeedback
-         * @instance
-         */
-        RobotProcessedFeedback.prototype.ballPosition = 0;
 
         /**
          * RobotProcessedFeedback ballSensorIsWorking.
@@ -7737,28 +7258,12 @@ export const proto = $root.proto = (() => {
         RobotProcessedFeedback.prototype.capacitorIsCharged = false;
 
         /**
-         * RobotProcessedFeedback wheelInformation.
-         * @member {proto.IRobotWheels|null|undefined} wheelInformation
-         * @memberof proto.RobotProcessedFeedback
-         * @instance
-         */
-        RobotProcessedFeedback.prototype.wheelInformation = null;
-
-        /**
          * RobotProcessedFeedback batteryLevel.
          * @member {number} batteryLevel
          * @memberof proto.RobotProcessedFeedback
          * @instance
          */
         RobotProcessedFeedback.prototype.batteryLevel = 0;
-
-        /**
-         * RobotProcessedFeedback signalStrength.
-         * @member {number} signalStrength
-         * @memberof proto.RobotProcessedFeedback
-         * @instance
-         */
-        RobotProcessedFeedback.prototype.signalStrength = 0;
 
         /**
          * Creates a new RobotProcessedFeedback instance using the specified properties.
@@ -7786,8 +7291,6 @@ export const proto = $root.proto = (() => {
                 writer = $Writer.create();
             if (message.ballSensorSeesBall != null && Object.hasOwnProperty.call(message, "ballSensorSeesBall"))
                 writer.uint32(/* id 1, wireType 0 =*/8).bool(message.ballSensorSeesBall);
-            if (message.ballPosition != null && Object.hasOwnProperty.call(message, "ballPosition"))
-                writer.uint32(/* id 2, wireType 5 =*/21).float(message.ballPosition);
             if (message.ballSensorIsWorking != null && Object.hasOwnProperty.call(message, "ballSensorIsWorking"))
                 writer.uint32(/* id 3, wireType 0 =*/24).bool(message.ballSensorIsWorking);
             if (message.dribblerSeesBall != null && Object.hasOwnProperty.call(message, "dribblerSeesBall"))
@@ -7796,12 +7299,8 @@ export const proto = $root.proto = (() => {
                 writer.uint32(/* id 5, wireType 0 =*/40).bool(message.xsensIsCalibrated);
             if (message.capacitorIsCharged != null && Object.hasOwnProperty.call(message, "capacitorIsCharged"))
                 writer.uint32(/* id 6, wireType 0 =*/48).bool(message.capacitorIsCharged);
-            if (message.wheelInformation != null && Object.hasOwnProperty.call(message, "wheelInformation"))
-                $root.proto.RobotWheels.encode(message.wheelInformation, writer.uint32(/* id 7, wireType 2 =*/58).fork()).ldelim();
             if (message.batteryLevel != null && Object.hasOwnProperty.call(message, "batteryLevel"))
                 writer.uint32(/* id 8, wireType 5 =*/69).float(message.batteryLevel);
-            if (message.signalStrength != null && Object.hasOwnProperty.call(message, "signalStrength"))
-                writer.uint32(/* id 9, wireType 0 =*/72).int32(message.signalStrength);
             return writer;
         };
 
@@ -7840,10 +7339,6 @@ export const proto = $root.proto = (() => {
                         message.ballSensorSeesBall = reader.bool();
                         break;
                     }
-                case 2: {
-                        message.ballPosition = reader.float();
-                        break;
-                    }
                 case 3: {
                         message.ballSensorIsWorking = reader.bool();
                         break;
@@ -7860,16 +7355,8 @@ export const proto = $root.proto = (() => {
                         message.capacitorIsCharged = reader.bool();
                         break;
                     }
-                case 7: {
-                        message.wheelInformation = $root.proto.RobotWheels.decode(reader, reader.uint32());
-                        break;
-                    }
                 case 8: {
                         message.batteryLevel = reader.float();
-                        break;
-                    }
-                case 9: {
-                        message.signalStrength = reader.int32();
                         break;
                     }
                 default:
@@ -7910,9 +7397,6 @@ export const proto = $root.proto = (() => {
             if (message.ballSensorSeesBall != null && message.hasOwnProperty("ballSensorSeesBall"))
                 if (typeof message.ballSensorSeesBall !== "boolean")
                     return "ballSensorSeesBall: boolean expected";
-            if (message.ballPosition != null && message.hasOwnProperty("ballPosition"))
-                if (typeof message.ballPosition !== "number")
-                    return "ballPosition: number expected";
             if (message.ballSensorIsWorking != null && message.hasOwnProperty("ballSensorIsWorking"))
                 if (typeof message.ballSensorIsWorking !== "boolean")
                     return "ballSensorIsWorking: boolean expected";
@@ -7925,17 +7409,9 @@ export const proto = $root.proto = (() => {
             if (message.capacitorIsCharged != null && message.hasOwnProperty("capacitorIsCharged"))
                 if (typeof message.capacitorIsCharged !== "boolean")
                     return "capacitorIsCharged: boolean expected";
-            if (message.wheelInformation != null && message.hasOwnProperty("wheelInformation")) {
-                let error = $root.proto.RobotWheels.verify(message.wheelInformation);
-                if (error)
-                    return "wheelInformation." + error;
-            }
             if (message.batteryLevel != null && message.hasOwnProperty("batteryLevel"))
                 if (typeof message.batteryLevel !== "number")
                     return "batteryLevel: number expected";
-            if (message.signalStrength != null && message.hasOwnProperty("signalStrength"))
-                if (!$util.isInteger(message.signalStrength))
-                    return "signalStrength: integer expected";
             return null;
         };
 
@@ -7953,8 +7429,6 @@ export const proto = $root.proto = (() => {
             let message = new $root.proto.RobotProcessedFeedback();
             if (object.ballSensorSeesBall != null)
                 message.ballSensorSeesBall = Boolean(object.ballSensorSeesBall);
-            if (object.ballPosition != null)
-                message.ballPosition = Number(object.ballPosition);
             if (object.ballSensorIsWorking != null)
                 message.ballSensorIsWorking = Boolean(object.ballSensorIsWorking);
             if (object.dribblerSeesBall != null)
@@ -7963,15 +7437,8 @@ export const proto = $root.proto = (() => {
                 message.xsensIsCalibrated = Boolean(object.xsensIsCalibrated);
             if (object.capacitorIsCharged != null)
                 message.capacitorIsCharged = Boolean(object.capacitorIsCharged);
-            if (object.wheelInformation != null) {
-                if (typeof object.wheelInformation !== "object")
-                    throw TypeError(".proto.RobotProcessedFeedback.wheelInformation: object expected");
-                message.wheelInformation = $root.proto.RobotWheels.fromObject(object.wheelInformation);
-            }
             if (object.batteryLevel != null)
                 message.batteryLevel = Number(object.batteryLevel);
-            if (object.signalStrength != null)
-                message.signalStrength = object.signalStrength | 0;
             return message;
         };
 
@@ -7990,19 +7457,14 @@ export const proto = $root.proto = (() => {
             let object = {};
             if (options.defaults) {
                 object.ballSensorSeesBall = false;
-                object.ballPosition = 0;
                 object.ballSensorIsWorking = false;
                 object.dribblerSeesBall = false;
                 object.xsensIsCalibrated = false;
                 object.capacitorIsCharged = false;
-                object.wheelInformation = null;
                 object.batteryLevel = 0;
-                object.signalStrength = 0;
             }
             if (message.ballSensorSeesBall != null && message.hasOwnProperty("ballSensorSeesBall"))
                 object.ballSensorSeesBall = message.ballSensorSeesBall;
-            if (message.ballPosition != null && message.hasOwnProperty("ballPosition"))
-                object.ballPosition = options.json && !isFinite(message.ballPosition) ? String(message.ballPosition) : message.ballPosition;
             if (message.ballSensorIsWorking != null && message.hasOwnProperty("ballSensorIsWorking"))
                 object.ballSensorIsWorking = message.ballSensorIsWorking;
             if (message.dribblerSeesBall != null && message.hasOwnProperty("dribblerSeesBall"))
@@ -8011,12 +7473,8 @@ export const proto = $root.proto = (() => {
                 object.xsensIsCalibrated = message.xsensIsCalibrated;
             if (message.capacitorIsCharged != null && message.hasOwnProperty("capacitorIsCharged"))
                 object.capacitorIsCharged = message.capacitorIsCharged;
-            if (message.wheelInformation != null && message.hasOwnProperty("wheelInformation"))
-                object.wheelInformation = $root.proto.RobotWheels.toObject(message.wheelInformation, options);
             if (message.batteryLevel != null && message.hasOwnProperty("batteryLevel"))
                 object.batteryLevel = options.json && !isFinite(message.batteryLevel) ? String(message.batteryLevel) : message.batteryLevel;
-            if (message.signalStrength != null && message.hasOwnProperty("signalStrength"))
-                object.signalStrength = message.signalStrength;
             return object;
         };
 
@@ -8291,7 +7749,7 @@ export const proto = $root.proto = (() => {
          * @property {number|null} [height] RobotParameters height
          * @property {number|null} [frontWidth] RobotParameters frontWidth
          * @property {number|null} [dribblerWidth] RobotParameters dribblerWidth
-         * @property {number|null} [angleOffset] RobotParameters angleOffset
+         * @property {number|null} [yawOffset] RobotParameters yawOffset
          */
 
         /**
@@ -8342,12 +7800,12 @@ export const proto = $root.proto = (() => {
         RobotParameters.prototype.dribblerWidth = 0;
 
         /**
-         * RobotParameters angleOffset.
-         * @member {number} angleOffset
+         * RobotParameters yawOffset.
+         * @member {number} yawOffset
          * @memberof proto.RobotParameters
          * @instance
          */
-        RobotParameters.prototype.angleOffset = 0;
+        RobotParameters.prototype.yawOffset = 0;
 
         /**
          * Creates a new RobotParameters instance using the specified properties.
@@ -8381,8 +7839,8 @@ export const proto = $root.proto = (() => {
                 writer.uint32(/* id 3, wireType 5 =*/29).float(message.frontWidth);
             if (message.dribblerWidth != null && Object.hasOwnProperty.call(message, "dribblerWidth"))
                 writer.uint32(/* id 4, wireType 5 =*/37).float(message.dribblerWidth);
-            if (message.angleOffset != null && Object.hasOwnProperty.call(message, "angleOffset"))
-                writer.uint32(/* id 5, wireType 5 =*/45).float(message.angleOffset);
+            if (message.yawOffset != null && Object.hasOwnProperty.call(message, "yawOffset"))
+                writer.uint32(/* id 5, wireType 5 =*/45).float(message.yawOffset);
             return writer;
         };
 
@@ -8434,7 +7892,7 @@ export const proto = $root.proto = (() => {
                         break;
                     }
                 case 5: {
-                        message.angleOffset = reader.float();
+                        message.yawOffset = reader.float();
                         break;
                     }
                 default:
@@ -8484,9 +7942,9 @@ export const proto = $root.proto = (() => {
             if (message.dribblerWidth != null && message.hasOwnProperty("dribblerWidth"))
                 if (typeof message.dribblerWidth !== "number")
                     return "dribblerWidth: number expected";
-            if (message.angleOffset != null && message.hasOwnProperty("angleOffset"))
-                if (typeof message.angleOffset !== "number")
-                    return "angleOffset: number expected";
+            if (message.yawOffset != null && message.hasOwnProperty("yawOffset"))
+                if (typeof message.yawOffset !== "number")
+                    return "yawOffset: number expected";
             return null;
         };
 
@@ -8510,8 +7968,8 @@ export const proto = $root.proto = (() => {
                 message.frontWidth = Number(object.frontWidth);
             if (object.dribblerWidth != null)
                 message.dribblerWidth = Number(object.dribblerWidth);
-            if (object.angleOffset != null)
-                message.angleOffset = Number(object.angleOffset);
+            if (object.yawOffset != null)
+                message.yawOffset = Number(object.yawOffset);
             return message;
         };
 
@@ -8533,7 +7991,7 @@ export const proto = $root.proto = (() => {
                 object.height = 0;
                 object.frontWidth = 0;
                 object.dribblerWidth = 0;
-                object.angleOffset = 0;
+                object.yawOffset = 0;
             }
             if (message.radius != null && message.hasOwnProperty("radius"))
                 object.radius = options.json && !isFinite(message.radius) ? String(message.radius) : message.radius;
@@ -8543,8 +8001,8 @@ export const proto = $root.proto = (() => {
                 object.frontWidth = options.json && !isFinite(message.frontWidth) ? String(message.frontWidth) : message.frontWidth;
             if (message.dribblerWidth != null && message.hasOwnProperty("dribblerWidth"))
                 object.dribblerWidth = options.json && !isFinite(message.dribblerWidth) ? String(message.dribblerWidth) : message.dribblerWidth;
-            if (message.angleOffset != null && message.hasOwnProperty("angleOffset"))
-                object.angleOffset = options.json && !isFinite(message.angleOffset) ? String(message.angleOffset) : message.angleOffset;
+            if (message.yawOffset != null && message.hasOwnProperty("yawOffset"))
+                object.yawOffset = options.json && !isFinite(message.yawOffset) ? String(message.yawOffset) : message.yawOffset;
             return object;
         };
 
@@ -10989,6 +10447,12 @@ export const proto = $root.proto = (() => {
          * @property {Array.<proto.ISSL_FieldCircularArc>|null} [fieldArcs] SSL_GeometryFieldSize fieldArcs
          * @property {number|null} [penaltyAreaDepth] SSL_GeometryFieldSize penaltyAreaDepth
          * @property {number|null} [penaltyAreaWidth] SSL_GeometryFieldSize penaltyAreaWidth
+         * @property {number|null} [centerCircleRadius] SSL_GeometryFieldSize centerCircleRadius
+         * @property {number|null} [lineThickness] SSL_GeometryFieldSize lineThickness
+         * @property {number|null} [goalCenterToPenaltyMark] SSL_GeometryFieldSize goalCenterToPenaltyMark
+         * @property {number|null} [goalHeight] SSL_GeometryFieldSize goalHeight
+         * @property {number|null} [ballRadius] SSL_GeometryFieldSize ballRadius
+         * @property {number|null} [maxRobotRadius] SSL_GeometryFieldSize maxRobotRadius
          */
 
         /**
@@ -11081,6 +10545,54 @@ export const proto = $root.proto = (() => {
         SSL_GeometryFieldSize.prototype.penaltyAreaWidth = 0;
 
         /**
+         * SSL_GeometryFieldSize centerCircleRadius.
+         * @member {number} centerCircleRadius
+         * @memberof proto.SSL_GeometryFieldSize
+         * @instance
+         */
+        SSL_GeometryFieldSize.prototype.centerCircleRadius = 0;
+
+        /**
+         * SSL_GeometryFieldSize lineThickness.
+         * @member {number} lineThickness
+         * @memberof proto.SSL_GeometryFieldSize
+         * @instance
+         */
+        SSL_GeometryFieldSize.prototype.lineThickness = 0;
+
+        /**
+         * SSL_GeometryFieldSize goalCenterToPenaltyMark.
+         * @member {number} goalCenterToPenaltyMark
+         * @memberof proto.SSL_GeometryFieldSize
+         * @instance
+         */
+        SSL_GeometryFieldSize.prototype.goalCenterToPenaltyMark = 0;
+
+        /**
+         * SSL_GeometryFieldSize goalHeight.
+         * @member {number} goalHeight
+         * @memberof proto.SSL_GeometryFieldSize
+         * @instance
+         */
+        SSL_GeometryFieldSize.prototype.goalHeight = 0;
+
+        /**
+         * SSL_GeometryFieldSize ballRadius.
+         * @member {number} ballRadius
+         * @memberof proto.SSL_GeometryFieldSize
+         * @instance
+         */
+        SSL_GeometryFieldSize.prototype.ballRadius = 0;
+
+        /**
+         * SSL_GeometryFieldSize maxRobotRadius.
+         * @member {number} maxRobotRadius
+         * @memberof proto.SSL_GeometryFieldSize
+         * @instance
+         */
+        SSL_GeometryFieldSize.prototype.maxRobotRadius = 0;
+
+        /**
          * Creates a new SSL_GeometryFieldSize instance using the specified properties.
          * @function create
          * @memberof proto.SSL_GeometryFieldSize
@@ -11119,6 +10631,18 @@ export const proto = $root.proto = (() => {
                 writer.uint32(/* id 8, wireType 0 =*/64).int32(message.penaltyAreaDepth);
             if (message.penaltyAreaWidth != null && Object.hasOwnProperty.call(message, "penaltyAreaWidth"))
                 writer.uint32(/* id 9, wireType 0 =*/72).int32(message.penaltyAreaWidth);
+            if (message.centerCircleRadius != null && Object.hasOwnProperty.call(message, "centerCircleRadius"))
+                writer.uint32(/* id 10, wireType 0 =*/80).int32(message.centerCircleRadius);
+            if (message.lineThickness != null && Object.hasOwnProperty.call(message, "lineThickness"))
+                writer.uint32(/* id 11, wireType 0 =*/88).int32(message.lineThickness);
+            if (message.goalCenterToPenaltyMark != null && Object.hasOwnProperty.call(message, "goalCenterToPenaltyMark"))
+                writer.uint32(/* id 12, wireType 0 =*/96).int32(message.goalCenterToPenaltyMark);
+            if (message.goalHeight != null && Object.hasOwnProperty.call(message, "goalHeight"))
+                writer.uint32(/* id 13, wireType 0 =*/104).int32(message.goalHeight);
+            if (message.ballRadius != null && Object.hasOwnProperty.call(message, "ballRadius"))
+                writer.uint32(/* id 14, wireType 5 =*/117).float(message.ballRadius);
+            if (message.maxRobotRadius != null && Object.hasOwnProperty.call(message, "maxRobotRadius"))
+                writer.uint32(/* id 15, wireType 5 =*/125).float(message.maxRobotRadius);
             return writer;
         };
 
@@ -11191,6 +10715,30 @@ export const proto = $root.proto = (() => {
                     }
                 case 9: {
                         message.penaltyAreaWidth = reader.int32();
+                        break;
+                    }
+                case 10: {
+                        message.centerCircleRadius = reader.int32();
+                        break;
+                    }
+                case 11: {
+                        message.lineThickness = reader.int32();
+                        break;
+                    }
+                case 12: {
+                        message.goalCenterToPenaltyMark = reader.int32();
+                        break;
+                    }
+                case 13: {
+                        message.goalHeight = reader.int32();
+                        break;
+                    }
+                case 14: {
+                        message.ballRadius = reader.float();
+                        break;
+                    }
+                case 15: {
+                        message.maxRobotRadius = reader.float();
                         break;
                     }
                 default:
@@ -11272,6 +10820,24 @@ export const proto = $root.proto = (() => {
             if (message.penaltyAreaWidth != null && message.hasOwnProperty("penaltyAreaWidth"))
                 if (!$util.isInteger(message.penaltyAreaWidth))
                     return "penaltyAreaWidth: integer expected";
+            if (message.centerCircleRadius != null && message.hasOwnProperty("centerCircleRadius"))
+                if (!$util.isInteger(message.centerCircleRadius))
+                    return "centerCircleRadius: integer expected";
+            if (message.lineThickness != null && message.hasOwnProperty("lineThickness"))
+                if (!$util.isInteger(message.lineThickness))
+                    return "lineThickness: integer expected";
+            if (message.goalCenterToPenaltyMark != null && message.hasOwnProperty("goalCenterToPenaltyMark"))
+                if (!$util.isInteger(message.goalCenterToPenaltyMark))
+                    return "goalCenterToPenaltyMark: integer expected";
+            if (message.goalHeight != null && message.hasOwnProperty("goalHeight"))
+                if (!$util.isInteger(message.goalHeight))
+                    return "goalHeight: integer expected";
+            if (message.ballRadius != null && message.hasOwnProperty("ballRadius"))
+                if (typeof message.ballRadius !== "number")
+                    return "ballRadius: number expected";
+            if (message.maxRobotRadius != null && message.hasOwnProperty("maxRobotRadius"))
+                if (typeof message.maxRobotRadius !== "number")
+                    return "maxRobotRadius: number expected";
             return null;
         };
 
@@ -11321,6 +10887,18 @@ export const proto = $root.proto = (() => {
                 message.penaltyAreaDepth = object.penaltyAreaDepth | 0;
             if (object.penaltyAreaWidth != null)
                 message.penaltyAreaWidth = object.penaltyAreaWidth | 0;
+            if (object.centerCircleRadius != null)
+                message.centerCircleRadius = object.centerCircleRadius | 0;
+            if (object.lineThickness != null)
+                message.lineThickness = object.lineThickness | 0;
+            if (object.goalCenterToPenaltyMark != null)
+                message.goalCenterToPenaltyMark = object.goalCenterToPenaltyMark | 0;
+            if (object.goalHeight != null)
+                message.goalHeight = object.goalHeight | 0;
+            if (object.ballRadius != null)
+                message.ballRadius = Number(object.ballRadius);
+            if (object.maxRobotRadius != null)
+                message.maxRobotRadius = Number(object.maxRobotRadius);
             return message;
         };
 
@@ -11349,6 +10927,12 @@ export const proto = $root.proto = (() => {
                 object.boundaryWidth = 0;
                 object.penaltyAreaDepth = 0;
                 object.penaltyAreaWidth = 0;
+                object.centerCircleRadius = 0;
+                object.lineThickness = 0;
+                object.goalCenterToPenaltyMark = 0;
+                object.goalHeight = 0;
+                object.ballRadius = 0;
+                object.maxRobotRadius = 0;
             }
             if (message.fieldLength != null && message.hasOwnProperty("fieldLength"))
                 object.fieldLength = message.fieldLength;
@@ -11374,6 +10958,18 @@ export const proto = $root.proto = (() => {
                 object.penaltyAreaDepth = message.penaltyAreaDepth;
             if (message.penaltyAreaWidth != null && message.hasOwnProperty("penaltyAreaWidth"))
                 object.penaltyAreaWidth = message.penaltyAreaWidth;
+            if (message.centerCircleRadius != null && message.hasOwnProperty("centerCircleRadius"))
+                object.centerCircleRadius = message.centerCircleRadius;
+            if (message.lineThickness != null && message.hasOwnProperty("lineThickness"))
+                object.lineThickness = message.lineThickness;
+            if (message.goalCenterToPenaltyMark != null && message.hasOwnProperty("goalCenterToPenaltyMark"))
+                object.goalCenterToPenaltyMark = message.goalCenterToPenaltyMark;
+            if (message.goalHeight != null && message.hasOwnProperty("goalHeight"))
+                object.goalHeight = message.goalHeight;
+            if (message.ballRadius != null && message.hasOwnProperty("ballRadius"))
+                object.ballRadius = options.json && !isFinite(message.ballRadius) ? String(message.ballRadius) : message.ballRadius;
+            if (message.maxRobotRadius != null && message.hasOwnProperty("maxRobotRadius"))
+                object.maxRobotRadius = options.json && !isFinite(message.maxRobotRadius) ? String(message.maxRobotRadius) : message.maxRobotRadius;
             return object;
         };
 
@@ -11978,6 +11574,743 @@ export const proto = $root.proto = (() => {
         return SSL_GeometryCameraCalibration;
     })();
 
+    proto.SSL_BallModelStraightTwoPhase = (function() {
+
+        /**
+         * Properties of a SSL_BallModelStraightTwoPhase.
+         * @memberof proto
+         * @interface ISSL_BallModelStraightTwoPhase
+         * @property {number} accSlide SSL_BallModelStraightTwoPhase accSlide
+         * @property {number} accRoll SSL_BallModelStraightTwoPhase accRoll
+         * @property {number} kSwitch SSL_BallModelStraightTwoPhase kSwitch
+         */
+
+        /**
+         * Constructs a new SSL_BallModelStraightTwoPhase.
+         * @memberof proto
+         * @classdesc Represents a SSL_BallModelStraightTwoPhase.
+         * @implements ISSL_BallModelStraightTwoPhase
+         * @constructor
+         * @param {proto.ISSL_BallModelStraightTwoPhase=} [properties] Properties to set
+         */
+        function SSL_BallModelStraightTwoPhase(properties) {
+            if (properties)
+                for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * SSL_BallModelStraightTwoPhase accSlide.
+         * @member {number} accSlide
+         * @memberof proto.SSL_BallModelStraightTwoPhase
+         * @instance
+         */
+        SSL_BallModelStraightTwoPhase.prototype.accSlide = 0;
+
+        /**
+         * SSL_BallModelStraightTwoPhase accRoll.
+         * @member {number} accRoll
+         * @memberof proto.SSL_BallModelStraightTwoPhase
+         * @instance
+         */
+        SSL_BallModelStraightTwoPhase.prototype.accRoll = 0;
+
+        /**
+         * SSL_BallModelStraightTwoPhase kSwitch.
+         * @member {number} kSwitch
+         * @memberof proto.SSL_BallModelStraightTwoPhase
+         * @instance
+         */
+        SSL_BallModelStraightTwoPhase.prototype.kSwitch = 0;
+
+        /**
+         * Creates a new SSL_BallModelStraightTwoPhase instance using the specified properties.
+         * @function create
+         * @memberof proto.SSL_BallModelStraightTwoPhase
+         * @static
+         * @param {proto.ISSL_BallModelStraightTwoPhase=} [properties] Properties to set
+         * @returns {proto.SSL_BallModelStraightTwoPhase} SSL_BallModelStraightTwoPhase instance
+         */
+        SSL_BallModelStraightTwoPhase.create = function create(properties) {
+            return new SSL_BallModelStraightTwoPhase(properties);
+        };
+
+        /**
+         * Encodes the specified SSL_BallModelStraightTwoPhase message. Does not implicitly {@link proto.SSL_BallModelStraightTwoPhase.verify|verify} messages.
+         * @function encode
+         * @memberof proto.SSL_BallModelStraightTwoPhase
+         * @static
+         * @param {proto.ISSL_BallModelStraightTwoPhase} message SSL_BallModelStraightTwoPhase message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        SSL_BallModelStraightTwoPhase.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            writer.uint32(/* id 1, wireType 1 =*/9).double(message.accSlide);
+            writer.uint32(/* id 2, wireType 1 =*/17).double(message.accRoll);
+            writer.uint32(/* id 3, wireType 1 =*/25).double(message.kSwitch);
+            return writer;
+        };
+
+        /**
+         * Encodes the specified SSL_BallModelStraightTwoPhase message, length delimited. Does not implicitly {@link proto.SSL_BallModelStraightTwoPhase.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof proto.SSL_BallModelStraightTwoPhase
+         * @static
+         * @param {proto.ISSL_BallModelStraightTwoPhase} message SSL_BallModelStraightTwoPhase message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        SSL_BallModelStraightTwoPhase.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a SSL_BallModelStraightTwoPhase message from the specified reader or buffer.
+         * @function decode
+         * @memberof proto.SSL_BallModelStraightTwoPhase
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {proto.SSL_BallModelStraightTwoPhase} SSL_BallModelStraightTwoPhase
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        SSL_BallModelStraightTwoPhase.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            let end = length === undefined ? reader.len : reader.pos + length, message = new $root.proto.SSL_BallModelStraightTwoPhase();
+            while (reader.pos < end) {
+                let tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1: {
+                        message.accSlide = reader.double();
+                        break;
+                    }
+                case 2: {
+                        message.accRoll = reader.double();
+                        break;
+                    }
+                case 3: {
+                        message.kSwitch = reader.double();
+                        break;
+                    }
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            if (!message.hasOwnProperty("accSlide"))
+                throw $util.ProtocolError("missing required 'accSlide'", { instance: message });
+            if (!message.hasOwnProperty("accRoll"))
+                throw $util.ProtocolError("missing required 'accRoll'", { instance: message });
+            if (!message.hasOwnProperty("kSwitch"))
+                throw $util.ProtocolError("missing required 'kSwitch'", { instance: message });
+            return message;
+        };
+
+        /**
+         * Decodes a SSL_BallModelStraightTwoPhase message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof proto.SSL_BallModelStraightTwoPhase
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {proto.SSL_BallModelStraightTwoPhase} SSL_BallModelStraightTwoPhase
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        SSL_BallModelStraightTwoPhase.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a SSL_BallModelStraightTwoPhase message.
+         * @function verify
+         * @memberof proto.SSL_BallModelStraightTwoPhase
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        SSL_BallModelStraightTwoPhase.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (typeof message.accSlide !== "number")
+                return "accSlide: number expected";
+            if (typeof message.accRoll !== "number")
+                return "accRoll: number expected";
+            if (typeof message.kSwitch !== "number")
+                return "kSwitch: number expected";
+            return null;
+        };
+
+        /**
+         * Creates a SSL_BallModelStraightTwoPhase message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof proto.SSL_BallModelStraightTwoPhase
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {proto.SSL_BallModelStraightTwoPhase} SSL_BallModelStraightTwoPhase
+         */
+        SSL_BallModelStraightTwoPhase.fromObject = function fromObject(object) {
+            if (object instanceof $root.proto.SSL_BallModelStraightTwoPhase)
+                return object;
+            let message = new $root.proto.SSL_BallModelStraightTwoPhase();
+            if (object.accSlide != null)
+                message.accSlide = Number(object.accSlide);
+            if (object.accRoll != null)
+                message.accRoll = Number(object.accRoll);
+            if (object.kSwitch != null)
+                message.kSwitch = Number(object.kSwitch);
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a SSL_BallModelStraightTwoPhase message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof proto.SSL_BallModelStraightTwoPhase
+         * @static
+         * @param {proto.SSL_BallModelStraightTwoPhase} message SSL_BallModelStraightTwoPhase
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        SSL_BallModelStraightTwoPhase.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            let object = {};
+            if (options.defaults) {
+                object.accSlide = 0;
+                object.accRoll = 0;
+                object.kSwitch = 0;
+            }
+            if (message.accSlide != null && message.hasOwnProperty("accSlide"))
+                object.accSlide = options.json && !isFinite(message.accSlide) ? String(message.accSlide) : message.accSlide;
+            if (message.accRoll != null && message.hasOwnProperty("accRoll"))
+                object.accRoll = options.json && !isFinite(message.accRoll) ? String(message.accRoll) : message.accRoll;
+            if (message.kSwitch != null && message.hasOwnProperty("kSwitch"))
+                object.kSwitch = options.json && !isFinite(message.kSwitch) ? String(message.kSwitch) : message.kSwitch;
+            return object;
+        };
+
+        /**
+         * Converts this SSL_BallModelStraightTwoPhase to JSON.
+         * @function toJSON
+         * @memberof proto.SSL_BallModelStraightTwoPhase
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        SSL_BallModelStraightTwoPhase.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        /**
+         * Gets the default type url for SSL_BallModelStraightTwoPhase
+         * @function getTypeUrl
+         * @memberof proto.SSL_BallModelStraightTwoPhase
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        SSL_BallModelStraightTwoPhase.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/proto.SSL_BallModelStraightTwoPhase";
+        };
+
+        return SSL_BallModelStraightTwoPhase;
+    })();
+
+    proto.SSL_BallModelChipFixedLoss = (function() {
+
+        /**
+         * Properties of a SSL_BallModelChipFixedLoss.
+         * @memberof proto
+         * @interface ISSL_BallModelChipFixedLoss
+         * @property {number} dampingXyFirstHop SSL_BallModelChipFixedLoss dampingXyFirstHop
+         * @property {number} dampingXyOtherHops SSL_BallModelChipFixedLoss dampingXyOtherHops
+         * @property {number} dampingZ SSL_BallModelChipFixedLoss dampingZ
+         */
+
+        /**
+         * Constructs a new SSL_BallModelChipFixedLoss.
+         * @memberof proto
+         * @classdesc Represents a SSL_BallModelChipFixedLoss.
+         * @implements ISSL_BallModelChipFixedLoss
+         * @constructor
+         * @param {proto.ISSL_BallModelChipFixedLoss=} [properties] Properties to set
+         */
+        function SSL_BallModelChipFixedLoss(properties) {
+            if (properties)
+                for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * SSL_BallModelChipFixedLoss dampingXyFirstHop.
+         * @member {number} dampingXyFirstHop
+         * @memberof proto.SSL_BallModelChipFixedLoss
+         * @instance
+         */
+        SSL_BallModelChipFixedLoss.prototype.dampingXyFirstHop = 0;
+
+        /**
+         * SSL_BallModelChipFixedLoss dampingXyOtherHops.
+         * @member {number} dampingXyOtherHops
+         * @memberof proto.SSL_BallModelChipFixedLoss
+         * @instance
+         */
+        SSL_BallModelChipFixedLoss.prototype.dampingXyOtherHops = 0;
+
+        /**
+         * SSL_BallModelChipFixedLoss dampingZ.
+         * @member {number} dampingZ
+         * @memberof proto.SSL_BallModelChipFixedLoss
+         * @instance
+         */
+        SSL_BallModelChipFixedLoss.prototype.dampingZ = 0;
+
+        /**
+         * Creates a new SSL_BallModelChipFixedLoss instance using the specified properties.
+         * @function create
+         * @memberof proto.SSL_BallModelChipFixedLoss
+         * @static
+         * @param {proto.ISSL_BallModelChipFixedLoss=} [properties] Properties to set
+         * @returns {proto.SSL_BallModelChipFixedLoss} SSL_BallModelChipFixedLoss instance
+         */
+        SSL_BallModelChipFixedLoss.create = function create(properties) {
+            return new SSL_BallModelChipFixedLoss(properties);
+        };
+
+        /**
+         * Encodes the specified SSL_BallModelChipFixedLoss message. Does not implicitly {@link proto.SSL_BallModelChipFixedLoss.verify|verify} messages.
+         * @function encode
+         * @memberof proto.SSL_BallModelChipFixedLoss
+         * @static
+         * @param {proto.ISSL_BallModelChipFixedLoss} message SSL_BallModelChipFixedLoss message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        SSL_BallModelChipFixedLoss.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            writer.uint32(/* id 1, wireType 1 =*/9).double(message.dampingXyFirstHop);
+            writer.uint32(/* id 2, wireType 1 =*/17).double(message.dampingXyOtherHops);
+            writer.uint32(/* id 3, wireType 1 =*/25).double(message.dampingZ);
+            return writer;
+        };
+
+        /**
+         * Encodes the specified SSL_BallModelChipFixedLoss message, length delimited. Does not implicitly {@link proto.SSL_BallModelChipFixedLoss.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof proto.SSL_BallModelChipFixedLoss
+         * @static
+         * @param {proto.ISSL_BallModelChipFixedLoss} message SSL_BallModelChipFixedLoss message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        SSL_BallModelChipFixedLoss.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a SSL_BallModelChipFixedLoss message from the specified reader or buffer.
+         * @function decode
+         * @memberof proto.SSL_BallModelChipFixedLoss
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {proto.SSL_BallModelChipFixedLoss} SSL_BallModelChipFixedLoss
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        SSL_BallModelChipFixedLoss.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            let end = length === undefined ? reader.len : reader.pos + length, message = new $root.proto.SSL_BallModelChipFixedLoss();
+            while (reader.pos < end) {
+                let tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1: {
+                        message.dampingXyFirstHop = reader.double();
+                        break;
+                    }
+                case 2: {
+                        message.dampingXyOtherHops = reader.double();
+                        break;
+                    }
+                case 3: {
+                        message.dampingZ = reader.double();
+                        break;
+                    }
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            if (!message.hasOwnProperty("dampingXyFirstHop"))
+                throw $util.ProtocolError("missing required 'dampingXyFirstHop'", { instance: message });
+            if (!message.hasOwnProperty("dampingXyOtherHops"))
+                throw $util.ProtocolError("missing required 'dampingXyOtherHops'", { instance: message });
+            if (!message.hasOwnProperty("dampingZ"))
+                throw $util.ProtocolError("missing required 'dampingZ'", { instance: message });
+            return message;
+        };
+
+        /**
+         * Decodes a SSL_BallModelChipFixedLoss message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof proto.SSL_BallModelChipFixedLoss
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {proto.SSL_BallModelChipFixedLoss} SSL_BallModelChipFixedLoss
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        SSL_BallModelChipFixedLoss.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a SSL_BallModelChipFixedLoss message.
+         * @function verify
+         * @memberof proto.SSL_BallModelChipFixedLoss
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        SSL_BallModelChipFixedLoss.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (typeof message.dampingXyFirstHop !== "number")
+                return "dampingXyFirstHop: number expected";
+            if (typeof message.dampingXyOtherHops !== "number")
+                return "dampingXyOtherHops: number expected";
+            if (typeof message.dampingZ !== "number")
+                return "dampingZ: number expected";
+            return null;
+        };
+
+        /**
+         * Creates a SSL_BallModelChipFixedLoss message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof proto.SSL_BallModelChipFixedLoss
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {proto.SSL_BallModelChipFixedLoss} SSL_BallModelChipFixedLoss
+         */
+        SSL_BallModelChipFixedLoss.fromObject = function fromObject(object) {
+            if (object instanceof $root.proto.SSL_BallModelChipFixedLoss)
+                return object;
+            let message = new $root.proto.SSL_BallModelChipFixedLoss();
+            if (object.dampingXyFirstHop != null)
+                message.dampingXyFirstHop = Number(object.dampingXyFirstHop);
+            if (object.dampingXyOtherHops != null)
+                message.dampingXyOtherHops = Number(object.dampingXyOtherHops);
+            if (object.dampingZ != null)
+                message.dampingZ = Number(object.dampingZ);
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a SSL_BallModelChipFixedLoss message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof proto.SSL_BallModelChipFixedLoss
+         * @static
+         * @param {proto.SSL_BallModelChipFixedLoss} message SSL_BallModelChipFixedLoss
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        SSL_BallModelChipFixedLoss.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            let object = {};
+            if (options.defaults) {
+                object.dampingXyFirstHop = 0;
+                object.dampingXyOtherHops = 0;
+                object.dampingZ = 0;
+            }
+            if (message.dampingXyFirstHop != null && message.hasOwnProperty("dampingXyFirstHop"))
+                object.dampingXyFirstHop = options.json && !isFinite(message.dampingXyFirstHop) ? String(message.dampingXyFirstHop) : message.dampingXyFirstHop;
+            if (message.dampingXyOtherHops != null && message.hasOwnProperty("dampingXyOtherHops"))
+                object.dampingXyOtherHops = options.json && !isFinite(message.dampingXyOtherHops) ? String(message.dampingXyOtherHops) : message.dampingXyOtherHops;
+            if (message.dampingZ != null && message.hasOwnProperty("dampingZ"))
+                object.dampingZ = options.json && !isFinite(message.dampingZ) ? String(message.dampingZ) : message.dampingZ;
+            return object;
+        };
+
+        /**
+         * Converts this SSL_BallModelChipFixedLoss to JSON.
+         * @function toJSON
+         * @memberof proto.SSL_BallModelChipFixedLoss
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        SSL_BallModelChipFixedLoss.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        /**
+         * Gets the default type url for SSL_BallModelChipFixedLoss
+         * @function getTypeUrl
+         * @memberof proto.SSL_BallModelChipFixedLoss
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        SSL_BallModelChipFixedLoss.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/proto.SSL_BallModelChipFixedLoss";
+        };
+
+        return SSL_BallModelChipFixedLoss;
+    })();
+
+    proto.SSL_GeometryModels = (function() {
+
+        /**
+         * Properties of a SSL_GeometryModels.
+         * @memberof proto
+         * @interface ISSL_GeometryModels
+         * @property {proto.ISSL_BallModelStraightTwoPhase|null} [straightTwoPhase] SSL_GeometryModels straightTwoPhase
+         * @property {proto.ISSL_BallModelChipFixedLoss|null} [chipFixedLoss] SSL_GeometryModels chipFixedLoss
+         */
+
+        /**
+         * Constructs a new SSL_GeometryModels.
+         * @memberof proto
+         * @classdesc Represents a SSL_GeometryModels.
+         * @implements ISSL_GeometryModels
+         * @constructor
+         * @param {proto.ISSL_GeometryModels=} [properties] Properties to set
+         */
+        function SSL_GeometryModels(properties) {
+            if (properties)
+                for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * SSL_GeometryModels straightTwoPhase.
+         * @member {proto.ISSL_BallModelStraightTwoPhase|null|undefined} straightTwoPhase
+         * @memberof proto.SSL_GeometryModels
+         * @instance
+         */
+        SSL_GeometryModels.prototype.straightTwoPhase = null;
+
+        /**
+         * SSL_GeometryModels chipFixedLoss.
+         * @member {proto.ISSL_BallModelChipFixedLoss|null|undefined} chipFixedLoss
+         * @memberof proto.SSL_GeometryModels
+         * @instance
+         */
+        SSL_GeometryModels.prototype.chipFixedLoss = null;
+
+        /**
+         * Creates a new SSL_GeometryModels instance using the specified properties.
+         * @function create
+         * @memberof proto.SSL_GeometryModels
+         * @static
+         * @param {proto.ISSL_GeometryModels=} [properties] Properties to set
+         * @returns {proto.SSL_GeometryModels} SSL_GeometryModels instance
+         */
+        SSL_GeometryModels.create = function create(properties) {
+            return new SSL_GeometryModels(properties);
+        };
+
+        /**
+         * Encodes the specified SSL_GeometryModels message. Does not implicitly {@link proto.SSL_GeometryModels.verify|verify} messages.
+         * @function encode
+         * @memberof proto.SSL_GeometryModels
+         * @static
+         * @param {proto.ISSL_GeometryModels} message SSL_GeometryModels message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        SSL_GeometryModels.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.straightTwoPhase != null && Object.hasOwnProperty.call(message, "straightTwoPhase"))
+                $root.proto.SSL_BallModelStraightTwoPhase.encode(message.straightTwoPhase, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+            if (message.chipFixedLoss != null && Object.hasOwnProperty.call(message, "chipFixedLoss"))
+                $root.proto.SSL_BallModelChipFixedLoss.encode(message.chipFixedLoss, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+            return writer;
+        };
+
+        /**
+         * Encodes the specified SSL_GeometryModels message, length delimited. Does not implicitly {@link proto.SSL_GeometryModels.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof proto.SSL_GeometryModels
+         * @static
+         * @param {proto.ISSL_GeometryModels} message SSL_GeometryModels message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        SSL_GeometryModels.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a SSL_GeometryModels message from the specified reader or buffer.
+         * @function decode
+         * @memberof proto.SSL_GeometryModels
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {proto.SSL_GeometryModels} SSL_GeometryModels
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        SSL_GeometryModels.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            let end = length === undefined ? reader.len : reader.pos + length, message = new $root.proto.SSL_GeometryModels();
+            while (reader.pos < end) {
+                let tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1: {
+                        message.straightTwoPhase = $root.proto.SSL_BallModelStraightTwoPhase.decode(reader, reader.uint32());
+                        break;
+                    }
+                case 2: {
+                        message.chipFixedLoss = $root.proto.SSL_BallModelChipFixedLoss.decode(reader, reader.uint32());
+                        break;
+                    }
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Decodes a SSL_GeometryModels message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof proto.SSL_GeometryModels
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {proto.SSL_GeometryModels} SSL_GeometryModels
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        SSL_GeometryModels.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a SSL_GeometryModels message.
+         * @function verify
+         * @memberof proto.SSL_GeometryModels
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        SSL_GeometryModels.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (message.straightTwoPhase != null && message.hasOwnProperty("straightTwoPhase")) {
+                let error = $root.proto.SSL_BallModelStraightTwoPhase.verify(message.straightTwoPhase);
+                if (error)
+                    return "straightTwoPhase." + error;
+            }
+            if (message.chipFixedLoss != null && message.hasOwnProperty("chipFixedLoss")) {
+                let error = $root.proto.SSL_BallModelChipFixedLoss.verify(message.chipFixedLoss);
+                if (error)
+                    return "chipFixedLoss." + error;
+            }
+            return null;
+        };
+
+        /**
+         * Creates a SSL_GeometryModels message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof proto.SSL_GeometryModels
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {proto.SSL_GeometryModels} SSL_GeometryModels
+         */
+        SSL_GeometryModels.fromObject = function fromObject(object) {
+            if (object instanceof $root.proto.SSL_GeometryModels)
+                return object;
+            let message = new $root.proto.SSL_GeometryModels();
+            if (object.straightTwoPhase != null) {
+                if (typeof object.straightTwoPhase !== "object")
+                    throw TypeError(".proto.SSL_GeometryModels.straightTwoPhase: object expected");
+                message.straightTwoPhase = $root.proto.SSL_BallModelStraightTwoPhase.fromObject(object.straightTwoPhase);
+            }
+            if (object.chipFixedLoss != null) {
+                if (typeof object.chipFixedLoss !== "object")
+                    throw TypeError(".proto.SSL_GeometryModels.chipFixedLoss: object expected");
+                message.chipFixedLoss = $root.proto.SSL_BallModelChipFixedLoss.fromObject(object.chipFixedLoss);
+            }
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a SSL_GeometryModels message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof proto.SSL_GeometryModels
+         * @static
+         * @param {proto.SSL_GeometryModels} message SSL_GeometryModels
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        SSL_GeometryModels.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            let object = {};
+            if (options.defaults) {
+                object.straightTwoPhase = null;
+                object.chipFixedLoss = null;
+            }
+            if (message.straightTwoPhase != null && message.hasOwnProperty("straightTwoPhase"))
+                object.straightTwoPhase = $root.proto.SSL_BallModelStraightTwoPhase.toObject(message.straightTwoPhase, options);
+            if (message.chipFixedLoss != null && message.hasOwnProperty("chipFixedLoss"))
+                object.chipFixedLoss = $root.proto.SSL_BallModelChipFixedLoss.toObject(message.chipFixedLoss, options);
+            return object;
+        };
+
+        /**
+         * Converts this SSL_GeometryModels to JSON.
+         * @function toJSON
+         * @memberof proto.SSL_GeometryModels
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        SSL_GeometryModels.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        /**
+         * Gets the default type url for SSL_GeometryModels
+         * @function getTypeUrl
+         * @memberof proto.SSL_GeometryModels
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        SSL_GeometryModels.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/proto.SSL_GeometryModels";
+        };
+
+        return SSL_GeometryModels;
+    })();
+
     proto.SSL_GeometryData = (function() {
 
         /**
@@ -11986,6 +12319,7 @@ export const proto = $root.proto = (() => {
          * @interface ISSL_GeometryData
          * @property {proto.ISSL_GeometryFieldSize} field SSL_GeometryData field
          * @property {Array.<proto.ISSL_GeometryCameraCalibration>|null} [calib] SSL_GeometryData calib
+         * @property {proto.ISSL_GeometryModels|null} [models] SSL_GeometryData models
          */
 
         /**
@@ -12021,6 +12355,14 @@ export const proto = $root.proto = (() => {
         SSL_GeometryData.prototype.calib = $util.emptyArray;
 
         /**
+         * SSL_GeometryData models.
+         * @member {proto.ISSL_GeometryModels|null|undefined} models
+         * @memberof proto.SSL_GeometryData
+         * @instance
+         */
+        SSL_GeometryData.prototype.models = null;
+
+        /**
          * Creates a new SSL_GeometryData instance using the specified properties.
          * @function create
          * @memberof proto.SSL_GeometryData
@@ -12048,6 +12390,8 @@ export const proto = $root.proto = (() => {
             if (message.calib != null && message.calib.length)
                 for (let i = 0; i < message.calib.length; ++i)
                     $root.proto.SSL_GeometryCameraCalibration.encode(message.calib[i], writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+            if (message.models != null && Object.hasOwnProperty.call(message, "models"))
+                $root.proto.SSL_GeometryModels.encode(message.models, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
             return writer;
         };
 
@@ -12090,6 +12434,10 @@ export const proto = $root.proto = (() => {
                         if (!(message.calib && message.calib.length))
                             message.calib = [];
                         message.calib.push($root.proto.SSL_GeometryCameraCalibration.decode(reader, reader.uint32()));
+                        break;
+                    }
+                case 3: {
+                        message.models = $root.proto.SSL_GeometryModels.decode(reader, reader.uint32());
                         break;
                     }
                 default:
@@ -12143,6 +12491,11 @@ export const proto = $root.proto = (() => {
                         return "calib." + error;
                 }
             }
+            if (message.models != null && message.hasOwnProperty("models")) {
+                let error = $root.proto.SSL_GeometryModels.verify(message.models);
+                if (error)
+                    return "models." + error;
+            }
             return null;
         };
 
@@ -12173,6 +12526,11 @@ export const proto = $root.proto = (() => {
                     message.calib[i] = $root.proto.SSL_GeometryCameraCalibration.fromObject(object.calib[i]);
                 }
             }
+            if (object.models != null) {
+                if (typeof object.models !== "object")
+                    throw TypeError(".proto.SSL_GeometryData.models: object expected");
+                message.models = $root.proto.SSL_GeometryModels.fromObject(object.models);
+            }
             return message;
         };
 
@@ -12191,8 +12549,10 @@ export const proto = $root.proto = (() => {
             let object = {};
             if (options.arrays || options.defaults)
                 object.calib = [];
-            if (options.defaults)
+            if (options.defaults) {
                 object.field = null;
+                object.models = null;
+            }
             if (message.field != null && message.hasOwnProperty("field"))
                 object.field = $root.proto.SSL_GeometryFieldSize.toObject(message.field, options);
             if (message.calib && message.calib.length) {
@@ -12200,6 +12560,8 @@ export const proto = $root.proto = (() => {
                 for (let j = 0; j < message.calib.length; ++j)
                     object.calib[j] = $root.proto.SSL_GeometryCameraCalibration.toObject(message.calib[j], options);
             }
+            if (message.models != null && message.hasOwnProperty("models"))
+                object.models = $root.proto.SSL_GeometryModels.toObject(message.models, options);
             return object;
         };
 
@@ -12270,37 +12632,40 @@ export const proto = $root.proto = (() => {
         return values;
     })();
 
-    proto.SSL_Referee = (function() {
+    proto.Referee = (function() {
 
         /**
-         * Properties of a SSL_Referee.
+         * Properties of a Referee.
          * @memberof proto
-         * @interface ISSL_Referee
-         * @property {number|Long} packetTimestamp SSL_Referee packetTimestamp
-         * @property {proto.SSL_Referee.Stage} stage SSL_Referee stage
-         * @property {number|null} [stageTimeLeft] SSL_Referee stageTimeLeft
-         * @property {proto.SSL_Referee.Command} command SSL_Referee command
-         * @property {number} commandCounter SSL_Referee commandCounter
-         * @property {number|Long} commandTimestamp SSL_Referee commandTimestamp
-         * @property {proto.SSL_Referee.ITeamInfo} yellow SSL_Referee yellow
-         * @property {proto.SSL_Referee.ITeamInfo} blue SSL_Referee blue
-         * @property {proto.SSL_Referee.IPoint|null} [designatedPosition] SSL_Referee designatedPosition
-         * @property {boolean|null} [blueTeamOnPositiveHalf] SSL_Referee blueTeamOnPositiveHalf
-         * @property {proto.SSL_Referee.Command|null} [nextCommand] SSL_Referee nextCommand
-         * @property {Array.<proto.IGameEvent>|null} [gameEvents] SSL_Referee gameEvents
-         * @property {Array.<proto.IGameEventProposalGroup>|null} [gameEventProposals] SSL_Referee gameEventProposals
-         * @property {number|null} [currentActionTimeRemaining] SSL_Referee currentActionTimeRemaining
+         * @interface IReferee
+         * @property {string|null} [sourceIdentifier] Referee sourceIdentifier
+         * @property {proto.MatchType|null} [matchType] Referee matchType
+         * @property {number|Long} packetTimestamp Referee packetTimestamp
+         * @property {proto.Referee.Stage} stage Referee stage
+         * @property {number|Long|null} [stageTimeLeft] Referee stageTimeLeft
+         * @property {proto.Referee.Command} command Referee command
+         * @property {number} commandCounter Referee commandCounter
+         * @property {number|Long} commandTimestamp Referee commandTimestamp
+         * @property {proto.Referee.ITeamInfo} yellow Referee yellow
+         * @property {proto.Referee.ITeamInfo} blue Referee blue
+         * @property {proto.Referee.IPoint|null} [designatedPosition] Referee designatedPosition
+         * @property {boolean|null} [blueTeamOnPositiveHalf] Referee blueTeamOnPositiveHalf
+         * @property {proto.Referee.Command|null} [nextCommand] Referee nextCommand
+         * @property {Array.<proto.IGameEvent>|null} [gameEvents] Referee gameEvents
+         * @property {Array.<proto.IGameEventProposalGroup>|null} [gameEventProposals] Referee gameEventProposals
+         * @property {number|Long|null} [currentActionTimeRemaining] Referee currentActionTimeRemaining
+         * @property {string|null} [statusMessage] Referee statusMessage
          */
 
         /**
-         * Constructs a new SSL_Referee.
+         * Constructs a new Referee.
          * @memberof proto
-         * @classdesc Represents a SSL_Referee.
-         * @implements ISSL_Referee
+         * @classdesc Represents a Referee.
+         * @implements IReferee
          * @constructor
-         * @param {proto.ISSL_Referee=} [properties] Properties to set
+         * @param {proto.IReferee=} [properties] Properties to set
          */
-        function SSL_Referee(properties) {
+        function Referee(properties) {
             this.gameEvents = [];
             this.gameEventProposals = [];
             if (properties)
@@ -12310,198 +12675,236 @@ export const proto = $root.proto = (() => {
         }
 
         /**
-         * SSL_Referee packetTimestamp.
+         * Referee sourceIdentifier.
+         * @member {string} sourceIdentifier
+         * @memberof proto.Referee
+         * @instance
+         */
+        Referee.prototype.sourceIdentifier = "";
+
+        /**
+         * Referee matchType.
+         * @member {proto.MatchType} matchType
+         * @memberof proto.Referee
+         * @instance
+         */
+        Referee.prototype.matchType = 0;
+
+        /**
+         * Referee packetTimestamp.
          * @member {number|Long} packetTimestamp
-         * @memberof proto.SSL_Referee
+         * @memberof proto.Referee
          * @instance
          */
-        SSL_Referee.prototype.packetTimestamp = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+        Referee.prototype.packetTimestamp = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
 
         /**
-         * SSL_Referee stage.
-         * @member {proto.SSL_Referee.Stage} stage
-         * @memberof proto.SSL_Referee
+         * Referee stage.
+         * @member {proto.Referee.Stage} stage
+         * @memberof proto.Referee
          * @instance
          */
-        SSL_Referee.prototype.stage = 0;
+        Referee.prototype.stage = 0;
 
         /**
-         * SSL_Referee stageTimeLeft.
-         * @member {number} stageTimeLeft
-         * @memberof proto.SSL_Referee
+         * Referee stageTimeLeft.
+         * @member {number|Long} stageTimeLeft
+         * @memberof proto.Referee
          * @instance
          */
-        SSL_Referee.prototype.stageTimeLeft = 0;
+        Referee.prototype.stageTimeLeft = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
 
         /**
-         * SSL_Referee command.
-         * @member {proto.SSL_Referee.Command} command
-         * @memberof proto.SSL_Referee
+         * Referee command.
+         * @member {proto.Referee.Command} command
+         * @memberof proto.Referee
          * @instance
          */
-        SSL_Referee.prototype.command = 0;
+        Referee.prototype.command = 0;
 
         /**
-         * SSL_Referee commandCounter.
+         * Referee commandCounter.
          * @member {number} commandCounter
-         * @memberof proto.SSL_Referee
+         * @memberof proto.Referee
          * @instance
          */
-        SSL_Referee.prototype.commandCounter = 0;
+        Referee.prototype.commandCounter = 0;
 
         /**
-         * SSL_Referee commandTimestamp.
+         * Referee commandTimestamp.
          * @member {number|Long} commandTimestamp
-         * @memberof proto.SSL_Referee
+         * @memberof proto.Referee
          * @instance
          */
-        SSL_Referee.prototype.commandTimestamp = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+        Referee.prototype.commandTimestamp = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
 
         /**
-         * SSL_Referee yellow.
-         * @member {proto.SSL_Referee.ITeamInfo} yellow
-         * @memberof proto.SSL_Referee
+         * Referee yellow.
+         * @member {proto.Referee.ITeamInfo} yellow
+         * @memberof proto.Referee
          * @instance
          */
-        SSL_Referee.prototype.yellow = null;
+        Referee.prototype.yellow = null;
 
         /**
-         * SSL_Referee blue.
-         * @member {proto.SSL_Referee.ITeamInfo} blue
-         * @memberof proto.SSL_Referee
+         * Referee blue.
+         * @member {proto.Referee.ITeamInfo} blue
+         * @memberof proto.Referee
          * @instance
          */
-        SSL_Referee.prototype.blue = null;
+        Referee.prototype.blue = null;
 
         /**
-         * SSL_Referee designatedPosition.
-         * @member {proto.SSL_Referee.IPoint|null|undefined} designatedPosition
-         * @memberof proto.SSL_Referee
+         * Referee designatedPosition.
+         * @member {proto.Referee.IPoint|null|undefined} designatedPosition
+         * @memberof proto.Referee
          * @instance
          */
-        SSL_Referee.prototype.designatedPosition = null;
+        Referee.prototype.designatedPosition = null;
 
         /**
-         * SSL_Referee blueTeamOnPositiveHalf.
+         * Referee blueTeamOnPositiveHalf.
          * @member {boolean} blueTeamOnPositiveHalf
-         * @memberof proto.SSL_Referee
+         * @memberof proto.Referee
          * @instance
          */
-        SSL_Referee.prototype.blueTeamOnPositiveHalf = false;
+        Referee.prototype.blueTeamOnPositiveHalf = false;
 
         /**
-         * SSL_Referee nextCommand.
-         * @member {proto.SSL_Referee.Command} nextCommand
-         * @memberof proto.SSL_Referee
+         * Referee nextCommand.
+         * @member {proto.Referee.Command} nextCommand
+         * @memberof proto.Referee
          * @instance
          */
-        SSL_Referee.prototype.nextCommand = 0;
+        Referee.prototype.nextCommand = 0;
 
         /**
-         * SSL_Referee gameEvents.
+         * Referee gameEvents.
          * @member {Array.<proto.IGameEvent>} gameEvents
-         * @memberof proto.SSL_Referee
+         * @memberof proto.Referee
          * @instance
          */
-        SSL_Referee.prototype.gameEvents = $util.emptyArray;
+        Referee.prototype.gameEvents = $util.emptyArray;
 
         /**
-         * SSL_Referee gameEventProposals.
+         * Referee gameEventProposals.
          * @member {Array.<proto.IGameEventProposalGroup>} gameEventProposals
-         * @memberof proto.SSL_Referee
+         * @memberof proto.Referee
          * @instance
          */
-        SSL_Referee.prototype.gameEventProposals = $util.emptyArray;
+        Referee.prototype.gameEventProposals = $util.emptyArray;
 
         /**
-         * SSL_Referee currentActionTimeRemaining.
-         * @member {number} currentActionTimeRemaining
-         * @memberof proto.SSL_Referee
+         * Referee currentActionTimeRemaining.
+         * @member {number|Long} currentActionTimeRemaining
+         * @memberof proto.Referee
          * @instance
          */
-        SSL_Referee.prototype.currentActionTimeRemaining = 0;
+        Referee.prototype.currentActionTimeRemaining = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
 
         /**
-         * Creates a new SSL_Referee instance using the specified properties.
+         * Referee statusMessage.
+         * @member {string} statusMessage
+         * @memberof proto.Referee
+         * @instance
+         */
+        Referee.prototype.statusMessage = "";
+
+        /**
+         * Creates a new Referee instance using the specified properties.
          * @function create
-         * @memberof proto.SSL_Referee
+         * @memberof proto.Referee
          * @static
-         * @param {proto.ISSL_Referee=} [properties] Properties to set
-         * @returns {proto.SSL_Referee} SSL_Referee instance
+         * @param {proto.IReferee=} [properties] Properties to set
+         * @returns {proto.Referee} Referee instance
          */
-        SSL_Referee.create = function create(properties) {
-            return new SSL_Referee(properties);
+        Referee.create = function create(properties) {
+            return new Referee(properties);
         };
 
         /**
-         * Encodes the specified SSL_Referee message. Does not implicitly {@link proto.SSL_Referee.verify|verify} messages.
+         * Encodes the specified Referee message. Does not implicitly {@link proto.Referee.verify|verify} messages.
          * @function encode
-         * @memberof proto.SSL_Referee
+         * @memberof proto.Referee
          * @static
-         * @param {proto.ISSL_Referee} message SSL_Referee message or plain object to encode
+         * @param {proto.IReferee} message Referee message or plain object to encode
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
-        SSL_Referee.encode = function encode(message, writer) {
+        Referee.encode = function encode(message, writer) {
             if (!writer)
                 writer = $Writer.create();
             writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.packetTimestamp);
             writer.uint32(/* id 2, wireType 0 =*/16).int32(message.stage);
             if (message.stageTimeLeft != null && Object.hasOwnProperty.call(message, "stageTimeLeft"))
-                writer.uint32(/* id 3, wireType 0 =*/24).sint32(message.stageTimeLeft);
+                writer.uint32(/* id 3, wireType 0 =*/24).sint64(message.stageTimeLeft);
             writer.uint32(/* id 4, wireType 0 =*/32).int32(message.command);
             writer.uint32(/* id 5, wireType 0 =*/40).uint32(message.commandCounter);
             writer.uint32(/* id 6, wireType 0 =*/48).uint64(message.commandTimestamp);
-            $root.proto.SSL_Referee.TeamInfo.encode(message.yellow, writer.uint32(/* id 7, wireType 2 =*/58).fork()).ldelim();
-            $root.proto.SSL_Referee.TeamInfo.encode(message.blue, writer.uint32(/* id 8, wireType 2 =*/66).fork()).ldelim();
+            $root.proto.Referee.TeamInfo.encode(message.yellow, writer.uint32(/* id 7, wireType 2 =*/58).fork()).ldelim();
+            $root.proto.Referee.TeamInfo.encode(message.blue, writer.uint32(/* id 8, wireType 2 =*/66).fork()).ldelim();
             if (message.designatedPosition != null && Object.hasOwnProperty.call(message, "designatedPosition"))
-                $root.proto.SSL_Referee.Point.encode(message.designatedPosition, writer.uint32(/* id 9, wireType 2 =*/74).fork()).ldelim();
+                $root.proto.Referee.Point.encode(message.designatedPosition, writer.uint32(/* id 9, wireType 2 =*/74).fork()).ldelim();
             if (message.blueTeamOnPositiveHalf != null && Object.hasOwnProperty.call(message, "blueTeamOnPositiveHalf"))
                 writer.uint32(/* id 10, wireType 0 =*/80).bool(message.blueTeamOnPositiveHalf);
             if (message.nextCommand != null && Object.hasOwnProperty.call(message, "nextCommand"))
                 writer.uint32(/* id 12, wireType 0 =*/96).int32(message.nextCommand);
             if (message.currentActionTimeRemaining != null && Object.hasOwnProperty.call(message, "currentActionTimeRemaining"))
-                writer.uint32(/* id 15, wireType 0 =*/120).int32(message.currentActionTimeRemaining);
+                writer.uint32(/* id 15, wireType 0 =*/120).int64(message.currentActionTimeRemaining);
             if (message.gameEvents != null && message.gameEvents.length)
                 for (let i = 0; i < message.gameEvents.length; ++i)
                     $root.proto.GameEvent.encode(message.gameEvents[i], writer.uint32(/* id 16, wireType 2 =*/130).fork()).ldelim();
             if (message.gameEventProposals != null && message.gameEventProposals.length)
                 for (let i = 0; i < message.gameEventProposals.length; ++i)
                     $root.proto.GameEventProposalGroup.encode(message.gameEventProposals[i], writer.uint32(/* id 17, wireType 2 =*/138).fork()).ldelim();
+            if (message.sourceIdentifier != null && Object.hasOwnProperty.call(message, "sourceIdentifier"))
+                writer.uint32(/* id 18, wireType 2 =*/146).string(message.sourceIdentifier);
+            if (message.matchType != null && Object.hasOwnProperty.call(message, "matchType"))
+                writer.uint32(/* id 19, wireType 0 =*/152).int32(message.matchType);
+            if (message.statusMessage != null && Object.hasOwnProperty.call(message, "statusMessage"))
+                writer.uint32(/* id 20, wireType 2 =*/162).string(message.statusMessage);
             return writer;
         };
 
         /**
-         * Encodes the specified SSL_Referee message, length delimited. Does not implicitly {@link proto.SSL_Referee.verify|verify} messages.
+         * Encodes the specified Referee message, length delimited. Does not implicitly {@link proto.Referee.verify|verify} messages.
          * @function encodeDelimited
-         * @memberof proto.SSL_Referee
+         * @memberof proto.Referee
          * @static
-         * @param {proto.ISSL_Referee} message SSL_Referee message or plain object to encode
+         * @param {proto.IReferee} message Referee message or plain object to encode
          * @param {$protobuf.Writer} [writer] Writer to encode to
          * @returns {$protobuf.Writer} Writer
          */
-        SSL_Referee.encodeDelimited = function encodeDelimited(message, writer) {
+        Referee.encodeDelimited = function encodeDelimited(message, writer) {
             return this.encode(message, writer).ldelim();
         };
 
         /**
-         * Decodes a SSL_Referee message from the specified reader or buffer.
+         * Decodes a Referee message from the specified reader or buffer.
          * @function decode
-         * @memberof proto.SSL_Referee
+         * @memberof proto.Referee
          * @static
          * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
          * @param {number} [length] Message length if known beforehand
-         * @returns {proto.SSL_Referee} SSL_Referee
+         * @returns {proto.Referee} Referee
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        SSL_Referee.decode = function decode(reader, length) {
+        Referee.decode = function decode(reader, length) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
-            let end = length === undefined ? reader.len : reader.pos + length, message = new $root.proto.SSL_Referee();
+            let end = length === undefined ? reader.len : reader.pos + length, message = new $root.proto.Referee();
             while (reader.pos < end) {
                 let tag = reader.uint32();
                 switch (tag >>> 3) {
+                case 18: {
+                        message.sourceIdentifier = reader.string();
+                        break;
+                    }
+                case 19: {
+                        message.matchType = reader.int32();
+                        break;
+                    }
                 case 1: {
                         message.packetTimestamp = reader.uint64();
                         break;
@@ -12511,7 +12914,7 @@ export const proto = $root.proto = (() => {
                         break;
                     }
                 case 3: {
-                        message.stageTimeLeft = reader.sint32();
+                        message.stageTimeLeft = reader.sint64();
                         break;
                     }
                 case 4: {
@@ -12527,15 +12930,15 @@ export const proto = $root.proto = (() => {
                         break;
                     }
                 case 7: {
-                        message.yellow = $root.proto.SSL_Referee.TeamInfo.decode(reader, reader.uint32());
+                        message.yellow = $root.proto.Referee.TeamInfo.decode(reader, reader.uint32());
                         break;
                     }
                 case 8: {
-                        message.blue = $root.proto.SSL_Referee.TeamInfo.decode(reader, reader.uint32());
+                        message.blue = $root.proto.Referee.TeamInfo.decode(reader, reader.uint32());
                         break;
                     }
                 case 9: {
-                        message.designatedPosition = $root.proto.SSL_Referee.Point.decode(reader, reader.uint32());
+                        message.designatedPosition = $root.proto.Referee.Point.decode(reader, reader.uint32());
                         break;
                     }
                 case 10: {
@@ -12559,7 +12962,11 @@ export const proto = $root.proto = (() => {
                         break;
                     }
                 case 15: {
-                        message.currentActionTimeRemaining = reader.int32();
+                        message.currentActionTimeRemaining = reader.int64();
+                        break;
+                    }
+                case 20: {
+                        message.statusMessage = reader.string();
                         break;
                     }
                 default:
@@ -12585,32 +12992,45 @@ export const proto = $root.proto = (() => {
         };
 
         /**
-         * Decodes a SSL_Referee message from the specified reader or buffer, length delimited.
+         * Decodes a Referee message from the specified reader or buffer, length delimited.
          * @function decodeDelimited
-         * @memberof proto.SSL_Referee
+         * @memberof proto.Referee
          * @static
          * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-         * @returns {proto.SSL_Referee} SSL_Referee
+         * @returns {proto.Referee} Referee
          * @throws {Error} If the payload is not a reader or valid buffer
          * @throws {$protobuf.util.ProtocolError} If required fields are missing
          */
-        SSL_Referee.decodeDelimited = function decodeDelimited(reader) {
+        Referee.decodeDelimited = function decodeDelimited(reader) {
             if (!(reader instanceof $Reader))
                 reader = new $Reader(reader);
             return this.decode(reader, reader.uint32());
         };
 
         /**
-         * Verifies a SSL_Referee message.
+         * Verifies a Referee message.
          * @function verify
-         * @memberof proto.SSL_Referee
+         * @memberof proto.Referee
          * @static
          * @param {Object.<string,*>} message Plain object to verify
          * @returns {string|null} `null` if valid, otherwise the reason why it is not
          */
-        SSL_Referee.verify = function verify(message) {
+        Referee.verify = function verify(message) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
+            if (message.sourceIdentifier != null && message.hasOwnProperty("sourceIdentifier"))
+                if (!$util.isString(message.sourceIdentifier))
+                    return "sourceIdentifier: string expected";
+            if (message.matchType != null && message.hasOwnProperty("matchType"))
+                switch (message.matchType) {
+                default:
+                    return "matchType: enum value expected";
+                case 0:
+                case 1:
+                case 2:
+                case 3:
+                    break;
+                }
             if (!$util.isInteger(message.packetTimestamp) && !(message.packetTimestamp && $util.isInteger(message.packetTimestamp.low) && $util.isInteger(message.packetTimestamp.high)))
                 return "packetTimestamp: integer|Long expected";
             switch (message.stage) {
@@ -12633,8 +13053,8 @@ export const proto = $root.proto = (() => {
                 break;
             }
             if (message.stageTimeLeft != null && message.hasOwnProperty("stageTimeLeft"))
-                if (!$util.isInteger(message.stageTimeLeft))
-                    return "stageTimeLeft: integer expected";
+                if (!$util.isInteger(message.stageTimeLeft) && !(message.stageTimeLeft && $util.isInteger(message.stageTimeLeft.low) && $util.isInteger(message.stageTimeLeft.high)))
+                    return "stageTimeLeft: integer|Long expected";
             switch (message.command) {
             default:
                 return "command: enum value expected";
@@ -12648,8 +13068,6 @@ export const proto = $root.proto = (() => {
             case 7:
             case 8:
             case 9:
-            case 10:
-            case 11:
             case 12:
             case 13:
             case 16:
@@ -12661,17 +13079,17 @@ export const proto = $root.proto = (() => {
             if (!$util.isInteger(message.commandTimestamp) && !(message.commandTimestamp && $util.isInteger(message.commandTimestamp.low) && $util.isInteger(message.commandTimestamp.high)))
                 return "commandTimestamp: integer|Long expected";
             {
-                let error = $root.proto.SSL_Referee.TeamInfo.verify(message.yellow);
+                let error = $root.proto.Referee.TeamInfo.verify(message.yellow);
                 if (error)
                     return "yellow." + error;
             }
             {
-                let error = $root.proto.SSL_Referee.TeamInfo.verify(message.blue);
+                let error = $root.proto.Referee.TeamInfo.verify(message.blue);
                 if (error)
                     return "blue." + error;
             }
             if (message.designatedPosition != null && message.hasOwnProperty("designatedPosition")) {
-                let error = $root.proto.SSL_Referee.Point.verify(message.designatedPosition);
+                let error = $root.proto.Referee.Point.verify(message.designatedPosition);
                 if (error)
                     return "designatedPosition." + error;
             }
@@ -12692,8 +13110,6 @@ export const proto = $root.proto = (() => {
                 case 7:
                 case 8:
                 case 9:
-                case 10:
-                case 11:
                 case 12:
                 case 13:
                 case 16:
@@ -12719,23 +13135,52 @@ export const proto = $root.proto = (() => {
                 }
             }
             if (message.currentActionTimeRemaining != null && message.hasOwnProperty("currentActionTimeRemaining"))
-                if (!$util.isInteger(message.currentActionTimeRemaining))
-                    return "currentActionTimeRemaining: integer expected";
+                if (!$util.isInteger(message.currentActionTimeRemaining) && !(message.currentActionTimeRemaining && $util.isInteger(message.currentActionTimeRemaining.low) && $util.isInteger(message.currentActionTimeRemaining.high)))
+                    return "currentActionTimeRemaining: integer|Long expected";
+            if (message.statusMessage != null && message.hasOwnProperty("statusMessage"))
+                if (!$util.isString(message.statusMessage))
+                    return "statusMessage: string expected";
             return null;
         };
 
         /**
-         * Creates a SSL_Referee message from a plain object. Also converts values to their respective internal types.
+         * Creates a Referee message from a plain object. Also converts values to their respective internal types.
          * @function fromObject
-         * @memberof proto.SSL_Referee
+         * @memberof proto.Referee
          * @static
          * @param {Object.<string,*>} object Plain object
-         * @returns {proto.SSL_Referee} SSL_Referee
+         * @returns {proto.Referee} Referee
          */
-        SSL_Referee.fromObject = function fromObject(object) {
-            if (object instanceof $root.proto.SSL_Referee)
+        Referee.fromObject = function fromObject(object) {
+            if (object instanceof $root.proto.Referee)
                 return object;
-            let message = new $root.proto.SSL_Referee();
+            let message = new $root.proto.Referee();
+            if (object.sourceIdentifier != null)
+                message.sourceIdentifier = String(object.sourceIdentifier);
+            switch (object.matchType) {
+            default:
+                if (typeof object.matchType === "number") {
+                    message.matchType = object.matchType;
+                    break;
+                }
+                break;
+            case "UNKNOWN_MATCH":
+            case 0:
+                message.matchType = 0;
+                break;
+            case "GROUP_PHASE":
+            case 1:
+                message.matchType = 1;
+                break;
+            case "ELIMINATION_PHASE":
+            case 2:
+                message.matchType = 2;
+                break;
+            case "FRIENDLY":
+            case 3:
+                message.matchType = 3;
+                break;
+            }
             if (object.packetTimestamp != null)
                 if ($util.Long)
                     (message.packetTimestamp = $util.Long.fromValue(object.packetTimestamp)).unsigned = true;
@@ -12810,7 +13255,14 @@ export const proto = $root.proto = (() => {
                 break;
             }
             if (object.stageTimeLeft != null)
-                message.stageTimeLeft = object.stageTimeLeft | 0;
+                if ($util.Long)
+                    (message.stageTimeLeft = $util.Long.fromValue(object.stageTimeLeft)).unsigned = false;
+                else if (typeof object.stageTimeLeft === "string")
+                    message.stageTimeLeft = parseInt(object.stageTimeLeft, 10);
+                else if (typeof object.stageTimeLeft === "number")
+                    message.stageTimeLeft = object.stageTimeLeft;
+                else if (typeof object.stageTimeLeft === "object")
+                    message.stageTimeLeft = new $util.LongBits(object.stageTimeLeft.low >>> 0, object.stageTimeLeft.high >>> 0).toNumber();
             switch (object.command) {
             default:
                 if (typeof object.command === "number") {
@@ -12858,14 +13310,6 @@ export const proto = $root.proto = (() => {
             case 9:
                 message.command = 9;
                 break;
-            case "INDIRECT_FREE_YELLOW":
-            case 10:
-                message.command = 10;
-                break;
-            case "INDIRECT_FREE_BLUE":
-            case 11:
-                message.command = 11;
-                break;
             case "TIMEOUT_YELLOW":
             case 12:
                 message.command = 12;
@@ -12896,18 +13340,18 @@ export const proto = $root.proto = (() => {
                     message.commandTimestamp = new $util.LongBits(object.commandTimestamp.low >>> 0, object.commandTimestamp.high >>> 0).toNumber(true);
             if (object.yellow != null) {
                 if (typeof object.yellow !== "object")
-                    throw TypeError(".proto.SSL_Referee.yellow: object expected");
-                message.yellow = $root.proto.SSL_Referee.TeamInfo.fromObject(object.yellow);
+                    throw TypeError(".proto.Referee.yellow: object expected");
+                message.yellow = $root.proto.Referee.TeamInfo.fromObject(object.yellow);
             }
             if (object.blue != null) {
                 if (typeof object.blue !== "object")
-                    throw TypeError(".proto.SSL_Referee.blue: object expected");
-                message.blue = $root.proto.SSL_Referee.TeamInfo.fromObject(object.blue);
+                    throw TypeError(".proto.Referee.blue: object expected");
+                message.blue = $root.proto.Referee.TeamInfo.fromObject(object.blue);
             }
             if (object.designatedPosition != null) {
                 if (typeof object.designatedPosition !== "object")
-                    throw TypeError(".proto.SSL_Referee.designatedPosition: object expected");
-                message.designatedPosition = $root.proto.SSL_Referee.Point.fromObject(object.designatedPosition);
+                    throw TypeError(".proto.Referee.designatedPosition: object expected");
+                message.designatedPosition = $root.proto.Referee.Point.fromObject(object.designatedPosition);
             }
             if (object.blueTeamOnPositiveHalf != null)
                 message.blueTeamOnPositiveHalf = Boolean(object.blueTeamOnPositiveHalf);
@@ -12958,14 +13402,6 @@ export const proto = $root.proto = (() => {
             case 9:
                 message.nextCommand = 9;
                 break;
-            case "INDIRECT_FREE_YELLOW":
-            case 10:
-                message.nextCommand = 10;
-                break;
-            case "INDIRECT_FREE_BLUE":
-            case 11:
-                message.nextCommand = 11;
-                break;
             case "TIMEOUT_YELLOW":
             case 12:
                 message.nextCommand = 12;
@@ -12985,39 +13421,48 @@ export const proto = $root.proto = (() => {
             }
             if (object.gameEvents) {
                 if (!Array.isArray(object.gameEvents))
-                    throw TypeError(".proto.SSL_Referee.gameEvents: array expected");
+                    throw TypeError(".proto.Referee.gameEvents: array expected");
                 message.gameEvents = [];
                 for (let i = 0; i < object.gameEvents.length; ++i) {
                     if (typeof object.gameEvents[i] !== "object")
-                        throw TypeError(".proto.SSL_Referee.gameEvents: object expected");
+                        throw TypeError(".proto.Referee.gameEvents: object expected");
                     message.gameEvents[i] = $root.proto.GameEvent.fromObject(object.gameEvents[i]);
                 }
             }
             if (object.gameEventProposals) {
                 if (!Array.isArray(object.gameEventProposals))
-                    throw TypeError(".proto.SSL_Referee.gameEventProposals: array expected");
+                    throw TypeError(".proto.Referee.gameEventProposals: array expected");
                 message.gameEventProposals = [];
                 for (let i = 0; i < object.gameEventProposals.length; ++i) {
                     if (typeof object.gameEventProposals[i] !== "object")
-                        throw TypeError(".proto.SSL_Referee.gameEventProposals: object expected");
+                        throw TypeError(".proto.Referee.gameEventProposals: object expected");
                     message.gameEventProposals[i] = $root.proto.GameEventProposalGroup.fromObject(object.gameEventProposals[i]);
                 }
             }
             if (object.currentActionTimeRemaining != null)
-                message.currentActionTimeRemaining = object.currentActionTimeRemaining | 0;
+                if ($util.Long)
+                    (message.currentActionTimeRemaining = $util.Long.fromValue(object.currentActionTimeRemaining)).unsigned = false;
+                else if (typeof object.currentActionTimeRemaining === "string")
+                    message.currentActionTimeRemaining = parseInt(object.currentActionTimeRemaining, 10);
+                else if (typeof object.currentActionTimeRemaining === "number")
+                    message.currentActionTimeRemaining = object.currentActionTimeRemaining;
+                else if (typeof object.currentActionTimeRemaining === "object")
+                    message.currentActionTimeRemaining = new $util.LongBits(object.currentActionTimeRemaining.low >>> 0, object.currentActionTimeRemaining.high >>> 0).toNumber();
+            if (object.statusMessage != null)
+                message.statusMessage = String(object.statusMessage);
             return message;
         };
 
         /**
-         * Creates a plain object from a SSL_Referee message. Also converts values to other types if specified.
+         * Creates a plain object from a Referee message. Also converts values to other types if specified.
          * @function toObject
-         * @memberof proto.SSL_Referee
+         * @memberof proto.Referee
          * @static
-         * @param {proto.SSL_Referee} message SSL_Referee
+         * @param {proto.Referee} message Referee
          * @param {$protobuf.IConversionOptions} [options] Conversion options
          * @returns {Object.<string,*>} Plain object
          */
-        SSL_Referee.toObject = function toObject(message, options) {
+        Referee.toObject = function toObject(message, options) {
             if (!options)
                 options = {};
             let object = {};
@@ -13032,7 +13477,11 @@ export const proto = $root.proto = (() => {
                 } else
                     object.packetTimestamp = options.longs === String ? "0" : 0;
                 object.stage = options.enums === String ? "NORMAL_FIRST_HALF_PRE" : 0;
-                object.stageTimeLeft = 0;
+                if ($util.Long) {
+                    let long = new $util.Long(0, 0, false);
+                    object.stageTimeLeft = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                } else
+                    object.stageTimeLeft = options.longs === String ? "0" : 0;
                 object.command = options.enums === String ? "HALT" : 0;
                 object.commandCounter = 0;
                 if ($util.Long) {
@@ -13045,7 +13494,14 @@ export const proto = $root.proto = (() => {
                 object.designatedPosition = null;
                 object.blueTeamOnPositiveHalf = false;
                 object.nextCommand = options.enums === String ? "HALT" : 0;
-                object.currentActionTimeRemaining = 0;
+                if ($util.Long) {
+                    let long = new $util.Long(0, 0, false);
+                    object.currentActionTimeRemaining = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                } else
+                    object.currentActionTimeRemaining = options.longs === String ? "0" : 0;
+                object.sourceIdentifier = "";
+                object.matchType = options.enums === String ? "UNKNOWN_MATCH" : 0;
+                object.statusMessage = "";
             }
             if (message.packetTimestamp != null && message.hasOwnProperty("packetTimestamp"))
                 if (typeof message.packetTimestamp === "number")
@@ -13053,11 +13509,14 @@ export const proto = $root.proto = (() => {
                 else
                     object.packetTimestamp = options.longs === String ? $util.Long.prototype.toString.call(message.packetTimestamp) : options.longs === Number ? new $util.LongBits(message.packetTimestamp.low >>> 0, message.packetTimestamp.high >>> 0).toNumber(true) : message.packetTimestamp;
             if (message.stage != null && message.hasOwnProperty("stage"))
-                object.stage = options.enums === String ? $root.proto.SSL_Referee.Stage[message.stage] === undefined ? message.stage : $root.proto.SSL_Referee.Stage[message.stage] : message.stage;
+                object.stage = options.enums === String ? $root.proto.Referee.Stage[message.stage] === undefined ? message.stage : $root.proto.Referee.Stage[message.stage] : message.stage;
             if (message.stageTimeLeft != null && message.hasOwnProperty("stageTimeLeft"))
-                object.stageTimeLeft = message.stageTimeLeft;
+                if (typeof message.stageTimeLeft === "number")
+                    object.stageTimeLeft = options.longs === String ? String(message.stageTimeLeft) : message.stageTimeLeft;
+                else
+                    object.stageTimeLeft = options.longs === String ? $util.Long.prototype.toString.call(message.stageTimeLeft) : options.longs === Number ? new $util.LongBits(message.stageTimeLeft.low >>> 0, message.stageTimeLeft.high >>> 0).toNumber() : message.stageTimeLeft;
             if (message.command != null && message.hasOwnProperty("command"))
-                object.command = options.enums === String ? $root.proto.SSL_Referee.Command[message.command] === undefined ? message.command : $root.proto.SSL_Referee.Command[message.command] : message.command;
+                object.command = options.enums === String ? $root.proto.Referee.Command[message.command] === undefined ? message.command : $root.proto.Referee.Command[message.command] : message.command;
             if (message.commandCounter != null && message.hasOwnProperty("commandCounter"))
                 object.commandCounter = message.commandCounter;
             if (message.commandTimestamp != null && message.hasOwnProperty("commandTimestamp"))
@@ -13066,17 +13525,20 @@ export const proto = $root.proto = (() => {
                 else
                     object.commandTimestamp = options.longs === String ? $util.Long.prototype.toString.call(message.commandTimestamp) : options.longs === Number ? new $util.LongBits(message.commandTimestamp.low >>> 0, message.commandTimestamp.high >>> 0).toNumber(true) : message.commandTimestamp;
             if (message.yellow != null && message.hasOwnProperty("yellow"))
-                object.yellow = $root.proto.SSL_Referee.TeamInfo.toObject(message.yellow, options);
+                object.yellow = $root.proto.Referee.TeamInfo.toObject(message.yellow, options);
             if (message.blue != null && message.hasOwnProperty("blue"))
-                object.blue = $root.proto.SSL_Referee.TeamInfo.toObject(message.blue, options);
+                object.blue = $root.proto.Referee.TeamInfo.toObject(message.blue, options);
             if (message.designatedPosition != null && message.hasOwnProperty("designatedPosition"))
-                object.designatedPosition = $root.proto.SSL_Referee.Point.toObject(message.designatedPosition, options);
+                object.designatedPosition = $root.proto.Referee.Point.toObject(message.designatedPosition, options);
             if (message.blueTeamOnPositiveHalf != null && message.hasOwnProperty("blueTeamOnPositiveHalf"))
                 object.blueTeamOnPositiveHalf = message.blueTeamOnPositiveHalf;
             if (message.nextCommand != null && message.hasOwnProperty("nextCommand"))
-                object.nextCommand = options.enums === String ? $root.proto.SSL_Referee.Command[message.nextCommand] === undefined ? message.nextCommand : $root.proto.SSL_Referee.Command[message.nextCommand] : message.nextCommand;
+                object.nextCommand = options.enums === String ? $root.proto.Referee.Command[message.nextCommand] === undefined ? message.nextCommand : $root.proto.Referee.Command[message.nextCommand] : message.nextCommand;
             if (message.currentActionTimeRemaining != null && message.hasOwnProperty("currentActionTimeRemaining"))
-                object.currentActionTimeRemaining = message.currentActionTimeRemaining;
+                if (typeof message.currentActionTimeRemaining === "number")
+                    object.currentActionTimeRemaining = options.longs === String ? String(message.currentActionTimeRemaining) : message.currentActionTimeRemaining;
+                else
+                    object.currentActionTimeRemaining = options.longs === String ? $util.Long.prototype.toString.call(message.currentActionTimeRemaining) : options.longs === Number ? new $util.LongBits(message.currentActionTimeRemaining.low >>> 0, message.currentActionTimeRemaining.high >>> 0).toNumber() : message.currentActionTimeRemaining;
             if (message.gameEvents && message.gameEvents.length) {
                 object.gameEvents = [];
                 for (let j = 0; j < message.gameEvents.length; ++j)
@@ -13087,38 +13549,44 @@ export const proto = $root.proto = (() => {
                 for (let j = 0; j < message.gameEventProposals.length; ++j)
                     object.gameEventProposals[j] = $root.proto.GameEventProposalGroup.toObject(message.gameEventProposals[j], options);
             }
+            if (message.sourceIdentifier != null && message.hasOwnProperty("sourceIdentifier"))
+                object.sourceIdentifier = message.sourceIdentifier;
+            if (message.matchType != null && message.hasOwnProperty("matchType"))
+                object.matchType = options.enums === String ? $root.proto.MatchType[message.matchType] === undefined ? message.matchType : $root.proto.MatchType[message.matchType] : message.matchType;
+            if (message.statusMessage != null && message.hasOwnProperty("statusMessage"))
+                object.statusMessage = message.statusMessage;
             return object;
         };
 
         /**
-         * Converts this SSL_Referee to JSON.
+         * Converts this Referee to JSON.
          * @function toJSON
-         * @memberof proto.SSL_Referee
+         * @memberof proto.Referee
          * @instance
          * @returns {Object.<string,*>} JSON object
          */
-        SSL_Referee.prototype.toJSON = function toJSON() {
+        Referee.prototype.toJSON = function toJSON() {
             return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
         };
 
         /**
-         * Gets the default type url for SSL_Referee
+         * Gets the default type url for Referee
          * @function getTypeUrl
-         * @memberof proto.SSL_Referee
+         * @memberof proto.Referee
          * @static
          * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
          * @returns {string} The default type url
          */
-        SSL_Referee.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+        Referee.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
             if (typeUrlPrefix === undefined) {
                 typeUrlPrefix = "type.googleapis.com";
             }
-            return typeUrlPrefix + "/proto.SSL_Referee";
+            return typeUrlPrefix + "/proto.Referee";
         };
 
         /**
          * Stage enum.
-         * @name proto.SSL_Referee.Stage
+         * @name proto.Referee.Stage
          * @enum {number}
          * @property {number} NORMAL_FIRST_HALF_PRE=0 NORMAL_FIRST_HALF_PRE value
          * @property {number} NORMAL_FIRST_HALF=1 NORMAL_FIRST_HALF value
@@ -13135,7 +13603,7 @@ export const proto = $root.proto = (() => {
          * @property {number} PENALTY_SHOOTOUT=12 PENALTY_SHOOTOUT value
          * @property {number} POST_GAME=13 POST_GAME value
          */
-        SSL_Referee.Stage = (function() {
+        Referee.Stage = (function() {
             const valuesById = {}, values = Object.create(valuesById);
             values[valuesById[0] = "NORMAL_FIRST_HALF_PRE"] = 0;
             values[valuesById[1] = "NORMAL_FIRST_HALF"] = 1;
@@ -13156,7 +13624,7 @@ export const proto = $root.proto = (() => {
 
         /**
          * Command enum.
-         * @name proto.SSL_Referee.Command
+         * @name proto.Referee.Command
          * @enum {number}
          * @property {number} HALT=0 HALT value
          * @property {number} STOP=1 STOP value
@@ -13168,14 +13636,12 @@ export const proto = $root.proto = (() => {
          * @property {number} PREPARE_PENALTY_BLUE=7 PREPARE_PENALTY_BLUE value
          * @property {number} DIRECT_FREE_YELLOW=8 DIRECT_FREE_YELLOW value
          * @property {number} DIRECT_FREE_BLUE=9 DIRECT_FREE_BLUE value
-         * @property {number} INDIRECT_FREE_YELLOW=10 INDIRECT_FREE_YELLOW value
-         * @property {number} INDIRECT_FREE_BLUE=11 INDIRECT_FREE_BLUE value
          * @property {number} TIMEOUT_YELLOW=12 TIMEOUT_YELLOW value
          * @property {number} TIMEOUT_BLUE=13 TIMEOUT_BLUE value
          * @property {number} BALL_PLACEMENT_YELLOW=16 BALL_PLACEMENT_YELLOW value
          * @property {number} BALL_PLACEMENT_BLUE=17 BALL_PLACEMENT_BLUE value
          */
-        SSL_Referee.Command = (function() {
+        Referee.Command = (function() {
             const valuesById = {}, values = Object.create(valuesById);
             values[valuesById[0] = "HALT"] = 0;
             values[valuesById[1] = "STOP"] = 1;
@@ -13187,8 +13653,6 @@ export const proto = $root.proto = (() => {
             values[valuesById[7] = "PREPARE_PENALTY_BLUE"] = 7;
             values[valuesById[8] = "DIRECT_FREE_YELLOW"] = 8;
             values[valuesById[9] = "DIRECT_FREE_BLUE"] = 9;
-            values[valuesById[10] = "INDIRECT_FREE_YELLOW"] = 10;
-            values[valuesById[11] = "INDIRECT_FREE_BLUE"] = 11;
             values[valuesById[12] = "TIMEOUT_YELLOW"] = 12;
             values[valuesById[13] = "TIMEOUT_BLUE"] = 13;
             values[valuesById[16] = "BALL_PLACEMENT_YELLOW"] = 16;
@@ -13196,11 +13660,11 @@ export const proto = $root.proto = (() => {
             return values;
         })();
 
-        SSL_Referee.TeamInfo = (function() {
+        Referee.TeamInfo = (function() {
 
             /**
              * Properties of a TeamInfo.
-             * @memberof proto.SSL_Referee
+             * @memberof proto.Referee
              * @interface ITeamInfo
              * @property {string} name TeamInfo name
              * @property {number} score TeamInfo score
@@ -13216,15 +13680,16 @@ export const proto = $root.proto = (() => {
              * @property {number|null} [maxAllowedBots] TeamInfo maxAllowedBots
              * @property {boolean|null} [botSubstitutionIntent] TeamInfo botSubstitutionIntent
              * @property {boolean|null} [ballPlacementFailuresReached] TeamInfo ballPlacementFailuresReached
+             * @property {boolean|null} [botSubstitutionAllowed] TeamInfo botSubstitutionAllowed
              */
 
             /**
              * Constructs a new TeamInfo.
-             * @memberof proto.SSL_Referee
+             * @memberof proto.Referee
              * @classdesc Represents a TeamInfo.
              * @implements ITeamInfo
              * @constructor
-             * @param {proto.SSL_Referee.ITeamInfo=} [properties] Properties to set
+             * @param {proto.Referee.ITeamInfo=} [properties] Properties to set
              */
             function TeamInfo(properties) {
                 this.yellowCardTimes = [];
@@ -13237,7 +13702,7 @@ export const proto = $root.proto = (() => {
             /**
              * TeamInfo name.
              * @member {string} name
-             * @memberof proto.SSL_Referee.TeamInfo
+             * @memberof proto.Referee.TeamInfo
              * @instance
              */
             TeamInfo.prototype.name = "";
@@ -13245,7 +13710,7 @@ export const proto = $root.proto = (() => {
             /**
              * TeamInfo score.
              * @member {number} score
-             * @memberof proto.SSL_Referee.TeamInfo
+             * @memberof proto.Referee.TeamInfo
              * @instance
              */
             TeamInfo.prototype.score = 0;
@@ -13253,7 +13718,7 @@ export const proto = $root.proto = (() => {
             /**
              * TeamInfo redCards.
              * @member {number} redCards
-             * @memberof proto.SSL_Referee.TeamInfo
+             * @memberof proto.Referee.TeamInfo
              * @instance
              */
             TeamInfo.prototype.redCards = 0;
@@ -13261,7 +13726,7 @@ export const proto = $root.proto = (() => {
             /**
              * TeamInfo yellowCardTimes.
              * @member {Array.<number>} yellowCardTimes
-             * @memberof proto.SSL_Referee.TeamInfo
+             * @memberof proto.Referee.TeamInfo
              * @instance
              */
             TeamInfo.prototype.yellowCardTimes = $util.emptyArray;
@@ -13269,7 +13734,7 @@ export const proto = $root.proto = (() => {
             /**
              * TeamInfo yellowCards.
              * @member {number} yellowCards
-             * @memberof proto.SSL_Referee.TeamInfo
+             * @memberof proto.Referee.TeamInfo
              * @instance
              */
             TeamInfo.prototype.yellowCards = 0;
@@ -13277,7 +13742,7 @@ export const proto = $root.proto = (() => {
             /**
              * TeamInfo timeouts.
              * @member {number} timeouts
-             * @memberof proto.SSL_Referee.TeamInfo
+             * @memberof proto.Referee.TeamInfo
              * @instance
              */
             TeamInfo.prototype.timeouts = 0;
@@ -13285,7 +13750,7 @@ export const proto = $root.proto = (() => {
             /**
              * TeamInfo timeoutTime.
              * @member {number} timeoutTime
-             * @memberof proto.SSL_Referee.TeamInfo
+             * @memberof proto.Referee.TeamInfo
              * @instance
              */
             TeamInfo.prototype.timeoutTime = 0;
@@ -13293,7 +13758,7 @@ export const proto = $root.proto = (() => {
             /**
              * TeamInfo goalkeeper.
              * @member {number} goalkeeper
-             * @memberof proto.SSL_Referee.TeamInfo
+             * @memberof proto.Referee.TeamInfo
              * @instance
              */
             TeamInfo.prototype.goalkeeper = 0;
@@ -13301,7 +13766,7 @@ export const proto = $root.proto = (() => {
             /**
              * TeamInfo foulCounter.
              * @member {number} foulCounter
-             * @memberof proto.SSL_Referee.TeamInfo
+             * @memberof proto.Referee.TeamInfo
              * @instance
              */
             TeamInfo.prototype.foulCounter = 0;
@@ -13309,7 +13774,7 @@ export const proto = $root.proto = (() => {
             /**
              * TeamInfo ballPlacementFailures.
              * @member {number} ballPlacementFailures
-             * @memberof proto.SSL_Referee.TeamInfo
+             * @memberof proto.Referee.TeamInfo
              * @instance
              */
             TeamInfo.prototype.ballPlacementFailures = 0;
@@ -13317,7 +13782,7 @@ export const proto = $root.proto = (() => {
             /**
              * TeamInfo canPlaceBall.
              * @member {boolean} canPlaceBall
-             * @memberof proto.SSL_Referee.TeamInfo
+             * @memberof proto.Referee.TeamInfo
              * @instance
              */
             TeamInfo.prototype.canPlaceBall = false;
@@ -13325,7 +13790,7 @@ export const proto = $root.proto = (() => {
             /**
              * TeamInfo maxAllowedBots.
              * @member {number} maxAllowedBots
-             * @memberof proto.SSL_Referee.TeamInfo
+             * @memberof proto.Referee.TeamInfo
              * @instance
              */
             TeamInfo.prototype.maxAllowedBots = 0;
@@ -13333,7 +13798,7 @@ export const proto = $root.proto = (() => {
             /**
              * TeamInfo botSubstitutionIntent.
              * @member {boolean} botSubstitutionIntent
-             * @memberof proto.SSL_Referee.TeamInfo
+             * @memberof proto.Referee.TeamInfo
              * @instance
              */
             TeamInfo.prototype.botSubstitutionIntent = false;
@@ -13341,29 +13806,37 @@ export const proto = $root.proto = (() => {
             /**
              * TeamInfo ballPlacementFailuresReached.
              * @member {boolean} ballPlacementFailuresReached
-             * @memberof proto.SSL_Referee.TeamInfo
+             * @memberof proto.Referee.TeamInfo
              * @instance
              */
             TeamInfo.prototype.ballPlacementFailuresReached = false;
 
             /**
+             * TeamInfo botSubstitutionAllowed.
+             * @member {boolean} botSubstitutionAllowed
+             * @memberof proto.Referee.TeamInfo
+             * @instance
+             */
+            TeamInfo.prototype.botSubstitutionAllowed = false;
+
+            /**
              * Creates a new TeamInfo instance using the specified properties.
              * @function create
-             * @memberof proto.SSL_Referee.TeamInfo
+             * @memberof proto.Referee.TeamInfo
              * @static
-             * @param {proto.SSL_Referee.ITeamInfo=} [properties] Properties to set
-             * @returns {proto.SSL_Referee.TeamInfo} TeamInfo instance
+             * @param {proto.Referee.ITeamInfo=} [properties] Properties to set
+             * @returns {proto.Referee.TeamInfo} TeamInfo instance
              */
             TeamInfo.create = function create(properties) {
                 return new TeamInfo(properties);
             };
 
             /**
-             * Encodes the specified TeamInfo message. Does not implicitly {@link proto.SSL_Referee.TeamInfo.verify|verify} messages.
+             * Encodes the specified TeamInfo message. Does not implicitly {@link proto.Referee.TeamInfo.verify|verify} messages.
              * @function encode
-             * @memberof proto.SSL_Referee.TeamInfo
+             * @memberof proto.Referee.TeamInfo
              * @static
-             * @param {proto.SSL_Referee.ITeamInfo} message TeamInfo message or plain object to encode
+             * @param {proto.Referee.ITeamInfo} message TeamInfo message or plain object to encode
              * @param {$protobuf.Writer} [writer] Writer to encode to
              * @returns {$protobuf.Writer} Writer
              */
@@ -13395,15 +13868,17 @@ export const proto = $root.proto = (() => {
                     writer.uint32(/* id 14, wireType 0 =*/112).bool(message.botSubstitutionIntent);
                 if (message.ballPlacementFailuresReached != null && Object.hasOwnProperty.call(message, "ballPlacementFailuresReached"))
                     writer.uint32(/* id 15, wireType 0 =*/120).bool(message.ballPlacementFailuresReached);
+                if (message.botSubstitutionAllowed != null && Object.hasOwnProperty.call(message, "botSubstitutionAllowed"))
+                    writer.uint32(/* id 16, wireType 0 =*/128).bool(message.botSubstitutionAllowed);
                 return writer;
             };
 
             /**
-             * Encodes the specified TeamInfo message, length delimited. Does not implicitly {@link proto.SSL_Referee.TeamInfo.verify|verify} messages.
+             * Encodes the specified TeamInfo message, length delimited. Does not implicitly {@link proto.Referee.TeamInfo.verify|verify} messages.
              * @function encodeDelimited
-             * @memberof proto.SSL_Referee.TeamInfo
+             * @memberof proto.Referee.TeamInfo
              * @static
-             * @param {proto.SSL_Referee.ITeamInfo} message TeamInfo message or plain object to encode
+             * @param {proto.Referee.ITeamInfo} message TeamInfo message or plain object to encode
              * @param {$protobuf.Writer} [writer] Writer to encode to
              * @returns {$protobuf.Writer} Writer
              */
@@ -13414,18 +13889,18 @@ export const proto = $root.proto = (() => {
             /**
              * Decodes a TeamInfo message from the specified reader or buffer.
              * @function decode
-             * @memberof proto.SSL_Referee.TeamInfo
+             * @memberof proto.Referee.TeamInfo
              * @static
              * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
              * @param {number} [length] Message length if known beforehand
-             * @returns {proto.SSL_Referee.TeamInfo} TeamInfo
+             * @returns {proto.Referee.TeamInfo} TeamInfo
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
             TeamInfo.decode = function decode(reader, length) {
                 if (!(reader instanceof $Reader))
                     reader = $Reader.create(reader);
-                let end = length === undefined ? reader.len : reader.pos + length, message = new $root.proto.SSL_Referee.TeamInfo();
+                let end = length === undefined ? reader.len : reader.pos + length, message = new $root.proto.Referee.TeamInfo();
                 while (reader.pos < end) {
                     let tag = reader.uint32();
                     switch (tag >>> 3) {
@@ -13492,6 +13967,10 @@ export const proto = $root.proto = (() => {
                             message.ballPlacementFailuresReached = reader.bool();
                             break;
                         }
+                    case 16: {
+                            message.botSubstitutionAllowed = reader.bool();
+                            break;
+                        }
                     default:
                         reader.skipType(tag & 7);
                         break;
@@ -13517,10 +13996,10 @@ export const proto = $root.proto = (() => {
             /**
              * Decodes a TeamInfo message from the specified reader or buffer, length delimited.
              * @function decodeDelimited
-             * @memberof proto.SSL_Referee.TeamInfo
+             * @memberof proto.Referee.TeamInfo
              * @static
              * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-             * @returns {proto.SSL_Referee.TeamInfo} TeamInfo
+             * @returns {proto.Referee.TeamInfo} TeamInfo
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
@@ -13533,7 +14012,7 @@ export const proto = $root.proto = (() => {
             /**
              * Verifies a TeamInfo message.
              * @function verify
-             * @memberof proto.SSL_Referee.TeamInfo
+             * @memberof proto.Referee.TeamInfo
              * @static
              * @param {Object.<string,*>} message Plain object to verify
              * @returns {string|null} `null` if valid, otherwise the reason why it is not
@@ -13580,21 +14059,24 @@ export const proto = $root.proto = (() => {
                 if (message.ballPlacementFailuresReached != null && message.hasOwnProperty("ballPlacementFailuresReached"))
                     if (typeof message.ballPlacementFailuresReached !== "boolean")
                         return "ballPlacementFailuresReached: boolean expected";
+                if (message.botSubstitutionAllowed != null && message.hasOwnProperty("botSubstitutionAllowed"))
+                    if (typeof message.botSubstitutionAllowed !== "boolean")
+                        return "botSubstitutionAllowed: boolean expected";
                 return null;
             };
 
             /**
              * Creates a TeamInfo message from a plain object. Also converts values to their respective internal types.
              * @function fromObject
-             * @memberof proto.SSL_Referee.TeamInfo
+             * @memberof proto.Referee.TeamInfo
              * @static
              * @param {Object.<string,*>} object Plain object
-             * @returns {proto.SSL_Referee.TeamInfo} TeamInfo
+             * @returns {proto.Referee.TeamInfo} TeamInfo
              */
             TeamInfo.fromObject = function fromObject(object) {
-                if (object instanceof $root.proto.SSL_Referee.TeamInfo)
+                if (object instanceof $root.proto.Referee.TeamInfo)
                     return object;
-                let message = new $root.proto.SSL_Referee.TeamInfo();
+                let message = new $root.proto.Referee.TeamInfo();
                 if (object.name != null)
                     message.name = String(object.name);
                 if (object.score != null)
@@ -13603,7 +14085,7 @@ export const proto = $root.proto = (() => {
                     message.redCards = object.redCards >>> 0;
                 if (object.yellowCardTimes) {
                     if (!Array.isArray(object.yellowCardTimes))
-                        throw TypeError(".proto.SSL_Referee.TeamInfo.yellowCardTimes: array expected");
+                        throw TypeError(".proto.Referee.TeamInfo.yellowCardTimes: array expected");
                     message.yellowCardTimes = [];
                     for (let i = 0; i < object.yellowCardTimes.length; ++i)
                         message.yellowCardTimes[i] = object.yellowCardTimes[i] >>> 0;
@@ -13628,15 +14110,17 @@ export const proto = $root.proto = (() => {
                     message.botSubstitutionIntent = Boolean(object.botSubstitutionIntent);
                 if (object.ballPlacementFailuresReached != null)
                     message.ballPlacementFailuresReached = Boolean(object.ballPlacementFailuresReached);
+                if (object.botSubstitutionAllowed != null)
+                    message.botSubstitutionAllowed = Boolean(object.botSubstitutionAllowed);
                 return message;
             };
 
             /**
              * Creates a plain object from a TeamInfo message. Also converts values to other types if specified.
              * @function toObject
-             * @memberof proto.SSL_Referee.TeamInfo
+             * @memberof proto.Referee.TeamInfo
              * @static
-             * @param {proto.SSL_Referee.TeamInfo} message TeamInfo
+             * @param {proto.Referee.TeamInfo} message TeamInfo
              * @param {$protobuf.IConversionOptions} [options] Conversion options
              * @returns {Object.<string,*>} Plain object
              */
@@ -13660,6 +14144,7 @@ export const proto = $root.proto = (() => {
                     object.maxAllowedBots = 0;
                     object.botSubstitutionIntent = false;
                     object.ballPlacementFailuresReached = false;
+                    object.botSubstitutionAllowed = false;
                 }
                 if (message.name != null && message.hasOwnProperty("name"))
                     object.name = message.name;
@@ -13692,13 +14177,15 @@ export const proto = $root.proto = (() => {
                     object.botSubstitutionIntent = message.botSubstitutionIntent;
                 if (message.ballPlacementFailuresReached != null && message.hasOwnProperty("ballPlacementFailuresReached"))
                     object.ballPlacementFailuresReached = message.ballPlacementFailuresReached;
+                if (message.botSubstitutionAllowed != null && message.hasOwnProperty("botSubstitutionAllowed"))
+                    object.botSubstitutionAllowed = message.botSubstitutionAllowed;
                 return object;
             };
 
             /**
              * Converts this TeamInfo to JSON.
              * @function toJSON
-             * @memberof proto.SSL_Referee.TeamInfo
+             * @memberof proto.Referee.TeamInfo
              * @instance
              * @returns {Object.<string,*>} JSON object
              */
@@ -13709,7 +14196,7 @@ export const proto = $root.proto = (() => {
             /**
              * Gets the default type url for TeamInfo
              * @function getTypeUrl
-             * @memberof proto.SSL_Referee.TeamInfo
+             * @memberof proto.Referee.TeamInfo
              * @static
              * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
              * @returns {string} The default type url
@@ -13718,17 +14205,17 @@ export const proto = $root.proto = (() => {
                 if (typeUrlPrefix === undefined) {
                     typeUrlPrefix = "type.googleapis.com";
                 }
-                return typeUrlPrefix + "/proto.SSL_Referee.TeamInfo";
+                return typeUrlPrefix + "/proto.Referee.TeamInfo";
             };
 
             return TeamInfo;
         })();
 
-        SSL_Referee.Point = (function() {
+        Referee.Point = (function() {
 
             /**
              * Properties of a Point.
-             * @memberof proto.SSL_Referee
+             * @memberof proto.Referee
              * @interface IPoint
              * @property {number} x Point x
              * @property {number} y Point y
@@ -13736,11 +14223,11 @@ export const proto = $root.proto = (() => {
 
             /**
              * Constructs a new Point.
-             * @memberof proto.SSL_Referee
+             * @memberof proto.Referee
              * @classdesc Represents a Point.
              * @implements IPoint
              * @constructor
-             * @param {proto.SSL_Referee.IPoint=} [properties] Properties to set
+             * @param {proto.Referee.IPoint=} [properties] Properties to set
              */
             function Point(properties) {
                 if (properties)
@@ -13752,7 +14239,7 @@ export const proto = $root.proto = (() => {
             /**
              * Point x.
              * @member {number} x
-             * @memberof proto.SSL_Referee.Point
+             * @memberof proto.Referee.Point
              * @instance
              */
             Point.prototype.x = 0;
@@ -13760,7 +14247,7 @@ export const proto = $root.proto = (() => {
             /**
              * Point y.
              * @member {number} y
-             * @memberof proto.SSL_Referee.Point
+             * @memberof proto.Referee.Point
              * @instance
              */
             Point.prototype.y = 0;
@@ -13768,21 +14255,21 @@ export const proto = $root.proto = (() => {
             /**
              * Creates a new Point instance using the specified properties.
              * @function create
-             * @memberof proto.SSL_Referee.Point
+             * @memberof proto.Referee.Point
              * @static
-             * @param {proto.SSL_Referee.IPoint=} [properties] Properties to set
-             * @returns {proto.SSL_Referee.Point} Point instance
+             * @param {proto.Referee.IPoint=} [properties] Properties to set
+             * @returns {proto.Referee.Point} Point instance
              */
             Point.create = function create(properties) {
                 return new Point(properties);
             };
 
             /**
-             * Encodes the specified Point message. Does not implicitly {@link proto.SSL_Referee.Point.verify|verify} messages.
+             * Encodes the specified Point message. Does not implicitly {@link proto.Referee.Point.verify|verify} messages.
              * @function encode
-             * @memberof proto.SSL_Referee.Point
+             * @memberof proto.Referee.Point
              * @static
-             * @param {proto.SSL_Referee.IPoint} message Point message or plain object to encode
+             * @param {proto.Referee.IPoint} message Point message or plain object to encode
              * @param {$protobuf.Writer} [writer] Writer to encode to
              * @returns {$protobuf.Writer} Writer
              */
@@ -13795,11 +14282,11 @@ export const proto = $root.proto = (() => {
             };
 
             /**
-             * Encodes the specified Point message, length delimited. Does not implicitly {@link proto.SSL_Referee.Point.verify|verify} messages.
+             * Encodes the specified Point message, length delimited. Does not implicitly {@link proto.Referee.Point.verify|verify} messages.
              * @function encodeDelimited
-             * @memberof proto.SSL_Referee.Point
+             * @memberof proto.Referee.Point
              * @static
-             * @param {proto.SSL_Referee.IPoint} message Point message or plain object to encode
+             * @param {proto.Referee.IPoint} message Point message or plain object to encode
              * @param {$protobuf.Writer} [writer] Writer to encode to
              * @returns {$protobuf.Writer} Writer
              */
@@ -13810,18 +14297,18 @@ export const proto = $root.proto = (() => {
             /**
              * Decodes a Point message from the specified reader or buffer.
              * @function decode
-             * @memberof proto.SSL_Referee.Point
+             * @memberof proto.Referee.Point
              * @static
              * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
              * @param {number} [length] Message length if known beforehand
-             * @returns {proto.SSL_Referee.Point} Point
+             * @returns {proto.Referee.Point} Point
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
             Point.decode = function decode(reader, length) {
                 if (!(reader instanceof $Reader))
                     reader = $Reader.create(reader);
-                let end = length === undefined ? reader.len : reader.pos + length, message = new $root.proto.SSL_Referee.Point();
+                let end = length === undefined ? reader.len : reader.pos + length, message = new $root.proto.Referee.Point();
                 while (reader.pos < end) {
                     let tag = reader.uint32();
                     switch (tag >>> 3) {
@@ -13848,10 +14335,10 @@ export const proto = $root.proto = (() => {
             /**
              * Decodes a Point message from the specified reader or buffer, length delimited.
              * @function decodeDelimited
-             * @memberof proto.SSL_Referee.Point
+             * @memberof proto.Referee.Point
              * @static
              * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-             * @returns {proto.SSL_Referee.Point} Point
+             * @returns {proto.Referee.Point} Point
              * @throws {Error} If the payload is not a reader or valid buffer
              * @throws {$protobuf.util.ProtocolError} If required fields are missing
              */
@@ -13864,7 +14351,7 @@ export const proto = $root.proto = (() => {
             /**
              * Verifies a Point message.
              * @function verify
-             * @memberof proto.SSL_Referee.Point
+             * @memberof proto.Referee.Point
              * @static
              * @param {Object.<string,*>} message Plain object to verify
              * @returns {string|null} `null` if valid, otherwise the reason why it is not
@@ -13882,15 +14369,15 @@ export const proto = $root.proto = (() => {
             /**
              * Creates a Point message from a plain object. Also converts values to their respective internal types.
              * @function fromObject
-             * @memberof proto.SSL_Referee.Point
+             * @memberof proto.Referee.Point
              * @static
              * @param {Object.<string,*>} object Plain object
-             * @returns {proto.SSL_Referee.Point} Point
+             * @returns {proto.Referee.Point} Point
              */
             Point.fromObject = function fromObject(object) {
-                if (object instanceof $root.proto.SSL_Referee.Point)
+                if (object instanceof $root.proto.Referee.Point)
                     return object;
-                let message = new $root.proto.SSL_Referee.Point();
+                let message = new $root.proto.Referee.Point();
                 if (object.x != null)
                     message.x = Number(object.x);
                 if (object.y != null)
@@ -13901,9 +14388,9 @@ export const proto = $root.proto = (() => {
             /**
              * Creates a plain object from a Point message. Also converts values to other types if specified.
              * @function toObject
-             * @memberof proto.SSL_Referee.Point
+             * @memberof proto.Referee.Point
              * @static
-             * @param {proto.SSL_Referee.Point} message Point
+             * @param {proto.Referee.Point} message Point
              * @param {$protobuf.IConversionOptions} [options] Conversion options
              * @returns {Object.<string,*>} Plain object
              */
@@ -13925,7 +14412,7 @@ export const proto = $root.proto = (() => {
             /**
              * Converts this Point to JSON.
              * @function toJSON
-             * @memberof proto.SSL_Referee.Point
+             * @memberof proto.Referee.Point
              * @instance
              * @returns {Object.<string,*>} JSON object
              */
@@ -13936,7 +14423,7 @@ export const proto = $root.proto = (() => {
             /**
              * Gets the default type url for Point
              * @function getTypeUrl
-             * @memberof proto.SSL_Referee.Point
+             * @memberof proto.Referee.Point
              * @static
              * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
              * @returns {string} The default type url
@@ -13945,13 +14432,13 @@ export const proto = $root.proto = (() => {
                 if (typeUrlPrefix === undefined) {
                     typeUrlPrefix = "type.googleapis.com";
                 }
-                return typeUrlPrefix + "/proto.SSL_Referee.Point";
+                return typeUrlPrefix + "/proto.Referee.Point";
             };
 
             return Point;
         })();
 
-        return SSL_Referee;
+        return Referee;
     })();
 
     proto.GameEventProposalGroup = (function() {
@@ -13960,7 +14447,8 @@ export const proto = $root.proto = (() => {
          * Properties of a GameEventProposalGroup.
          * @memberof proto
          * @interface IGameEventProposalGroup
-         * @property {Array.<proto.IGameEvent>|null} [gameEvent] GameEventProposalGroup gameEvent
+         * @property {string|null} [id] GameEventProposalGroup id
+         * @property {Array.<proto.IGameEvent>|null} [gameEvents] GameEventProposalGroup gameEvents
          * @property {boolean|null} [accepted] GameEventProposalGroup accepted
          */
 
@@ -13973,7 +14461,7 @@ export const proto = $root.proto = (() => {
          * @param {proto.IGameEventProposalGroup=} [properties] Properties to set
          */
         function GameEventProposalGroup(properties) {
-            this.gameEvent = [];
+            this.gameEvents = [];
             if (properties)
                 for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                     if (properties[keys[i]] != null)
@@ -13981,12 +14469,20 @@ export const proto = $root.proto = (() => {
         }
 
         /**
-         * GameEventProposalGroup gameEvent.
-         * @member {Array.<proto.IGameEvent>} gameEvent
+         * GameEventProposalGroup id.
+         * @member {string} id
          * @memberof proto.GameEventProposalGroup
          * @instance
          */
-        GameEventProposalGroup.prototype.gameEvent = $util.emptyArray;
+        GameEventProposalGroup.prototype.id = "";
+
+        /**
+         * GameEventProposalGroup gameEvents.
+         * @member {Array.<proto.IGameEvent>} gameEvents
+         * @memberof proto.GameEventProposalGroup
+         * @instance
+         */
+        GameEventProposalGroup.prototype.gameEvents = $util.emptyArray;
 
         /**
          * GameEventProposalGroup accepted.
@@ -14020,11 +14516,13 @@ export const proto = $root.proto = (() => {
         GameEventProposalGroup.encode = function encode(message, writer) {
             if (!writer)
                 writer = $Writer.create();
-            if (message.gameEvent != null && message.gameEvent.length)
-                for (let i = 0; i < message.gameEvent.length; ++i)
-                    $root.proto.GameEvent.encode(message.gameEvent[i], writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+            if (message.gameEvents != null && message.gameEvents.length)
+                for (let i = 0; i < message.gameEvents.length; ++i)
+                    $root.proto.GameEvent.encode(message.gameEvents[i], writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
             if (message.accepted != null && Object.hasOwnProperty.call(message, "accepted"))
                 writer.uint32(/* id 2, wireType 0 =*/16).bool(message.accepted);
+            if (message.id != null && Object.hasOwnProperty.call(message, "id"))
+                writer.uint32(/* id 3, wireType 2 =*/26).string(message.id);
             return writer;
         };
 
@@ -14059,10 +14557,14 @@ export const proto = $root.proto = (() => {
             while (reader.pos < end) {
                 let tag = reader.uint32();
                 switch (tag >>> 3) {
+                case 3: {
+                        message.id = reader.string();
+                        break;
+                    }
                 case 1: {
-                        if (!(message.gameEvent && message.gameEvent.length))
-                            message.gameEvent = [];
-                        message.gameEvent.push($root.proto.GameEvent.decode(reader, reader.uint32()));
+                        if (!(message.gameEvents && message.gameEvents.length))
+                            message.gameEvents = [];
+                        message.gameEvents.push($root.proto.GameEvent.decode(reader, reader.uint32()));
                         break;
                     }
                 case 2: {
@@ -14104,13 +14606,16 @@ export const proto = $root.proto = (() => {
         GameEventProposalGroup.verify = function verify(message) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
-            if (message.gameEvent != null && message.hasOwnProperty("gameEvent")) {
-                if (!Array.isArray(message.gameEvent))
-                    return "gameEvent: array expected";
-                for (let i = 0; i < message.gameEvent.length; ++i) {
-                    let error = $root.proto.GameEvent.verify(message.gameEvent[i]);
+            if (message.id != null && message.hasOwnProperty("id"))
+                if (!$util.isString(message.id))
+                    return "id: string expected";
+            if (message.gameEvents != null && message.hasOwnProperty("gameEvents")) {
+                if (!Array.isArray(message.gameEvents))
+                    return "gameEvents: array expected";
+                for (let i = 0; i < message.gameEvents.length; ++i) {
+                    let error = $root.proto.GameEvent.verify(message.gameEvents[i]);
                     if (error)
-                        return "gameEvent." + error;
+                        return "gameEvents." + error;
                 }
             }
             if (message.accepted != null && message.hasOwnProperty("accepted"))
@@ -14131,14 +14636,16 @@ export const proto = $root.proto = (() => {
             if (object instanceof $root.proto.GameEventProposalGroup)
                 return object;
             let message = new $root.proto.GameEventProposalGroup();
-            if (object.gameEvent) {
-                if (!Array.isArray(object.gameEvent))
-                    throw TypeError(".proto.GameEventProposalGroup.gameEvent: array expected");
-                message.gameEvent = [];
-                for (let i = 0; i < object.gameEvent.length; ++i) {
-                    if (typeof object.gameEvent[i] !== "object")
-                        throw TypeError(".proto.GameEventProposalGroup.gameEvent: object expected");
-                    message.gameEvent[i] = $root.proto.GameEvent.fromObject(object.gameEvent[i]);
+            if (object.id != null)
+                message.id = String(object.id);
+            if (object.gameEvents) {
+                if (!Array.isArray(object.gameEvents))
+                    throw TypeError(".proto.GameEventProposalGroup.gameEvents: array expected");
+                message.gameEvents = [];
+                for (let i = 0; i < object.gameEvents.length; ++i) {
+                    if (typeof object.gameEvents[i] !== "object")
+                        throw TypeError(".proto.GameEventProposalGroup.gameEvents: object expected");
+                    message.gameEvents[i] = $root.proto.GameEvent.fromObject(object.gameEvents[i]);
                 }
             }
             if (object.accepted != null)
@@ -14160,16 +14667,20 @@ export const proto = $root.proto = (() => {
                 options = {};
             let object = {};
             if (options.arrays || options.defaults)
-                object.gameEvent = [];
-            if (options.defaults)
+                object.gameEvents = [];
+            if (options.defaults) {
                 object.accepted = false;
-            if (message.gameEvent && message.gameEvent.length) {
-                object.gameEvent = [];
-                for (let j = 0; j < message.gameEvent.length; ++j)
-                    object.gameEvent[j] = $root.proto.GameEvent.toObject(message.gameEvent[j], options);
+                object.id = "";
+            }
+            if (message.gameEvents && message.gameEvents.length) {
+                object.gameEvents = [];
+                for (let j = 0; j < message.gameEvents.length; ++j)
+                    object.gameEvents[j] = $root.proto.GameEvent.toObject(message.gameEvents[j], options);
             }
             if (message.accepted != null && message.hasOwnProperty("accepted"))
                 object.accepted = message.accepted;
+            if (message.id != null && message.hasOwnProperty("id"))
+                object.id = message.id;
             return object;
         };
 
@@ -14202,14 +14713,34 @@ export const proto = $root.proto = (() => {
         return GameEventProposalGroup;
     })();
 
+    /**
+     * MatchType enum.
+     * @name proto.MatchType
+     * @enum {number}
+     * @property {number} UNKNOWN_MATCH=0 UNKNOWN_MATCH value
+     * @property {number} GROUP_PHASE=1 GROUP_PHASE value
+     * @property {number} ELIMINATION_PHASE=2 ELIMINATION_PHASE value
+     * @property {number} FRIENDLY=3 FRIENDLY value
+     */
+    proto.MatchType = (function() {
+        const valuesById = {}, values = Object.create(valuesById);
+        values[valuesById[0] = "UNKNOWN_MATCH"] = 0;
+        values[valuesById[1] = "GROUP_PHASE"] = 1;
+        values[valuesById[2] = "ELIMINATION_PHASE"] = 2;
+        values[valuesById[3] = "FRIENDLY"] = 3;
+        return values;
+    })();
+
     proto.GameEvent = (function() {
 
         /**
          * Properties of a GameEvent.
          * @memberof proto
          * @interface IGameEvent
+         * @property {string|null} [id] GameEvent id
          * @property {proto.GameEvent.Type|null} [type] GameEvent type
          * @property {Array.<string>|null} [origin] GameEvent origin
+         * @property {number|Long|null} [createdTimestamp] GameEvent createdTimestamp
          * @property {proto.GameEvent.IBallLeftField|null} [ballLeftFieldTouchLine] GameEvent ballLeftFieldTouchLine
          * @property {proto.GameEvent.IBallLeftField|null} [ballLeftFieldGoalLine] GameEvent ballLeftFieldGoalLine
          * @property {proto.GameEvent.IAimlessKick|null} [aimlessKick] GameEvent aimlessKick
@@ -14221,6 +14752,7 @@ export const proto = $root.proto = (() => {
          * @property {proto.GameEvent.IBotPushedBot|null} [botPushedBot] GameEvent botPushedBot
          * @property {proto.GameEvent.IBotHeldBallDeliberately|null} [botHeldBallDeliberately] GameEvent botHeldBallDeliberately
          * @property {proto.GameEvent.IBotTippedOver|null} [botTippedOver] GameEvent botTippedOver
+         * @property {proto.GameEvent.IBotDroppedParts|null} [botDroppedParts] GameEvent botDroppedParts
          * @property {proto.GameEvent.IAttackerTouchedBallInDefenseArea|null} [attackerTouchedBallInDefenseArea] GameEvent attackerTouchedBallInDefenseArea
          * @property {proto.GameEvent.IBotKickedBallTooFast|null} [botKickedBallTooFast] GameEvent botKickedBallTooFast
          * @property {proto.GameEvent.IBotCrashUnique|null} [botCrashUnique] GameEvent botCrashUnique
@@ -14241,6 +14773,7 @@ export const proto = $root.proto = (() => {
          * @property {proto.GameEvent.IBotSubstitution|null} [botSubstitution] GameEvent botSubstitution
          * @property {proto.GameEvent.ITooManyRobots|null} [tooManyRobots] GameEvent tooManyRobots
          * @property {proto.GameEvent.IChallengeFlag|null} [challengeFlag] GameEvent challengeFlag
+         * @property {proto.GameEvent.IChallengeFlagHandled|null} [challengeFlagHandled] GameEvent challengeFlagHandled
          * @property {proto.GameEvent.IEmergencyStop|null} [emergencyStop] GameEvent emergencyStop
          * @property {proto.GameEvent.IUnsportingBehaviorMinor|null} [unsportingBehaviorMinor] GameEvent unsportingBehaviorMinor
          * @property {proto.GameEvent.IUnsportingBehaviorMajor|null} [unsportingBehaviorMajor] GameEvent unsportingBehaviorMajor
@@ -14263,6 +14796,14 @@ export const proto = $root.proto = (() => {
         }
 
         /**
+         * GameEvent id.
+         * @member {string} id
+         * @memberof proto.GameEvent
+         * @instance
+         */
+        GameEvent.prototype.id = "";
+
+        /**
          * GameEvent type.
          * @member {proto.GameEvent.Type} type
          * @memberof proto.GameEvent
@@ -14277,6 +14818,14 @@ export const proto = $root.proto = (() => {
          * @instance
          */
         GameEvent.prototype.origin = $util.emptyArray;
+
+        /**
+         * GameEvent createdTimestamp.
+         * @member {number|Long} createdTimestamp
+         * @memberof proto.GameEvent
+         * @instance
+         */
+        GameEvent.prototype.createdTimestamp = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
 
         /**
          * GameEvent ballLeftFieldTouchLine.
@@ -14365,6 +14914,14 @@ export const proto = $root.proto = (() => {
          * @instance
          */
         GameEvent.prototype.botTippedOver = null;
+
+        /**
+         * GameEvent botDroppedParts.
+         * @member {proto.GameEvent.IBotDroppedParts|null|undefined} botDroppedParts
+         * @memberof proto.GameEvent
+         * @instance
+         */
+        GameEvent.prototype.botDroppedParts = null;
 
         /**
          * GameEvent attackerTouchedBallInDefenseArea.
@@ -14527,6 +15084,14 @@ export const proto = $root.proto = (() => {
         GameEvent.prototype.challengeFlag = null;
 
         /**
+         * GameEvent challengeFlagHandled.
+         * @member {proto.GameEvent.IChallengeFlagHandled|null|undefined} challengeFlagHandled
+         * @memberof proto.GameEvent
+         * @instance
+         */
+        GameEvent.prototype.challengeFlagHandled = null;
+
+        /**
          * GameEvent emergencyStop.
          * @member {proto.GameEvent.IEmergencyStop|null|undefined} emergencyStop
          * @memberof proto.GameEvent
@@ -14555,12 +15120,12 @@ export const proto = $root.proto = (() => {
 
         /**
          * GameEvent event.
-         * @member {"ballLeftFieldTouchLine"|"ballLeftFieldGoalLine"|"aimlessKick"|"attackerTooCloseToDefenseArea"|"defenderInDefenseArea"|"boundaryCrossing"|"keeperHeldBall"|"botDribbledBallTooFar"|"botPushedBot"|"botHeldBallDeliberately"|"botTippedOver"|"attackerTouchedBallInDefenseArea"|"botKickedBallTooFast"|"botCrashUnique"|"botCrashDrawn"|"defenderTooCloseToKickPoint"|"botTooFastInStop"|"botInterferedPlacement"|"possibleGoal"|"goal"|"invalidGoal"|"attackerDoubleTouchedBall"|"placementSucceeded"|"penaltyKickFailed"|"noProgressInGame"|"placementFailed"|"multipleCards"|"multipleFouls"|"botSubstitution"|"tooManyRobots"|"challengeFlag"|"emergencyStop"|"unsportingBehaviorMinor"|"unsportingBehaviorMajor"|undefined} event
+         * @member {"ballLeftFieldTouchLine"|"ballLeftFieldGoalLine"|"aimlessKick"|"attackerTooCloseToDefenseArea"|"defenderInDefenseArea"|"boundaryCrossing"|"keeperHeldBall"|"botDribbledBallTooFar"|"botPushedBot"|"botHeldBallDeliberately"|"botTippedOver"|"botDroppedParts"|"attackerTouchedBallInDefenseArea"|"botKickedBallTooFast"|"botCrashUnique"|"botCrashDrawn"|"defenderTooCloseToKickPoint"|"botTooFastInStop"|"botInterferedPlacement"|"possibleGoal"|"goal"|"invalidGoal"|"attackerDoubleTouchedBall"|"placementSucceeded"|"penaltyKickFailed"|"noProgressInGame"|"placementFailed"|"multipleCards"|"multipleFouls"|"botSubstitution"|"tooManyRobots"|"challengeFlag"|"challengeFlagHandled"|"emergencyStop"|"unsportingBehaviorMinor"|"unsportingBehaviorMajor"|undefined} event
          * @memberof proto.GameEvent
          * @instance
          */
         Object.defineProperty(GameEvent.prototype, "event", {
-            get: $util.oneOfGetter($oneOfFields = ["ballLeftFieldTouchLine", "ballLeftFieldGoalLine", "aimlessKick", "attackerTooCloseToDefenseArea", "defenderInDefenseArea", "boundaryCrossing", "keeperHeldBall", "botDribbledBallTooFar", "botPushedBot", "botHeldBallDeliberately", "botTippedOver", "attackerTouchedBallInDefenseArea", "botKickedBallTooFast", "botCrashUnique", "botCrashDrawn", "defenderTooCloseToKickPoint", "botTooFastInStop", "botInterferedPlacement", "possibleGoal", "goal", "invalidGoal", "attackerDoubleTouchedBall", "placementSucceeded", "penaltyKickFailed", "noProgressInGame", "placementFailed", "multipleCards", "multipleFouls", "botSubstitution", "tooManyRobots", "challengeFlag", "emergencyStop", "unsportingBehaviorMinor", "unsportingBehaviorMajor"]),
+            get: $util.oneOfGetter($oneOfFields = ["ballLeftFieldTouchLine", "ballLeftFieldGoalLine", "aimlessKick", "attackerTooCloseToDefenseArea", "defenderInDefenseArea", "boundaryCrossing", "keeperHeldBall", "botDribbledBallTooFar", "botPushedBot", "botHeldBallDeliberately", "botTippedOver", "botDroppedParts", "attackerTouchedBallInDefenseArea", "botKickedBallTooFast", "botCrashUnique", "botCrashDrawn", "defenderTooCloseToKickPoint", "botTooFastInStop", "botInterferedPlacement", "possibleGoal", "goal", "invalidGoal", "attackerDoubleTouchedBall", "placementSucceeded", "penaltyKickFailed", "noProgressInGame", "placementFailed", "multipleCards", "multipleFouls", "botSubstitution", "tooManyRobots", "challengeFlag", "challengeFlagHandled", "emergencyStop", "unsportingBehaviorMinor", "unsportingBehaviorMajor"]),
             set: $util.oneOfSetter($oneOfFields)
         });
 
@@ -14661,6 +15226,14 @@ export const proto = $root.proto = (() => {
                 $root.proto.GameEvent.ChallengeFlag.encode(message.challengeFlag, writer.uint32(/* id 46, wireType 2 =*/370).fork()).ldelim();
             if (message.emergencyStop != null && Object.hasOwnProperty.call(message, "emergencyStop"))
                 $root.proto.GameEvent.EmergencyStop.encode(message.emergencyStop, writer.uint32(/* id 47, wireType 2 =*/378).fork()).ldelim();
+            if (message.challengeFlagHandled != null && Object.hasOwnProperty.call(message, "challengeFlagHandled"))
+                $root.proto.GameEvent.ChallengeFlagHandled.encode(message.challengeFlagHandled, writer.uint32(/* id 48, wireType 2 =*/386).fork()).ldelim();
+            if (message.createdTimestamp != null && Object.hasOwnProperty.call(message, "createdTimestamp"))
+                writer.uint32(/* id 49, wireType 0 =*/392).uint64(message.createdTimestamp);
+            if (message.id != null && Object.hasOwnProperty.call(message, "id"))
+                writer.uint32(/* id 50, wireType 2 =*/402).string(message.id);
+            if (message.botDroppedParts != null && Object.hasOwnProperty.call(message, "botDroppedParts"))
+                $root.proto.GameEvent.BotDroppedParts.encode(message.botDroppedParts, writer.uint32(/* id 51, wireType 2 =*/410).fork()).ldelim();
             return writer;
         };
 
@@ -14695,6 +15268,10 @@ export const proto = $root.proto = (() => {
             while (reader.pos < end) {
                 let tag = reader.uint32();
                 switch (tag >>> 3) {
+                case 50: {
+                        message.id = reader.string();
+                        break;
+                    }
                 case 40: {
                         message.type = reader.int32();
                         break;
@@ -14703,6 +15280,10 @@ export const proto = $root.proto = (() => {
                         if (!(message.origin && message.origin.length))
                             message.origin = [];
                         message.origin.push(reader.string());
+                        break;
+                    }
+                case 49: {
+                        message.createdTimestamp = reader.uint64();
                         break;
                     }
                 case 6: {
@@ -14747,6 +15328,10 @@ export const proto = $root.proto = (() => {
                     }
                 case 27: {
                         message.botTippedOver = $root.proto.GameEvent.BotTippedOver.decode(reader, reader.uint32());
+                        break;
+                    }
+                case 51: {
+                        message.botDroppedParts = $root.proto.GameEvent.BotDroppedParts.decode(reader, reader.uint32());
                         break;
                     }
                 case 15: {
@@ -14829,6 +15414,10 @@ export const proto = $root.proto = (() => {
                         message.challengeFlag = $root.proto.GameEvent.ChallengeFlag.decode(reader, reader.uint32());
                         break;
                     }
+                case 48: {
+                        message.challengeFlagHandled = $root.proto.GameEvent.ChallengeFlagHandled.decode(reader, reader.uint32());
+                        break;
+                    }
                 case 47: {
                         message.emergencyStop = $root.proto.GameEvent.EmergencyStop.decode(reader, reader.uint32());
                         break;
@@ -14877,6 +15466,9 @@ export const proto = $root.proto = (() => {
             if (typeof message !== "object" || message === null)
                 return "object expected";
             let properties = {};
+            if (message.id != null && message.hasOwnProperty("id"))
+                if (!$util.isString(message.id))
+                    return "id: string expected";
             if (message.type != null && message.hasOwnProperty("type"))
                 switch (message.type) {
                 default:
@@ -14893,6 +15485,7 @@ export const proto = $root.proto = (() => {
                 case 24:
                 case 26:
                 case 27:
+                case 47:
                 case 15:
                 case 18:
                 case 22:
@@ -14913,6 +15506,7 @@ export const proto = $root.proto = (() => {
                 case 37:
                 case 38:
                 case 44:
+                case 46:
                 case 45:
                 case 35:
                 case 36:
@@ -14925,6 +15519,9 @@ export const proto = $root.proto = (() => {
                     if (!$util.isString(message.origin[i]))
                         return "origin: string[] expected";
             }
+            if (message.createdTimestamp != null && message.hasOwnProperty("createdTimestamp"))
+                if (!$util.isInteger(message.createdTimestamp) && !(message.createdTimestamp && $util.isInteger(message.createdTimestamp.low) && $util.isInteger(message.createdTimestamp.high)))
+                    return "createdTimestamp: integer|Long expected";
             if (message.ballLeftFieldTouchLine != null && message.hasOwnProperty("ballLeftFieldTouchLine")) {
                 properties.event = 1;
                 {
@@ -15031,6 +15628,16 @@ export const proto = $root.proto = (() => {
                     let error = $root.proto.GameEvent.BotTippedOver.verify(message.botTippedOver);
                     if (error)
                         return "botTippedOver." + error;
+                }
+            }
+            if (message.botDroppedParts != null && message.hasOwnProperty("botDroppedParts")) {
+                if (properties.event === 1)
+                    return "event: multiple values";
+                properties.event = 1;
+                {
+                    let error = $root.proto.GameEvent.BotDroppedParts.verify(message.botDroppedParts);
+                    if (error)
+                        return "botDroppedParts." + error;
                 }
             }
             if (message.attackerTouchedBallInDefenseArea != null && message.hasOwnProperty("attackerTouchedBallInDefenseArea")) {
@@ -15233,6 +15840,16 @@ export const proto = $root.proto = (() => {
                         return "challengeFlag." + error;
                 }
             }
+            if (message.challengeFlagHandled != null && message.hasOwnProperty("challengeFlagHandled")) {
+                if (properties.event === 1)
+                    return "event: multiple values";
+                properties.event = 1;
+                {
+                    let error = $root.proto.GameEvent.ChallengeFlagHandled.verify(message.challengeFlagHandled);
+                    if (error)
+                        return "challengeFlagHandled." + error;
+                }
+            }
             if (message.emergencyStop != null && message.hasOwnProperty("emergencyStop")) {
                 if (properties.event === 1)
                     return "event: multiple values";
@@ -15278,6 +15895,8 @@ export const proto = $root.proto = (() => {
             if (object instanceof $root.proto.GameEvent)
                 return object;
             let message = new $root.proto.GameEvent();
+            if (object.id != null)
+                message.id = String(object.id);
             switch (object.type) {
             default:
                 if (typeof object.type === "number") {
@@ -15332,6 +15951,10 @@ export const proto = $root.proto = (() => {
             case "BOT_TIPPED_OVER":
             case 27:
                 message.type = 27;
+                break;
+            case "BOT_DROPPED_PARTS":
+            case 47:
+                message.type = 47;
                 break;
             case "ATTACKER_TOUCHED_BALL_IN_DEFENSE_AREA":
             case 15:
@@ -15413,6 +16036,10 @@ export const proto = $root.proto = (() => {
             case 44:
                 message.type = 44;
                 break;
+            case "CHALLENGE_FLAG_HANDLED":
+            case 46:
+                message.type = 46;
+                break;
             case "EMERGENCY_STOP":
             case 45:
                 message.type = 45;
@@ -15433,6 +16060,15 @@ export const proto = $root.proto = (() => {
                 for (let i = 0; i < object.origin.length; ++i)
                     message.origin[i] = String(object.origin[i]);
             }
+            if (object.createdTimestamp != null)
+                if ($util.Long)
+                    (message.createdTimestamp = $util.Long.fromValue(object.createdTimestamp)).unsigned = true;
+                else if (typeof object.createdTimestamp === "string")
+                    message.createdTimestamp = parseInt(object.createdTimestamp, 10);
+                else if (typeof object.createdTimestamp === "number")
+                    message.createdTimestamp = object.createdTimestamp;
+                else if (typeof object.createdTimestamp === "object")
+                    message.createdTimestamp = new $util.LongBits(object.createdTimestamp.low >>> 0, object.createdTimestamp.high >>> 0).toNumber(true);
             if (object.ballLeftFieldTouchLine != null) {
                 if (typeof object.ballLeftFieldTouchLine !== "object")
                     throw TypeError(".proto.GameEvent.ballLeftFieldTouchLine: object expected");
@@ -15487,6 +16123,11 @@ export const proto = $root.proto = (() => {
                 if (typeof object.botTippedOver !== "object")
                     throw TypeError(".proto.GameEvent.botTippedOver: object expected");
                 message.botTippedOver = $root.proto.GameEvent.BotTippedOver.fromObject(object.botTippedOver);
+            }
+            if (object.botDroppedParts != null) {
+                if (typeof object.botDroppedParts !== "object")
+                    throw TypeError(".proto.GameEvent.botDroppedParts: object expected");
+                message.botDroppedParts = $root.proto.GameEvent.BotDroppedParts.fromObject(object.botDroppedParts);
             }
             if (object.attackerTouchedBallInDefenseArea != null) {
                 if (typeof object.attackerTouchedBallInDefenseArea !== "object")
@@ -15588,6 +16229,11 @@ export const proto = $root.proto = (() => {
                     throw TypeError(".proto.GameEvent.challengeFlag: object expected");
                 message.challengeFlag = $root.proto.GameEvent.ChallengeFlag.fromObject(object.challengeFlag);
             }
+            if (object.challengeFlagHandled != null) {
+                if (typeof object.challengeFlagHandled !== "object")
+                    throw TypeError(".proto.GameEvent.challengeFlagHandled: object expected");
+                message.challengeFlagHandled = $root.proto.GameEvent.ChallengeFlagHandled.fromObject(object.challengeFlagHandled);
+            }
             if (object.emergencyStop != null) {
                 if (typeof object.emergencyStop !== "object")
                     throw TypeError(".proto.GameEvent.emergencyStop: object expected");
@@ -15621,8 +16267,15 @@ export const proto = $root.proto = (() => {
             let object = {};
             if (options.arrays || options.defaults)
                 object.origin = [];
-            if (options.defaults)
+            if (options.defaults) {
                 object.type = options.enums === String ? "UNKNOWN_GAME_EVENT_TYPE" : 0;
+                if ($util.Long) {
+                    let long = new $util.Long(0, 0, true);
+                    object.createdTimestamp = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                } else
+                    object.createdTimestamp = options.longs === String ? "0" : 0;
+                object.id = "";
+            }
             if (message.noProgressInGame != null && message.hasOwnProperty("noProgressInGame")) {
                 object.noProgressInGame = $root.proto.GameEvent.NoProgressInGame.toObject(message.noProgressInGame, options);
                 if (options.oneofs)
@@ -15799,6 +16452,23 @@ export const proto = $root.proto = (() => {
                 object.emergencyStop = $root.proto.GameEvent.EmergencyStop.toObject(message.emergencyStop, options);
                 if (options.oneofs)
                     object.event = "emergencyStop";
+            }
+            if (message.challengeFlagHandled != null && message.hasOwnProperty("challengeFlagHandled")) {
+                object.challengeFlagHandled = $root.proto.GameEvent.ChallengeFlagHandled.toObject(message.challengeFlagHandled, options);
+                if (options.oneofs)
+                    object.event = "challengeFlagHandled";
+            }
+            if (message.createdTimestamp != null && message.hasOwnProperty("createdTimestamp"))
+                if (typeof message.createdTimestamp === "number")
+                    object.createdTimestamp = options.longs === String ? String(message.createdTimestamp) : message.createdTimestamp;
+                else
+                    object.createdTimestamp = options.longs === String ? $util.Long.prototype.toString.call(message.createdTimestamp) : options.longs === Number ? new $util.LongBits(message.createdTimestamp.low >>> 0, message.createdTimestamp.high >>> 0).toNumber(true) : message.createdTimestamp;
+            if (message.id != null && message.hasOwnProperty("id"))
+                object.id = message.id;
+            if (message.botDroppedParts != null && message.hasOwnProperty("botDroppedParts")) {
+                object.botDroppedParts = $root.proto.GameEvent.BotDroppedParts.toObject(message.botDroppedParts, options);
+                if (options.oneofs)
+                    object.event = "botDroppedParts";
             }
             return object;
         };
@@ -19443,6 +20113,313 @@ export const proto = $root.proto = (() => {
             return BotTippedOver;
         })();
 
+        GameEvent.BotDroppedParts = (function() {
+
+            /**
+             * Properties of a BotDroppedParts.
+             * @memberof proto.GameEvent
+             * @interface IBotDroppedParts
+             * @property {proto.Team} byTeam BotDroppedParts byTeam
+             * @property {number|null} [byBot] BotDroppedParts byBot
+             * @property {proto.IVector2|null} [location] BotDroppedParts location
+             * @property {proto.IVector2|null} [ballLocation] BotDroppedParts ballLocation
+             */
+
+            /**
+             * Constructs a new BotDroppedParts.
+             * @memberof proto.GameEvent
+             * @classdesc Represents a BotDroppedParts.
+             * @implements IBotDroppedParts
+             * @constructor
+             * @param {proto.GameEvent.IBotDroppedParts=} [properties] Properties to set
+             */
+            function BotDroppedParts(properties) {
+                if (properties)
+                    for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
+            }
+
+            /**
+             * BotDroppedParts byTeam.
+             * @member {proto.Team} byTeam
+             * @memberof proto.GameEvent.BotDroppedParts
+             * @instance
+             */
+            BotDroppedParts.prototype.byTeam = 0;
+
+            /**
+             * BotDroppedParts byBot.
+             * @member {number} byBot
+             * @memberof proto.GameEvent.BotDroppedParts
+             * @instance
+             */
+            BotDroppedParts.prototype.byBot = 0;
+
+            /**
+             * BotDroppedParts location.
+             * @member {proto.IVector2|null|undefined} location
+             * @memberof proto.GameEvent.BotDroppedParts
+             * @instance
+             */
+            BotDroppedParts.prototype.location = null;
+
+            /**
+             * BotDroppedParts ballLocation.
+             * @member {proto.IVector2|null|undefined} ballLocation
+             * @memberof proto.GameEvent.BotDroppedParts
+             * @instance
+             */
+            BotDroppedParts.prototype.ballLocation = null;
+
+            /**
+             * Creates a new BotDroppedParts instance using the specified properties.
+             * @function create
+             * @memberof proto.GameEvent.BotDroppedParts
+             * @static
+             * @param {proto.GameEvent.IBotDroppedParts=} [properties] Properties to set
+             * @returns {proto.GameEvent.BotDroppedParts} BotDroppedParts instance
+             */
+            BotDroppedParts.create = function create(properties) {
+                return new BotDroppedParts(properties);
+            };
+
+            /**
+             * Encodes the specified BotDroppedParts message. Does not implicitly {@link proto.GameEvent.BotDroppedParts.verify|verify} messages.
+             * @function encode
+             * @memberof proto.GameEvent.BotDroppedParts
+             * @static
+             * @param {proto.GameEvent.IBotDroppedParts} message BotDroppedParts message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            BotDroppedParts.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                writer.uint32(/* id 1, wireType 0 =*/8).int32(message.byTeam);
+                if (message.byBot != null && Object.hasOwnProperty.call(message, "byBot"))
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.byBot);
+                if (message.location != null && Object.hasOwnProperty.call(message, "location"))
+                    $root.proto.Vector2.encode(message.location, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+                if (message.ballLocation != null && Object.hasOwnProperty.call(message, "ballLocation"))
+                    $root.proto.Vector2.encode(message.ballLocation, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
+                return writer;
+            };
+
+            /**
+             * Encodes the specified BotDroppedParts message, length delimited. Does not implicitly {@link proto.GameEvent.BotDroppedParts.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof proto.GameEvent.BotDroppedParts
+             * @static
+             * @param {proto.GameEvent.IBotDroppedParts} message BotDroppedParts message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            BotDroppedParts.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
+            };
+
+            /**
+             * Decodes a BotDroppedParts message from the specified reader or buffer.
+             * @function decode
+             * @memberof proto.GameEvent.BotDroppedParts
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {proto.GameEvent.BotDroppedParts} BotDroppedParts
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            BotDroppedParts.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                let end = length === undefined ? reader.len : reader.pos + length, message = new $root.proto.GameEvent.BotDroppedParts();
+                while (reader.pos < end) {
+                    let tag = reader.uint32();
+                    switch (tag >>> 3) {
+                    case 1: {
+                            message.byTeam = reader.int32();
+                            break;
+                        }
+                    case 2: {
+                            message.byBot = reader.uint32();
+                            break;
+                        }
+                    case 3: {
+                            message.location = $root.proto.Vector2.decode(reader, reader.uint32());
+                            break;
+                        }
+                    case 4: {
+                            message.ballLocation = $root.proto.Vector2.decode(reader, reader.uint32());
+                            break;
+                        }
+                    default:
+                        reader.skipType(tag & 7);
+                        break;
+                    }
+                }
+                if (!message.hasOwnProperty("byTeam"))
+                    throw $util.ProtocolError("missing required 'byTeam'", { instance: message });
+                return message;
+            };
+
+            /**
+             * Decodes a BotDroppedParts message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof proto.GameEvent.BotDroppedParts
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {proto.GameEvent.BotDroppedParts} BotDroppedParts
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            BotDroppedParts.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a BotDroppedParts message.
+             * @function verify
+             * @memberof proto.GameEvent.BotDroppedParts
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            BotDroppedParts.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                switch (message.byTeam) {
+                default:
+                    return "byTeam: enum value expected";
+                case 0:
+                case 1:
+                case 2:
+                    break;
+                }
+                if (message.byBot != null && message.hasOwnProperty("byBot"))
+                    if (!$util.isInteger(message.byBot))
+                        return "byBot: integer expected";
+                if (message.location != null && message.hasOwnProperty("location")) {
+                    let error = $root.proto.Vector2.verify(message.location);
+                    if (error)
+                        return "location." + error;
+                }
+                if (message.ballLocation != null && message.hasOwnProperty("ballLocation")) {
+                    let error = $root.proto.Vector2.verify(message.ballLocation);
+                    if (error)
+                        return "ballLocation." + error;
+                }
+                return null;
+            };
+
+            /**
+             * Creates a BotDroppedParts message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof proto.GameEvent.BotDroppedParts
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {proto.GameEvent.BotDroppedParts} BotDroppedParts
+             */
+            BotDroppedParts.fromObject = function fromObject(object) {
+                if (object instanceof $root.proto.GameEvent.BotDroppedParts)
+                    return object;
+                let message = new $root.proto.GameEvent.BotDroppedParts();
+                switch (object.byTeam) {
+                default:
+                    if (typeof object.byTeam === "number") {
+                        message.byTeam = object.byTeam;
+                        break;
+                    }
+                    break;
+                case "UNKNOWN":
+                case 0:
+                    message.byTeam = 0;
+                    break;
+                case "YELLOW":
+                case 1:
+                    message.byTeam = 1;
+                    break;
+                case "BLUE":
+                case 2:
+                    message.byTeam = 2;
+                    break;
+                }
+                if (object.byBot != null)
+                    message.byBot = object.byBot >>> 0;
+                if (object.location != null) {
+                    if (typeof object.location !== "object")
+                        throw TypeError(".proto.GameEvent.BotDroppedParts.location: object expected");
+                    message.location = $root.proto.Vector2.fromObject(object.location);
+                }
+                if (object.ballLocation != null) {
+                    if (typeof object.ballLocation !== "object")
+                        throw TypeError(".proto.GameEvent.BotDroppedParts.ballLocation: object expected");
+                    message.ballLocation = $root.proto.Vector2.fromObject(object.ballLocation);
+                }
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a BotDroppedParts message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof proto.GameEvent.BotDroppedParts
+             * @static
+             * @param {proto.GameEvent.BotDroppedParts} message BotDroppedParts
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            BotDroppedParts.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                let object = {};
+                if (options.defaults) {
+                    object.byTeam = options.enums === String ? "UNKNOWN" : 0;
+                    object.byBot = 0;
+                    object.location = null;
+                    object.ballLocation = null;
+                }
+                if (message.byTeam != null && message.hasOwnProperty("byTeam"))
+                    object.byTeam = options.enums === String ? $root.proto.Team[message.byTeam] === undefined ? message.byTeam : $root.proto.Team[message.byTeam] : message.byTeam;
+                if (message.byBot != null && message.hasOwnProperty("byBot"))
+                    object.byBot = message.byBot;
+                if (message.location != null && message.hasOwnProperty("location"))
+                    object.location = $root.proto.Vector2.toObject(message.location, options);
+                if (message.ballLocation != null && message.hasOwnProperty("ballLocation"))
+                    object.ballLocation = $root.proto.Vector2.toObject(message.ballLocation, options);
+                return object;
+            };
+
+            /**
+             * Converts this BotDroppedParts to JSON.
+             * @function toJSON
+             * @memberof proto.GameEvent.BotDroppedParts
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            BotDroppedParts.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            /**
+             * Gets the default type url for BotDroppedParts
+             * @function getTypeUrl
+             * @memberof proto.GameEvent.BotDroppedParts
+             * @static
+             * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+             * @returns {string} The default type url
+             */
+            BotDroppedParts.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                if (typeUrlPrefix === undefined) {
+                    typeUrlPrefix = "type.googleapis.com";
+                }
+                return typeUrlPrefix + "/proto.GameEvent.BotDroppedParts";
+            };
+
+            return BotDroppedParts;
+        })();
+
         GameEvent.DefenderInDefenseArea = (function() {
 
             /**
@@ -22735,6 +23712,7 @@ export const proto = $root.proto = (() => {
              * @memberof proto.GameEvent
              * @interface IMultipleFouls
              * @property {proto.Team} byTeam MultipleFouls byTeam
+             * @property {Array.<proto.IGameEvent>|null} [causedGameEvents] MultipleFouls causedGameEvents
              */
 
             /**
@@ -22746,6 +23724,7 @@ export const proto = $root.proto = (() => {
              * @param {proto.GameEvent.IMultipleFouls=} [properties] Properties to set
              */
             function MultipleFouls(properties) {
+                this.causedGameEvents = [];
                 if (properties)
                     for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                         if (properties[keys[i]] != null)
@@ -22759,6 +23738,14 @@ export const proto = $root.proto = (() => {
              * @instance
              */
             MultipleFouls.prototype.byTeam = 0;
+
+            /**
+             * MultipleFouls causedGameEvents.
+             * @member {Array.<proto.IGameEvent>} causedGameEvents
+             * @memberof proto.GameEvent.MultipleFouls
+             * @instance
+             */
+            MultipleFouls.prototype.causedGameEvents = $util.emptyArray;
 
             /**
              * Creates a new MultipleFouls instance using the specified properties.
@@ -22785,6 +23772,9 @@ export const proto = $root.proto = (() => {
                 if (!writer)
                     writer = $Writer.create();
                 writer.uint32(/* id 1, wireType 0 =*/8).int32(message.byTeam);
+                if (message.causedGameEvents != null && message.causedGameEvents.length)
+                    for (let i = 0; i < message.causedGameEvents.length; ++i)
+                        $root.proto.GameEvent.encode(message.causedGameEvents[i], writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
                 return writer;
             };
 
@@ -22821,6 +23811,12 @@ export const proto = $root.proto = (() => {
                     switch (tag >>> 3) {
                     case 1: {
                             message.byTeam = reader.int32();
+                            break;
+                        }
+                    case 2: {
+                            if (!(message.causedGameEvents && message.causedGameEvents.length))
+                                message.causedGameEvents = [];
+                            message.causedGameEvents.push($root.proto.GameEvent.decode(reader, reader.uint32()));
                             break;
                         }
                     default:
@@ -22868,6 +23864,15 @@ export const proto = $root.proto = (() => {
                 case 2:
                     break;
                 }
+                if (message.causedGameEvents != null && message.hasOwnProperty("causedGameEvents")) {
+                    if (!Array.isArray(message.causedGameEvents))
+                        return "causedGameEvents: array expected";
+                    for (let i = 0; i < message.causedGameEvents.length; ++i) {
+                        let error = $root.proto.GameEvent.verify(message.causedGameEvents[i]);
+                        if (error)
+                            return "causedGameEvents." + error;
+                    }
+                }
                 return null;
             };
 
@@ -22903,6 +23908,16 @@ export const proto = $root.proto = (() => {
                     message.byTeam = 2;
                     break;
                 }
+                if (object.causedGameEvents) {
+                    if (!Array.isArray(object.causedGameEvents))
+                        throw TypeError(".proto.GameEvent.MultipleFouls.causedGameEvents: array expected");
+                    message.causedGameEvents = [];
+                    for (let i = 0; i < object.causedGameEvents.length; ++i) {
+                        if (typeof object.causedGameEvents[i] !== "object")
+                            throw TypeError(".proto.GameEvent.MultipleFouls.causedGameEvents: object expected");
+                        message.causedGameEvents[i] = $root.proto.GameEvent.fromObject(object.causedGameEvents[i]);
+                    }
+                }
                 return message;
             };
 
@@ -22919,10 +23934,17 @@ export const proto = $root.proto = (() => {
                 if (!options)
                     options = {};
                 let object = {};
+                if (options.arrays || options.defaults)
+                    object.causedGameEvents = [];
                 if (options.defaults)
                     object.byTeam = options.enums === String ? "UNKNOWN" : 0;
                 if (message.byTeam != null && message.hasOwnProperty("byTeam"))
                     object.byTeam = options.enums === String ? $root.proto.Team[message.byTeam] === undefined ? message.byTeam : $root.proto.Team[message.byTeam] : message.byTeam;
+                if (message.causedGameEvents && message.causedGameEvents.length) {
+                    object.causedGameEvents = [];
+                    for (let j = 0; j < message.causedGameEvents.length; ++j)
+                        object.causedGameEvents[j] = $root.proto.GameEvent.toObject(message.causedGameEvents[j], options);
+                }
                 return object;
             };
 
@@ -25679,6 +26701,257 @@ export const proto = $root.proto = (() => {
             return ChallengeFlag;
         })();
 
+        GameEvent.ChallengeFlagHandled = (function() {
+
+            /**
+             * Properties of a ChallengeFlagHandled.
+             * @memberof proto.GameEvent
+             * @interface IChallengeFlagHandled
+             * @property {proto.Team} byTeam ChallengeFlagHandled byTeam
+             * @property {boolean} accepted ChallengeFlagHandled accepted
+             */
+
+            /**
+             * Constructs a new ChallengeFlagHandled.
+             * @memberof proto.GameEvent
+             * @classdesc Represents a ChallengeFlagHandled.
+             * @implements IChallengeFlagHandled
+             * @constructor
+             * @param {proto.GameEvent.IChallengeFlagHandled=} [properties] Properties to set
+             */
+            function ChallengeFlagHandled(properties) {
+                if (properties)
+                    for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
+            }
+
+            /**
+             * ChallengeFlagHandled byTeam.
+             * @member {proto.Team} byTeam
+             * @memberof proto.GameEvent.ChallengeFlagHandled
+             * @instance
+             */
+            ChallengeFlagHandled.prototype.byTeam = 0;
+
+            /**
+             * ChallengeFlagHandled accepted.
+             * @member {boolean} accepted
+             * @memberof proto.GameEvent.ChallengeFlagHandled
+             * @instance
+             */
+            ChallengeFlagHandled.prototype.accepted = false;
+
+            /**
+             * Creates a new ChallengeFlagHandled instance using the specified properties.
+             * @function create
+             * @memberof proto.GameEvent.ChallengeFlagHandled
+             * @static
+             * @param {proto.GameEvent.IChallengeFlagHandled=} [properties] Properties to set
+             * @returns {proto.GameEvent.ChallengeFlagHandled} ChallengeFlagHandled instance
+             */
+            ChallengeFlagHandled.create = function create(properties) {
+                return new ChallengeFlagHandled(properties);
+            };
+
+            /**
+             * Encodes the specified ChallengeFlagHandled message. Does not implicitly {@link proto.GameEvent.ChallengeFlagHandled.verify|verify} messages.
+             * @function encode
+             * @memberof proto.GameEvent.ChallengeFlagHandled
+             * @static
+             * @param {proto.GameEvent.IChallengeFlagHandled} message ChallengeFlagHandled message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            ChallengeFlagHandled.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                writer.uint32(/* id 1, wireType 0 =*/8).int32(message.byTeam);
+                writer.uint32(/* id 2, wireType 0 =*/16).bool(message.accepted);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified ChallengeFlagHandled message, length delimited. Does not implicitly {@link proto.GameEvent.ChallengeFlagHandled.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof proto.GameEvent.ChallengeFlagHandled
+             * @static
+             * @param {proto.GameEvent.IChallengeFlagHandled} message ChallengeFlagHandled message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            ChallengeFlagHandled.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
+            };
+
+            /**
+             * Decodes a ChallengeFlagHandled message from the specified reader or buffer.
+             * @function decode
+             * @memberof proto.GameEvent.ChallengeFlagHandled
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {proto.GameEvent.ChallengeFlagHandled} ChallengeFlagHandled
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            ChallengeFlagHandled.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                let end = length === undefined ? reader.len : reader.pos + length, message = new $root.proto.GameEvent.ChallengeFlagHandled();
+                while (reader.pos < end) {
+                    let tag = reader.uint32();
+                    switch (tag >>> 3) {
+                    case 1: {
+                            message.byTeam = reader.int32();
+                            break;
+                        }
+                    case 2: {
+                            message.accepted = reader.bool();
+                            break;
+                        }
+                    default:
+                        reader.skipType(tag & 7);
+                        break;
+                    }
+                }
+                if (!message.hasOwnProperty("byTeam"))
+                    throw $util.ProtocolError("missing required 'byTeam'", { instance: message });
+                if (!message.hasOwnProperty("accepted"))
+                    throw $util.ProtocolError("missing required 'accepted'", { instance: message });
+                return message;
+            };
+
+            /**
+             * Decodes a ChallengeFlagHandled message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof proto.GameEvent.ChallengeFlagHandled
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {proto.GameEvent.ChallengeFlagHandled} ChallengeFlagHandled
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            ChallengeFlagHandled.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a ChallengeFlagHandled message.
+             * @function verify
+             * @memberof proto.GameEvent.ChallengeFlagHandled
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            ChallengeFlagHandled.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                switch (message.byTeam) {
+                default:
+                    return "byTeam: enum value expected";
+                case 0:
+                case 1:
+                case 2:
+                    break;
+                }
+                if (typeof message.accepted !== "boolean")
+                    return "accepted: boolean expected";
+                return null;
+            };
+
+            /**
+             * Creates a ChallengeFlagHandled message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof proto.GameEvent.ChallengeFlagHandled
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {proto.GameEvent.ChallengeFlagHandled} ChallengeFlagHandled
+             */
+            ChallengeFlagHandled.fromObject = function fromObject(object) {
+                if (object instanceof $root.proto.GameEvent.ChallengeFlagHandled)
+                    return object;
+                let message = new $root.proto.GameEvent.ChallengeFlagHandled();
+                switch (object.byTeam) {
+                default:
+                    if (typeof object.byTeam === "number") {
+                        message.byTeam = object.byTeam;
+                        break;
+                    }
+                    break;
+                case "UNKNOWN":
+                case 0:
+                    message.byTeam = 0;
+                    break;
+                case "YELLOW":
+                case 1:
+                    message.byTeam = 1;
+                    break;
+                case "BLUE":
+                case 2:
+                    message.byTeam = 2;
+                    break;
+                }
+                if (object.accepted != null)
+                    message.accepted = Boolean(object.accepted);
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a ChallengeFlagHandled message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof proto.GameEvent.ChallengeFlagHandled
+             * @static
+             * @param {proto.GameEvent.ChallengeFlagHandled} message ChallengeFlagHandled
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            ChallengeFlagHandled.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                let object = {};
+                if (options.defaults) {
+                    object.byTeam = options.enums === String ? "UNKNOWN" : 0;
+                    object.accepted = false;
+                }
+                if (message.byTeam != null && message.hasOwnProperty("byTeam"))
+                    object.byTeam = options.enums === String ? $root.proto.Team[message.byTeam] === undefined ? message.byTeam : $root.proto.Team[message.byTeam] : message.byTeam;
+                if (message.accepted != null && message.hasOwnProperty("accepted"))
+                    object.accepted = message.accepted;
+                return object;
+            };
+
+            /**
+             * Converts this ChallengeFlagHandled to JSON.
+             * @function toJSON
+             * @memberof proto.GameEvent.ChallengeFlagHandled
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            ChallengeFlagHandled.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            /**
+             * Gets the default type url for ChallengeFlagHandled
+             * @function getTypeUrl
+             * @memberof proto.GameEvent.ChallengeFlagHandled
+             * @static
+             * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+             * @returns {string} The default type url
+             */
+            ChallengeFlagHandled.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                if (typeUrlPrefix === undefined) {
+                    typeUrlPrefix = "type.googleapis.com";
+                }
+                return typeUrlPrefix + "/proto.GameEvent.ChallengeFlagHandled";
+            };
+
+            return ChallengeFlagHandled;
+        })();
+
         GameEvent.EmergencyStop = (function() {
 
             /**
@@ -26472,6 +27745,7 @@ export const proto = $root.proto = (() => {
              * @interface IPenaltyKickFailed
              * @property {proto.Team} byTeam PenaltyKickFailed byTeam
              * @property {proto.IVector2|null} [location] PenaltyKickFailed location
+             * @property {string|null} [reason] PenaltyKickFailed reason
              */
 
             /**
@@ -26506,6 +27780,14 @@ export const proto = $root.proto = (() => {
             PenaltyKickFailed.prototype.location = null;
 
             /**
+             * PenaltyKickFailed reason.
+             * @member {string} reason
+             * @memberof proto.GameEvent.PenaltyKickFailed
+             * @instance
+             */
+            PenaltyKickFailed.prototype.reason = "";
+
+            /**
              * Creates a new PenaltyKickFailed instance using the specified properties.
              * @function create
              * @memberof proto.GameEvent.PenaltyKickFailed
@@ -26532,6 +27814,8 @@ export const proto = $root.proto = (() => {
                 writer.uint32(/* id 1, wireType 0 =*/8).int32(message.byTeam);
                 if (message.location != null && Object.hasOwnProperty.call(message, "location"))
                     $root.proto.Vector2.encode(message.location, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+                if (message.reason != null && Object.hasOwnProperty.call(message, "reason"))
+                    writer.uint32(/* id 3, wireType 2 =*/26).string(message.reason);
                 return writer;
             };
 
@@ -26572,6 +27856,10 @@ export const proto = $root.proto = (() => {
                         }
                     case 2: {
                             message.location = $root.proto.Vector2.decode(reader, reader.uint32());
+                            break;
+                        }
+                    case 3: {
+                            message.reason = reader.string();
                             break;
                         }
                     default:
@@ -26624,6 +27912,9 @@ export const proto = $root.proto = (() => {
                     if (error)
                         return "location." + error;
                 }
+                if (message.reason != null && message.hasOwnProperty("reason"))
+                    if (!$util.isString(message.reason))
+                        return "reason: string expected";
                 return null;
             };
 
@@ -26664,6 +27955,8 @@ export const proto = $root.proto = (() => {
                         throw TypeError(".proto.GameEvent.PenaltyKickFailed.location: object expected");
                     message.location = $root.proto.Vector2.fromObject(object.location);
                 }
+                if (object.reason != null)
+                    message.reason = String(object.reason);
                 return message;
             };
 
@@ -26683,11 +27976,14 @@ export const proto = $root.proto = (() => {
                 if (options.defaults) {
                     object.byTeam = options.enums === String ? "UNKNOWN" : 0;
                     object.location = null;
+                    object.reason = "";
                 }
                 if (message.byTeam != null && message.hasOwnProperty("byTeam"))
                     object.byTeam = options.enums === String ? $root.proto.Team[message.byTeam] === undefined ? message.byTeam : $root.proto.Team[message.byTeam] : message.byTeam;
                 if (message.location != null && message.hasOwnProperty("location"))
                     object.location = $root.proto.Vector2.toObject(message.location, options);
+                if (message.reason != null && message.hasOwnProperty("reason"))
+                    object.reason = message.reason;
                 return object;
             };
 
@@ -26736,6 +28032,7 @@ export const proto = $root.proto = (() => {
          * @property {number} BOT_PUSHED_BOT=24 BOT_PUSHED_BOT value
          * @property {number} BOT_HELD_BALL_DELIBERATELY=26 BOT_HELD_BALL_DELIBERATELY value
          * @property {number} BOT_TIPPED_OVER=27 BOT_TIPPED_OVER value
+         * @property {number} BOT_DROPPED_PARTS=47 BOT_DROPPED_PARTS value
          * @property {number} ATTACKER_TOUCHED_BALL_IN_DEFENSE_AREA=15 ATTACKER_TOUCHED_BALL_IN_DEFENSE_AREA value
          * @property {number} BOT_KICKED_BALL_TOO_FAST=18 BOT_KICKED_BALL_TOO_FAST value
          * @property {number} BOT_CRASH_UNIQUE=22 BOT_CRASH_UNIQUE value
@@ -26756,6 +28053,7 @@ export const proto = $root.proto = (() => {
          * @property {number} BOT_SUBSTITUTION=37 BOT_SUBSTITUTION value
          * @property {number} TOO_MANY_ROBOTS=38 TOO_MANY_ROBOTS value
          * @property {number} CHALLENGE_FLAG=44 CHALLENGE_FLAG value
+         * @property {number} CHALLENGE_FLAG_HANDLED=46 CHALLENGE_FLAG_HANDLED value
          * @property {number} EMERGENCY_STOP=45 EMERGENCY_STOP value
          * @property {number} UNSPORTING_BEHAVIOR_MINOR=35 UNSPORTING_BEHAVIOR_MINOR value
          * @property {number} UNSPORTING_BEHAVIOR_MAJOR=36 UNSPORTING_BEHAVIOR_MAJOR value
@@ -26774,6 +28072,7 @@ export const proto = $root.proto = (() => {
             values[valuesById[24] = "BOT_PUSHED_BOT"] = 24;
             values[valuesById[26] = "BOT_HELD_BALL_DELIBERATELY"] = 26;
             values[valuesById[27] = "BOT_TIPPED_OVER"] = 27;
+            values[valuesById[47] = "BOT_DROPPED_PARTS"] = 47;
             values[valuesById[15] = "ATTACKER_TOUCHED_BALL_IN_DEFENSE_AREA"] = 15;
             values[valuesById[18] = "BOT_KICKED_BALL_TOO_FAST"] = 18;
             values[valuesById[22] = "BOT_CRASH_UNIQUE"] = 22;
@@ -26794,6 +28093,7 @@ export const proto = $root.proto = (() => {
             values[valuesById[37] = "BOT_SUBSTITUTION"] = 37;
             values[valuesById[38] = "TOO_MANY_ROBOTS"] = 38;
             values[valuesById[44] = "CHALLENGE_FLAG"] = 44;
+            values[valuesById[46] = "CHALLENGE_FLAG_HANDLED"] = 46;
             values[valuesById[45] = "EMERGENCY_STOP"] = 45;
             values[valuesById[35] = "UNSPORTING_BEHAVIOR_MINOR"] = 35;
             values[valuesById[36] = "UNSPORTING_BEHAVIOR_MAJOR"] = 36;
@@ -27599,18 +28899,14 @@ export const proto = $root.proto = (() => {
          * @interface IRobotFeedback
          * @property {number|null} [id] RobotFeedback id
          * @property {boolean|null} [ballSensorSeesBall] RobotFeedback ballSensorSeesBall
-         * @property {number|null} [ballPosition] RobotFeedback ballPosition
          * @property {boolean|null} [ballSensorIsWorking] RobotFeedback ballSensorIsWorking
          * @property {boolean|null} [dribblerSeesBall] RobotFeedback dribblerSeesBall
          * @property {number|null} [estimatedVelocityX] RobotFeedback estimatedVelocityX
          * @property {number|null} [estimatedVelocityY] RobotFeedback estimatedVelocityY
-         * @property {number|null} [estimatedAngle] RobotFeedback estimatedAngle
+         * @property {number|null} [estimatedYaw] RobotFeedback estimatedYaw
          * @property {boolean|null} [xsensIsCalibrated] RobotFeedback xsensIsCalibrated
          * @property {boolean|null} [capacitorIsCharged] RobotFeedback capacitorIsCharged
-         * @property {number|null} [wheelsLocked] RobotFeedback wheelsLocked
-         * @property {number|null} [wheelsBraking] RobotFeedback wheelsBraking
          * @property {number|null} [batteryLevel] RobotFeedback batteryLevel
-         * @property {number|null} [signalStrength] RobotFeedback signalStrength
          */
 
         /**
@@ -27645,14 +28941,6 @@ export const proto = $root.proto = (() => {
         RobotFeedback.prototype.ballSensorSeesBall = false;
 
         /**
-         * RobotFeedback ballPosition.
-         * @member {number} ballPosition
-         * @memberof proto.RobotFeedback
-         * @instance
-         */
-        RobotFeedback.prototype.ballPosition = 0;
-
-        /**
          * RobotFeedback ballSensorIsWorking.
          * @member {boolean} ballSensorIsWorking
          * @memberof proto.RobotFeedback
@@ -27685,12 +28973,12 @@ export const proto = $root.proto = (() => {
         RobotFeedback.prototype.estimatedVelocityY = 0;
 
         /**
-         * RobotFeedback estimatedAngle.
-         * @member {number} estimatedAngle
+         * RobotFeedback estimatedYaw.
+         * @member {number} estimatedYaw
          * @memberof proto.RobotFeedback
          * @instance
          */
-        RobotFeedback.prototype.estimatedAngle = 0;
+        RobotFeedback.prototype.estimatedYaw = 0;
 
         /**
          * RobotFeedback xsensIsCalibrated.
@@ -27709,36 +28997,12 @@ export const proto = $root.proto = (() => {
         RobotFeedback.prototype.capacitorIsCharged = false;
 
         /**
-         * RobotFeedback wheelsLocked.
-         * @member {number} wheelsLocked
-         * @memberof proto.RobotFeedback
-         * @instance
-         */
-        RobotFeedback.prototype.wheelsLocked = 0;
-
-        /**
-         * RobotFeedback wheelsBraking.
-         * @member {number} wheelsBraking
-         * @memberof proto.RobotFeedback
-         * @instance
-         */
-        RobotFeedback.prototype.wheelsBraking = 0;
-
-        /**
          * RobotFeedback batteryLevel.
          * @member {number} batteryLevel
          * @memberof proto.RobotFeedback
          * @instance
          */
         RobotFeedback.prototype.batteryLevel = 0;
-
-        /**
-         * RobotFeedback signalStrength.
-         * @member {number} signalStrength
-         * @memberof proto.RobotFeedback
-         * @instance
-         */
-        RobotFeedback.prototype.signalStrength = 0;
 
         /**
          * Creates a new RobotFeedback instance using the specified properties.
@@ -27768,8 +29032,6 @@ export const proto = $root.proto = (() => {
                 writer.uint32(/* id 1, wireType 0 =*/8).int32(message.id);
             if (message.ballSensorSeesBall != null && Object.hasOwnProperty.call(message, "ballSensorSeesBall"))
                 writer.uint32(/* id 2, wireType 0 =*/16).bool(message.ballSensorSeesBall);
-            if (message.ballPosition != null && Object.hasOwnProperty.call(message, "ballPosition"))
-                writer.uint32(/* id 3, wireType 5 =*/29).float(message.ballPosition);
             if (message.ballSensorIsWorking != null && Object.hasOwnProperty.call(message, "ballSensorIsWorking"))
                 writer.uint32(/* id 4, wireType 0 =*/32).bool(message.ballSensorIsWorking);
             if (message.dribblerSeesBall != null && Object.hasOwnProperty.call(message, "dribblerSeesBall"))
@@ -27778,20 +29040,14 @@ export const proto = $root.proto = (() => {
                 writer.uint32(/* id 6, wireType 1 =*/49).double(message.estimatedVelocityX);
             if (message.estimatedVelocityY != null && Object.hasOwnProperty.call(message, "estimatedVelocityY"))
                 writer.uint32(/* id 7, wireType 1 =*/57).double(message.estimatedVelocityY);
-            if (message.estimatedAngle != null && Object.hasOwnProperty.call(message, "estimatedAngle"))
-                writer.uint32(/* id 8, wireType 1 =*/65).double(message.estimatedAngle);
+            if (message.estimatedYaw != null && Object.hasOwnProperty.call(message, "estimatedYaw"))
+                writer.uint32(/* id 8, wireType 1 =*/65).double(message.estimatedYaw);
             if (message.xsensIsCalibrated != null && Object.hasOwnProperty.call(message, "xsensIsCalibrated"))
                 writer.uint32(/* id 9, wireType 0 =*/72).bool(message.xsensIsCalibrated);
             if (message.capacitorIsCharged != null && Object.hasOwnProperty.call(message, "capacitorIsCharged"))
                 writer.uint32(/* id 10, wireType 0 =*/80).bool(message.capacitorIsCharged);
-            if (message.wheelsLocked != null && Object.hasOwnProperty.call(message, "wheelsLocked"))
-                writer.uint32(/* id 11, wireType 0 =*/88).int32(message.wheelsLocked);
-            if (message.wheelsBraking != null && Object.hasOwnProperty.call(message, "wheelsBraking"))
-                writer.uint32(/* id 12, wireType 0 =*/96).int32(message.wheelsBraking);
             if (message.batteryLevel != null && Object.hasOwnProperty.call(message, "batteryLevel"))
                 writer.uint32(/* id 13, wireType 5 =*/109).float(message.batteryLevel);
-            if (message.signalStrength != null && Object.hasOwnProperty.call(message, "signalStrength"))
-                writer.uint32(/* id 14, wireType 0 =*/112).int32(message.signalStrength);
             return writer;
         };
 
@@ -27834,10 +29090,6 @@ export const proto = $root.proto = (() => {
                         message.ballSensorSeesBall = reader.bool();
                         break;
                     }
-                case 3: {
-                        message.ballPosition = reader.float();
-                        break;
-                    }
                 case 4: {
                         message.ballSensorIsWorking = reader.bool();
                         break;
@@ -27855,7 +29107,7 @@ export const proto = $root.proto = (() => {
                         break;
                     }
                 case 8: {
-                        message.estimatedAngle = reader.double();
+                        message.estimatedYaw = reader.double();
                         break;
                     }
                 case 9: {
@@ -27866,20 +29118,8 @@ export const proto = $root.proto = (() => {
                         message.capacitorIsCharged = reader.bool();
                         break;
                     }
-                case 11: {
-                        message.wheelsLocked = reader.int32();
-                        break;
-                    }
-                case 12: {
-                        message.wheelsBraking = reader.int32();
-                        break;
-                    }
                 case 13: {
                         message.batteryLevel = reader.float();
-                        break;
-                    }
-                case 14: {
-                        message.signalStrength = reader.int32();
                         break;
                     }
                 default:
@@ -27923,9 +29163,6 @@ export const proto = $root.proto = (() => {
             if (message.ballSensorSeesBall != null && message.hasOwnProperty("ballSensorSeesBall"))
                 if (typeof message.ballSensorSeesBall !== "boolean")
                     return "ballSensorSeesBall: boolean expected";
-            if (message.ballPosition != null && message.hasOwnProperty("ballPosition"))
-                if (typeof message.ballPosition !== "number")
-                    return "ballPosition: number expected";
             if (message.ballSensorIsWorking != null && message.hasOwnProperty("ballSensorIsWorking"))
                 if (typeof message.ballSensorIsWorking !== "boolean")
                     return "ballSensorIsWorking: boolean expected";
@@ -27938,27 +29175,18 @@ export const proto = $root.proto = (() => {
             if (message.estimatedVelocityY != null && message.hasOwnProperty("estimatedVelocityY"))
                 if (typeof message.estimatedVelocityY !== "number")
                     return "estimatedVelocityY: number expected";
-            if (message.estimatedAngle != null && message.hasOwnProperty("estimatedAngle"))
-                if (typeof message.estimatedAngle !== "number")
-                    return "estimatedAngle: number expected";
+            if (message.estimatedYaw != null && message.hasOwnProperty("estimatedYaw"))
+                if (typeof message.estimatedYaw !== "number")
+                    return "estimatedYaw: number expected";
             if (message.xsensIsCalibrated != null && message.hasOwnProperty("xsensIsCalibrated"))
                 if (typeof message.xsensIsCalibrated !== "boolean")
                     return "xsensIsCalibrated: boolean expected";
             if (message.capacitorIsCharged != null && message.hasOwnProperty("capacitorIsCharged"))
                 if (typeof message.capacitorIsCharged !== "boolean")
                     return "capacitorIsCharged: boolean expected";
-            if (message.wheelsLocked != null && message.hasOwnProperty("wheelsLocked"))
-                if (!$util.isInteger(message.wheelsLocked))
-                    return "wheelsLocked: integer expected";
-            if (message.wheelsBraking != null && message.hasOwnProperty("wheelsBraking"))
-                if (!$util.isInteger(message.wheelsBraking))
-                    return "wheelsBraking: integer expected";
             if (message.batteryLevel != null && message.hasOwnProperty("batteryLevel"))
                 if (typeof message.batteryLevel !== "number")
                     return "batteryLevel: number expected";
-            if (message.signalStrength != null && message.hasOwnProperty("signalStrength"))
-                if (!$util.isInteger(message.signalStrength))
-                    return "signalStrength: integer expected";
             return null;
         };
 
@@ -27978,8 +29206,6 @@ export const proto = $root.proto = (() => {
                 message.id = object.id | 0;
             if (object.ballSensorSeesBall != null)
                 message.ballSensorSeesBall = Boolean(object.ballSensorSeesBall);
-            if (object.ballPosition != null)
-                message.ballPosition = Number(object.ballPosition);
             if (object.ballSensorIsWorking != null)
                 message.ballSensorIsWorking = Boolean(object.ballSensorIsWorking);
             if (object.dribblerSeesBall != null)
@@ -27988,20 +29214,14 @@ export const proto = $root.proto = (() => {
                 message.estimatedVelocityX = Number(object.estimatedVelocityX);
             if (object.estimatedVelocityY != null)
                 message.estimatedVelocityY = Number(object.estimatedVelocityY);
-            if (object.estimatedAngle != null)
-                message.estimatedAngle = Number(object.estimatedAngle);
+            if (object.estimatedYaw != null)
+                message.estimatedYaw = Number(object.estimatedYaw);
             if (object.xsensIsCalibrated != null)
                 message.xsensIsCalibrated = Boolean(object.xsensIsCalibrated);
             if (object.capacitorIsCharged != null)
                 message.capacitorIsCharged = Boolean(object.capacitorIsCharged);
-            if (object.wheelsLocked != null)
-                message.wheelsLocked = object.wheelsLocked | 0;
-            if (object.wheelsBraking != null)
-                message.wheelsBraking = object.wheelsBraking | 0;
             if (object.batteryLevel != null)
                 message.batteryLevel = Number(object.batteryLevel);
-            if (object.signalStrength != null)
-                message.signalStrength = object.signalStrength | 0;
             return message;
         };
 
@@ -28021,25 +29241,19 @@ export const proto = $root.proto = (() => {
             if (options.defaults) {
                 object.id = 0;
                 object.ballSensorSeesBall = false;
-                object.ballPosition = 0;
                 object.ballSensorIsWorking = false;
                 object.dribblerSeesBall = false;
                 object.estimatedVelocityX = 0;
                 object.estimatedVelocityY = 0;
-                object.estimatedAngle = 0;
+                object.estimatedYaw = 0;
                 object.xsensIsCalibrated = false;
                 object.capacitorIsCharged = false;
-                object.wheelsLocked = 0;
-                object.wheelsBraking = 0;
                 object.batteryLevel = 0;
-                object.signalStrength = 0;
             }
             if (message.id != null && message.hasOwnProperty("id"))
                 object.id = message.id;
             if (message.ballSensorSeesBall != null && message.hasOwnProperty("ballSensorSeesBall"))
                 object.ballSensorSeesBall = message.ballSensorSeesBall;
-            if (message.ballPosition != null && message.hasOwnProperty("ballPosition"))
-                object.ballPosition = options.json && !isFinite(message.ballPosition) ? String(message.ballPosition) : message.ballPosition;
             if (message.ballSensorIsWorking != null && message.hasOwnProperty("ballSensorIsWorking"))
                 object.ballSensorIsWorking = message.ballSensorIsWorking;
             if (message.dribblerSeesBall != null && message.hasOwnProperty("dribblerSeesBall"))
@@ -28048,20 +29262,14 @@ export const proto = $root.proto = (() => {
                 object.estimatedVelocityX = options.json && !isFinite(message.estimatedVelocityX) ? String(message.estimatedVelocityX) : message.estimatedVelocityX;
             if (message.estimatedVelocityY != null && message.hasOwnProperty("estimatedVelocityY"))
                 object.estimatedVelocityY = options.json && !isFinite(message.estimatedVelocityY) ? String(message.estimatedVelocityY) : message.estimatedVelocityY;
-            if (message.estimatedAngle != null && message.hasOwnProperty("estimatedAngle"))
-                object.estimatedAngle = options.json && !isFinite(message.estimatedAngle) ? String(message.estimatedAngle) : message.estimatedAngle;
+            if (message.estimatedYaw != null && message.hasOwnProperty("estimatedYaw"))
+                object.estimatedYaw = options.json && !isFinite(message.estimatedYaw) ? String(message.estimatedYaw) : message.estimatedYaw;
             if (message.xsensIsCalibrated != null && message.hasOwnProperty("xsensIsCalibrated"))
                 object.xsensIsCalibrated = message.xsensIsCalibrated;
             if (message.capacitorIsCharged != null && message.hasOwnProperty("capacitorIsCharged"))
                 object.capacitorIsCharged = message.capacitorIsCharged;
-            if (message.wheelsLocked != null && message.hasOwnProperty("wheelsLocked"))
-                object.wheelsLocked = message.wheelsLocked;
-            if (message.wheelsBraking != null && message.hasOwnProperty("wheelsBraking"))
-                object.wheelsBraking = message.wheelsBraking;
             if (message.batteryLevel != null && message.hasOwnProperty("batteryLevel"))
                 object.batteryLevel = options.json && !isFinite(message.batteryLevel) ? String(message.batteryLevel) : message.batteryLevel;
-            if (message.signalStrength != null && message.hasOwnProperty("signalStrength"))
-                object.signalStrength = message.signalStrength;
             return object;
         };
 
@@ -28402,773 +29610,6 @@ export const proto = $root.proto = (() => {
         };
 
         return RobotsFeedback;
-    })();
-
-    proto.RobotCommand = (function() {
-
-        /**
-         * Properties of a RobotCommand.
-         * @memberof proto
-         * @interface IRobotCommand
-         * @property {number|null} [id] RobotCommand id
-         * @property {number|null} [velocityX] RobotCommand velocityX
-         * @property {number|null} [velocityY] RobotCommand velocityY
-         * @property {number|null} [angle] RobotCommand angle
-         * @property {number|null} [angularVelocity] RobotCommand angularVelocity
-         * @property {boolean|null} [useAngularVelocity] RobotCommand useAngularVelocity
-         * @property {number|null} [cameraAngleOfRobot] RobotCommand cameraAngleOfRobot
-         * @property {boolean|null} [cameraAngleOfRobotIsSet] RobotCommand cameraAngleOfRobotIsSet
-         * @property {number|null} [kickSpeed] RobotCommand kickSpeed
-         * @property {boolean|null} [waitForBall] RobotCommand waitForBall
-         * @property {boolean|null} [kickAtAngle] RobotCommand kickAtAngle
-         * @property {proto.RobotCommand.KickType|null} [kickType] RobotCommand kickType
-         * @property {number|null} [dribblerSpeed] RobotCommand dribblerSpeed
-         * @property {boolean|null} [ignorePacket] RobotCommand ignorePacket
-         */
-
-        /**
-         * Constructs a new RobotCommand.
-         * @memberof proto
-         * @classdesc Represents a RobotCommand.
-         * @implements IRobotCommand
-         * @constructor
-         * @param {proto.IRobotCommand=} [properties] Properties to set
-         */
-        function RobotCommand(properties) {
-            if (properties)
-                for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
-                        this[keys[i]] = properties[keys[i]];
-        }
-
-        /**
-         * RobotCommand id.
-         * @member {number} id
-         * @memberof proto.RobotCommand
-         * @instance
-         */
-        RobotCommand.prototype.id = 0;
-
-        /**
-         * RobotCommand velocityX.
-         * @member {number} velocityX
-         * @memberof proto.RobotCommand
-         * @instance
-         */
-        RobotCommand.prototype.velocityX = 0;
-
-        /**
-         * RobotCommand velocityY.
-         * @member {number} velocityY
-         * @memberof proto.RobotCommand
-         * @instance
-         */
-        RobotCommand.prototype.velocityY = 0;
-
-        /**
-         * RobotCommand angle.
-         * @member {number} angle
-         * @memberof proto.RobotCommand
-         * @instance
-         */
-        RobotCommand.prototype.angle = 0;
-
-        /**
-         * RobotCommand angularVelocity.
-         * @member {number} angularVelocity
-         * @memberof proto.RobotCommand
-         * @instance
-         */
-        RobotCommand.prototype.angularVelocity = 0;
-
-        /**
-         * RobotCommand useAngularVelocity.
-         * @member {boolean} useAngularVelocity
-         * @memberof proto.RobotCommand
-         * @instance
-         */
-        RobotCommand.prototype.useAngularVelocity = false;
-
-        /**
-         * RobotCommand cameraAngleOfRobot.
-         * @member {number} cameraAngleOfRobot
-         * @memberof proto.RobotCommand
-         * @instance
-         */
-        RobotCommand.prototype.cameraAngleOfRobot = 0;
-
-        /**
-         * RobotCommand cameraAngleOfRobotIsSet.
-         * @member {boolean} cameraAngleOfRobotIsSet
-         * @memberof proto.RobotCommand
-         * @instance
-         */
-        RobotCommand.prototype.cameraAngleOfRobotIsSet = false;
-
-        /**
-         * RobotCommand kickSpeed.
-         * @member {number} kickSpeed
-         * @memberof proto.RobotCommand
-         * @instance
-         */
-        RobotCommand.prototype.kickSpeed = 0;
-
-        /**
-         * RobotCommand waitForBall.
-         * @member {boolean} waitForBall
-         * @memberof proto.RobotCommand
-         * @instance
-         */
-        RobotCommand.prototype.waitForBall = false;
-
-        /**
-         * RobotCommand kickAtAngle.
-         * @member {boolean} kickAtAngle
-         * @memberof proto.RobotCommand
-         * @instance
-         */
-        RobotCommand.prototype.kickAtAngle = false;
-
-        /**
-         * RobotCommand kickType.
-         * @member {proto.RobotCommand.KickType} kickType
-         * @memberof proto.RobotCommand
-         * @instance
-         */
-        RobotCommand.prototype.kickType = 0;
-
-        /**
-         * RobotCommand dribblerSpeed.
-         * @member {number} dribblerSpeed
-         * @memberof proto.RobotCommand
-         * @instance
-         */
-        RobotCommand.prototype.dribblerSpeed = 0;
-
-        /**
-         * RobotCommand ignorePacket.
-         * @member {boolean} ignorePacket
-         * @memberof proto.RobotCommand
-         * @instance
-         */
-        RobotCommand.prototype.ignorePacket = false;
-
-        /**
-         * Creates a new RobotCommand instance using the specified properties.
-         * @function create
-         * @memberof proto.RobotCommand
-         * @static
-         * @param {proto.IRobotCommand=} [properties] Properties to set
-         * @returns {proto.RobotCommand} RobotCommand instance
-         */
-        RobotCommand.create = function create(properties) {
-            return new RobotCommand(properties);
-        };
-
-        /**
-         * Encodes the specified RobotCommand message. Does not implicitly {@link proto.RobotCommand.verify|verify} messages.
-         * @function encode
-         * @memberof proto.RobotCommand
-         * @static
-         * @param {proto.IRobotCommand} message RobotCommand message or plain object to encode
-         * @param {$protobuf.Writer} [writer] Writer to encode to
-         * @returns {$protobuf.Writer} Writer
-         */
-        RobotCommand.encode = function encode(message, writer) {
-            if (!writer)
-                writer = $Writer.create();
-            if (message.id != null && Object.hasOwnProperty.call(message, "id"))
-                writer.uint32(/* id 1, wireType 0 =*/8).int32(message.id);
-            if (message.velocityX != null && Object.hasOwnProperty.call(message, "velocityX"))
-                writer.uint32(/* id 2, wireType 1 =*/17).double(message.velocityX);
-            if (message.velocityY != null && Object.hasOwnProperty.call(message, "velocityY"))
-                writer.uint32(/* id 3, wireType 1 =*/25).double(message.velocityY);
-            if (message.angle != null && Object.hasOwnProperty.call(message, "angle"))
-                writer.uint32(/* id 4, wireType 1 =*/33).double(message.angle);
-            if (message.angularVelocity != null && Object.hasOwnProperty.call(message, "angularVelocity"))
-                writer.uint32(/* id 5, wireType 1 =*/41).double(message.angularVelocity);
-            if (message.useAngularVelocity != null && Object.hasOwnProperty.call(message, "useAngularVelocity"))
-                writer.uint32(/* id 6, wireType 0 =*/48).bool(message.useAngularVelocity);
-            if (message.cameraAngleOfRobot != null && Object.hasOwnProperty.call(message, "cameraAngleOfRobot"))
-                writer.uint32(/* id 7, wireType 1 =*/57).double(message.cameraAngleOfRobot);
-            if (message.cameraAngleOfRobotIsSet != null && Object.hasOwnProperty.call(message, "cameraAngleOfRobotIsSet"))
-                writer.uint32(/* id 8, wireType 0 =*/64).bool(message.cameraAngleOfRobotIsSet);
-            if (message.kickSpeed != null && Object.hasOwnProperty.call(message, "kickSpeed"))
-                writer.uint32(/* id 9, wireType 1 =*/73).double(message.kickSpeed);
-            if (message.waitForBall != null && Object.hasOwnProperty.call(message, "waitForBall"))
-                writer.uint32(/* id 10, wireType 0 =*/80).bool(message.waitForBall);
-            if (message.kickAtAngle != null && Object.hasOwnProperty.call(message, "kickAtAngle"))
-                writer.uint32(/* id 11, wireType 0 =*/88).bool(message.kickAtAngle);
-            if (message.kickType != null && Object.hasOwnProperty.call(message, "kickType"))
-                writer.uint32(/* id 12, wireType 0 =*/96).int32(message.kickType);
-            if (message.dribblerSpeed != null && Object.hasOwnProperty.call(message, "dribblerSpeed"))
-                writer.uint32(/* id 13, wireType 1 =*/105).double(message.dribblerSpeed);
-            if (message.ignorePacket != null && Object.hasOwnProperty.call(message, "ignorePacket"))
-                writer.uint32(/* id 14, wireType 0 =*/112).bool(message.ignorePacket);
-            return writer;
-        };
-
-        /**
-         * Encodes the specified RobotCommand message, length delimited. Does not implicitly {@link proto.RobotCommand.verify|verify} messages.
-         * @function encodeDelimited
-         * @memberof proto.RobotCommand
-         * @static
-         * @param {proto.IRobotCommand} message RobotCommand message or plain object to encode
-         * @param {$protobuf.Writer} [writer] Writer to encode to
-         * @returns {$protobuf.Writer} Writer
-         */
-        RobotCommand.encodeDelimited = function encodeDelimited(message, writer) {
-            return this.encode(message, writer).ldelim();
-        };
-
-        /**
-         * Decodes a RobotCommand message from the specified reader or buffer.
-         * @function decode
-         * @memberof proto.RobotCommand
-         * @static
-         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-         * @param {number} [length] Message length if known beforehand
-         * @returns {proto.RobotCommand} RobotCommand
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        RobotCommand.decode = function decode(reader, length) {
-            if (!(reader instanceof $Reader))
-                reader = $Reader.create(reader);
-            let end = length === undefined ? reader.len : reader.pos + length, message = new $root.proto.RobotCommand();
-            while (reader.pos < end) {
-                let tag = reader.uint32();
-                switch (tag >>> 3) {
-                case 1: {
-                        message.id = reader.int32();
-                        break;
-                    }
-                case 2: {
-                        message.velocityX = reader.double();
-                        break;
-                    }
-                case 3: {
-                        message.velocityY = reader.double();
-                        break;
-                    }
-                case 4: {
-                        message.angle = reader.double();
-                        break;
-                    }
-                case 5: {
-                        message.angularVelocity = reader.double();
-                        break;
-                    }
-                case 6: {
-                        message.useAngularVelocity = reader.bool();
-                        break;
-                    }
-                case 7: {
-                        message.cameraAngleOfRobot = reader.double();
-                        break;
-                    }
-                case 8: {
-                        message.cameraAngleOfRobotIsSet = reader.bool();
-                        break;
-                    }
-                case 9: {
-                        message.kickSpeed = reader.double();
-                        break;
-                    }
-                case 10: {
-                        message.waitForBall = reader.bool();
-                        break;
-                    }
-                case 11: {
-                        message.kickAtAngle = reader.bool();
-                        break;
-                    }
-                case 12: {
-                        message.kickType = reader.int32();
-                        break;
-                    }
-                case 13: {
-                        message.dribblerSpeed = reader.double();
-                        break;
-                    }
-                case 14: {
-                        message.ignorePacket = reader.bool();
-                        break;
-                    }
-                default:
-                    reader.skipType(tag & 7);
-                    break;
-                }
-            }
-            return message;
-        };
-
-        /**
-         * Decodes a RobotCommand message from the specified reader or buffer, length delimited.
-         * @function decodeDelimited
-         * @memberof proto.RobotCommand
-         * @static
-         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-         * @returns {proto.RobotCommand} RobotCommand
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        RobotCommand.decodeDelimited = function decodeDelimited(reader) {
-            if (!(reader instanceof $Reader))
-                reader = new $Reader(reader);
-            return this.decode(reader, reader.uint32());
-        };
-
-        /**
-         * Verifies a RobotCommand message.
-         * @function verify
-         * @memberof proto.RobotCommand
-         * @static
-         * @param {Object.<string,*>} message Plain object to verify
-         * @returns {string|null} `null` if valid, otherwise the reason why it is not
-         */
-        RobotCommand.verify = function verify(message) {
-            if (typeof message !== "object" || message === null)
-                return "object expected";
-            if (message.id != null && message.hasOwnProperty("id"))
-                if (!$util.isInteger(message.id))
-                    return "id: integer expected";
-            if (message.velocityX != null && message.hasOwnProperty("velocityX"))
-                if (typeof message.velocityX !== "number")
-                    return "velocityX: number expected";
-            if (message.velocityY != null && message.hasOwnProperty("velocityY"))
-                if (typeof message.velocityY !== "number")
-                    return "velocityY: number expected";
-            if (message.angle != null && message.hasOwnProperty("angle"))
-                if (typeof message.angle !== "number")
-                    return "angle: number expected";
-            if (message.angularVelocity != null && message.hasOwnProperty("angularVelocity"))
-                if (typeof message.angularVelocity !== "number")
-                    return "angularVelocity: number expected";
-            if (message.useAngularVelocity != null && message.hasOwnProperty("useAngularVelocity"))
-                if (typeof message.useAngularVelocity !== "boolean")
-                    return "useAngularVelocity: boolean expected";
-            if (message.cameraAngleOfRobot != null && message.hasOwnProperty("cameraAngleOfRobot"))
-                if (typeof message.cameraAngleOfRobot !== "number")
-                    return "cameraAngleOfRobot: number expected";
-            if (message.cameraAngleOfRobotIsSet != null && message.hasOwnProperty("cameraAngleOfRobotIsSet"))
-                if (typeof message.cameraAngleOfRobotIsSet !== "boolean")
-                    return "cameraAngleOfRobotIsSet: boolean expected";
-            if (message.kickSpeed != null && message.hasOwnProperty("kickSpeed"))
-                if (typeof message.kickSpeed !== "number")
-                    return "kickSpeed: number expected";
-            if (message.waitForBall != null && message.hasOwnProperty("waitForBall"))
-                if (typeof message.waitForBall !== "boolean")
-                    return "waitForBall: boolean expected";
-            if (message.kickAtAngle != null && message.hasOwnProperty("kickAtAngle"))
-                if (typeof message.kickAtAngle !== "boolean")
-                    return "kickAtAngle: boolean expected";
-            if (message.kickType != null && message.hasOwnProperty("kickType"))
-                switch (message.kickType) {
-                default:
-                    return "kickType: enum value expected";
-                case 0:
-                case 1:
-                case 2:
-                    break;
-                }
-            if (message.dribblerSpeed != null && message.hasOwnProperty("dribblerSpeed"))
-                if (typeof message.dribblerSpeed !== "number")
-                    return "dribblerSpeed: number expected";
-            if (message.ignorePacket != null && message.hasOwnProperty("ignorePacket"))
-                if (typeof message.ignorePacket !== "boolean")
-                    return "ignorePacket: boolean expected";
-            return null;
-        };
-
-        /**
-         * Creates a RobotCommand message from a plain object. Also converts values to their respective internal types.
-         * @function fromObject
-         * @memberof proto.RobotCommand
-         * @static
-         * @param {Object.<string,*>} object Plain object
-         * @returns {proto.RobotCommand} RobotCommand
-         */
-        RobotCommand.fromObject = function fromObject(object) {
-            if (object instanceof $root.proto.RobotCommand)
-                return object;
-            let message = new $root.proto.RobotCommand();
-            if (object.id != null)
-                message.id = object.id | 0;
-            if (object.velocityX != null)
-                message.velocityX = Number(object.velocityX);
-            if (object.velocityY != null)
-                message.velocityY = Number(object.velocityY);
-            if (object.angle != null)
-                message.angle = Number(object.angle);
-            if (object.angularVelocity != null)
-                message.angularVelocity = Number(object.angularVelocity);
-            if (object.useAngularVelocity != null)
-                message.useAngularVelocity = Boolean(object.useAngularVelocity);
-            if (object.cameraAngleOfRobot != null)
-                message.cameraAngleOfRobot = Number(object.cameraAngleOfRobot);
-            if (object.cameraAngleOfRobotIsSet != null)
-                message.cameraAngleOfRobotIsSet = Boolean(object.cameraAngleOfRobotIsSet);
-            if (object.kickSpeed != null)
-                message.kickSpeed = Number(object.kickSpeed);
-            if (object.waitForBall != null)
-                message.waitForBall = Boolean(object.waitForBall);
-            if (object.kickAtAngle != null)
-                message.kickAtAngle = Boolean(object.kickAtAngle);
-            switch (object.kickType) {
-            default:
-                if (typeof object.kickType === "number") {
-                    message.kickType = object.kickType;
-                    break;
-                }
-                break;
-            case "NO_KICK":
-            case 0:
-                message.kickType = 0;
-                break;
-            case "KICK":
-            case 1:
-                message.kickType = 1;
-                break;
-            case "CHIP":
-            case 2:
-                message.kickType = 2;
-                break;
-            }
-            if (object.dribblerSpeed != null)
-                message.dribblerSpeed = Number(object.dribblerSpeed);
-            if (object.ignorePacket != null)
-                message.ignorePacket = Boolean(object.ignorePacket);
-            return message;
-        };
-
-        /**
-         * Creates a plain object from a RobotCommand message. Also converts values to other types if specified.
-         * @function toObject
-         * @memberof proto.RobotCommand
-         * @static
-         * @param {proto.RobotCommand} message RobotCommand
-         * @param {$protobuf.IConversionOptions} [options] Conversion options
-         * @returns {Object.<string,*>} Plain object
-         */
-        RobotCommand.toObject = function toObject(message, options) {
-            if (!options)
-                options = {};
-            let object = {};
-            if (options.defaults) {
-                object.id = 0;
-                object.velocityX = 0;
-                object.velocityY = 0;
-                object.angle = 0;
-                object.angularVelocity = 0;
-                object.useAngularVelocity = false;
-                object.cameraAngleOfRobot = 0;
-                object.cameraAngleOfRobotIsSet = false;
-                object.kickSpeed = 0;
-                object.waitForBall = false;
-                object.kickAtAngle = false;
-                object.kickType = options.enums === String ? "NO_KICK" : 0;
-                object.dribblerSpeed = 0;
-                object.ignorePacket = false;
-            }
-            if (message.id != null && message.hasOwnProperty("id"))
-                object.id = message.id;
-            if (message.velocityX != null && message.hasOwnProperty("velocityX"))
-                object.velocityX = options.json && !isFinite(message.velocityX) ? String(message.velocityX) : message.velocityX;
-            if (message.velocityY != null && message.hasOwnProperty("velocityY"))
-                object.velocityY = options.json && !isFinite(message.velocityY) ? String(message.velocityY) : message.velocityY;
-            if (message.angle != null && message.hasOwnProperty("angle"))
-                object.angle = options.json && !isFinite(message.angle) ? String(message.angle) : message.angle;
-            if (message.angularVelocity != null && message.hasOwnProperty("angularVelocity"))
-                object.angularVelocity = options.json && !isFinite(message.angularVelocity) ? String(message.angularVelocity) : message.angularVelocity;
-            if (message.useAngularVelocity != null && message.hasOwnProperty("useAngularVelocity"))
-                object.useAngularVelocity = message.useAngularVelocity;
-            if (message.cameraAngleOfRobot != null && message.hasOwnProperty("cameraAngleOfRobot"))
-                object.cameraAngleOfRobot = options.json && !isFinite(message.cameraAngleOfRobot) ? String(message.cameraAngleOfRobot) : message.cameraAngleOfRobot;
-            if (message.cameraAngleOfRobotIsSet != null && message.hasOwnProperty("cameraAngleOfRobotIsSet"))
-                object.cameraAngleOfRobotIsSet = message.cameraAngleOfRobotIsSet;
-            if (message.kickSpeed != null && message.hasOwnProperty("kickSpeed"))
-                object.kickSpeed = options.json && !isFinite(message.kickSpeed) ? String(message.kickSpeed) : message.kickSpeed;
-            if (message.waitForBall != null && message.hasOwnProperty("waitForBall"))
-                object.waitForBall = message.waitForBall;
-            if (message.kickAtAngle != null && message.hasOwnProperty("kickAtAngle"))
-                object.kickAtAngle = message.kickAtAngle;
-            if (message.kickType != null && message.hasOwnProperty("kickType"))
-                object.kickType = options.enums === String ? $root.proto.RobotCommand.KickType[message.kickType] === undefined ? message.kickType : $root.proto.RobotCommand.KickType[message.kickType] : message.kickType;
-            if (message.dribblerSpeed != null && message.hasOwnProperty("dribblerSpeed"))
-                object.dribblerSpeed = options.json && !isFinite(message.dribblerSpeed) ? String(message.dribblerSpeed) : message.dribblerSpeed;
-            if (message.ignorePacket != null && message.hasOwnProperty("ignorePacket"))
-                object.ignorePacket = message.ignorePacket;
-            return object;
-        };
-
-        /**
-         * Converts this RobotCommand to JSON.
-         * @function toJSON
-         * @memberof proto.RobotCommand
-         * @instance
-         * @returns {Object.<string,*>} JSON object
-         */
-        RobotCommand.prototype.toJSON = function toJSON() {
-            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
-        };
-
-        /**
-         * Gets the default type url for RobotCommand
-         * @function getTypeUrl
-         * @memberof proto.RobotCommand
-         * @static
-         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-         * @returns {string} The default type url
-         */
-        RobotCommand.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
-            if (typeUrlPrefix === undefined) {
-                typeUrlPrefix = "type.googleapis.com";
-            }
-            return typeUrlPrefix + "/proto.RobotCommand";
-        };
-
-        /**
-         * KickType enum.
-         * @name proto.RobotCommand.KickType
-         * @enum {number}
-         * @property {number} NO_KICK=0 NO_KICK value
-         * @property {number} KICK=1 KICK value
-         * @property {number} CHIP=2 CHIP value
-         */
-        RobotCommand.KickType = (function() {
-            const valuesById = {}, values = Object.create(valuesById);
-            values[valuesById[0] = "NO_KICK"] = 0;
-            values[valuesById[1] = "KICK"] = 1;
-            values[valuesById[2] = "CHIP"] = 2;
-            return values;
-        })();
-
-        return RobotCommand;
-    })();
-
-    proto.RobotCommands = (function() {
-
-        /**
-         * Properties of a RobotCommands.
-         * @memberof proto
-         * @interface IRobotCommands
-         * @property {Array.<proto.IRobotCommand>|null} [robotCommands] RobotCommands robotCommands
-         */
-
-        /**
-         * Constructs a new RobotCommands.
-         * @memberof proto
-         * @classdesc Represents a RobotCommands.
-         * @implements IRobotCommands
-         * @constructor
-         * @param {proto.IRobotCommands=} [properties] Properties to set
-         */
-        function RobotCommands(properties) {
-            this.robotCommands = [];
-            if (properties)
-                for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                    if (properties[keys[i]] != null)
-                        this[keys[i]] = properties[keys[i]];
-        }
-
-        /**
-         * RobotCommands robotCommands.
-         * @member {Array.<proto.IRobotCommand>} robotCommands
-         * @memberof proto.RobotCommands
-         * @instance
-         */
-        RobotCommands.prototype.robotCommands = $util.emptyArray;
-
-        /**
-         * Creates a new RobotCommands instance using the specified properties.
-         * @function create
-         * @memberof proto.RobotCommands
-         * @static
-         * @param {proto.IRobotCommands=} [properties] Properties to set
-         * @returns {proto.RobotCommands} RobotCommands instance
-         */
-        RobotCommands.create = function create(properties) {
-            return new RobotCommands(properties);
-        };
-
-        /**
-         * Encodes the specified RobotCommands message. Does not implicitly {@link proto.RobotCommands.verify|verify} messages.
-         * @function encode
-         * @memberof proto.RobotCommands
-         * @static
-         * @param {proto.IRobotCommands} message RobotCommands message or plain object to encode
-         * @param {$protobuf.Writer} [writer] Writer to encode to
-         * @returns {$protobuf.Writer} Writer
-         */
-        RobotCommands.encode = function encode(message, writer) {
-            if (!writer)
-                writer = $Writer.create();
-            if (message.robotCommands != null && message.robotCommands.length)
-                for (let i = 0; i < message.robotCommands.length; ++i)
-                    $root.proto.RobotCommand.encode(message.robotCommands[i], writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-            return writer;
-        };
-
-        /**
-         * Encodes the specified RobotCommands message, length delimited. Does not implicitly {@link proto.RobotCommands.verify|verify} messages.
-         * @function encodeDelimited
-         * @memberof proto.RobotCommands
-         * @static
-         * @param {proto.IRobotCommands} message RobotCommands message or plain object to encode
-         * @param {$protobuf.Writer} [writer] Writer to encode to
-         * @returns {$protobuf.Writer} Writer
-         */
-        RobotCommands.encodeDelimited = function encodeDelimited(message, writer) {
-            return this.encode(message, writer).ldelim();
-        };
-
-        /**
-         * Decodes a RobotCommands message from the specified reader or buffer.
-         * @function decode
-         * @memberof proto.RobotCommands
-         * @static
-         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-         * @param {number} [length] Message length if known beforehand
-         * @returns {proto.RobotCommands} RobotCommands
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        RobotCommands.decode = function decode(reader, length) {
-            if (!(reader instanceof $Reader))
-                reader = $Reader.create(reader);
-            let end = length === undefined ? reader.len : reader.pos + length, message = new $root.proto.RobotCommands();
-            while (reader.pos < end) {
-                let tag = reader.uint32();
-                switch (tag >>> 3) {
-                case 1: {
-                        if (!(message.robotCommands && message.robotCommands.length))
-                            message.robotCommands = [];
-                        message.robotCommands.push($root.proto.RobotCommand.decode(reader, reader.uint32()));
-                        break;
-                    }
-                default:
-                    reader.skipType(tag & 7);
-                    break;
-                }
-            }
-            return message;
-        };
-
-        /**
-         * Decodes a RobotCommands message from the specified reader or buffer, length delimited.
-         * @function decodeDelimited
-         * @memberof proto.RobotCommands
-         * @static
-         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-         * @returns {proto.RobotCommands} RobotCommands
-         * @throws {Error} If the payload is not a reader or valid buffer
-         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-         */
-        RobotCommands.decodeDelimited = function decodeDelimited(reader) {
-            if (!(reader instanceof $Reader))
-                reader = new $Reader(reader);
-            return this.decode(reader, reader.uint32());
-        };
-
-        /**
-         * Verifies a RobotCommands message.
-         * @function verify
-         * @memberof proto.RobotCommands
-         * @static
-         * @param {Object.<string,*>} message Plain object to verify
-         * @returns {string|null} `null` if valid, otherwise the reason why it is not
-         */
-        RobotCommands.verify = function verify(message) {
-            if (typeof message !== "object" || message === null)
-                return "object expected";
-            if (message.robotCommands != null && message.hasOwnProperty("robotCommands")) {
-                if (!Array.isArray(message.robotCommands))
-                    return "robotCommands: array expected";
-                for (let i = 0; i < message.robotCommands.length; ++i) {
-                    let error = $root.proto.RobotCommand.verify(message.robotCommands[i]);
-                    if (error)
-                        return "robotCommands." + error;
-                }
-            }
-            return null;
-        };
-
-        /**
-         * Creates a RobotCommands message from a plain object. Also converts values to their respective internal types.
-         * @function fromObject
-         * @memberof proto.RobotCommands
-         * @static
-         * @param {Object.<string,*>} object Plain object
-         * @returns {proto.RobotCommands} RobotCommands
-         */
-        RobotCommands.fromObject = function fromObject(object) {
-            if (object instanceof $root.proto.RobotCommands)
-                return object;
-            let message = new $root.proto.RobotCommands();
-            if (object.robotCommands) {
-                if (!Array.isArray(object.robotCommands))
-                    throw TypeError(".proto.RobotCommands.robotCommands: array expected");
-                message.robotCommands = [];
-                for (let i = 0; i < object.robotCommands.length; ++i) {
-                    if (typeof object.robotCommands[i] !== "object")
-                        throw TypeError(".proto.RobotCommands.robotCommands: object expected");
-                    message.robotCommands[i] = $root.proto.RobotCommand.fromObject(object.robotCommands[i]);
-                }
-            }
-            return message;
-        };
-
-        /**
-         * Creates a plain object from a RobotCommands message. Also converts values to other types if specified.
-         * @function toObject
-         * @memberof proto.RobotCommands
-         * @static
-         * @param {proto.RobotCommands} message RobotCommands
-         * @param {$protobuf.IConversionOptions} [options] Conversion options
-         * @returns {Object.<string,*>} Plain object
-         */
-        RobotCommands.toObject = function toObject(message, options) {
-            if (!options)
-                options = {};
-            let object = {};
-            if (options.arrays || options.defaults)
-                object.robotCommands = [];
-            if (message.robotCommands && message.robotCommands.length) {
-                object.robotCommands = [];
-                for (let j = 0; j < message.robotCommands.length; ++j)
-                    object.robotCommands[j] = $root.proto.RobotCommand.toObject(message.robotCommands[j], options);
-            }
-            return object;
-        };
-
-        /**
-         * Converts this RobotCommands to JSON.
-         * @function toJSON
-         * @memberof proto.RobotCommands
-         * @instance
-         * @returns {Object.<string,*>} JSON object
-         */
-        RobotCommands.prototype.toJSON = function toJSON() {
-            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
-        };
-
-        /**
-         * Gets the default type url for RobotCommands
-         * @function getTypeUrl
-         * @memberof proto.RobotCommands
-         * @static
-         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-         * @returns {string} The default type url
-         */
-        RobotCommands.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
-            if (typeUrlPrefix === undefined) {
-                typeUrlPrefix = "type.googleapis.com";
-            }
-            return typeUrlPrefix + "/proto.RobotCommands";
-        };
-
-        return RobotCommands;
     })();
 
     proto.RoboCup2014Legacy = (function() {
@@ -30199,6 +30640,773 @@ export const proto = $root.proto = (() => {
         })();
 
         return RoboCup2014Legacy;
+    })();
+
+    proto.RobotCommand = (function() {
+
+        /**
+         * Properties of a RobotCommand.
+         * @memberof proto
+         * @interface IRobotCommand
+         * @property {number|null} [id] RobotCommand id
+         * @property {number|null} [velocityX] RobotCommand velocityX
+         * @property {number|null} [velocityY] RobotCommand velocityY
+         * @property {number|null} [yaw] RobotCommand yaw
+         * @property {number|null} [angularVelocity] RobotCommand angularVelocity
+         * @property {boolean|null} [useAngularVelocity] RobotCommand useAngularVelocity
+         * @property {number|null} [cameraYawOfRobot] RobotCommand cameraYawOfRobot
+         * @property {boolean|null} [cameraYawOfRobotIsSet] RobotCommand cameraYawOfRobotIsSet
+         * @property {number|null} [kickSpeed] RobotCommand kickSpeed
+         * @property {boolean|null} [waitForBall] RobotCommand waitForBall
+         * @property {boolean|null} [kickAtYaw] RobotCommand kickAtYaw
+         * @property {proto.RobotCommand.KickType|null} [kickType] RobotCommand kickType
+         * @property {number|null} [dribblerOn] RobotCommand dribblerOn
+         * @property {boolean|null} [wheelsOff] RobotCommand wheelsOff
+         */
+
+        /**
+         * Constructs a new RobotCommand.
+         * @memberof proto
+         * @classdesc Represents a RobotCommand.
+         * @implements IRobotCommand
+         * @constructor
+         * @param {proto.IRobotCommand=} [properties] Properties to set
+         */
+        function RobotCommand(properties) {
+            if (properties)
+                for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * RobotCommand id.
+         * @member {number} id
+         * @memberof proto.RobotCommand
+         * @instance
+         */
+        RobotCommand.prototype.id = 0;
+
+        /**
+         * RobotCommand velocityX.
+         * @member {number} velocityX
+         * @memberof proto.RobotCommand
+         * @instance
+         */
+        RobotCommand.prototype.velocityX = 0;
+
+        /**
+         * RobotCommand velocityY.
+         * @member {number} velocityY
+         * @memberof proto.RobotCommand
+         * @instance
+         */
+        RobotCommand.prototype.velocityY = 0;
+
+        /**
+         * RobotCommand yaw.
+         * @member {number} yaw
+         * @memberof proto.RobotCommand
+         * @instance
+         */
+        RobotCommand.prototype.yaw = 0;
+
+        /**
+         * RobotCommand angularVelocity.
+         * @member {number} angularVelocity
+         * @memberof proto.RobotCommand
+         * @instance
+         */
+        RobotCommand.prototype.angularVelocity = 0;
+
+        /**
+         * RobotCommand useAngularVelocity.
+         * @member {boolean} useAngularVelocity
+         * @memberof proto.RobotCommand
+         * @instance
+         */
+        RobotCommand.prototype.useAngularVelocity = false;
+
+        /**
+         * RobotCommand cameraYawOfRobot.
+         * @member {number} cameraYawOfRobot
+         * @memberof proto.RobotCommand
+         * @instance
+         */
+        RobotCommand.prototype.cameraYawOfRobot = 0;
+
+        /**
+         * RobotCommand cameraYawOfRobotIsSet.
+         * @member {boolean} cameraYawOfRobotIsSet
+         * @memberof proto.RobotCommand
+         * @instance
+         */
+        RobotCommand.prototype.cameraYawOfRobotIsSet = false;
+
+        /**
+         * RobotCommand kickSpeed.
+         * @member {number} kickSpeed
+         * @memberof proto.RobotCommand
+         * @instance
+         */
+        RobotCommand.prototype.kickSpeed = 0;
+
+        /**
+         * RobotCommand waitForBall.
+         * @member {boolean} waitForBall
+         * @memberof proto.RobotCommand
+         * @instance
+         */
+        RobotCommand.prototype.waitForBall = false;
+
+        /**
+         * RobotCommand kickAtYaw.
+         * @member {boolean} kickAtYaw
+         * @memberof proto.RobotCommand
+         * @instance
+         */
+        RobotCommand.prototype.kickAtYaw = false;
+
+        /**
+         * RobotCommand kickType.
+         * @member {proto.RobotCommand.KickType} kickType
+         * @memberof proto.RobotCommand
+         * @instance
+         */
+        RobotCommand.prototype.kickType = 0;
+
+        /**
+         * RobotCommand dribblerOn.
+         * @member {number} dribblerOn
+         * @memberof proto.RobotCommand
+         * @instance
+         */
+        RobotCommand.prototype.dribblerOn = 0;
+
+        /**
+         * RobotCommand wheelsOff.
+         * @member {boolean} wheelsOff
+         * @memberof proto.RobotCommand
+         * @instance
+         */
+        RobotCommand.prototype.wheelsOff = false;
+
+        /**
+         * Creates a new RobotCommand instance using the specified properties.
+         * @function create
+         * @memberof proto.RobotCommand
+         * @static
+         * @param {proto.IRobotCommand=} [properties] Properties to set
+         * @returns {proto.RobotCommand} RobotCommand instance
+         */
+        RobotCommand.create = function create(properties) {
+            return new RobotCommand(properties);
+        };
+
+        /**
+         * Encodes the specified RobotCommand message. Does not implicitly {@link proto.RobotCommand.verify|verify} messages.
+         * @function encode
+         * @memberof proto.RobotCommand
+         * @static
+         * @param {proto.IRobotCommand} message RobotCommand message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        RobotCommand.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.id != null && Object.hasOwnProperty.call(message, "id"))
+                writer.uint32(/* id 1, wireType 0 =*/8).int32(message.id);
+            if (message.velocityX != null && Object.hasOwnProperty.call(message, "velocityX"))
+                writer.uint32(/* id 2, wireType 1 =*/17).double(message.velocityX);
+            if (message.velocityY != null && Object.hasOwnProperty.call(message, "velocityY"))
+                writer.uint32(/* id 3, wireType 1 =*/25).double(message.velocityY);
+            if (message.yaw != null && Object.hasOwnProperty.call(message, "yaw"))
+                writer.uint32(/* id 4, wireType 1 =*/33).double(message.yaw);
+            if (message.angularVelocity != null && Object.hasOwnProperty.call(message, "angularVelocity"))
+                writer.uint32(/* id 5, wireType 1 =*/41).double(message.angularVelocity);
+            if (message.useAngularVelocity != null && Object.hasOwnProperty.call(message, "useAngularVelocity"))
+                writer.uint32(/* id 6, wireType 0 =*/48).bool(message.useAngularVelocity);
+            if (message.cameraYawOfRobot != null && Object.hasOwnProperty.call(message, "cameraYawOfRobot"))
+                writer.uint32(/* id 7, wireType 1 =*/57).double(message.cameraYawOfRobot);
+            if (message.cameraYawOfRobotIsSet != null && Object.hasOwnProperty.call(message, "cameraYawOfRobotIsSet"))
+                writer.uint32(/* id 8, wireType 0 =*/64).bool(message.cameraYawOfRobotIsSet);
+            if (message.kickSpeed != null && Object.hasOwnProperty.call(message, "kickSpeed"))
+                writer.uint32(/* id 9, wireType 1 =*/73).double(message.kickSpeed);
+            if (message.waitForBall != null && Object.hasOwnProperty.call(message, "waitForBall"))
+                writer.uint32(/* id 10, wireType 0 =*/80).bool(message.waitForBall);
+            if (message.kickAtYaw != null && Object.hasOwnProperty.call(message, "kickAtYaw"))
+                writer.uint32(/* id 11, wireType 0 =*/88).bool(message.kickAtYaw);
+            if (message.kickType != null && Object.hasOwnProperty.call(message, "kickType"))
+                writer.uint32(/* id 12, wireType 0 =*/96).int32(message.kickType);
+            if (message.dribblerOn != null && Object.hasOwnProperty.call(message, "dribblerOn"))
+                writer.uint32(/* id 13, wireType 1 =*/105).double(message.dribblerOn);
+            if (message.wheelsOff != null && Object.hasOwnProperty.call(message, "wheelsOff"))
+                writer.uint32(/* id 14, wireType 0 =*/112).bool(message.wheelsOff);
+            return writer;
+        };
+
+        /**
+         * Encodes the specified RobotCommand message, length delimited. Does not implicitly {@link proto.RobotCommand.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof proto.RobotCommand
+         * @static
+         * @param {proto.IRobotCommand} message RobotCommand message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        RobotCommand.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a RobotCommand message from the specified reader or buffer.
+         * @function decode
+         * @memberof proto.RobotCommand
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {proto.RobotCommand} RobotCommand
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        RobotCommand.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            let end = length === undefined ? reader.len : reader.pos + length, message = new $root.proto.RobotCommand();
+            while (reader.pos < end) {
+                let tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1: {
+                        message.id = reader.int32();
+                        break;
+                    }
+                case 2: {
+                        message.velocityX = reader.double();
+                        break;
+                    }
+                case 3: {
+                        message.velocityY = reader.double();
+                        break;
+                    }
+                case 4: {
+                        message.yaw = reader.double();
+                        break;
+                    }
+                case 5: {
+                        message.angularVelocity = reader.double();
+                        break;
+                    }
+                case 6: {
+                        message.useAngularVelocity = reader.bool();
+                        break;
+                    }
+                case 7: {
+                        message.cameraYawOfRobot = reader.double();
+                        break;
+                    }
+                case 8: {
+                        message.cameraYawOfRobotIsSet = reader.bool();
+                        break;
+                    }
+                case 9: {
+                        message.kickSpeed = reader.double();
+                        break;
+                    }
+                case 10: {
+                        message.waitForBall = reader.bool();
+                        break;
+                    }
+                case 11: {
+                        message.kickAtYaw = reader.bool();
+                        break;
+                    }
+                case 12: {
+                        message.kickType = reader.int32();
+                        break;
+                    }
+                case 13: {
+                        message.dribblerOn = reader.double();
+                        break;
+                    }
+                case 14: {
+                        message.wheelsOff = reader.bool();
+                        break;
+                    }
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Decodes a RobotCommand message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof proto.RobotCommand
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {proto.RobotCommand} RobotCommand
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        RobotCommand.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a RobotCommand message.
+         * @function verify
+         * @memberof proto.RobotCommand
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        RobotCommand.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (message.id != null && message.hasOwnProperty("id"))
+                if (!$util.isInteger(message.id))
+                    return "id: integer expected";
+            if (message.velocityX != null && message.hasOwnProperty("velocityX"))
+                if (typeof message.velocityX !== "number")
+                    return "velocityX: number expected";
+            if (message.velocityY != null && message.hasOwnProperty("velocityY"))
+                if (typeof message.velocityY !== "number")
+                    return "velocityY: number expected";
+            if (message.yaw != null && message.hasOwnProperty("yaw"))
+                if (typeof message.yaw !== "number")
+                    return "yaw: number expected";
+            if (message.angularVelocity != null && message.hasOwnProperty("angularVelocity"))
+                if (typeof message.angularVelocity !== "number")
+                    return "angularVelocity: number expected";
+            if (message.useAngularVelocity != null && message.hasOwnProperty("useAngularVelocity"))
+                if (typeof message.useAngularVelocity !== "boolean")
+                    return "useAngularVelocity: boolean expected";
+            if (message.cameraYawOfRobot != null && message.hasOwnProperty("cameraYawOfRobot"))
+                if (typeof message.cameraYawOfRobot !== "number")
+                    return "cameraYawOfRobot: number expected";
+            if (message.cameraYawOfRobotIsSet != null && message.hasOwnProperty("cameraYawOfRobotIsSet"))
+                if (typeof message.cameraYawOfRobotIsSet !== "boolean")
+                    return "cameraYawOfRobotIsSet: boolean expected";
+            if (message.kickSpeed != null && message.hasOwnProperty("kickSpeed"))
+                if (typeof message.kickSpeed !== "number")
+                    return "kickSpeed: number expected";
+            if (message.waitForBall != null && message.hasOwnProperty("waitForBall"))
+                if (typeof message.waitForBall !== "boolean")
+                    return "waitForBall: boolean expected";
+            if (message.kickAtYaw != null && message.hasOwnProperty("kickAtYaw"))
+                if (typeof message.kickAtYaw !== "boolean")
+                    return "kickAtYaw: boolean expected";
+            if (message.kickType != null && message.hasOwnProperty("kickType"))
+                switch (message.kickType) {
+                default:
+                    return "kickType: enum value expected";
+                case 0:
+                case 1:
+                case 2:
+                    break;
+                }
+            if (message.dribblerOn != null && message.hasOwnProperty("dribblerOn"))
+                if (typeof message.dribblerOn !== "number")
+                    return "dribblerOn: number expected";
+            if (message.wheelsOff != null && message.hasOwnProperty("wheelsOff"))
+                if (typeof message.wheelsOff !== "boolean")
+                    return "wheelsOff: boolean expected";
+            return null;
+        };
+
+        /**
+         * Creates a RobotCommand message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof proto.RobotCommand
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {proto.RobotCommand} RobotCommand
+         */
+        RobotCommand.fromObject = function fromObject(object) {
+            if (object instanceof $root.proto.RobotCommand)
+                return object;
+            let message = new $root.proto.RobotCommand();
+            if (object.id != null)
+                message.id = object.id | 0;
+            if (object.velocityX != null)
+                message.velocityX = Number(object.velocityX);
+            if (object.velocityY != null)
+                message.velocityY = Number(object.velocityY);
+            if (object.yaw != null)
+                message.yaw = Number(object.yaw);
+            if (object.angularVelocity != null)
+                message.angularVelocity = Number(object.angularVelocity);
+            if (object.useAngularVelocity != null)
+                message.useAngularVelocity = Boolean(object.useAngularVelocity);
+            if (object.cameraYawOfRobot != null)
+                message.cameraYawOfRobot = Number(object.cameraYawOfRobot);
+            if (object.cameraYawOfRobotIsSet != null)
+                message.cameraYawOfRobotIsSet = Boolean(object.cameraYawOfRobotIsSet);
+            if (object.kickSpeed != null)
+                message.kickSpeed = Number(object.kickSpeed);
+            if (object.waitForBall != null)
+                message.waitForBall = Boolean(object.waitForBall);
+            if (object.kickAtYaw != null)
+                message.kickAtYaw = Boolean(object.kickAtYaw);
+            switch (object.kickType) {
+            default:
+                if (typeof object.kickType === "number") {
+                    message.kickType = object.kickType;
+                    break;
+                }
+                break;
+            case "NO_KICK":
+            case 0:
+                message.kickType = 0;
+                break;
+            case "KICK":
+            case 1:
+                message.kickType = 1;
+                break;
+            case "CHIP":
+            case 2:
+                message.kickType = 2;
+                break;
+            }
+            if (object.dribblerOn != null)
+                message.dribblerOn = Number(object.dribblerOn);
+            if (object.wheelsOff != null)
+                message.wheelsOff = Boolean(object.wheelsOff);
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a RobotCommand message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof proto.RobotCommand
+         * @static
+         * @param {proto.RobotCommand} message RobotCommand
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        RobotCommand.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            let object = {};
+            if (options.defaults) {
+                object.id = 0;
+                object.velocityX = 0;
+                object.velocityY = 0;
+                object.yaw = 0;
+                object.angularVelocity = 0;
+                object.useAngularVelocity = false;
+                object.cameraYawOfRobot = 0;
+                object.cameraYawOfRobotIsSet = false;
+                object.kickSpeed = 0;
+                object.waitForBall = false;
+                object.kickAtYaw = false;
+                object.kickType = options.enums === String ? "NO_KICK" : 0;
+                object.dribblerOn = 0;
+                object.wheelsOff = false;
+            }
+            if (message.id != null && message.hasOwnProperty("id"))
+                object.id = message.id;
+            if (message.velocityX != null && message.hasOwnProperty("velocityX"))
+                object.velocityX = options.json && !isFinite(message.velocityX) ? String(message.velocityX) : message.velocityX;
+            if (message.velocityY != null && message.hasOwnProperty("velocityY"))
+                object.velocityY = options.json && !isFinite(message.velocityY) ? String(message.velocityY) : message.velocityY;
+            if (message.yaw != null && message.hasOwnProperty("yaw"))
+                object.yaw = options.json && !isFinite(message.yaw) ? String(message.yaw) : message.yaw;
+            if (message.angularVelocity != null && message.hasOwnProperty("angularVelocity"))
+                object.angularVelocity = options.json && !isFinite(message.angularVelocity) ? String(message.angularVelocity) : message.angularVelocity;
+            if (message.useAngularVelocity != null && message.hasOwnProperty("useAngularVelocity"))
+                object.useAngularVelocity = message.useAngularVelocity;
+            if (message.cameraYawOfRobot != null && message.hasOwnProperty("cameraYawOfRobot"))
+                object.cameraYawOfRobot = options.json && !isFinite(message.cameraYawOfRobot) ? String(message.cameraYawOfRobot) : message.cameraYawOfRobot;
+            if (message.cameraYawOfRobotIsSet != null && message.hasOwnProperty("cameraYawOfRobotIsSet"))
+                object.cameraYawOfRobotIsSet = message.cameraYawOfRobotIsSet;
+            if (message.kickSpeed != null && message.hasOwnProperty("kickSpeed"))
+                object.kickSpeed = options.json && !isFinite(message.kickSpeed) ? String(message.kickSpeed) : message.kickSpeed;
+            if (message.waitForBall != null && message.hasOwnProperty("waitForBall"))
+                object.waitForBall = message.waitForBall;
+            if (message.kickAtYaw != null && message.hasOwnProperty("kickAtYaw"))
+                object.kickAtYaw = message.kickAtYaw;
+            if (message.kickType != null && message.hasOwnProperty("kickType"))
+                object.kickType = options.enums === String ? $root.proto.RobotCommand.KickType[message.kickType] === undefined ? message.kickType : $root.proto.RobotCommand.KickType[message.kickType] : message.kickType;
+            if (message.dribblerOn != null && message.hasOwnProperty("dribblerOn"))
+                object.dribblerOn = options.json && !isFinite(message.dribblerOn) ? String(message.dribblerOn) : message.dribblerOn;
+            if (message.wheelsOff != null && message.hasOwnProperty("wheelsOff"))
+                object.wheelsOff = message.wheelsOff;
+            return object;
+        };
+
+        /**
+         * Converts this RobotCommand to JSON.
+         * @function toJSON
+         * @memberof proto.RobotCommand
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        RobotCommand.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        /**
+         * Gets the default type url for RobotCommand
+         * @function getTypeUrl
+         * @memberof proto.RobotCommand
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        RobotCommand.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/proto.RobotCommand";
+        };
+
+        /**
+         * KickType enum.
+         * @name proto.RobotCommand.KickType
+         * @enum {number}
+         * @property {number} NO_KICK=0 NO_KICK value
+         * @property {number} KICK=1 KICK value
+         * @property {number} CHIP=2 CHIP value
+         */
+        RobotCommand.KickType = (function() {
+            const valuesById = {}, values = Object.create(valuesById);
+            values[valuesById[0] = "NO_KICK"] = 0;
+            values[valuesById[1] = "KICK"] = 1;
+            values[valuesById[2] = "CHIP"] = 2;
+            return values;
+        })();
+
+        return RobotCommand;
+    })();
+
+    proto.RobotCommands = (function() {
+
+        /**
+         * Properties of a RobotCommands.
+         * @memberof proto
+         * @interface IRobotCommands
+         * @property {Array.<proto.IRobotCommand>|null} [robotCommands] RobotCommands robotCommands
+         */
+
+        /**
+         * Constructs a new RobotCommands.
+         * @memberof proto
+         * @classdesc Represents a RobotCommands.
+         * @implements IRobotCommands
+         * @constructor
+         * @param {proto.IRobotCommands=} [properties] Properties to set
+         */
+        function RobotCommands(properties) {
+            this.robotCommands = [];
+            if (properties)
+                for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * RobotCommands robotCommands.
+         * @member {Array.<proto.IRobotCommand>} robotCommands
+         * @memberof proto.RobotCommands
+         * @instance
+         */
+        RobotCommands.prototype.robotCommands = $util.emptyArray;
+
+        /**
+         * Creates a new RobotCommands instance using the specified properties.
+         * @function create
+         * @memberof proto.RobotCommands
+         * @static
+         * @param {proto.IRobotCommands=} [properties] Properties to set
+         * @returns {proto.RobotCommands} RobotCommands instance
+         */
+        RobotCommands.create = function create(properties) {
+            return new RobotCommands(properties);
+        };
+
+        /**
+         * Encodes the specified RobotCommands message. Does not implicitly {@link proto.RobotCommands.verify|verify} messages.
+         * @function encode
+         * @memberof proto.RobotCommands
+         * @static
+         * @param {proto.IRobotCommands} message RobotCommands message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        RobotCommands.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.robotCommands != null && message.robotCommands.length)
+                for (let i = 0; i < message.robotCommands.length; ++i)
+                    $root.proto.RobotCommand.encode(message.robotCommands[i], writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+            return writer;
+        };
+
+        /**
+         * Encodes the specified RobotCommands message, length delimited. Does not implicitly {@link proto.RobotCommands.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof proto.RobotCommands
+         * @static
+         * @param {proto.IRobotCommands} message RobotCommands message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        RobotCommands.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a RobotCommands message from the specified reader or buffer.
+         * @function decode
+         * @memberof proto.RobotCommands
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {proto.RobotCommands} RobotCommands
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        RobotCommands.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            let end = length === undefined ? reader.len : reader.pos + length, message = new $root.proto.RobotCommands();
+            while (reader.pos < end) {
+                let tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1: {
+                        if (!(message.robotCommands && message.robotCommands.length))
+                            message.robotCommands = [];
+                        message.robotCommands.push($root.proto.RobotCommand.decode(reader, reader.uint32()));
+                        break;
+                    }
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Decodes a RobotCommands message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof proto.RobotCommands
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {proto.RobotCommands} RobotCommands
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        RobotCommands.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a RobotCommands message.
+         * @function verify
+         * @memberof proto.RobotCommands
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        RobotCommands.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (message.robotCommands != null && message.hasOwnProperty("robotCommands")) {
+                if (!Array.isArray(message.robotCommands))
+                    return "robotCommands: array expected";
+                for (let i = 0; i < message.robotCommands.length; ++i) {
+                    let error = $root.proto.RobotCommand.verify(message.robotCommands[i]);
+                    if (error)
+                        return "robotCommands." + error;
+                }
+            }
+            return null;
+        };
+
+        /**
+         * Creates a RobotCommands message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof proto.RobotCommands
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {proto.RobotCommands} RobotCommands
+         */
+        RobotCommands.fromObject = function fromObject(object) {
+            if (object instanceof $root.proto.RobotCommands)
+                return object;
+            let message = new $root.proto.RobotCommands();
+            if (object.robotCommands) {
+                if (!Array.isArray(object.robotCommands))
+                    throw TypeError(".proto.RobotCommands.robotCommands: array expected");
+                message.robotCommands = [];
+                for (let i = 0; i < object.robotCommands.length; ++i) {
+                    if (typeof object.robotCommands[i] !== "object")
+                        throw TypeError(".proto.RobotCommands.robotCommands: object expected");
+                    message.robotCommands[i] = $root.proto.RobotCommand.fromObject(object.robotCommands[i]);
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a RobotCommands message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof proto.RobotCommands
+         * @static
+         * @param {proto.RobotCommands} message RobotCommands
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        RobotCommands.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            let object = {};
+            if (options.arrays || options.defaults)
+                object.robotCommands = [];
+            if (message.robotCommands && message.robotCommands.length) {
+                object.robotCommands = [];
+                for (let j = 0; j < message.robotCommands.length; ++j)
+                    object.robotCommands[j] = $root.proto.RobotCommand.toObject(message.robotCommands[j], options);
+            }
+            return object;
+        };
+
+        /**
+         * Converts this RobotCommands to JSON.
+         * @function toJSON
+         * @memberof proto.RobotCommands
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        RobotCommands.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        /**
+         * Gets the default type url for RobotCommands
+         * @function getTypeUrl
+         * @memberof proto.RobotCommands
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        RobotCommands.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/proto.RobotCommands";
+        };
+
+        return RobotCommands;
     })();
 
     return proto;
@@ -34633,6 +35841,12 @@ export const SSL_GeometryFieldSize = $root.SSL_GeometryFieldSize = (() => {
      * @property {Array.<ISSL_FieldCircularArc>|null} [fieldArcs] SSL_GeometryFieldSize fieldArcs
      * @property {number|null} [penaltyAreaDepth] SSL_GeometryFieldSize penaltyAreaDepth
      * @property {number|null} [penaltyAreaWidth] SSL_GeometryFieldSize penaltyAreaWidth
+     * @property {number|null} [centerCircleRadius] SSL_GeometryFieldSize centerCircleRadius
+     * @property {number|null} [lineThickness] SSL_GeometryFieldSize lineThickness
+     * @property {number|null} [goalCenterToPenaltyMark] SSL_GeometryFieldSize goalCenterToPenaltyMark
+     * @property {number|null} [goalHeight] SSL_GeometryFieldSize goalHeight
+     * @property {number|null} [ballRadius] SSL_GeometryFieldSize ballRadius
+     * @property {number|null} [maxRobotRadius] SSL_GeometryFieldSize maxRobotRadius
      */
 
     /**
@@ -34725,6 +35939,54 @@ export const SSL_GeometryFieldSize = $root.SSL_GeometryFieldSize = (() => {
     SSL_GeometryFieldSize.prototype.penaltyAreaWidth = 0;
 
     /**
+     * SSL_GeometryFieldSize centerCircleRadius.
+     * @member {number} centerCircleRadius
+     * @memberof SSL_GeometryFieldSize
+     * @instance
+     */
+    SSL_GeometryFieldSize.prototype.centerCircleRadius = 0;
+
+    /**
+     * SSL_GeometryFieldSize lineThickness.
+     * @member {number} lineThickness
+     * @memberof SSL_GeometryFieldSize
+     * @instance
+     */
+    SSL_GeometryFieldSize.prototype.lineThickness = 0;
+
+    /**
+     * SSL_GeometryFieldSize goalCenterToPenaltyMark.
+     * @member {number} goalCenterToPenaltyMark
+     * @memberof SSL_GeometryFieldSize
+     * @instance
+     */
+    SSL_GeometryFieldSize.prototype.goalCenterToPenaltyMark = 0;
+
+    /**
+     * SSL_GeometryFieldSize goalHeight.
+     * @member {number} goalHeight
+     * @memberof SSL_GeometryFieldSize
+     * @instance
+     */
+    SSL_GeometryFieldSize.prototype.goalHeight = 0;
+
+    /**
+     * SSL_GeometryFieldSize ballRadius.
+     * @member {number} ballRadius
+     * @memberof SSL_GeometryFieldSize
+     * @instance
+     */
+    SSL_GeometryFieldSize.prototype.ballRadius = 0;
+
+    /**
+     * SSL_GeometryFieldSize maxRobotRadius.
+     * @member {number} maxRobotRadius
+     * @memberof SSL_GeometryFieldSize
+     * @instance
+     */
+    SSL_GeometryFieldSize.prototype.maxRobotRadius = 0;
+
+    /**
      * Creates a new SSL_GeometryFieldSize instance using the specified properties.
      * @function create
      * @memberof SSL_GeometryFieldSize
@@ -34763,6 +36025,18 @@ export const SSL_GeometryFieldSize = $root.SSL_GeometryFieldSize = (() => {
             writer.uint32(/* id 8, wireType 0 =*/64).int32(message.penaltyAreaDepth);
         if (message.penaltyAreaWidth != null && Object.hasOwnProperty.call(message, "penaltyAreaWidth"))
             writer.uint32(/* id 9, wireType 0 =*/72).int32(message.penaltyAreaWidth);
+        if (message.centerCircleRadius != null && Object.hasOwnProperty.call(message, "centerCircleRadius"))
+            writer.uint32(/* id 10, wireType 0 =*/80).int32(message.centerCircleRadius);
+        if (message.lineThickness != null && Object.hasOwnProperty.call(message, "lineThickness"))
+            writer.uint32(/* id 11, wireType 0 =*/88).int32(message.lineThickness);
+        if (message.goalCenterToPenaltyMark != null && Object.hasOwnProperty.call(message, "goalCenterToPenaltyMark"))
+            writer.uint32(/* id 12, wireType 0 =*/96).int32(message.goalCenterToPenaltyMark);
+        if (message.goalHeight != null && Object.hasOwnProperty.call(message, "goalHeight"))
+            writer.uint32(/* id 13, wireType 0 =*/104).int32(message.goalHeight);
+        if (message.ballRadius != null && Object.hasOwnProperty.call(message, "ballRadius"))
+            writer.uint32(/* id 14, wireType 5 =*/117).float(message.ballRadius);
+        if (message.maxRobotRadius != null && Object.hasOwnProperty.call(message, "maxRobotRadius"))
+            writer.uint32(/* id 15, wireType 5 =*/125).float(message.maxRobotRadius);
         return writer;
     };
 
@@ -34835,6 +36109,30 @@ export const SSL_GeometryFieldSize = $root.SSL_GeometryFieldSize = (() => {
                 }
             case 9: {
                     message.penaltyAreaWidth = reader.int32();
+                    break;
+                }
+            case 10: {
+                    message.centerCircleRadius = reader.int32();
+                    break;
+                }
+            case 11: {
+                    message.lineThickness = reader.int32();
+                    break;
+                }
+            case 12: {
+                    message.goalCenterToPenaltyMark = reader.int32();
+                    break;
+                }
+            case 13: {
+                    message.goalHeight = reader.int32();
+                    break;
+                }
+            case 14: {
+                    message.ballRadius = reader.float();
+                    break;
+                }
+            case 15: {
+                    message.maxRobotRadius = reader.float();
                     break;
                 }
             default:
@@ -34916,6 +36214,24 @@ export const SSL_GeometryFieldSize = $root.SSL_GeometryFieldSize = (() => {
         if (message.penaltyAreaWidth != null && message.hasOwnProperty("penaltyAreaWidth"))
             if (!$util.isInteger(message.penaltyAreaWidth))
                 return "penaltyAreaWidth: integer expected";
+        if (message.centerCircleRadius != null && message.hasOwnProperty("centerCircleRadius"))
+            if (!$util.isInteger(message.centerCircleRadius))
+                return "centerCircleRadius: integer expected";
+        if (message.lineThickness != null && message.hasOwnProperty("lineThickness"))
+            if (!$util.isInteger(message.lineThickness))
+                return "lineThickness: integer expected";
+        if (message.goalCenterToPenaltyMark != null && message.hasOwnProperty("goalCenterToPenaltyMark"))
+            if (!$util.isInteger(message.goalCenterToPenaltyMark))
+                return "goalCenterToPenaltyMark: integer expected";
+        if (message.goalHeight != null && message.hasOwnProperty("goalHeight"))
+            if (!$util.isInteger(message.goalHeight))
+                return "goalHeight: integer expected";
+        if (message.ballRadius != null && message.hasOwnProperty("ballRadius"))
+            if (typeof message.ballRadius !== "number")
+                return "ballRadius: number expected";
+        if (message.maxRobotRadius != null && message.hasOwnProperty("maxRobotRadius"))
+            if (typeof message.maxRobotRadius !== "number")
+                return "maxRobotRadius: number expected";
         return null;
     };
 
@@ -34965,6 +36281,18 @@ export const SSL_GeometryFieldSize = $root.SSL_GeometryFieldSize = (() => {
             message.penaltyAreaDepth = object.penaltyAreaDepth | 0;
         if (object.penaltyAreaWidth != null)
             message.penaltyAreaWidth = object.penaltyAreaWidth | 0;
+        if (object.centerCircleRadius != null)
+            message.centerCircleRadius = object.centerCircleRadius | 0;
+        if (object.lineThickness != null)
+            message.lineThickness = object.lineThickness | 0;
+        if (object.goalCenterToPenaltyMark != null)
+            message.goalCenterToPenaltyMark = object.goalCenterToPenaltyMark | 0;
+        if (object.goalHeight != null)
+            message.goalHeight = object.goalHeight | 0;
+        if (object.ballRadius != null)
+            message.ballRadius = Number(object.ballRadius);
+        if (object.maxRobotRadius != null)
+            message.maxRobotRadius = Number(object.maxRobotRadius);
         return message;
     };
 
@@ -34993,6 +36321,12 @@ export const SSL_GeometryFieldSize = $root.SSL_GeometryFieldSize = (() => {
             object.boundaryWidth = 0;
             object.penaltyAreaDepth = 0;
             object.penaltyAreaWidth = 0;
+            object.centerCircleRadius = 0;
+            object.lineThickness = 0;
+            object.goalCenterToPenaltyMark = 0;
+            object.goalHeight = 0;
+            object.ballRadius = 0;
+            object.maxRobotRadius = 0;
         }
         if (message.fieldLength != null && message.hasOwnProperty("fieldLength"))
             object.fieldLength = message.fieldLength;
@@ -35018,6 +36352,18 @@ export const SSL_GeometryFieldSize = $root.SSL_GeometryFieldSize = (() => {
             object.penaltyAreaDepth = message.penaltyAreaDepth;
         if (message.penaltyAreaWidth != null && message.hasOwnProperty("penaltyAreaWidth"))
             object.penaltyAreaWidth = message.penaltyAreaWidth;
+        if (message.centerCircleRadius != null && message.hasOwnProperty("centerCircleRadius"))
+            object.centerCircleRadius = message.centerCircleRadius;
+        if (message.lineThickness != null && message.hasOwnProperty("lineThickness"))
+            object.lineThickness = message.lineThickness;
+        if (message.goalCenterToPenaltyMark != null && message.hasOwnProperty("goalCenterToPenaltyMark"))
+            object.goalCenterToPenaltyMark = message.goalCenterToPenaltyMark;
+        if (message.goalHeight != null && message.hasOwnProperty("goalHeight"))
+            object.goalHeight = message.goalHeight;
+        if (message.ballRadius != null && message.hasOwnProperty("ballRadius"))
+            object.ballRadius = options.json && !isFinite(message.ballRadius) ? String(message.ballRadius) : message.ballRadius;
+        if (message.maxRobotRadius != null && message.hasOwnProperty("maxRobotRadius"))
+            object.maxRobotRadius = options.json && !isFinite(message.maxRobotRadius) ? String(message.maxRobotRadius) : message.maxRobotRadius;
         return object;
     };
 

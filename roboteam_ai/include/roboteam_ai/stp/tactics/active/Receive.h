@@ -51,7 +51,7 @@ class Receive : public Tactic {
     const char *getName() override;
 
     /**
-     * @brief Calculates the angle the robot needs to have using the ball position
+     * @brief Calculates the yaw the robot needs to have using the ball position
      * @param robot
      * @param ball
      * @return Angle the robot should take

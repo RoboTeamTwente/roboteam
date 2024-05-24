@@ -11,7 +11,6 @@ using namespace rtt::net;
 
 constexpr int MAX_AMOUNT_OF_ROBOTS = 16;
 constexpr float MAX_ANGULAR_VELOCITY = 2.0f;
-constexpr float MAX_DRIBBLER_SPEED = 100;
 constexpr float MAX_VELOCITY = 1.0f;
 constexpr int COMMAND_TRANSMISSION_INTERVAL_MS = 100;
 constexpr int SETTINGS_TRANSMISSION_INTERVAL_MS = 1000;
@@ -46,7 +45,7 @@ Movement currentMovement = Movement::STILL;
 int targetRobotID = 0;
 bool targetAllRobotIDs = false;
 rtt::Vector2 targetVelocity(0, 0);
-rtt::Angle targetAngle(0.0);
+rtt::Angle yaw(0.0);
 double targetAngularVelocity = 0.0;
 bool useDribbler = false;
 bool useAngularVelocity = false;
@@ -57,13 +56,13 @@ void updateCommandValues() {
     auto timeSinceLastCommand = static_cast<double>(timeSinceLastCommandMS) / 1000;
 
     if (currentRotation == Rotation::LEFT_ROTATION) {
-        targetAngle = rtt::Angle(timeSinceLastCommand * MAX_ANGULAR_VELOCITY);
+        yaw = rtt::Angle(timeSinceLastCommand * MAX_ANGULAR_VELOCITY);
         targetAngularVelocity = MAX_ANGULAR_VELOCITY;
     } else if (currentRotation == Rotation::RIGHT_ROTATION) {
-        targetAngle = rtt::Angle(timeSinceLastCommand * MAX_ANGULAR_VELOCITY * -1);
+        yaw = rtt::Angle(timeSinceLastCommand * MAX_ANGULAR_VELOCITY * -1);
         targetAngularVelocity = -MAX_ANGULAR_VELOCITY;
     } else {
-        targetAngle = rtt::Angle(0.0);
+        yaw = rtt::Angle(0.0);
         targetAngularVelocity = 0.0;
     }
 
@@ -88,20 +87,20 @@ void updateCommandValues() {
 rtt::RobotCommand createCommandForRobot(int id) {
     rtt::RobotCommand cmd = {.id = id,
                              .velocity = targetVelocity,
-                             .targetAngle = targetAngle,
+                             .yaw = yaw,
                              .targetAngularVelocity = targetAngularVelocity,
                              .useAngularVelocity = useAngularVelocity,
 
-                             .cameraAngleOfRobot = 0.0,
-                             .cameraAngleOfRobotIsSet = false,
+                             .cameraYawOfRobot = 0.0,
+                             .cameraYawOfRobotIsSet = false,
 
                              .kickSpeed = 0.0,
                              .waitForBall = false,
                              .kickType = rtt::KickType::NO_KICK,
 
-                             .dribblerSpeed = useDribbler ? MAX_DRIBBLER_SPEED : 0.0f,
+                             .dribblerOn = useDribbler ? MAX_DRIBBLER_SPEED : 0.0f,
 
-                             .ignorePacket = false};
+                             .wheelsOff = false};
     return cmd;
 }
 
@@ -322,7 +321,7 @@ std::string currentMovementToString() {
     }
 }
 std::string currentRotationToString() {
-    std::string method = useAngularVelocity ? "in angular velocity" : "in absolute angles";
+    std::string method = useAngularVelocity ? "in angular velocity" : "in absolute yaws";
 
     switch (currentRotation) {
         case Rotation::NO_ROTATION:

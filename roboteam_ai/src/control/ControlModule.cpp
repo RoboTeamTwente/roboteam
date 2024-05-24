@@ -12,7 +12,7 @@ namespace rtt::ai::control {
 void ControlModule::rotateRobotCommand(rtt::RobotCommand& command) {
     command.velocity.x = -command.velocity.x;
     command.velocity.y = -command.velocity.y;
-    command.targetAngle += M_PI;
+    command.yaw += M_PI;
 }
 
 void ControlModule::limitRobotCommand(rtt::RobotCommand& command, rtt::world::view::RobotView robot) {
@@ -25,26 +25,26 @@ void ControlModule::limitVel(rtt::RobotCommand& command) {
 }
 
 void ControlModule::limitAngularVel(rtt::RobotCommand& command, rtt::world::view::RobotView robot) {
-    // Limit the angular velocity when the robot has the ball by setting the target angle in small steps
+    // Limit the angular velocity when the robot has the ball by setting the target yaw in small steps
     if (robot->hasBall() && !command.useAngularVelocity) {
-        auto targetAngle = command.targetAngle;
-        auto robotAngle = robot->getAngle();
+        auto yaw = command.yaw;
+        auto robotYaw = robot->getYaw();
 
-        // Adjust robot angle if game is not on the left
+        // Adjust robot yaw if game is not on the left
         if (!GameSettings::isLeft()) {
-            robotAngle += M_PI;
+            robotYaw += M_PI;
         }
 
-        // If the angle error is larger than the desired angle rate, adjust the angle command
-        if (robotAngle.shortestAngleDiff(targetAngle) > stp::control_constants::ANGLE_RATE) {
+        // If the yaw error is larger than the desired yaw rate, adjust the yaw command
+        if (robotYaw.shortestAngleDiff(yaw) > stp::control_constants::YAW_RATE) {
             // Determine direction of rotation (shortest distance)
-            int direction = Angle(robotAngle).rotateDirection(targetAngle) ? 1 : -1;
+            int direction = Angle(robotYaw).rotateDirection(yaw) ? 1 : -1;
 
-            // Set the angle command to the current robot angle + the angle rate
-            command.targetAngle = robotAngle + Angle(direction * stp::control_constants::ANGLE_RATE);
+            // Set the yaw command to the current robot yaw + the yaw rate
+            command.yaw = robotYaw + Angle(direction * stp::control_constants::YAW_RATE);
         }
     }
-    // TODO: Well, then also limit the target angular velocity just like target angle!
+    // TODO: Well, then also limit the target angular velocity just like target yaw!
 }
 
 void ControlModule::addRobotCommand(std::optional<::rtt::world::view::RobotView> robot, rtt::RobotCommand command) noexcept {
@@ -69,14 +69,14 @@ void ControlModule::addRobotCommand(std::optional<::rtt::world::view::RobotView>
 void ControlModule::simulator_angular_control(const std::optional<::rtt::world::view::RobotView>& robot, rtt::RobotCommand& robot_command) {
     double ang_velocity_out = 0.0;  // in case there is no robot visible, we just adjust the command to not have any angular velocity
     if (robot) {
-        Angle current_angle = robot->get()->getAngle();
+        Angle current_yaw = robot->get()->getYaw();
         if (!GameSettings::isLeft()) {
-            current_angle += M_PI;
+            current_yaw += M_PI;
         }
-        Angle target_angle(robot_command.targetAngle);
+        Angle target_yaw(robot_command.yaw);
         // get relevant PID controller
-        if (simulatorAnglePIDmap.contains(robot->get()->getId())) {
-            ang_velocity_out = simulatorAnglePIDmap.at(robot->get()->getId()).getOutput(target_angle, current_angle);
+        if (simulatorYawPIDmap.contains(robot->get()->getId())) {
+            ang_velocity_out = simulatorYawPIDmap.at(robot->get()->getId()).getOutput(target_yaw, current_yaw);
         } else {
             // initialize PID controller for robot
             // below tuning only works ish for erforce, is completely useless in grsim
@@ -86,9 +86,9 @@ void ControlModule::simulator_angular_control(const std::optional<::rtt::world::
             double max_ang_vel = 5.0;  // rad/s
             double dt = 1. / double(Constants::STP_TICK_RATE());
 
-            AnglePID pid(P, I, D, max_ang_vel, dt);
-            ang_velocity_out = pid.getOutput(target_angle, current_angle);
-            simulatorAnglePIDmap.insert({robot->get()->getId(), pid});
+            YawPID pid(P, I, D, max_ang_vel, dt);
+            ang_velocity_out = pid.getOutput(target_yaw, current_yaw);
+            simulatorYawPIDmap.insert({robot->get()->getId(), pid});
         }
     }
     robot_command.useAngularVelocity = true;

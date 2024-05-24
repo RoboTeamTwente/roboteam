@@ -5,7 +5,7 @@
 
 namespace rtt::ai::stp::tactic {
 /**
- * @brief Class that defines the halt tactic. This tactic is used for halting, it rotates the robot to angle 0
+ * @brief Class that defines the halt tactic. This tactic is used for halting, it rotates the robot to yaw 0
  * It cannot fail and reset. It's not an
  * end tactic, therefore it can succeed.
  */

@@ -17,9 +17,7 @@ export const useAIDataStore = defineStore('aiDataStore', () => {
 
   // Getters
   const fieldOrientation = computed(() => {
-    return state.value?.gameSettings?.isLeft
-      ? { x: 1, y: -1, angle: 0 }
-      : { x: -1, y: 1, angle: 180 }
+    return state.value?.gameSettings?.isLeft ? { x: 1, y: -1, yaw: 0 } : { x: -1, y: 1, yaw: 180 }
   })
 
   return {

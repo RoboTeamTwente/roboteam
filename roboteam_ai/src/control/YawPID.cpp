@@ -1,11 +1,11 @@
-#include "control/AnglePID.h"
+#include "control/YawPID.h"
 
 #include <algorithm>
 
-double rtt::AnglePID::getOutput(rtt::Angle target_angle, rtt::Angle current_angle) {
-    // Calculate error; note that crossing the 'border' between two angles
-    double dir = current_angle.rotateDirection(target_angle) ? 1.0 : -1.0;
-    double error = dir * current_angle.shortestAngleDiff(target_angle);
+double rtt::YawPID::getOutput(Angle target_yaw, Angle current_yaw) {
+    // Calculate error; note that crossing the 'border' between two yaws
+    double dir = current_yaw.rotateDirection(target_yaw) ? 1.0 : -1.0;
+    double error = dir * current_yaw.shortestAngleDiff(target_yaw);
 
     // Proportional term
     double Pout = P * error;

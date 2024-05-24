@@ -75,7 +75,7 @@ void FreeKickThem::calculateInfoForHarasser() noexcept {
     auto enemyToBall = (ballPos - enemyClosestToBall->getPos());
     auto targetPos = ballPos + (enemyToBall).stretchToLength(control_constants::AVOID_BALL_DISTANCE);
     stpInfos["harasser"].setPositionToMoveTo(targetPos);
-    stpInfos["harasser"].setAngle(enemyToBall.angle() + M_PI);
+    stpInfos["harasser"].setYaw(enemyToBall.angle() + M_PI);
 }
 
 const char* FreeKickThem::getName() const { return "Free Kick Them"; }

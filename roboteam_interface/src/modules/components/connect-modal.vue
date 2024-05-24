@@ -29,20 +29,20 @@ const props = defineProps<{
         />
         {{ props.status }}
       </span>
-    <form @submit.prevent="() => emit('connect', 'ws://' + url)">
-      <div class="form-control w-full max-w">
-        <label class="label">
-          <span class="label-text">AI InterfaceGateway url</span>
-        </label>
-        <label class="input-group">
-          <span>ws://</span>
-          <input class="input input-bordered w-full" v-model="url" />
-        </label>
-      </div>
-      <div class="form-control w-full max-w">
-        <button class="btn btn-primary w-full" type="submit">Connect</button>
-      </div>
-    </form>
+      <form @submit.prevent="() => emit('connect', 'ws://' + url)">
+        <div class="form-control w-full max-w">
+          <label class="label">
+            <span class="label-text">AI InterfaceGateway url</span>
+          </label>
+          <label class="input-group">
+            <span>ws://</span>
+            <input class="input input-bordered w-full" v-model="url" />
+          </label>
+        </div>
+        <div class="form-control w-full max-w">
+          <button class="btn btn-primary w-full" type="submit">Connect</button>
+        </div>
+      </form>
     </div>
   </div>
 </template>

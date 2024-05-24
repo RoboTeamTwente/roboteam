@@ -13,7 +13,7 @@ RobotShape::RobotShape(const Vector2 &pos, double centerToFront, double radius, 
     Vector2 dribblerCenter = pos + middleToCenter;
     double halfFrontWidth = sqrt(radius * radius - centerToFront * centerToFront);  // Pythagoras
     Vector2 diff = Vector2(-middleToCenter.y, middleToCenter.x).stretchToLength(halfFrontWidth);
-    kickerLine = LineSegment(dribblerCenter - diff, dribblerCenter + diff);  // Lower corner, upper corner (when robot is facing right (e.g. angle = 0))
+    kickerLine = LineSegment(dribblerCenter - diff, dribblerCenter + diff);  // Lower corner, upper corner (when robot is facing right (e.g. yaw = 0))
 }
 
 bool RobotShape::inFrontOfDribbler(const Vector2 &point) const {
@@ -110,7 +110,7 @@ std::vector<Vector2> RobotShape::intersects(const LineSegment &segment) const {
     return {};  // This should never be hit as circle intersection always hits atleast two.
 }
 
-Angle RobotShape::angle() const { return orientation; }
+Angle RobotShape::yaw() const { return orientation; }
 
 Vector2 RobotShape::pos() const { return circle.center; }
 

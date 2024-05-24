@@ -11,7 +11,7 @@ Robot::Robot(const proto::WorldRobot &copy, rtt::world::Team team, std::optional
       team{team},
       pos{copy.pos().x(), copy.pos().y()},
       vel{copy.vel().x(), copy.vel().y()},
-      angle{copy.angle()},
+      yaw{copy.yaw()},
       distanceToBall{-1.0},
       angularVelocity{copy.w()} {
     if (id < 16) {
@@ -22,7 +22,7 @@ Robot::Robot(const proto::WorldRobot &copy, rtt::world::Team team, std::optional
     if (ball.has_value()) {
         setDistanceToBall(pos.dist((*ball)->position));
         auto angleRobotToBall = ((*ball)->position - pos).angle();
-        setAngleDiffToBall(angle.shortestAngleDiff(Angle(angleRobotToBall)));
+        setYawDiffToBall(yaw.shortestAngleDiff(Angle(angleRobotToBall)));
     }
 
     if (team == Team::us) {
@@ -31,7 +31,7 @@ Robot::Robot(const proto::WorldRobot &copy, rtt::world::Team team, std::optional
         }
         updateHasBallMap(ball);
     } else {
-        auto hasBallAccordingToVision = distanceToBall < ai::Constants::HAS_BALL_DISTANCE() && angleDiffToBall < ai::Constants::HAS_BALL_ANGLE();
+        auto hasBallAccordingToVision = distanceToBall < ai::Constants::HAS_BALL_DISTANCE() && yawDiffToBall < ai::Constants::HAS_BALL_ANGLE();
         setHasBall(hasBallAccordingToVision);
     }
 }
@@ -44,9 +44,9 @@ const Vector2 &Robot::getPos() const noexcept { return pos; }
 
 const Vector2 &Robot::getVel() const noexcept { return vel; }
 
-const Angle &Robot::getAngle() const noexcept { return angle; }
+const Angle &Robot::getYaw() const noexcept { return yaw; }
 
-void Robot::setAngle(const Angle &_angle) noexcept { Robot::angle = _angle; }
+void Robot::setYaw(const Angle &_yaw) noexcept { Robot::yaw = _yaw; }
 
 double Robot::getAngularVelocity() const noexcept { return angularVelocity; }
 
@@ -71,15 +71,13 @@ void Robot::setHasBall(bool _hasBall) noexcept { Robot::robotHasBall = _hasBall;
 
 bool Robot::hasBall() const noexcept { return robotHasBall; }
 
-void Robot::setBallPosBallSensor(float _ballPos) noexcept { Robot::ballPos = _ballPos; }
-
 double Robot::getDistanceToBall() const noexcept { return distanceToBall; }
 
 void Robot::setDistanceToBall(double _distanceToBall) noexcept { Robot::distanceToBall = _distanceToBall; }
 
-double Robot::getAngleDiffToBall() const noexcept { return angleDiffToBall; }
+double Robot::getYawDiffToBall() const noexcept { return yawDiffToBall; }
 
-void Robot::setAngleDiffToBall(double _angleDiffToBall) noexcept { Robot::angleDiffToBall = _angleDiffToBall; }
+void Robot::setYawDiffToBall(double _yawDiffToBall) noexcept { Robot::yawDiffToBall = _yawDiffToBall; }
 
 void Robot::updateFromFeedback(const proto::RobotProcessedFeedback &feedback) noexcept {
     // TODO: add processing of more of the fields of feedback
@@ -88,14 +86,13 @@ void Robot::updateFromFeedback(const proto::RobotProcessedFeedback &feedback) no
         setBatteryLow(feedback.battery_level() < 22);  // TODO: Figure out with electronics which value should be considered low
         setBallSensorSeesBall(feedback.ball_sensor_sees_ball());
         setDribblerSeesBall(feedback.dribbler_sees_ball());
-        setBallPosBallSensor(feedback.ball_position());
     }
 }
 
 void Robot::updateHasBallMap(std::optional<view::BallView> &ball) {
     if (!ball) return;
 
-    auto hasBallAccordingToVision = distanceToBall < ai::Constants::HAS_BALL_DISTANCE() && angleDiffToBall < ai::Constants::HAS_BALL_ANGLE();
+    auto hasBallAccordingToVision = distanceToBall < ai::Constants::HAS_BALL_DISTANCE() && yawDiffToBall < ai::Constants::HAS_BALL_ANGLE();
     auto hasBallAccordingToDribblerOrBallSensor = (GameSettings::getRobotHubMode() == net::RobotHubMode::BASESTATION) ? dribblerSeesBall : ballSensorSeesBall;
     if (hasBallAccordingToDribblerOrBallSensor && hasBallAccordingToVision) {
         hasBallUpdateMap[id].score = 25;

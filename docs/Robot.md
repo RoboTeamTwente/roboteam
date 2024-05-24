@@ -15,11 +15,11 @@ The enum Team in [team.hpp](https://github.com/RoboTeamTwente/roboteam_ai/blob/d
 
 `vel` -> Current velocity of the robot
 
-`angle` -> Current angle of the robot
+`yaw` -> Current yaw of the robot
 
 `distanceToBall` -> Distance from the robot to the ball
 
-`angleDiffToBall` -> Angle offset between the kicker and the ball.
+`yawDiffToBall` -> Angle offset between the kicker and the ball.
 
 `angularVelocity` -> Angular velocity of the robot.
 
@@ -32,9 +32,6 @@ The enum Team in [team.hpp](https://github.com/RoboTeamTwente/roboteam_ai/blob/d
 `BallSensorSeesBall` -> True if the ball sensor picks up the ball, false if not.
 
 `DribblerSeesBall` -> True if the dribbler picks up the ball, false if not.
-
-`ballPos` -> Position of the ball (if seesBall == true)
-
 
 ## Functions ## 
 

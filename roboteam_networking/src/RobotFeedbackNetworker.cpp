@@ -55,18 +55,14 @@ proto::RobotsFeedback feedbackToProto(const rtt::RobotsFeedback& robotsFeedback)
         auto protoRobot = protoFeedback.add_robots_feedback();
         protoRobot->set_id(feedback.id);
         protoRobot->set_ball_sensor_sees_ball(feedback.ballSensorSeesBall);
-        protoRobot->set_ball_position(feedback.ballPosition);
         protoRobot->set_ball_sensor_is_working(feedback.ballSensorIsWorking);
         protoRobot->set_dribbler_sees_ball(feedback.dribblerSeesBall);
         protoRobot->set_estimated_velocity_x(feedback.velocity.x);
         protoRobot->set_estimated_velocity_y(feedback.velocity.y);
-        protoRobot->set_estimated_angle(feedback.angle.getValue());
+        protoRobot->set_estimated_yaw(feedback.yaw.getValue());
         protoRobot->set_xsens_is_calibrated(feedback.xSensIsCalibrated);
         protoRobot->set_capacitor_is_charged(feedback.capacitorIsCharged);
-        protoRobot->set_wheels_locked(feedback.wheelLocked);
-        protoRobot->set_wheels_braking(feedback.wheelBraking);
         protoRobot->set_battery_level(feedback.batteryLevel);
-        protoRobot->set_signal_strength(feedback.signalStrength);
     }
 
     return protoFeedback;
@@ -80,17 +76,13 @@ rtt::RobotsFeedback protoFeedbackToRobotsFeedback(const proto::RobotsFeedback& p
     for (const auto& protoFeedback : protoFeedbacks.robots_feedback()) {
         rtt::RobotFeedback feedback = {.id = protoFeedback.id(),
                                        .ballSensorSeesBall = protoFeedback.ball_sensor_sees_ball(),
-                                       .ballPosition = protoFeedback.ball_position(),
                                        .ballSensorIsWorking = protoFeedback.ball_sensor_is_working(),
                                        .dribblerSeesBall = protoFeedback.dribbler_sees_ball(),
                                        .velocity = Vector2(protoFeedback.estimated_velocity_x(), protoFeedback.estimated_velocity_y()),
-                                       .angle = Angle(protoFeedback.estimated_angle()),
+                                       .yaw = Angle(protoFeedback.estimated_yaw()),
                                        .xSensIsCalibrated = protoFeedback.xsens_is_calibrated(),
                                        .capacitorIsCharged = protoFeedback.capacitor_is_charged(),
-                                       .wheelLocked = protoFeedback.wheels_locked(),
-                                       .wheelBraking = protoFeedback.wheels_braking(),
-                                       .batteryLevel = protoFeedback.battery_level(),
-                                       .signalStrength = protoFeedback.signal_strength()};
+                                       .batteryLevel = protoFeedback.battery_level()};
         robotsFeedback.feedback.push_back(feedback);
     }
 

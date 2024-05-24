@@ -13,7 +13,6 @@
 #include "utilities/Constants.h"
 
 using Vector2 = rtt::Vector2;
-using Angle = rtt::Angle;
 
 namespace rtt::ai::control {
 

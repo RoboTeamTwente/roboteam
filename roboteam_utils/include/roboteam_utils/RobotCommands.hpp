@@ -20,22 +20,22 @@ typedef struct RobotCommand {
 
     // Positioning related variables
     Vector2 velocity;                    // (m/s) Target velocity of the robot
-    Angle targetAngle;                   // (rad) [-PI, PI] The target angle of the robot
+    Angle yaw;                           // (rad) [-PI, PI] The target yaw of the robot
     double targetAngularVelocity = 0.0;  // (rad/s) The target angular velocity of the robot
-    bool useAngularVelocity = 0.0;       // True if angular velocity should be used instead of angle
+    bool useAngularVelocity = 0.0;       // True if angular velocity should be used instead of yaw
 
-    Angle cameraAngleOfRobot;              // (rad) The current angle of the robot according to the camera
-    bool cameraAngleOfRobotIsSet = false;  // True if the cameraAngleOfRobot is set. If false, these fields should be ignored
+    Angle cameraYawOfRobot;              // (rad) The current yaw of the robot according to the camera
+    bool cameraYawOfRobotIsSet = false;  // True if the cameraYawOfRobot is set. If false, these fields should be ignored
 
     // Action related variables
     double kickSpeed = 0.0;                 // (m/s) [0, 6.5] The target speed of the ball. Speed of <= 0.0 is undefined
     bool waitForBall = false;               // Will make the robot wait with kicking until it has the ball
     KickType kickType = KickType::NO_KICK;  // Defines the type of kicking, either normal(horizontal) or chipping(vertical), or no kick
-    bool kickAtAngle = false;               // Makes robot kick once it arrives at the specified angle, used in combination with angular velocity
+    bool kickAtYaw = false;                 // Makes robot kick once it arrives at the specified yaw, used in combination with angular velocity
 
-    double dribblerSpeed = 0.0;  // [0, 1] Speed of the dribbler
+    double dribblerOn = 0.0;  // [0, 1] Speed of the dribbler
 
-    bool ignorePacket = false;  // Robot will ignore packet, but robot will reply with feedback
+    bool wheelsOff = false;  // Robot will ignore packet, but robot will reply with feedback
 
     bool operator==(const RobotCommand &other) const;
 

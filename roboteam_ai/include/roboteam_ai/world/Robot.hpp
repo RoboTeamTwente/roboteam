@@ -31,10 +31,10 @@ class Robot {
 
     Vector2 pos; /**< Position of the robot */
     Vector2 vel; /**< Velocity of the robot */
-    Angle angle; /**< Angle of the robot */
+    Angle yaw;   /**< Yaw of the robot */
 
-    double distanceToBall;  /**< Distance from the robot to the ball */
-    double angleDiffToBall; /**< Angle of the robot relative to the ball */
+    double distanceToBall; /**< Distance from the robot to the ball */
+    double yawDiffToBall;  /**< Angle of the robot relative to the ball */
 
     double angularVelocity; /**< Angular velocity of the ball */
     bool batteryLow{false}; /**< Indicates whether the battery of the robot is low */
@@ -43,7 +43,6 @@ class Robot {
     bool workingBallSensor{}; /**< Indicates whether the robot has a working ball sensor */
 
     bool ballSensorSeesBall{}; /**< Indicates whether the ball sensor sees the ball */
-    float ballPos{};           /**< The position of the ball */
     bool dribblerSeesBall{};   /**< Indicates whether the dribbler sees the ball */
     bool robotHasBall{};       /**< Indicates whether the robot has the ball */
 
@@ -63,10 +62,10 @@ class Robot {
     void updateHasBallMap(std::optional<view::BallView> &ball);
 
     /**
-     * @brief Set the angle of the robot according to the given angle
-     * @param angle The angle to which the robot angle should be set to
+     * @brief Sets the robot's yaw to the specified yaw
+     * @param yaw The desired yaw for the robot
      */
-    void setAngle(const Angle &angle) noexcept;
+    void setYaw(const Angle &yaw) noexcept;
 
     /**
      * @brief Set the batteryLow boolean
@@ -87,10 +86,10 @@ class Robot {
     void setDistanceToBall(double distanceToBall) noexcept;
 
     /**
-     * @brief Set the angle difference to the ball
-     * @param _angleDiffToBall The Angle of the robot relative to the ball
+     * @brief Set the yaw difference to the ball
+     * @param _yawDiffToBall The Angle of the robot relative to the ball
      */
-    void setAngleDiffToBall(double _angleDiffToBall) noexcept;
+    void setYawDiffToBall(double _yawDiffToBall) noexcept;
 
     /**
      * @brief Set the ballSensorSeesBall boolean
@@ -109,12 +108,6 @@ class Robot {
      * @param _hasBall Indicates whether the robot has the ball
      */
     void setHasBall(bool _hasBall) noexcept;
-
-    /**
-     * @brief Set the ball position according to the ball sensor
-     * @param _ballPos The position of the ball according to the ball sensor
-     */
-    void setBallPosBallSensor(float _ballPos) noexcept;
 
    public:
     /**
@@ -142,10 +135,10 @@ class Robot {
     [[nodiscard]] const Vector2 &getVel() const noexcept;
 
     /**
-     * @brief Get the angle of the robot
-     * @return The angle of the robot
+     * @brief Get the yaw of the robot
+     * @return The yaw of the robot
      */
-    [[nodiscard]] const Angle &getAngle() const noexcept;
+    [[nodiscard]] const Angle &getYaw() const noexcept;
 
     /**
      * @brief Get the angular velocity of the robot
@@ -184,10 +177,10 @@ class Robot {
     [[nodiscard]] double getDistanceToBall() const noexcept;
 
     /**
-     * @brief Get the angle of the robot relative to the ball
-     * @return The angle of the robot relative to the ball
+     * @brief Get the yaw of the robot relative to the ball
+     * @return The yaw of the robot relative to the ball
      */
-    [[nodiscard]] double getAngleDiffToBall() const noexcept;
+    [[nodiscard]] double getYawDiffToBall() const noexcept;
 
    public:
     /**

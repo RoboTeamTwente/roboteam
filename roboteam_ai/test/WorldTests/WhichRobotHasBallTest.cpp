@@ -28,18 +28,18 @@ TEST(worldTest, WhichRobotHasBallTest) {
         roboty1.mutable_feedbackinfo()->set_dribbler_sees_ball(true);
         roboty1.mutable_feedbackinfo()->set_ball_sensor_sees_ball(true);
 
-        roboty1.set_angle(M_PI);
+        roboty1.set_yaw(M_PI);
 
         proto::WorldRobot roboty2;
         roboty2.set_id(2);
         roboty2.mutable_pos()->set_x(0.5);
-        roboty2.set_angle(M_PI);
+        roboty2.set_yaw(M_PI);
 
         // Create robots blue
         proto::WorldRobot robotb1;
         robotb1.set_id(3);
         robotb1.mutable_pos()->set_x(0.05);
-        robotb1.set_angle(M_PI);
+        robotb1.set_yaw(M_PI);
 
         /* Setup :  Ball ..0.05.. robotb1(3) ..0.1.. roboty1(1) ..0.5.. roboty2(2) */
 
@@ -96,20 +96,20 @@ TEST(worldTest, NoRobotHasBall) {
     roboty1.set_id(4);
     roboty1.mutable_pos()->set_x(1);
     roboty1.mutable_pos()->set_y(0);
-    roboty1.set_angle(M_PI);
+    roboty1.set_yaw(M_PI);
 
     proto::WorldRobot roboty2;
     roboty2.set_id(5);
     roboty2.mutable_pos()->set_x(2);
     roboty2.mutable_pos()->set_y(0);
-    roboty2.set_angle(M_PI);
+    roboty2.set_yaw(M_PI);
 
     // Create robots blue
     proto::WorldRobot robotb1;
     robotb1.set_id(6);
     robotb1.mutable_pos()->set_x(3);
     robotb1.mutable_pos()->set_y(0);
-    robotb1.set_angle(M_PI);
+    robotb1.set_yaw(M_PI);
 
     /* Setup :  Ball ..1.. robotb1(3) ..2.. roboty1(1) ..3.. roboty2(2) */
 

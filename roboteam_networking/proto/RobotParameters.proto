@@ -7,7 +7,7 @@ message RobotParameters{
     float height = 2;
     float front_width = 3;
     float dribbler_width = 4;
-    float angle_offset = 5;
+    float yaw_offset = 5;
 }
 
 message TeamParameters{

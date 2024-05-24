@@ -28,7 +28,7 @@ CameraRobotFilter::CameraRobotFilter(const RobotObservation &observation, RobotV
     Eigen::Matrix2d initialAngleCov = Eigen::Matrix2d::Zero();
     initialAngleCov(0, 0) = ROBOT_ANGLE_INITIAL_COV;
     initialAngleCov(1, 1) = ROBOT_ANGULAR_VEL_INITIAL_COV;
-    angleFilter = RobotOrientationFilter(initialAngle, initialAngleCov, ROBOT_ANGLE_MODEL_ERROR, ROBOT_ANGLE_MEASUREMENT_ERROR, observation.timeCaptured);
+    yawFilter = RobotOrientationFilter(initialAngle, initialAngleCov, ROBOT_ANGLE_MODEL_ERROR, ROBOT_ANGLE_MEASUREMENT_ERROR, observation.timeCaptured);
 
     previousPosition = RobotPos(observation.position, rtt::Angle(observation.orientation));
 
@@ -40,7 +40,7 @@ CameraRobotFilter::CameraRobotFilter(const RobotObservation &observation, RobotV
 void CameraRobotFilter::predict(Time time) {
     updatePreviousInfo();
     positionFilter.predict(time);
-    angleFilter.predict(time);
+    yawFilter.predict(time);
     just_updated = false;
 }
 
@@ -49,8 +49,8 @@ void CameraRobotFilter::update(const RobotObservation &observation) {
     assert(observation.cameraID == cameraID);
     // Update position kalman filter
     positionFilter.update(observation.position);
-    // Update angle kalman filter
-    angleFilter.update(observation.orientation);
+    // Update yaw kalman filter
+    yawFilter.update(observation.orientation);
     // update object seen settings
     objectSeen(observation.timeCaptured);
     just_updated = true;
@@ -64,26 +64,26 @@ bool CameraRobotFilter::updateRobotNotSeen(const Time &time) {
 bool CameraRobotFilter::justUpdated() const { return just_updated; }
 
 FilteredRobot CameraRobotFilter::estimate(const Time &time) const {
-    FilteredRobot bot(robot, RobotPos(positionFilter.getPositionEstimate(time), angleFilter.getPositionEstimate(time)),
-                      RobotVel(positionFilter.getVelocity(), angleFilter.getVelocity()), getHealth(), positionFilter.getPositionUncertainty().norm(),
-                      positionFilter.getVelocityUncertainty().norm(), angleFilter.getPositionUncertainty(), angleFilter.getVelocityUncertainty());
+    FilteredRobot bot(robot, RobotPos(positionFilter.getPositionEstimate(time), yawFilter.getPositionEstimate(time)),
+                      RobotVel(positionFilter.getVelocity(), yawFilter.getVelocity()), getHealth(), positionFilter.getPositionUncertainty().norm(),
+                      positionFilter.getVelocityUncertainty().norm(), yawFilter.getPositionUncertainty(), yawFilter.getVelocityUncertainty());
     return bot;
 }
 
 bool CameraRobotFilter::acceptObservation(const RobotObservation &observation) const {
-    double angleDif = abs(rtt::Angle(angleFilter.getPosition() - observation.orientation));
+    double yawDif = abs(rtt::Angle(yawFilter.getPosition() - observation.orientation));
     double posDifSq = (observation.position - positionFilter.getPosition()).squaredNorm();
-    return posDifSq < 0.4 * 0.4 && angleDif < M_PI_2;  // TODO: remove hardcoded constants
+    return posDifSq < 0.4 * 0.4 && yawDif < M_PI_2;  // TODO: remove hardcoded constants
 }
 
 RobotVel CameraRobotFilter::velocityEstimate() const {
     Eigen::Vector2d vel = positionFilter.getVelocity();
-    double angVel = angleFilter.getVelocity();
+    double angVel = yawFilter.getVelocity();
     return RobotVel(vel, angVel);
 }
 
 void CameraRobotFilter::updatePreviousInfo() {
-    previousPosition = RobotPos(positionFilter.getPosition(), angleFilter.getPosition());
+    previousPosition = RobotPos(positionFilter.getPosition(), yawFilter.getPosition());
 
     previousTime = positionFilter.lastUpdated();
 }

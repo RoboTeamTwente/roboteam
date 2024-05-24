@@ -41,7 +41,7 @@ class Position {
     Position translate(const Vector2 &vec) const;
 
     /**
-     * \brief Rotate this position by the specified angle.
+     * \brief Rotate this position by the specified yaw.
      */
     Position rotate(double radians) const;
 

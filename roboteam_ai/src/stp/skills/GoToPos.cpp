@@ -44,11 +44,9 @@ Status GoToPos::onUpdate(const StpInfo &info) noexcept {
                                                                                                        robot->getVel(), targetPos, info.getMaxRobotVelocity(), avoidObj);
 
     auto distanceToTarget = (robot->getPos() - targetPos).length();
-    command.targetAngle = distanceToTarget <= 0.5 ? info.getAngle() : robot->getAngle() + rtt::Angle(0.5 / distanceToTarget * (info.getAngle() - robot->getAngle()));
+    command.yaw = distanceToTarget <= 0.5 ? info.getYaw() : robot->getYaw() + rtt::Angle(0.5 / distanceToTarget * (info.getYaw() - robot->getYaw()));
 
-    // Clamp and set dribbler speed
-    int targetDribblerPercentage = std::clamp(info.getDribblerSpeed(), 0, 100);
-    command.dribblerSpeed = targetDribblerPercentage / 100.0 * stp::control_constants::MAX_DRIBBLER_CMD;
+    command.dribblerOn = info.getDribblerOn();
 
     // set command ID
     command.id = robot->getId();

@@ -10,9 +10,9 @@
 class RobotPos {
    public:
     RobotPos() = default;
-    RobotPos(Eigen::Vector2d pos, double angle) : position{std::move(pos)}, angle{angle} {}
+    RobotPos(Eigen::Vector2d pos, double yaw) : position{std::move(pos)}, yaw{yaw} {}
     Eigen::Vector2d position;
-    rtt::Angle angle = 0.0;
+    rtt::Angle yaw = 0.0;
 };
 class RobotVel {
    public:

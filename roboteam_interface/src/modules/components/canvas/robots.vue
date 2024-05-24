@@ -1,5 +1,4 @@
-<script setup lang='ts'>
-import { Container } from 'pixi.js'
+<script setup lang="ts">
 import { appSymbol, stageSymbol, useMoveRobots } from './utils'
 import { useVisionDataStore } from '../../stores/data-stores/vision-data-store'
 import { useAIDataStore } from '../../stores/data-stores/ai-data-store'
@@ -10,24 +9,20 @@ import IWorldRobot = proto.IWorldRobot
 import { inject, onBeforeUnmount, watch } from 'vue'
 import { RobotDrawing } from './field-objects'
 
-
-const
-  app = inject(appSymbol)!,
+const app = inject(appSymbol)!,
   stage = inject(stageSymbol)!,
   visionData = useVisionDataStore(),
   aiData = useAIDataStore(),
   uiStore = useUIStore()
 
 // Internal (non-reactive) variables
-let
-  yellowRobots = new Map<number, RobotDrawing>(),
+let yellowRobots = new Map<number, RobotDrawing>(),
   blueRobots = new Map<number, RobotDrawing>()
 
 useMoveRobots(app, stage)
 
 // Methods
-const
-  cleanup = () => {
+const cleanup = () => {
     yellowRobots.forEach((robot) => robot.destroy({ children: true }))
     blueRobots.forEach((robot) => robot.destroy({ children: true }))
     yellowRobots.clear()
@@ -63,14 +58,14 @@ const
       robot.moveOnField(
         OUT_OF_CANVAS_COORDINATES.x,
         OUT_OF_CANVAS_COORDINATES.y,
-        OUT_OF_CANVAS_COORDINATES.angle
+        OUT_OF_CANVAS_COORDINATES.yaw
       )
     })
     blueRobots.forEach((robot) => {
       robot.moveOnField(
         OUT_OF_CANVAS_COORDINATES.x,
         OUT_OF_CANVAS_COORDINATES.y,
-        OUT_OF_CANVAS_COORDINATES.angle
+        OUT_OF_CANVAS_COORDINATES.yaw
       )
     })
 
@@ -78,10 +73,14 @@ const
     world?.blue!.forEach((robot) => renderRobot(robot, false))
   }
 
-watch(app, (app, _, onCleanup) => {
-  app?.ticker.add(onPixiTick)
-  onCleanup(cleanup)
-}, { immediate: true })
+watch(
+  app,
+  (app, _, onCleanup) => {
+    app?.ticker.add(onPixiTick)
+    onCleanup(cleanup)
+  },
+  { immediate: true }
+)
 
 // When the scaling setting changes, update the scaling of the drawings
 watch(

@@ -11214,7 +11214,7 @@ export namespace proto {
         kickType?: (proto.RobotCommand.KickType|null);
 
         /** RobotCommand dribblerOn */
-        dribblerOn?: (number|null);
+        dribblerOn?: (boolean|null);
 
         /** RobotCommand wheelsOff */
         wheelsOff?: (boolean|null);
@@ -11266,7 +11266,7 @@ export namespace proto {
         public kickType: proto.RobotCommand.KickType;
 
         /** RobotCommand dribblerOn. */
-        public dribblerOn: number;
+        public dribblerOn: boolean;
 
         /** RobotCommand wheelsOff. */
         public wheelsOff: boolean;

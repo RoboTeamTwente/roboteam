@@ -39,7 +39,7 @@ std::optional<StpInfo> GetBall::calculateInfoForSkill(const StpInfo &info) noexc
     double distanceToInterception = (interceptionPosition - robotPosition).length();
     double distanceToBall = (ballPosition - robotPosition).length();
 
-    if (info.getRobot()->get()->getYawDiffToBall() > Constants::HAS_BALL_ANGLE() && distanceToBall < control_constants::ROBOT_CLOSE_TO_POINT) {
+    if (info.getRobot()->get()->getAngleDiffToBall() > Constants::HAS_BALL_ANGLE() && distanceToBall < control_constants::ROBOT_CLOSE_TO_POINT) {
         skillStpInfo.setPositionToMoveTo(FieldComputations::projectPointToValidPosition(info.getField().value(), info.getRobot()->get()->getPos(), info.getObjectsToAvoid()));
     } else {
         auto getBallDistance = std::max(distanceToInterception - control_constants::CENTER_TO_FRONT, MIN_DISTANCE_TO_TARGET);

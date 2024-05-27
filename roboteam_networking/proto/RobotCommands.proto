@@ -25,7 +25,7 @@ message RobotCommand {
     }
     KickType kick_type = 12;        // Decides if and how the ball should be kicked
 
-    double dribbler_on = 13; // [0, 1] Speed of the dribbler
+    bool dribbler_on = 13; // If true, the robot will turn on its dribbler
     bool wheels_off = 14;    // If true, the robot will not move its wheels
 }
 

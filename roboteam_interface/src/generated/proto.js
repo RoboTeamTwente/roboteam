@@ -30660,7 +30660,7 @@ export const proto = $root.proto = (() => {
          * @property {boolean|null} [waitForBall] RobotCommand waitForBall
          * @property {boolean|null} [kickAtYaw] RobotCommand kickAtYaw
          * @property {proto.RobotCommand.KickType|null} [kickType] RobotCommand kickType
-         * @property {number|null} [dribblerOn] RobotCommand dribblerOn
+         * @property {boolean|null} [dribblerOn] RobotCommand dribblerOn
          * @property {boolean|null} [wheelsOff] RobotCommand wheelsOff
          */
 
@@ -30777,11 +30777,11 @@ export const proto = $root.proto = (() => {
 
         /**
          * RobotCommand dribblerOn.
-         * @member {number} dribblerOn
+         * @member {boolean} dribblerOn
          * @memberof proto.RobotCommand
          * @instance
          */
-        RobotCommand.prototype.dribblerOn = 0;
+        RobotCommand.prototype.dribblerOn = false;
 
         /**
          * RobotCommand wheelsOff.
@@ -30840,7 +30840,7 @@ export const proto = $root.proto = (() => {
             if (message.kickType != null && Object.hasOwnProperty.call(message, "kickType"))
                 writer.uint32(/* id 12, wireType 0 =*/96).int32(message.kickType);
             if (message.dribblerOn != null && Object.hasOwnProperty.call(message, "dribblerOn"))
-                writer.uint32(/* id 13, wireType 1 =*/105).double(message.dribblerOn);
+                writer.uint32(/* id 13, wireType 0 =*/104).bool(message.dribblerOn);
             if (message.wheelsOff != null && Object.hasOwnProperty.call(message, "wheelsOff"))
                 writer.uint32(/* id 14, wireType 0 =*/112).bool(message.wheelsOff);
             return writer;
@@ -30926,7 +30926,7 @@ export const proto = $root.proto = (() => {
                         break;
                     }
                 case 13: {
-                        message.dribblerOn = reader.double();
+                        message.dribblerOn = reader.bool();
                         break;
                     }
                 case 14: {
@@ -31011,8 +31011,8 @@ export const proto = $root.proto = (() => {
                     break;
                 }
             if (message.dribblerOn != null && message.hasOwnProperty("dribblerOn"))
-                if (typeof message.dribblerOn !== "number")
-                    return "dribblerOn: number expected";
+                if (typeof message.dribblerOn !== "boolean")
+                    return "dribblerOn: boolean expected";
             if (message.wheelsOff != null && message.hasOwnProperty("wheelsOff"))
                 if (typeof message.wheelsOff !== "boolean")
                     return "wheelsOff: boolean expected";
@@ -31074,7 +31074,7 @@ export const proto = $root.proto = (() => {
                 break;
             }
             if (object.dribblerOn != null)
-                message.dribblerOn = Number(object.dribblerOn);
+                message.dribblerOn = Boolean(object.dribblerOn);
             if (object.wheelsOff != null)
                 message.wheelsOff = Boolean(object.wheelsOff);
             return message;
@@ -31106,7 +31106,7 @@ export const proto = $root.proto = (() => {
                 object.waitForBall = false;
                 object.kickAtYaw = false;
                 object.kickType = options.enums === String ? "NO_KICK" : 0;
-                object.dribblerOn = 0;
+                object.dribblerOn = false;
                 object.wheelsOff = false;
             }
             if (message.id != null && message.hasOwnProperty("id"))
@@ -31134,7 +31134,7 @@ export const proto = $root.proto = (() => {
             if (message.kickType != null && message.hasOwnProperty("kickType"))
                 object.kickType = options.enums === String ? $root.proto.RobotCommand.KickType[message.kickType] === undefined ? message.kickType : $root.proto.RobotCommand.KickType[message.kickType] : message.kickType;
             if (message.dribblerOn != null && message.hasOwnProperty("dribblerOn"))
-                object.dribblerOn = options.json && !isFinite(message.dribblerOn) ? String(message.dribblerOn) : message.dribblerOn;
+                object.dribblerOn = message.dribblerOn;
             if (message.wheelsOff != null && message.hasOwnProperty("wheelsOff"))
                 object.wheelsOff = message.wheelsOff;
             return object;

@@ -19,7 +19,7 @@ The enum Team in [team.hpp](https://github.com/RoboTeamTwente/roboteam_ai/blob/d
 
 `distanceToBall` -> Distance from the robot to the ball
 
-`yawDiffToBall` -> Angle offset between the kicker and the ball.
+`angleDiffToBall` -> Angle offset between the yaw of the kicker and the vector from robot center to ball
 
 `angularVelocity` -> Angular velocity of the robot.
 

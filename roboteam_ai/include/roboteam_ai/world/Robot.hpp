@@ -33,8 +33,8 @@ class Robot {
     Vector2 vel; /**< Velocity of the robot */
     Angle yaw;   /**< Yaw of the robot */
 
-    double distanceToBall; /**< Distance from the robot to the ball */
-    double yawDiffToBall;  /**< Angle of the robot relative to the ball */
+    double distanceToBall;  /**< Distance from the robot to the ball */
+    double angleDiffToBall; /**< Angle of the robot relative to the ball */
 
     double angularVelocity; /**< Angular velocity of the ball */
     bool batteryLow{false}; /**< Indicates whether the battery of the robot is low */
@@ -87,9 +87,9 @@ class Robot {
 
     /**
      * @brief Set the yaw difference to the ball
-     * @param _yawDiffToBall The Angle of the robot relative to the ball
+     * @param _angleDiffToBall The Angle of the robot relative to the ball
      */
-    void setYawDiffToBall(double _yawDiffToBall) noexcept;
+    void setAngleDiffToBall(double _angleDiffToBall) noexcept;
 
     /**
      * @brief Set the ballSensorSeesBall boolean
@@ -180,7 +180,7 @@ class Robot {
      * @brief Get the yaw of the robot relative to the ball
      * @return The yaw of the robot relative to the ball
      */
-    [[nodiscard]] double getYawDiffToBall() const noexcept;
+    [[nodiscard]] double getAngleDiffToBall() const noexcept;
 
    public:
     /**

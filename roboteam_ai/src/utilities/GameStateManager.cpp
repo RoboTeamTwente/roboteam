@@ -13,6 +13,7 @@ int GameState::cardId = -1;
 double GameState::timeLeft;
 RefCommand GameState::commandFromRef;
 RefCommand GameState::followUpCommandFromRef;
+std::optional<Vector2> GameState::kickPoint;
 
 proto::Referee_TeamInfo GameStateManager::yellowTeam;
 proto::Referee_TeamInfo GameStateManager::blueTeam;

@@ -31,6 +31,16 @@ void Play::update() noexcept {
     roleStatuses.clear();
     //    RTT_INFO("Play executing: ", getName())
 
+    // Set the kickPoint to determine whether a free kick/kickoff has been taken
+    if ((GameStateManager::getCurrentGameState().commandId == RefCommand::DIRECT_FREE_THEM || GameStateManager::getCurrentGameState().commandId == RefCommand::KICKOFF_THEM ||
+         GameStateManager::getCurrentGameState().commandId == RefCommand::DIRECT_FREE_US || GameStateManager::getCurrentGameState().commandId == RefCommand::KICKOFF_US) &&
+        !GameStateManager::getCurrentGameState().kickPoint.has_value()) {
+        GameStateManager::getCurrentGameState().kickPoint = world->getWorld()->getBall()->get()->position;
+    } else if (GameStateManager::getCurrentGameState().commandId != RefCommand::DIRECT_FREE_THEM && GameStateManager::getCurrentGameState().commandId != RefCommand::KICKOFF_THEM &&
+               GameStateManager::getCurrentGameState().commandId != RefCommand::DIRECT_FREE_US && GameStateManager::getCurrentGameState().commandId != RefCommand::KICKOFF_US) {
+        GameStateManager::getCurrentGameState().kickPoint.reset();
+    }
+    // RTT_INFO(GameStateManager::getCurrentGameState().kickPoint)
     // Check if the amount of robots changed or keeper id changed
     // If so, we will re deal the roles
     auto currentRobotNum{world->getWorld()->getRobotsNonOwning().size()};

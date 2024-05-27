@@ -3,6 +3,8 @@
 
 #include <roboteam_utils/Vector2.h>
 
+#include <optional>
+
 #include "Constants.h"
 #include "RefCommand.h"
 #include "RuleSet.h"
@@ -23,6 +25,7 @@ struct GameState {
     int maxAllowedRobots = stp::control_constants::MAX_ROBOT_COUNT;
     static int cardId;
     static double timeLeft;
+    static std::optional<Vector2> kickPoint;
 
     GameState() = default;
 

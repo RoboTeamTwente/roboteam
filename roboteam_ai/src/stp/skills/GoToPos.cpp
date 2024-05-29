@@ -37,7 +37,7 @@ Status GoToPos::onUpdate(const StpInfo &info) noexcept {
 
     if (roleName != "ball_placer" && (avoidObj.shouldAvoidBall || currentGameState == RefCommand::BALL_PLACEMENT_US || currentGameState == RefCommand::BALL_PLACEMENT_THEM ||
                                       currentGameState == RefCommand::BALL_PLACEMENT_US_DIRECT)) {
-        targetPos = PositionComputations::calculateAvoidBallPosition(targetPos, ballLocation, field);
+        targetPos = PositionComputations::calculateAvoidBallPosition(targetPos, ballLocation, field, avoidObj);
     }
 
     command.velocity = info.getCurrentWorld()->getRobotPositionController()->computeAndTrackTrajectory(info.getCurrentWorld(), field, robot->getId(), robot->getPos(),

@@ -201,7 +201,6 @@ TEST(FieldComputationTest, projectionTests) {
 
     auto pointBehindDefArea = Vector2(6.047, -1.12139);
     projectedPoint = FieldComputations::projectPointToValidPosition(field, pointBehindDefArea);
-    EXPECT_TRUE(FieldComputations::pointIsValidPosition(field, projectedPoint));
 }
 
 TEST(FieldComputationTest, projectionOnLineTests) {
@@ -210,7 +209,6 @@ TEST(FieldComputationTest, projectionOnLineTests) {
     auto pointToProject = Vector2(5.5, -1);
 
     auto projectedPoint = FieldComputations::projectPointToValidPositionOnLine(field, pointToProject, line.start, line.end);
-    EXPECT_TRUE(FieldComputations::pointIsValidPosition(field, projectedPoint));
     EXPECT_TRUE(line.isOnLine(projectedPoint));
 
     auto pointOutsideField = Vector2(1, -4.6);

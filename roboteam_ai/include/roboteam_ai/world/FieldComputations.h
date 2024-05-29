@@ -63,7 +63,7 @@ class FieldComputations {
      * @param fieldMargin The outwards margin in which the field area will get expanded/shrunk in all directions.
      * @return True if the point is not within any area that has to be avoided according to avoidObjects, note that this does not take ball avoidance into consideration
      */
-    static bool pointIsValidPosition(const rtt::Field &field, const Vector2 &point, stp::AvoidObjects avoidObjects = {}, double fieldMargin = 0.0);
+    static bool pointIsValidPosition(const rtt::Field &field, const Vector2 &point, stp::AvoidObjects avoidObjects, double fieldMargin = 0.0);
 
     /**
      * @brief Project given position to within the field with a certain margin

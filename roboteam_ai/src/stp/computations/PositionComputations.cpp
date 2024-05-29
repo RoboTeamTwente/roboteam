@@ -18,10 +18,14 @@ namespace rtt::ai::stp {
 gen::ScoredPosition PositionComputations::getPosition(std::optional<rtt::Vector2> currentPosition, const Grid &searchGrid, gen::ScoreProfile profile, const Field &field,
                                                       const world::World *world) {
     gen::ScoredPosition bestPosition;
+    AvoidObjects avoidObj;
+    avoidObj.shouldAvoidOurDefenseArea = true;
+    avoidObj.shouldAvoidTheirDefenseArea = true;
+    avoidObj.shouldAvoidOutOfField = true;
     (currentPosition.has_value()) ? bestPosition = PositionScoring::scorePosition(currentPosition.value(), profile, field, world, 2) : bestPosition = {{0, 0}, 0};
     for (const auto &nestedPoints : searchGrid.getPoints()) {
         for (const Vector2 &position : nestedPoints) {
-            if (!FieldComputations::pointIsValidPosition(field, position)) continue;
+            if (!FieldComputations::pointIsValidPosition(field, position, avoidObj)) continue;
             gen::ScoredPosition consideredPosition = PositionScoring::scorePosition(position, profile, field, world);
             if (consideredPosition.score > bestPosition.score) bestPosition = consideredPosition;
         }
@@ -193,7 +197,7 @@ Vector2 PositionComputations::calculateAvoidRobotsPosition(Vector2 targetPositio
         auto possiblePoints = Grid(targetPosition.x - distance / 2.0, targetPosition.y - distance / 2.0, distance, distance, 3, 3).getPoints();
         for (auto &pointVector : possiblePoints) {
             for (auto &point : pointVector) {
-                if (FieldComputations::pointIsValidPosition(field, point) &&
+                if (FieldComputations::pointIsValidPosition(field, point, avoidObj) &&
                     std::all_of(pointsToAvoid.begin(), pointsToAvoid.end(), [&](const Vector2 &avoidPoint) { return avoidPoint.dist(point) >= control_constants::ROBOT_RADIUS; })) {
                     return point;
                 }
@@ -204,7 +208,7 @@ Vector2 PositionComputations::calculateAvoidRobotsPosition(Vector2 targetPositio
     return targetPosition;
 }
 
-Vector2 PositionComputations::calculateAvoidBallPosition(Vector2 targetPosition, Vector2 ballPosition, const Field &field) {
+Vector2 PositionComputations::calculateAvoidBallPosition(Vector2 targetPosition, Vector2 ballPosition, const Field &field, const AvoidObjects &avoidObj) {
     RefCommand currentGameState = GameStateManager::getCurrentGameState().getCommandId();
 
     std::unique_ptr<Shape> avoidShape;
@@ -219,22 +223,23 @@ Vector2 PositionComputations::calculateAvoidBallPosition(Vector2 targetPosition,
 
     if (avoidShape->contains(targetPosition)) {
         auto projectedPos = avoidShape->project(targetPosition);
-        if (FieldComputations::pointIsValidPosition(field, projectedPos))
+        if (FieldComputations::pointIsValidPosition(field, projectedPos, avoidObj))
             targetPosition = projectedPos;
         else {
-            targetPosition = calculatePositionOutsideOfShape(targetPosition, field, avoidShape);
+            targetPosition = calculatePositionOutsideOfShape(targetPosition, field, avoidShape, avoidObj);
         }
     }
     return targetPosition;
 }
 
-Vector2 PositionComputations::calculatePositionOutsideOfShape(Vector2 targetPosition, const rtt::Field &field, const std::unique_ptr<Shape> &avoidShape) {
+Vector2 PositionComputations::calculatePositionOutsideOfShape(Vector2 targetPosition, const rtt::Field &field, const std::unique_ptr<Shape> &avoidShape,
+                                                              const AvoidObjects &avoidObj) {
     for (int distanceSteps = 0; distanceSteps < 5; ++distanceSteps) {
         auto distance = 2 * control_constants::AVOID_BALL_DISTANCE + distanceSteps * control_constants::AVOID_BALL_DISTANCE;
         auto possiblePoints = Grid(targetPosition.x - distance / 2.0, targetPosition.y - distance / 2.0, distance, distance, 3, 3).getPoints();
         for (auto &pointVector : possiblePoints) {
             for (auto &point : pointVector) {
-                if (FieldComputations::pointIsValidPosition(field, point) && !avoidShape->contains(point)) {
+                if (FieldComputations::pointIsValidPosition(field, point, avoidObj) && !avoidShape->contains(point)) {
                     return point;
                 }
             }
@@ -503,7 +508,7 @@ void PositionComputations::recalculateInfoForNonPassers(std::unordered_map<std::
         if (!avoidShape->contains(robotPositionToMoveTo.value())) {
             continue;
         }
-        auto newRobotPositionToMoveTo = calculatePositionOutsideOfShape(robotPositionToMoveTo.value(), field, avoidShape);
+        auto newRobotPositionToMoveTo = calculatePositionOutsideOfShape(robotPositionToMoveTo.value(), field, avoidShape, stpInfos[robot].getObjectsToAvoid());
         stpInfos[robot].setPositionToMoveTo(newRobotPositionToMoveTo);
     }
 }

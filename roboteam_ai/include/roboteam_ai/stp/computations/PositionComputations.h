@@ -80,9 +80,10 @@ class PositionComputations {
      * @param targetPosition The initial target position
      * @param ballPosition The position of the ball
      * @param field The current field
+     * @param avoidObj The objects to avoid
      * @return A position that is not within the min allowed distance to the ball
      */
-    static Vector2 calculateAvoidBallPosition(Vector2 targetPosition, Vector2 ballPosition, const Field &field);
+    static Vector2 calculateAvoidBallPosition(Vector2 targetPosition, Vector2 ballPosition, const Field &field, const AvoidObjects &avoidObj);
 
     /**
      * @brief Calculates info for the harasser role
@@ -158,9 +159,10 @@ class PositionComputations {
      * @param targetPosition The position where the robot wants to go
      * @param field The current field
      * @param avoidShape The shape to avoid
+     * @param avoidObj The objects to avoid
      * @return A position that is outside the given shape
      */
-    static Vector2 calculatePositionOutsideOfShape(Vector2 targetPosition, const Field &field, const std::unique_ptr<Shape> &avoidShape);
+    static Vector2 calculatePositionOutsideOfShape(Vector2 targetPosition, const Field &field, const std::unique_ptr<Shape> &avoidShape, const AvoidObjects &avoidObj);
 };
 }  // namespace rtt::ai::stp
 #endif  // RTT_POSITIONCOMPUTATIONS_H

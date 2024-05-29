@@ -122,7 +122,7 @@ std::pair<Vector2, bool> KeeperBlockBall::calculateTargetPosition(const StpInfo 
             const auto startVelocity = robot->getVel();
             const auto maxVelocity = info.getMaxRobotVelocity();
             const auto maxAcceleration = Constants::MAX_ACC();
-            const auto newTarget =
+            const auto [newTarget, _] =
                 control::OvershootComputations::overshootingDestination(startPosition, targetPosition.value(), startVelocity, maxVelocity, maxAcceleration, targetTime);
             return {newTarget, shouldAvoidGoalPosts};
         }

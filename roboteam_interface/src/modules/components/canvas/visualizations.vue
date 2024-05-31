@@ -26,6 +26,7 @@ const onPixiTick = () => {
       return
     if (data.category == Category.DEBUG && !uiStore.showDebug(data.forRobotId)) return
     if (data.category == Category.MARGINS && !uiStore.showMargins(data.forRobotId)) return
+    if (data.category == Category.ROBOTROLES && !uiStore.showRobotRoles(data.forRobotId)) return
 
     const shape = new ShapeDrawing({
       data: data as NoUndefinedField<IDrawing>,

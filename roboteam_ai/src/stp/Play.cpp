@@ -256,10 +256,10 @@ void Play::DrawMargins() noexcept {
                 rightDefenseAreaMargin);
         }
         proto::Drawing::Color color;
-        if (currentGameState == RefCommand::BALL_PLACEMENT_THEM || currentGameState == RefCommand::DIRECT_FREE_THEM || currentGameState == RefCommand::KICKOFF_THEM)
+        if (currentGameState == RefCommand::BALL_PLACEMENT_THEM || currentGameState == RefCommand::DIRECT_FREE_THEM || currentGameState == RefCommand::KICKOFF_THEM || (currentGameState == RefCommand::PREPARE_FORCED_START && GameStateManager::getCurrentGameState().commandFromRef != RefCommand::BALL_PLACEMENT_THEM))
             color = GameSettings::isYellow() ? proto::Drawing::YELLOW : proto::Drawing::BLUE;
         else if (currentGameState == RefCommand::BALL_PLACEMENT_US || currentGameState == RefCommand::BALL_PLACEMENT_US_DIRECT || currentGameState == RefCommand::DIRECT_FREE_US ||
-                 currentGameState == RefCommand::KICKOFF_US)
+                 currentGameState == RefCommand::KICKOFF_US || (currentGameState == RefCommand::PREPARE_FORCED_START && GameStateManager::getCurrentGameState().commandFromRef != RefCommand::BALL_PLACEMENT_US))
             color = GameSettings::isYellow() ? proto::Drawing::BLUE : proto::Drawing::YELLOW;
         else
             color = proto::Drawing::RED;
@@ -314,7 +314,7 @@ void Play::DrawMargins() noexcept {
                     .label = names[i],
                     .color = colors[i],
                     .method = proto::Drawing::CIRCLES,
-                    .category = proto::Drawing::DEBUG,
+                    .category = proto::Drawing::ROBOTROLES,
                     .size = 15,
                     .thickness = 7,
                 },

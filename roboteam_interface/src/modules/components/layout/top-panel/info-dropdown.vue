@@ -71,6 +71,30 @@ const props = defineProps<{
             <div class="kbd kbd-sm font-mono">drag mouse</div>
           </li>
         </ul>
+
+        <h2 class="card-title">Colour explanation</h2>
+        <ul class="flex flex-col gap-2">
+
+          <li>
+            Red colour:
+            <div class="kbd kbd-sm font-mono" :style="{ backgroundColor: '#ff0000', color: '#ffffff' }">Harasser</div>
+          </li>
+
+          <li>
+            White colour:
+            <div class="kbd kbd-sm font-mono" :style="{ backgroundColor: '#ffffff', color: '#000000' }">Passer/striker</div>
+          </li>
+
+          <li>
+            Magenta colour:
+            <div class="kbd kbd-sm font-mono" :style="{ backgroundColor: '#ff00ff', color: '#ffffff' }">Receiver</div>
+          </li>
+
+          <li>
+            Black colour:
+            <div class="kbd kbd-sm font-mono" :style="{ backgroundColor: '#000000', color: '#ffffff' }">Robot with card</div>
+          </li>
+          </ul>
       </div>
     </div>
   </div>

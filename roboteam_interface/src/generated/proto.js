@@ -582,12 +582,14 @@ export const proto = $root.proto = (() => {
          * @property {number} PATH_PLANNING=0 PATH_PLANNING value
          * @property {number} DEBUG=1 DEBUG value
          * @property {number} MARGINS=2 MARGINS value
+         * @property {number} ROBOTROLES=3 ROBOTROLES value
          */
         Drawing.Category = (function() {
             const valuesById = {}, values = Object.create(valuesById);
             values[valuesById[0] = "PATH_PLANNING"] = 0;
             values[valuesById[1] = "DEBUG"] = 1;
             values[valuesById[2] = "MARGINS"] = 2;
+            values[valuesById[3] = "ROBOTROLES"] = 3;
             return values;
         })();
 

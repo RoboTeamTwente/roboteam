@@ -106,6 +106,11 @@ const leftPanelSelectedTabs = computed({
         Margins
         <dual-state v-model="uiStore.visualizations.margins" />
       </div>
+
+      <div class="form-control mb-4">
+        Robot Roles
+        <dual-state v-model="uiStore.visualizations.robotroles" />
+      </div>
     </div>
   </div>
 </template>

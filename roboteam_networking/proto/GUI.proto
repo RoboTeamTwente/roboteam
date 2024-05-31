@@ -30,6 +30,7 @@ message Drawing {
         PATH_PLANNING = 0;
         DEBUG = 1;
         MARGINS = 2;
+        ROBOTROLES = 3;
     }
 
     uint32 retain_for_ticks = 1;

@@ -175,7 +175,8 @@ export namespace proto {
         enum Category {
             PATH_PLANNING = 0,
             DEBUG = 1,
-            MARGINS = 2
+            MARGINS = 2,
+            ROBOTROLES = 3
         }
     }
 

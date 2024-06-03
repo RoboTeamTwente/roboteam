@@ -71,7 +71,7 @@ void Play::update() noexcept {
     // If we have more robots than allowed, one drives to the edge of the field
     if (currentMaxRobots < sizeUs) {
         stpInfos[roles[currentMaxRobots]->getName()].setShouldAvoidBall(true);
-        stpInfos[roles[currentMaxRobots]->getName()].setPositionToMoveTo(Vector2(0.0, -field.playArea.width() / 2));
+        stpInfos[roles[currentMaxRobots]->getName()].setPositionToMoveTo(rtt::Vector2(0.0, -field.playArea.height() / 2));
     }
 
     // Loop through roles and update them if they are assigned to a robot
@@ -150,7 +150,7 @@ void Play::distributeRoles() noexcept {
         flagMap[roles[currentMaxRobots]->getName()].priority = DealerFlagPriority::CARD;
         flagMap[roles[currentMaxRobots]->getName()].forcedID = cardId;
         stpInfos[roles[currentMaxRobots]->getName()].setShouldAvoidBall(true);
-        stpInfos[roles[currentMaxRobots]->getName()].setPositionToMoveTo(Vector2(0.0, -field.playArea.height() / 2));
+        stpInfos[roles[currentMaxRobots]->getName()].setPositionToMoveTo(rtt::Vector2(0.0, -field.playArea.height() / 2));
     }
     // Only keep the first n roles, where n is the amount of robots we have
     // This order is based on the order of the roles array
@@ -203,7 +203,6 @@ void Play::DrawMargins() noexcept {
                                                           field.rightDefenseArea.bottomLeft() + Vector2(-0.2, -0.2), field.rightDefenseArea.bottomRight() + Vector2(0.0, -0.2)};
     std::array<rtt::Vector2, 4> leftDefenseAreaMargin = {field.leftDefenseArea.topLeft() + Vector2(0.0, 0.2), field.leftDefenseArea.topRight() + Vector2(0.2, 0.2),
                                                          field.leftDefenseArea.bottomRight() + Vector2(0.2, -0.2), field.leftDefenseArea.bottomLeft() + Vector2(0.0, -0.2)};
-    std::array<rtt::Vector2, 1> cardId = {rtt::Vector2(0.0, -field.playArea.height() / 2)};
     std::array<rtt::Vector2, 1> placementLocation = {rtt::ai::GameStateManager::getRefereeDesignatedPosition()};
     std::array<rtt::Vector2, 2> pathToPlacementLocation = {world->getWorld()->getBall()->get()->position, world->getWorld()->getBall()->get()->position};
 
@@ -293,6 +292,7 @@ void Play::DrawMargins() noexcept {
     }
 
     if (GameStateManager::getCurrentGameState().cardId != -1) {
+        std::array<rtt::Vector2, 2> sideOfTheField = {*stpInfos[roles[GameStateManager::getCurrentGameState().maxAllowedRobots]->getName()].getPositionToMoveTo(), stpInfos[roles[GameStateManager::getCurrentGameState().maxAllowedRobots]->getName()].getRobot()->get()->getPos()};
         rtt::ai::gui::Out::draw(
             {
                 .label = "CardID",
@@ -302,7 +302,7 @@ void Play::DrawMargins() noexcept {
                 .size = 15,
                 .thickness = 7,
             },
-            cardId);
+            sideOfTheField);
     }
     std::array<std::string, 4> names = {"harasser", "passer", "receiver", "striker"};
     std::array<proto::Drawing::Color, 4> colors = {proto::Drawing::RED, proto::Drawing::WHITE, proto::Drawing::MAGENTA, proto::Drawing::WHITE};

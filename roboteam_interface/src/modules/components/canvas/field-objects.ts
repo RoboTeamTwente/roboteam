@@ -49,6 +49,8 @@ const protoColorToHex = (color: proto.Drawing.Color): string => {
       return '#ff00ff'
     case proto.Drawing.Color.WHITE:
       return '#ffffff'
+    case proto.Drawing.Color.GREY:
+      return '#666666'  
     case proto.Drawing.Color.BLACK:
       return '#000000'
   }

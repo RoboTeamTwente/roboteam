@@ -602,6 +602,7 @@ export const proto = $root.proto = (() => {
                 case 5:
                 case 6:
                 case 7:
+                case 8:
                     break;
                 }
             if (message.method != null && message.hasOwnProperty("method"))
@@ -696,9 +697,13 @@ export const proto = $root.proto = (() => {
             case 6:
                 message.color = 6;
                 break;
-            case "BLACK":
+            case "GREY":
             case 7:
                 message.color = 7;
+                break;
+            case "BLACK":
+            case 8:
+                message.color = 8;
                 break;
             }
             switch (object.method) {
@@ -874,7 +879,8 @@ export const proto = $root.proto = (() => {
          * @property {number} CYAN=4 CYAN value
          * @property {number} MAGENTA=5 MAGENTA value
          * @property {number} WHITE=6 WHITE value
-         * @property {number} BLACK=7 BLACK value
+         * @property {number} GREY=7 GREY value
+         * @property {number} BLACK=8 BLACK value
          */
         Drawing.Color = (function() {
             const valuesById = {}, values = Object.create(valuesById);
@@ -885,7 +891,8 @@ export const proto = $root.proto = (() => {
             values[valuesById[4] = "CYAN"] = 4;
             values[valuesById[5] = "MAGENTA"] = 5;
             values[valuesById[6] = "WHITE"] = 6;
-            values[valuesById[7] = "BLACK"] = 7;
+            values[valuesById[7] = "GREY"] = 7;
+            values[valuesById[8] = "BLACK"] = 8;
             return values;
         })();
 

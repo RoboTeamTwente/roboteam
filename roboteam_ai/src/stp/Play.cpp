@@ -219,6 +219,7 @@ void Play::DrawMargins() noexcept {
         pathToPlacementLocation = {world->getWorld()->getBall()->get()->position, rtt::ai::GameStateManager::getRefereeDesignatedPosition()};
 
     // Drawing all figures regarding states robots have to avoid certain area's (stop, ball placement, free kick, kick off)
+    proto::Drawing::Color color;
     if (ruleSetTitle == RuleSetName::STOP || currentGameState == RefCommand::DIRECT_FREE_THEM || currentGameState == RefCommand::DIRECT_FREE_THEM_STOP ||
         currentGameState == RefCommand::DIRECT_FREE_US || currentGameState == RefCommand::KICKOFF_US || currentGameState == RefCommand::KICKOFF_THEM ||
         currentGameState == RefCommand::PREPARE_FORCED_START || currentGameState == RefCommand::BALL_PLACEMENT_THEM || currentGameState == RefCommand::BALL_PLACEMENT_US ||
@@ -245,7 +246,6 @@ void Play::DrawMargins() noexcept {
                 },
                 rightDefenseAreaMargin);
         }
-        proto::Drawing::Color color;
         if (currentGameState == RefCommand::BALL_PLACEMENT_THEM || currentGameState == RefCommand::DIRECT_FREE_THEM || currentGameState == RefCommand::KICKOFF_THEM)
             color = GameSettings::isYellow() ? proto::Drawing::YELLOW : proto::Drawing::BLUE;
         else if (currentGameState == RefCommand::BALL_PLACEMENT_US || currentGameState == RefCommand::BALL_PLACEMENT_US_DIRECT || currentGameState == RefCommand::DIRECT_FREE_US ||
@@ -253,18 +253,21 @@ void Play::DrawMargins() noexcept {
             color = GameSettings::isYellow() ? proto::Drawing::BLUE : proto::Drawing::YELLOW;
         else
             color = proto::Drawing::RED;
-        for (auto method : {proto::Drawing::CIRCLES, proto::Drawing::LINES_CONNECTED}) {
-            rtt::ai::gui::Out::draw(
-                {
-                    .label = method == proto::Drawing::CIRCLES ? "Ball area to avoid" : "Path to placement location",
-                    .color = method == proto::Drawing::CIRCLES ? color : proto::Drawing::BLACK,
-                    .method = method,
-                    .category = proto::Drawing::MARGINS,
-                    .size = method == proto::Drawing::CIRCLES ? 52 : 8,
-                    .thickness = method == proto::Drawing::CIRCLES ? 4 : 8,
-                },
-                pathToPlacementLocation);
-        }
+        
+    }
+    else color = proto::Drawing::GREY;
+
+    for (auto method : {proto::Drawing::CIRCLES, proto::Drawing::LINES_CONNECTED}) {
+        rtt::ai::gui::Out::draw(
+            {
+                .label = method == proto::Drawing::CIRCLES ? "Ball area to avoid" : "Path to placement location",
+                .color = method == proto::Drawing::CIRCLES ? color : proto::Drawing::BLACK,
+                .method = method,
+                .category = proto::Drawing::MARGINS,
+                .size = method == proto::Drawing::CIRCLES ? 52 : 8,
+                .thickness = method == proto::Drawing::CIRCLES ? 4 : 8,
+            },
+            pathToPlacementLocation);
     }
 
     // Drawing all figures regarding ball placement location and the path towards it

@@ -26,7 +26,6 @@ namespace rtt::ai {
 class FieldComputations {
    private:
     static constexpr double NEGLIGIBLE_LENGTH = 0.000001; /**< If a line length is below or equal to this threshold then is it neglected during determining the blockades. */
-    static constexpr double PROJECTION_MARGIN = 0.02;     /**< Some extra padding is added when projecting positions,so that the projected position is not on lines/intersections */
 
    public:
     /**

@@ -288,8 +288,8 @@ std::vector<LineSegment> FieldComputations::mergeBlockades(std::vector<LineSegme
 
 Vector2 FieldComputations::projectPointInField(const Field &field, Vector2 point, double margin) {
     Vector2 projectedPoint;
-    projectedPoint.x = std::clamp(point.x, field.playArea.left() + margin + PROJECTION_MARGIN, field.playArea.right() - margin - PROJECTION_MARGIN);
-    projectedPoint.y = std::clamp(point.y, field.playArea.bottom() + margin + PROJECTION_MARGIN, field.playArea.top() - margin - PROJECTION_MARGIN);
+    projectedPoint.x = std::clamp(point.x, field.playArea.left() + margin, field.playArea.right() - margin);
+    projectedPoint.y = std::clamp(point.y, field.playArea.bottom() + margin, field.playArea.top() - margin);
     return projectedPoint;
 }
 
@@ -308,13 +308,11 @@ Vector2 FieldComputations::projectPointOutOfDefenseArea(const Field &field, Vect
     double xDiff;
     double yDiff;
     if (field.leftDefenseArea.contains(point, ourDefenseAreaMargin)) {
-        xDiff = (field.leftDefenseArea.right() + ourDefenseAreaMargin + PROJECTION_MARGIN) - point.x;
-        yDiff = point.y > 0 ? (field.leftDefenseArea.top() + ourDefenseAreaMargin + PROJECTION_MARGIN) - point.y
-                            : (field.leftDefenseArea.bottom() - ourDefenseAreaMargin - PROJECTION_MARGIN) - point.y;
+        xDiff = (field.leftDefenseArea.right() + ourDefenseAreaMargin) - point.x;
+        yDiff = point.y > 0 ? (field.leftDefenseArea.top() + ourDefenseAreaMargin) - point.y : (field.leftDefenseArea.bottom() - ourDefenseAreaMargin) - point.y;
     } else if (field.rightDefenseArea.contains(point, theirDefenseAreaMargin)) {
-        xDiff = (field.rightDefenseArea.left() - theirDefenseAreaMargin - PROJECTION_MARGIN) - point.x;
-        yDiff = point.y > 0 ? (field.rightDefenseArea.top() + theirDefenseAreaMargin + PROJECTION_MARGIN) - point.y
-                            : (field.rightDefenseArea.bottom() - theirDefenseAreaMargin - PROJECTION_MARGIN) - point.y;
+        xDiff = (field.rightDefenseArea.left() - theirDefenseAreaMargin) - point.x;
+        yDiff = point.y > 0 ? (field.rightDefenseArea.top() + theirDefenseAreaMargin) - point.y : (field.rightDefenseArea.bottom() - theirDefenseAreaMargin) - point.y;
     } else
         return point;  // In case it is in neither defense area, just return the point
 
@@ -333,8 +331,8 @@ Vector2 FieldComputations::projectPointIntoFieldOnLine(const Field &field, Vecto
     auto projectedPos = LineSegment(p1, p2).project(point);
     if (field.playArea.contains(projectedPos, fieldMargin)) return projectedPos;
 
-    auto intersection_lhs = FieldComputations::lineIntersectionWithField(field, projectedPos, p1, fieldMargin - PROJECTION_MARGIN);
-    auto intersection_rhs = FieldComputations::lineIntersectionWithField(field, projectedPos, p2, fieldMargin - PROJECTION_MARGIN);
+    auto intersection_lhs = FieldComputations::lineIntersectionWithField(field, projectedPos, p1, fieldMargin);
+    auto intersection_rhs = FieldComputations::lineIntersectionWithField(field, projectedPos, p2, fieldMargin);
 
     // If there is no point  on this line inside the field, project the position into the field and return it
     if (!intersection_lhs && !intersection_rhs) return projectPointInField(field, projectedPos, fieldMargin);
@@ -345,8 +343,7 @@ Vector2 FieldComputations::projectPointIntoFieldOnLine(const Field &field, Vecto
 
 Vector2 FieldComputations::projectPointToValidPositionOnLine(const Field &field, Vector2 point, Vector2 p1, Vector2 p2, double fieldMargin) {
     auto [theirDefenseAreaMargin, ourDefenseAreaMargin] = getDefenseAreaMargin();
-    // Subtract PROJECTION_MARGIN to avoid the situation where the point is between the left field line and our goal line (-6.0 < x < -5.9)
-    auto pointProjectedInField = projectPointIntoFieldOnLine(field, point, p1, p2, fieldMargin - PROJECTION_MARGIN);
+    auto pointProjectedInField = projectPointIntoFieldOnLine(field, point, p1, p2, fieldMargin);
 
     bool ourGoal;   // Which goal's defense area the projected point is in
     double margin;  // The margin to be used for the defense area- set to ourDefenseMargin or theirDefenseAreaMargin depending on where the projected pos is
@@ -361,7 +358,7 @@ Vector2 FieldComputations::projectPointToValidPositionOnLine(const Field &field,
     }
 
     std::vector<Vector2> intersections;
-    auto defenseAreaVertices = getDefenseArea(field, ourGoal, margin + PROJECTION_MARGIN, 0).vertices;
+    auto defenseAreaVertices = getDefenseArea(field, ourGoal, margin, 0).vertices;
     // Loop over the all lines of the defense area except the goal line and check for intersections
     for (size_t i = 0; i < defenseAreaVertices.size() - 1; i++) {
         auto intersection = LineSegment(defenseAreaVertices[i], defenseAreaVertices[i + 1]).intersects({p1, p2});

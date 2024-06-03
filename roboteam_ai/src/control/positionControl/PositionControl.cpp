@@ -59,7 +59,7 @@ Vector2 PositionControl::handleBallCollision(const world::World *world, const Fi
         return targetPosition;
     }
     int rotationStepDegrees = 10;
-    int maxRotationDegrees = 90;
+    int maxRotationDegrees = 180;
     for (int i = rotationStepDegrees; i <= maxRotationDegrees; i += rotationStepDegrees) {
         for (int sign : {1, -1}) {
             double rotation = sign * i * M_PI / 180;
@@ -83,7 +83,7 @@ Vector2 PositionControl::handleBallPlacementCollision(const world::World *world,
         return targetPosition;
     }
     int rotationStepDegrees = 10;
-    int maxRotationDegrees = 90;
+    int maxRotationDegrees = 180;
     for (int i = rotationStepDegrees; i <= maxRotationDegrees; i += rotationStepDegrees) {
         for (int sign : {1, -1}) {
             double rotation = sign * i * M_PI / 180;

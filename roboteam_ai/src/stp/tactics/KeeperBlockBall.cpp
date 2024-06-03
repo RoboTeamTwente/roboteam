@@ -27,7 +27,7 @@ constexpr double MAX_DISTANCE_HEADING_TOWARDS_GOAL = 0.2;
 // For determining where the keeper should stand to stand between the ball and the goal, we draw a line from the ball to a bit behind the goal
 constexpr double PROJECT_BALL_DISTANCE_TO_GOAL = 0.5;  // Small means keeper will me more in center, big means keeper will be more to the side of the goal
 // We stop deciding where the keeper should be if the ball is too far behind our own goal
-constexpr double MAX_DISTANCE_BALL_BEHIND_GOAL = 0.3;
+constexpr double MAX_DISTANCE_BALL_BEHIND_GOAL = 0.1;
 
 KeeperBlockBall::KeeperBlockBall() { skills = rtt::collections::state_machine<Skill, Status, StpInfo>{skill::GoToPos()}; }
 
@@ -69,34 +69,6 @@ LineSegment KeeperBlockBall::getKeepersLineSegment(const Field &field) {
     return LineSegment(keepersLineSegmentLeft, keepersLineSegmentRight);
 }
 
-std::optional<HalfLine> KeeperBlockBall::estimateBallTrajectory(const world::view::BallView &ball, const std::optional<world::view::RobotView> &enemyRobot) {
-    // If the ball is already moving, the trajectory of the ball is clear
-    if (ball->velocity.length2() > control_constants::BALL_STILL_VEL2) {
-        const auto start = ball->position;
-        const auto direction = ball->position + ball->velocity;
-        return HalfLine(start, direction);
-    }
-
-    const bool hasEnemy = enemyRobot.has_value() && enemyRobot.value().get() != nullptr;
-
-    // If the enemy robot already has the ball, it will probably kick in the direction it is facing
-    if (hasEnemy && enemyRobot->get()->hasBall()) {
-        const auto start = enemyRobot->get()->getPos();
-        const auto direction = enemyRobot->get()->getPos() + enemyRobot->get()->getAngle().toVector2();
-        return HalfLine(start, direction);
-    }
-
-    // If the enemy is only a bit close, we look at the direction from the robot to the ball
-    if (enemyRobot && enemyRobot->get()->getDistanceToBall() < control_constants::ENEMY_CLOSE_TO_BALL_DISTANCE) {
-        const auto start = enemyRobot->get()->getPos();
-        const auto direction = ball->position;
-        return HalfLine(start, direction);
-    }
-
-    // Otherwise, the ball probably will not be moved by enemies soon :P
-    return std::nullopt;
-}
-
 bool KeeperBlockBall::isBallHeadingTowardsOurGoal(const HalfLine &ballTrajectory, const Field &field) {
     const auto goalLineSegment = LineSegment(field.leftGoalArea.bottomRight(), field.leftGoalArea.topRight());
     const auto intersectionWithGoalLine = ballTrajectory.intersect(Line(goalLineSegment));
@@ -105,125 +77,164 @@ bool KeeperBlockBall::isBallHeadingTowardsOurGoal(const HalfLine &ballTrajectory
 }
 
 std::pair<Vector2, bool> KeeperBlockBall::calculateTargetPosition(const StpInfo info) noexcept {
-    bool shouldAvoidGoalPosts = true;
     const auto &field = info.getField().value();
     const auto &ball = info.getBall().value();
-    // const auto &world = info.getCurrentWorld();
-    const auto &robot = info.getRobot().value();
-    // const auto enemyRobot = world->getWorld()->getRobotClosestToBall(world::them);
 
     const auto keepersLineSegment = getKeepersLineSegment(field);
-    // const auto ballTrajectory = estimateBallTrajectory(ball, enemyRobot);
-    // const bool ballHeadsTowardsOurGoal = ballTrajectory.has_value() && isBallHeadingTowardsOurGoal(ballTrajectory.value(), field);
-    LineSegment ballTrajectory(ball->position, ball->expectedEndPosition);
+    const LineSegment ballTrajectory(ball->position, ball->expectedEndPosition);
     bool ballHeadsTowardsOurGoal = ballTrajectory.intersects(keepersLineSegment).has_value();
-    // const auto enemyRobot = world->getWorld()->getRobotClosestToBall(world::them);
-    const auto &world = info.getCurrentWorld();
-    auto &theirRobots = world->getWorld()->getThem();
-    auto &ourRobots = world->getWorld()->getUs();
-    bool anyTheirRobotHasBall = std::any_of(theirRobots.begin(), theirRobots.end(), [](const auto &robot) { return robot.get()->hasBall(); });
-    bool anyOurRobotHasBall = std::any_of(ourRobots.begin(), ourRobots.end(), [](const auto &robot) { return robot.get()->hasBall(); });
 
     if (ballHeadsTowardsOurGoal) {
-        shouldAvoidGoalPosts = false;
-        const auto robotPosition = robot->getPos();
-        const auto robotVelocity = robot->getVel();
-        const auto maxRobotVelocity = info.getMaxRobotVelocity();
-        const auto maxRobotAcceleration = Constants::MAX_ACC();
-        const auto closestPointToGoal = Line(ballTrajectory).intersect(Line(keepersLineSegment));
-
-        // If possible, we intercept the ball at the line
-        if (closestPointToGoal.has_value() && keepersLineSegment.distanceToLine(closestPointToGoal.value()) < MAX_DISTANCE_HEADING_TOWARDS_GOAL) {
-            const auto ballTimeAtClosestPoint = FieldComputations::getBallTimeAtPosition(*ball.get(), closestPointToGoal.value());
-            auto [targetPosition, timeToTarget] = control::OvershootComputations::overshootingDestination(robotPosition, closestPointToGoal.value(), robotVelocity,
-                                                                                                          maxRobotVelocity, maxRobotAcceleration, ballTimeAtClosestPoint);
-            if (timeToTarget <= ballTimeAtClosestPoint) {
-                return {targetPosition, shouldAvoidGoalPosts};
-            }
-        }
-
-        double maxTimeLeftWhenArrived = std::numeric_limits<double>::lowest();
-        Vector2 optimalTarget = Vector2();
-        // double optimalTargetTime;
-        // double optimalTimeToTarget;
-        // if ball is already extremely close the robot, and the robot is on the line of the velocity of the ball, robot should not move
-        // ??
-        if (ball->position.dist(robotPosition) < 0.11) {
-            return {ball->position, shouldAvoidGoalPosts};
-        }
-
-        for (double timeStep = 0.01; timeStep <= 3; timeStep += 0.01) {
-            auto predictedBallPosition = FieldComputations::getBallPositionAtTime(*ball.get(), timeStep);
-
-            if (!field.leftDefenseArea.contains(predictedBallPosition)) {
-                continue;
-            }
-
-            auto [currentTarget, currentTimeToTarget] =
-                control::OvershootComputations::overshootingDestination(robotPosition, predictedBallPosition, robotVelocity, maxRobotVelocity, maxRobotAcceleration, timeStep);
-
-            double timeLeftWhenArrived = timeStep - currentTimeToTarget;
-
-            if (timeLeftWhenArrived > maxTimeLeftWhenArrived) {
-                maxTimeLeftWhenArrived = timeLeftWhenArrived;
-                optimalTarget = currentTarget;
-                // optimalTargetTime = timeStep;
-                // optimalTimeToTarget = currentTimeToTarget;
-            }
-        }
-        return {optimalTarget, shouldAvoidGoalPosts};
-    }
-    // If ball is being passed to opponent Robot, calculate potential receiver position and move to a possible interception point
-    //  else if(true){
-    //      LineSegment realBallTraj = LineSegment(ball->position, ball->expectedEndPosition);
-    //      //Identify the opponent robot along the trajectory of the ball
-    //      for (const auto& enemy : theirRobots) {
-    //          if(enemy.get()->getPos().x <= 0){
-    //              std::optional<rtt::Vector2> vecPts = realBallTraj.project(enemy.get()->getPos());
-    //              // see if the distnace between the projected point and the robot is less than the 1m
-    //              if (vecPts.has_value() && vecPts.value().dist(enemy.get()->getPos()) < 0.5) {
-    //                  // Draw a circle on the opponent robot at this point of intersection
-    //                  std::vector<rtt::Vector2> vec = {enemy.get()->getPos()};
-    //                  std::span<rtt::Vector2> spanVec = vec;
-    //                  rtt::ai::gui::Out::draw(
-    //                      {
-    //                          .label = "Interception Point",
-    //                          .color = proto::Drawing::CYAN,
-    //                          .method = proto::Drawing::CIRCLES,
-    //                          .category = proto::Drawing::MARGINS,
-    //                          .size = 15,
-    //                          .thickness = 7,
-    //                      },
-    //                      spanVec);
-    //                  // return {vecPts.value(), shouldAvoidGoalPosts};
-    //              }
-    //          }
-    //      }
-    //  }
-    //  else if(true){
-    const rtt::world::robot::Robot *closestEnemy = nullptr;
-    double minDist = std::numeric_limits<double>::max();
-    LineSegment realBallTraj = LineSegment(ball->position, ball->expectedEndPosition);
-    for (const auto &enemy : theirRobots) {
-        if (enemy.get()->getPos().x <= 0) {
-            std::optional<rtt::Vector2> vecPts = realBallTraj.project(enemy.get()->getPos());
-            // see if the distance between the projected point and the robot is less than 1m
-            if (vecPts.has_value() && vecPts.value().dist(enemy.get()->getPos()) < 0.5) {
-                double dist = vecPts.value().dist(ball->position);
-                if (dist < minDist) {
-                    minDist = dist;
-                    closestEnemy = enemy.get();
-                }
-            }
-        }
+        auto shouldAvoidGoalPosts = false;
+        return {calculateTargetPositionBallShot(info, keepersLineSegment, ballTrajectory), shouldAvoidGoalPosts};
     }
 
     // This lets the keeper intercept the ball in the defense area when it's not heading towards our goal. This did not work well at the Schubert open, since we always just barely
     // missed the ball. Might be tweaking control constants const KeeperInterceptionInfo keeperInterceptionInfo = InterceptionComputations::calculateKeeperInterceptionInfo(world,
     // robot); if (keeperInterceptionInfo.canIntercept) {
-    if (closestEnemy) {
-        // Draw a circle on the closest opponent robot at this point of intersection
-        std::vector<rtt::Vector2> vec = {closestEnemy->getPos()};
+    // }
+    // const KeeperInterceptionInfo keeperInterceptionInfo = InterceptionComputations::calculateKeeperInterceptionInfo(world, robot);
+    // if (keeperInterceptionInfo.canIntercept) {
+    //     return keeperInterceptionInfo.interceptLocation;
+    // }
+
+    if (ball->position.x >= field.leftGoalArea.rightLine().center().x - MAX_DISTANCE_BALL_BEHIND_GOAL) {
+        auto shouldAvoidGoalPosts = true;
+        std::optional<Vector2> predictedBallPositionTheirRobot = calculateTheirBallInterception(info, ballTrajectory);
+        return {calculateTargetPositionBallNotShot(info, predictedBallPositionTheirRobot), shouldAvoidGoalPosts};
+    }
+
+    // Default case: go to the center of the goal
+    auto shouldAvoidGoalPosts = true;
+    return {Vector2(keepersLineSegment.start.x, 0), shouldAvoidGoalPosts};
+}
+
+Vector2 KeeperBlockBall::calculateTargetPositionBallShot(const StpInfo info, rtt::LineSegment keepersLineSegment, rtt::LineSegment ballTrajectory) noexcept {
+    const auto &field = info.getField().value();
+    const auto &ball = info.getBall().value();
+    const auto &robot = info.getRobot().value();
+    const auto robotPosition = robot->getPos();
+    const auto robotVelocity = robot->getVel();
+    const auto maxRobotVelocity = info.getMaxRobotVelocity();
+    const auto maxRobotAcceleration = Constants::MAX_ACC();
+    const auto closestPointToGoal = Line(ballTrajectory).intersect(Line(keepersLineSegment));
+
+    // If possible, we intercept the ball at the line
+    if (closestPointToGoal.has_value()) {
+        const auto ballTimeAtClosestPoint = FieldComputations::getBallTimeAtPosition(*ball.get(), closestPointToGoal.value());
+        auto [targetPosition, timeToTarget] = control::OvershootComputations::overshootingDestination(robotPosition, closestPointToGoal.value(), robotVelocity, maxRobotVelocity,
+                                                                                                      maxRobotAcceleration, ballTimeAtClosestPoint);
+        if (timeToTarget <= ballTimeAtClosestPoint) {
+            return targetPosition;
+        }
+    }
+
+    double maxTimeLeftWhenArrived = std::numeric_limits<double>::lowest();
+    Vector2 optimalTarget = Vector2();
+    for (double timeStep = 0.01; timeStep <= 3; timeStep += 0.01) {
+        auto predictedBallPosition = FieldComputations::getBallPositionAtTime(*ball.get(), timeStep);
+
+        if (!field.leftDefenseArea.contains(predictedBallPosition)) {
+            continue;
+        }
+
+        auto [currentTarget, currentTimeToTarget] =
+            control::OvershootComputations::overshootingDestination(robotPosition, predictedBallPosition, robotVelocity, maxRobotVelocity, maxRobotAcceleration, timeStep);
+
+        double timeLeftWhenArrived = timeStep - currentTimeToTarget;
+
+        if (timeLeftWhenArrived > maxTimeLeftWhenArrived) {
+            maxTimeLeftWhenArrived = timeLeftWhenArrived;
+            optimalTarget = currentTarget;
+        }
+    }
+    return optimalTarget;
+}
+
+Vector2 KeeperBlockBall::calculateTargetPositionBallNotShot(const StpInfo &info, std::optional<Vector2> predictedBallPositionTheirRobot) noexcept {
+    const auto &field = info.getField().value();
+    const auto &ball = info.getBall().value();
+    const auto &robot = info.getRobot().value();
+    Vector2 leftGoalPost = field.leftGoalArea.topRight();
+    Vector2 rightGoalPost = field.leftGoalArea.bottomRight();
+    Vector2 targetFromPos = predictedBallPositionTheirRobot ? predictedBallPositionTheirRobot.value() : ball->position;
+    std::array<rtt::Vector2, 2> rightGoalPostArr = {targetFromPos, rightGoalPost};
+    std::array<rtt::Vector2, 2> leftGoalPostArr = {targetFromPos, leftGoalPost};
+    gui::Out::draw(
+        {
+            .label = "ballToLeftGoalPost",
+            .color = proto::Drawing::MAGENTA,
+            .method = proto::Drawing::LINES_CONNECTED,
+            .category = proto::Drawing::DEBUG,
+            .forRobotId = robot->getId(),
+            .thickness = 1,
+        },
+        rightGoalPostArr);
+    gui::Out::draw(
+        {
+            .label = "ballToRightGoalPost",
+            .color = proto::Drawing::MAGENTA,
+            .method = proto::Drawing::LINES_CONNECTED,
+            .category = proto::Drawing::DEBUG,
+            .forRobotId = robot->getId(),
+            .thickness = 1,
+        },
+        leftGoalPostArr);
+
+    Vector2 ballToLeftGoalPost = leftGoalPost - targetFromPos;
+    Vector2 ballToRightGoalPost = rightGoalPost - targetFromPos;
+    Vector2 bisectorUnitVector = (ballToLeftGoalPost.normalize() + ballToRightGoalPost.normalize()).normalize();
+    auto scalingFactor = (field.leftGoalArea.rightLine().center().x - targetFromPos.x) / bisectorUnitVector.x;
+    Vector2 bisectorPoint = targetFromPos + bisectorUnitVector * scalingFactor;
+
+    std::array<rtt::Vector2, 2> bisectorArr = {targetFromPos, bisectorPoint};
+    gui::Out::draw(
+        {
+            .label = "bisectorLine",
+            .color = proto::Drawing::RED,
+            .method = proto::Drawing::LINES_CONNECTED,
+            .category = proto::Drawing::DEBUG,
+            .forRobotId = robot->getId(),
+            .thickness = 2,
+        },
+        bisectorArr);
+
+    // project the leftGoalPost on the ball->pos bisectorPoint line if the ball has positive x, else project the rightGoalPost
+    Vector2 targetGoalPost = targetFromPos.y >= 0 ? leftGoalPost : rightGoalPost;
+    auto targetPositionNew = LineSegment(targetFromPos, bisectorPoint).project(targetGoalPost);
+    std::array<rtt::Vector2, 2> goalPostArr = {targetGoalPost, targetPositionNew};
+    gui::Out::draw(
+        {
+            .label = "targetPositionNew",
+            .color = proto::Drawing::GREEN,
+            .method = proto::Drawing::LINES_CONNECTED,
+            .category = proto::Drawing::DEBUG,
+            .forRobotId = robot->getId(),
+            .thickness = 1,
+        },
+        goalPostArr);
+    return targetPositionNew;
+}
+
+std::optional<Vector2> KeeperBlockBall::calculateTheirBallInterception(const StpInfo &info, rtt::LineSegment ballTrajectory) noexcept {
+    std::optional<Vector2> predictedBallPositionTheirRobot = std::nullopt;
+    const auto ball = info.getBall().value();
+    double minDistanceToBall = std::numeric_limits<double>::max();
+    for (const auto &theirRobot : info.getCurrentWorld()->getWorld()->getThem()) {
+        std::optional<rtt::Vector2> vecPts = ballTrajectory.project(theirRobot.get()->getPos());
+        // see if the distance between the projected point and the robot is less than 0.5m
+        if (vecPts.value().dist(theirRobot.get()->getPos()) < 0.5) {
+            double dist = vecPts.value().dist(ball->position);
+            if (dist < minDistanceToBall) {
+                minDistanceToBall = dist;
+                predictedBallPositionTheirRobot = vecPts.value();
+                predictedBallPositionTheirRobot =
+                    predictedBallPositionTheirRobot.value() + (ball->position - predictedBallPositionTheirRobot.value()).normalize() * control_constants::CENTER_TO_FRONT;
+            }
+        }
+    }
+    if (predictedBallPositionTheirRobot) {
+        std::vector<rtt::Vector2> vec = {predictedBallPositionTheirRobot.value()};
         std::span<rtt::Vector2> spanVec = vec;
 
         rtt::ai::gui::Out::draw(
@@ -237,94 +248,7 @@ std::pair<Vector2, bool> KeeperBlockBall::calculateTargetPosition(const StpInfo 
             },
             spanVec);
     }
-    // }
-    // const KeeperInterceptionInfo keeperInterceptionInfo = InterceptionComputations::calculateKeeperInterceptionInfo(world, robot);
-    // if (keeperInterceptionInfo.canIntercept) {
-    //     return keeperInterceptionInfo.interceptLocation;
-    // }
-
-    if (ball->position.x >= field.leftGoalArea.rightLine().center().x - MAX_DISTANCE_BALL_BEHIND_GOAL) {
-        Vector2 leftGoalPost = field.leftGoalArea.topRight();
-        Vector2 rightGoalPost = field.leftGoalArea.bottomRight();
-        // set targetFromPos to closetEnemey getPos if defined, else ball position
-        Vector2 targetFromPos = closestEnemy ? closestEnemy->getPos() : ball->position;
-
-        std::array<rtt::Vector2, 2> rightGoalPostArr = {targetFromPos, rightGoalPost};
-        std::array<rtt::Vector2, 2> leftGoalPostArr = {targetFromPos, leftGoalPost};
-        gui::Out::draw(
-            {
-                .label = "ballToLeftGoalPost",
-                .color = proto::Drawing::MAGENTA,
-                .method = proto::Drawing::LINES_CONNECTED,
-                .category = proto::Drawing::DEBUG,
-                .forRobotId = robot->getId(),
-                .thickness = 1,
-            },
-            rightGoalPostArr);
-        gui::Out::draw(
-            {
-                .label = "ballToRightGoalPost",
-                .color = proto::Drawing::MAGENTA,
-                .method = proto::Drawing::LINES_CONNECTED,
-                .category = proto::Drawing::DEBUG,
-                .forRobotId = robot->getId(),
-                .thickness = 1,
-            },
-            leftGoalPostArr);
-
-        // Calculate the angle bisector of the line from the ball to the goal posts
-        Vector2 ballToLeftGoalPost = leftGoalPost - targetFromPos;
-        Vector2 ballToRightGoalPost = rightGoalPost - targetFromPos;
-        // Add the unit vectors together and normalize the result to get the bisector unit vector
-        Vector2 bisectorUnitVector = (ballToLeftGoalPost.normalize() + ballToRightGoalPost.normalize()).normalize();
-        // Scale the bisector unit vector such that it will be long enough to reach the goal line
-        auto scalingFactor = (field.leftGoalArea.rightLine().center().x - targetFromPos.x) / bisectorUnitVector.x;
-        Vector2 bisectorPoint = targetFromPos + bisectorUnitVector * scalingFactor;
-
-        std::array<rtt::Vector2, 2> bisectorArr = {targetFromPos, bisectorPoint};
-        gui::Out::draw(
-            {
-                .label = "bisectorLine",
-                .color = proto::Drawing::RED,
-                .method = proto::Drawing::LINES_CONNECTED,
-                .category = proto::Drawing::DEBUG,
-                .forRobotId = robot->getId(),
-                .thickness = 2,
-            },
-            bisectorArr);
-
-        // Old target position for comparison
-        std::array<rtt::Vector2, 2> ballGoalLineArr = {ball->position, field.leftGoalArea.rightLine().center() - Vector2(PROJECT_BALL_DISTANCE_TO_GOAL, 0)};
-        gui::Out::draw(
-            {
-                .label = "targetPositionOld",
-                .color = proto::Drawing::BLUE,
-                .method = proto::Drawing::LINES_CONNECTED,
-                .category = proto::Drawing::DEBUG,
-                .forRobotId = robot->getId(),
-                .thickness = 1,
-            },
-            {ballGoalLineArr});
-
-        // project the leftGoalPost on the ball->pos bisectorPoint line if the ball has positive x, else project the rightGoalPost
-        Vector2 targetGoalPost = targetFromPos.y >= 0 ? leftGoalPost : rightGoalPost;
-        const auto targetPositionNew = LineSegment(targetFromPos, bisectorPoint).project(targetGoalPost);
-        std::array<rtt::Vector2, 2> goalPostArr = {targetGoalPost, targetPositionNew};
-        gui::Out::draw(
-            {
-                .label = "targetPositionNew",
-                .color = proto::Drawing::GREEN,
-                .method = proto::Drawing::LINES_CONNECTED,
-                .category = proto::Drawing::DEBUG,
-                .forRobotId = robot->getId(),
-                .thickness = 1,
-            },
-            goalPostArr);
-        return {targetPositionNew, shouldAvoidGoalPosts};
-    }
-
-    // Default case: go to the center of the goal
-    return {Vector2(keepersLineSegment.start.x, 0), shouldAvoidGoalPosts};
+    return predictedBallPositionTheirRobot;
 }
 
 Angle KeeperBlockBall::calculateTargetAngle(const world::view::BallView &ball, const Vector2 &targetKeeperPosition) {

@@ -17,8 +17,7 @@ FreeKickUsPass::FreeKickUsPass() : Play() {
 
     // Evaluations that have to be true to allow the play to continue, otherwise the play will change. Plays can also end using the shouldEndPlay().
     keepPlayEvaluation.clear();
-    keepPlayEvaluation.emplace_back(GlobalEvaluation::NormalOrFreeKickUsGameState);
-    keepPlayEvaluation.emplace_back(GlobalEvaluation::WeWillHaveBall);
+    keepPlayEvaluation.emplace_back(GlobalEvaluation::FreeKickUsGameState);
 
     // Role creation, the names should be unique. The names are used in the stpInfos-map.
     roles = std::array<std::unique_ptr<Role>, rtt::ai::Constants::ROBOT_COUNT()>{

@@ -5,6 +5,7 @@
 #include "stp/roles/Keeper.h"
 #include "stp/roles/active/PenaltyTaker.h"
 #include "stp/roles/passive/Halt.h"
+#include "utilities/RuntimeConfig.h"
 
 namespace rtt::ai::stp::play {
 const char* PenaltyUs::getName() const { return "Penalty Us"; }
@@ -57,7 +58,7 @@ Dealer::FlagMap PenaltyUs::decideRoleFlags() const noexcept {
 
 void PenaltyUs::calculateInfoForRoles() noexcept {
     auto positionTarget = PositionComputations::getPosition(std::nullopt, field.middleRightGrid, gen::GoalShot, field, world);
-    if (GameStateManager::getCurrentGameState().timeLeft > 3.0) {
+    if (!RuntimeConfig::useReferee || GameStateManager::getCurrentGameState().timeLeft > 3.0) {
         stpInfos["kicker"].setPositionToMoveTo(positionTarget);
     } else {
         stpInfos["kicker"].setPositionToMoveTo(stpInfos["kicker"].getRobot()->get()->getPos());

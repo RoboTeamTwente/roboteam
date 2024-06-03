@@ -7,6 +7,7 @@
 #include "stp/roles/active/PassReceiver.h"
 #include "stp/roles/passive/Defender.h"
 #include "stp/roles/passive/Formation.h"
+#include "utilities/RuntimeConfig.h"
 
 namespace rtt::ai::stp::play {
 
@@ -73,7 +74,7 @@ void FreeKickUsPass::calculateInfoForRoles() noexcept {
         stpInfos["free_kick_taker"].setPositionToShootAt(passInfo.receiverLocation);
         stpInfos["free_kick_taker"].setShotType(ShotType::PASS);
         stpInfos["free_kick_taker"].setKickOrChip(KickOrChip::KICK);
-        if (GameStateManager::getCurrentGameState().timeLeft < 1.5) {
+        if (RuntimeConfig::useReferee && GameStateManager::getCurrentGameState().timeLeft < 1.5) {
             stpInfos["free_kick_taker"].setPositionToShootAt(field.rightDefenseArea.rightLine().center());
             stpInfos["free_kick_taker"].setShotType(ShotType::MAX);
         }
@@ -114,7 +115,7 @@ bool FreeKickUsPass::shouldEndPlay() noexcept {
     if (!ballKicked() && stpInfos["free_kick_taker"].getRobot() && !stpInfos["free_kick_taker"].getRobot().value()->hasBall() &&
         stp::computations::PassComputations::calculatePass(gen::AttackingPass, world, field).passScore >
             1.05 * stp::PositionScoring::scorePosition(passInfo.receiverLocation, gen::AttackingPass, field, world).score &&
-        GameStateManager::getCurrentGameState().timeLeft > 1.5)
+        (!RuntimeConfig::useReferee || GameStateManager::getCurrentGameState().timeLeft > 1.5))
         return true;
 
     return false;

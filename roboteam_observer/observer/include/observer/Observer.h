@@ -29,7 +29,7 @@ class Observer {
      *@return The entire known/predicted state of the game at this point in time.
      */
     proto::State process(const std::vector<proto::SSL_WrapperPacket>& visionPackets, const std::vector<proto::Referee>& refereePackets,
-                         const std::vector<rtt::RobotsFeedback>& robotData);
+                         const std::vector<rtt::RobotsFeedback>& robotData, const std::vector<int>& camera_ids = {});
 
    private:
     RobotParameterDatabase parameterDatabase;

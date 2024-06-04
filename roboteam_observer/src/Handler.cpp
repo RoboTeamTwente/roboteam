@@ -10,7 +10,7 @@
 
 std::optional<rtt::LogFileWriter> Handler::fileWriter = std::nullopt;
 
-void Handler::start(std::string visionip, std::string refereeip, int visionport, int refereeport, bool shouldLog) {
+void Handler::start(std::string visionip, std::string refereeip, int visionport, int refereeport, bool shouldLog, const std::vector<int>& camera_ids) {
     if (!initializeNetworkers()) {
         throw FailedToInitializeNetworkersException();
     }
@@ -94,7 +94,7 @@ void Handler::start(std::string visionip, std::string refereeip, int visionport,
                 std::swap(robothub_info, this->receivedRobotData);
             }
             // TODO: try-catch here?
-            auto state = observer.process(vision_packets, referee_packets, robothub_info);  // TODO: fix time extrapolation
+            auto state = observer.process(vision_packets, referee_packets, robothub_info, camera_ids);  // TODO: fix time extrapolation
             std::size_t iterations = 0;
             bool sent = false;
             while (iterations < 10) {

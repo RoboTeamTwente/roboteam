@@ -242,7 +242,7 @@ std::optional<Vector2> KeeperBlockBall::calculateTheirBallInterception(const Stp
                 .label = "Interception Point",
                 .color = proto::Drawing::CYAN,
                 .method = proto::Drawing::CIRCLES,
-                .category = proto::Drawing::MARGINS,
+                .category = proto::Drawing::DEBUG,
                 .size = 15,
                 .thickness = 7,
             },

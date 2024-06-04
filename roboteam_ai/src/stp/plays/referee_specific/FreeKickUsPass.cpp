@@ -104,15 +104,12 @@ bool FreeKickUsPass::ballKicked() {
 }
 
 bool FreeKickUsPass::shouldEndPlay() noexcept {
-    // True if receiver has ball
-    if (stpInfos["receiver"].getRobot() && stpInfos["receiver"].getRobot().value()->hasBall()) return true;
-
-    // If the ball is moving too slow after we have kicked it, we should stop the play to get the ball
+    // If the ball is kicked, we end the play to already prepare for what happens next
     if (ballKicked()) return true;
 
     // True if a different pass has a higher score than the current pass (by some margin)- only if the passer is not already close to the ball (since we don't want to adjust our
     // target when we're in the process of shooting
-    if (!ballKicked() && stpInfos["free_kick_taker"].getRobot() && !stpInfos["free_kick_taker"].getRobot().value()->hasBall() &&
+    if (stpInfos["free_kick_taker"].getRobot() && !stpInfos["free_kick_taker"].getRobot().value()->hasBall() &&
         stp::computations::PassComputations::calculatePass(gen::AttackingPass, world, field).passScore >
             1.05 * stp::PositionScoring::scorePosition(passInfo.receiverLocation, gen::AttackingPass, field, world).score &&
         (!RuntimeConfig::useReferee || GameStateManager::getCurrentGameState().timeLeft > 1.5))

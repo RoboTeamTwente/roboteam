@@ -19,7 +19,7 @@ KeeperKickBall::KeeperKickBall() : Play() {
     // Evaluations that have to be true to allow the play to continue, otherwise the play will change. Plays can also end using the shouldEndPlay().
     keepPlayEvaluation.clear();
     keepPlayEvaluation.emplace_back(GlobalEvaluation::NormalPlayGameState);
-    keepPlayEvaluation.emplace_back(GlobalEvaluation::WeWillHaveBall);
+    keepPlayEvaluation.emplace_back(GlobalEvaluation::BallInOurDefenseAreaAndStill);
 
     // Role creation, the names should be unique. The names are used in the stpInfos-map.
     roles = std::array<std::unique_ptr<Role>, rtt::ai::Constants::ROBOT_COUNT()>{
@@ -92,20 +92,14 @@ bool KeeperKickBall::ballKicked() {
 }
 
 bool KeeperKickBall::shouldEndPlay() noexcept {
-    // If the receiver has the ball, the play finished successfully
-    if (stpInfos["receiver"].getRobot() && stpInfos["receiver"].getRobot().value()->hasBall()) return true;
-
-    // If the ball is moving too slow after we have kicked it, we should stop the play to get the ball
+    // If the ball is kicked, we end the play to already prepare for what happens next
     if (ballKicked()) return true;
 
     // If the keeper doesn't have the ball yet and there is a better pass available, we should stop the play
-    if (!ballKicked() && stpInfos["keeper"].getRobot() && !stpInfos["keeper"].getRobot().value()->hasBall() &&
+    if (stpInfos["keeper"].getRobot() && !stpInfos["keeper"].getRobot().value()->hasBall() &&
         stp::computations::PassComputations::calculatePass(gen::SafePass, world, field).passScore >
             1.05 * stp::PositionScoring::scorePosition(passInfo.receiverLocation, gen::SafePass, field, world).score)
         return true;
-
-    // If the keeper is outside of our defense area, we should stop the play
-    if (stpInfos["keeper"].getRobot() && !field.leftDefenseArea.contains(stpInfos["keeper"].getRobot().value()->getPos())) return true;
 
     return false;
 }

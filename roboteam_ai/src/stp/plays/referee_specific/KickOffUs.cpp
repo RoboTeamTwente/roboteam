@@ -71,7 +71,7 @@ void KickOffUs::calculateInfoForRoles() noexcept {
 }
 
 bool KickOffUs::shouldEndPlay() noexcept {
-    if (stpInfos["receiver"].getRobot() && stpInfos["receiver"].getRobot().value()->hasBall()) return true;
+    // If the ball is kicked, we end the play to already prepare for what happens next
     if (ballKicked()) return true;
     if (stpInfos["receiver"].getRobot() && world->getWorld()->getBall()->get()->position.x < stpInfos["receiver"].getRobot()->get()->getPos().x) return true;
 

@@ -110,26 +110,17 @@ bool AttackingPass::ballKicked() {
 }
 
 bool AttackingPass::shouldEndPlay() noexcept {
-    // If the receiver has the ball, the play finished successfully
-    if (stpInfos["receiver"].getRobot() && stpInfos["receiver"].getRobot().value()->hasBall()) return true;
-
-    // If the ball is moving too slow after we have kicked it, we should stop the play to get the ball
+    // If the ball is kicked, we end the play to already prepare for what happens next
     if (ballKicked()) return true;
-
-    // If the ball is rolling away from the receiver
-    if (ballKicked() && (world->getWorld()->getBall()->get()->position - passInfo.receiverLocation).dot(world->getWorld()->getBall()->get()->velocity) > 0) return true;
 
     auto newPassInfo = stp::computations::PassComputations::calculatePass(gen::AttackingPass, world, field);
     // If the passer doesn't have the ball yet and there is a better pass available, we should stop the play
-    if (!ballKicked() && stpInfos["passer"].getRobot() && !stpInfos["passer"].getRobot().value()->hasBall() &&
+    if (stpInfos["passer"].getRobot() && !stpInfos["passer"].getRobot().value()->hasBall() &&
         newPassInfo.passScore > 1.05 * stp::PositionScoring::scorePosition(passInfo.receiverLocation, gen::AttackingPass, field, world).score)
         return true;
-    // If the ball is not kicked yet and the passer id is different, another robot can quicker get the ball, so stop
-    if (!ballKicked() && newPassInfo.passerId != passInfo.passerId) {
-        endPlayCounter++;
-        if (endPlayCounter > 20) return true;
-    } else {
-        endPlayCounter = 0;
+    // If the passer id is different, another robot can quicker get the ball, so stop
+    if (newPassInfo.passerId != passInfo.passerId) {
+        return true;
     }
 
     return false;

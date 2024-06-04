@@ -109,14 +109,11 @@ bool ChippingPass::ballKicked() {
 }
 
 bool ChippingPass::shouldEndPlay() noexcept {
-    // If the receiver has the ball, the play finished successfully
-    if (stpInfos["receiver"].getRobot() && stpInfos["receiver"].getRobot().value()->hasBall()) return true;
-
-    // If the ball is moving too slow after we have kicked it, we should stop the play to get the ball
+    // If the ball is kicked, we end the play to already prepare for what happens next
     if (ballKicked()) return true;
 
     // If the passer doesn't have the ball yet and there is a better pass available, we should stop the play
-    if (!ballKicked() && stpInfos["passer"].getRobot() && !stpInfos["passer"].getRobot().value()->hasBall() &&
+    if (stpInfos["passer"].getRobot() && !stpInfos["passer"].getRobot().value()->hasBall() &&
         stp::computations::PassComputations::calculatePass(gen::ChippingPass, world, field).passScore >
             1.05 * stp::PositionScoring::scorePosition(passInfo.receiverLocation, gen::ChippingPass, field, world).score)
         return true;

@@ -41,7 +41,7 @@ KeeperKickBall::KeeperKickBall() : Play() {
 
 uint8_t KeeperKickBall::score(const rtt::Field& field) noexcept {
     // Calculate passInfo to be used during the play
-    passInfo = stp::computations::PassComputations::calculatePass(gen::SafePass, world, field);
+    passInfo = stp::computations::PassComputations::calculatePass(gen::SafePass, world, field, true);
 
     // If this play is valid, the ball is in the defense area and still, and we always want to execute this play
     return control_constants::FUZZY_TRUE;
@@ -97,7 +97,7 @@ bool KeeperKickBall::shouldEndPlay() noexcept {
 
     // If the keeper doesn't have the ball yet and there is a better pass available, we should stop the play
     if (stpInfos["keeper"].getRobot() && !stpInfos["keeper"].getRobot().value()->hasBall() &&
-        stp::computations::PassComputations::calculatePass(gen::SafePass, world, field).passScore >
+        stp::computations::PassComputations::calculatePass(gen::SafePass, world, field, true).passScore >
             1.05 * stp::PositionScoring::scorePosition(passInfo.receiverLocation, gen::SafePass, field, world).score)
         return true;
 

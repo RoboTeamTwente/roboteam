@@ -233,7 +233,7 @@ void Play::DrawMargins() noexcept {
         currentGameState == RefCommand::PREPARE_FORCED_START || currentGameState == RefCommand::BALL_PLACEMENT_THEM || currentGameState == RefCommand::BALL_PLACEMENT_US ||
         currentGameState == RefCommand::BALL_PLACEMENT_US_DIRECT) {
         if (currentGameState != RefCommand::PREPARE_FORCED_START && currentGameState != RefCommand::BALL_PLACEMENT_THEM && currentGameState != RefCommand::BALL_PLACEMENT_US &&
-        currentGameState != RefCommand::BALL_PLACEMENT_US_DIRECT) {
+            currentGameState != RefCommand::BALL_PLACEMENT_US_DIRECT) {
             rtt::ai::gui::Out::draw(
                 {
                     .label = "Left defense area to avoid",

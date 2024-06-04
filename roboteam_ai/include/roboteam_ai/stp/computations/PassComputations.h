@@ -38,10 +38,10 @@ class PassComputations {
      * @param profile the profile to be used when scoring the pass location
      * @param world the current world state
      * @param field the current field
-     * @param keeperCanPass indicate whether the keeper can pass and be passed to
+     * @param keeperMustPass indicate whether the keeper must pass
      * @return a PassInfo struct which contains the relevant information needed to complete the pass
      */
-    static PassInfo calculatePass(gen::ScoreProfile profile, const world::World* world, const Field& field, bool keeperCanPass = false);
+    static PassInfo calculatePass(gen::ScoreProfile profile, const world::World* world, const Field& field, bool keeperMustPass = false);
 
    private:
     /**

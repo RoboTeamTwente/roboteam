@@ -3,10 +3,10 @@
 #include <RobotFeedbackNetworker.hpp>
 
 proto::State Observer::process(const std::vector<proto::SSL_WrapperPacket>& visionPackets, const std::vector<proto::Referee>& refereePackets,
-                               const std::vector<rtt::RobotsFeedback>& robotData) {
+                               const std::vector<rtt::RobotsFeedback>& robotData, const std::vector<int>& camera_ids) {
     updateRobotParams(refereePackets);
     proto::State state;
-    proto::World world = visionFilter.process(visionPackets, robotData);
+    proto::World world = visionFilter.process(visionPackets, robotData, camera_ids);
     updateReferee(refereePackets);
 
     state.mutable_last_seen_world()->CopyFrom(world);

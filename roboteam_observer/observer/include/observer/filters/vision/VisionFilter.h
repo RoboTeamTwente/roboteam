@@ -21,9 +21,10 @@ class VisionFilter {
      * @param packets the received packets to update visionfilter with
      * @param time the wanted time to estimate the world state at (can extrapolate in the future)
      * @param feedback the feedback packets received for all robots
+     * @param camera_ids the camera ids to process, if empty all cameras are processed
      * @return a world state, extrapolated to the given time
      */
-    proto::World process(const std::vector<proto::SSL_WrapperPacket>& packets, const std::vector<rtt::RobotsFeedback>& feedback);
+    proto::World process(const std::vector<proto::SSL_WrapperPacket>& packets, const std::vector<rtt::RobotsFeedback>& feedback, const std::vector<int>& camera_ids = {});
 
     /*
      * Updates the robot definitions the vision filter uses in world prediction
@@ -47,7 +48,7 @@ class VisionFilter {
     /**
      * @param packets the relevant detection frames from SSL-vision
      */
-    void processDetections(const std::vector<proto::SSL_WrapperPacket>& packets, const std::vector<rtt::RobotsFeedback>& robotData);
+    void processDetections(const std::vector<proto::SSL_WrapperPacket>& packets, const std::vector<rtt::RobotsFeedback>& robotData, const std::vector<int>& camera_ids = {});
 
     GeometryFilter geomFilter;
     WorldFilter worldFilter;

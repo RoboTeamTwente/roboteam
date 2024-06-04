@@ -1,7 +1,7 @@
 #include "filters/vision/VisionFilter.h"
-proto::World VisionFilter::process(const std::vector<proto::SSL_WrapperPacket>& packets, const std::vector<rtt::RobotsFeedback>& robotData) {
+proto::World VisionFilter::process(const std::vector<proto::SSL_WrapperPacket>& packets, const std::vector<rtt::RobotsFeedback>& robotData, const std::vector<int>& camera_ids) {
     processGeometry(packets);
-    processDetections(packets, robotData);
+    processDetections(packets, robotData, camera_ids);
 
     // TODO for now not extrapolating because grsim sends packets from 1970...
     Time extroplatedToTime = getExtrapolationTimeForPolicy();
@@ -15,7 +15,7 @@ void VisionFilter::processGeometry(const std::vector<proto::SSL_WrapperPacket>& 
         }
     }
 }
-void VisionFilter::processDetections(const std::vector<proto::SSL_WrapperPacket>& packets, const std::vector<rtt::RobotsFeedback>& robotData) {
+void VisionFilter::processDetections(const std::vector<proto::SSL_WrapperPacket>& packets, const std::vector<rtt::RobotsFeedback>& robotData, const std::vector<int>& camera_ids) {
     std::vector<proto::SSL_DetectionFrame> detectionFrames;
     for (const auto& packet : packets) {
         if (packet.has_detection()) {
@@ -26,7 +26,7 @@ void VisionFilter::processDetections(const std::vector<proto::SSL_WrapperPacket>
             }
         }
     }
-    worldFilter.process(detectionFrames, robotData);
+    worldFilter.process(detectionFrames, robotData, camera_ids);
 }
 void VisionFilter::updateRobotParameters(const TwoTeamRobotParameters& parameters) { worldFilter.updateRobotParameters(parameters); }
 std::optional<proto::SSL_GeometryData> VisionFilter::getGeometry() const {

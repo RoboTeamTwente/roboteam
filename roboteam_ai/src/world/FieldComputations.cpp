@@ -79,6 +79,16 @@ bool FieldComputations::pointIsValidPosition(const rtt::Field &field, const Vect
     if (avoidObjects.shouldAvoidOutOfField && !field.playArea.contains(point, fieldMargin)) return false;
     if (avoidObjects.shouldAvoidOurDefenseArea && (field.leftDefenseArea.contains(point, ourDefenseAreaMargin))) return false;
     if (avoidObjects.shouldAvoidTheirDefenseArea && (field.rightDefenseArea.contains(point, theirDefenseAreaMargin))) return false;
+    auto leftGoalTopPost = field.leftGoalArea.topLine();
+    auto leftGoalBottomPost = field.leftGoalArea.bottomLine();
+    auto rightGoalTopPost = field.rightGoalArea.topLine();
+    auto rightGoalBottomPost = field.rightGoalArea.bottomLine();
+    if (avoidObjects.shouldAvoidGoalPosts) {
+        if (leftGoalTopPost.distanceToLine(point) < Constants::ROBOT_RADIUS() || leftGoalBottomPost.distanceToLine(point) < Constants::ROBOT_RADIUS() ||
+            rightGoalTopPost.distanceToLine(point) < Constants::ROBOT_RADIUS() || rightGoalBottomPost.distanceToLine(point) < Constants::ROBOT_RADIUS()) {
+            return false;
+        }
+    }
     return true;
 }
 
@@ -324,6 +334,21 @@ Vector2 FieldComputations::projectPointToValidPosition(const Field &field, Vecto
     Vector2 projectedPos = point;
     if (avoidObjects.shouldAvoidOutOfField) projectedPos = projectPointInField(field, projectedPos);
     projectedPos = projectPointOutOfDefenseArea(field, projectedPos, avoidObjects.shouldAvoidOurDefenseArea, avoidObjects.shouldAvoidTheirDefenseArea);
+    if (avoidObjects.shouldAvoidGoalPosts) {
+        auto leftGoalTopPost = field.leftGoalArea.topLine();
+        auto leftGoalBottomPost = field.leftGoalArea.bottomLine();
+        auto rightGoalTopPost = field.rightGoalArea.topLine();
+        auto rightGoalBottomPost = field.rightGoalArea.bottomLine();
+        if (leftGoalTopPost.distanceToLine(point) < Constants::ROBOT_RADIUS()) {
+            projectedPos = {leftGoalTopPost.end.x + Constants::ROBOT_RADIUS(), projectedPos.y};
+        } else if (leftGoalBottomPost.distanceToLine(point) < Constants::ROBOT_RADIUS()) {
+            projectedPos = {leftGoalBottomPost.start.x + Constants::ROBOT_RADIUS(), projectedPos.y};
+        } else if (rightGoalTopPost.distanceToLine(point) < Constants::ROBOT_RADIUS()) {
+            projectedPos = {rightGoalTopPost.start.x - Constants::ROBOT_RADIUS(), projectedPos.y};
+        } else if (rightGoalBottomPost.distanceToLine(point) < Constants::ROBOT_RADIUS()) {
+            projectedPos = {rightGoalBottomPost.end.x - Constants::ROBOT_RADIUS(), projectedPos.y};
+        }
+    }
     return projectedPos;
 }
 

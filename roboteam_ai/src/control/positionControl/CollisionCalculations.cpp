@@ -16,12 +16,12 @@ double CollisionCalculations::getFirstCollisionTimeMotionlessObject(const Trajec
     const auto &ourDefenseArea = FieldComputations::getDefenseArea(field, true, ourDefenseAreaMargin, 1);
     const auto &theirDefenseArea = FieldComputations::getDefenseArea(field, false, theirDefenseAreaMargin, 1);
 
-    auto leftGoalTopPost = LineSegment(field.leftGoalArea.topLeft(), field.leftGoalArea.topRight());
-    auto leftGoalBottomPost = LineSegment(field.leftGoalArea.bottomLeft(), field.leftGoalArea.bottomRight());
-    auto leftGoalBackPost = LineSegment(field.leftGoalArea.topLeft(), field.leftGoalArea.bottomLeft());
-    auto rightGoalTopPost = LineSegment(field.rightGoalArea.topLeft(), field.rightGoalArea.topRight());
-    auto rightGoalBottomPost = LineSegment(field.rightGoalArea.bottomLeft(), field.rightGoalArea.bottomRight());
-    auto rightGoalBackPost = LineSegment(field.rightGoalArea.topRight(), field.rightGoalArea.bottomRight());
+    auto leftGoalTopPost = field.leftGoalArea.topLine();
+    auto leftGoalBottomPost = field.leftGoalArea.bottomLine();
+    auto leftGoalBackPost = field.leftGoalArea.leftLine();
+    auto rightGoalTopPost = field.rightGoalArea.topLine();
+    auto rightGoalBottomPost = field.rightGoalArea.bottomLine();
+    auto rightGoalBackPost = field.rightGoalArea.rightLine();
 
     for (int checkPoint = 1; checkPoint < static_cast<int>(maxCheckPoints); checkPoint += 1) {
         auto pathLine = LineSegment(pathPoints[checkPoint - 1], pathPoints[checkPoint]);

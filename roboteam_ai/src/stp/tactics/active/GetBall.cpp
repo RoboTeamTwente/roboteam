@@ -39,8 +39,16 @@ std::optional<StpInfo> GetBall::calculateInfoForSkill(const StpInfo &info) noexc
     double distanceToInterception = (interceptionPosition - robotPosition).length();
     double distanceToBall = (ballPosition - robotPosition).length();
 
+    // Don't go to the ball if we are close to the ball and the angle is too big
+    // If the ball is moving, we move to the interception point with the front assembly, and the rest of the robot is more away from the ball
+    // Something like: ball ...... interceptionPoint. robot
+    // If the ball is not moving (or slow), we move to the interception point with the center of the robot, and the rest of the robot is more away from the ball
+    // This makes sure we always hit the ball with our front assembly, and we never go to the wrong 'side' of the ball.
     if (info.getRobot()->get()->getAngleDiffToBall() > Constants::HAS_BALL_ANGLE() && distanceToBall < control_constants::ROBOT_CLOSE_TO_POINT) {
-        skillStpInfo.setPositionToMoveTo(FieldComputations::projectPointToValidPosition(info.getField().value(), info.getRobot()->get()->getPos(), info.getObjectsToAvoid()));
+        skillStpInfo.setPositionToMoveTo(info.getRobot()->get()->getPos());
+    } else if (info.getBall()->get()->velocity.length() > control_constants::BALL_IS_MOVING_SLOW_LIMIT) {
+        auto newRobotPos = interceptionPosition + (interceptionPosition - ballPosition).stretchToLength(control_constants::CENTER_TO_FRONT);
+        skillStpInfo.setPositionToMoveTo(newRobotPos);
     } else {
         auto getBallDistance = std::max(distanceToInterception - control_constants::CENTER_TO_FRONT, MIN_DISTANCE_TO_TARGET);
         Vector2 newRobotPosition = robotPosition + (interceptionPosition - robotPosition).stretchToLength(getBallDistance);

@@ -36,7 +36,6 @@ PassInfo PassComputations::calculatePass(gen::ScoreProfile profile, const rtt::w
         interceptionInfo = InterceptionComputations::calculateInterceptionInfoForKickingRobots(us, world);
     }
     passInfo.passerId = interceptionInfo.interceptId;
-    RTT_INFO("Passer id in passcomp: ", passInfo.passerId);
     passInfo.passLocation = interceptionInfo.interceptLocation;
     auto passerIt = std::find_if(us.begin(), us.end(), [passInfo](auto& bot) { return bot->getId() == passInfo.passerId; });
 

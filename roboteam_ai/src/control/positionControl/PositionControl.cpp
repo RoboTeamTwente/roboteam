@@ -47,7 +47,9 @@ Vector2 PositionControl::computeAndTrackTrajectory(const world::World *world, co
             .thickness = 1,
         },
         computedPaths[robotId]);
-
+    // Since our acceleration is 3.5 m/s^2, this means we will move if we need to move more than
+    // 2*(1/2*3.5*0.145^2) (2 times the distance we move in 0.145/2s under constant (de)acceleration (1/2 * a * t^2))
+    // This is 0.07m, so we will move if we need to move more than 0.07m
     return computedTrajectories[robotId].getVelocity(0.145);
 }
 

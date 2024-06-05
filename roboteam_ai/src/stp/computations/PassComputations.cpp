@@ -31,8 +31,7 @@ PassInfo PassComputations::calculatePass(gen::ScoreProfile profile, const rtt::w
     InterceptionInfo interceptionInfo;
     auto keeper = world->getWorld()->getRobotForId(passInfo.keeperId, true);
     if (keeperMustPass && keeper) {
-        std::vector<rtt::world::view::RobotView> robotViews = {keeper.value()};
-        interceptionInfo = InterceptionComputations::calculateInterceptionInfoForKickingRobots(robotViews, world);
+        interceptionInfo = InterceptionComputations::calculateInterceptionInfoForKickingRobots({keeper.value()}, world);
     } else {
         interceptionInfo = InterceptionComputations::calculateInterceptionInfoForKickingRobots(us, world);
     }

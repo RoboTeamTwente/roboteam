@@ -76,10 +76,6 @@ std::unordered_map<std::string, v::RobotView> Dealer::distribute(std::vector<v::
     // Loop through the role priorities from high to low : KEEPER, REQUIRED, HIGH_PRIORITY, MEDIUM_PRIORITY, LOW_PRIORITY
     for (const auto current_priority : PriorityOrder) {
         /** Example : current_priority = HIGH_PRIORITY */
-
-        // Uncomment the following line to print the current cost matrix. Useful for debugging
-        // printCostMatrix(cost_matrix, role_names, robots, role_to_flags, row_to_role, col_to_robot);
-
         // Create a new cost matrix which will hold the cost_matrix rows for the priority we're currently at
         std::vector<std::vector<double>> cost_matrix_for_priority;
         cost_matrix_for_priority.reserve(cost_matrix.size());  // Reserve rows

@@ -96,6 +96,11 @@ void Play::update() noexcept {
 
 void Play::reassignRobots() noexcept {
     stpInfos.clear();
+    for (auto &role : roles) {
+        if (role == nullptr) continue;
+        stpInfos[role->getName()].setShouldAvoidBall(FieldComputations::getBallAvoidance());
+        stpInfos[role->getName()].setMaxRobotVelocity(control::ControlUtils::getMaxVelocity(false));
+    }
     calculateInfoForRoles();
     distributeRoles();
 }

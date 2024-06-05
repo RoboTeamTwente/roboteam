@@ -16,7 +16,7 @@ constexpr int DEFAULT_GRSIM_FEEDBACK_PORT_YELLOW_CONTROL = 30012;
 constexpr int DEFAULT_GRSIM_FEEDBACK_PORT_CONFIGURATION = 30013;
 
 // These two values are properties of our physical robots. We use these in commands for simulators
-constexpr float SIM_CHIPPER_ANGLE_DEGREES = 45.0f;     // The angle at which the chipper shoots
+constexpr float SIM_CHIPPER_ANGLE_DEGREES = 45.0f;      // The angle at which the chipper shoots
 constexpr float SIM_MAX_DRIBBLER_SPEED_RPM = 16000.0f;  // The theoretical maximum speed of the dribblers in RPM
 
 RobotHub::RobotHub(bool shouldLog, bool logInMarpleFormat) {

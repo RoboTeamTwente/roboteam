@@ -178,9 +178,9 @@ var annotated_dup =
         [ "World", "da/d39/classrtt_1_1world_1_1World.html", "da/d39/classrtt_1_1world_1_1World" ],
         [ "WorldData", "d5/db9/classrtt_1_1world_1_1WorldData.html", "d5/db9/classrtt_1_1world_1_1WorldData" ]
       ] ],
-      [ "AnglePID", "dc/d0b/classrtt_1_1AnglePID.html", "dc/d0b/classrtt_1_1AnglePID" ],
       [ "Trajectory1D", "d0/d62/classrtt_1_1Trajectory1D.html", "d0/d62/classrtt_1_1Trajectory1D" ],
       [ "Trajectory2D", "d9/da4/classrtt_1_1Trajectory2D.html", "d9/da4/classrtt_1_1Trajectory2D" ],
+      [ "YawPID", "df/d2f/classrtt_1_1YawPID.html", "df/d2f/classrtt_1_1YawPID" ],
       [ "STPManager", "da/de3/classrtt_1_1STPManager.html", "da/de3/classrtt_1_1STPManager" ],
       [ "GameSettings", "df/db4/classrtt_1_1GameSettings.html", "df/db4/classrtt_1_1GameSettings" ]
     ] ],

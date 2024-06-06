@@ -2,7 +2,6 @@ var namespacertt_1_1ai_1_1stp =
 [
     [ "computations", "d8/d97/namespacertt_1_1ai_1_1stp_1_1computations.html", "d8/d97/namespacertt_1_1ai_1_1stp_1_1computations" ],
     [ "control_constants", "db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html", [
-      [ "ANGLE_RATE", "db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#a75bf4289b2ca6b1f968a4bc2095d9bce", null ],
       [ "AVOID_BALL_DISTANCE", "db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#a8ac896036838a0c21ff0b72a6c35612e", null ],
       [ "AVOID_BALL_DISTANCE_BEFORE_FREE_KICK", "db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#a8fa01669dc4aaee68b979a785e121e8b", null ],
       [ "BALL_GOT_SHOT_LIMIT", "db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#aa8b98c67e91a1bbd0830a58216211d13", null ],
@@ -35,7 +34,8 @@ var namespacertt_1_1ai_1_1stp =
       [ "ROBOT_CLOSE_TO_POINT", "db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#a2065e692775cf964b93006329a1b0b15", null ],
       [ "ROBOT_RADIUS", "db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#a6571c4e8f14e7dc072d17dc431f18e48", null ],
       [ "SIMULATION_FRICTION", "db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#ad37dafcd825af19967116e4f39089357", null ],
-      [ "TURN_ON_DRIBBLER_DISTANCE", "db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#acd30b6326a0e8f8a387db14972abac0d", null ]
+      [ "TURN_ON_DRIBBLER_DISTANCE", "db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#acd30b6326a0e8f8a387db14972abac0d", null ],
+      [ "YAW_RATE", "db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#aef649b5f9764426414fad8cb052c27a3", null ]
     ] ],
     [ "evaluation", "dc/d81/namespacertt_1_1ai_1_1stp_1_1evaluation.html", "dc/d81/namespacertt_1_1ai_1_1stp_1_1evaluation" ],
     [ "gen", "d7/d73/namespacertt_1_1ai_1_1stp_1_1gen.html", "d7/d73/namespacertt_1_1ai_1_1stp_1_1gen" ],

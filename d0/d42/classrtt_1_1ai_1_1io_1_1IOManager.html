@@ -103,7 +103,7 @@ $(document).ready(function(){initNavTree('d0/d42/classrtt_1_1ai_1_1io_1_1IOManag
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a55382a03a2cf2331dc248689184a9104"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a55382a03a2cf2331dc248689184a9104">publishAllRobotCommands</a> (rtt::RobotCommands &amp;robotCommands)</td></tr>
-<tr class="memdesc:a55382a03a2cf2331dc248689184a9104"><td class="mdescLeft">&#160;</td><td class="mdescRight">Publishes all robot commands with the robot angles from world.  <a href="../../d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a55382a03a2cf2331dc248689184a9104">More...</a><br /></td></tr>
+<tr class="memdesc:a55382a03a2cf2331dc248689184a9104"><td class="mdescLeft">&#160;</td><td class="mdescRight">Publishes all robot commands with the robot yaw from world.  <a href="../../d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a55382a03a2cf2331dc248689184a9104">More...</a><br /></td></tr>
 <tr class="separator:a55382a03a2cf2331dc248689184a9104"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3adae449c9345d234258d35f061a1468"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a3adae449c9345d234258d35f061a1468">publishSettings</a> ()</td></tr>
 <tr class="memdesc:a3adae449c9345d234258d35f061a1468"><td class="mdescLeft">&#160;</td><td class="mdescRight">Publishes the settings on the settingsPublisher channel.  <a href="../../d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a3adae449c9345d234258d35f061a1468">More...</a><br /></td></tr>
@@ -138,9 +138,9 @@ Private Member Functions</h2></td></tr>
 <tr class="memitem:ad06a4509dfdb3f7c6013799b27ed2c20"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#ad06a4509dfdb3f7c6013799b27ed2c20">handleState</a> (const proto::State &amp;<a class="el" href="../../d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a6f5a374a4afc6e8064d430933990039a">state</a>)</td></tr>
 <tr class="memdesc:ad06a4509dfdb3f7c6013799b27ed2c20"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unpacks the state so it is usable by AI.  <a href="../../d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#ad06a4509dfdb3f7c6013799b27ed2c20">More...</a><br /></td></tr>
 <tr class="separator:ad06a4509dfdb3f7c6013799b27ed2c20"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a72fefaf49186393174f420b3c08d0173"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a72fefaf49186393174f420b3c08d0173">addCameraAngleToRobotCommands</a> (rtt::RobotCommands &amp;robotCommands)</td></tr>
-<tr class="memdesc:a72fefaf49186393174f420b3c08d0173"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds the camera angle from world to the robot commands, so the robot can use it for its angle control.  <a href="../../d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a72fefaf49186393174f420b3c08d0173">More...</a><br /></td></tr>
-<tr class="separator:a72fefaf49186393174f420b3c08d0173"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7ed6facea37aa7447b8d39b4cf16713a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a7ed6facea37aa7447b8d39b4cf16713a">addCameraYawToRobotCommands</a> (rtt::RobotCommands &amp;robotCommands)</td></tr>
+<tr class="memdesc:a7ed6facea37aa7447b8d39b4cf16713a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds the camera yaw from world to the robot commands, so the robot can use it for its yaw control.  <a href="../../d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a7ed6facea37aa7447b8d39b4cf16713a">More...</a><br /></td></tr>
+<tr class="separator:a7ed6facea37aa7447b8d39b4cf16713a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0f0f4a00275a57156911cd1da3388124"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a0f0f4a00275a57156911cd1da3388124">publishRobotCommands</a> (const rtt::RobotCommands &amp;robotCommands, bool isForTeamYellow)</td></tr>
 <tr class="memdesc:a0f0f4a00275a57156911cd1da3388124"><td class="mdescLeft">&#160;</td><td class="mdescRight">Publishes the robot commands on the given team's socket.  <a href="../../d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a0f0f4a00275a57156911cd1da3388124">More...</a><br /></td></tr>
 <tr class="separator:a0f0f4a00275a57156911cd1da3388124"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -169,8 +169,8 @@ Private Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class that defines the <a class="el" href="../../d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html" title="Class that defines the IOManager. The IOManager manages the input and output of AI....">IOManager</a>. The <a class="el" href="../../d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html" title="Class that defines the IOManager. The IOManager manages the input and output of AI....">IOManager</a> manages the input and output of AI. The input consists of world and the output of simulation configuration, robot commands and settings. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a72fefaf49186393174f420b3c08d0173"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a72fefaf49186393174f420b3c08d0173">&#9670;&nbsp;</a></span>addCameraAngleToRobotCommands()</h2>
+<a id="a7ed6facea37aa7447b8d39b4cf16713a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7ed6facea37aa7447b8d39b4cf16713a">&#9670;&nbsp;</a></span>addCameraYawToRobotCommands()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -179,7 +179,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void rtt::ai::io::IOManager::addCameraAngleToRobotCommands </td>
+          <td class="memname">void rtt::ai::io::IOManager::addCameraYawToRobotCommands </td>
           <td>(</td>
           <td class="paramtype">rtt::RobotCommands &amp;&#160;</td>
           <td class="paramname"><em>robotCommands</em></td><td>)</td>
@@ -193,10 +193,10 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Adds the camera angle from world to the robot commands, so the robot can use it for its angle control. </p>
+<p>Adds the camera yaw from world to the robot commands, so the robot can use it for its yaw control. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">robotCommands</td><td>the robot commands in which the camera angle needs to be added </td></tr>
+    <tr><td class="paramname">robotCommands</td><td>the robot commands in which the camera yaw needs to be added </td></tr>
   </table>
   </dd>
 </dl>
@@ -348,7 +348,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Publishes all robot commands with the robot angles from world. </p>
+<p>Publishes all robot commands with the robot yaw from world. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">robotCommands</td><td>Commands that need to be published </td></tr>

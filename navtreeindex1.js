@@ -1,6 +1,5 @@
 var NAVTREEINDEX1 =
 {
-"d1/d22/classrtt_1_1ai_1_1stp_1_1evaluation_1_1NormalPlayGameStateEvaluation.html#a73444e1b39ab0b39e20dbf6914c5b35a":[2,0,0,0,4,1,13,1],
 "d1/d22/classrtt_1_1ai_1_1stp_1_1evaluation_1_1NormalPlayGameStateEvaluation.html#a80164c8fa4f01457c6ec28c150cb098b":[2,0,0,0,4,1,13,0],
 "d1/d24/tactics_2passive_2Formation_8h.html":[3,0,0,0,0,3,6,1,2],
 "d1/d24/tactics_2passive_2Formation_8h_source.html":[3,0,0,0,0,3,6,1,2],
@@ -28,11 +27,13 @@ var NAVTREEINDEX1 =
 "d1/d71/classrtt_1_1ai_1_1gui_1_1net_1_1InterfacePublisher.html#a9201867b803f93844f4d2700f7736819":[2,0,0,0,1,0,1,6],
 "d1/d71/classrtt_1_1ai_1_1gui_1_1net_1_1InterfacePublisher.html#aae6b38aa7b4a9cd2f88ddc643422a3da":[2,0,0,0,1,0,1,3],
 "d1/d71/classrtt_1_1ai_1_1gui_1_1net_1_1InterfacePublisher.html#ad6238df0b16318d8709c1d2811110040":[2,0,0,0,1,0,1,1],
-"d1/d97/ControlModule_8cpp.html":[3,0,0,1,0,2],
+"d1/d97/ControlModule_8cpp.html":[3,0,0,1,0,1],
 "d1/d9a/GoalShotEvaluation_8h.html":[3,0,0,0,0,3,2,2,0],
 "d1/d9a/GoalShotEvaluation_8h_source.html":[3,0,0,0,0,3,2,2,0],
 "d1/da0/Out_8h.html":[3,0,0,0,0,1,1],
 "d1/da0/Out_8h_source.html":[3,0,0,0,0,1,1],
+"d1/da0/YawPID_8h.html":[3,0,0,0,0,0,3],
+"d1/da0/YawPID_8h_source.html":[3,0,0,0,0,0,3],
 "d1/db0/WorldHelper_8h.html":[3,0,0,2,1,3],
 "d1/db0/WorldHelper_8h_source.html":[3,0,0,2,1,3],
 "d1/dcf/classrtt_1_1ai_1_1stp_1_1evaluation_1_1WeWillHaveBallGlobalEvaluation.html":[2,0,0,0,4,1,24],
@@ -90,8 +91,6 @@ var NAVTREEINDEX1 =
 "d2/d25/classrtt_1_1ai_1_1stp_1_1tactic_1_1DriveWithBall.html#adfab981037d0e44130a2342dd240df13":[2,0,0,0,4,6,1,1],
 "d2/d25/classrtt_1_1ai_1_1stp_1_1tactic_1_1DriveWithBall.html#aee858efd7c6be32e2c331ae459c67b1c":[2,0,0,0,4,6,1,7],
 "d2/d25/classrtt_1_1ai_1_1stp_1_1tactic_1_1DriveWithBall.html#af4a9f63577d36c0cf178aae99fb0fd00":[2,0,0,0,4,6,1,8],
-"d2/d42/AnglePID_8h.html":[3,0,0,0,0,0,1],
-"d2/d42/AnglePID_8h_source.html":[3,0,0,0,0,0,1],
 "d2/d43/TestTactic_8h.html":[3,0,0,0,0,3,6,3],
 "d2/d43/TestTactic_8h_source.html":[3,0,0,0,0,3,6,3],
 "d2/d47/classrtt_1_1ai_1_1stp_1_1play_1_1KickOffUs.html":[2,0,0,0,4,3,15],
@@ -249,5 +248,6 @@ var NAVTREEINDEX1 =
 "d3/d26/namespacetesthelpers.html":[1,0,2],
 "d3/d2b/FieldHelper_8h.html":[3,0,0,2,1,1],
 "d3/d2b/FieldHelper_8h_source.html":[3,0,0,2,1,1],
-"d3/d45/Attack_8cpp.html":[3,0,0,1,3,2,1,0]
+"d3/d45/Attack_8cpp.html":[3,0,0,1,3,2,1,0],
+"d3/d66/OrbitKick_8cpp.html":[3,0,0,1,3,5,0,5]
 };

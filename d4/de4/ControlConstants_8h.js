@@ -1,6 +1,5 @@
 var ControlConstants_8h =
 [
-    [ "ANGLE_RATE", "d4/de4/ControlConstants_8h.html#a75bf4289b2ca6b1f968a4bc2095d9bce", null ],
     [ "AVOID_BALL_DISTANCE", "d4/de4/ControlConstants_8h.html#a8ac896036838a0c21ff0b72a6c35612e", null ],
     [ "AVOID_BALL_DISTANCE_BEFORE_FREE_KICK", "d4/de4/ControlConstants_8h.html#a8fa01669dc4aaee68b979a785e121e8b", null ],
     [ "BALL_GOT_SHOT_LIMIT", "d4/de4/ControlConstants_8h.html#aa8b98c67e91a1bbd0830a58216211d13", null ],
@@ -33,5 +32,6 @@ var ControlConstants_8h =
     [ "ROBOT_CLOSE_TO_POINT", "d4/de4/ControlConstants_8h.html#a2065e692775cf964b93006329a1b0b15", null ],
     [ "ROBOT_RADIUS", "d4/de4/ControlConstants_8h.html#a6571c4e8f14e7dc072d17dc431f18e48", null ],
     [ "SIMULATION_FRICTION", "d4/de4/ControlConstants_8h.html#ad37dafcd825af19967116e4f39089357", null ],
-    [ "TURN_ON_DRIBBLER_DISTANCE", "d4/de4/ControlConstants_8h.html#acd30b6326a0e8f8a387db14972abac0d", null ]
+    [ "TURN_ON_DRIBBLER_DISTANCE", "d4/de4/ControlConstants_8h.html#acd30b6326a0e8f8a387db14972abac0d", null ],
+    [ "YAW_RATE", "d4/de4/ControlConstants_8h.html#aef649b5f9764426414fad8cb052c27a3", null ]
 ];

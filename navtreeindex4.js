@@ -1,8 +1,5 @@
 var NAVTREEINDEX4 =
 {
-"d5/d3d/classrtt_1_1ai_1_1stp_1_1tactic_1_1OrbitKick.html#af773c74e22de969c6e044f88f1ff7cc4":[2,0,0,0,4,6,5,7],
-"d5/d3e/KeeperKickBall_8h.html":[3,0,0,0,0,3,3,0,2],
-"d5/d3e/KeeperKickBall_8h_source.html":[3,0,0,0,0,3,3,0,2],
 "d5/d45/FreeKickThemGameStateEvaluation_8cpp.html":[3,0,0,1,3,1,0,3],
 "d5/d4d/BallOnOurSideGlobalEvaluation_8cpp.html":[3,0,0,1,3,1,1,1],
 "d5/d4e/tactics_2passive_2Formation_8cpp.html":[3,0,0,1,3,5,1,2],
@@ -195,10 +192,9 @@ var NAVTREEINDEX4 =
 "d5/de0/PenaltyThemPrepare_8cpp.html#a073cfb0dcce27c69a198183f4eccad10":[3,0,0,1,3,2,2,12,0],
 "d5/de0/PositionComputations_8h.html":[3,0,0,0,0,3,0,4],
 "d5/de0/PositionComputations_8h_source.html":[3,0,0,0,0,3,0,4],
-"d5/df1/ControlUtils_8h.html":[3,0,0,0,0,0,3],
-"d5/df1/ControlUtils_8h.html#a190e260c90ed557590c2ca7d74a4e490":[3,0,0,0,0,0,3,1],
-"d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82":[3,0,0,0,0,0,3,2],
-"d5/df1/ControlUtils_8h_source.html":[3,0,0,0,0,0,3],
+"d5/df1/ControlUtils_8h.html":[3,0,0,0,0,0,2],
+"d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82":[3,0,0,0,0,0,2,1],
+"d5/df1/ControlUtils_8h_source.html":[3,0,0,0,0,0,2],
 "d5/df2/BallPlacementUsDirectGameStateEvaluation_8h.html":[3,0,0,0,0,3,2,0,1],
 "d5/df2/BallPlacementUsDirectGameStateEvaluation_8h_source.html":[3,0,0,0,0,3,2,0,1],
 "d5/df6/TheyHaveBallGlobalEvaluation_8cpp.html":[3,0,0,1,3,1,1,2],
@@ -249,5 +245,9 @@ var NAVTREEINDEX4 =
 "d6/d14/BlockBall_8h.html":[3,0,0,0,0,3,6,1,1],
 "d6/d14/BlockBall_8h_source.html":[3,0,0,0,0,3,6,1,1],
 "d6/d23/RobotView_8cpp.html":[3,0,0,1,5,0,1],
-"d6/d47/CorrectPlayTest_8cpp.html":[3,0,0,2,5,0]
+"d6/d47/CorrectPlayTest_8cpp.html":[3,0,0,2,5,0],
+"d6/d47/CorrectPlayTest_8cpp.html#a1edb5baaa131732586acb7a2daca34aa":[3,0,0,2,5,0,0],
+"d6/d47/CorrectPlayTest_8cpp.html#aefa88de2b7eb9347c8ea2a25e0d24889":[3,0,0,2,5,0,1],
+"d6/d47/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUsPrepare.html":[2,0,0,0,4,3,20],
+"d6/d47/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUsPrepare.html#a0329d2814e2651902bb05f23659e0084":[2,0,0,0,4,3,20,24]
 };

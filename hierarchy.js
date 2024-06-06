@@ -1,7 +1,6 @@
 var hierarchy =
 [
     [ "rtt::world::World::AcquireInfo< T >", "da/d39/classrtt_1_1world_1_1World.html#d6/de5/structrtt_1_1world_1_1World_1_1AcquireInfo", null ],
-    [ "rtt::AnglePID", "dc/d0b/classrtt_1_1AnglePID.html", null ],
     [ "rtt::ai::stp::AvoidObjects", "d5/d14/namespacertt_1_1ai_1_1stp.html#d8/dcb/structrtt_1_1ai_1_1stp_1_1AvoidObjects", null ],
     [ "rtt::world::ball::Ball", "dd/db7/classrtt_1_1world_1_1ball_1_1Ball.html", null ],
     [ "rtt::ai::BallPossession", "d7/d54/classrtt_1_1ai_1_1BallPossession.html", null ],
@@ -164,5 +163,6 @@ var hierarchy =
     [ "rtt::world::World", "da/d39/classrtt_1_1world_1_1World.html", null ],
     [ "rtt::world::WorldData", "d5/db9/classrtt_1_1world_1_1WorldData.html", null ],
     [ "rtt::world::view::WorldDataView", "d6/d08/classrtt_1_1world_1_1view_1_1WorldDataView.html", null ],
-    [ "testhelpers::WorldHelper", "d6/d74/classtesthelpers_1_1WorldHelper.html", null ]
+    [ "testhelpers::WorldHelper", "d6/d74/classtesthelpers_1_1WorldHelper.html", null ],
+    [ "rtt::YawPID", "df/d2f/classrtt_1_1YawPID.html", null ]
 ];

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Roboteam AI: rtt::AnglePID Class Reference</title>
+<title>Roboteam AI: rtt::YawPID Class Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -65,7 +65,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
-$(document).ready(function(){initNavTree('dc/d0b/classrtt_1_1AnglePID.html','../../'); initResizable(); });
+$(document).ready(function(){initNavTree('df/d2f/classrtt_1_1YawPID.html','../../'); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -87,50 +87,50 @@ $(document).ready(function(){initNavTree('dc/d0b/classrtt_1_1AnglePID.html','../
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a> &#124;
-<a href="../../d4/dfa/classrtt_1_1AnglePID-members.html">List of all members</a>  </div>
+<a href="../../d7/d9d/classrtt_1_1YawPID-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">rtt::AnglePID Class Reference</div>  </div>
+<div class="title">rtt::YawPID Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>Class that controls the angle with a PID.  
- <a href="../../dc/d0b/classrtt_1_1AnglePID.html#details">More...</a></p>
+<p>Class that controls the yaw with a PID.  
+ <a href="../../df/d2f/classrtt_1_1YawPID.html#details">More...</a></p>
 
-<p><code>#include &lt;<a class="el" href="../../d2/d42/AnglePID_8h_source.html">AnglePID.h</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="../../d1/da0/YawPID_8h_source.html">YawPID.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:abbb8cd0afbaa91e5ec00eb92c4709493"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d0b/classrtt_1_1AnglePID.html#abbb8cd0afbaa91e5ec00eb92c4709493">AnglePID</a> (double <a class="el" href="../../dc/d0b/classrtt_1_1AnglePID.html#a28526d0d9253e545ffcd2f1e8a2f2ccb">P</a>, double <a class="el" href="../../dc/d0b/classrtt_1_1AnglePID.html#a9d5b09364c7e520a7bd71b69cba5e59e">I</a>, double <a class="el" href="../../dc/d0b/classrtt_1_1AnglePID.html#adec896c0bcf3298a70cc5a538ce11821">D</a>, double max_ang_vel, double <a class="el" href="../../dc/d0b/classrtt_1_1AnglePID.html#acb743c208b47ff2be1e6ed2e0ef2f206">dt</a>)</td></tr>
-<tr class="memdesc:abbb8cd0afbaa91e5ec00eb92c4709493"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor of the <a class="el" href="../../dc/d0b/classrtt_1_1AnglePID.html" title="Class that controls the angle with a PID.">AnglePID</a> class.  <a href="../../dc/d0b/classrtt_1_1AnglePID.html#abbb8cd0afbaa91e5ec00eb92c4709493">More...</a><br /></td></tr>
-<tr class="separator:abbb8cd0afbaa91e5ec00eb92c4709493"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0b5836c99b3f4f7517d59837d65625d8"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d0b/classrtt_1_1AnglePID.html#a0b5836c99b3f4f7517d59837d65625d8">getOutput</a> (<a class="el" href="../../d5/df1/ControlUtils_8h.html#a190e260c90ed557590c2ca7d74a4e490">Angle</a> target_angle, <a class="el" href="../../d5/df1/ControlUtils_8h.html#a190e260c90ed557590c2ca7d74a4e490">Angle</a> current_angle)</td></tr>
-<tr class="memdesc:a0b5836c99b3f4f7517d59837d65625d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the angular velocity calculated by the controller.  <a href="../../dc/d0b/classrtt_1_1AnglePID.html#a0b5836c99b3f4f7517d59837d65625d8">More...</a><br /></td></tr>
-<tr class="separator:a0b5836c99b3f4f7517d59837d65625d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac0e9dd1b11b50b3ae5a60114f56c534d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d2f/classrtt_1_1YawPID.html#ac0e9dd1b11b50b3ae5a60114f56c534d">YawPID</a> (double <a class="el" href="../../df/d2f/classrtt_1_1YawPID.html#a60460a49b360f420e8c65e7329b0c353">P</a>, double <a class="el" href="../../df/d2f/classrtt_1_1YawPID.html#a197a65cb590f8353771c4e8db9e98378">I</a>, double <a class="el" href="../../df/d2f/classrtt_1_1YawPID.html#a0d61766ce3d510f999cb87f8caf79263">D</a>, double max_ang_vel, double <a class="el" href="../../df/d2f/classrtt_1_1YawPID.html#a13b3366714d76ac3a1bf52de6390b7e9">dt</a>)</td></tr>
+<tr class="memdesc:ac0e9dd1b11b50b3ae5a60114f56c534d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor of the <a class="el" href="../../df/d2f/classrtt_1_1YawPID.html" title="Class that controls the yaw with a PID.">YawPID</a> class.  <a href="../../df/d2f/classrtt_1_1YawPID.html#ac0e9dd1b11b50b3ae5a60114f56c534d">More...</a><br /></td></tr>
+<tr class="separator:ac0e9dd1b11b50b3ae5a60114f56c534d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a99e5ba0fcafcea6c146a547a1477e69c"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d2f/classrtt_1_1YawPID.html#a99e5ba0fcafcea6c146a547a1477e69c">getOutput</a> (Angle target_yaw, Angle current_yaw)</td></tr>
+<tr class="memdesc:a99e5ba0fcafcea6c146a547a1477e69c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the angular velocity calculated by the controller.  <a href="../../df/d2f/classrtt_1_1YawPID.html#a99e5ba0fcafcea6c146a547a1477e69c">More...</a><br /></td></tr>
+<tr class="separator:a99e5ba0fcafcea6c146a547a1477e69c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
-<tr class="memitem:a28526d0d9253e545ffcd2f1e8a2f2ccb"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d0b/classrtt_1_1AnglePID.html#a28526d0d9253e545ffcd2f1e8a2f2ccb">P</a></td></tr>
-<tr class="separator:a28526d0d9253e545ffcd2f1e8a2f2ccb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9d5b09364c7e520a7bd71b69cba5e59e"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d0b/classrtt_1_1AnglePID.html#a9d5b09364c7e520a7bd71b69cba5e59e">I</a></td></tr>
-<tr class="separator:a9d5b09364c7e520a7bd71b69cba5e59e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adec896c0bcf3298a70cc5a538ce11821"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d0b/classrtt_1_1AnglePID.html#adec896c0bcf3298a70cc5a538ce11821">D</a></td></tr>
-<tr class="separator:adec896c0bcf3298a70cc5a538ce11821"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9ab280e3788378b3fd3d5c9a9ed2d64f"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d0b/classrtt_1_1AnglePID.html#a9ab280e3788378b3fd3d5c9a9ed2d64f">min</a></td></tr>
-<tr class="separator:a9ab280e3788378b3fd3d5c9a9ed2d64f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5a0b7b826a3cdf0345b434a014445d87"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d0b/classrtt_1_1AnglePID.html#a5a0b7b826a3cdf0345b434a014445d87">max</a></td></tr>
-<tr class="separator:a5a0b7b826a3cdf0345b434a014445d87"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a58ea0be8649bc57ea4056795d30a0558"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d0b/classrtt_1_1AnglePID.html#a58ea0be8649bc57ea4056795d30a0558">previous_error</a></td></tr>
-<tr class="separator:a58ea0be8649bc57ea4056795d30a0558"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7f5782281c70803c20588c15de5206fe"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d0b/classrtt_1_1AnglePID.html#a7f5782281c70803c20588c15de5206fe">integral</a></td></tr>
-<tr class="separator:a7f5782281c70803c20588c15de5206fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acb743c208b47ff2be1e6ed2e0ef2f206"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d0b/classrtt_1_1AnglePID.html#acb743c208b47ff2be1e6ed2e0ef2f206">dt</a></td></tr>
-<tr class="separator:acb743c208b47ff2be1e6ed2e0ef2f206"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a60460a49b360f420e8c65e7329b0c353"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d2f/classrtt_1_1YawPID.html#a60460a49b360f420e8c65e7329b0c353">P</a></td></tr>
+<tr class="separator:a60460a49b360f420e8c65e7329b0c353"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a197a65cb590f8353771c4e8db9e98378"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d2f/classrtt_1_1YawPID.html#a197a65cb590f8353771c4e8db9e98378">I</a></td></tr>
+<tr class="separator:a197a65cb590f8353771c4e8db9e98378"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d61766ce3d510f999cb87f8caf79263"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d2f/classrtt_1_1YawPID.html#a0d61766ce3d510f999cb87f8caf79263">D</a></td></tr>
+<tr class="separator:a0d61766ce3d510f999cb87f8caf79263"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad96e79ba2c619cfda8df02b1961d5f37"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d2f/classrtt_1_1YawPID.html#ad96e79ba2c619cfda8df02b1961d5f37">min</a></td></tr>
+<tr class="separator:ad96e79ba2c619cfda8df02b1961d5f37"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a203f0bc5cf1aec40ec5e12a2e9bd86b3"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d2f/classrtt_1_1YawPID.html#a203f0bc5cf1aec40ec5e12a2e9bd86b3">max</a></td></tr>
+<tr class="separator:a203f0bc5cf1aec40ec5e12a2e9bd86b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f58fd2b8bbefadd0c267cea4f377b13"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d2f/classrtt_1_1YawPID.html#a1f58fd2b8bbefadd0c267cea4f377b13">previous_error</a></td></tr>
+<tr class="separator:a1f58fd2b8bbefadd0c267cea4f377b13"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3880a0d118d073158e5f2d3fa111399b"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d2f/classrtt_1_1YawPID.html#a3880a0d118d073158e5f2d3fa111399b">integral</a></td></tr>
+<tr class="separator:a3880a0d118d073158e5f2d3fa111399b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a13b3366714d76ac3a1bf52de6390b7e9"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d2f/classrtt_1_1YawPID.html#a13b3366714d76ac3a1bf52de6390b7e9">dt</a></td></tr>
+<tr class="separator:a13b3366714d76ac3a1bf52de6390b7e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Class that controls the angle with a PID. </p>
+<div class="textblock"><p>Class that controls the yaw with a PID. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="abbb8cd0afbaa91e5ec00eb92c4709493"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abbb8cd0afbaa91e5ec00eb92c4709493">&#9670;&nbsp;</a></span>AnglePID()</h2>
+<a id="ac0e9dd1b11b50b3ae5a60114f56c534d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac0e9dd1b11b50b3ae5a60114f56c534d">&#9670;&nbsp;</a></span>YawPID()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -139,7 +139,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">rtt::AnglePID::AnglePID </td>
+          <td class="memname">rtt::YawPID::YawPID </td>
           <td>(</td>
           <td class="paramtype">double&#160;</td>
           <td class="paramname"><em>P</em>, </td>
@@ -181,7 +181,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Constructor of the <a class="el" href="../../dc/d0b/classrtt_1_1AnglePID.html" title="Class that controls the angle with a PID.">AnglePID</a> class. </p>
+<p>Constructor of the <a class="el" href="../../df/d2f/classrtt_1_1YawPID.html" title="Class that controls the yaw with a PID.">YawPID</a> class. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">P</td><td>Proportional part of the controller </td></tr>
@@ -196,23 +196,23 @@ Private Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a0b5836c99b3f4f7517d59837d65625d8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0b5836c99b3f4f7517d59837d65625d8">&#9670;&nbsp;</a></span>getOutput()</h2>
+<a id="a99e5ba0fcafcea6c146a547a1477e69c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a99e5ba0fcafcea6c146a547a1477e69c">&#9670;&nbsp;</a></span>getOutput()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">double rtt::AnglePID::getOutput </td>
+          <td class="memname">double rtt::YawPID::getOutput </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="../../d5/df1/ControlUtils_8h.html#a190e260c90ed557590c2ca7d74a4e490">rtt::Angle</a>&#160;</td>
-          <td class="paramname"><em>target_angle</em>, </td>
+          <td class="paramtype">Angle&#160;</td>
+          <td class="paramname"><em>target_yaw</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="../../d5/df1/ControlUtils_8h.html#a190e260c90ed557590c2ca7d74a4e490">rtt::Angle</a>&#160;</td>
-          <td class="paramname"><em>current_angle</em>&#160;</td>
+          <td class="paramtype">Angle&#160;</td>
+          <td class="paramname"><em>current_yaw</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -225,8 +225,8 @@ Private Attributes</h2></td></tr>
 <p>Retrieves the angular velocity calculated by the controller. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">target_angle</td><td>Angle the robot needs to be at </td></tr>
-    <tr><td class="paramname">current_angle</td><td>Current angle of the robot </td></tr>
+    <tr><td class="paramname">target_yaw</td><td>Yaw the robot needs to be at </td></tr>
+    <tr><td class="paramname">current_yaw</td><td>Current yaw of the robot </td></tr>
   </table>
   </dd>
 </dl>
@@ -235,8 +235,8 @@ Private Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="adec896c0bcf3298a70cc5a538ce11821"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adec896c0bcf3298a70cc5a538ce11821">&#9670;&nbsp;</a></span>D</h2>
+<a id="a0d61766ce3d510f999cb87f8caf79263"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0d61766ce3d510f999cb87f8caf79263">&#9670;&nbsp;</a></span>D</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -245,7 +245,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">double rtt::AnglePID::D</td>
+          <td class="memname">double rtt::YawPID::D</td>
         </tr>
       </table>
   </td>
@@ -258,8 +258,8 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="acb743c208b47ff2be1e6ed2e0ef2f206"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acb743c208b47ff2be1e6ed2e0ef2f206">&#9670;&nbsp;</a></span>dt</h2>
+<a id="a13b3366714d76ac3a1bf52de6390b7e9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a13b3366714d76ac3a1bf52de6390b7e9">&#9670;&nbsp;</a></span>dt</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -268,7 +268,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">double rtt::AnglePID::dt</td>
+          <td class="memname">double rtt::YawPID::dt</td>
         </tr>
       </table>
   </td>
@@ -281,8 +281,8 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a9d5b09364c7e520a7bd71b69cba5e59e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9d5b09364c7e520a7bd71b69cba5e59e">&#9670;&nbsp;</a></span>I</h2>
+<a id="a197a65cb590f8353771c4e8db9e98378"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a197a65cb590f8353771c4e8db9e98378">&#9670;&nbsp;</a></span>I</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -291,7 +291,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">double rtt::AnglePID::I</td>
+          <td class="memname">double rtt::YawPID::I</td>
         </tr>
       </table>
   </td>
@@ -304,8 +304,8 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a7f5782281c70803c20588c15de5206fe"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7f5782281c70803c20588c15de5206fe">&#9670;&nbsp;</a></span>integral</h2>
+<a id="a3880a0d118d073158e5f2d3fa111399b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3880a0d118d073158e5f2d3fa111399b">&#9670;&nbsp;</a></span>integral</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -314,7 +314,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">double rtt::AnglePID::integral</td>
+          <td class="memname">double rtt::YawPID::integral</td>
         </tr>
       </table>
   </td>
@@ -327,8 +327,8 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a5a0b7b826a3cdf0345b434a014445d87"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5a0b7b826a3cdf0345b434a014445d87">&#9670;&nbsp;</a></span>max</h2>
+<a id="a203f0bc5cf1aec40ec5e12a2e9bd86b3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a203f0bc5cf1aec40ec5e12a2e9bd86b3">&#9670;&nbsp;</a></span>max</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -337,7 +337,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">double rtt::AnglePID::max</td>
+          <td class="memname">double rtt::YawPID::max</td>
         </tr>
       </table>
   </td>
@@ -350,8 +350,8 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a9ab280e3788378b3fd3d5c9a9ed2d64f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9ab280e3788378b3fd3d5c9a9ed2d64f">&#9670;&nbsp;</a></span>min</h2>
+<a id="ad96e79ba2c619cfda8df02b1961d5f37"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad96e79ba2c619cfda8df02b1961d5f37">&#9670;&nbsp;</a></span>min</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -360,7 +360,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">double rtt::AnglePID::min</td>
+          <td class="memname">double rtt::YawPID::min</td>
         </tr>
       </table>
   </td>
@@ -373,8 +373,8 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a28526d0d9253e545ffcd2f1e8a2f2ccb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a28526d0d9253e545ffcd2f1e8a2f2ccb">&#9670;&nbsp;</a></span>P</h2>
+<a id="a60460a49b360f420e8c65e7329b0c353"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a60460a49b360f420e8c65e7329b0c353">&#9670;&nbsp;</a></span>P</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -383,7 +383,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">double rtt::AnglePID::P</td>
+          <td class="memname">double rtt::YawPID::P</td>
         </tr>
       </table>
   </td>
@@ -396,8 +396,8 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a58ea0be8649bc57ea4056795d30a0558"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a58ea0be8649bc57ea4056795d30a0558">&#9670;&nbsp;</a></span>previous_error</h2>
+<a id="a1f58fd2b8bbefadd0c267cea4f377b13"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1f58fd2b8bbefadd0c267cea4f377b13">&#9670;&nbsp;</a></span>previous_error</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -406,7 +406,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">double rtt::AnglePID::previous_error</td>
+          <td class="memname">double rtt::YawPID::previous_error</td>
         </tr>
       </table>
   </td>
@@ -420,15 +420,15 @@ Private Attributes</h2></td></tr>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>roboteam_ai/include/roboteam_ai/control/<a class="el" href="../../d2/d42/AnglePID_8h_source.html">AnglePID.h</a></li>
-<li>roboteam_ai/src/control/<a class="el" href="../../d0/d40/AnglePID_8cpp.html">AnglePID.cpp</a></li>
+<li>roboteam_ai/include/roboteam_ai/control/<a class="el" href="../../d1/da0/YawPID_8h_source.html">YawPID.h</a></li>
+<li>roboteam_ai/src/control/<a class="el" href="../../db/df8/YawPID_8cpp.html">YawPID.cpp</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="../../dc/d8f/namespacertt.html">rtt</a></li><li class="navelem"><a class="el" href="../../dc/d0b/classrtt_1_1AnglePID.html">AnglePID</a></li>
+    <li class="navelem"><a class="el" href="../../dc/d8f/namespacertt.html">rtt</a></li><li class="navelem"><a class="el" href="../../df/d2f/classrtt_1_1YawPID.html">YawPID</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>

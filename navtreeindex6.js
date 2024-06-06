@@ -1,9 +1,5 @@
 var NAVTREEINDEX6 =
 {
-"d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#a58560de6d2d6ca91e467deb1071aadbd":[2,0,0,0,4,15,12],
-"d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#a5be299fd1dab79b7f656ca37631d6ef6":[2,0,0,0,4,15,11],
-"d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#a7164f241b13b1aa59b6e6b5c30a3094b":[2,0,0,0,4,15,23],
-"d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#a727ddaebc6547c71775d10cdad0bdad2":[2,0,0,0,4,15,8],
 "d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#a7439c6149abbc461640c9ecdad2ba8d6":[2,0,0,0,4,15,7],
 "d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#a805621fd748e3dfd6399ff69570f7e56":[2,0,0,0,4,15,19],
 "d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#a81d204e55bab023d2937c1420abd04ad":[2,0,0,0,4,15,22],
@@ -72,8 +68,8 @@ var NAVTREEINDEX6 =
 "d7/db7/classrtt_1_1ai_1_1stp_1_1evaluation_1_1BallPlacementUsGameStateEvaluation.html":[2,0,0,0,4,1,3],
 "d7/db7/classrtt_1_1ai_1_1stp_1_1evaluation_1_1BallPlacementUsGameStateEvaluation.html#a8e8143540f85da5d8de1c26ce9d6d2e9":[2,0,0,0,4,1,3,1],
 "d7/db7/classrtt_1_1ai_1_1stp_1_1evaluation_1_1BallPlacementUsGameStateEvaluation.html#ae5e30ee85fdcdc49b9ca64144b888997":[2,0,0,0,4,1,3,0],
-"d7/dbe/ControlModule_8h.html":[3,0,0,0,0,0,2],
-"d7/dbe/ControlModule_8h_source.html":[3,0,0,0,0,0,2],
+"d7/dbe/ControlModule_8h.html":[3,0,0,0,0,0,1],
+"d7/dbe/ControlModule_8h_source.html":[3,0,0,0,0,0,1],
 "d7/dbf/OvershootComputations_8h.html":[3,0,0,0,0,0,0,2],
 "d7/dbf/OvershootComputations_8h_source.html":[3,0,0,0,0,0,0,2],
 "d7/dd9/PositionScoring_8cpp.html":[3,0,0,1,3,0,4],
@@ -96,8 +92,8 @@ var NAVTREEINDEX6 =
 "d7/ddc/classrtt_1_1ai_1_1Dealer.html#a94358830841e86be15709f16a5a71aa5":[3,0,0,0,0,4,1,3,1],
 "d7/ddc/classrtt_1_1ai_1_1Dealer.html#a94358830841e86be15709f16a5a71aa5":[2,0,0,0,6,1,1],
 "d7/ddc/classrtt_1_1ai_1_1Dealer.html#a9c3ea880f0bfdd05727d3d0a661d2ceb":[2,0,0,0,6,16],
-"d7/ddc/classrtt_1_1ai_1_1Dealer.html#aa55cf5612995a0d899e7c185e6e46c4e":[2,0,0,0,6,2,1],
 "d7/ddc/classrtt_1_1ai_1_1Dealer.html#aa55cf5612995a0d899e7c185e6e46c4e":[3,0,0,0,0,4,1,2,1],
+"d7/ddc/classrtt_1_1ai_1_1Dealer.html#aa55cf5612995a0d899e7c185e6e46c4e":[2,0,0,0,6,2,1],
 "d7/ddc/classrtt_1_1ai_1_1Dealer.html#aad8a4055abc33454fce6cf0966ee3d9e":[2,0,0,0,6,5],
 "d7/ddc/classrtt_1_1ai_1_1Dealer.html#ab3d3176a7d6bee6d573b23f5140fdbea":[2,0,0,0,6,18],
 "d7/ddc/classrtt_1_1ai_1_1Dealer.html#abffef721813b1e58bf8754f963c29abb":[3,0,0,0,0,4,1,2,0],
@@ -249,5 +245,9 @@ var NAVTREEINDEX6 =
 "d8/dd4/RefCommand_8h.html#ac458fd2464c54331a04fc2fd54d82843a615a46af313786fc4e349f34118be111":[3,0,0,0,0,4,7,0,1],
 "d8/dd4/RefCommand_8h.html#ac458fd2464c54331a04fc2fd54d82843a7894f3ecc3abad045c2909912bdd5132":[3,0,0,0,0,4,7,0,21],
 "d8/dd4/RefCommand_8h.html#ac458fd2464c54331a04fc2fd54d82843a7d4f8613628e265b6bf9c674bedad46d":[3,0,0,0,0,4,7,0,8],
-"d8/dd4/RefCommand_8h.html#ac458fd2464c54331a04fc2fd54d82843aa0e17303d5ddfc03629d114713d8fa7d":[3,0,0,0,0,4,7,0,19]
+"d8/dd4/RefCommand_8h.html#ac458fd2464c54331a04fc2fd54d82843aa0e17303d5ddfc03629d114713d8fa7d":[3,0,0,0,0,4,7,0,19],
+"d8/dd4/RefCommand_8h.html#ac458fd2464c54331a04fc2fd54d82843aa582f62ddc20516e733b0ce09acc219a":[3,0,0,0,0,4,7,0,7],
+"d8/dd4/RefCommand_8h.html#ac458fd2464c54331a04fc2fd54d82843aaa94a644a66e971a67a1865b6256bda0":[3,0,0,0,0,4,7,0,12],
+"d8/dd4/RefCommand_8h.html#ac458fd2464c54331a04fc2fd54d82843ab1b09aed356d6152877ff14f116e9e3b":[3,0,0,0,0,4,7,0,4],
+"d8/dd4/RefCommand_8h.html#ac458fd2464c54331a04fc2fd54d82843abafba8df79d3bc511dadfaf088ca4382":[3,0,0,0,0,4,7,0,10]
 };

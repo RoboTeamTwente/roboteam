@@ -2,8 +2,8 @@ var classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall =
 [
     [ "KeeperBlockBall", "d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#a90925906e42a4da8344a7f568dd77c79", null ],
     [ "calculateInfoForSkill", "d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#aa6d4654c89847534172684fea5ef6843", null ],
-    [ "calculateTargetAngle", "d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#abd5f3fa2fb0f1ec7158adfbe4830067f", null ],
     [ "calculateTargetPosition", "d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#aed029a6dec04c0f4d4deb50a9aa90dc4", null ],
+    [ "calculateYaw", "d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#a94843b609e566bbf3806e3c15699a013", null ],
     [ "estimateBallTrajectory", "d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#a8e121c98829ab73ffab5702f91de4b20", null ],
     [ "getCurrentSkill", "d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#a483d158a091f8347c3c25983b22d015f", null ],
     [ "getKeepersLineSegment", "d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#a69444207b9e6d1623afacf9253d4e357", null ],

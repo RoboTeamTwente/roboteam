@@ -2,9 +2,9 @@ var namespacertt =
 [
     [ "ai", "d4/dcc/namespacertt_1_1ai.html", "d4/dcc/namespacertt_1_1ai" ],
     [ "world", "db/d1b/namespacertt_1_1world.html", "db/d1b/namespacertt_1_1world" ],
-    [ "AnglePID", "dc/d0b/classrtt_1_1AnglePID.html", "dc/d0b/classrtt_1_1AnglePID" ],
     [ "Trajectory1D", "d0/d62/classrtt_1_1Trajectory1D.html", "d0/d62/classrtt_1_1Trajectory1D" ],
     [ "Trajectory2D", "d9/da4/classrtt_1_1Trajectory2D.html", "d9/da4/classrtt_1_1Trajectory2D" ],
+    [ "YawPID", "df/d2f/classrtt_1_1YawPID.html", "df/d2f/classrtt_1_1YawPID" ],
     [ "STPManager", "da/de3/classrtt_1_1STPManager.html", "da/de3/classrtt_1_1STPManager" ],
     [ "GameSettings", "df/db4/classrtt_1_1GameSettings.html", "df/db4/classrtt_1_1GameSettings" ],
     [ "RefCommand", "dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843", [

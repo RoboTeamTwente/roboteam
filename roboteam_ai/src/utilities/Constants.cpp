@@ -22,9 +22,9 @@ double Constants::MAX_ANGULAR_VELOCITY() { return 6.0; }
 
 double Constants::MAX_VEL_CMD() { return 4.0; }
 
-double Constants::MIN_ANGLE() { return -M_PI; }
+double Constants::MIN_YAW() { return -M_PI; }
 
-double Constants::MAX_ANGLE() { return M_PI; }
+double Constants::MAX_YAW() { return M_PI; }
 
 double Constants::MAX_ACC() { return 3.5; }
 

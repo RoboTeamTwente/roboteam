@@ -91,15 +91,15 @@ void RobotHub::sendCommandsToSimulator(const rtt::RobotCommands &commands, rtt::
         int id = robotCommand.id;
         auto kickSpeed = static_cast<float>(robotCommand.kickSpeed);
         float kickAngle = robotCommand.kickType == rtt::KickType::CHIP ? SIM_CHIPPER_ANGLE_DEGREES : 0.0f;
-        float dribblerSpeed = static_cast<float>(robotCommand.dribblerSpeed) * SIM_MAX_DRIBBLER_SPEED_RPM;  // dribblerSpeed is range of 0 to 1
+        float dribblerSpeed = static_cast<float>(robotCommand.dribblerOn) * SIM_MAX_DRIBBLER_SPEED_RPM;  // dribblerOn is range of 0 to 1
         auto angularVelocity = static_cast<float>(robotCommand.targetAngularVelocity);
 
         if (!robotCommand.useAngularVelocity) {
-            RTT_WARNING("Robot command used absolute angle, but simulator requires angular velocity")
+            RTT_WARNING("Robot command used absolute yaw, but simulator requires angular velocity")
         }
 
         /* addRobotControlWithLocalSpeeds works with both grSim and ER-Force sim, while addRobotControlWithGlobalSpeeds only works with grSim*/
-        auto relativeVelocity = robotCommand.velocity.rotate(-robotCommand.cameraAngleOfRobot);
+        auto relativeVelocity = robotCommand.velocity.rotate(-robotCommand.cameraYawOfRobot);
         auto forward = relativeVelocity.x;
         auto left = relativeVelocity.y;
         simCommand.addRobotControlWithLocalSpeeds(id, kickSpeed, kickAngle, dribblerSpeed, forward, left, angularVelocity);
@@ -135,38 +135,39 @@ void RobotHub::sendCommandsToBasestation(const rtt::RobotCommands &commands, rtt
         // Convert the RobotCommand to a command for the basestation
 
         REM_RobotCommand command = {};
-        command.header = REM_PACKET_TYPE_REM_ROBOT_COMMAND;
+        command.packetType = REM_PACKET_TYPE_REM_ROBOT_COMMAND;
         command.toRobotId = robotCommand.id;
         command.toColor = color == rtt::Team::BLUE;
         command.fromPC = true;
         command.remVersion = REM_LOCAL_VERSION;
         // command.messageId = 0; TODO implement incrementing message id
         command.payloadSize = REM_PACKET_SIZE_REM_ROBOT_COMMAND;
-        command.timestamp = static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count() / 10);
+        command.timestamp = static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count());
 
-        command.kickAtAngle = robotCommand.kickAtAngle;
+        command.kickAtYaw = robotCommand.kickAtYaw;
         command.doKick = robotCommand.kickSpeed > 0.0 && robotCommand.kickType == KickType::KICK;
         command.doChip = robotCommand.kickSpeed > 0.0 && robotCommand.kickType == KickType::CHIP;
         command.doForce = !robotCommand.waitForBall;
         command.kickChipPower = static_cast<float>(robotCommand.kickSpeed);
-        command.dribbler = static_cast<float>(robotCommand.dribblerSpeed);
+        // command.dribblerOn = static_cast<float>(robotCommand.dribblerOn);
+        command.dribblerOn = robotCommand.dribblerOn;
 
         command.rho = static_cast<float>(robotCommand.velocity.length());
-        command.theta = -1.0f * static_cast<float>(robotCommand.velocity.angle());
+        command.theta = static_cast<float>(robotCommand.velocity.angle());
 
-        command.useAbsoluteAngle = !robotCommand.useAngularVelocity;
-        command.angle = static_cast<float>(robotCommand.targetAngle.getValue());
+        command.useYaw = !robotCommand.useAngularVelocity;
+        command.yaw = static_cast<float>(robotCommand.yaw.getValue());
         command.angularVelocity = static_cast<float>(robotCommand.targetAngularVelocity);
 
-        command.useCameraAngle = robotCommand.cameraAngleOfRobotIsSet;
-        command.cameraAngle = command.useCameraAngle ? static_cast<float>(robotCommand.cameraAngleOfRobot) : 0.0f;
+        command.useCameraYaw = robotCommand.cameraYawOfRobotIsSet;
+        command.cameraYaw = command.useCameraYaw ? static_cast<float>(robotCommand.cameraYawOfRobot) : 0.0f;
 
-        command.feedback = robotCommand.ignorePacket;
+        command.wheelsOff = robotCommand.wheelsOff;
 
         // command.rho = 0;
         // command.theta = 0;
         // command.angularVelocity = 1;
-        // command.useAbsoluteAngle = 0;
+        // command.useYaw = 0;
 
         int bytesSent = 0;
         {
@@ -240,17 +241,13 @@ void RobotHub::handleRobotFeedbackFromSimulator(const simulation::RobotControlFe
     for (auto const &[robotId, hasBall] : feedback.robotIdHasBall) {
         rtt::RobotFeedback robotFeedback = {.id = robotId,
                                             .ballSensorSeesBall = hasBall,
-                                            .ballPosition = 0,
                                             .ballSensorIsWorking = true,
                                             .dribblerSeesBall = hasBall,
                                             .velocity = {0, 0},
-                                            .angle = 0,
+                                            .yaw = 0,
                                             .xSensIsCalibrated = true,
                                             .capacitorIsCharged = true,
-                                            .wheelLocked = 0,
-                                            .wheelBraking = 0,
-                                            .batteryLevel = 23.0f,
-                                            .signalStrength = 0};
+                                            .batteryLevel = 23.0f};
         robotsFeedback.feedback.push_back(robotFeedback);
 
         // Increment the feedback counter of this robot
@@ -270,17 +267,13 @@ void RobotHub::handleRobotFeedbackFromBasestation(const REM_RobotFeedback &feedb
 
     rtt::RobotFeedback robotFeedback = {.id = static_cast<int>(feedback.fromRobotId),
                                         .ballSensorSeesBall = feedback.ballSensorSeesBall,
-                                        .ballPosition = feedback.ballPos,
                                         .ballSensorIsWorking = feedback.ballSensorWorking,
                                         .dribblerSeesBall = feedback.dribblerSeesBall,
                                         .velocity = Vector2(Angle(feedback.theta), feedback.rho),
-                                        .angle = Angle(feedback.angle),
+                                        .yaw = Angle(feedback.yaw),
                                         .xSensIsCalibrated = feedback.XsensCalibrated,
                                         .capacitorIsCharged = feedback.capacitorCharged,
-                                        .wheelLocked = static_cast<int>(feedback.wheelLocked),
-                                        .wheelBraking = static_cast<int>(feedback.wheelBraking),
-                                        .batteryLevel = static_cast<float>(feedback.batteryLevel),
-                                        .signalStrength = static_cast<int>(feedback.rssi)};
+                                        .batteryLevel = static_cast<float>(feedback.batteryLevel)};
     robotsFeedback.feedback.push_back(robotFeedback);
 
     this->sendRobotFeedback(robotsFeedback);

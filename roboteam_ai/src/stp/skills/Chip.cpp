@@ -9,11 +9,9 @@ Status Chip::onUpdate(const StpInfo &info) noexcept {
     command.kickType = KickType::CHIP;
     command.kickSpeed = chipVelocity;
 
-    int targetDribblerPercentage = std::clamp(info.getDribblerSpeed(), 0, 10);
-    double targetDribblerSpeed = targetDribblerPercentage / 100.0 * stp::control_constants::MAX_DRIBBLER_CMD;
-    command.dribblerSpeed = targetDribblerSpeed;
+    command.dribblerOn = info.getDribblerOn();
 
-    command.targetAngle = info.getRobot().value()->getAngle();
+    command.yaw = info.getRobot().value()->getYaw();
 
     if (chipAttempts > control_constants::MAX_CHIP_ATTEMPTS) {
         command.waitForBall = false;

@@ -12,8 +12,8 @@ std::optional<StpInfo> Formation::calculateInfoForSkill(StpInfo const &info) noe
     StpInfo skillStpInfo = info;
 
     if (!info.getPositionToMoveTo()) return std::nullopt;
-    if (!info.getAngle()) skillStpInfo.setAngle(0);
-    skillStpInfo.setDribblerSpeed(0);
+    if (!info.getYaw()) skillStpInfo.setYaw(0);
+    skillStpInfo.setDribblerOn(false);
 
     return skillStpInfo;
 }

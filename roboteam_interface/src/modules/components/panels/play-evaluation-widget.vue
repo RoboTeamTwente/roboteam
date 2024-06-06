@@ -1,29 +1,30 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref, watch } from 'vue'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { useSTPDataStore } from '../../stores/data-stores/stp-data-store'
 
-const props = defineProps(['playName']);
-
-const stpData = useSTPDataStore();
+const stpData = useSTPDataStore()
 
 // Track play scores using a map
-const playScoreMap = ref<Record<string, { count: number; startTime: number }>>({});
+const playScoreMap = ref<Record<string, { count: number; startTime: number }>>({})
 
 // Watch for changes in the current play and update the score accordingly
-watch(() => stpData.latest?.currentPlay?.playName, (newPlay, oldPlay) => {
-  if (newPlay !== oldPlay) {
-    // A new play has started
-    const currentTime = performance.now(); // Use performance.now() for higher precision
-    const playInfo = playScoreMap.value[newPlay] || { count: 0, startTime: currentTime };
-    playInfo.count += 1;
-    if (oldPlay) {
-      // Only update time spent if a previous play was in progress
-      playInfo.timeSpent = ((currentTime - playInfo.startTime) / 1000).toFixed(2); // Convert to seconds
+watch(
+  () => stpData.latest?.currentPlay?.playName,
+  (newPlay, oldPlay) => {
+    if (newPlay !== oldPlay) {
+      // A new play has started
+      const currentTime = performance.now() // Use performance.now() for higher precision
+      const playInfo = playScoreMap.value[newPlay] || { count: 0, startTime: currentTime }
+      playInfo.count += 1
+      if (oldPlay) {
+        // Only update time spent if a previous play was in progress
+        playInfo.timeSpent = ((currentTime - playInfo.startTime) / 1000).toFixed(2) // Convert to seconds
+      }
+      playScoreMap.value[newPlay] = playInfo
     }
-    playScoreMap.value[newPlay] = playInfo;
   }
-});
+)
 </script>
 <template>
   <div>
@@ -51,7 +52,11 @@ watch(() => stpData.latest?.currentPlay?.playName, (newPlay, oldPlay) => {
             <td>{{ playScoreMap[play.playName]?.count || 0 }}</td>
             <td>{{ playScoreMap[play.playName]?.timeSpent || 0 }}</td>
             <td>
-              <progress class="progress w-56" :value="playScoreMap[play.playName]?.count || 0" max="255"></progress>
+              <progress
+                class="progress w-56"
+                :value="playScoreMap[play.playName]?.count || 0"
+                max="255"
+              ></progress>
             </td>
           </tr>
         </tbody>

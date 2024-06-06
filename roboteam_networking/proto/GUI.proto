@@ -23,7 +23,8 @@ message Drawing {
         CYAN = 4;
         MAGENTA = 5;
         WHITE = 6;
-        BLACK = 7;
+        GREY = 7;
+        BLACK = 8;
     }
 
     enum Category {

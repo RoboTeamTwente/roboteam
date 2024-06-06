@@ -14,7 +14,7 @@ World randomWorld() {
                  .yellowRobots = {Robot{.id = SimpleRandom::getInt(0, 15),
                                         .position = Vector2(SimpleRandom::getDouble(-5, 5), SimpleRandom::getDouble(-5, 5)),
                                         .velocity = Vector2(SimpleRandom::getDouble(-5, 5), SimpleRandom::getDouble(-5, 5)),
-                                        .angle = SimpleRandom::getDouble(-5, 5),
+                                        .yaw = SimpleRandom::getDouble(-5, 5),
                                         .capOffset = SimpleRandom::getDouble(-5, 5)}},
                  .blueRobots = {}};
 }

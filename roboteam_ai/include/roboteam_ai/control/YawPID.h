@@ -1,13 +1,13 @@
-#ifndef RTT_ANGLEPID_H
-#define RTT_ANGLEPID_H
+#ifndef RTT_YAWPID_H
+#define RTT_YAWPID_H
 
 #include "roboteam_utils/Angle.h"
 #include "roboteam_utils/pid.h"
 namespace rtt {
 /**
- * @brief Class that controls the angle with a PID
+ * @brief Class that controls the yaw with a PID
  */
-class AnglePID {
+class YawPID {
    private:
     double P;              /**< Proportional part of the controller */
     double I;              /**< Integral part of the controller */
@@ -20,23 +20,23 @@ class AnglePID {
 
    public:
     /**
-     * @brief Constructor of the AnglePID class
+     * @brief Constructor of the YawPID class
      * @param P Proportional part of the controller
      * @param I Integral part of the controller
      * @param D Derivative part of the controller
      * @param max_ang_vel Absolute maximum allowed angular velocity
      * @param dt Time difference since previous tick
      */
-    AnglePID(double P, double I, double D, double max_ang_vel, double dt) : P{P}, I{I}, D{D}, min{-max_ang_vel}, max{max_ang_vel}, previous_error{0.0}, integral{0.0}, dt{dt} {}
+    YawPID(double P, double I, double D, double max_ang_vel, double dt) : P{P}, I{I}, D{D}, min{-max_ang_vel}, max{max_ang_vel}, previous_error{0.0}, integral{0.0}, dt{dt} {}
 
     /**
      * @brief Retrieves the angular velocity calculated by the controller
-     * @param target_angle Angle the robot needs to be at
-     * @param current_angle Current angle of the robot
+     * @param target_yaw Yaw the robot needs to be at
+     * @param current_yaw Current yaw of the robot
      * @return Target angular velocity
      */
-    double getOutput(Angle target_angle, Angle current_angle);
+    double getOutput(Angle target_yaw, Angle current_yaw);
 };
 }  // namespace rtt
 
-#endif  // RTT_ANGLEPID_H
+#endif  // RTT_YAWPID_H

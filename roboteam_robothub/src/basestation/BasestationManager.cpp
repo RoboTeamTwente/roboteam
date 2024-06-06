@@ -109,7 +109,7 @@ std::vector<libusb_device*> BasestationManager::filterBasestationDevices(libusb_
 void BasestationManager::handleIncomingMessage(const BasestationMessage& message, rtt::Team color) const {
     REM_PacketPayload* packetPayload = (REM_PacketPayload*)message.payloadBuffer;
     uint32_t payloadSize = REM_Packet_get_payloadSize(packetPayload);
-    uint8_t packetType = REM_Packet_get_header(packetPayload);
+    uint8_t packetType = REM_Packet_get_packetType(packetPayload);
     uint32_t packetVersion = REM_Packet_get_remVersion(packetPayload);
 
     if (packetVersion != REM_LOCAL_VERSION) {
@@ -118,7 +118,7 @@ void BasestationManager::handleIncomingMessage(const BasestationMessage& message
     }
 
     if (static_cast<uint32_t>(message.payloadSize) != payloadSize) {
-        RTT_ERROR("Payload size of message does not match the size specified in the packet header. Received size: ", message.payloadSize, ", indicated size: ", payloadSize);
+        RTT_ERROR("Payload size of message does not match the size specified in the packet packetType. Received size: ", message.payloadSize, ", indicated size: ", payloadSize);
         return;
     }
 

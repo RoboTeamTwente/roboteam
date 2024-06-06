@@ -85,18 +85,10 @@ const togglePause = () => {
       </select>
     </div>
     <div class="btn-group">
-      <button
-        :disabled='disabled'
-        class="btn btn-sm btn-primary gap-2"
-        @click="resetPlay"
-      >
+      <button :disabled="disabled" class="btn btn-sm btn-primary gap-2" @click="resetPlay">
         <font-awesome-icon icon="fa-rotate-right" /> Reset Play
       </button>
-      <button
-        :disabled='disabled'
-        class="btn btn-sm btn-secondary gap-2"
-        @click="haltPlay"
-      >
+      <button :disabled="disabled" class="btn btn-sm btn-secondary gap-2" @click="haltPlay">
         <font-awesome-icon icon="fa-hand" /> Halt
       </button>
     </div>
@@ -105,19 +97,19 @@ const togglePause = () => {
         <template v-if="stpData.latest?.currentPlay?.timeLeft">
           Time left:
           <span class="btn btn-sm gap-2" :style="{ backgroundColor: '#583c7c', color: '#ffffff' }">
-            {{stpData.latest.currentPlay.timeLeft}}
+            {{ stpData.latest.currentPlay.timeLeft }}
           </span>
         </template>
         <template v-if="stpData.latest?.currentPlay?.commandFromRef">
           Current ref command:
           <span class="btn btn-sm gap-2" :style="{ backgroundColor: '#583c7c', color: '#ffffff' }">
-            {{stpData.latest.currentPlay.commandFromRef}}
+            {{ stpData.latest.currentPlay.commandFromRef }}
           </span>
         </template>
         <template v-if="stpData.latest?.currentPlay?.followUpCommandFromRef">
           Next ref command:
           <span class="btn btn-sm gap-2" :style="{ backgroundColor: '#583c7c', color: '#ffffff' }">
-            {{stpData.latest.currentPlay.followUpCommandFromRef}}
+            {{ stpData.latest.currentPlay.followUpCommandFromRef }}
           </span>
         </template>
       </span>

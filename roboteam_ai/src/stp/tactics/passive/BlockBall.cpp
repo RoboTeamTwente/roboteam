@@ -23,10 +23,10 @@ std::optional<StpInfo> BlockBall::calculateInfoForSkill(StpInfo const &info) noe
 
         skillStpInfo.setPositionToMoveTo(targetPosition);
 
-        auto targetAngle = (info.getBall()->get()->position - info.getRobot()->get()->getPos()).angle();
-        skillStpInfo.setAngle(targetAngle);
+        auto yaw = (info.getBall()->get()->position - info.getRobot()->get()->getPos()).angle();
+        skillStpInfo.setYaw(yaw);
     } else {
-        skillStpInfo.setDribblerSpeed(0);
+        skillStpInfo.setDribblerOn(false);
     }
 
     return skillStpInfo;

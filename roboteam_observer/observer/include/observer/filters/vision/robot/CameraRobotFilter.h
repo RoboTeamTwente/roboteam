@@ -31,7 +31,7 @@ class CameraRobotFilter : public CameraObjectFilter {
    private:
     void updatePreviousInfo();
     PosVelFilter2D positionFilter;
-    RobotOrientationFilter angleFilter;
+    RobotOrientationFilter yawFilter;
     bool just_updated;  // keeps track if the filter was just updated e.g. a observation was given to it
                         //  so that we can efficiently find filters which were not updated
     TeamRobotID robot;

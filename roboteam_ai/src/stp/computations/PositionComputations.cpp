@@ -251,18 +251,18 @@ void PositionComputations::calculateInfoForHarasser(std::unordered_map<std::stri
     // If there is no enemy or we don't have a harasser yet, estimate the position to move to
     if (!stpInfos["harasser"].getRobot() || !enemyClosestToBall) {
         stpInfos["harasser"].setPositionToMoveTo(interceptionLocation);
-        stpInfos["harasser"].setAngle((world->getWorld()->getBall()->get()->position - interceptionLocation).angle());
+        stpInfos["harasser"].setYaw((world->getWorld()->getBall()->get()->position - interceptionLocation).angle());
         return;
     }
-    auto enemyAngle = enemyClosestToBall->get()->getAngle();
-    auto harasserAngle = stpInfos["harasser"].getAngle();
+    auto enemyAngle = enemyClosestToBall->get()->getYaw();
+    auto harasserAngle = stpInfos["harasser"].getYaw();
     // If enemy is not facing our goal AND does have the ball, stand between the enemy and our goal
     if (enemyClosestToBall->get()->hasBall() && enemyAngle.shortestAngleDiff(harasserAngle) < M_PI / 1.5) {
         auto enemyPos = enemyClosestToBall->get()->getPos();
         auto targetPos =
             enemyPos + (field.leftGoalArea.leftLine().center() - enemyPos).stretchToLength(control_constants::ROBOT_RADIUS * 4 + control_constants::GO_TO_POS_ERROR_MARGIN);
         stpInfos["harasser"].setPositionToMoveTo(targetPos);
-        stpInfos["harasser"].setAngle((world->getWorld()->getBall()->get()->position - targetPos).angle());
+        stpInfos["harasser"].setYaw((world->getWorld()->getBall()->get()->position - targetPos).angle());
     } else {
         auto harasser = std::find_if(roles->begin(), roles->end(), [](const std::unique_ptr<Role> &role) { return role != nullptr && role->getName() == "harasser"; });
         if (harasser != roles->end() && !harasser->get()->finished() && strcmp(harasser->get()->getCurrentTactic()->getName(), "Formation") == 0)
@@ -369,7 +369,7 @@ void PositionComputations::calculateInfoForDefendersAndWallers(std::unordered_ma
         auto &wallerStpInfo = stpInfos[currentWallerName];
 
         wallerStpInfo.setPositionToMoveTo(positionToMoveTo);
-        wallerStpInfo.setAngle((world->getWorld()->getBall()->get()->position - field.leftGoalArea.rightLine().center()).angle());
+        wallerStpInfo.setYaw((world->getWorld()->getBall()->get()->position - field.leftGoalArea.rightLine().center()).angle());
 
         // If the waller is close to its target, ignore collisions
         constexpr double IGNORE_COLLISIONS_DISTANCE = 0.4;

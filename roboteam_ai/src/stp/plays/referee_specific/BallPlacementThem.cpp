@@ -71,7 +71,7 @@ void BallPlacementThem::calculateInfoForHarasser() noexcept {
     auto placementPos = rtt::ai::GameStateManager::getRefereeDesignatedPosition();
     auto targetPos = placementPos + (field.leftGoalArea.rightLine().center() - placementPos).stretchToLength(control_constants::AVOID_BALL_DISTANCE);
     stpInfos["harasser"].setPositionToMoveTo(targetPos);
-    stpInfos["harasser"].setAngle((placementPos - field.leftGoalArea.rightLine().center()).toAngle());
+    stpInfos["harasser"].setYaw((placementPos - field.leftGoalArea.rightLine().center()).toAngle());
 }
 
 const char* BallPlacementThem::getName() const { return "Ball Placement Them"; }

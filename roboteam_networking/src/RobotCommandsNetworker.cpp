@@ -39,20 +39,20 @@ proto::RobotCommands robotCommandsToProto(const rtt::RobotCommands& commands) {
         protoCommand->set_id(command.id);
         protoCommand->set_velocity_x(command.velocity.x);
         protoCommand->set_velocity_y(command.velocity.y);
-        protoCommand->set_angle(command.targetAngle.getValue());
+        protoCommand->set_yaw(command.yaw.getValue());
         protoCommand->set_angular_velocity(command.targetAngularVelocity);
         protoCommand->set_use_angular_velocity(command.useAngularVelocity);
 
-        protoCommand->set_camera_angle_of_robot(command.cameraAngleOfRobot.getValue());
-        protoCommand->set_camera_angle_of_robot_is_set(command.cameraAngleOfRobotIsSet);
+        protoCommand->set_camera_yaw_of_robot(command.cameraYawOfRobot.getValue());
+        protoCommand->set_camera_yaw_of_robot_is_set(command.cameraYawOfRobotIsSet);
 
         protoCommand->set_kick_speed(command.kickSpeed);
         protoCommand->set_wait_for_ball(command.waitForBall);
         protoCommand->set_kick_type(kickTypeToProto(command.kickType));
-        protoCommand->set_kick_at_angle(command.kickAtAngle);
+        protoCommand->set_kick_at_yaw(command.kickAtYaw);
 
-        protoCommand->set_dribbler_speed(command.dribblerSpeed);
-        protoCommand->set_ignore_packet(command.ignorePacket);
+        protoCommand->set_dribbler_on(command.dribblerOn);
+        protoCommand->set_wheels_off(command.wheelsOff);
     }
 
     return protoCommands;
@@ -64,20 +64,20 @@ rtt::RobotCommands protoToRobotCommands(const proto::RobotCommands& protoCommand
     for (const auto& protoCommand : protoCommands.robot_commands()) {
         rtt::RobotCommand robotCommand = {.id = protoCommand.id(),
                                           .velocity = Vector2(protoCommand.velocity_x(), protoCommand.velocity_y()),
-                                          .targetAngle = protoCommand.angle(),
+                                          .yaw = protoCommand.yaw(),
                                           .targetAngularVelocity = protoCommand.angular_velocity(),
                                           .useAngularVelocity = protoCommand.use_angular_velocity(),
 
-                                          .cameraAngleOfRobot = protoCommand.camera_angle_of_robot(),
-                                          .cameraAngleOfRobotIsSet = protoCommand.camera_angle_of_robot_is_set(),
+                                          .cameraYawOfRobot = protoCommand.camera_yaw_of_robot(),
+                                          .cameraYawOfRobotIsSet = protoCommand.camera_yaw_of_robot_is_set(),
 
                                           .kickSpeed = protoCommand.kick_speed(),
                                           .waitForBall = protoCommand.wait_for_ball(),
                                           .kickType = protoToKickType(protoCommand.kick_type()),
-                                          .kickAtAngle = protoCommand.kick_at_angle(),
+                                          .kickAtYaw = protoCommand.kick_at_yaw(),
 
-                                          .dribblerSpeed = protoCommand.dribbler_speed(),
-                                          .ignorePacket = protoCommand.ignore_packet()};
+                                          .dribblerOn = protoCommand.dribbler_on(),
+                                          .wheelsOff = protoCommand.wheels_off()};
         robotCommands.push_back(robotCommand);
     }
 

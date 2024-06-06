@@ -13,13 +13,10 @@ Status Kick::onUpdate(const StpInfo &info) noexcept {
     command.kickType = KickType::KICK;
     command.kickSpeed = kickVelocity;
 
-    // Clamp and set dribbler speed
-    int targetDribblerPercentage = std::clamp(info.getDribblerSpeed(), 0, 100);
-    double targetDribblerSpeed = targetDribblerPercentage / 100.0 * stp::control_constants::MAX_DRIBBLER_CMD;
-    command.dribblerSpeed = targetDribblerSpeed;
+    command.dribblerOn = info.getDribblerOn();
 
-    // Set angle command
-    command.targetAngle = robot->getAngle();
+    // Set yaw command
+    command.yaw = robot->getYaw();
 
     command.waitForBall = false;
 

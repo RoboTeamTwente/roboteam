@@ -32,7 +32,7 @@ class OrbitKick : public Tactic {
 
     /**
      * @brief Should this tactic be reset (go back to the first skill of this tactic)
-     * Returns true when the robot angle is outside some error margin
+     * Returns true when the robot yaw is outside some error margin
      * @param info StpInfo can be used to check some data
      * @return true if tactic  should reset, false if execution should continue
      */

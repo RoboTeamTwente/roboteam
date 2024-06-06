@@ -6,7 +6,7 @@
 class RobotParameters {
    public:
     RobotParameters();
-    RobotParameters(double radius, double height, double frontWidth, double dribblerWidth, double angleOffset);
+    RobotParameters(double radius, double height, double frontWidth, double dribblerWidth, double yawOffset);
     explicit RobotParameters(const proto::RobotParameters& protoParams);
     [[nodiscard]] proto::RobotParameters toProto() const;
     static RobotParameters from_default();
@@ -17,7 +17,7 @@ class RobotParameters {
     double height;
     double frontWidth;
     double dribblerWidth;
-    double angleOffset;
+    double yawOffset;
 };
 
 #endif  // RTT_ROBOTPARAMETERS_H

@@ -39,13 +39,13 @@ print("It has never been tested outside of that environment and is not guarantee
 time.sleep(2)
 
 cmd_blue = REM_RobotCommand()
-cmd_blue.header = BaseTypes.REM_PACKET_TYPE_REM_ROBOT_COMMAND
+cmd_blue.packetType = BaseTypes.REM_PACKET_TYPE_REM_ROBOT_COMMAND
 cmd_blue.fromPC = True	
 cmd_blue.remVersion = BaseTypes.REM_LOCAL_VERSION
 cmd_blue.payloadSize = BaseTypes.REM_PACKET_SIZE_REM_ROBOT_COMMAND
  
 cmd_yellow = REM_RobotCommand()
-cmd_yellow.header = BaseTypes.REM_PACKET_TYPE_REM_ROBOT_COMMAND
+cmd_yellow.packetType = BaseTypes.REM_PACKET_TYPE_REM_ROBOT_COMMAND
 cmd_yellow.fromPC = True
 cmd_yellow.remVersion = BaseTypes.REM_LOCAL_VERSION
 cmd_yellow.payloadSize = BaseTypes.REM_PACKET_SIZE_REM_ROBOT_COMMAND 
@@ -116,18 +116,18 @@ def thread_listen_to_commands(arg):
             cmd.toColor = 0 if arg['name'] == 'Yellow' else 1
             cmd.rho = min(rho, 4)
             cmd.theta = -theta
-            cmd.angle = proto_command.angle
+            cmd.yaw = proto_command.yaw
             cmd.angularVelocity = proto_command.angular_velocity
-            cmd.cameraAngle = proto_command.camera_angle_of_robot
-            cmd.useCameraAngle = proto_command.camera_angle_of_robot_is_set
-            cmd.useAbsoluteAngle = proto_command.camera_angle_of_robot_is_set
-            cmd.dribbler = proto_command.dribbler_speed
+            cmd.cameraYaw = proto_command.camera_yaw_of_robot
+            cmd.useCameraYaw = proto_command.camera_yaw_of_robot_is_set
+            cmd.useYaw = proto_command.camera_yaw_of_robot_is_set
+            cmd.dribblerOn = proto_command.dribbler_on
             cmd.doKick = proto_command.kick_type != 0#RobotCommand.KickType.KICK
             # cmd.doChip = proto_command.kick_type == RobotCommand.KickType.CHIP
-            cmd.kickAtAngle = proto_command.kick_at_angle
+            cmd.kickAtYaw = proto_command.kick_at_yaw
             cmd.kickChipPower = 6#proto_command.kick_speed
             cmd.doForce = True#proto_command.wait_for_ball
-            cmd.feedback = proto_command.ignore_packet
+            cmd.feedback = proto_command.wheels_off
             
             command_queue.put(cmd.encode())
 

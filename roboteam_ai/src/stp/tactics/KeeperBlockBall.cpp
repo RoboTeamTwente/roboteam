@@ -42,8 +42,8 @@ std::optional<StpInfo> KeeperBlockBall::calculateInfoForSkill(const StpInfo &inf
     skillStpInfo.setShouldAvoidOurRobots(targetPosition.second);
     skillStpInfo.setShouldAvoidTheirRobots(targetPosition.second);
 
-    const auto targetAngle = calculateTargetAngle(info.getBall().value(), targetPosition.first);
-    skillStpInfo.setAngle(targetAngle);
+    const auto yaw = calculateYaw(info.getBall().value(), targetPosition.first);
+    skillStpInfo.setYaw(yaw);
 
     return skillStpInfo;
 }
@@ -79,7 +79,7 @@ std::optional<HalfLine> KeeperBlockBall::estimateBallTrajectory(const world::vie
     // If the enemy robot already has the ball, it will probably kick in the direction it is facing
     if (hasEnemy && enemyRobot->get()->hasBall()) {
         const auto start = enemyRobot->get()->getPos();
-        const auto direction = enemyRobot->get()->getPos() + enemyRobot->get()->getAngle().toVector2();
+        const auto direction = enemyRobot->get()->getPos() + enemyRobot->get()->getYaw().toVector2();
         return HalfLine(start, direction);
     }
 
@@ -145,7 +145,7 @@ std::pair<Vector2, bool> KeeperBlockBall::calculateTargetPosition(const StpInfo 
     return {Vector2(keepersLineSegment.start.x, 0), shouldAvoidGoalPosts};
 }
 
-Angle KeeperBlockBall::calculateTargetAngle(const world::view::BallView &ball, const Vector2 &targetKeeperPosition) {
+Angle KeeperBlockBall::calculateYaw(const world::view::BallView &ball, const Vector2 &targetKeeperPosition) {
     // Look towards ball to ensure ball hits the front assembly to reduce odds of ball reflecting in goal
     const auto keeperToBall = (ball->position - targetKeeperPosition) / 1.6;
     return keeperToBall.angle();

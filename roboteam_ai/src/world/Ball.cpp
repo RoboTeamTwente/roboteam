@@ -91,7 +91,7 @@ void Ball::updateBallAtRobotPosition(const world::World* data) noexcept {
     }
 
     double distanceInFrontOfRobot = ai::stp::control_constants::CENTER_TO_FRONT + ai::Constants::BALL_RADIUS();
-    position = robotWithBall->get()->getPos() + robotWithBall->get()->getAngle().toVector2(distanceInFrontOfRobot);
+    position = robotWithBall->get()->getPos() + robotWithBall->get()->getYaw().toVector2(distanceInFrontOfRobot);
     velocity = robotWithBall->get()->getVel();
 }
 

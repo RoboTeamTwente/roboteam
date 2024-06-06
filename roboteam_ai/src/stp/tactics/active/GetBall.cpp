@@ -48,10 +48,10 @@ std::optional<StpInfo> GetBall::calculateInfoForSkill(const StpInfo &info) noexc
         skillStpInfo.setPositionToMoveTo(newRobotPosition);
     }
 
-    skillStpInfo.setAngle((ballPosition - robotPosition).angle());
+    skillStpInfo.setYaw((ballPosition - robotPosition).angle());
 
     if (distanceToBall < control_constants::TURN_ON_DRIBBLER_DISTANCE) {
-        skillStpInfo.setDribblerSpeed(100);
+        skillStpInfo.setDribblerOn(true);
     }
 
     return skillStpInfo;

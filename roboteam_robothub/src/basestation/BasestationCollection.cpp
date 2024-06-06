@@ -235,7 +235,7 @@ void BasestationCollection::updateBasestationSelection() {
 void BasestationCollection::askChannelOfBasestationsWithUnknownChannel() const {
     // Create the channel request message
     REM_BasestationGetConfiguration getConfigurationMessage = {0};
-    getConfigurationMessage.header = REM_PACKET_TYPE_REM_BASESTATION_GET_CONFIGURATION;
+    getConfigurationMessage.packetType = REM_PACKET_TYPE_REM_BASESTATION_GET_CONFIGURATION;
     getConfigurationMessage.toBS = true;
     getConfigurationMessage.fromPC = true;
     getConfigurationMessage.remVersion = REM_LOCAL_VERSION;
@@ -277,7 +277,7 @@ std::vector<std::shared_ptr<Basestation>> BasestationCollection::getSelectableBa
 
 bool BasestationCollection::sendChannelChangeRequest(const std::shared_ptr<Basestation>& basestation, WirelessChannel newChannel) {
     REM_BasestationConfiguration setConfigurationCommand;
-    setConfigurationCommand.header = REM_PACKET_TYPE_REM_BASESTATION_CONFIGURATION;
+    setConfigurationCommand.packetType = REM_PACKET_TYPE_REM_BASESTATION_CONFIGURATION;
     setConfigurationCommand.toBS = true;
     setConfigurationCommand.fromPC = true;
     setConfigurationCommand.remVersion = REM_LOCAL_VERSION;
@@ -452,13 +452,13 @@ void BasestationCollection::onMessageFromBasestation(const BasestationMessage& m
     // If this message contains what channel the basestation has, parse it and update our map
     REM_PacketPayload* packetPayload = (REM_PacketPayload*)message.payloadBuffer;
 
-    if (REM_Packet_get_header(packetPayload) == REM_PACKET_TYPE_REM_BASESTATION_CONFIGURATION) {
+    if (REM_Packet_get_packetType(packetPayload) == REM_PACKET_TYPE_REM_BASESTATION_CONFIGURATION) {
         uint8_t basestation_channel_rem = REM_BasestationConfiguration_get_channel((REM_BasestationConfigurationPayload*)message.payloadBuffer);
         WirelessChannel basestation_channel = BasestationCollection::remChannelToWirelessChannel(basestation_channel_rem);
         this->setChannelOfBasestation(basestationId, basestation_channel);
     }
 
-    if (REM_Packet_get_header(packetPayload) == REM_PACKET_TYPE_REM_LOG) {
+    if (REM_Packet_get_packetType(packetPayload) == REM_PACKET_TYPE_REM_LOG) {
         REM_LogPayload* logPayload = (REM_LogPayload*)message.payloadBuffer;
         uint32_t message_length = REM_Log_get_payloadSize(logPayload) - REM_PACKET_SIZE_REM_LOG;
         char* charstring = (char*)&message.payloadBuffer[REM_PACKET_SIZE_REM_LOG];

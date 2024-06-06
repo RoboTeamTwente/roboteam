@@ -12,8 +12,8 @@ std::optional<StpInfo> DriveWithBall::calculateInfoForSkill(const StpInfo &info)
 
     StpInfo skillStpInfo = info;
     auto angleToTarget = (info.getPositionToMoveTo().value() - info.getRobot()->get()->getPos()).angle();
-    skillStpInfo.setAngle(skills.current_num() == 0 ? angleToTarget : (info.getPositionToMoveTo().value() - info.getBall()->get()->position).angle());
-    skillStpInfo.setDribblerSpeed(100);
+    skillStpInfo.setYaw(skills.current_num() == 0 ? angleToTarget : (info.getPositionToMoveTo().value() - info.getBall()->get()->position).angle());
+    skillStpInfo.setDribblerOn(true);
 
     return skillStpInfo;
 }
@@ -21,7 +21,7 @@ std::optional<StpInfo> DriveWithBall::calculateInfoForSkill(const StpInfo &info)
 bool DriveWithBall::isTacticFailing(const StpInfo &info) noexcept { return !info.getRobot().value()->hasBall() || !info.getPositionToMoveTo(); }
 
 bool DriveWithBall::shouldTacticReset(const StpInfo &info) noexcept {
-    return skills.current_num() == 1 && info.getRobot()->get()->getAngle().shortestAngleDiff(info.getAngle()) > Constants::HAS_BALL_ANGLE();
+    return skills.current_num() == 1 && info.getRobot()->get()->getYaw().shortestAngleDiff(info.getYaw()) > Constants::HAS_BALL_ANGLE();
 }
 
 bool DriveWithBall::isEndTactic() noexcept { return false; }

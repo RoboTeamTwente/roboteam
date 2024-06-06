@@ -15,11 +15,9 @@ std::string robotFeedbackSourceToString(RobotFeedbackSource source) {
 }
 
 bool RobotFeedback::operator==(const RobotFeedback &other) const {
-    return this->id == other.id && this->ballSensorSeesBall == other.ballSensorSeesBall && this->ballPosition == other.ballPosition &&
-           this->ballSensorIsWorking == other.ballSensorIsWorking && this->dribblerSeesBall == other.dribblerSeesBall && this->velocity == other.velocity &&
-           this->angle == other.angle && this->xSensIsCalibrated == other.xSensIsCalibrated && this->capacitorIsCharged == other.capacitorIsCharged &&
-           this->wheelLocked == other.wheelLocked && this->wheelBraking == other.wheelBraking && this->batteryLevel == other.batteryLevel &&
-           this->signalStrength == other.signalStrength;
+    return this->id == other.id && this->ballSensorSeesBall == other.ballSensorSeesBall && this->ballSensorIsWorking == other.ballSensorIsWorking &&
+           this->dribblerSeesBall == other.dribblerSeesBall && this->velocity == other.velocity && this->yaw == other.yaw && this->xSensIsCalibrated == other.xSensIsCalibrated &&
+           this->capacitorIsCharged == other.capacitorIsCharged && this->batteryLevel == other.batteryLevel;
 }
 
 std::string boolToString(bool b) { return (b ? " true" : "false"); }
@@ -28,17 +26,13 @@ std::ostream &RobotFeedback::write(std::ostream &os) const {
     return os << "{"
               << "id: " << formatString("%2i", this->id) << ", "
               << "ballSensorSeesBall: " << boolToString(this->ballSensorSeesBall) << ", "
-              << "ballPos: " << formatString("%5f", this->ballPosition) << ", "
               << "ballSensorWorks: " << boolToString(this->ballSensorIsWorking) << ", "
               << "dribblerSeesBall: " << boolToString(this->dribblerSeesBall) << ", "
               << "velocity: " << this->velocity << ", "
-              << "angle: " << this->angle << ", "
+              << "yaw: " << this->yaw << ", "
               << "xSensCalib: " << boolToString(this->xSensIsCalibrated) << ", "
               << "capacitorCharged: " << boolToString(this->capacitorIsCharged) << ", "
-              << "wheelLocked: " << formatString("%4i", this->wheelLocked) << ", "
-              << "wheelBraking: " << formatString("%4i", this->wheelBraking) << ", "
-              << "battery: " << formatString("%4f", this->batteryLevel) << ", "
-              << "signalStrength: " << formatString("%3i", this->signalStrength) << "}";
+              << "battery: " << formatString("%4f", this->batteryLevel) << "}";
 }
 
 std::ostream &operator<<(std::ostream &os, const RobotFeedback &feedback) { return feedback.write(os); }

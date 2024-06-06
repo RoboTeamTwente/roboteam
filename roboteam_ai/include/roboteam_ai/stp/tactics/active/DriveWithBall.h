@@ -32,7 +32,7 @@ class DriveWithBall : public Tactic {
 
     /**
      * @brief Should this tactic be reset (go back to the first skill of this tactic)
-     * Should reset if the angle the robot is at is no longer correct
+     * Should reset if the yaw the robot is at is no longer correct
      * @param info StpInfo can be used to check some data
      * @return true if tactic  should reset, false if execution should continue
      */

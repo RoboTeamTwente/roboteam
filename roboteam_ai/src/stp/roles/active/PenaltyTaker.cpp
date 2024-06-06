@@ -23,7 +23,7 @@ PenaltyTaker::PenaltyTaker(std::string name) : Role(std::move(name)) {
             // set position to move to the current position
             infoCopy.setPositionToMoveTo(currentPos - Vector2(0.1, 0));
             if (currentVel.x < 0.1) {
-                infoCopy.setDribblerSpeed(0);
+                infoCopy.setDribblerOn(false);
             }
         }
         // if we don't have ball, reset the tactic

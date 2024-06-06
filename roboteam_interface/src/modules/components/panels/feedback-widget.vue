@@ -6,7 +6,6 @@ import { formatFloat } from '../../../utils'
 
 const visionData = useVisionDataStore()
 const uiStore = useUIStore()
-
 </script>
 
 <template>
@@ -28,7 +27,10 @@ const uiStore = useUIStore()
         v-on:click="uiStore.toggleRobotSelection(robot.id!)"
       >
         <div class="flex flex-wrap gap-1 mb-2">
-          <div class="badge badge-sm tooltip tooltip-bottom" :data-tip="uiStore.robotName(robot.id!)">
+          <div
+            class="badge badge-sm tooltip tooltip-bottom"
+            :data-tip="uiStore.robotName(robot.id!)"
+          >
             <font-awesome-icon icon="robot" class="w-3 h-3 mr-1" />{{ robot.id }}
           </div>
           <div
@@ -37,13 +39,6 @@ const uiStore = useUIStore()
           >
             <font-awesome-icon icon="battery" class="h-3 w-3 mr-1" />
             {{ robot.feedbackInfo?.batteryLevel }}
-          </div>
-          <div
-            class="badge badge-sm badge-secondary tooltip tooltip-bottom text-no-wrap"
-            data-tip="Signal strength"
-          >
-            <font-awesome-icon icon="signal" class="h-3 w-3 mr-1" />
-            {{ robot.feedbackInfo?.signalStrength }}
           </div>
           <div
             class="badge badge-sm badge-secondary tooltip tooltip-bottom"
@@ -67,7 +62,7 @@ const uiStore = useUIStore()
         <div class="text-no-wrap text-sm font-mono">
           vel:[{{ formatFloat(robot.vel?.x) }}x,{{ formatFloat(robot.vel?.y) }}y]
         </div>
-        <div class="text-no-wrap text-sm font-mono">angle: {{ formatFloat(robot.angle) }}rad</div>
+        <div class="text-no-wrap text-sm font-mono">yaw: {{ formatFloat(robot.yaw) }}rad</div>
         <div class="text-no-wrap text-sm font-mono">w: {{ formatFloat(robot.w) }}rad/s</div>
         <div class="text-no-wrap text-sm font-mono">
           Ball detected: {{ robot.feedbackInfo?.ballSensorSeesBall }}

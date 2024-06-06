@@ -22,7 +22,7 @@ std::optional<StpInfo> GetBehindBallInDirection::calculateInfoForSkill(const Stp
     Vector2 ballPosition = info.getBall()->get()->position;
     Vector2 positionToShootAt = info.getPositionToShootAt().value();
 
-    skillStpInfo.setAngle((positionToShootAt - robotPosition).angle());
+    skillStpInfo.setYaw((positionToShootAt - robotPosition).angle());
 
     if ((ballPosition - robotPosition).length() > DISTANCE_THRESHOLD || info.getObjectsToAvoid().shouldAvoidBall) {
         Vector2 targetPos = calculateTargetPosition(ballPosition, robotPosition, positionToShootAt);

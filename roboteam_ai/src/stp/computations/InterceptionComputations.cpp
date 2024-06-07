@@ -54,6 +54,7 @@ InterceptionInfo InterceptionComputations::calculateInterceptionInfo(const std::
     auto pastBallPosition = ballPosition;
     auto futureBallPosition = ballPosition;
     auto ballVelocity = world->getWorld()->getBall()->get()->velocity;
+    bool shouldReturn = false;
     interceptionInfo.interceptLocation = ballPosition;
 
     // Helper function to calculate the intercept info for a given target position
@@ -77,6 +78,16 @@ InterceptionInfo InterceptionComputations::calculateInterceptionInfo(const std::
                 interceptionInfo.interceptLocation =
                     robotCloseToBallPos + (world->getWorld()->getBall()->get()->position - robotCloseToBallPos).stretchToLength(control_constants::ROBOT_RADIUS * 3);
             }
+            double minTimeToTarget = std::numeric_limits<double>::max();
+            for (const auto &robot : ourRobots) {
+                auto trajectory = Trajectory2D(robot->getPos(), robot->getVel(), interceptionInfo.interceptLocation, maxRobotVelocity, ai::Constants::MAX_ACC());
+                if (trajectory.getTotalTime() < minTimeToTarget) {
+                    minTimeToTarget = trajectory.getTotalTime();
+                    interceptionInfo.interceptId = robot->getId();
+                    interceptionInfo.timeToIntercept = minTimeToTarget;
+                }
+            }
+            shouldReturn = true;
             return;
         }
 
@@ -141,7 +152,8 @@ InterceptionInfo InterceptionComputations::calculateInterceptionInfo(const std::
         // If the ball is out of the field, we intercept at the projected position in the field, unless the ball is already out of the field
         if (!world->getField().value().playArea.contains(futureBallPosition, control_constants::BALL_RADIUS)) {
             if (world->getField().value().playArea.contains(ballPosition, control_constants::BALL_RADIUS)) {
-                futureBallPosition = FieldComputations::projectPointIntoFieldOnLine(world->getField().value(), futureBallPosition, ballPosition, futureBallPosition, control_constants::BALL_RADIUS);
+                futureBallPosition =
+                    FieldComputations::projectPointIntoFieldOnLine(world->getField().value(), futureBallPosition, ballPosition, futureBallPosition, control_constants::BALL_RADIUS);
                 calculateIntercept(futureBallPosition);
             } else {
                 calculateIntercept(ballPosition);
@@ -153,6 +165,8 @@ InterceptionInfo InterceptionComputations::calculateInterceptionInfo(const std::
         // If any robot can intercept the ball in time, return that info
         if (loopTime >= interceptionInfo.timeToIntercept) {
             interceptionInfo.isInterceptable = true;
+            return interceptionInfo;
+        } else if (shouldReturn) {
             return interceptionInfo;
         }
     }

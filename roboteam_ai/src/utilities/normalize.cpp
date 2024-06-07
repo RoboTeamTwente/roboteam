@@ -19,7 +19,7 @@ void rotate(proto::WorldRobot *robot) {
     robot->mutable_vel()->set_x(robot->vel().x() * -1);
     robot->mutable_vel()->set_y(robot->vel().y() * -1);
     robot->set_w(robot->w() * -1);
-    robot->set_angle(static_cast<float>(rtt::cleanAngle(robot->angle() + M_PI)));
+    robot->set_yaw(static_cast<float>(rtt::cleanAngle(robot->yaw() + M_PI)));
 }
 
 // rotate the ball and robots
@@ -81,7 +81,7 @@ void rotate(proto::SSL_GeometryFieldSize *field) {
 void rotate(rtt::RobotCommand *command) {
     assert(command && "Invalid pointer for command");
     command->velocity = command->velocity * -1;
-    command->targetAngle += M_PI;
+    command->yaw += M_PI;
 }
 void rotate(proto::SSL_WrapperPacket *packet) {
     if (packet->has_detection()) {

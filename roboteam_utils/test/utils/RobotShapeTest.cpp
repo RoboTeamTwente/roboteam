@@ -9,7 +9,7 @@ TEST(RobotShapeTest, constructors) {
     double centerToFront = 0.05;
     RobotShape shape(Vector2(0, 0), centerToFront, radius, Angle(0.0));
     EXPECT_EQ(shape.pos(), Vector2(0, 0));
-    EXPECT_DOUBLE_EQ(shape.angle().getValue(), 0.0);
+    EXPECT_DOUBLE_EQ(shape.yaw().getValue(), 0.0);
     EXPECT_EQ(shape.centerOfKickerPos(), Vector2(centerToFront, 0));
     LineSegment kicker = shape.kicker();
     double diff = sqrt(radius * radius - centerToFront * centerToFront);
@@ -22,7 +22,7 @@ TEST(RobotShapeTest, constructors) {
     // Check if rotation is applied correctly
     RobotShape shape2(Vector2(0, 0), centerToFront, radius, Angle(1.0));
     EXPECT_EQ(shape2.pos(), Vector2(0, 0));
-    EXPECT_DOUBLE_EQ(shape2.angle().getValue(), 1.0);
+    EXPECT_DOUBLE_EQ(shape2.yaw().getValue(), 1.0);
     EXPECT_DOUBLE_EQ(shape2.centerOfKickerPos().x, Vector2(centerToFront, 0).rotate(1.0).x);
     EXPECT_DOUBLE_EQ(shape2.centerOfKickerPos().y, Vector2(centerToFront, 0).rotate(1.0).y);
 }

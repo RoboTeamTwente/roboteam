@@ -53,10 +53,10 @@ class IOManager {
     rtt::ai::Pause* pause; /**< Pauses the robots when needed */
 
     /**
-     * @brief Adds the camera angle from world to the robot commands, so the robot can use it for its angle control
-     * @param robotCommands the robot commands in which the camera angle needs to be added
+     * @brief Adds the camera yaw from world to the robot commands, so the robot can use it for its yaw control
+     * @param robotCommands the robot commands in which the camera yaw needs to be added
      */
-    void addCameraAngleToRobotCommands(rtt::RobotCommands& robotCommands);
+    void addCameraYawToRobotCommands(rtt::RobotCommands& robotCommands);
     /**
      * @brief Publishes the robot commands on the given team's socket.
      * @param robotCommands Commands that need to be published
@@ -67,7 +67,7 @@ class IOManager {
 
    public:
     /**
-     * @brief Publishes all robot commands with the robot angles from world
+     * @brief Publishes all robot commands with the robot yaw from world
      * @param robotCommands Commands that need to be published
      */
     void publishAllRobotCommands(rtt::RobotCommands& robotCommands);

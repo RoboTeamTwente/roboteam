@@ -15,11 +15,11 @@ export type DualState = 'SHOW' | 'HIDE'
 export type UiStore = {
   bottomPanel: Panel
   leftPanel: Panel
-  selectedRobots: Set<number>,
+  selectedRobots: Set<number>
   pointerLocation: {
     x: number
     y: number
-  } | null,
+  } | null
   scaling: {
     ball: number
     robots: number
@@ -97,8 +97,7 @@ export const useUIStore = defineStore('uiStore', {
       return (id: number) => state.selectedRobots.has(id)
     },
     showMargins(state) {
-      return (forRobot?: number | null) => 
-        state.visualizations.margins === 'SHOW'
+      return () => state.visualizations.margins === 'SHOW'
     },
     showRobotRoles(state) {
       return (forRobot?: number | null) => 

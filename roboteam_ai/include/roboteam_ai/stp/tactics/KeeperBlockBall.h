@@ -99,12 +99,12 @@ class KeeperBlockBall : public Tactic {
     static Vector2 calculateTargetPositionBallNotShot(const StpInfo &info, std::optional<Vector2> predictedBallPositionTheirRobot) noexcept;
 
     /**
-     * @brief Calculates the angle the robot should have
+     * @brief Calculates the yaw the robot should have
      * @param ball the ball for which the keeper should defend
      * @param targetKeeperPosition the target position the keeper should have
-     * @return the angle the robot should have
+     * @return the yaw the robot should have
      */
-    static Angle calculateTargetAngle(const world::view::BallView &ball, const Vector2 &targetKeeperPosition);
+    static Angle calculateYaw(const world::view::BallView &ball, const Vector2 &targetKeeperPosition);
 };
 }  // namespace rtt::ai::stp::tactic
 

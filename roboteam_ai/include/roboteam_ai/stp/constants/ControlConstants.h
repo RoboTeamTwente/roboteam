@@ -37,8 +37,8 @@ constexpr double ENEMY_CLOSE_TO_BALL_DISTANCE = 1.0;                /**< Distanc
 
 /// RobotCommand limits
 constexpr double MAX_DRIBBLER_CMD = 1; /**< Maximum allowed dribbler velocity that can be send to the robot */
-// Angle increment per tick
-constexpr double ANGLE_RATE = 0.2 * M_PI;     /**< Maximum allowed angular velocity that can be send to the robot */
+// Yaw increment per tick
+constexpr double YAW_RATE = 0.2 * M_PI;       /**< Maximum allowed angular velocity that can be send to the robot */
 constexpr double MAX_VEL_WHEN_HAS_BALL = 3.0; /**< Maximum allowed velocity that can be send to the robot when that robot has the ball */
 
 /// GoToPos Constants

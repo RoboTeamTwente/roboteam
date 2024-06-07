@@ -20,7 +20,7 @@ TEST(RobotAndView, test_getters) {
 
     proto::WorldRobot robotData{};
     robotData.set_id(1);
-    robotData.set_angle(5.0);
+    robotData.set_yaw(5.0);
     robotData.set_allocated_pos(getVec(5, 7));
     robotData.set_allocated_vel(getVec(3, 0));
     robotData.set_w(5.0);
@@ -28,7 +28,7 @@ TEST(RobotAndView, test_getters) {
     Robot data{robotData, us};
 
     ASSERT_EQ(data.getId(), 1);
-    ASSERT_EQ(data.getAngle(), Angle(5.0));
+    ASSERT_EQ(data.getYaw(), Angle(5.0));
     ASSERT_EQ(data.getPos(), Vector2(5.0, 7.0));
     ASSERT_EQ(data.getVel(), Vector2(3, 0));
     ASSERT_EQ(data.getAngularVelocity(), 5.0);

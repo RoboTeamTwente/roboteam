@@ -43,7 +43,7 @@ void RobotHubLogger::write(uint8_t* byte_buffer, uint32_t size, uint64_t timesta
     rtt::RobotHubLogger logger("logfile.rembin");
 
     REM_Packet packet;
-    packet.header = REM_PACKET_TYPE_REM_PACKET;
+    packet.packetType = REM_PACKET_TYPE_REM_PACKET;
     packet.fromPC = 1;
     packet.toPC = 1;
     packet.remVersion = REM_LOCAL_VERSION;
@@ -54,7 +54,7 @@ void RobotHubLogger::write(uint8_t* byte_buffer, uint32_t size, uint64_t timesta
     logger.writeREM(&payload);
 
     REM_RobotCommand command;
-    command.header = REM_PACKET_TYPE_REM_ROBOT_COMMAND;
+    command.packetType = REM_PACKET_TYPE_REM_ROBOT_COMMAND;
     command.fromPC = 1;
     command.toPC = 1;
     command.remVersion = REM_LOCAL_VERSION;
@@ -64,7 +64,7 @@ void RobotHubLogger::write(uint8_t* byte_buffer, uint32_t size, uint64_t timesta
     encodeREM_RobotCommand(&commandPayload, &command);
 
     REM_RobotFeedback feedback;
-    feedback.header = REM_PACKET_TYPE_REM_ROBOT_FEEDBACK;
+    feedback.packetType = REM_PACKET_TYPE_REM_ROBOT_FEEDBACK;
     feedback.fromPC = 1;
     feedback.toPC = 1;
     feedback.remVersion = REM_LOCAL_VERSION;

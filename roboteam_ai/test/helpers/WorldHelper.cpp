@@ -84,7 +84,7 @@ proto::WorldRobot WorldHelper::generateRandomRobot(int id, proto::SSL_GeometryFi
     robot.set_id((unsigned)id);
     robot.mutable_pos()->set_x(randomFieldPos.x);
     robot.mutable_pos()->set_y(randomFieldPos.y);
-    robot.set_angle(static_cast<float>(getRandomValue(rtt::ai::Constants::MIN_ANGLE(), rtt::ai::Constants::MAX_ANGLE())));
+    robot.set_yaw(static_cast<float>(getRandomValue(rtt::ai::Constants::MIN_YAW(), rtt::ai::Constants::MAX_YAW())));
     robot.mutable_vel()->set_x(randomVel.x);
     robot.mutable_vel()->set_y(randomVel.x);
     robot.set_w(static_cast<float>(getRandomValue(0, rtt::ai::Constants::MAX_ANGULAR_VELOCITY())));
@@ -115,10 +115,10 @@ proto::WorldBall *WorldHelper::generateRandomBall(proto::SSL_GeometryFieldSize f
  * so close that we can say that the robot has the ball.
  */
 rtt::Vector2 WorldHelper::getLocationRightBeforeRobot(proto::WorldRobot robot) {
-    rtt::Vector2 angleVector = rtt::Vector2(cos(robot.angle()), sin(robot.angle()));
-    angleVector = angleVector.stretchToLength(rtt::ai::Constants::ROBOT_RADIUS());
+    rtt::Vector2 yawVector = rtt::Vector2(cos(robot.yaw()), sin(robot.yaw()));
+    yawVector = yawVector.stretchToLength(rtt::ai::Constants::ROBOT_RADIUS());
     rtt::Vector2 robotPos = rtt::Vector2(robot.pos().x(), robot.pos().y());
-    return robotPos + angleVector;
+    return robotPos + yawVector;
 }
 
 /*

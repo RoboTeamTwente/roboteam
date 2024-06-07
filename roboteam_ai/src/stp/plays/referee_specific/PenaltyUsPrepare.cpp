@@ -96,7 +96,7 @@ void PenaltyUsPrepare::calculateInfoForRoles() noexcept {
         stpInfos[formationName].setPositionToMoveTo(position);
 
         auto angleToGoal = (field.rightGoalArea.leftLine().center() - position).toAngle();
-        stpInfos[formationName].setAngle(angleToGoal);
+        stpInfos[formationName].setYaw(angleToGoal);
     }
 
     /// Top row of robots
@@ -106,7 +106,7 @@ void PenaltyUsPrepare::calculateInfoForRoles() noexcept {
         stpInfos[formationName].setPositionToMoveTo(position);
 
         auto angleToGoal = (field.rightGoalArea.leftLine().center() - position).toAngle();
-        stpInfos[formationName].setAngle(angleToGoal);
+        stpInfos[formationName].setYaw(angleToGoal);
     }
 }
 

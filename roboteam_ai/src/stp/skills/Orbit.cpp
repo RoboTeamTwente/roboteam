@@ -10,15 +10,15 @@ Status Orbit::onUpdate(const StpInfo &info) noexcept {
 
     Vector2 directionVector = ball->position - robot->getPos();
     double normalAngle = directionVector.rotate(M_PI).rotate(M_PI_2).angle();
-    Angle targetAngle = (info.getPositionToShootAt().value() - ball->position).toAngle();
+    Angle yaw = (info.getPositionToShootAt().value() - ball->position).toAngle();
 
     double margin = 1.5 * control_constants::ROBOT_RADIUS + stp::control_constants::BALL_RADIUS;
     double adjustDistance = robot->getDistanceToBall() - margin;
 
     // Get the direction of movement, counterclockwise or clockwise
-    auto direction = Angle(directionVector).rotateDirection(targetAngle) ? -1.0 : 1.0;
+    auto direction = Angle(directionVector).rotateDirection(yaw) ? -1.0 : 1.0;
 
-    double error = targetAngle.shortestAngleDiff(directionVector.angle());
+    double error = yaw.shortestAngleDiff(directionVector.angle());
     error = error * direction;
 
     // Use PID controller to determine desired velocity multiplier
@@ -34,7 +34,7 @@ Status Orbit::onUpdate(const StpInfo &info) noexcept {
     if (targetVelocity.length() > maxVel) targetVelocity = targetVelocity.stretchToLength(maxVel);
 
     command.velocity = targetVelocity;
-    command.targetAngle = targetAngle;
+    command.yaw = yaw;
     command.id = robot->getId();
 
     // forward the generated command to the ControlModule, for checking and limiting
@@ -42,7 +42,7 @@ Status Orbit::onUpdate(const StpInfo &info) noexcept {
 
     // Check if successful
     double errorMargin = stp::control_constants::GO_TO_POS_ANGLE_ERROR_MARGIN * M_PI;
-    if (directionVector.toAngle().shortestAngleDiff(targetAngle) < errorMargin) {
+    if (directionVector.toAngle().shortestAngleDiff(yaw) < errorMargin) {
         counter++;
     } else {
         counter = 0;

@@ -62,14 +62,14 @@ FilteredRobot RobotFilter::mergeRobots(const Time &time) const {
     double mergeFactor = 1.5;
     Eigen::Vector2d vel(0, 0);
     Eigen::Vector2d pos(0, 0);
-    double angle = 0;
+    double yaw = 0;
     double angularVel = 0;
     double totalPosUncertainty = 0;
     double totalVelUncertainty = 0;
     double totalAngleUncertainty = 0;
     double totalAngleVelUncertainty = 0;
     // We cannot take averages of angular coordinates easily, so we take the averages of the offsets (this works)
-    double angleOffset = cameraFilters.begin()->second.estimate(time).position.angle;
+    double yawOffset = cameraFilters.begin()->second.estimate(time).position.yaw;
 
     // TODO: consider more fancy  merging using covariance matrices, which is not reliant on the health information
     for (const auto &filter : cameraFilters) {
@@ -79,25 +79,25 @@ FilteredRobot RobotFilter::mergeRobots(const Time &time) const {
         double weight = 100.0 / health;                // TODO: call MAXIMUM here from object
         double posWeight = pow(robot.posUncertainty * weight, -mergeFactor);
         double velWeight = pow(robot.velocityUncertainty * weight, -mergeFactor);
-        double angleWeight = pow(robot.angleUncertainty * weight, -mergeFactor);
-        double angleVelWeight = pow(robot.angularVelUncertainty * weight, -mergeFactor);
+        double yawWeight = pow(robot.yawUncertainty * weight, -mergeFactor);
+        double yawVelWeight = pow(robot.angularVelUncertainty * weight, -mergeFactor);
 
         pos += robot.position.position * posWeight;
         vel += robot.velocity.velocity * velWeight;
-        angle += double(robot.position.angle - rtt::Angle(angleOffset)) * angleWeight;
-        angularVel += robot.velocity.angularVelocity * angleVelWeight;
+        yaw += double(robot.position.yaw - rtt::Angle(yawOffset)) * yawWeight;
+        angularVel += robot.velocity.angularVelocity * yawVelWeight;
 
         totalPosUncertainty += posWeight;
         totalVelUncertainty += velWeight;
-        totalAngleUncertainty += angleWeight;
-        totalAngleVelUncertainty += angleVelWeight;
+        totalAngleUncertainty += yawWeight;
+        totalAngleVelUncertainty += yawVelWeight;
     }
     pos /= totalPosUncertainty;
     vel /= totalVelUncertainty;
-    angle /= totalAngleUncertainty;
+    yaw /= totalAngleUncertainty;
     angularVel /= totalAngleVelUncertainty;
-    angle += angleOffset;
-    FilteredRobot result(id, RobotPos(pos, angle), RobotVel(vel, angularVel), -1, -1, -1, -1, -1);  // TODO define health and merged uncertainties?
+    yaw += yawOffset;
+    FilteredRobot result(id, RobotPos(pos, yaw), RobotVel(vel, angularVel), -1, -1, -1, -1, -1);  // TODO define health and merged uncertainties?
 
     return result;
 }

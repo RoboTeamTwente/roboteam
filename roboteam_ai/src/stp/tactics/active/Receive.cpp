@@ -13,8 +13,8 @@ std::optional<StpInfo> Receive::calculateInfoForSkill(StpInfo const &info) noexc
 
     if (!skillStpInfo.getRobot() || !skillStpInfo.getBall()) return std::nullopt;
 
-    skillStpInfo.setAngle(calculateAngle(info.getRobot().value(), info.getBall().value()));
-    skillStpInfo.setDribblerSpeed(100);
+    skillStpInfo.setYaw(calculateAngle(info.getRobot().value(), info.getBall().value()));
+    skillStpInfo.setDribblerOn(true);
 
     return skillStpInfo;
 }

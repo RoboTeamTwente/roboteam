@@ -36,26 +36,11 @@ void SingleRobotFeedbackFilter::process(const rtt::RobotFeedback& feedback) { st
 proto::RobotProcessedFeedback SingleRobotFeedbackFilter::getFilteredFeedback() const {
     proto::RobotProcessedFeedback feedback;
     feedback.set_ball_sensor_sees_ball(storedFeedback.ballSensorSeesBall);
-    feedback.set_ball_position(storedFeedback.ballPosition);
     feedback.set_ball_sensor_is_working(storedFeedback.ballSensorIsWorking);
     feedback.set_dribbler_sees_ball(storedFeedback.dribblerSeesBall);
     feedback.set_battery_level(storedFeedback.batteryLevel);
     feedback.set_xsens_is_calibrated(storedFeedback.xSensIsCalibrated);
-    feedback.set_signal_strength(storedFeedback.signalStrength);
     feedback.set_capacitor_is_charged(storedFeedback.capacitorIsCharged);
-
-    // TODO: wheel ordering? which bit corresponds to which wheel?
-    feedback.mutable_wheelinformation()->mutable_rightfront()->set_braking(storedFeedback.wheelBraking & 1);
-    feedback.mutable_wheelinformation()->mutable_rightfront()->set_locked(storedFeedback.wheelLocked & 1);
-
-    feedback.mutable_wheelinformation()->mutable_rightback()->set_braking(storedFeedback.wheelBraking & 2);
-    feedback.mutable_wheelinformation()->mutable_rightback()->set_locked(storedFeedback.wheelLocked & 2);
-
-    feedback.mutable_wheelinformation()->mutable_leftback()->set_braking(storedFeedback.wheelBraking & 4);
-    feedback.mutable_wheelinformation()->mutable_leftback()->set_locked(storedFeedback.wheelLocked & 4);
-
-    feedback.mutable_wheelinformation()->mutable_leftfront()->set_braking(storedFeedback.wheelBraking & 8);
-    feedback.mutable_wheelinformation()->mutable_leftfront()->set_locked(storedFeedback.wheelLocked & 8);
 
     return feedback;
 }

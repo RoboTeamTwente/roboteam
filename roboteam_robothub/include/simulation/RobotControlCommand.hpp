@@ -10,10 +10,10 @@ namespace rtt::robothub::simulation {
     speeds relative to the field. */
 class RobotControlCommand {
    public:
-    void addRobotControlWithWheelSpeeds(int robotId, float kickSpeed, float kickAngle, float dribblerSpeed, float frontRightWheelVelocity, float backRightWheelVelocity,
+    void addRobotControlWithWheelSpeeds(int robotId, float kickSpeed, float kickAngle, float dribblerOn, float frontRightWheelVelocity, float backRightWheelVelocity,
                                         float backLeftWheelVelocity, float frontLeftWheelVelocity);
-    void addRobotControlWithLocalSpeeds(int robotId, float kickSpeed, float kickAngle, float dribblerSpeed, float forwardVelocity, float leftVelocity, float angularVelocity);
-    void addRobotControlWithGlobalSpeeds(int robotId, float kickSpeed, float kickAngle, float dribblerSpeed, float xVelocity, float yVelocity, float angularVelocity);
+    void addRobotControlWithLocalSpeeds(int robotId, float kickSpeed, float kickAngle, float dribblerOn, float forwardVelocity, float leftVelocity, float angularVelocity);
+    void addRobotControlWithGlobalSpeeds(int robotId, float kickSpeed, float kickAngle, float dribblerOn, float xVelocity, float yVelocity, float angularVelocity);
     proto::simulation::RobotControl& getPacket();
 
    private:

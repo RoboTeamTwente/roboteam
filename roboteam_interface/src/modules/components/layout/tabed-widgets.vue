@@ -13,7 +13,9 @@ const emit = defineEmits<{
 
 <template>
   <div class="flex flex-col max-h-full">
-    <div class="tabs rounded-none flex-nowrap overflow-auto whitespace-nowrap min-h-8 subtile-scroll-bar">
+    <div
+      class="tabs rounded-none flex-nowrap overflow-auto whitespace-nowrap min-h-8 subtile-scroll-bar"
+    >
       <a
         v-for="tab in props.tabs"
         class="tab tab-bordered gap-1 flex-nowrap"

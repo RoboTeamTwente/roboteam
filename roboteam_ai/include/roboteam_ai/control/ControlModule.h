@@ -4,7 +4,7 @@
 #include <mutex>
 #include <roboteam_utils/RobotCommands.hpp>
 
-#include "control/AnglePID.h"
+#include "control/YawPID.h"
 #include "world/views/RobotView.hpp"
 
 namespace rtt::ai::control {
@@ -18,8 +18,8 @@ namespace rtt::ai::control {
  */
 class ControlModule {
    protected:
-    static inline std::vector<rtt::RobotCommand> robotCommands;          /**< Vector of all robot commands */
-    static inline std::map<unsigned int, AnglePID> simulatorAnglePIDmap; /**< Angle controller for each robot */
+    static inline std::vector<rtt::RobotCommand> robotCommands;      /**< Vector of all robot commands */
+    static inline std::map<unsigned int, YawPID> simulatorYawPIDmap; /**< Yaw controller for each robot */
 
     /**
      * @brief Applies constraints to the internal robot command

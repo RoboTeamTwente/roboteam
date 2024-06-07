@@ -13,12 +13,12 @@ std::optional<StpInfo> OrbitKick::calculateInfoForSkill(const StpInfo &info) noe
 
     StpInfo skillStpInfo = info;
     double angleToTarget = (info.getPositionToShootAt().value() - info.getRobot().value()->getPos()).angle();
-    skillStpInfo.setAngle(angleToTarget);
+    skillStpInfo.setYaw(angleToTarget);
 
     double distanceBallToTarget = (info.getBall()->get()->position - info.getPositionToShootAt().value()).length();
     skillStpInfo.setKickChipVelocity(control::ControlUtils::determineKickForce(distanceBallToTarget, skillStpInfo.getShotType()));
 
-    skillStpInfo.setDribblerSpeed(100);
+    skillStpInfo.setDribblerOn(true);
 
     return skillStpInfo;
 }
@@ -29,7 +29,7 @@ bool OrbitKick::isTacticFailing(const StpInfo &info) noexcept { return !info.get
 
 bool OrbitKick::shouldTacticReset(const StpInfo &info) noexcept {
     const auto errorMargin = stp::control_constants::GO_TO_POS_ANGLE_ERROR_MARGIN * M_PI;
-    return info.getRobot().value()->getAngle().shortestAngleDiff(info.getAngle()) > errorMargin;
+    return info.getRobot().value()->getYaw().shortestAngleDiff(info.getYaw()) > errorMargin;
 }
 
 const char *OrbitKick::getName() { return "Orbit Kick"; }

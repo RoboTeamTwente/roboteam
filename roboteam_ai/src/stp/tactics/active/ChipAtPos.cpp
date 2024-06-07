@@ -14,13 +14,13 @@ std::optional<StpInfo> ChipAtPos::calculateInfoForSkill(const StpInfo &info) noe
 
     StpInfo skillStpInfo = info;
     auto angleToTarget = (info.getPositionToShootAt().value() - info.getRobot().value()->getPos()).angle();
-    skillStpInfo.setAngle(angleToTarget);
+    skillStpInfo.setYaw(angleToTarget);
 
     auto distanceBallToTarget = (info.getBall()->get()->position - info.getPositionToShootAt().value()).length();
     skillStpInfo.setKickChipVelocity(control::ControlUtils::determineChipForce(distanceBallToTarget));
 
     if (skills.current_num() == 0) {
-        skillStpInfo.setDribblerSpeed(100);
+        skillStpInfo.setDribblerOn(true);
     }
 
     return skillStpInfo;
@@ -38,7 +38,7 @@ bool ChipAtPos::isTacticFailing(const StpInfo &info) noexcept {
 bool ChipAtPos::shouldTacticReset(const StpInfo &info) noexcept {
     if (skills.current_num() != 0) {
         auto errorMargin = stp::control_constants::GO_TO_POS_ANGLE_ERROR_MARGIN * M_PI;
-        return info.getRobot().value()->getAngle().shortestAngleDiff(info.getAngle()) > errorMargin;
+        return info.getRobot().value()->getYaw().shortestAngleDiff(info.getYaw()) > errorMargin;
     }
     return false;
 }

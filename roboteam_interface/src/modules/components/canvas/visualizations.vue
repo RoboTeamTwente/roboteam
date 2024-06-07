@@ -1,4 +1,4 @@
-<script setup lang='ts'>
+<script setup lang="ts">
 // Internal (non-reactive) variables
 import { inject, onBeforeUnmount, watch } from 'vue'
 import { appSymbol } from './utils'
@@ -13,8 +13,7 @@ import { ShapeDrawing, ShapeMap } from './field-objects'
 
 let visuals = new ShapeMap<string, ShapeDrawing>()
 
-const
-  app = inject(appSymbol)!,
+const app = inject(appSymbol)!,
   stpData = useSTPDataStore(),
   visualizationStore = useVisualizationStore(),
   uiStore = useUIStore()
@@ -46,10 +45,14 @@ const cleanUp = () => {
   app.value.ticker.remove(onPixiTick)
 }
 
-watch(app, (_, __, onCleanup) => {
-  app.value.ticker.add(onPixiTick)
-  onCleanup(cleanUp)
-}, { immediate: true })
+watch(
+  app,
+  (_, __, onCleanup) => {
+    app.value.ticker.add(onPixiTick)
+    onCleanup(cleanUp)
+  },
+  { immediate: true }
+)
 onBeforeUnmount(cleanUp)
 </script>
 

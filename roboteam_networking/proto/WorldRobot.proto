@@ -8,7 +8,7 @@ package proto;
 message WorldRobot {
     uint32 id = 1;
     Vector2f pos = 2;
-    float angle = 3;
+    float yaw = 3;
     Vector2f vel = 4;
     float w = 5;
     RobotProcessedFeedback feedbackInfo = 6;

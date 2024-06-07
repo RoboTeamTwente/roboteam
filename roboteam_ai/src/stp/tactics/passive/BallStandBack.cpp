@@ -35,10 +35,10 @@ std::optional<StpInfo> BallStandBack::calculateInfoForSkill(StpInfo const &info)
         skillStpInfo.setShouldAvoidBall(false);
     }
 
-    double angle = (info.getBall()->get()->position - targetPosition).angle();
+    double yaw = (info.getBall()->get()->position - targetPosition).angle();
     skillStpInfo.setPositionToMoveTo(targetPosition);
-    skillStpInfo.setAngle(angle);
-    skillStpInfo.setDribblerSpeed(0);
+    skillStpInfo.setYaw(yaw);
+    skillStpInfo.setDribblerOn(false);
 
     return skillStpInfo;
 }

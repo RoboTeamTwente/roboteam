@@ -34,7 +34,7 @@ class ChipAtPos : public Tactic {
      * @brief Should this tactic be reset (go back to the first skill of this tactic)
      * @param info StpInfo can be used to check some data
      * @return true if tactic  should reset, false if execution should continue
-     * Returns true when the robot angle is not within its error margin
+     * Returns true when the robot yaw is not within its error margin
      */
     bool shouldTacticReset(const StpInfo &info) noexcept override;
 

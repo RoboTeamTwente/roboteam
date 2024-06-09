@@ -632,6 +632,7 @@ export const proto = $root.proto = (() => {
                 case 0:
                 case 1:
                 case 2:
+                case 3:
                     break;
                 }
             if (message.forRobotId != null && message.hasOwnProperty("forRobotId"))
@@ -762,6 +763,10 @@ export const proto = $root.proto = (() => {
             case "MARGINS":
             case 2:
                 message.category = 2;
+                break;
+            case "ROBOTROLES":
+            case 3:
+                message.category = 3;
                 break;
             }
             if (object.forRobotId != null)

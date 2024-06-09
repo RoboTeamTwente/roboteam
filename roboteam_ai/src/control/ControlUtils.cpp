@@ -16,39 +16,6 @@ double ControlUtils::getMaxVelocity(bool hasBall) {
     if (hasBall) maxVel = std::min(stp::control_constants::MAX_VEL_WHEN_HAS_BALL, maxVel);
     return maxVel;
 }
-/// Limits velocity to maximum velocity. it defaults to the max velocity stored in Referee.
-Vector2 ControlUtils::velocityLimiter(const Vector2 &vel, double maxVel, double minVel, bool listenToReferee) {
-    if (listenToReferee) {
-        double refereeMaxVel = rtt::ai::GameStateManager::getCurrentGameState().getRuleSet().getMaxRobotVel();
-        if (refereeMaxVel < maxVel) {
-            maxVel = refereeMaxVel;
-        }
-    }
-
-    if (vel.length() > maxVel) {
-        return vel.stretchToLength(maxVel);
-    } else if (vel.length() < minVel) {
-        return vel.stretchToLength(minVel);
-    }
-    return vel;
-}
-
-/// Calculate the force of a given vector + a certain type.
-/// the basic formula is: force = weight/distance^2 * unit vector
-Vector2 ControlUtils::calculateForce(const Vector2 &vector, double weight, double minDistance) {
-    // if the object is close enough, it's forces should affect. Otherwise don't change anything.
-    if (vector.length() < minDistance && vector.length2() > 0) {
-        return vector.normalize() * (weight / vector.length2());
-    }
-    return {0, 0};
-}
-
-bool ControlUtils::objectVelocityAimedToPoint(const Vector2 &objectPosition, const Vector2 &velocity, const Vector2 &point, double maxDifference) {
-    double exactAngleTowardsPoint = (point - objectPosition).angle();
-
-    // Note: The angles should NOT be constrained here. This is necessary.
-    return (velocity.length() > 0 && velocity.angle() > exactAngleTowardsPoint - maxDifference / 2 && velocity.angle() < exactAngleTowardsPoint + maxDifference / 2);
-}
 
 /// Calculate the kick force
 double ControlUtils::determineKickForce(const double distance, stp::ShotType shotType) noexcept {

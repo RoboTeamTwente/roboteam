@@ -13,8 +13,8 @@ constexpr int MAX_ROBOT_STATISTICS = 16;
 
 class RobotHubStatistics {
    public:
+    void initializeValues();
     RobotHubStatistics();
-
     void resetValues();
 
     basestation::BasestationManagerStatus basestationManagerStatus{};

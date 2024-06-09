@@ -444,21 +444,23 @@ int BasestationCollection::unselectIncorrectlySelectedBasestations() {
 }
 
 void BasestationCollection::onMessageFromBasestation(const BasestationMessage& message, const BasestationIdentifier& basestationId) {
-    uint64_t type = (uint64_t)message.payloadBuffer[0];
-    if (type != 36 && type != 39 && type != 43) {
-        RTT_INFO("onMessageFromBasestation() REM = ", (uint64_t)message.payloadBuffer[0])
+    REM_PacketPayload* packetPayload = (REM_PacketPayload*)message.payloadBuffer;
+    auto packetType = REM_Packet_get_packetType(packetPayload);
+
+    if (packetType != REM_PACKET_TYPE_REM_LOG && packetType != REM_PACKET_TYPE_REM_BASESTATION_CONFIGURATION && packetType != REM_PACKET_TYPE_REM_ROBOT_FEEDBACK &&
+        packetType != REM_PACKET_TYPE_REM_ROBOT_STATE_INFO) {
+        RTT_DEBUG("onMessageFromBasestation() REM = ", packetType)
     }
 
     // If this message contains what channel the basestation has, parse it and update our map
-    REM_PacketPayload* packetPayload = (REM_PacketPayload*)message.payloadBuffer;
 
-    if (REM_Packet_get_packetType(packetPayload) == REM_PACKET_TYPE_REM_BASESTATION_CONFIGURATION) {
+    if (packetType == REM_PACKET_TYPE_REM_BASESTATION_CONFIGURATION) {
         uint8_t basestation_channel_rem = REM_BasestationConfiguration_get_channel((REM_BasestationConfigurationPayload*)message.payloadBuffer);
         WirelessChannel basestation_channel = BasestationCollection::remChannelToWirelessChannel(basestation_channel_rem);
         this->setChannelOfBasestation(basestationId, basestation_channel);
     }
 
-    if (REM_Packet_get_packetType(packetPayload) == REM_PACKET_TYPE_REM_LOG) {
+    if (packetType == REM_PACKET_TYPE_REM_LOG) {
         REM_LogPayload* logPayload = (REM_LogPayload*)message.payloadBuffer;
         uint32_t message_length = REM_Log_get_payloadSize(logPayload) - REM_PACKET_SIZE_REM_LOG;
         char* charstring = (char*)&message.payloadBuffer[REM_PACKET_SIZE_REM_LOG];

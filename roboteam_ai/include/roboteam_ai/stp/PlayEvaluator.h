@@ -74,13 +74,6 @@ class PlayEvaluator {
      */
     static bool checkEvaluation(GlobalEvaluation globalEvaluation, const rtt::world::World* world, uint8_t cutOff = control_constants::FUZZY_DEFAULT_CUTOFF) noexcept;
 
-    /**
-     * @brief Calculate a final weighted score given a vector of scores with their weights
-     * @param scoring vector withto be considered Evaluations
-     * @return final score (0-255)
-     */
-    static uint8_t calculateScore(std::vector<PlayScoring>& scoring);
-
    private:
     static inline std::unordered_map<GlobalEvaluation, uint8_t> scoresGlobal{}; /**< Map of all loaded Global Evaluations scores */
 

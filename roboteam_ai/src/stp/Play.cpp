@@ -270,9 +270,9 @@ void Play::DrawMargins() noexcept {
             color = GameSettings::isYellow() ? proto::Drawing::BLUE : proto::Drawing::YELLOW;
         else
             color = proto::Drawing::RED;
-        
-    }
-    else color = proto::Drawing::GREY;
+
+    } else
+        color = proto::Drawing::GREY;
 
     for (auto method : {proto::Drawing::CIRCLES, proto::Drawing::LINES_CONNECTED}) {
         rtt::ai::gui::Out::draw(

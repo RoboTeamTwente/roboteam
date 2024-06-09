@@ -93,14 +93,4 @@ bool PlayEvaluator::checkEvaluation(GlobalEvaluation globalEvaluation, const rtt
     return getGlobalEvaluation(globalEvaluation, world) >= cutOff;
 }
 
-uint8_t PlayEvaluator::calculateScore(std::vector<PlayScoring>& scoring) {
-    double scoreTotal = 0;
-    double weightTotal = 0;
-    for (auto& factor : scoring) {
-        scoreTotal += factor.evaluationScore;
-        weightTotal += factor.weight;
-    }
-    return scoreTotal / weightTotal;
-}
-
 }  // namespace rtt::ai::stp

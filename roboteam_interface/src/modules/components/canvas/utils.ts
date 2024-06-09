@@ -76,12 +76,17 @@ export const useMoveBall = (
   stage: ShallowRef<Container<DisplayObject>>
 ) => {
   const aiController = useAiController(),
+    aiData = useAIDataStore(),
     keys = useMagicKeys(),
     { pressed } = useMousePressed()
 
   const onMouseMove = useThrottleFn((e: FederatedPointerEvent) => {
     if (!(keys.b.value || keys.shift.value) || !pressed.value) return
     const pos = transformCoordinates(e.getLocalPosition(app.value!.layers.objects))
+    if (!aiData.state?.gameSettings?.isLeft) {
+      pos.x = -pos.x
+      pos.y = -pos.y
+    }
     aiController.sendSimulatorCommand({
       control: { teleportBall: { x: pos.x, y: pos.y, z: 0.0, vx: 0.0, vy: 0.0, vz: 0.0 } }
     })
@@ -95,6 +100,7 @@ export const useShootBall = (
   stage: ShallowRef<Container<DisplayObject>>
 ) => {
   const aiController = useAiController(),
+    aiData = useAIDataStore(),
     keys = useMagicKeys(),
     { pressed } = useMousePressed()
   const onClick = useThrottleFn((e: FederatedPointerEvent) => {
@@ -109,6 +115,10 @@ export const useShootBall = (
     }
     if (!numberKeyPressed && (!keys.s.value || !pressed.value)) return
     const pos = transformCoordinates(e.getLocalPosition(app.value!.layers.objects))
+    if (!aiData.state?.gameSettings?.isLeft) {
+      pos.x = -pos.x
+      pos.y = -pos.y
+    }
     const visionData = useVisionDataStore()
     const world = visionData.latestWorld
     if (!world) return
@@ -141,6 +151,10 @@ export const useMoveRobots = (
     if (!(keys.r.value || keys.alt.value) || !pressed.value) return
 
     const pos = transformCoordinates(e.getLocalPosition(app.value!.layers.objects))
+    if (!aiData.state?.gameSettings?.isLeft) {
+      pos.x = -pos.x
+      pos.y = -pos.y
+    }
 
     const robots = [...uiStore.selectedRobots].map((id) => ({
       id: {

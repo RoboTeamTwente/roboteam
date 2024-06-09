@@ -7,38 +7,27 @@
 
 namespace rtt::robothub {
 
+void RobotHubStatistics::initializeValues() {
+    std::lock_guard<std::mutex> lock(robotStatsMutex);
+    this->yellowCommandsSent.fill(0);
+    this->yellowFeedbackReceived.fill(0);
+    this->blueCommandsSent.fill(0);
+    this->blueFeedbackReceived.fill(0);
+
+    this->yellowTeamBytesSent = 0;
+    this->blueTeamBytesSent = 0;
+    this->feedbackBytesSent = 0;
+    this->yellowTeamPacketsDropped = 0;
+    this->blueTeamPacketsDropped = 0;
+    this->feedbackPacketsDropped = 0;
+}
+
 RobotHubStatistics::RobotHubStatistics() {
-    std::lock_guard<std::mutex> lock(robotStatsMutex);
     this->startTime = std::chrono::steady_clock::now();
-
-    // Fill arrays with 0
-    this->yellowCommandsSent.fill(0);
-    this->yellowFeedbackReceived.fill(0);
-    this->blueCommandsSent.fill(0);
-    this->blueFeedbackReceived.fill(0);
-
-    this->yellowTeamBytesSent = 0;
-    this->blueTeamBytesSent = 0;
-    this->feedbackBytesSent = 0;
-    this->yellowTeamPacketsDropped = 0;
-    this->blueTeamPacketsDropped = 0;
-    this->feedbackPacketsDropped = 0;
+    initializeValues();
 }
 
-void RobotHubStatistics::resetValues() {
-    std::lock_guard<std::mutex> lock(robotStatsMutex);
-    this->yellowCommandsSent.fill(0);
-    this->yellowFeedbackReceived.fill(0);
-    this->blueCommandsSent.fill(0);
-    this->blueFeedbackReceived.fill(0);
-
-    this->yellowTeamBytesSent = 0;
-    this->blueTeamBytesSent = 0;
-    this->feedbackBytesSent = 0;
-    this->yellowTeamPacketsDropped = 0;
-    this->blueTeamPacketsDropped = 0;
-    this->feedbackPacketsDropped = 0;
-}
+void RobotHubStatistics::resetValues() { initializeValues(); }
 
 void RobotHubStatistics::print() const {
     std::lock_guard<std::mutex> lock(robotStatsMutex);

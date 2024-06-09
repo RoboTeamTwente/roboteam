@@ -51,7 +51,7 @@ std::unordered_map<std::string, v::RobotView> Dealer::distribute(std::vector<v::
     // Put all role names in a vector, for convenience
     std::vector<std::string> role_names;  // Holds all role names
     role_names.reserve(role_to_flags.size());
-    for (auto const &imap : role_to_flags) role_names.push_back(imap.first);  // Fill with rolenames, e.g. KEEPER, DEFENDER_1, etc, etc
+    for (auto const &imap : role_to_flags) role_names.emplace_back(imap.first);  // Fill with rolenames, e.g. KEEPER, DEFENDER_1, etc, etc
 
     // Create mappings between the rows and column of the cost matrix and the roles and robots. These will be modified during distribution
     std::vector<int> row_to_role(role_to_flags.size());              // maps a row to the original role
@@ -118,7 +118,7 @@ std::unordered_map<std::string, v::RobotView> Dealer::distribute(std::vector<v::
             if (0 <= assignments[i]) {
                 std::string role_name = role_names[row_to_role[row_indices[i]]];
                 v::RobotView robot = robots[col_to_robot[assignments[i]]];
-                role_assignment.insert({role_name, robot});
+                role_assignment.try_emplace(role_name, robot);
             }
         }
 

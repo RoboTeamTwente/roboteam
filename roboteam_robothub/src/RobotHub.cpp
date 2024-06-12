@@ -149,11 +149,13 @@ void RobotHub::sendCommandsToBasestation(const rtt::RobotCommands &commands, rtt
         command.doChip = robotCommand.kickSpeed > 0.0 && robotCommand.kickType == KickType::CHIP;
         command.doForce = !robotCommand.waitForBall;
         command.kickChipPower = static_cast<float>(robotCommand.kickSpeed);
-        // command.dribblerOn = static_cast<float>(robotCommand.dribblerOn);
         command.dribblerOn = robotCommand.dribblerOn;
 
         command.rho = static_cast<float>(robotCommand.velocity.length());
         command.theta = static_cast<float>(robotCommand.velocity.angle());
+
+        command.acceleration_angle = static_cast<float>(robotCommand.acceleration.angle());
+        command.acceleration_magnitude = static_cast<float>(robotCommand.acceleration.length());
 
         command.useYaw = !robotCommand.useAngularVelocity;
         command.yaw = static_cast<float>(robotCommand.yaw.getValue());

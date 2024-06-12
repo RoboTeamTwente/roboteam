@@ -10,7 +10,7 @@
 namespace rtt::ai::control {
 std::vector<Vector2> PositionControl::getComputedPath(int ID) { return computedPaths[ID]; }
 
-Vector2 PositionControl::computeAndTrackTrajectory(const world::World *world, const Field &field, int robotId, Vector2 currentPosition, Vector2 currentVelocity,
+std::pair<Vector2,Vector2> PositionControl::computeAndTrackTrajectory(const world::World *world, const Field &field, int robotId, Vector2 currentPosition, Vector2 currentVelocity,
                                                    Vector2 targetPosition, double maxRobotVelocity, stp::AvoidObjects avoidObjects) {
     double timeStep = 0.1;
     auto [theirDefenseAreaMargin, ourDefenseAreaMargin] = FieldComputations::getDefenseAreaMargin();
@@ -50,7 +50,9 @@ Vector2 PositionControl::computeAndTrackTrajectory(const world::World *world, co
     // Since our acceleration is 3.5 m/s^2, this means we will move if we need to move more than
     // 2*(1/2*3.5*0.145^2) (2 times the distance we move in 0.145/2s under constant (de)acceleration (1/2 * a * t^2))
     // This is 0.07m, so we will move if we need to move more than 0.07m
-    return computedTrajectories[robotId].getVelocity(0.145);
+    auto acc = computedTrajectories[robotId].getAcceleration(0.01);
+    auto vel = computedTrajectories[robotId].getVelocity(0.145);
+    return std::make_pair(vel, acc);
 }
 
 Vector2 PositionControl::handleBallCollision(const world::World *world, const Field &field, Vector2 currentPosition, stp::AvoidObjects avoidObjects) {

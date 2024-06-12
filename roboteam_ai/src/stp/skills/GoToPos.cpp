@@ -51,9 +51,13 @@ Status GoToPos::onUpdate(const StpInfo &info) noexcept {
         targetPos = PositionComputations::calculateAvoidBallPosition(targetPos, ballLocation, field, avoidObj);
     }
 
-    command.velocity = info.getCurrentWorld()->getRobotPositionController()->computeAndTrackTrajectory(info.getCurrentWorld(), field, robot->getId(), robot->getPos(),
+    auto [vel, acc] = info.getCurrentWorld()->getRobotPositionController()->computeAndTrackTrajectory(info.getCurrentWorld(), field, robot->getId(), robot->getPos(),
                                                                                                        robot->getVel(), targetPos, info.getMaxRobotVelocity(), avoidObj);
-
+    // command.velocity = info.getCurrentWorld()->getRobotPositionController()->computeAndTrackTrajectory(info.getCurrentWorld(), field, robot->getId(), robot->getPos(),
+                                                                                                    //    robot->getVel(), targetPos, info.getMaxRobotVelocity(), avoidObj);
+    command.velocity = vel;
+    command.acceleration = acc;
+    
     auto distanceToTarget = (robot->getPos() - targetPos).length();
     command.yaw = distanceToTarget <= 0.5 ? info.getYaw() : robot->getYaw() + rtt::Angle(0.5 / distanceToTarget * (info.getYaw() - robot->getYaw()));
 

@@ -20,6 +20,7 @@ typedef struct RobotCommand {
 
     // Positioning related variables
     Vector2 velocity;                    // (m/s) Target velocity of the robot
+    Vector2 acceleration;                // (m/s^2) Target acceleration of the robot
     Angle yaw;                           // (rad) [-PI, PI] The target yaw of the robot
     double targetAngularVelocity = 0.0;  // (rad/s) The target angular velocity of the robot
     bool useAngularVelocity = 0.0;       // True if angular velocity should be used instead of yaw

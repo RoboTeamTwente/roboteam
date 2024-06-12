@@ -43,7 +43,7 @@ class PositionControl {
      * @param maxRobotVelocity the maximum velocity that the robot is allowed to have
      * @return A RobotCommand and optional with the location of the first collision on the path
      */
-    Vector2 computeAndTrackTrajectory(const rtt::world::World *world, const rtt::Field &field, int robotId, Vector2 currentPosition, Vector2 currentVelocity,
+    std::pair<Vector2,Vector2> computeAndTrackTrajectory(const rtt::world::World *world, const rtt::Field &field, int robotId, Vector2 currentPosition, Vector2 currentVelocity,
                                       Vector2 targetPosition, double maxRobotVelocity, stp::AvoidObjects avoidObjects);
 
     /**

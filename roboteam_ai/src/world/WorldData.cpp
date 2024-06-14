@@ -26,14 +26,14 @@ WorldData::WorldData(const World *data, proto::World &protoMsg) noexcept : time{
     // }
 
     for (auto &each : ours) {
-        if (std::isnan(each.pos().x())) {
+        if (isnan(each.pos().x())) {
             RTT_ERROR("WATCH OUT! ROBOT WITH NAN VALUES RECEIVED FROM OBSERVER! Omitting robot for now..")
         } else {
             robots.emplace_back(each, Team::us, getBall());
         }
     }
     for (auto &each : others) {
-        if (std::isnan(each.pos().x())) {
+        if (isnan(each.pos().x())) {
             RTT_ERROR("WATCH OUT! ROBOT WITH NAN VALUES RECEIVED FROM OBSERVER! Omitting robot for now..")
         } else {
             robots.emplace_back(each, Team::them, getBall());

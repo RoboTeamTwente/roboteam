@@ -1,5 +1,7 @@
 #include "utilities/StrategyManager.h"
 
+#include "utilities/Constants.h"
+
 namespace rtt::ai {
 
 void StrategyManager::setCurrentGameState(RefCommand command, RefCommand nextCommand, std::optional<world::view::BallView> ballOpt) {

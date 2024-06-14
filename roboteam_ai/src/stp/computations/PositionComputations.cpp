@@ -11,6 +11,7 @@
 #include "stp/computations/ComputationManager.h"
 #include "stp/computations/PassComputations.h"
 #include "stp/computations/PositionScoring.h"
+#include "utilities/Constants.h"
 #include "world/World.hpp"
 
 namespace rtt::ai::stp {

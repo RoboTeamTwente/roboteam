@@ -3,6 +3,7 @@
 #include "control/ControlUtils.h"
 #include "stp/skills/Kick.h"
 #include "stp/skills/Rotate.h"
+#include "utilities/Constants.h"
 
 namespace rtt::ai::stp::tactic {
 

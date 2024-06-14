@@ -13,6 +13,7 @@
 #include "stp/computations/PositionComputations.h"
 #include "stp/computations/PositionScoring.h"
 #include "stp/skills/GoToPos.h"
+#include "utilities/Constants.h"
 
 namespace rtt::ai::stp::tactic {
 

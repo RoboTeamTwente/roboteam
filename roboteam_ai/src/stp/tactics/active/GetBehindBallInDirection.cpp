@@ -5,6 +5,7 @@
 #include "roboteam_utils/Circle.h"
 #include "stp/skills/GoToPos.h"
 #include "stp/skills/Orbit.h"
+#include "utilities/Constants.h"
 
 namespace rtt::ai::stp::tactic {
 

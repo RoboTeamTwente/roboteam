@@ -1,5 +1,7 @@
 #include "stp/skills/Chip.h"
 
+#include "utilities/Constants.h"
+
 namespace rtt::ai::stp::skill {
 
 Status Chip::onUpdate(const StpInfo &info) noexcept {

@@ -10,6 +10,7 @@
 #include "stp/roles/active/Passer.h"
 #include "stp/roles/passive/Defender.h"
 #include "stp/roles/passive/Formation.h"
+#include "utilities/Constants.h"
 #include "world/views/RobotView.hpp"
 
 namespace rtt::ai::stp::play {

@@ -6,6 +6,7 @@
 #include "stp/roles/active/PassReceiver.h"
 #include "stp/roles/passive/Defender.h"
 #include "stp/roles/passive/Formation.h"
+#include "utilities/Constants.h"
 
 namespace rtt::ai::stp::play {
 

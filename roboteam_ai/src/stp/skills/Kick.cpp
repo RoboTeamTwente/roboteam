@@ -1,6 +1,7 @@
 #include "stp/skills/Kick.h"
 
 #include "roboteam_utils/Print.h"
+#include "utilities/Constants.h"
 
 namespace rtt::ai::stp::skill {
 

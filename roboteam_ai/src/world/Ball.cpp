@@ -1,6 +1,7 @@
 #include "world/Ball.hpp"
 
 #include "gui/Out.h"
+#include "utilities/Constants.h"
 #include "utilities/GameSettings.h"
 #include "world/World.hpp"
 

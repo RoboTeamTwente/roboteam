@@ -1,6 +1,7 @@
 #include "world/Robot.hpp"
 
 #include "roboteam_utils/Print.h"
+#include "utilities/Constants.h"
 #include "utilities/GameSettings.h"
 #include "world/World.hpp"
 

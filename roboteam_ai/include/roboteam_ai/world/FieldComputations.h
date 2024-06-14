@@ -3,6 +3,7 @@
 
 #include <proto/messages_robocup_ssl_geometry.pb.h>
 #include <roboteam_utils/Polygon.h>
+#include <utilities/Constants.h>
 
 #include <cmath>
 #include <mutex>

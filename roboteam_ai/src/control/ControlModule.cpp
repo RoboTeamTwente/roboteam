@@ -2,6 +2,7 @@
 
 #include "control/ControlUtils.h"
 #include "iostream"
+#include "utilities/Constants.h"
 #include "utilities/GameSettings.h"
 #include "utilities/IOManager.h"
 #include "world/World.hpp"

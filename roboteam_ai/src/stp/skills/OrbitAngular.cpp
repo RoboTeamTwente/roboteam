@@ -1,5 +1,6 @@
 #include "stp/skills/OrbitAngular.h"
 
+#include "utilities/Constants.h"
 #include "utilities/GameSettings.h"
 
 namespace rtt::ai::stp::skill {

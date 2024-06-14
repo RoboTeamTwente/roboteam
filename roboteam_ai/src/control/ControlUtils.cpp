@@ -4,6 +4,7 @@
 
 #include <roboteam_utils/Field.hpp>
 
+#include "utilities/Constants.h"
 #include "utilities/GameStateManager.hpp"
 #include "utilities/StpInfoEnums.h"
 #include "world/World.hpp"

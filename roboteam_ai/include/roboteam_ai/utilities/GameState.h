@@ -8,6 +8,7 @@
 #include "Constants.h"
 #include "RefCommand.h"
 #include "RuleSet.h"
+#include "utilities/Constants.h"
 
 namespace rtt::ai {
 

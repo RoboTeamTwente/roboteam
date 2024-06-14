@@ -6,6 +6,7 @@
 #include <iostream>
 #include <map>
 
+#include "Constants.h"
 #include "GameState.h"
 #include "RuleSet.h"
 #include "world/views/WorldDataView.hpp"

@@ -1,6 +1,6 @@
 #include "stp/skills/OrbitAngular.h"
 
-#include "stp/constants/ControlConstants.h"
+#include "utilities/Constants.h"
 #include "utilities/GameSettings.h"
 
 namespace rtt::ai::stp::skill {
@@ -22,7 +22,7 @@ Status OrbitAngular::onUpdate(const StpInfo &info) noexcept {
     Vector2 normalVector = currentYaw.toVector2().rotate(-direction * M_PI_2);
 
     // Calculate target velocity
-    Vector2 targetVelocity = normalVector * speedFactor * (stp::control_constants::BALL_RADIUS + stp::control_constants::CENTER_TO_FRONT);
+    Vector2 targetVelocity = normalVector * speedFactor * (constants::BALL_RADIUS + constants::CENTER_TO_FRONT);
 
     // Construct the robot command
     command.id = robot->getId();
@@ -36,16 +36,16 @@ Status OrbitAngular::onUpdate(const StpInfo &info) noexcept {
     // target yaw is angular velocity times the time step (1/60th of a second) in basestation
     // in simulator, we multiple by 1/2.5 because of how the simulator works and the pid controller is tuned
     if (rtt::GameSettings::getRobotHubMode() == rtt::net::RobotHubMode::BASESTATION) {
-        command.yaw = currentYaw + Angle(targetAngularVelocity * 1 / Constants::STP_TICK_RATE());
+        command.yaw = currentYaw + Angle(targetAngularVelocity * 1 / constants::STP_TICK_RATE);
     } else {
         command.yaw = currentYaw + Angle(targetAngularVelocity * 1 / 2.5);
     }
-    command.dribblerOn = stp::control_constants::MAX_DRIBBLER_CMD;
+    command.dribblerOn = true;
 
     forwardRobotCommand();  // Send the robot command
 
     // Check if the robot is within the error margin
-    double errorMargin = stp::control_constants::GO_TO_POS_ANGLE_ERROR_MARGIN * M_PI;
+    double errorMargin = constants::GO_TO_POS_ANGLE_ERROR_MARGIN * M_PI;
     if (currentYaw.shortestAngleDiff(yaw) < errorMargin) {
         withinMarginCount++;
     } else {

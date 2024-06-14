@@ -9,8 +9,8 @@
 namespace rtt::ai {
 
 std::tuple<double, double> FieldComputations::getDefenseAreaMargin() {
-    double theirDefenseAreaMargin = stp::control_constants::ROBOT_RADIUS + stp::control_constants::GO_TO_POS_ERROR_MARGIN;
-    double ourDefenseAreaMargin = -stp::control_constants::ROBOT_RADIUS + stp::control_constants::GO_TO_POS_ERROR_MARGIN;
+    double theirDefenseAreaMargin = constants::ROBOT_RADIUS + constants::GO_TO_POS_ERROR_MARGIN;
+    double ourDefenseAreaMargin = -constants::ROBOT_RADIUS + constants::GO_TO_POS_ERROR_MARGIN;
 
     RuleSetName ruleSetTitle = GameStateManager::getCurrentGameState().getRuleSet().getTitle();
     RefCommand currentGameState = GameStateManager::getCurrentGameState().getCommandId();
@@ -36,8 +36,7 @@ bool FieldComputations::getBallAvoidance() {
 
 Vector2 FieldComputations::getBallPositionAtTime(const rtt::world::ball::Ball &ball, double time) {
     const double initialVelocity = ball.velocity.length();
-    const double frictionCoefficient =
-        GameSettings::getRobotHubMode() == net::RobotHubMode::SIMULATOR ? ai::stp::control_constants::SIMULATION_FRICTION : ai::stp::control_constants::REAL_FRICTION;
+    const double frictionCoefficient = GameSettings::getRobotHubMode() == net::RobotHubMode::SIMULATOR ? ai::constants::SIMULATION_FRICTION : ai::constants::REAL_FRICTION;
     double timeToStop = initialVelocity / frictionCoefficient;
     if (time > timeToStop) {
         time = timeToStop;
@@ -48,8 +47,7 @@ Vector2 FieldComputations::getBallPositionAtTime(const rtt::world::ball::Ball &b
 }
 
 double FieldComputations::getBallTimeAtPosition(const rtt::world::ball::Ball &ball, const Vector2 &targetPoint) {
-    const double frictionCoefficient =
-        GameSettings::getRobotHubMode() == net::RobotHubMode::SIMULATOR ? ai::stp::control_constants::SIMULATION_FRICTION : ai::stp::control_constants::REAL_FRICTION;
+    const double frictionCoefficient = GameSettings::getRobotHubMode() == net::RobotHubMode::SIMULATOR ? ai::constants::SIMULATION_FRICTION : ai::constants::REAL_FRICTION;
 
     Vector2 direction = targetPoint - ball.position;
     Vector2 velocityUnit = ball.velocity.normalize();
@@ -84,8 +82,8 @@ bool FieldComputations::pointIsValidPosition(const rtt::Field &field, const Vect
     auto rightGoalTopPost = field.rightGoalArea.topLine();
     auto rightGoalBottomPost = field.rightGoalArea.bottomLine();
     if (avoidObjects.shouldAvoidGoalPosts) {
-        if (leftGoalTopPost.distanceToLine(point) < Constants::ROBOT_RADIUS() || leftGoalBottomPost.distanceToLine(point) < Constants::ROBOT_RADIUS() ||
-            rightGoalTopPost.distanceToLine(point) < Constants::ROBOT_RADIUS() || rightGoalBottomPost.distanceToLine(point) < Constants::ROBOT_RADIUS()) {
+        if (leftGoalTopPost.distanceToLine(point) < constants::ROBOT_RADIUS || leftGoalBottomPost.distanceToLine(point) < constants::ROBOT_RADIUS ||
+            rightGoalTopPost.distanceToLine(point) < constants::ROBOT_RADIUS || rightGoalBottomPost.distanceToLine(point) < constants::ROBOT_RADIUS) {
             return false;
         }
     }
@@ -245,7 +243,7 @@ Polygon FieldComputations::getFieldEdge(const rtt::Field &field, double margin) 
 std::vector<LineSegment> FieldComputations::getBlockadesMappedToGoal(const rtt::Field &field, bool ourGoal, const Vector2 &point,
                                                                      const std::vector<rtt::world::view::RobotView> &robots, int id, bool ourTeam) {
     std::vector<LineSegment> blockades = {};
-    const double robotRadius = Constants::ROBOT_RADIUS() + Constants::BALL_RADIUS();
+    const double robotRadius = constants::ROBOT_RADIUS + constants::BALL_RADIUS;
     LineSegment goalSide = ourGoal ? field.leftGoalArea.rightLine() : field.rightGoalArea.leftLine();
     for (auto const &robot : robots) {
         std::optional<LineSegment> blockade = robotBlockade(ourGoal, point, id, ourTeam, robot, robotRadius, goalSide);
@@ -339,14 +337,14 @@ Vector2 FieldComputations::projectPointToValidPosition(const Field &field, Vecto
         auto leftGoalBottomPost = field.leftGoalArea.bottomLine();
         auto rightGoalTopPost = field.rightGoalArea.topLine();
         auto rightGoalBottomPost = field.rightGoalArea.bottomLine();
-        if (leftGoalTopPost.distanceToLine(point) < Constants::ROBOT_RADIUS()) {
-            projectedPos = {leftGoalTopPost.end.x + Constants::ROBOT_RADIUS(), projectedPos.y};
-        } else if (leftGoalBottomPost.distanceToLine(point) < Constants::ROBOT_RADIUS()) {
-            projectedPos = {leftGoalBottomPost.start.x + Constants::ROBOT_RADIUS(), projectedPos.y};
-        } else if (rightGoalTopPost.distanceToLine(point) < Constants::ROBOT_RADIUS()) {
-            projectedPos = {rightGoalTopPost.start.x - Constants::ROBOT_RADIUS(), projectedPos.y};
-        } else if (rightGoalBottomPost.distanceToLine(point) < Constants::ROBOT_RADIUS()) {
-            projectedPos = {rightGoalBottomPost.end.x - Constants::ROBOT_RADIUS(), projectedPos.y};
+        if (leftGoalTopPost.distanceToLine(point) < constants::ROBOT_RADIUS) {
+            projectedPos = {leftGoalTopPost.end.x + constants::ROBOT_RADIUS, projectedPos.y};
+        } else if (leftGoalBottomPost.distanceToLine(point) < constants::ROBOT_RADIUS) {
+            projectedPos = {leftGoalBottomPost.start.x + constants::ROBOT_RADIUS, projectedPos.y};
+        } else if (rightGoalTopPost.distanceToLine(point) < constants::ROBOT_RADIUS) {
+            projectedPos = {rightGoalTopPost.start.x - constants::ROBOT_RADIUS, projectedPos.y};
+        } else if (rightGoalBottomPost.distanceToLine(point) < constants::ROBOT_RADIUS) {
+            projectedPos = {rightGoalBottomPost.end.x - constants::ROBOT_RADIUS, projectedPos.y};
         }
     }
     return projectedPos;

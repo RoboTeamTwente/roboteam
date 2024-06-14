@@ -11,6 +11,7 @@
 #include "stp/computations/ComputationManager.h"
 #include "stp/computations/PassComputations.h"
 #include "stp/computations/PositionScoring.h"
+#include "utilities/Constants.h"
 #include "world/World.hpp"
 
 namespace rtt::ai::stp {
@@ -48,7 +49,7 @@ std::vector<Vector2> PositionComputations::determineWallPositions(const rtt::Fie
     }
 
     // Constants for positioning the defenders
-    const double radius = control_constants::ROBOT_RADIUS;
+    const double radius = constants::ROBOT_RADIUS;
     const double spacingRobots = radius * 0.5;
     const double spaceBetweenDefenseArea = 2 * radius;
     RefCommand currentGameState = GameStateManager::getCurrentGameState().getCommandId();
@@ -188,17 +189,17 @@ Vector2 PositionComputations::calculateAvoidRobotsPosition(Vector2 targetPositio
         }
     }
     // We use robot radius instead of 2 * robot radius to make sure we are not overly cautious
-    if (std::all_of(pointsToAvoid.begin(), pointsToAvoid.end(), [&](const Vector2 &avoidPoint) { return avoidPoint.dist(targetPosition) >= control_constants::ROBOT_RADIUS; })) {
+    if (std::all_of(pointsToAvoid.begin(), pointsToAvoid.end(), [&](const Vector2 &avoidPoint) { return avoidPoint.dist(targetPosition) >= constants::ROBOT_RADIUS; })) {
         return targetPosition;
     }
 
     for (int distanceSteps = 0; distanceSteps < 5; ++distanceSteps) {
-        auto distance = 4 * control_constants::ROBOT_RADIUS + distanceSteps * control_constants::ROBOT_RADIUS * 2;
+        auto distance = 4 * constants::ROBOT_RADIUS + distanceSteps * constants::ROBOT_RADIUS * 2;
         auto possiblePoints = Grid(targetPosition.x - distance / 2.0, targetPosition.y - distance / 2.0, distance, distance, 3, 3).getPoints();
         for (auto &pointVector : possiblePoints) {
             for (auto &point : pointVector) {
                 if (FieldComputations::pointIsValidPosition(field, point, avoidObj) &&
-                    std::all_of(pointsToAvoid.begin(), pointsToAvoid.end(), [&](const Vector2 &avoidPoint) { return avoidPoint.dist(point) >= control_constants::ROBOT_RADIUS; })) {
+                    std::all_of(pointsToAvoid.begin(), pointsToAvoid.end(), [&](const Vector2 &avoidPoint) { return avoidPoint.dist(point) >= constants::ROBOT_RADIUS; })) {
                     return point;
                 }
             }
@@ -215,10 +216,10 @@ Vector2 PositionComputations::calculateAvoidBallPosition(Vector2 targetPosition,
 
     if (currentGameState == RefCommand::BALL_PLACEMENT_US || currentGameState == RefCommand::BALL_PLACEMENT_THEM || currentGameState == RefCommand::BALL_PLACEMENT_US_DIRECT ||
         currentGameState == RefCommand::PREPARE_FORCED_START) {
-        avoidShape = std::make_unique<Tube>(
-            Tube(ballPosition, GameStateManager::getRefereeDesignatedPosition(), control_constants::AVOID_BALL_DISTANCE + control_constants::GO_TO_POS_ERROR_MARGIN));
+        avoidShape =
+            std::make_unique<Tube>(Tube(ballPosition, GameStateManager::getRefereeDesignatedPosition(), constants::AVOID_BALL_DISTANCE + constants::GO_TO_POS_ERROR_MARGIN));
     } else {
-        avoidShape = std::make_unique<Circle>(Circle(ballPosition, control_constants::AVOID_BALL_DISTANCE + control_constants::GO_TO_POS_ERROR_MARGIN));
+        avoidShape = std::make_unique<Circle>(Circle(ballPosition, constants::AVOID_BALL_DISTANCE + constants::GO_TO_POS_ERROR_MARGIN));
     }
 
     if (avoidShape->contains(targetPosition)) {
@@ -235,7 +236,7 @@ Vector2 PositionComputations::calculateAvoidBallPosition(Vector2 targetPosition,
 Vector2 PositionComputations::calculatePositionOutsideOfShape(Vector2 targetPosition, const rtt::Field &field, const std::unique_ptr<Shape> &avoidShape,
                                                               const AvoidObjects &avoidObj) {
     for (int distanceSteps = 0; distanceSteps < 5; ++distanceSteps) {
-        auto distance = 2 * control_constants::AVOID_BALL_DISTANCE + distanceSteps * control_constants::AVOID_BALL_DISTANCE;
+        auto distance = 2 * constants::AVOID_BALL_DISTANCE + distanceSteps * constants::AVOID_BALL_DISTANCE;
         auto possiblePoints = Grid(targetPosition.x - distance / 2.0, targetPosition.y - distance / 2.0, distance, distance, 3, 3).getPoints();
         for (auto &pointVector : possiblePoints) {
             for (auto &point : pointVector) {
@@ -249,9 +250,8 @@ Vector2 PositionComputations::calculatePositionOutsideOfShape(Vector2 targetPosi
     return targetPosition;
 }
 
-void PositionComputations::calculateInfoForHarasser(std::unordered_map<std::string, StpInfo> &stpInfos,
-                                                    std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT> *roles, const Field &field, world::World *world,
-                                                    Vector2 interceptionLocation) noexcept {
+void PositionComputations::calculateInfoForHarasser(std::unordered_map<std::string, StpInfo> &stpInfos, std::array<std::unique_ptr<Role>, constants::MAX_ROBOT_COUNT> *roles,
+                                                    const Field &field, world::World *world, Vector2 interceptionLocation) noexcept {
     auto enemyClosestToBall = world->getWorld()->getRobotClosestToPoint(world->getWorld()->getBall()->get()->position, world::them);
     // If there is no enemy or we don't have a harasser yet, estimate the position to move to
     if (!stpInfos["harasser"].getRobot() || !enemyClosestToBall) {
@@ -264,8 +264,7 @@ void PositionComputations::calculateInfoForHarasser(std::unordered_map<std::stri
     // If enemy is not facing our goal AND does have the ball, stand between the enemy and our goal
     if (enemyClosestToBall->get()->hasBall() && enemyAngle.shortestAngleDiff(harasserAngle) < M_PI / 1.5) {
         auto enemyPos = enemyClosestToBall->get()->getPos();
-        auto targetPos =
-            enemyPos + (field.leftGoalArea.leftLine().center() - enemyPos).stretchToLength(control_constants::ROBOT_RADIUS * 4 + control_constants::GO_TO_POS_ERROR_MARGIN);
+        auto targetPos = enemyPos + (field.leftGoalArea.leftLine().center() - enemyPos).stretchToLength(constants::ROBOT_RADIUS * 4 + constants::GO_TO_POS_ERROR_MARGIN);
         stpInfos["harasser"].setPositionToMoveTo(targetPos);
         stpInfos["harasser"].setYaw((world->getWorld()->getBall()->get()->position - targetPos).angle());
     } else {
@@ -276,8 +275,8 @@ void PositionComputations::calculateInfoForHarasser(std::unordered_map<std::stri
 }
 
 void PositionComputations::calculateInfoForDefendersAndWallers(std::unordered_map<std::string, StpInfo> &stpInfos,
-                                                               std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT> &roles, const Field &field,
-                                                               world::World *world, bool mustStayOnOurSide) noexcept {
+                                                               std::array<std::unique_ptr<Role>, constants::MAX_ROBOT_COUNT> &roles, const Field &field, world::World *world,
+                                                               bool mustStayOnOurSide) noexcept {
     // List of all active defender and waller names
     auto defenderNames = std::vector<std::string>{};
     auto wallerNames = std::vector<std::string>{};
@@ -309,7 +308,7 @@ void PositionComputations::calculateInfoForDefendersAndWallers(std::unordered_ma
         double score = FieldComputations::getDistanceToGoal(field, true, enemy->getPos());
         if (std::find(ComputationManager::calculatedEnemyMapIds.begin(), ComputationManager::calculatedEnemyMapIds.end(), enemy->getId()) !=
             ComputationManager::calculatedEnemyMapIds.end()) {
-            score *= stp::control_constants::ENEMY_ALREADY_ASSIGNED_MULTIPLIER;
+            score *= constants::ENEMY_ALREADY_ASSIGNED_MULTIPLIER;
         }
         EnemyInfo info = {enemy->getPos(), enemy->getVel(), enemy->getId()};
         enemyMap.insert({score, info});
@@ -384,9 +383,8 @@ void PositionComputations::calculateInfoForDefendersAndWallers(std::unordered_ma
     }
 }
 
-void PositionComputations::calculateInfoForAttackers(std::unordered_map<std::string, StpInfo> &stpInfos,
-                                                     std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT> &roles, const Field &field,
-                                                     world::World *world) noexcept {
+void PositionComputations::calculateInfoForAttackers(std::unordered_map<std::string, StpInfo> &stpInfos, std::array<std::unique_ptr<Role>, constants::MAX_ROBOT_COUNT> &roles,
+                                                     const Field &field, world::World *world) noexcept {
     // List of all active attackers
     auto attackerNames = std::vector<std::string>{};
     for (size_t i = 0; i < world->getWorld()->getUs().size(); i++) {
@@ -418,9 +416,8 @@ void PositionComputations::calculateInfoForAttackers(std::unordered_map<std::str
     }
 }
 
-void PositionComputations::calculateInfoForFormation(std::unordered_map<std::string, StpInfo> &stpInfos,
-                                                     std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT> &roles, const Field &field,
-                                                     world::World *world) noexcept {
+void PositionComputations::calculateInfoForFormation(std::unordered_map<std::string, StpInfo> &stpInfos, std::array<std::unique_ptr<Role>, constants::MAX_ROBOT_COUNT> &roles,
+                                                     const Field &field, world::World *world) noexcept {
     auto formationBackNames = std::vector<std::string>{};
     auto formationMidNames = std::vector<std::string>{};
     auto formationFrontNames = std::vector<std::string>{};
@@ -449,7 +446,7 @@ void PositionComputations::calculateInfoForFormation(std::unordered_map<std::str
 }
 
 void PositionComputations::calculateInfoForFormationOurSide(std::unordered_map<std::string, StpInfo> &stpInfos,
-                                                            std::array<std::unique_ptr<Role>, stp::control_constants::MAX_ROBOT_COUNT> &roles, const Field &field,
+                                                            std::array<std::unique_ptr<Role>, constants::MAX_ROBOT_COUNT> &roles, const Field &field,
                                                             world::World *world) noexcept {
     auto formationBackNames = std::vector<std::string>{};
     auto formationMidNames = std::vector<std::string>{};
@@ -498,7 +495,7 @@ void PositionComputations::recalculateInfoForNonPassers(std::unordered_map<std::
         }
     }
     // Make a tube around the pass trajectory, and make sure all robots outside of this tube
-    std::unique_ptr<Shape> avoidShape = std::make_unique<Tube>(Tube(ballPosition, receiverLocation, control_constants::DISTANCE_TO_PASS_TRAJECTORY));
+    std::unique_ptr<Shape> avoidShape = std::make_unique<Tube>(Tube(ballPosition, receiverLocation, constants::DISTANCE_TO_PASS_TRAJECTORY));
     for (auto &robot : toBeCheckedRobots) {
         stpInfos[robot].setShouldAvoidBall(true);
         auto robotPositionToMoveTo = stpInfos[robot].getPositionToMoveTo();
@@ -517,7 +514,7 @@ void PositionComputations::calculateInfoForAvoidBallHarasser(std::unordered_map<
     if (!world->getWorld()->getBall()) return;
     auto ballPos = world->getWorld()->getBall()->get()->position;
     auto goalToBall = ballPos - world->getField().value().leftGoalArea.rightLine().center();
-    stpInfos["harasser"].setPositionToMoveTo(ballPos - goalToBall.stretchToLength(control_constants::AVOID_BALL_DISTANCE));
+    stpInfos["harasser"].setPositionToMoveTo(ballPos - goalToBall.stretchToLength(constants::AVOID_BALL_DISTANCE));
 }
 
 }  // namespace rtt::ai::stp

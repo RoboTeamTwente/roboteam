@@ -18,7 +18,7 @@ BallPlacementUsForceStart::BallPlacementUsForceStart() : Play() {
     keepPlayEvaluation.emplace_back(GlobalEvaluation::BallPlacementUsGameState);
 
     // Role creation, the names should be unique. The names are used in the stpInfos-map.
-    roles = std::array<std::unique_ptr<Role>, rtt::ai::Constants::ROBOT_COUNT()>{
+    roles = std::array<std::unique_ptr<Role>, rtt::ai::constants::MAX_ROBOT_COUNT>{
         // Roles is we play 6v6
         std::make_unique<role::Keeper>("keeper"),
         std::make_unique<role::BallPlacer>("ball_placer"),
@@ -37,7 +37,7 @@ BallPlacementUsForceStart::BallPlacementUsForceStart() : Play() {
 
 uint8_t BallPlacementUsForceStart::score(const rtt::Field&) noexcept {
     // If this play is valid we always want to execute this play
-    return control_constants::FUZZY_TRUE;
+    return constants::FUZZY_TRUE;
 }
 
 Dealer::FlagMap BallPlacementUsForceStart::decideRoleFlags() const noexcept {
@@ -70,7 +70,7 @@ void BallPlacementUsForceStart::calculateInfoForRoles() noexcept {
     // Adjust placement position to be one robot radius away in the distance of movement
     if (stpInfos["ball_placer"].getRobot()) {
         ballTarget = rtt::ai::GameStateManager::getRefereeDesignatedPosition();
-        ballTarget -= (world->getWorld()->get()->getBall()->get()->position - stpInfos["ball_placer"].getRobot()->get()->getPos()).stretchToLength(control_constants::ROBOT_RADIUS);
+        ballTarget -= (world->getWorld()->get()->getBall()->get()->position - stpInfos["ball_placer"].getRobot()->get()->getPos()).stretchToLength(constants::ROBOT_RADIUS);
     } else {
         // If we don't have a ball placer, set the target location to the ball, such that the dealer will
         // assign the robot closest to the ball to the ball placer role
@@ -87,13 +87,13 @@ void BallPlacementUsForceStart::calculateInfoForRoles() noexcept {
     stpInfos["ball_placer"].setShouldAvoidOutOfField(false);
     stpInfos["ball_placer"].setShouldAvoidBall(false);
 
-    if ((world->getWorld()->get()->getBall()->get()->position - rtt::ai::GameStateManager::getRefereeDesignatedPosition()).length() < control_constants::BALL_PLACEMENT_MARGIN) {
+    if ((world->getWorld()->get()->getBall()->get()->position - rtt::ai::GameStateManager::getRefereeDesignatedPosition()).length() < constants::BALL_PLACEMENT_MARGIN) {
         for (auto& role : roles)
             if (role->getName() == "ball_placer") role->forceLastTactic();
     }
 
     if (stpInfos["ball_placer"].getRobot() && stpInfos["ball_placer"].getRobot()->get()->getDistanceToBall() < 1.0) stpInfos["ball_placer"].setMaxRobotVelocity(0.75);
-    if (stpInfos["ball_placer"].getRobot() && stpInfos["ball_placer"].getRobot()->get()->getDistanceToBall() < control_constants::TURN_ON_DRIBBLER_DISTANCE) {
+    if (stpInfos["ball_placer"].getRobot() && stpInfos["ball_placer"].getRobot()->get()->getDistanceToBall() < constants::TURN_ON_DRIBBLER_DISTANCE) {
         stpInfos["ball_placer"].setDribblerOn(true);
     }
 }

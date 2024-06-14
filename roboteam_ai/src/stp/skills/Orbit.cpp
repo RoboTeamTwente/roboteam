@@ -1,6 +1,6 @@
 #include "stp/skills/Orbit.h"
 
-#include "stp/constants/ControlConstants.h"
+#include "utilities/Constants.h"
 
 namespace rtt::ai::stp::skill {
 
@@ -12,7 +12,7 @@ Status Orbit::onUpdate(const StpInfo &info) noexcept {
     double normalAngle = directionVector.rotate(M_PI).rotate(M_PI_2).angle();
     Angle yaw = (info.getPositionToShootAt().value() - ball->position).toAngle();
 
-    double margin = 1.5 * control_constants::ROBOT_RADIUS + stp::control_constants::BALL_RADIUS;
+    double margin = 1.5 * constants::ROBOT_RADIUS + constants::BALL_RADIUS;
     double adjustDistance = robot->getDistanceToBall() - margin;
 
     // Get the direction of movement, counterclockwise or clockwise
@@ -41,7 +41,7 @@ Status Orbit::onUpdate(const StpInfo &info) noexcept {
     forwardRobotCommand();
 
     // Check if successful
-    double errorMargin = stp::control_constants::GO_TO_POS_ANGLE_ERROR_MARGIN * M_PI;
+    double errorMargin = constants::GO_TO_POS_ANGLE_ERROR_MARGIN * M_PI;
     if (directionVector.toAngle().shortestAngleDiff(yaw) < errorMargin) {
         counter++;
     } else {

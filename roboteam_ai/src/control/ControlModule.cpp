@@ -20,9 +20,7 @@ void ControlModule::limitRobotCommand(rtt::RobotCommand& command, rtt::world::vi
     limitAngularVel(command, robot);
 }
 
-void ControlModule::limitVel(rtt::RobotCommand& command) {
-    command.velocity = command.velocity.stretchToLength(std::clamp(command.velocity.length(), 0.0, Constants::MAX_VEL_CMD()));
-}
+void ControlModule::limitVel(rtt::RobotCommand& command) { command.velocity = command.velocity.stretchToLength(std::clamp(command.velocity.length(), 0.0, constants::MAX_VEL)); }
 
 void ControlModule::limitAngularVel(rtt::RobotCommand& command, rtt::world::view::RobotView robot) {
     // Limit the angular velocity when the robot has the ball by setting the target yaw in small steps
@@ -36,12 +34,12 @@ void ControlModule::limitAngularVel(rtt::RobotCommand& command, rtt::world::view
         }
 
         // If the yaw error is larger than the desired yaw rate, adjust the yaw command
-        if (robotYaw.shortestAngleDiff(yaw) > stp::control_constants::YAW_RATE) {
+        if (robotYaw.shortestAngleDiff(yaw) > constants::YAW_RATE) {
             // Determine direction of rotation (shortest distance)
             int direction = Angle(robotYaw).rotateDirection(yaw) ? 1 : -1;
 
             // Set the yaw command to the current robot yaw + the yaw rate
-            command.yaw = robotYaw + Angle(direction * stp::control_constants::YAW_RATE);
+            command.yaw = robotYaw + Angle(direction * constants::YAW_RATE);
         }
     }
     // TODO: Well, then also limit the target angular velocity just like target yaw!
@@ -84,7 +82,7 @@ void ControlModule::simulator_angular_control(const std::optional<::rtt::world::
             double I = 0.0;
             double D = 0;
             double max_ang_vel = 5.0;  // rad/s
-            double dt = 1. / double(Constants::STP_TICK_RATE());
+            double dt = 1. / double(constants::STP_TICK_RATE);
 
             YawPID pid(P, I, D, max_ang_vel, dt);
             ang_velocity_out = pid.getOutput(target_yaw, current_yaw);

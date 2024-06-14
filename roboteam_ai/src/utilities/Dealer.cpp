@@ -268,12 +268,12 @@ double Dealer::getDefaultFlagScores(const v::RobotView &robot, const Dealer::Dea
         case DealerFlagTitle::KEEPER:
             return costForProperty(robot->getId() == GameStateManager::getCurrentGameState().keeperId);
         case DealerFlagTitle::CAN_DETECT_BALL: {
-            bool hasWorkingBallSensor = Constants::ROBOT_HAS_WORKING_BALL_SENSOR(robot->getId());
-            bool hasDribblerEncoder = Constants::ROBOT_HAS_WORKING_DRIBBLER_ENCODER(robot->getId());
+            bool hasWorkingBallSensor = constants::ROBOT_HAS_WORKING_BALL_SENSOR(robot->getId());
+            bool hasDribblerEncoder = constants::ROBOT_HAS_WORKING_DRIBBLER_ENCODER(robot->getId());
             return costForProperty(hasWorkingBallSensor || hasDribblerEncoder);
         }
         case DealerFlagTitle::CAN_KICK_BALL: {
-            bool hasWorkingKicker = Constants::ROBOT_HAS_KICKER(robot->getId());
+            bool hasWorkingKicker = constants::ROBOT_HAS_KICKER(robot->getId());
             return costForProperty(hasWorkingKicker);
         }
         default: {
@@ -291,7 +291,7 @@ void Dealer::setGameStateRoleIds(std::unordered_map<std::string, v::RobotView> o
 
 // Calculate the cost for distance. The further away the target, the higher the cost for that distance.
 double Dealer::costForDistance(const v::RobotView &robot, const rtt::Vector2 target_position, const double MaxRobotVelocity) {
-    return Trajectory2D(robot->getPos(), robot->getVel(), target_position, MaxRobotVelocity, ai::Constants::MAX_ACC()).getTotalTime();
+    return Trajectory2D(robot->getPos(), robot->getVel(), target_position, MaxRobotVelocity, ai::constants::MAX_ACC).getTotalTime();
 }
 
 double Dealer::costForProperty(bool property) { return property ? 0.0 : 1.0; }

@@ -166,11 +166,6 @@ void RobotHub::sendCommandsToBasestation(const rtt::RobotCommands &commands, rtt
 
         command.wheelsOff = robotCommand.wheelsOff;
 
-        // command.rho = 0;
-        // command.theta = 0;
-        // command.angularVelocity = 1;
-        // command.useYaw = 0;
-
         int bytesSent = 0;
         {
             std::lock_guard<std::mutex> lock(basestationManagerMutex);

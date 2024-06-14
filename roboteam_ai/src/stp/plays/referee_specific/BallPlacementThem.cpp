@@ -16,7 +16,7 @@ BallPlacementThem::BallPlacementThem() : Play() {
     keepPlayEvaluation.emplace_back(GlobalEvaluation::BallPlacementThemGameState);
 
     // Role creation, the names should be unique. The names are used in the stpInfos-map.
-    roles = std::array<std::unique_ptr<Role>, rtt::ai::Constants::ROBOT_COUNT()>{
+    roles = std::array<std::unique_ptr<Role>, rtt::ai::constants::MAX_ROBOT_COUNT>{
         // Roles is we play 6v6
         std::make_unique<role::Keeper>("keeper"),
         std::make_unique<role::Formation>("harasser"),
@@ -35,7 +35,7 @@ BallPlacementThem::BallPlacementThem() : Play() {
 
 uint8_t BallPlacementThem::score(const rtt::Field&) noexcept {
     // If this play is valid we always want to execute this play
-    return control_constants::FUZZY_TRUE;
+    return constants::FUZZY_TRUE;
 }
 
 Dealer::FlagMap BallPlacementThem::decideRoleFlags() const noexcept {
@@ -69,7 +69,7 @@ void BallPlacementThem::calculateInfoForRoles() noexcept {
 
 void BallPlacementThem::calculateInfoForHarasser() noexcept {
     auto placementPos = rtt::ai::GameStateManager::getRefereeDesignatedPosition();
-    auto targetPos = placementPos + (field.leftGoalArea.rightLine().center() - placementPos).stretchToLength(control_constants::AVOID_BALL_DISTANCE);
+    auto targetPos = placementPos + (field.leftGoalArea.rightLine().center() - placementPos).stretchToLength(constants::AVOID_BALL_DISTANCE);
     stpInfos["harasser"].setPositionToMoveTo(targetPos);
     stpInfos["harasser"].setYaw((placementPos - field.leftGoalArea.rightLine().center()).toAngle());
 }

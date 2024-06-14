@@ -7,7 +7,7 @@
 #include "control/ControlUtils.h"
 #include "gui/Out.h"
 #include "roboteam_utils/Tube.h"
-#include "stp/constants/ControlConstants.h"
+#include "utilities/Constants.h"
 
 namespace rtt::ai::stp::computations {
 
@@ -55,7 +55,7 @@ PassInfo PassComputations::calculatePass(gen::ScoreProfile profile, const rtt::w
     std::vector<Vector2> possibleReceiverLocations;
     std::vector<Vector2> possibleReceiverVelocities;
     for (const auto& robot : us) {
-        if (Constants::ROBOT_HAS_KICKER(robot->getId())) {
+        if (constants::ROBOT_HAS_KICKER(robot->getId())) {
             possibleReceiverLocations.push_back(robot->getPos());
             possibleReceiverVelocities.push_back(robot->getVel());
         }
@@ -135,11 +135,11 @@ bool PassComputations::pointIsValidReceiverLocation(Vector2 point, const std::ve
 }
 
 double PassComputations::calculateRobotTravelTime(Vector2 robotPosition, Vector2 robotVelocity, Vector2 targetPosition) {
-    return Trajectory2D(robotPosition, robotVelocity, targetPosition, control::ControlUtils::getMaxVelocity(false), ai::Constants::MAX_ACC()).getTotalTime() * 1.1;
+    return Trajectory2D(robotPosition, robotVelocity, targetPosition, control::ControlUtils::getMaxVelocity(false), ai::constants::MAX_ACC).getTotalTime() * 1.1;
 }
 
 double PassComputations::calculateBallTravelTime(Vector2 passLocation, Vector2 passerLocation, Vector2 passerVelocity, Vector2 targetPosition) {
-    auto travelTime = calculateRobotTravelTime(passerLocation, passerVelocity, passLocation - (passerLocation - passLocation).stretchToLength(control_constants::ROBOT_RADIUS));
+    auto travelTime = calculateRobotTravelTime(passerLocation, passerVelocity, passLocation - (passerLocation - passLocation).stretchToLength(constants::ROBOT_RADIUS));
     auto rotateTime = (passLocation - passerLocation).toAngle().shortestAngleDiff(targetPosition - passLocation) / (M_PI);
     double ballSpeed = control::ControlUtils::determineKickForce(passLocation.dist(targetPosition), ShotType::PASS);
     auto ballTime = passLocation.dist(targetPosition) / ballSpeed;

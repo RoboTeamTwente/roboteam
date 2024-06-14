@@ -29,13 +29,14 @@ rtt::Vector2 WorldHelper::getRandomFieldPosition(const proto::SSL_GeometryFieldS
  * Generate a random velocity which is lower than the maximum velocity
  */
 rtt::Vector2 WorldHelper::getRandomVelocity() {
-    auto xVel = getRandomValue(-rtt::ai::Constants::MAX_VEL(), rtt::ai::Constants::MAX_VEL());
-    auto yVel = getRandomValue(-rtt::ai::Constants::MAX_VEL(), rtt::ai::Constants::MAX_VEL());
+    auto maxVel = 4.0;
+    auto xVel = getRandomValue(-maxVel, maxVel);
+    auto yVel = getRandomValue(-maxVel, maxVel);
     rtt::Vector2 vector = {xVel, yVel};
 
     // limit the vector if needed
-    if (vector.length() > rtt::ai::Constants::MAX_VEL()) {
-        vector = vector.stretchToLength(rtt::ai::Constants::MAX_VEL());
+    if (vector.length() > maxVel) {
+        vector = vector.stretchToLength(maxVel);
     }
     return vector;
 }
@@ -59,12 +60,12 @@ bool WorldHelper::allPositionsAreValid(const proto::World &worldMsg, bool withBa
         for (auto &posToCompore : robotPositions) {
             // if the position is itself we don't need to do anything
             if (pos.first != posToCompore.first) {
-                if (pos.second.dist((posToCompore.second)) < 2 * rtt::ai::Constants::ROBOT_RADIUS()) return false;
+                if (pos.second.dist((posToCompore.second)) < 2 * rtt::ai::constants::ROBOT_RADIUS) return false;
             }
         }
 
         if (withBall) {
-            if (pos.second.dist(rtt::Vector2(worldMsg.ball().pos().x(), worldMsg.ball().pos().y())) < rtt::ai::Constants::ROBOT_RADIUS() + rtt::ai::Constants::BALL_RADIUS()) {
+            if (pos.second.dist(rtt::Vector2(worldMsg.ball().pos().x(), worldMsg.ball().pos().y())) < rtt::ai::constants::ROBOT_RADIUS + rtt::ai::constants::BALL_RADIUS) {
                 return false;
             }
         }
@@ -84,10 +85,10 @@ proto::WorldRobot WorldHelper::generateRandomRobot(int id, proto::SSL_GeometryFi
     robot.set_id((unsigned)id);
     robot.mutable_pos()->set_x(randomFieldPos.x);
     robot.mutable_pos()->set_y(randomFieldPos.y);
-    robot.set_yaw(static_cast<float>(getRandomValue(rtt::ai::Constants::MIN_YAW(), rtt::ai::Constants::MAX_YAW())));
+    robot.set_yaw(static_cast<float>(getRandomValue(rtt::ai::constants::MIN_YAW, rtt::ai::constants::MAX_YAW)));
     robot.mutable_vel()->set_x(randomVel.x);
     robot.mutable_vel()->set_y(randomVel.x);
-    robot.set_w(static_cast<float>(getRandomValue(0, rtt::ai::Constants::MAX_ANGULAR_VELOCITY())));
+    robot.set_w(static_cast<float>(getRandomValue(0, rtt::ai::constants::MAX_ANGULAR_VELOCITY)));
     return robot;
 }
 
@@ -116,7 +117,7 @@ proto::WorldBall *WorldHelper::generateRandomBall(proto::SSL_GeometryFieldSize f
  */
 rtt::Vector2 WorldHelper::getLocationRightBeforeRobot(proto::WorldRobot robot) {
     rtt::Vector2 yawVector = rtt::Vector2(cos(robot.yaw()), sin(robot.yaw()));
-    yawVector = yawVector.stretchToLength(rtt::ai::Constants::ROBOT_RADIUS());
+    yawVector = yawVector.stretchToLength(rtt::ai::constants::ROBOT_RADIUS);
     rtt::Vector2 robotPos = rtt::Vector2(robot.pos().x(), robot.pos().y());
     return robotPos + yawVector;
 }

@@ -15,7 +15,7 @@ KickOffUsPrepare::KickOffUsPrepare() : Play() {
     keepPlayEvaluation.emplace_back(GlobalEvaluation::KickOffUsPrepareGameState);
 
     // Role creation, the names should be unique. The names are used in the stpInfos-map.
-    roles = std::array<std::unique_ptr<Role>, rtt::ai::Constants::ROBOT_COUNT()>{
+    roles = std::array<std::unique_ptr<Role>, rtt::ai::constants::MAX_ROBOT_COUNT>{
         // Roles is we play 6v6
         std::make_unique<role::Keeper>("keeper"),
         std::make_unique<role::Formation>("kicker"),
@@ -34,7 +34,7 @@ KickOffUsPrepare::KickOffUsPrepare() : Play() {
 
 uint8_t KickOffUsPrepare::score(const rtt::Field&) noexcept {
     // If this play is valid we always want to execute this play
-    return control_constants::FUZZY_TRUE;
+    return constants::FUZZY_TRUE;
 }
 
 Dealer::FlagMap KickOffUsPrepare::decideRoleFlags() const noexcept {
@@ -63,7 +63,7 @@ void KickOffUsPrepare::calculateInfoForRoles() noexcept {
     PositionComputations::calculateInfoForFormationOurSide(stpInfos, roles, field, world);
 
     // The "kicker" will go to the ball
-    stpInfos["kicker"].setPositionToMoveTo(Vector2(-control_constants::AVOID_BALL_DISTANCE, 0.0));
+    stpInfos["kicker"].setPositionToMoveTo(Vector2(-constants::AVOID_BALL_DISTANCE, 0.0));
 }
 
 const char* KickOffUsPrepare::getName() const { return "Kick Off Us Prepare"; }

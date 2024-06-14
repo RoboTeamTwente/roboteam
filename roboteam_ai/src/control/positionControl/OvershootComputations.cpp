@@ -4,6 +4,7 @@
 #include <cmath>
 
 #include "utilities/Constants.h"
+
 namespace rtt::ai::control {
 
 std::pair<Vector2, double> OvershootComputations::overshootingDestination(const Vector2& startPosition, const Vector2& endPosition, const Vector2& startVelocity,

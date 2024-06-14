@@ -1,6 +1,7 @@
 #include "utilities/StrategyManager.h"
 
-#include "stp/constants/ControlConstants.h"
+#include "utilities/Constants.h"
+
 namespace rtt::ai {
 
 void StrategyManager::setCurrentGameState(RefCommand command, RefCommand nextCommand, std::optional<world::view::BallView> ballOpt) {
@@ -36,7 +37,7 @@ void StrategyManager::setCurrentGameState(RefCommand command, RefCommand nextCom
     if ((currentGameState.commandId == RefCommand::DIRECT_FREE_THEM || currentGameState.commandId == RefCommand::DIRECT_FREE_US ||
          currentGameState.commandId == RefCommand::KICKOFF_US || currentGameState.commandId == RefCommand::KICKOFF_THEM) &&
         ((ballOpt.has_value() && currentGameState.kickPoint.has_value() &&
-          (ballOpt.value()->position - *currentGameState.kickPoint).length() > stp::control_constants::FREE_KICK_TAKEN_DISTANCE) ||
+          (ballOpt.value()->position - *currentGameState.kickPoint).length() > constants::FREE_KICK_TAKEN_DISTANCE) ||
          currentGameState.timeLeft <= 0.0)) {
         currentGameState = getGameStateForRefCommand(RefCommand::NORMAL_START);
         lastCommand = command;

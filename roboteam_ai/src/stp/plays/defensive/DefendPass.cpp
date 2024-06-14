@@ -26,7 +26,7 @@ DefendPass::DefendPass() : Play() {
     keepPlayEvaluation.emplace_back(GlobalEvaluation::BallNotInOurDefenseAreaAndStill);
 
     // Role creation, the names should be unique. The names are used in the stpInfos-map
-    roles = std::array<std::unique_ptr<Role>, rtt::ai::Constants::ROBOT_COUNT()>{
+    roles = std::array<std::unique_ptr<Role>, rtt::ai::constants::MAX_ROBOT_COUNT>{
         // Roles is we play 6v6
         std::make_unique<role::Keeper>("keeper"),
         std::make_unique<role::Harasser>("harasser"),
@@ -45,7 +45,7 @@ DefendPass::DefendPass() : Play() {
 
 uint8_t DefendPass::score(const rtt::Field&) noexcept {
     // If this play is valid we always want to execute this play
-    return control_constants::FUZZY_TRUE;
+    return constants::FUZZY_TRUE;
 }
 
 Dealer::FlagMap DefendPass::decideRoleFlags() const noexcept {

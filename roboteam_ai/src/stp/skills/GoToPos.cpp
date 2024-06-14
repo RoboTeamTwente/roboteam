@@ -23,8 +23,8 @@ Status GoToPos::onUpdate(const StpInfo &info) noexcept {
             double distance2 = (robot->getPos() - ballPlacementPos).length() + (ballPlacementPos - targetPos).length();
             Vector2 point1 = ballLocation - (ballPlacementPos - ballLocation).stretchToLength(0.8);
             Vector2 point2 = ballPlacementPos - (robot->getPos() - ballPlacementPos).stretchToLength(0.8);
-            bool point1InField = field.playArea.contains(point1, control_constants::OUT_OF_FIELD_MARGIN);
-            bool point2InField = field.playArea.contains(point2, control_constants::OUT_OF_FIELD_MARGIN);
+            bool point1InField = field.playArea.contains(point1, constants::OUT_OF_FIELD_MARGIN);
+            bool point2InField = field.playArea.contains(point2, constants::OUT_OF_FIELD_MARGIN);
             if (point1InField && point2InField) {
                 targetPos = (distance1 < distance2) ? point1 : point2;
             } else if (point1InField) {
@@ -71,7 +71,7 @@ Status GoToPos::onUpdate(const StpInfo &info) noexcept {
 
     // Check if successful
     auto distanceError = (robot->getPos() - targetPos).length();
-    if (robot->hasBall() && distanceError <= stp::control_constants::BALL_PLACEMENT_MARGIN - stp::control_constants::GO_TO_POS_ERROR_MARGIN) {
+    if (robot->hasBall() && distanceError <= constants::BALL_PLACEMENT_MARGIN - constants::GO_TO_POS_ERROR_MARGIN) {
         return Status::Success;
     } else {
         return Status::Running;

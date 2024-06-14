@@ -5,6 +5,6 @@
 namespace rtt::ai::stp::evaluation {
 
 uint8_t PenaltyUsPrepareGameStateEvaluation::metricCheck(const world::World *, const Field *) const noexcept {
-    return GameStateManager::getCurrentGameState().getCommandId() == RefCommand::PREPARE_PENALTY_US ? stp::control_constants::FUZZY_TRUE : stp::control_constants::FUZZY_FALSE;
+    return GameStateManager::getCurrentGameState().getCommandId() == RefCommand::PREPARE_PENALTY_US ? constants::FUZZY_TRUE : constants::FUZZY_FALSE;
 }
 }  // namespace rtt::ai::stp::evaluation

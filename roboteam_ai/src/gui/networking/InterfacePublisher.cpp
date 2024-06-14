@@ -101,7 +101,7 @@ InterfacePublisher& InterfacePublisher::publishAIStatus() {
         aiState->add_plays(play->getName());
     }
 
-    for (const auto& ruleSet : Constants::ruleSets()) {
+    for (const auto& ruleSet : RuleSet::ruleSets()) {
         aiState->add_rule_sets(ruleSet.toString());
     }
 

@@ -123,29 +123,29 @@ Vector2 GameStateManager::getRefereeDesignatedPosition() {
 
 void GameStateManager::updateInterfaceGameState(const char* name) {
     static const std::map<std::string, std::pair<RefCommand, rtt::ai::RuleSet>> nameToGameState = {
-        {"Stop Formation", {RefCommand::STOP, Constants::RULESET_STOP()}},
-        {"Prepare Forced Start", {RefCommand::STOP, Constants::RULESET_STOP()}},
-        {"Ball Placement Us Free Kick", {RefCommand::BALL_PLACEMENT_US_DIRECT, Constants::RULESET_DEFAULT()}},
-        {"Ball Placement Us Force Start", {RefCommand::BALL_PLACEMENT_US, Constants::RULESET_DEFAULT()}},
-        {"Ball Placement Them", {RefCommand::BALL_PLACEMENT_THEM, Constants::RULESET_DEFAULT()}},
-        {"Halt", {RefCommand::HALT, Constants::RULESET_HALT()}},
-        {"Free Kick Them", {RefCommand::DIRECT_FREE_THEM, Constants::RULESET_DEFAULT()}},
-        {"Free Kick Us At Goal", {RefCommand::DIRECT_FREE_US, Constants::RULESET_DEFAULT()}},
-        {"Free Kick Us Pass", {RefCommand::DIRECT_FREE_US, Constants::RULESET_DEFAULT()}},
-        {"Kick Off Us Prepare", {RefCommand::PREPARE_KICKOFF_US, Constants::RULESET_STOP()}},
-        {"Kick Off Them Prepare", {RefCommand::PREPARE_KICKOFF_THEM, Constants::RULESET_STOP()}},
-        {"Kick Off Us", {RefCommand::KICKOFF_US, Constants::RULESET_DEFAULT()}},
-        {"Kick Off Them", {RefCommand::KICKOFF_THEM, Constants::RULESET_DEFAULT()}},
-        {"Penalty Us Prepare", {RefCommand::PREPARE_PENALTY_US, Constants::RULESET_STOP()}},
-        {"Penalty Them Prepare", {RefCommand::PREPARE_PENALTY_THEM, Constants::RULESET_STOP()}},
-        {"Penalty Us", {RefCommand::PENALTY_US, Constants::RULESET_DEFAULT()}},
-        {"Penalty Them", {RefCommand::PENALTY_THEM, Constants::RULESET_DEFAULT()}},
-        {"Time Out", {RefCommand::TIMEOUT_US, Constants::RULESET_HALT()}},
-        {"Attacking Pass", {RefCommand::NORMAL_START, Constants::RULESET_DEFAULT()}},
-        {"Attack", {RefCommand::NORMAL_START, Constants::RULESET_DEFAULT()}},
-        {"Defend Shot", {RefCommand::NORMAL_START, Constants::RULESET_DEFAULT()}},
-        {"Defend Pass", {RefCommand::NORMAL_START, Constants::RULESET_DEFAULT()}},
-        {"Keeper Kick Ball", {RefCommand::NORMAL_START, Constants::RULESET_DEFAULT()}},
+        {"Stop Formation", {RefCommand::STOP, RuleSet::RULESET_STOP()}},
+        {"Prepare Forced Start", {RefCommand::STOP, RuleSet::RULESET_STOP()}},
+        {"Ball Placement Us Free Kick", {RefCommand::BALL_PLACEMENT_US_DIRECT, RuleSet::RULESET_DEFAULT()}},
+        {"Ball Placement Us Force Start", {RefCommand::BALL_PLACEMENT_US, RuleSet::RULESET_DEFAULT()}},
+        {"Ball Placement Them", {RefCommand::BALL_PLACEMENT_THEM, RuleSet::RULESET_DEFAULT()}},
+        {"Halt", {RefCommand::HALT, RuleSet::RULESET_HALT()}},
+        {"Free Kick Them", {RefCommand::DIRECT_FREE_THEM, RuleSet::RULESET_DEFAULT()}},
+        {"Free Kick Us At Goal", {RefCommand::DIRECT_FREE_US, RuleSet::RULESET_DEFAULT()}},
+        {"Free Kick Us Pass", {RefCommand::DIRECT_FREE_US, RuleSet::RULESET_DEFAULT()}},
+        {"Kick Off Us Prepare", {RefCommand::PREPARE_KICKOFF_US, RuleSet::RULESET_STOP()}},
+        {"Kick Off Them Prepare", {RefCommand::PREPARE_KICKOFF_THEM, RuleSet::RULESET_STOP()}},
+        {"Kick Off Us", {RefCommand::KICKOFF_US, RuleSet::RULESET_DEFAULT()}},
+        {"Kick Off Them", {RefCommand::KICKOFF_THEM, RuleSet::RULESET_DEFAULT()}},
+        {"Penalty Us Prepare", {RefCommand::PREPARE_PENALTY_US, RuleSet::RULESET_STOP()}},
+        {"Penalty Them Prepare", {RefCommand::PREPARE_PENALTY_THEM, RuleSet::RULESET_STOP()}},
+        {"Penalty Us", {RefCommand::PENALTY_US, RuleSet::RULESET_DEFAULT()}},
+        {"Penalty Them", {RefCommand::PENALTY_THEM, RuleSet::RULESET_DEFAULT()}},
+        {"Time Out", {RefCommand::TIMEOUT_US, RuleSet::RULESET_HALT()}},
+        {"Attacking Pass", {RefCommand::NORMAL_START, RuleSet::RULESET_DEFAULT()}},
+        {"Attack", {RefCommand::NORMAL_START, RuleSet::RULESET_DEFAULT()}},
+        {"Defend Shot", {RefCommand::NORMAL_START, RuleSet::RULESET_DEFAULT()}},
+        {"Defend Pass", {RefCommand::NORMAL_START, RuleSet::RULESET_DEFAULT()}},
+        {"Keeper Kick Ball", {RefCommand::NORMAL_START, RuleSet::RULESET_DEFAULT()}},
     };
 
     auto it = nameToGameState.find(name);
@@ -153,7 +153,7 @@ void GameStateManager::updateInterfaceGameState(const char* name) {
         interface::Output::setInterfaceGameState(GameState(it->second.first, it->second.second));
     } else {
         RTT_WARNING("Play has been selected for which no ruleset is found!");
-        interface::Output::setInterfaceGameState(GameState(RefCommand::HALT, Constants::RULESET_HALT()));
+        interface::Output::setInterfaceGameState(GameState(RefCommand::HALT, RuleSet::RULESET_HALT()));
     }
 }
 }  // namespace rtt::ai

@@ -85,8 +85,7 @@ void Play::update() noexcept {
         }
         if (stpInfos.find(role->getName())->second.getRobot() &&
             stpInfos.find(role->getName())->second.getRobot()->get()->getId() == GameStateManager::getCurrentGameState().cardId &&
-            (stpInfos.find(role->getName())->second.getRobot()->get()->getPos() - Vector2(0.0, -field.playArea.height() / 2)).length() <=
-                control_constants::GO_TO_POS_ERROR_MARGIN * 4) {
+            (stpInfos.find(role->getName())->second.getRobot()->get()->getPos() - Vector2(0.0, -field.playArea.height() / 2)).length() <= constants::GO_TO_POS_ERROR_MARGIN * 4) {
             stpInfos[role->getName()].setShouldAvoidTheirRobots(false);
             stpInfos[role->getName()].setShouldAvoidOurRobots(false);
         }
@@ -315,23 +314,6 @@ void Play::DrawMargins() noexcept {
                 .thickness = 7,
             },
             sideOfTheField);
-    }
-    std::array<std::string, 4> names = {"harasser", "passer", "receiver", "striker"};
-    std::array<proto::Drawing::Color, 4> colors = {proto::Drawing::RED, proto::Drawing::WHITE, proto::Drawing::MAGENTA, proto::Drawing::WHITE};
-    for (std::size_t i = 0; i < names.size(); i++) {
-        if (stpInfos[names[i]].getRobot()) {
-            std::array<rtt::Vector2, 1> position = {stpInfos[names[i]].getRobot()->get()->getPos()};
-            rtt::ai::gui::Out::draw(
-                {
-                    .label = names[i],
-                    .color = colors[i],
-                    .method = proto::Drawing::CIRCLES,
-                    .category = proto::Drawing::ROBOTROLES,
-                    .size = 15,
-                    .thickness = 7,
-                },
-                position);
-        }
     }
 }
 

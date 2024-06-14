@@ -2,8 +2,6 @@
 #define RTT_COMPUTATIONMANAGER_H
 
 #include "roboteam_utils/Vector2.h"
-#include "stp/constants/GeneralizationConstants.h"
-
 namespace rtt::ai::stp {
 
 /**

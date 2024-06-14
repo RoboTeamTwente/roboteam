@@ -3,13 +3,13 @@
 
 #include <proto/messages_robocup_ssl_geometry.pb.h>
 #include <roboteam_utils/Polygon.h>
+#include <utilities/Constants.h>
 
 #include <cmath>
 #include <mutex>
 #include <roboteam_utils/Field.hpp>
 
 #include "control/ControlUtils.h"
-#include "stp/constants/ControlConstants.h"
 #include "utilities/StpInfoEnums.h"
 #include "views/WorldDataView.hpp"
 

@@ -29,13 +29,13 @@ class ControlModule {
     static void limitRobotCommand(rtt::RobotCommand& command, rtt::world::view::RobotView robot);
 
     /**
-     * @brief Limits the velocity with a control_constants value
+     * @brief Limits the velocity with a constants value
      * @param command Robot command that needs to be checked
      */
     static void limitVel(rtt::RobotCommand& command);
 
     /**
-     * @brief Limits the angular velocity with a control_constants value
+     * @brief Limits the angular velocity with a constants value
      * @param command Robot command that needs to be checked
      * @param robot Info about the robot
      */

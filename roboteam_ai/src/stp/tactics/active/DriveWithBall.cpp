@@ -21,7 +21,7 @@ std::optional<StpInfo> DriveWithBall::calculateInfoForSkill(const StpInfo &info)
 bool DriveWithBall::isTacticFailing(const StpInfo &info) noexcept { return !info.getRobot().value()->hasBall() || !info.getPositionToMoveTo(); }
 
 bool DriveWithBall::shouldTacticReset(const StpInfo &info) noexcept {
-    return skills.current_num() == 1 && info.getRobot()->get()->getYaw().shortestAngleDiff(info.getYaw()) > Constants::HAS_BALL_ANGLE();
+    return skills.current_num() == 1 && info.getRobot()->get()->getYaw().shortestAngleDiff(info.getYaw()) > constants::HAS_BALL_ANGLE;
 }
 
 bool DriveWithBall::isEndTactic() noexcept { return false; }

@@ -8,6 +8,7 @@
 
 #include "Constants.h"
 #include "GameState.h"
+#include "RuleSet.h"
 #include "world/views/WorldDataView.hpp"
 
 namespace rtt::ai {
@@ -54,32 +55,32 @@ class StrategyManager {
      * @brief Vector containing all possible game states
      */
     const std::vector<GameState> gameStates = {
-        GameState(RefCommand::UNDEFINED, Constants::RULESET_HALT()),
-        GameState(RefCommand::HALT, Constants::RULESET_HALT()),
-        GameState(RefCommand::TIMEOUT_US, Constants::RULESET_HALT()),
-        GameState(RefCommand::TIMEOUT_THEM, Constants::RULESET_HALT()),
+        GameState(RefCommand::UNDEFINED, RuleSet::RULESET_HALT()),
+        GameState(RefCommand::HALT, RuleSet::RULESET_HALT()),
+        GameState(RefCommand::TIMEOUT_US, RuleSet::RULESET_HALT()),
+        GameState(RefCommand::TIMEOUT_THEM, RuleSet::RULESET_HALT()),
 
-        GameState(RefCommand::STOP, Constants::RULESET_STOP()),
+        GameState(RefCommand::STOP, RuleSet::RULESET_STOP()),
         // Default to have a higher max velocity. Ball will still be avoided by ballplacementarea avoidance
-        GameState(RefCommand::BALL_PLACEMENT_THEM, Constants::RULESET_DEFAULT()),
-        GameState(RefCommand::BALL_PLACEMENT_US, Constants::RULESET_DEFAULT()),
-        GameState(RefCommand::BALL_PLACEMENT_US_DIRECT, Constants::RULESET_DEFAULT()),
-        GameState(RefCommand::DIRECT_FREE_THEM_STOP, Constants::RULESET_STOP()),
-        GameState(RefCommand::DIRECT_FREE_US_STOP, Constants::RULESET_STOP()),
-        GameState(RefCommand::PREPARE_KICKOFF_US, Constants::RULESET_STOP(), false, RefCommand::KICKOFF_US),
-        GameState(RefCommand::PREPARE_KICKOFF_THEM, Constants::RULESET_STOP(), false, RefCommand::KICKOFF_THEM),
-        GameState(RefCommand::PREPARE_PENALTY_US, Constants::RULESET_STOP(), false, RefCommand::PENALTY_US),
-        GameState(RefCommand::PREPARE_PENALTY_THEM, Constants::RULESET_STOP(), false, RefCommand::PENALTY_THEM),
-        GameState(RefCommand::PREPARE_FORCED_START, Constants::RULESET_STOP()),
+        GameState(RefCommand::BALL_PLACEMENT_THEM, RuleSet::RULESET_DEFAULT()),
+        GameState(RefCommand::BALL_PLACEMENT_US, RuleSet::RULESET_DEFAULT()),
+        GameState(RefCommand::BALL_PLACEMENT_US_DIRECT, RuleSet::RULESET_DEFAULT()),
+        GameState(RefCommand::DIRECT_FREE_THEM_STOP, RuleSet::RULESET_STOP()),
+        GameState(RefCommand::DIRECT_FREE_US_STOP, RuleSet::RULESET_STOP()),
+        GameState(RefCommand::PREPARE_KICKOFF_US, RuleSet::RULESET_STOP(), false, RefCommand::KICKOFF_US),
+        GameState(RefCommand::PREPARE_KICKOFF_THEM, RuleSet::RULESET_STOP(), false, RefCommand::KICKOFF_THEM),
+        GameState(RefCommand::PREPARE_PENALTY_US, RuleSet::RULESET_STOP(), false, RefCommand::PENALTY_US),
+        GameState(RefCommand::PREPARE_PENALTY_THEM, RuleSet::RULESET_STOP(), false, RefCommand::PENALTY_THEM),
+        GameState(RefCommand::PREPARE_FORCED_START, RuleSet::RULESET_STOP()),
 
-        GameState(RefCommand::DIRECT_FREE_THEM, Constants::RULESET_DEFAULT()),
-        GameState(RefCommand::NORMAL_START, Constants::RULESET_DEFAULT()),
-        GameState(RefCommand::FORCED_START, Constants::RULESET_DEFAULT()),
-        GameState(RefCommand::DIRECT_FREE_US, Constants::RULESET_DEFAULT()),
-        GameState(RefCommand::KICKOFF_US, Constants::RULESET_DEFAULT(), true),
-        GameState(RefCommand::KICKOFF_THEM, Constants::RULESET_DEFAULT(), true),
-        GameState(RefCommand::PENALTY_US, Constants::RULESET_DEFAULT(), true),
-        GameState(RefCommand::PENALTY_THEM, Constants::RULESET_DEFAULT(), true),
+        GameState(RefCommand::DIRECT_FREE_THEM, RuleSet::RULESET_DEFAULT()),
+        GameState(RefCommand::NORMAL_START, RuleSet::RULESET_DEFAULT()),
+        GameState(RefCommand::FORCED_START, RuleSet::RULESET_DEFAULT()),
+        GameState(RefCommand::DIRECT_FREE_US, RuleSet::RULESET_DEFAULT()),
+        GameState(RefCommand::KICKOFF_US, RuleSet::RULESET_DEFAULT(), true),
+        GameState(RefCommand::KICKOFF_THEM, RuleSet::RULESET_DEFAULT(), true),
+        GameState(RefCommand::PENALTY_US, RuleSet::RULESET_DEFAULT(), true),
+        GameState(RefCommand::PENALTY_THEM, RuleSet::RULESET_DEFAULT(), true),
     };
     GameState currentGameState = gameStates[0];     /**< Current game state according to the referee, after the StrategyManager has processed it */
     RefCommand lastCommand = RefCommand::UNDEFINED; /**< Last command given by the referee */

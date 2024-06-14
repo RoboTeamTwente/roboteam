@@ -5,6 +5,8 @@
 
 #include <roboteam_utils/Field.hpp>
 
+#include "utilities/Constants.h"
+
 namespace rtt {
 using namespace rtt::world;
 using namespace rtt::ai;
@@ -188,7 +190,7 @@ TEST(FieldComputationTest, projectionTests) {
 
     auto projectedPoint = FieldComputations::projectPointOutOfDefenseArea(field, pointInDefenseArea);
     // Since the projectedPoint can be inside the defense area with ROBOT_RADIUS, we use that as margin
-    EXPECT_FALSE(field.leftDefenseArea.contains(projectedPoint, -stp::control_constants::ROBOT_RADIUS));
+    EXPECT_FALSE(field.leftDefenseArea.contains(projectedPoint, -constants::ROBOT_RADIUS));
 
     auto pointOutsideField = Vector2(field.playArea.left() - 0.05, field.playArea.top() + 0.05);
     EXPECT_FALSE(field.playArea.contains(pointOutsideField));

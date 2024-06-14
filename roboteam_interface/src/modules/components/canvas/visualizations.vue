@@ -24,7 +24,7 @@ const onPixiTick = () => {
     if (data.category == Category.PATH_PLANNING && !uiStore.showPathPlanning(data.forRobotId))
       return
     if (data.category == Category.DEBUG && !uiStore.showDebug(data.forRobotId)) return
-    if (data.category == Category.MARGINS && !uiStore.showMargins(data.forRobotId)) return
+    if (data.category == Category.MARGINS && !uiStore.showMargins()) return
     if (data.category == Category.ROBOTROLES && !uiStore.showRobotRoles(data.forRobotId)) return
 
     const shape = new ShapeDrawing({

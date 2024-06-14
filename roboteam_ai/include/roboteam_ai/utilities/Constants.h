@@ -168,13 +168,13 @@ static std::map<int, bool> ROBOTS_WITH_KICKER() {
     return kickerRobots;
 }
 
-static bool ROBOT_HAS_WORKING_BALL_SENSOR(int id) { return ROBOTS_WITH_WORKING_BALL_SENSOR()[id]; }
+[[maybe_unused]] static bool ROBOT_HAS_WORKING_BALL_SENSOR(int id) { return ROBOTS_WITH_WORKING_BALL_SENSOR()[id]; }
 
-static bool ROBOT_HAS_WORKING_DRIBBLER(int id) { return ROBOTS_WITH_WORKING_DRIBBLER()[id]; }
+[[maybe_unused]] static bool ROBOT_HAS_WORKING_DRIBBLER(int id) { return ROBOTS_WITH_WORKING_DRIBBLER()[id]; }
 
-static bool ROBOT_HAS_WORKING_DRIBBLER_ENCODER(int id) { return ROBOTS_WITH_WORKING_DRIBBLER_ENCODER()[id]; }
+[[maybe_unused]] static bool ROBOT_HAS_WORKING_DRIBBLER_ENCODER(int id) { return ROBOTS_WITH_WORKING_DRIBBLER_ENCODER()[id]; }
 
-static bool ROBOT_HAS_KICKER(int id) { return ROBOTS_WITH_KICKER()[id]; }
+[[maybe_unused]] static bool ROBOT_HAS_KICKER(int id) { return ROBOTS_WITH_KICKER()[id]; }
 
 }  // namespace rtt::ai::constants
 

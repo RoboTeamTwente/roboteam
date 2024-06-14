@@ -19,8 +19,8 @@ struct PassInfo {
     int keeperId = -1;
     int passerId = -1;
     int receiverId = -1;
-    Vector2 passLocation;      // The location where the ball will be passed from, towards the receiver
-    Vector2 receiverLocation = Vector2(6,0);  // The location of the receiver, who will receive the ball from the passer
+    Vector2 passLocation;                      // The location where the ball will be passed from, towards the receiver
+    Vector2 receiverLocation = Vector2(6, 0);  // The location of the receiver, who will receive the ball from the passer
     uint8_t passScore = 0;
 };
 

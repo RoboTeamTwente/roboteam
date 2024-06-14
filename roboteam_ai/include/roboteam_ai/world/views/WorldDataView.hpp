@@ -5,7 +5,6 @@
 
 #include "BallView.hpp"
 #include "RobotView.hpp"
-#include "utilities/Constants.h"
 #include "world/Ball.hpp"
 #include "world/Robot.hpp"
 #include "world/Team.hpp"

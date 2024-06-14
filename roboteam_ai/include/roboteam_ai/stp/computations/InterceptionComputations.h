@@ -12,8 +12,6 @@
 
 #include "stp/Role.hpp"
 #include "stp/StpInfo.h"
-#include "stp/constants/GeneralizationConstants.h"
-#include "utilities/Constants.h"
 #include "world/FieldComputations.h"
 #include "world/World.hpp"
 #include "world/views/WorldDataView.hpp"

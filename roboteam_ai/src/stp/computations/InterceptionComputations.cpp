@@ -24,19 +24,19 @@ KeeperInterceptionInfo InterceptionComputations::calculateKeeperInterceptionInfo
         futureBallPosition = FieldComputations::getBallPositionAtTime(*(world->getWorld()->getBall()->get()), loopTime);
         // If the ball is out of the field or the LoS score is too low, we don't intercept
         if (PositionScoring::scorePosition(futureBallPosition, gen::LineOfSight, field, world).score < LineOfSightScore ||
-            !field.playArea.contains(futureBallPosition, control_constants::BALL_RADIUS)) {
+            !field.playArea.contains(futureBallPosition, constants::BALL_RADIUS)) {
             return keeperInterceptionInfo;
         }
         // Only intercept if the ball will be in the defense area
         if (field.leftDefenseArea.contains(futureBallPosition)) {
             // If we are already close to the linesegment, project the position to prevent always moving to the 0.1 second mark
-            if (LineSegment(ballPosition, futureBallPosition).distanceToLine(keeper->getPos()) < 1.5 * control_constants::ROBOT_RADIUS) {
+            if (LineSegment(ballPosition, futureBallPosition).distanceToLine(keeper->getPos()) < 1.5 * constants::ROBOT_RADIUS) {
                 keeperInterceptionInfo.interceptLocation = LineSegment(ballPosition, futureBallPosition).project(keeper->getPos());
                 keeperInterceptionInfo.canIntercept = true;
                 return keeperInterceptionInfo;
             }
             // If we can reach the ball in time, we will intercept
-            if (Trajectory2D(keeper->getPos(), keeper->getVel(), futureBallPosition, maxRobotVelocity, ai::Constants::MAX_ACC()).getTotalTime() < loopTime) {
+            if (Trajectory2D(keeper->getPos(), keeper->getVel(), futureBallPosition, maxRobotVelocity, ai::constants::MAX_ACC).getTotalTime() < loopTime) {
                 keeperInterceptionInfo.interceptLocation = futureBallPosition;
                 keeperInterceptionInfo.canIntercept = true;
                 return keeperInterceptionInfo;
@@ -76,11 +76,11 @@ InterceptionInfo InterceptionComputations::calculateInterceptionInfo(const std::
                     LineSegment(futureBallPosition, pastBallPosition).project(world->getWorld()->getRobotClosestToBall(world::us)->get()->getPos());
             } else {
                 interceptionInfo.interceptLocation =
-                    robotCloseToBallPos + (world->getWorld()->getBall()->get()->position - robotCloseToBallPos).stretchToLength(control_constants::ROBOT_RADIUS * 3);
+                    robotCloseToBallPos + (world->getWorld()->getBall()->get()->position - robotCloseToBallPos).stretchToLength(constants::ROBOT_RADIUS * 3);
             }
             double minTimeToTarget = std::numeric_limits<double>::max();
             for (const auto &robot : ourRobots) {
-                auto trajectory = Trajectory2D(robot->getPos(), robot->getVel(), interceptionInfo.interceptLocation, maxRobotVelocity, ai::Constants::MAX_ACC());
+                auto trajectory = Trajectory2D(robot->getPos(), robot->getVel(), interceptionInfo.interceptLocation, maxRobotVelocity, ai::constants::MAX_ACC);
                 if (trajectory.getTotalTime() < minTimeToTarget) {
                     minTimeToTarget = trajectory.getTotalTime();
                     interceptionInfo.interceptId = robot->getId();
@@ -93,7 +93,7 @@ InterceptionInfo InterceptionComputations::calculateInterceptionInfo(const std::
 
         for (const auto &robot : ourRobots) {
             // If the robot is already close to the line, project it's position onto the line to prevent always moving to the 0.1 second mark
-            if (LineSegment(pastBallPosition, futureBallPosition).distanceToLine(robot->getPos()) < 1.5 * control_constants::ROBOT_RADIUS) {
+            if (LineSegment(pastBallPosition, futureBallPosition).distanceToLine(robot->getPos()) < 1.5 * constants::ROBOT_RADIUS) {
                 interceptionInfo.interceptLocation = LineSegment(pastBallPosition, futureBallPosition).project(robot->getPos());
                 interceptionInfo.interceptId = robot->getId();
                 interceptionInfo.timeToIntercept = 0;
@@ -104,7 +104,7 @@ InterceptionInfo InterceptionComputations::calculateInterceptionInfo(const std::
 
         double minTimeToTarget = std::numeric_limits<double>::max();
         for (const auto &robot : ourRobots) {
-            auto trajectory = Trajectory2D(robot->getPos(), robot->getVel(), targetPosition, maxRobotVelocity, ai::Constants::MAX_ACC());
+            auto trajectory = Trajectory2D(robot->getPos(), robot->getVel(), targetPosition, maxRobotVelocity, ai::constants::MAX_ACC);
             if (trajectory.getTotalTime() < minTimeToTarget) {
                 minTimeToTarget = trajectory.getTotalTime();
                 interceptionInfo.interceptLocation = targetPosition;
@@ -119,7 +119,7 @@ InterceptionInfo InterceptionComputations::calculateInterceptionInfo(const std::
     };
 
     // If the ball is not moving, we use the current ball position
-    if (ballVelocity.length() <= control_constants::BALL_STILL_VEL) {
+    if (ballVelocity.length() <= constants::BALL_STILL_VEL) {
         calculateIntercept(ballPosition);
         return interceptionInfo;
     }
@@ -150,10 +150,10 @@ InterceptionInfo InterceptionComputations::calculateInterceptionInfo(const std::
         }
 
         // If the ball is out of the field, we intercept at the projected position in the field, unless the ball is already out of the field
-        if (!world->getField().value().playArea.contains(futureBallPosition, control_constants::BALL_RADIUS)) {
-            if (world->getField().value().playArea.contains(ballPosition, control_constants::BALL_RADIUS)) {
+        if (!world->getField().value().playArea.contains(futureBallPosition, constants::BALL_RADIUS)) {
+            if (world->getField().value().playArea.contains(ballPosition, constants::BALL_RADIUS)) {
                 futureBallPosition =
-                    FieldComputations::projectPointIntoFieldOnLine(world->getField().value(), futureBallPosition, ballPosition, futureBallPosition, control_constants::BALL_RADIUS);
+                    FieldComputations::projectPointIntoFieldOnLine(world->getField().value(), futureBallPosition, ballPosition, futureBallPosition, constants::BALL_RADIUS);
                 calculateIntercept(futureBallPosition);
             } else {
                 calculateIntercept(ballPosition);
@@ -191,7 +191,7 @@ InterceptionInfo InterceptionComputations::calculateInterceptionInfoForKickingRo
     auto possibleRobots = robots;
 
     // Remove robots that cannot kick
-    std::erase_if(possibleRobots, [](const world::view::RobotView &rbv) { return !Constants::ROBOT_HAS_KICKER(rbv->getId()); });
+    std::erase_if(possibleRobots, [](const world::view::RobotView &rbv) { return !constants::ROBOT_HAS_KICKER(rbv->getId()); });
 
     // If there is no robot that can kick, return empty
     if (possibleRobots.empty()) return interceptionInfo;
@@ -201,7 +201,7 @@ InterceptionInfo InterceptionComputations::calculateInterceptionInfoForKickingRo
 
     // Remove robots that cannot detect the ball themselves (so no ballSensor or dribblerEncoder)
     auto numRobots = possibleRobots.size();
-    std::erase_if(possibleRobots, [](const world::view::RobotView &rbv) { return !Constants::ROBOT_HAS_WORKING_DRIBBLER_ENCODER(rbv->getId()); });
+    std::erase_if(possibleRobots, [](const world::view::RobotView &rbv) { return !constants::ROBOT_HAS_WORKING_DRIBBLER_ENCODER(rbv->getId()); });
 
     // If no robot can detect the ball, the previous closest robot that can only kick is the best one
     if (possibleRobots.empty()) return interceptionInfo;

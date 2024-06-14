@@ -24,11 +24,11 @@ world::World* generateWorld() {
  * @param pointsPerMeterY the amount of points to generate per meter in the y direction
  * @return scoredPosition with the highest score of all considered points
  */
-ai::stp::gen::ScoredPosition getMaxScore(world::World* world, ai::stp::gen::ScoreProfile profile, int pointsPerMeterX = 10, int pointsPerMeterY = 10) {
+ai::stp::ScoredPosition getMaxScore(world::World* world, ai::stp::ScoreProfile profile, int pointsPerMeterX = 10, int pointsPerMeterY = 10) {
     auto width = world->getField().value().playArea.width();
     auto height = world->getField().value().playArea.height();
     auto gridPoints = Grid(-width / 2.0, -height / 2.0, width, height, static_cast<int>(width) * pointsPerMeterX, static_cast<int>(height) * pointsPerMeterY).getPoints();
-    auto bestPosition = ai::stp::gen::ScoredPosition{Vector2(), 0};
+    auto bestPosition = ai::stp::ScoredPosition{Vector2(), 0};
     for (auto& pointsVec : gridPoints) {
         for (auto& point : pointsVec) {
             // Uncomment this line if you want to ignore invalid positions!
@@ -43,7 +43,7 @@ ai::stp::gen::ScoredPosition getMaxScore(world::World* world, ai::stp::gen::Scor
 }
 
 /// Saves all computed scores in the specified file ([x, y, score\n])
-void saveScores(world::World* world, ai::stp::gen::ScoreProfile profile, const std::string& fileName, int pointsPerMeterX = 10, int pointsPerMeterY = 10) {
+void saveScores(world::World* world, ai::stp::ScoreProfile profile, const std::string& fileName, int pointsPerMeterX = 10, int pointsPerMeterY = 10) {
     auto width = world->getField().value().playArea.width();
     auto height = world->getField().value().playArea.height();
     auto gridPoints = Grid(-width / 2.0, -height / 2.0, width, height, static_cast<int>(width) * pointsPerMeterX, static_cast<int>(height) * pointsPerMeterY).getPoints();
@@ -79,11 +79,10 @@ void saveBallLocation(world::World* world, const std::string& fileName) {
 }  // namespace rtt
 
 int main(int argc, char* argv[]) {
-    // rtt::ai::Constants::init();
     auto world = rtt::generateWorld();
 
     /// Set the profile to be used when scoring positions
-    auto scoreProfile = rtt::ai::stp::gen::AttackingPass;
+    auto scoreProfile = rtt::ai::stp::AttackingPass;
 
     /// Get and print the best position and its score
     auto bestPos = rtt::getMaxScore(world, scoreProfile);

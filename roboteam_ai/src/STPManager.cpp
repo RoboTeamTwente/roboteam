@@ -120,14 +120,14 @@ void STPManager::start(std::atomic_flag &exitApplication) {
 
             // If this is primary AI, broadcast settings every second
             if (GameSettings::isPrimaryAI()) {
-                stpTimer.limit([&]() { io::io.publishSettings(); }, ai::Constants::SETTINGS_BROADCAST_RATE());
+                stpTimer.limit([&]() { io::io.publishSettings(); }, ai::constants::SETTING_BROADCAST_RATE);
             }
 
             if (exitApplication.test()) {
                 stpTimer.stop();
             }
         },
-        ai::Constants::STP_TICK_RATE());
+        ai::constants::STP_TICK_RATE);
 }
 
 /// Run everything with regard to behaviour trees
@@ -183,7 +183,7 @@ void STPManager::decidePlay(world::World *_world, bool ignoreWorldAge) {
 
     /* Check if world is not too old. Can be ignored, when e.g. running the debugger */
     if (!ignoreWorldAge) {
-        if (ai::Constants::WORLD_MAX_AGE_MILLISECONDS() < rtt::ai::io::io.getStateAgeMs()) {
+        if (ai::constants::WORLD_MAX_AGE_MILLISECONDS < rtt::ai::io::io.getStateAgeMs()) {
             RTT_WARNING("World is too old! Age: ", rtt::ai::io::io.getStateAgeMs(), " ms")
             currentPlay = nullptr;
             // Returning here prevents the play from being updated, which means that the play will not be able to send any commands,

@@ -15,7 +15,7 @@ Halt::Halt() : Play() {
     keepPlayEvaluation.emplace_back(GlobalEvaluation::HaltGameState);
 
     // Role creation, the names should be unique. The names are used in the stpInfos-map.
-    roles = std::array<std::unique_ptr<Role>, rtt::ai::Constants::ROBOT_COUNT()>{
+    roles = std::array<std::unique_ptr<Role>, rtt::ai::constants::MAX_ROBOT_COUNT>{
         // Roles is we play 6v6
         std::make_unique<role::Halt>("halt_0"), std::make_unique<role::Halt>("halt_1"), std::make_unique<role::Halt>("halt_2"), std::make_unique<role::Halt>("halt_3"),
         std::make_unique<role::Halt>("halt_4"), std::make_unique<role::Halt>("halt_5"),
@@ -26,7 +26,7 @@ Halt::Halt() : Play() {
 
 uint8_t Halt::score(const rtt::Field &) noexcept {
     // If this play is valid we always want to execute this play
-    return control_constants::FUZZY_TRUE;
+    return constants::FUZZY_TRUE;
 }
 
 Dealer::FlagMap Halt::decideRoleFlags() const noexcept {

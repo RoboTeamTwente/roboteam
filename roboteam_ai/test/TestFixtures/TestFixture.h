@@ -3,7 +3,6 @@
 
 #include <gtest/gtest.h>
 #include <interface/api/Output.h>
-#include <utilities/Constants.h>
 #include <utilities/GameSettings.h>
 
 #include <QtWidgets/QApplication>

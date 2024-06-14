@@ -20,7 +20,7 @@ PenaltyUs::PenaltyUs() : Play() {
     keepPlayEvaluation.emplace_back(GlobalEvaluation::PenaltyUsGameState);
 
     // Role creation, the names should be unique. The names are used in the stpInfos-map.
-    roles = std::array<std::unique_ptr<Role>, rtt::ai::Constants::ROBOT_COUNT()>{
+    roles = std::array<std::unique_ptr<Role>, rtt::ai::constants::MAX_ROBOT_COUNT>{
         // Roles is we play 6v6
         std::make_unique<role::Keeper>("keeper"), std::make_unique<role::PenaltyTaker>("kicker"), std::make_unique<role::Halt>("halt_0"), std::make_unique<role::Halt>("halt_1"),
         std::make_unique<role::Halt>("halt_2"), std::make_unique<role::Halt>("halt_3"),
@@ -31,7 +31,7 @@ PenaltyUs::PenaltyUs() : Play() {
 
 uint8_t PenaltyUs::score(const rtt::Field&) noexcept {
     // If this play is valid we always want to execute this play
-    return control_constants::FUZZY_TRUE;
+    return constants::FUZZY_TRUE;
 }
 
 Dealer::FlagMap PenaltyUs::decideRoleFlags() const noexcept {

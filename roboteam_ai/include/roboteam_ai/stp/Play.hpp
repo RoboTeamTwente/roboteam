@@ -6,7 +6,6 @@
 #include "PlayEvaluator.h"
 #include "Role.hpp"
 #include "computations/PositionComputations.h"
-#include "constants/GeneralizationConstants.h"
 #include "stp/evaluations/BaseEvaluation.h"
 #include "utilities/Dealer.h"
 #include "utilities/GameState.h"
@@ -110,7 +109,7 @@ class Play {
     uint8_t getLastScore() const;
 
    protected:
-    std::array<std::unique_ptr<Role>, rtt::ai::Constants::ROBOT_COUNT()> roles; /**< The roles, constructed in ctor of a play */
+    std::array<std::unique_ptr<Role>, rtt::ai::constants::MAX_ROBOT_COUNT> roles; /**< The roles, constructed in ctor of a play */
 
     std::vector<PlayEvaluator::PlayScoring> scoring; /**< The evaluations with their weight */
 

@@ -72,7 +72,7 @@ class PlayEvaluator {
      * @param cutOff Bottom bound value of true
      * @return boolean if FUZZY-TRUE is high enough
      */
-    static bool checkEvaluation(GlobalEvaluation globalEvaluation, const rtt::world::World* world, uint8_t cutOff = control_constants::FUZZY_DEFAULT_CUTOFF) noexcept;
+    static bool checkEvaluation(GlobalEvaluation globalEvaluation, const rtt::world::World* world, uint8_t cutOff = constants::FUZZY_DEFAULT_CUTOFF) noexcept;
 
    private:
     static inline std::unordered_map<GlobalEvaluation, uint8_t> scoresGlobal{}; /**< Map of all loaded Global Evaluations scores */

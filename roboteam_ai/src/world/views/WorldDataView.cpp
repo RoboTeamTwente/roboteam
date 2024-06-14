@@ -1,6 +1,6 @@
 #include "world/views/WorldDataView.hpp"
 
-#include "stp/constants/ControlConstants.h"
+#include "utilities/Constants.h"
 #include "world/WorldData.hpp"
 
 namespace rtt::world::view {
@@ -31,7 +31,7 @@ rtt::world::view::WorldDataView::operator bool() const noexcept { return get() !
 
 std::optional<RobotView> WorldDataView::getRobotClosestToPoint(const Vector2 &point, Team team) const noexcept {
     std::vector<RobotView> robots{};
-    robots.reserve(ai::stp::control_constants::MAX_ROBOT_COUNT * 2);
+    robots.reserve(ai::constants::MAX_ROBOT_COUNT * 2);
     if (team == us)
         robots.assign(getUs().begin(), getUs().end());
     else if (team == them)

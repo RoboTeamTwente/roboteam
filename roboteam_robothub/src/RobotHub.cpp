@@ -149,7 +149,6 @@ void RobotHub::sendCommandsToBasestation(const rtt::RobotCommands &commands, rtt
         command.doChip = robotCommand.kickSpeed > 0.0 && robotCommand.kickType == KickType::CHIP;
         command.doForce = !robotCommand.waitForBall;
         command.kickChipPower = static_cast<float>(robotCommand.kickSpeed);
-        // command.dribblerOn = static_cast<float>(robotCommand.dribblerOn);
         command.dribblerOn = robotCommand.dribblerOn;
 
         command.rho = static_cast<float>(robotCommand.velocity.length());
@@ -163,11 +162,6 @@ void RobotHub::sendCommandsToBasestation(const rtt::RobotCommands &commands, rtt
         command.cameraYaw = command.useCameraYaw ? static_cast<float>(robotCommand.cameraYawOfRobot) : 0.0f;
 
         command.wheelsOff = robotCommand.wheelsOff;
-
-        // command.rho = 0;
-        // command.theta = 0;
-        // command.angularVelocity = 1;
-        // command.useYaw = 0;
 
         int bytesSent = 0;
         {

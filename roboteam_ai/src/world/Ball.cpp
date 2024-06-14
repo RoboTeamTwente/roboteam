@@ -1,7 +1,6 @@
 #include "world/Ball.hpp"
 
 #include "gui/Out.h"
-#include "utilities/Constants.h"
 #include "utilities/GameSettings.h"
 #include "world/World.hpp"
 
@@ -41,8 +40,7 @@ void Ball::initBallAtExpectedPosition(const world::World* data) noexcept {
 
 void Ball::updateExpectedBallEndPosition() noexcept {
     const double ballVelSquared = velocity.length2();
-    const double frictionCoefficient =
-        GameSettings::getRobotHubMode() == net::RobotHubMode::SIMULATOR ? ai::stp::control_constants::SIMULATION_FRICTION : ai::stp::control_constants::REAL_FRICTION;
+    const double frictionCoefficient = GameSettings::getRobotHubMode() == net::RobotHubMode::SIMULATOR ? ai::constants::SIMULATION_FRICTION : ai::constants::REAL_FRICTION;
     expectedEndPosition = position + velocity.stretchToLength(ballVelSquared / frictionCoefficient);
 
     // Uncomment the following lines to calculate the friction coefficient
@@ -90,7 +88,7 @@ void Ball::updateBallAtRobotPosition(const world::World* data) noexcept {
         return;
     }
 
-    double distanceInFrontOfRobot = ai::stp::control_constants::CENTER_TO_FRONT + ai::Constants::BALL_RADIUS();
+    double distanceInFrontOfRobot = ai::constants::CENTER_TO_FRONT + ai::constants::BALL_RADIUS;
     position = robotWithBall->get()->getPos() + robotWithBall->get()->getYaw().toVector2(distanceInFrontOfRobot);
     velocity = robotWithBall->get()->getVel();
 }

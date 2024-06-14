@@ -3,14 +3,13 @@
 #include <roboteam_utils/LineSegment.h>
 
 #include "roboteam_utils/Circle.h"
-#include "stp/constants/ControlConstants.h"
 #include "stp/skills/GoToPos.h"
 #include "stp/skills/Orbit.h"
 
 namespace rtt::ai::stp::tactic {
 
 constexpr double DISTANCE_THRESHOLD = 0.5;
-constexpr double BALL_AVOID_DISTANCE = 4 * control_constants::ROBOT_RADIUS;
+constexpr double BALL_AVOID_DISTANCE = 4 * constants::ROBOT_RADIUS;
 
 GetBehindBallInDirection::GetBehindBallInDirection() { skills = collections::state_machine<Skill, Status, StpInfo>{skill::GoToPos(), skill::Orbit()}; }
 

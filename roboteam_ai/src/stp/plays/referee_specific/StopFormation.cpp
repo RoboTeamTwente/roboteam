@@ -17,7 +17,7 @@ StopFormation::StopFormation() : Play() {
     keepPlayEvaluation.emplace_back(GlobalEvaluation::StopGameState);
 
     // Role creation, the names should be unique. The names are used in the stpInfos-map.
-    roles = std::array<std::unique_ptr<Role>, rtt::ai::Constants::ROBOT_COUNT()>{
+    roles = std::array<std::unique_ptr<Role>, rtt::ai::constants::MAX_ROBOT_COUNT>{
         // Roles is we play 6v6
         std::make_unique<role::Keeper>("keeper"),
         std::make_unique<role::Formation>("harasser"),
@@ -36,7 +36,7 @@ StopFormation::StopFormation() : Play() {
 
 uint8_t StopFormation::score(const rtt::Field&) noexcept {
     // If this play is valid we always want to execute this play
-    return control_constants::FUZZY_TRUE;
+    return constants::FUZZY_TRUE;
 }
 
 Dealer::FlagMap StopFormation::decideRoleFlags() const noexcept {

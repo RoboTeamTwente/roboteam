@@ -1,7 +1,6 @@
 #include "world/Robot.hpp"
 
 #include "roboteam_utils/Print.h"
-#include "utilities/Constants.h"
 #include "utilities/GameSettings.h"
 #include "world/World.hpp"
 
@@ -15,8 +14,8 @@ Robot::Robot(const proto::WorldRobot &copy, rtt::world::Team team, std::optional
       distanceToBall{-1.0},
       angularVelocity{copy.w()} {
     if (id < 16) {
-        workingDribbler = ai::Constants::ROBOT_HAS_WORKING_DRIBBLER(id);
-        workingBallSensor = ai::Constants::ROBOT_HAS_WORKING_BALL_SENSOR(id);
+        workingDribbler = ai::constants::ROBOT_HAS_WORKING_DRIBBLER(id);
+        workingBallSensor = ai::constants::ROBOT_HAS_WORKING_BALL_SENSOR(id);
     }
 
     if (ball.has_value()) {
@@ -31,7 +30,7 @@ Robot::Robot(const proto::WorldRobot &copy, rtt::world::Team team, std::optional
         }
         updateHasBallMap(ball);
     } else {
-        auto hasBallAccordingToVision = distanceToBall < ai::Constants::HAS_BALL_DISTANCE() && angleDiffToBall < ai::Constants::HAS_BALL_ANGLE();
+        auto hasBallAccordingToVision = distanceToBall < ai::constants::HAS_BALL_DISTANCE() && angleDiffToBall < ai::constants::HAS_BALL_ANGLE;
         setHasBall(hasBallAccordingToVision);
     }
 }
@@ -81,7 +80,7 @@ void Robot::setAngleDiffToBall(double _angleDiffToBall) noexcept { Robot::angleD
 
 void Robot::updateFromFeedback(const proto::RobotProcessedFeedback &feedback) noexcept {
     // TODO: add processing of more of the fields of feedback
-    if (ai::Constants::FEEDBACK_ENABLED()) {
+    if (ai::constants::FEEDBACK_ENABLED) {
         setWorkingBallSensor(feedback.ball_sensor_is_working());
         setBatteryLow(feedback.battery_level() < 22);  // TODO: Figure out with electronics which value should be considered low
         setBallSensorSeesBall(feedback.ball_sensor_sees_ball());
@@ -92,7 +91,7 @@ void Robot::updateFromFeedback(const proto::RobotProcessedFeedback &feedback) no
 void Robot::updateHasBallMap(std::optional<view::BallView> &ball) {
     if (!ball) return;
 
-    auto hasBallAccordingToVision = distanceToBall < ai::Constants::HAS_BALL_DISTANCE() && angleDiffToBall < ai::Constants::HAS_BALL_ANGLE();
+    auto hasBallAccordingToVision = distanceToBall < ai::constants::HAS_BALL_DISTANCE() && angleDiffToBall < ai::constants::HAS_BALL_ANGLE;
     // auto hasBallAccordingToDribblerOrBallSensor = (GameSettings::getRobotHubMode() == net::RobotHubMode::BASESTATION) ? dribblerSeesBall : ballSensorSeesBall;
     auto hasBallAccordingToDribblerOrBallSensor = ballSensorSeesBall;
     if (hasBallAccordingToDribblerOrBallSensor && hasBallAccordingToVision) {

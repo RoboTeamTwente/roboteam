@@ -14,22 +14,22 @@ Vector2 PositionControl::computeAndTrackTrajectory(const world::World *world, co
                                                    Vector2 targetPosition, double maxRobotVelocity, stp::AvoidObjects avoidObjects) {
     double timeStep = 0.1;
     auto [theirDefenseAreaMargin, ourDefenseAreaMargin] = FieldComputations::getDefenseAreaMargin();
-    if (avoidObjects.shouldAvoidBall && (currentPosition - world->getWorld()->getBall()->get()->position).length() < ai::stp::control_constants::AVOID_BALL_DISTANCE) {
+    if (avoidObjects.shouldAvoidBall && (currentPosition - world->getWorld()->getBall()->get()->position).length() < ai::constants::AVOID_BALL_DISTANCE) {
         targetPosition = handleBallCollision(world, field, currentPosition, avoidObjects);
-        computedTrajectories[robotId] = Trajectory2D(currentPosition, currentVelocity, targetPosition, maxRobotVelocity, ai::Constants::MAX_ACC());
+        computedTrajectories[robotId] = Trajectory2D(currentPosition, currentVelocity, targetPosition, maxRobotVelocity, ai::constants::MAX_ACC);
     } else if ((GameStateManager::getCurrentGameState().getCommandId() == RefCommand::BALL_PLACEMENT_THEM ||
                 GameStateManager::getCurrentGameState().getCommandId() == RefCommand::PREPARE_FORCED_START) &&
                LineSegment(world->getWorld()->getBall()->get()->position, GameStateManager::getRefereeDesignatedPosition()).distanceToLine(currentPosition) <
-                   ai::stp::control_constants::AVOID_BALL_DISTANCE) {
+                   ai::constants::AVOID_BALL_DISTANCE) {
         targetPosition = handleBallPlacementCollision(world, field, currentPosition, avoidObjects);
-        computedTrajectories[robotId] = Trajectory2D(currentPosition, currentVelocity, targetPosition, maxRobotVelocity, ai::Constants::MAX_ACC());
+        computedTrajectories[robotId] = Trajectory2D(currentPosition, currentVelocity, targetPosition, maxRobotVelocity, ai::constants::MAX_ACC);
     } else if ((avoidObjects.shouldAvoidOurDefenseArea && FieldComputations::getDefenseArea(field, true, ourDefenseAreaMargin, 1).contains(currentPosition)) ||
-               (avoidObjects.shouldAvoidTheirDefenseArea && theirDefenseAreaMargin > stp::control_constants::ROBOT_RADIUS + stp::control_constants::GO_TO_POS_ERROR_MARGIN &&
+               (avoidObjects.shouldAvoidTheirDefenseArea && theirDefenseAreaMargin > constants::ROBOT_RADIUS + constants::GO_TO_POS_ERROR_MARGIN &&
                 FieldComputations::getDefenseArea(field, false, theirDefenseAreaMargin, 1).contains(currentPosition))) {
         targetPosition = handleDefenseAreaCollision(field, currentPosition);
-        computedTrajectories[robotId] = Trajectory2D(currentPosition, currentVelocity, targetPosition, maxRobotVelocity, ai::Constants::MAX_ACC());
+        computedTrajectories[robotId] = Trajectory2D(currentPosition, currentVelocity, targetPosition, maxRobotVelocity, ai::constants::MAX_ACC);
     } else {
-        computedTrajectories[robotId] = Trajectory2D(currentPosition, currentVelocity, targetPosition, maxRobotVelocity, ai::Constants::MAX_ACC());
+        computedTrajectories[robotId] = Trajectory2D(currentPosition, currentVelocity, targetPosition, maxRobotVelocity, ai::constants::MAX_ACC);
         auto hasCollsion = CollisionCalculations::isColliding(computedTrajectories[robotId], avoidObjects, field, robotId, world, computedPaths);
         if (hasCollsion) {
             computedTrajectories[robotId] = findNewTrajectory(world, field, robotId, currentPosition, currentVelocity, targetPosition, maxRobotVelocity, timeStep, avoidObjects);
@@ -56,8 +56,8 @@ Vector2 PositionControl::computeAndTrackTrajectory(const world::World *world, co
 Vector2 PositionControl::handleBallCollision(const world::World *world, const Field &field, Vector2 currentPosition, stp::AvoidObjects avoidObjects) {
     auto ballPos = world->getWorld()->getBall()->get()->position;
     auto direction = currentPosition - ballPos;
-    Vector2 targetPosition = currentPosition + direction.stretchToLength(stp::control_constants::AVOID_BALL_DISTANCE * 2);
-    if (FieldComputations::pointIsValidPosition(field, targetPosition, avoidObjects, stp::control_constants::OUT_OF_FIELD_MARGIN)) {
+    Vector2 targetPosition = currentPosition + direction.stretchToLength(constants::AVOID_BALL_DISTANCE * 2);
+    if (FieldComputations::pointIsValidPosition(field, targetPosition, avoidObjects, constants::OUT_OF_FIELD_MARGIN)) {
         return targetPosition;
     }
     int rotationStepDegrees = 10;
@@ -65,23 +65,23 @@ Vector2 PositionControl::handleBallCollision(const world::World *world, const Fi
     for (int i = rotationStepDegrees; i <= maxRotationDegrees; i += rotationStepDegrees) {
         for (int sign : {1, -1}) {
             double rotation = sign * i * M_PI / 180;
-            Vector2 rotatedDirection = direction.stretchToLength(stp::control_constants::AVOID_BALL_DISTANCE * 2).rotate(rotation);
+            Vector2 rotatedDirection = direction.stretchToLength(constants::AVOID_BALL_DISTANCE * 2).rotate(rotation);
             Vector2 potentialTargetPosition = currentPosition + rotatedDirection;
-            if (FieldComputations::pointIsValidPosition(field, potentialTargetPosition, avoidObjects, stp::control_constants::OUT_OF_FIELD_MARGIN)) {
+            if (FieldComputations::pointIsValidPosition(field, potentialTargetPosition, avoidObjects, constants::OUT_OF_FIELD_MARGIN)) {
                 return potentialTargetPosition;
             }
         }
     }
-    return currentPosition + direction.stretchToLength(stp::control_constants::AVOID_BALL_DISTANCE * 2).rotate(M_PI / 2);
+    return currentPosition + direction.stretchToLength(constants::AVOID_BALL_DISTANCE * 2).rotate(M_PI / 2);
 }
 
 Vector2 PositionControl::handleBallPlacementCollision(const world::World *world, const Field &field, Vector2 currentPosition, stp::AvoidObjects avoidObjects) {
     auto placementPos = GameStateManager::getRefereeDesignatedPosition();
     auto ballPos = world->getWorld()->getBall()->get()->position;
-    auto direction = (placementPos - ballPos).stretchToLength(stp::control_constants::AVOID_BALL_DISTANCE * 2);
+    auto direction = (placementPos - ballPos).stretchToLength(constants::AVOID_BALL_DISTANCE * 2);
     direction = direction.rotate((currentPosition - ballPos).cross(placementPos - ballPos) < 0 ? M_PI / 2 : -M_PI / 2);
     Vector2 targetPosition = currentPosition + direction;
-    if (FieldComputations::pointIsValidPosition(field, targetPosition, avoidObjects, stp::control_constants::OUT_OF_FIELD_MARGIN)) {
+    if (FieldComputations::pointIsValidPosition(field, targetPosition, avoidObjects, constants::OUT_OF_FIELD_MARGIN)) {
         return targetPosition;
     }
     int rotationStepDegrees = 10;
@@ -91,7 +91,7 @@ Vector2 PositionControl::handleBallPlacementCollision(const world::World *world,
             double rotation = sign * i * M_PI / 180;
             Vector2 rotatedDirection = direction.rotate(rotation);
             Vector2 potentialTargetPosition = currentPosition + rotatedDirection;
-            if (FieldComputations::pointIsValidPosition(field, potentialTargetPosition, avoidObjects, stp::control_constants::OUT_OF_FIELD_MARGIN)) {
+            if (FieldComputations::pointIsValidPosition(field, potentialTargetPosition, avoidObjects, constants::OUT_OF_FIELD_MARGIN)) {
                 return potentialTargetPosition;
             }
         }
@@ -103,7 +103,7 @@ Vector2 PositionControl::handleDefenseAreaCollision(const Field &field, Vector2 
     Vector2 ourGoalCenter = field.leftGoalArea.rightLine().center();
     Vector2 theirGoalCenter = field.rightGoalArea.leftLine().center();
     Vector2 closestGoalCenter = (currentPosition - ourGoalCenter).length() < (currentPosition - theirGoalCenter).length() ? ourGoalCenter : theirGoalCenter;
-    Vector2 targetPosition = currentPosition + (currentPosition - closestGoalCenter).stretchToLength(stp::control_constants::AVOID_BALL_DISTANCE * 2);
+    Vector2 targetPosition = currentPosition + (currentPosition - closestGoalCenter).stretchToLength(constants::AVOID_BALL_DISTANCE * 2);
     return targetPosition;
 }
 
@@ -114,7 +114,7 @@ Trajectory2D PositionControl::findNewTrajectory(const world::World *world, const
     Vector2 startToDest = targetPosition - currentPosition;
     for (const auto &normalizedPoint : normalizedPoints) {
         auto intermediatePoint = startToDest.rotate(normalizedPoint.angle()) * normalizedPoint.length() + currentPosition;
-        Trajectory2D trajectoryToIntermediatePoint(currentPosition, currentVelocity, intermediatePoint, maxRobotVelocity, ai::Constants::MAX_ACC());
+        Trajectory2D trajectoryToIntermediatePoint(currentPosition, currentVelocity, intermediatePoint, maxRobotVelocity, ai::constants::MAX_ACC);
         auto timeTillFirstCollision = CollisionCalculations::getFirstCollisionTime(trajectoryToIntermediatePoint, avoidObjects, field, robotId, world, computedPaths);
         double maxLoopTime = timeTillFirstCollision != -1 ? timeTillFirstCollision - 0.1 : trajectoryToIntermediatePoint.getTotalTime();
         int numSteps = static_cast<int>(maxLoopTime / timeStep);
@@ -122,7 +122,7 @@ Trajectory2D PositionControl::findNewTrajectory(const world::World *world, const
             double loopTime = i * timeStep;
             Vector2 newStartPosition = trajectoryToIntermediatePoint.getPosition(loopTime);
             Vector2 newStartVelocity = trajectoryToIntermediatePoint.getVelocity(loopTime);
-            Trajectory2D trajectoryFromIntermediateToTarget(newStartPosition, newStartVelocity, targetPosition, maxRobotVelocity, ai::Constants::MAX_ACC());
+            Trajectory2D trajectoryFromIntermediateToTarget(newStartPosition, newStartVelocity, targetPosition, maxRobotVelocity, ai::constants::MAX_ACC);
             auto hasCollision = CollisionCalculations::isColliding(trajectoryFromIntermediateToTarget, avoidObjects, field, robotId, world, computedPaths);
             if (!hasCollision) {
                 trajectoryToIntermediatePoint.addTrajectory(trajectoryFromIntermediateToTarget, loopTime);
@@ -132,7 +132,7 @@ Trajectory2D PositionControl::findNewTrajectory(const world::World *world, const
         }
     }
     lastUsedNormalizedPoints.erase(robotId);
-    return Trajectory2D(currentPosition, currentVelocity, currentPosition, maxRobotVelocity, ai::Constants::MAX_ACC());
+    return Trajectory2D(currentPosition, currentVelocity, currentPosition, maxRobotVelocity, ai::constants::MAX_ACC);
     ;
 }
 

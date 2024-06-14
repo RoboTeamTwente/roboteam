@@ -28,7 +28,7 @@ bool OrbitKick::isEndTactic() noexcept { return false; }
 bool OrbitKick::isTacticFailing(const StpInfo &info) noexcept { return !info.getPositionToShootAt() || !info.getRobot()->get()->hasBall(); }
 
 bool OrbitKick::shouldTacticReset(const StpInfo &info) noexcept {
-    const auto errorMargin = stp::control_constants::GO_TO_POS_ANGLE_ERROR_MARGIN * M_PI;
+    const auto errorMargin = constants::GO_TO_POS_ANGLE_ERROR_MARGIN * M_PI;
     return info.getRobot().value()->getYaw().shortestAngleDiff(info.getYaw()) > errorMargin;
 }
 

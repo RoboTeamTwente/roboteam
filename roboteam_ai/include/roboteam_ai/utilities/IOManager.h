@@ -1,7 +1,6 @@
 #ifndef ROBOTEAM_AI_IO_MANAGER_H
 #define ROBOTEAM_AI_IO_MANAGER_H
 
-#include <utilities/Constants.h>
 #include <utilities/GameSettings.h>
 
 #include <QtNetwork>

@@ -9,7 +9,6 @@
 #include <roboteam_utils/Field.hpp>
 
 #include "control/ControlUtils.h"
-#include "stp/constants/ControlConstants.h"
 #include "utilities/StpInfoEnums.h"
 #include "views/WorldDataView.hpp"
 

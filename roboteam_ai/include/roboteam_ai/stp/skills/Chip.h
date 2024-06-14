@@ -20,9 +20,6 @@ class Chip : public Skill {
      * @return The name of this skill
      */
     const char* getName() override;
-
-   private:
-    int chipAttempts = 0; /**< Keeps track of how many ticks we tried to chip */
 };
 }  // namespace rtt::ai::stp::skill
 

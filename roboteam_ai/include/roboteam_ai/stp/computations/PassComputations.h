@@ -3,7 +3,6 @@
 
 #include <roboteam_utils/LineSegment.h>
 #include <stp/computations/InterceptionComputations.h>
-#include <stp/constants/GeneralizationConstants.h>
 
 #include <roboteam_utils/Field.hpp>
 

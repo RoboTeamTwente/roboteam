@@ -1,7 +1,6 @@
 #include "stp/tactics/active/ChipAtPos.h"
 
 #include "control/ControlUtils.h"
-#include "stp/constants/ControlConstants.h"
 #include "stp/skills/Chip.h"
 #include "stp/skills/OrbitAngular.h"
 
@@ -37,7 +36,7 @@ bool ChipAtPos::isTacticFailing(const StpInfo &info) noexcept {
 
 bool ChipAtPos::shouldTacticReset(const StpInfo &info) noexcept {
     if (skills.current_num() != 0) {
-        auto errorMargin = stp::control_constants::GO_TO_POS_ANGLE_ERROR_MARGIN * M_PI;
+        auto errorMargin = constants::GO_TO_POS_ANGLE_ERROR_MARGIN * M_PI;
         return info.getRobot().value()->getYaw().shortestAngleDiff(info.getYaw()) > errorMargin;
     }
     return false;

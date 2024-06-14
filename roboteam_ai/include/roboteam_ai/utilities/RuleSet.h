@@ -22,7 +22,7 @@ struct RuleSet {
      * @param title Title of the RuleSet
      * @param maxRobotVel Maximum allowed velocities for robots
      */
-    RuleSet(RuleSetName title, double maxRobotVel) : title(std::move(title)), maxRobotVel(maxRobotVel) {}
+    constexpr RuleSet(RuleSetName title, double maxRobotVel) : title(std::move(title)), maxRobotVel(maxRobotVel) {}
 
     /**
      * @brief Getter for the title of the RuleSet
@@ -47,6 +47,18 @@ struct RuleSet {
             default:
                 return "Unknown";
         }
+    }
+
+    static constexpr RuleSet RULESET_DEFAULT() { return {RuleSetName::DEFAULT, 4.0}; }
+    static constexpr RuleSet RULESET_HALT() { return {RuleSetName::HALT, 0.0}; }
+    static constexpr RuleSet RULESET_STOP() { return {RuleSetName::STOP, 1.3}; }
+
+    static constexpr std::array<RuleSet, 3> ruleSets() {
+        return {
+            RULESET_DEFAULT(),
+            RULESET_HALT(),
+            RULESET_STOP(),
+        };
     }
 
    private:

@@ -2,7 +2,6 @@
 #define RTT_ROBOT_VIEW_HPP
 
 #include <roboteam_utils/Vector2.h>
-#include <utilities/Constants.h>
 
 #include <world/Robot.hpp>
 

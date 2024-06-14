@@ -4,7 +4,7 @@
 #include <optional>
 #include <roboteam_utils/Field.hpp>
 
-#include "constants/GeneralizationConstants.h"
+#include "computations/PositionScoring.h"
 #include "utilities/StpInfoEnums.h"
 #include "world/views/BallView.hpp"
 #include "world/views/RobotView.hpp"

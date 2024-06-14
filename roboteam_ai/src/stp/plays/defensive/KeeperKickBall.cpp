@@ -2,7 +2,6 @@
 
 #include "stp/computations/PassComputations.h"
 #include "stp/computations/PositionScoring.h"
-#include "stp/constants/ControlConstants.h"
 #include "stp/roles/active/KeeperPasser.h"
 #include "stp/roles/active/PassReceiver.h"
 #include "stp/roles/passive/Defender.h"
@@ -22,7 +21,7 @@ KeeperKickBall::KeeperKickBall() : Play() {
     keepPlayEvaluation.emplace_back(GlobalEvaluation::BallInOurDefenseAreaAndStill);
 
     // Role creation, the names should be unique. The names are used in the stpInfos-map.
-    roles = std::array<std::unique_ptr<Role>, rtt::ai::Constants::ROBOT_COUNT()>{
+    roles = std::array<std::unique_ptr<Role>, rtt::ai::constants::MAX_ROBOT_COUNT>{
         // Roles is we play 6v6
         std::make_unique<role::KeeperPasser>("keeper"),
         std::make_unique<role::PassReceiver>("receiver"),
@@ -44,7 +43,7 @@ uint8_t KeeperKickBall::score(const rtt::Field& field) noexcept {
     passInfo = stp::computations::PassComputations::calculatePass(gen::SafePass, world, field, true);
 
     // If this play is valid, the ball is in the defense area and still, and we always want to execute this play
-    return control_constants::FUZZY_TRUE;
+    return constants::FUZZY_TRUE;
 }
 
 Dealer::FlagMap KeeperKickBall::decideRoleFlags() const noexcept {

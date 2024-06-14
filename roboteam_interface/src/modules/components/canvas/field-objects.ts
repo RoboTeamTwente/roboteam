@@ -150,10 +150,13 @@ export class RobotDrawing extends Container {
     data: IWorldRobot
   ) {
     const robots = useSTPDataStore()?.latest?.robots;
-    const robotsize = useUIStore().scaling.robots
+    const uiStore = useUIStore();
     let outlineColor : string | undefined;
 
-    if (robots) {
+    this.robotOutline
+    .clear()
+
+    if (robots && uiStore.showRobotRoles()) {
       Object.values(robots).forEach((robot) => {
         if (robot.id === data.id && showVelocity) {
           switch (robot.role?.name) {
@@ -176,12 +179,8 @@ export class RobotDrawing extends Container {
           if (outlineColor !== undefined) {
             this.robotOutline
             .lineStyle(4, outlineColor)
-            .arc(0, 0, 0.089 * 150 + 0.089 * robotsize, 0.86707957, -0.86707957)
+            .arc(0, 0, 0.089 * 150 + 0.089 * uiStore.scaling.robots, 0.86707957, -0.86707957)
             this.addChild(this.robotOutline)
-          }
-          else {
-            this.robotOutline
-            .clear()
           }
         }
       })

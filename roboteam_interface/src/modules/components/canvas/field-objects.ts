@@ -16,6 +16,8 @@ import IWorldRobot = proto.IWorldRobot
 import { IApplicationOptions } from '@pixi/app/lib/Application'
 import { proto } from '../../../generated/proto'
 import { useAIDataStore } from '../../stores/data-stores/ai-data-store'
+import { useSTPDataStore } from '../../stores/data-stores/stp-data-store'
+import { useUIStore } from '../../stores/ui-store'
 import { NoUndefinedField } from '../../../utils'
 
 export const Colors = {
@@ -97,6 +99,7 @@ export class CustomPixiApplication extends Application {
 export class RobotDrawing extends Container {
   readonly originalColor: string
   robotElem: Graphics
+  robotOutline: Graphics
   velocityMeter: Graphics
   textElem?: Text
 
@@ -114,6 +117,8 @@ export class RobotDrawing extends Container {
 
     this.velocityMeter = new Graphics().lineStyle(4, Colors.fieldLines, 0).lineTo(100, 100)
     this.addChild(this.velocityMeter)
+
+    this.robotOutline = new Graphics()
 
     this.robotElem = new Graphics()
       .beginFill(this.originalColor)
@@ -144,6 +149,44 @@ export class RobotDrawing extends Container {
     },
     data: IWorldRobot
   ) {
+    const robots = useSTPDataStore()?.latest?.robots;
+    const robotsize = useUIStore().scaling.robots
+    let outlineColor : string | undefined;
+
+    if (robots) {
+      Object.values(robots).forEach((robot) => {
+        if (robot.id === data.id && showVelocity) {
+          switch (robot.role?.name) {
+            case 'harasser':
+              outlineColor = '#8B0000'
+              break
+            case 'passer':
+            case 'striker':
+            case "ball_placer":
+            case "kicker":
+            case "kicker_formation":
+            case "free_kick_taker":
+            case "kick_off_taker":
+              outlineColor = Colors.ball
+              break
+            case 'receiver':
+              outlineColor = '#ff00ff'
+              break 
+          }
+          if (outlineColor !== undefined) {
+            this.robotOutline
+            .lineStyle(4, outlineColor)
+            .arc(0, 0, 0.089 * 150 + 0.089 * robotsize, 0.86707957, -0.86707957)
+            this.addChild(this.robotOutline)
+          }
+          else {
+            this.robotOutline
+            .clear()
+          }
+        }
+      })
+    }
+
     this.toggleSelection(isSelected)
     this.moveOnField(
       fieldOrientation.x * data.pos!.x!,
@@ -165,6 +208,7 @@ export class RobotDrawing extends Container {
     this.x = x * 100
     this.y = y * 100
     this.robotElem.angle = yaw * 57
+    this.robotOutline.angle = yaw * 57
   }
 
   updateVelocityDrawing(showVelocity: boolean, x: number, y: number) {

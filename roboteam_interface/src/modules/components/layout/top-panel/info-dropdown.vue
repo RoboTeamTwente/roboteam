@@ -84,22 +84,18 @@ const props = defineProps<{
         <ul class="flex flex-col gap-2">
 
           <li>
-            Red colour:
-            <div class="kbd kbd-sm font-mono" :style="{ backgroundColor: '#ff0000', color: '#ffffff' }">Harasser</div>
+            <div class="kbd kbd-sm font-mono" :style="{ backgroundColor: '#8a0000', color: '#ffffff' }">Harasser</div>
           </li>
 
           <li>
-            White colour:
-            <div class="kbd kbd-sm font-mono" :style="{ backgroundColor: '#ffffff', color: '#000000' }">Passer/striker</div>
+            <div class="kbd kbd-sm font-mono" :style="{ backgroundColor: '#FF6600', color: '#000000' }">Passer/striker/ball placer/free kick taker/penalty taker/kick off taker</div>
           </li>
 
           <li>
-            Magenta colour:
             <div class="kbd kbd-sm font-mono" :style="{ backgroundColor: '#ff00ff', color: '#ffffff' }">Receiver</div>
           </li>
 
           <li>
-            Black colour:
             <div class="kbd kbd-sm font-mono" :style="{ backgroundColor: '#000000', color: '#ffffff' }">Robot with card</div>
           </li>
           </ul>

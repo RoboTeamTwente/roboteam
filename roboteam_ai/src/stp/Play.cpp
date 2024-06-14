@@ -315,23 +315,6 @@ void Play::DrawMargins() noexcept {
             },
             sideOfTheField);
     }
-    std::array<std::string, 4> names = {"harasser", "passer", "receiver", "striker"};
-    std::array<proto::Drawing::Color, 4> colors = {proto::Drawing::RED, proto::Drawing::WHITE, proto::Drawing::MAGENTA, proto::Drawing::WHITE};
-    for (std::size_t i = 0; i < names.size(); i++) {
-        if (stpInfos[names[i]].getRobot()) {
-            std::array<rtt::Vector2, 1> position = {stpInfos[names[i]].getRobot()->get()->getPos()};
-            rtt::ai::gui::Out::draw(
-                {
-                    .label = names[i],
-                    .color = colors[i],
-                    .method = proto::Drawing::CIRCLES,
-                    .category = proto::Drawing::ROBOTROLES,
-                    .size = 15,
-                    .thickness = 7,
-                },
-                position);
-        }
-    }
 }
 
 }  // namespace rtt::ai::stp

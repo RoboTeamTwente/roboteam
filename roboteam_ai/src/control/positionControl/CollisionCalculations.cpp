@@ -2,6 +2,7 @@
 
 #include <algorithm>
 
+#include "utilities/Constants.h"
 #include "world/World.hpp"
 #include "world/WorldData.hpp"
 

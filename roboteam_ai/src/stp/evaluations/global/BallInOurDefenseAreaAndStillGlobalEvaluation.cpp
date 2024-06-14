@@ -1,5 +1,6 @@
 #include "stp/evaluations/global/BallInOurDefenseAreaAndStillGlobalEvaluation.h"
 
+#include "utilities/Constants.h"
 #include "world/FieldComputations.h"
 
 namespace rtt::ai::stp::evaluation {

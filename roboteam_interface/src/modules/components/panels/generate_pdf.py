@@ -1,7 +1,7 @@
 from reportlab.lib.pagesizes import letter
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, PageBreak, Frame
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, PageBreak, Frame, PageBreak
 import webbrowser
 import socket
 from flask import Flask, request, jsonify
@@ -22,7 +22,7 @@ def generate_heatmap(data_array):
     plt.imshow(data_array, cmap='RdBu', interpolation='nearest')
     plt.savefig("heatmap_from_interface.png")
 
-def generate_pdf(a, b, c, d, e, f, header_image_path, center_image_path, filename='performance_report.pdf'):
+def generate_pdf(a, b, c, d, e, f, g, h, i, j, header_image_path, center_image_path, filename='performance_report.pdf'):
     
     current_time = time.time()
     date = datetime.fromtimestamp(current_time)
@@ -51,7 +51,7 @@ def generate_pdf(a, b, c, d, e, f, header_image_path, center_image_path, filenam
         spaceAfter=8, 
         textColor=colors.black,
         fontName='Helvetica-Bold',
-        fontSize = 12
+        fontSize = 15
     )
 
     score_style = ParagraphStyle(
@@ -93,9 +93,12 @@ def generate_pdf(a, b, c, d, e, f, header_image_path, center_image_path, filenam
     # Agregar el encabezado con la imagen
     header_image = PILImage.open(header_image_path)
     header_image_width, header_image_height = int(pdf_document.width), 100*1.2
-    #header_image = header_image.resize((header_image_width, header_image_height))
-    #header_image_path = 'robo_header.jpeg'  # Nombre del archivo de imagen de encabezado
     header_image.save(header_image_path)
+
+    # Characteristics of the heatmap image
+    center_image = PILImage.open(center_image_path)
+    center_image_width, center_image_height = 200, 200
+    center_image.save(center_image_path)
 
     content.append(Image(header_image_path, width=pdf_document.width, height=header_image_height))
     content.append(Spacer(1, 20))  
@@ -120,16 +123,24 @@ def generate_pdf(a, b, c, d, e, f, header_image_path, center_image_path, filenam
     content.append(Paragraph(f"<b>- Number of offensive actions:</b> {d}", custom_style))
     content.append(Paragraph(f"<b>- Number of defensive actions:</b> {e}", custom_style))
     content.append(Paragraph(f"<b>- Number of keeper actions:</b> {f}", custom_style))
+    content.append(Paragraph(f"<b>- Number of passes tried:</b> {g}", custom_style))
+    content.append(Paragraph(f"<b>- Number of passes from free kick tried:</b> {h}", custom_style))
+    content.append(Paragraph(f"<b>- Number of passes from goalkeeper tried:</b> {i}", custom_style))
+    content.append(Paragraph(f"<b>- Number of successful passes:</b> {j}", custom_style))
+    
+    content.append(Spacer(5, 160))
+
+    content.append(Image("white_logo.png", width=center_image_width/3, height=center_image_height/3, hAlign='CENTER'))
+
+    # Insert page break
+    content.append(PageBreak())
+
+    content.append(Spacer(5, 50))
     content.append(Paragraph(f"<b>- Team's heatmap:</b>", custom_style))
-    content.append(Spacer(5, 1))
-
-    center_image = PILImage.open(center_image_path)
-    center_image_width, center_image_height = 200, 200
-    center_image.save(center_image_path)
-
-    content.append(Image(center_image_path, width=center_image_width, height=center_image_height/1.5, hAlign='CENTER'))
+    content.append(Image(center_image_path, width=3*center_image_width, height=3*center_image_height/1.5, hAlign='CENTER'))
 
     content.append(Paragraph(aux, custom_style))
+    content.append(Spacer(5, 130))
     content.append(Image("white_logo.png", width=center_image_width/3, height=center_image_height/3, hAlign='CENTER'))
 
     # Construir el PDF
@@ -179,6 +190,10 @@ def manejar_post():
                      general_metrics[3], 
                      general_metrics[4], 
                      general_metrics[5], 
+                     general_metrics[6], 
+                     general_metrics[7], 
+                     general_metrics[8], 
+                     general_metrics[9], 
                      "Report_header.png",
                      "heatmap_from_interface.png", 
                      "performance_report.pdf")

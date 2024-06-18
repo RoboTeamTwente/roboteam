@@ -18,7 +18,6 @@ void Play::initialize() noexcept {
     }
     calculateInfoForRoles();
     distributeRoles();
-    Play::waller_count = std::count_if(roles.begin(), roles.end(), [](const std::unique_ptr<Role>& role) { return role && role->getName().find("waller") != std::string::npos; });
     previousRobotNum = world->getWorld()->getRobotsNonOwning().size();
     previousKeeperId = GameStateManager::getCurrentGameState().keeperId;
     previousMaxRobots = GameStateManager::getCurrentGameState().maxAllowedRobots;
@@ -143,6 +142,7 @@ void Play::distributeRoles() noexcept {
         auto roleName{role->getName()};
         stpInfos[roleName].setRoleName(roleName);
     }
+    Play::waller_count = std::count_if(roles.begin(), roles.end(), [](const std::unique_ptr<Role>& role) { return role && role->getName().find("waller") != std::string::npos; });
 
     auto flagMap = decideRoleFlags();
 

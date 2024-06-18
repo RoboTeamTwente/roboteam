@@ -37,8 +37,8 @@ AttackingPass::AttackingPass() : Play() {
         std::make_unique<role::Defender>("defender_1"),
         std::make_unique<role::Formation>("attacker_0"),
         // Additional roles if we play 11v11
-        std::make_unique<role::Formation>("waller_0"),
-        std::make_unique<role::Formation>("waller_1"),
+        std::make_unique<role::Defender>("waller_0"),
+        std::make_unique<role::Defender>("waller_1"),
         std::make_unique<role::Defender>("defender_2"),
         std::make_unique<role::Defender>("defender_3"),
         std::make_unique<role::Formation>("attacker_1"),

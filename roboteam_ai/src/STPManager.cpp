@@ -18,8 +18,7 @@
  * Plays are included here
  */
 #include "gui/Out.h"
-#include "stp/plays/defensive/DefendPass.h"
-#include "stp/plays/defensive/DefendShot.h"
+#include "stp/plays/defensive/Defend.h"
 #include "stp/plays/defensive/KeeperKickBall.h"
 #include "stp/plays/offensive/Attack.h"
 #include "stp/plays/offensive/AttackingPass.h"
@@ -56,8 +55,7 @@ const STPManager::PlaysVec STPManager::plays = ([] {
     // plays.emplace_back(std::make_unique<rtt::ai::stp::play::ChippingPass>());
     plays.emplace_back(std::make_unique<plays::Attack>());
     plays.emplace_back(std::make_unique<plays::Halt>());
-    plays.emplace_back(std::make_unique<plays::DefendShot>());
-    plays.emplace_back(std::make_unique<plays::DefendPass>());
+    plays.emplace_back(std::make_unique<plays::Defend>());
     plays.emplace_back(std::make_unique<plays::KeeperKickBall>());
     plays.emplace_back(std::make_unique<plays::PrepareForcedStart>());
     plays.emplace_back(std::make_unique<plays::StopFormation>());

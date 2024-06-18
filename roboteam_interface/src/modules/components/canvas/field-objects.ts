@@ -175,6 +175,12 @@ export class RobotDrawing extends Container {
             case 'receiver':
               outlineColor = '#ff00ff'
               break 
+            case 'waller_0':
+            case 'waller_1':
+            case 'waller_2':
+            case 'waller_3':
+              outlineColor = '#FFC0CB'
+              break
           }
           if (outlineColor !== undefined) {
             this.robotOutline

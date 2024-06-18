@@ -55,6 +55,14 @@ class PositionComputations {
                                            const world::World *world);
 
     /**
+     * @brief Calculates amount of wallers needed based on the position of the ball
+     * @param field
+     * @param world
+     * @return The amount of wallers needed
+     */
+    static void setAmountOfWallers(const rtt::Field &field, rtt::world::World *world) noexcept; 
+
+    /**
      * @brief Makes a wall if not ready done, saves it in calculatedWallPositions and deals the index
      * @param index Index of the wall position (do unique positions)
      * @param amountDefenders Amount of defenders the wall is made of
@@ -150,6 +158,7 @@ class PositionComputations {
      */
     static void calculateInfoForAvoidBallHarasser(std::unordered_map<std::string, StpInfo> &stpInfos, world::World *world) noexcept;
 
+    static int amountOfWallers;
    private:
     /**
      * @brief Calculates a position outside of a given shape

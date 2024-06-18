@@ -21,8 +21,19 @@ Status GoToPos::onUpdate(const StpInfo &info) noexcept {
         if (robotToTarget.doesIntersect(ballToReferee)) {
             double distance1 = (robot->getPos() - ballLocation).length() + (ballLocation - targetPos).length();
             double distance2 = (robot->getPos() - ballPlacementPos).length() + (ballPlacementPos - targetPos).length();
-            targetPos = (distance1 < distance2) ? ballLocation - (ballPlacementPos - ballLocation).stretchToLength(0.8)
-                                                : ballPlacementPos - (robot->getPos() - ballPlacementPos).stretchToLength(0.8);
+            Vector2 point1 = ballLocation - (ballPlacementPos - ballLocation).stretchToLength(0.8);
+            Vector2 point2 = ballPlacementPos - (robot->getPos() - ballPlacementPos).stretchToLength(0.8);
+            bool point1InField = field.playArea.contains(point1, constants::OUT_OF_FIELD_MARGIN);
+            bool point2InField = field.playArea.contains(point2, constants::OUT_OF_FIELD_MARGIN);
+            if (point1InField && point2InField) {
+                targetPos = (distance1 < distance2) ? point1 : point2;
+            } else if (point1InField) {
+                targetPos = point1;
+            } else if (point2InField) {
+                targetPos = point2;
+            } else {
+                targetPos = FieldComputations::projectPointToValidPosition(field, targetPos, avoidObj);
+            }
             targetPos = targetPos - (robot->getPos() - targetPos).stretchToLength(0.8);
         }
     }
@@ -37,7 +48,7 @@ Status GoToPos::onUpdate(const StpInfo &info) noexcept {
 
     if (roleName != "ball_placer" && (avoidObj.shouldAvoidBall || currentGameState == RefCommand::BALL_PLACEMENT_US || currentGameState == RefCommand::BALL_PLACEMENT_THEM ||
                                       currentGameState == RefCommand::BALL_PLACEMENT_US_DIRECT)) {
-        targetPos = PositionComputations::calculateAvoidBallPosition(targetPos, ballLocation, field);
+        targetPos = PositionComputations::calculateAvoidBallPosition(targetPos, ballLocation, field, avoidObj);
     }
 
     command.velocity = info.getCurrentWorld()->getRobotPositionController()->computeAndTrackTrajectory(info.getCurrentWorld(), field, robot->getId(), robot->getPos(),
@@ -56,8 +67,7 @@ Status GoToPos::onUpdate(const StpInfo &info) noexcept {
 
     // Check if successful
     auto distanceError = (robot->getPos() - targetPos).length();
-    if (distanceError <= stp::control_constants::GO_TO_POS_ERROR_MARGIN ||
-        (robot->hasBall() && distanceError <= stp::control_constants::BALL_PLACEMENT_MARGIN - stp::control_constants::GO_TO_POS_ERROR_MARGIN)) {
+    if (robot->hasBall() && distanceError <= constants::BALL_PLACEMENT_MARGIN - constants::GO_TO_POS_ERROR_MARGIN) {
         return Status::Success;
     } else {
         return Status::Running;

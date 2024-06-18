@@ -632,6 +632,7 @@ export const proto = $root.proto = (() => {
                 case 0:
                 case 1:
                 case 2:
+                case 3:
                     break;
                 }
             if (message.forRobotId != null && message.hasOwnProperty("forRobotId"))
@@ -762,6 +763,10 @@ export const proto = $root.proto = (() => {
             case "MARGINS":
             case 2:
                 message.category = 2;
+                break;
+            case "ROBOTROLES":
+            case 3:
+                message.category = 3;
                 break;
             }
             if (object.forRobotId != null)
@@ -903,12 +908,14 @@ export const proto = $root.proto = (() => {
          * @property {number} PATH_PLANNING=0 PATH_PLANNING value
          * @property {number} DEBUG=1 DEBUG value
          * @property {number} MARGINS=2 MARGINS value
+         * @property {number} ROBOTROLES=3 ROBOTROLES value
          */
         Drawing.Category = (function() {
             const valuesById = {}, values = Object.create(valuesById);
             values[valuesById[0] = "PATH_PLANNING"] = 0;
             values[valuesById[1] = "DEBUG"] = 1;
             values[valuesById[2] = "MARGINS"] = 2;
+            values[valuesById[3] = "ROBOTROLES"] = 3;
             return values;
         })();
 

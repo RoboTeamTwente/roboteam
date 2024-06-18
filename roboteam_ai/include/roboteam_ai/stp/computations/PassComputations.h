@@ -3,7 +3,6 @@
 
 #include <roboteam_utils/LineSegment.h>
 #include <stp/computations/InterceptionComputations.h>
-#include <stp/constants/GeneralizationConstants.h>
 
 #include <roboteam_utils/Field.hpp>
 
@@ -20,8 +19,8 @@ struct PassInfo {
     int keeperId = -1;
     int passerId = -1;
     int receiverId = -1;
-    Vector2 passLocation;      // The location where the ball will be passed from, towards the receiver
-    Vector2 receiverLocation;  // The location of the receiver, who will receive the ball from the passer
+    Vector2 passLocation;                      // The location where the ball will be passed from, towards the receiver
+    Vector2 receiverLocation = Vector2(6, 0);  // The location of the receiver, who will receive the ball from the passer
     uint8_t passScore = 0;
 };
 
@@ -38,10 +37,10 @@ class PassComputations {
      * @param profile the profile to be used when scoring the pass location
      * @param world the current world state
      * @param field the current field
-     * @param keeperCanPass indicate whether the keeper can pass and be passed to
+     * @param keeperMustPass indicate whether the keeper must pass
      * @return a PassInfo struct which contains the relevant information needed to complete the pass
      */
-    static PassInfo calculatePass(gen::ScoreProfile profile, const world::World* world, const Field& field, bool keeperCanPass = false);
+    static PassInfo calculatePass(gen::ScoreProfile profile, const world::World* world, const Field& field, bool keeperMustPass = false);
 
    private:
     /**

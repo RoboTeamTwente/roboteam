@@ -3,10 +3,12 @@
 
 #include <roboteam_utils/Vector2.h>
 
+#include <optional>
+
 #include "Constants.h"
 #include "RefCommand.h"
 #include "RuleSet.h"
-#include "stp/constants/ControlConstants.h"
+#include "utilities/Constants.h"
 
 namespace rtt::ai {
 
@@ -19,10 +21,11 @@ struct GameState {
     RuleSet ruleSet;
     bool isFollowUpCommand;
     RefCommand followUpCommandId;
-    int keeperId = Constants::DEFAULT_KEEPER_ID();
-    int maxAllowedRobots = stp::control_constants::MAX_ROBOT_COUNT;
+    int keeperId = -1;
+    int maxAllowedRobots = constants::MAX_ROBOT_COUNT;
     static int cardId;
     static double timeLeft;
+    static std::optional<Vector2> kickPoint;
 
     GameState() = default;
 

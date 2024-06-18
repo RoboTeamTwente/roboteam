@@ -19,7 +19,7 @@ std::optional<StpInfo> BlockBall::calculateInfoForSkill(StpInfo const &info) noe
         auto positionToDefend = info.getPositionToDefend().value();
         auto targetPosition = calculateTargetPosition(info.getBall().value(), positionToDefend);
 
-        targetPosition = FieldComputations::projectPointToValidPositionOnLine(info.getField().value(), targetPosition, positionToDefend, info.getBall()->get()->position);
+        targetPosition = FieldComputations::projectPointToValidPosition(info.getField().value(), targetPosition, info.getObjectsToAvoid());
 
         skillStpInfo.setPositionToMoveTo(targetPosition);
 
@@ -41,7 +41,7 @@ bool BlockBall::shouldTacticReset(const StpInfo &) noexcept { return false; }
 const char *BlockBall::getName() { return "Block Ball"; }
 
 Vector2 BlockBall::calculateTargetPosition(const world::view::BallView &ball, Vector2 defendPos) noexcept {
-    return defendPos + (ball->position - defendPos).stretchToLength(4 * control_constants::ROBOT_RADIUS);
+    return defendPos + (ball->position - defendPos).stretchToLength(3 * constants::ROBOT_RADIUS);
 }
 
 }  // namespace rtt::ai::stp::tactic

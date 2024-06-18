@@ -29,6 +29,7 @@ export type UiStore = {
     pathPlanning: TriState
     debug: TriState
     margins: DualState
+    robotroles: DualState
   }
   internalTeam: 'BLACK' | 'PURPLE'
 }
@@ -57,7 +58,8 @@ const defaultState: () => UiStore = () => ({
     drawings: 'SHOW',
     pathPlanning: 'SHOW',
     debug: 'SHOW',
-    margins: 'SHOW'
+    margins: 'SHOW',
+    robotroles: 'SHOW'
   },
   internalTeam: 'PURPLE'
 })
@@ -96,6 +98,10 @@ export const useUIStore = defineStore('uiStore', {
     },
     showMargins(state) {
       return () => state.visualizations.margins === 'SHOW'
+    },
+    showRobotRoles(state) {
+      return (forRobot?: number | null) => 
+        state.visualizations.robotroles === 'SHOW'
     },
     showDebug(state) {
       return (forRobot?: number | null) =>

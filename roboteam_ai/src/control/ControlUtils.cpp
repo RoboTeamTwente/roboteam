@@ -4,7 +4,7 @@
 
 #include <roboteam_utils/Field.hpp>
 
-#include "stp/constants/ControlConstants.h"
+#include "utilities/Constants.h"
 #include "utilities/GameStateManager.hpp"
 #include "utilities/StpInfoEnums.h"
 #include "world/World.hpp"
@@ -13,46 +13,13 @@ namespace rtt::ai::control {
 
 double ControlUtils::getMaxVelocity(bool hasBall) {
     double maxVel = rtt::ai::GameStateManager::getCurrentGameState().getRuleSet().getMaxRobotVel();
-    if (hasBall) maxVel = std::min(stp::control_constants::MAX_VEL_WHEN_HAS_BALL, maxVel);
+    if (hasBall) maxVel = std::min(constants::MAX_VEL_WHEN_HAS_BALL, maxVel);
     return maxVel;
-}
-/// Limits velocity to maximum velocity. it defaults to the max velocity stored in Referee.
-Vector2 ControlUtils::velocityLimiter(const Vector2 &vel, double maxVel, double minVel, bool listenToReferee) {
-    if (listenToReferee) {
-        double refereeMaxVel = rtt::ai::GameStateManager::getCurrentGameState().getRuleSet().getMaxRobotVel();
-        if (refereeMaxVel < maxVel) {
-            maxVel = refereeMaxVel;
-        }
-    }
-
-    if (vel.length() > maxVel) {
-        return vel.stretchToLength(maxVel);
-    } else if (vel.length() < minVel) {
-        return vel.stretchToLength(minVel);
-    }
-    return vel;
-}
-
-/// Calculate the force of a given vector + a certain type.
-/// the basic formula is: force = weight/distance^2 * unit vector
-Vector2 ControlUtils::calculateForce(const Vector2 &vector, double weight, double minDistance) {
-    // if the object is close enough, it's forces should affect. Otherwise don't change anything.
-    if (vector.length() < minDistance && vector.length2() > 0) {
-        return vector.normalize() * (weight / vector.length2());
-    }
-    return {0, 0};
-}
-
-bool ControlUtils::objectVelocityAimedToPoint(const Vector2 &objectPosition, const Vector2 &velocity, const Vector2 &point, double maxDifference) {
-    double exactAngleTowardsPoint = (point - objectPosition).angle();
-
-    // Note: The angles should NOT be constrained here. This is necessary.
-    return (velocity.length() > 0 && velocity.angle() > exactAngleTowardsPoint - maxDifference / 2 && velocity.angle() < exactAngleTowardsPoint + maxDifference / 2);
 }
 
 /// Calculate the kick force
 double ControlUtils::determineKickForce(const double distance, stp::ShotType shotType) noexcept {
-    if (shotType == stp::ShotType::MAX) return stp::control_constants::MAX_KICK_POWER;
+    if (shotType == stp::ShotType::MAX) return constants::MAX_KICK_POWER;
 
     double kickForce;
     if (shotType == stp::ShotType::PASS) {
@@ -67,7 +34,7 @@ double ControlUtils::determineKickForce(const double distance, stp::ShotType sho
     auto velocity = distance * kickForce;
 
     // Make sure velocity is always between MIN_KICK_POWER and MAX_KICK_POWER
-    return std::clamp(velocity, stp::control_constants::MIN_KICK_POWER, stp::control_constants::MAX_KICK_POWER);
+    return std::clamp(velocity, constants::MIN_KICK_POWER, constants::MAX_KICK_POWER);
 }
 /// Calculates the chip force
 double ControlUtils::determineChipForce(const double distance) noexcept {
@@ -76,6 +43,6 @@ double ControlUtils::determineChipForce(const double distance) noexcept {
     // Calculate the velocity based on this function with the previously set limitingFactor
     auto velocity = distance * chipFactor;
     // Make sure velocity is always between MIN_CHIP_POWER and MAX_CHIP_POWER
-    return std::clamp(velocity, stp::control_constants::MIN_CHIP_POWER, stp::control_constants::MAX_CHIP_POWER);
+    return std::clamp(velocity, constants::MIN_CHIP_POWER, constants::MAX_CHIP_POWER);
 }
 }  // namespace rtt::ai::control

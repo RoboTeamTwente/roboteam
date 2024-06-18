@@ -18,7 +18,7 @@ FreeKickThem::FreeKickThem() : Play() {
     keepPlayEvaluation.emplace_back(GlobalEvaluation::FreeKickThemGameState);
 
     // Role creation, the names should be unique. The names are used in the stpInfos-map.
-    roles = std::array<std::unique_ptr<Role>, rtt::ai::Constants::ROBOT_COUNT()>{
+    roles = std::array<std::unique_ptr<Role>, rtt::ai::constants::MAX_ROBOT_COUNT>{
         // Roles is we play 6v6
         std::make_unique<role::Keeper>("keeper"),
         std::make_unique<role::Harasser>("harasser"),
@@ -37,7 +37,7 @@ FreeKickThem::FreeKickThem() : Play() {
 
 uint8_t FreeKickThem::score(const rtt::Field&) noexcept {
     // If this play is valid we always want to execute this play
-    return control_constants::FUZZY_TRUE;
+    return constants::FUZZY_TRUE;
 }
 
 Dealer::FlagMap FreeKickThem::decideRoleFlags() const noexcept {
@@ -73,7 +73,7 @@ void FreeKickThem::calculateInfoForHarasser() noexcept {
     auto enemyClosestToBall = enemyClosestToBallOpt.value();
 
     auto enemyToBall = (ballPos - enemyClosestToBall->getPos());
-    auto targetPos = ballPos + (enemyToBall).stretchToLength(control_constants::AVOID_BALL_DISTANCE);
+    auto targetPos = ballPos + (enemyToBall).stretchToLength(constants::AVOID_BALL_DISTANCE);
     stpInfos["harasser"].setPositionToMoveTo(targetPos);
     stpInfos["harasser"].setYaw(enemyToBall.angle() + M_PI);
 }

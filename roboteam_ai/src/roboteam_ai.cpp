@@ -74,7 +74,7 @@ int main(int argc, char** argv) {
 
     if (!rtt::ai::io::io.init(rtt::GameSettings::isPrimaryAI())) {
         RTT_ERROR("Failed to initialize IO Manager. Exiting...")
-        return 0;
+        return 1;
     }
 
     RTT_DEBUG("Initialize Interface Server");

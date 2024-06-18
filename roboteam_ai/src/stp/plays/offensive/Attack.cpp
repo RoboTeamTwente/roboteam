@@ -25,20 +25,20 @@ Attack::Attack() : Play() {
     keepPlayEvaluation.emplace_back(GlobalEvaluation::BallNotInOurDefenseAreaAndStill);
 
     // Role creation, the names should be unique. The names are used in the stpInfos-map.
-    roles = std::array<std::unique_ptr<Role>, rtt::ai::Constants::ROBOT_COUNT()>{
+    roles = std::array<std::unique_ptr<Role>, rtt::ai::constants::MAX_ROBOT_COUNT>{
         // Roles is we play 6v6
         std::make_unique<role::Keeper>("keeper"),
         std::make_unique<role::Striker>("striker"),
         std::make_unique<role::Defender>("defender_0"),
         std::make_unique<role::Formation>("attacker_0"),
         std::make_unique<role::Defender>("defender_1"),
-        std::make_unique<role::Formation>("attacker_1"),
+        std::make_unique<role::Defender>("defender_2"),
         // Additional roles if we play 11v11
         std::make_unique<role::Formation>("waller_0"),
         std::make_unique<role::Formation>("waller_1"),
+        std::make_unique<role::Formation>("attacker_1"),
+        std::make_unique<role::Defender>("defender_3"),
         std::make_unique<role::Formation>("attacker_2"),
-        std::make_unique<role::Defender>("defender_2"),
-        std::make_unique<role::Formation>("attacker_3"),
     };
 }
 
@@ -60,10 +60,10 @@ Dealer::FlagMap Attack::decideRoleFlags() const noexcept {
     flagMap.insert({"defender_0", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
     flagMap.insert({"defender_1", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
     flagMap.insert({"defender_2", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
+    flagMap.insert({"defender_3", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
     flagMap.insert({"attacker_0", {DealerFlagPriority::LOW_PRIORITY, {}}});
     flagMap.insert({"attacker_1", {DealerFlagPriority::LOW_PRIORITY, {}}});
     flagMap.insert({"attacker_2", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"attacker_3", {DealerFlagPriority::LOW_PRIORITY, {}}});
 
     return flagMap;
 }

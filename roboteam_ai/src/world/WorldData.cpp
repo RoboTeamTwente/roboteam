@@ -41,8 +41,6 @@ WorldData::WorldData(const World *data, proto::World &protoMsg) noexcept : time{
     }
     // End of temporary fix
 
-    us.reserve(amountUs);
-    them.reserve(amountThem);
     setViewVectors();
 
     // TODO: add information from robots which were only seen on feedback but not on vision
@@ -76,6 +74,7 @@ WorldData &WorldData::operator=(WorldData const &other) noexcept {
 
     this->robots = other.robots;
     this->ball = other.ball;
+    this->time = other.time;
 
     this->us.reserve(other.getUs().size());
     this->them.reserve(other.getThem().size());
@@ -85,7 +84,7 @@ WorldData &WorldData::operator=(WorldData const &other) noexcept {
     return *this;
 }
 
-WorldData::WorldData(WorldData const &other) noexcept : robots{other.robots}, ball{other.ball} {
+WorldData::WorldData(WorldData const &other) noexcept : robots{other.robots}, ball{other.ball}, time{other.time} {
     us.reserve(other.getUs().size());
     them.reserve(other.getThem().size());
     robotsNonOwning.reserve(getUs().size() + getThem().size());

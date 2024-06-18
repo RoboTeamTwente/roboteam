@@ -10,19 +10,22 @@ const ball::Ball &BallView::operator*() const noexcept { return *get(); }
 const ball::Ball *BallView::operator->() const noexcept { return get(); }
 
 BallView &BallView::operator=(const BallView &old) noexcept {
-    if (this == &old) {
-        return *this;
+    if (this != &old) {
+        _ptr = old._ptr;
     }
     return *this;
 }
 
 BallView &BallView::operator=(BallView &&other) noexcept {
-    if (this == &other) {
-        return *this;
+    if (this != &other) {
+        _ptr = other._ptr;
+        other._ptr = nullptr;
     }
     return *this;
 }
 
-BallView::BallView(BallView &&other) noexcept : _ptr{other._ptr} {}
+BallView::BallView(BallView &&other) noexcept : _ptr{other._ptr} { other._ptr = nullptr; }
+
+BallView::operator bool() const noexcept { return get() != nullptr; }
+
 }  // namespace rtt::world::view
-rtt::world::view::BallView::operator bool() const noexcept { return get() != nullptr; }

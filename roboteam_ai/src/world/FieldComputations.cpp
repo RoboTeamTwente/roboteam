@@ -9,8 +9,8 @@
 namespace rtt::ai {
 
 std::tuple<double, double> FieldComputations::getDefenseAreaMargin() {
-    double theirDefenseAreaMargin = stp::control_constants::ROBOT_RADIUS + stp::control_constants::GO_TO_POS_ERROR_MARGIN;
-    double ourDefenseAreaMargin = -stp::control_constants::ROBOT_RADIUS + stp::control_constants::GO_TO_POS_ERROR_MARGIN;
+    double theirDefenseAreaMargin = constants::ROBOT_RADIUS + constants::GO_TO_POS_ERROR_MARGIN;
+    double ourDefenseAreaMargin = -constants::ROBOT_RADIUS + constants::GO_TO_POS_ERROR_MARGIN;
 
     RuleSetName ruleSetTitle = GameStateManager::getCurrentGameState().getRuleSet().getTitle();
     RefCommand currentGameState = GameStateManager::getCurrentGameState().getCommandId();
@@ -36,8 +36,7 @@ bool FieldComputations::getBallAvoidance() {
 
 Vector2 FieldComputations::getBallPositionAtTime(const rtt::world::ball::Ball &ball, double time) {
     const double initialVelocity = ball.velocity.length();
-    const double frictionCoefficient =
-        GameSettings::getRobotHubMode() == net::RobotHubMode::SIMULATOR ? ai::stp::control_constants::SIMULATION_FRICTION : ai::stp::control_constants::REAL_FRICTION;
+    const double frictionCoefficient = GameSettings::getRobotHubMode() == net::RobotHubMode::SIMULATOR ? ai::constants::SIMULATION_FRICTION : ai::constants::REAL_FRICTION;
     double timeToStop = initialVelocity / frictionCoefficient;
     if (time > timeToStop) {
         time = timeToStop;
@@ -48,8 +47,7 @@ Vector2 FieldComputations::getBallPositionAtTime(const rtt::world::ball::Ball &b
 }
 
 double FieldComputations::getBallTimeAtPosition(const rtt::world::ball::Ball &ball, const Vector2 &targetPoint) {
-    const double frictionCoefficient =
-        GameSettings::getRobotHubMode() == net::RobotHubMode::SIMULATOR ? ai::stp::control_constants::SIMULATION_FRICTION : ai::stp::control_constants::REAL_FRICTION;
+    const double frictionCoefficient = GameSettings::getRobotHubMode() == net::RobotHubMode::SIMULATOR ? ai::constants::SIMULATION_FRICTION : ai::constants::REAL_FRICTION;
 
     Vector2 direction = targetPoint - ball.position;
     Vector2 velocityUnit = ball.velocity.normalize();
@@ -79,6 +77,16 @@ bool FieldComputations::pointIsValidPosition(const rtt::Field &field, const Vect
     if (avoidObjects.shouldAvoidOutOfField && !field.playArea.contains(point, fieldMargin)) return false;
     if (avoidObjects.shouldAvoidOurDefenseArea && (field.leftDefenseArea.contains(point, ourDefenseAreaMargin))) return false;
     if (avoidObjects.shouldAvoidTheirDefenseArea && (field.rightDefenseArea.contains(point, theirDefenseAreaMargin))) return false;
+    auto leftGoalTopPost = field.leftGoalArea.topLine();
+    auto leftGoalBottomPost = field.leftGoalArea.bottomLine();
+    auto rightGoalTopPost = field.rightGoalArea.topLine();
+    auto rightGoalBottomPost = field.rightGoalArea.bottomLine();
+    if (avoidObjects.shouldAvoidGoalPosts) {
+        if (leftGoalTopPost.distanceToLine(point) < constants::ROBOT_RADIUS || leftGoalBottomPost.distanceToLine(point) < constants::ROBOT_RADIUS ||
+            rightGoalTopPost.distanceToLine(point) < constants::ROBOT_RADIUS || rightGoalBottomPost.distanceToLine(point) < constants::ROBOT_RADIUS) {
+            return false;
+        }
+    }
     return true;
 }
 
@@ -235,7 +243,7 @@ Polygon FieldComputations::getFieldEdge(const rtt::Field &field, double margin) 
 std::vector<LineSegment> FieldComputations::getBlockadesMappedToGoal(const rtt::Field &field, bool ourGoal, const Vector2 &point,
                                                                      const std::vector<rtt::world::view::RobotView> &robots, int id, bool ourTeam) {
     std::vector<LineSegment> blockades = {};
-    const double robotRadius = Constants::ROBOT_RADIUS() + Constants::BALL_RADIUS();
+    const double robotRadius = constants::ROBOT_RADIUS + constants::BALL_RADIUS;
     LineSegment goalSide = ourGoal ? field.leftGoalArea.rightLine() : field.rightGoalArea.leftLine();
     for (auto const &robot : robots) {
         std::optional<LineSegment> blockade = robotBlockade(ourGoal, point, id, ourTeam, robot, robotRadius, goalSide);
@@ -288,8 +296,8 @@ std::vector<LineSegment> FieldComputations::mergeBlockades(std::vector<LineSegme
 
 Vector2 FieldComputations::projectPointInField(const Field &field, Vector2 point, double margin) {
     Vector2 projectedPoint;
-    projectedPoint.x = std::clamp(point.x, field.playArea.left() + margin + PROJECTION_MARGIN, field.playArea.right() - margin - PROJECTION_MARGIN);
-    projectedPoint.y = std::clamp(point.y, field.playArea.bottom() + margin + PROJECTION_MARGIN, field.playArea.top() - margin - PROJECTION_MARGIN);
+    projectedPoint.x = std::clamp(point.x, field.playArea.left() + margin, field.playArea.right() - margin);
+    projectedPoint.y = std::clamp(point.y, field.playArea.bottom() + margin, field.playArea.top() - margin);
     return projectedPoint;
 }
 
@@ -308,13 +316,11 @@ Vector2 FieldComputations::projectPointOutOfDefenseArea(const Field &field, Vect
     double xDiff;
     double yDiff;
     if (field.leftDefenseArea.contains(point, ourDefenseAreaMargin)) {
-        xDiff = (field.leftDefenseArea.right() + ourDefenseAreaMargin + PROJECTION_MARGIN) - point.x;
-        yDiff = point.y > 0 ? (field.leftDefenseArea.top() + ourDefenseAreaMargin + PROJECTION_MARGIN) - point.y
-                            : (field.leftDefenseArea.bottom() - ourDefenseAreaMargin - PROJECTION_MARGIN) - point.y;
+        xDiff = (field.leftDefenseArea.right() + ourDefenseAreaMargin) - point.x;
+        yDiff = point.y > 0 ? (field.leftDefenseArea.top() + ourDefenseAreaMargin) - point.y : (field.leftDefenseArea.bottom() - ourDefenseAreaMargin) - point.y;
     } else if (field.rightDefenseArea.contains(point, theirDefenseAreaMargin)) {
-        xDiff = (field.rightDefenseArea.left() - theirDefenseAreaMargin - PROJECTION_MARGIN) - point.x;
-        yDiff = point.y > 0 ? (field.rightDefenseArea.top() + theirDefenseAreaMargin + PROJECTION_MARGIN) - point.y
-                            : (field.rightDefenseArea.bottom() - theirDefenseAreaMargin - PROJECTION_MARGIN) - point.y;
+        xDiff = (field.rightDefenseArea.left() - theirDefenseAreaMargin) - point.x;
+        yDiff = point.y > 0 ? (field.rightDefenseArea.top() + theirDefenseAreaMargin) - point.y : (field.rightDefenseArea.bottom() - theirDefenseAreaMargin) - point.y;
     } else
         return point;  // In case it is in neither defense area, just return the point
 
@@ -326,6 +332,21 @@ Vector2 FieldComputations::projectPointToValidPosition(const Field &field, Vecto
     Vector2 projectedPos = point;
     if (avoidObjects.shouldAvoidOutOfField) projectedPos = projectPointInField(field, projectedPos);
     projectedPos = projectPointOutOfDefenseArea(field, projectedPos, avoidObjects.shouldAvoidOurDefenseArea, avoidObjects.shouldAvoidTheirDefenseArea);
+    if (avoidObjects.shouldAvoidGoalPosts) {
+        auto leftGoalTopPost = field.leftGoalArea.topLine();
+        auto leftGoalBottomPost = field.leftGoalArea.bottomLine();
+        auto rightGoalTopPost = field.rightGoalArea.topLine();
+        auto rightGoalBottomPost = field.rightGoalArea.bottomLine();
+        if (leftGoalTopPost.distanceToLine(point) < constants::ROBOT_RADIUS) {
+            projectedPos = {leftGoalTopPost.end.x + constants::ROBOT_RADIUS, projectedPos.y};
+        } else if (leftGoalBottomPost.distanceToLine(point) < constants::ROBOT_RADIUS) {
+            projectedPos = {leftGoalBottomPost.start.x + constants::ROBOT_RADIUS, projectedPos.y};
+        } else if (rightGoalTopPost.distanceToLine(point) < constants::ROBOT_RADIUS) {
+            projectedPos = {rightGoalTopPost.start.x - constants::ROBOT_RADIUS, projectedPos.y};
+        } else if (rightGoalBottomPost.distanceToLine(point) < constants::ROBOT_RADIUS) {
+            projectedPos = {rightGoalBottomPost.end.x - constants::ROBOT_RADIUS, projectedPos.y};
+        }
+    }
     return projectedPos;
 }
 
@@ -333,8 +354,8 @@ Vector2 FieldComputations::projectPointIntoFieldOnLine(const Field &field, Vecto
     auto projectedPos = LineSegment(p1, p2).project(point);
     if (field.playArea.contains(projectedPos, fieldMargin)) return projectedPos;
 
-    auto intersection_lhs = FieldComputations::lineIntersectionWithField(field, projectedPos, p1, fieldMargin - PROJECTION_MARGIN);
-    auto intersection_rhs = FieldComputations::lineIntersectionWithField(field, projectedPos, p2, fieldMargin - PROJECTION_MARGIN);
+    auto intersection_lhs = FieldComputations::lineIntersectionWithField(field, projectedPos, p1, fieldMargin);
+    auto intersection_rhs = FieldComputations::lineIntersectionWithField(field, projectedPos, p2, fieldMargin);
 
     // If there is no point  on this line inside the field, project the position into the field and return it
     if (!intersection_lhs && !intersection_rhs) return projectPointInField(field, projectedPos, fieldMargin);
@@ -345,8 +366,7 @@ Vector2 FieldComputations::projectPointIntoFieldOnLine(const Field &field, Vecto
 
 Vector2 FieldComputations::projectPointToValidPositionOnLine(const Field &field, Vector2 point, Vector2 p1, Vector2 p2, double fieldMargin) {
     auto [theirDefenseAreaMargin, ourDefenseAreaMargin] = getDefenseAreaMargin();
-    // Subtract PROJECTION_MARGIN to avoid the situation where the point is between the left field line and our goal line (-6.0 < x < -5.9)
-    auto pointProjectedInField = projectPointIntoFieldOnLine(field, point, p1, p2, fieldMargin - PROJECTION_MARGIN);
+    auto pointProjectedInField = projectPointIntoFieldOnLine(field, point, p1, p2, fieldMargin);
 
     bool ourGoal;   // Which goal's defense area the projected point is in
     double margin;  // The margin to be used for the defense area- set to ourDefenseMargin or theirDefenseAreaMargin depending on where the projected pos is
@@ -361,7 +381,7 @@ Vector2 FieldComputations::projectPointToValidPositionOnLine(const Field &field,
     }
 
     std::vector<Vector2> intersections;
-    auto defenseAreaVertices = getDefenseArea(field, ourGoal, margin + PROJECTION_MARGIN, 0).vertices;
+    auto defenseAreaVertices = getDefenseArea(field, ourGoal, margin, 0).vertices;
     // Loop over the all lines of the defense area except the goal line and check for intersections
     for (size_t i = 0; i < defenseAreaVertices.size() - 1; i++) {
         auto intersection = LineSegment(defenseAreaVertices[i], defenseAreaVertices[i + 1]).intersects({p1, p2});

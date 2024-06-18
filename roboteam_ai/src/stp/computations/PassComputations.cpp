@@ -7,13 +7,13 @@
 #include "control/ControlUtils.h"
 #include "gui/Out.h"
 #include "roboteam_utils/Tube.h"
-#include "stp/constants/ControlConstants.h"
+#include "utilities/Constants.h"
 
 namespace rtt::ai::stp::computations {
 
-PassInfo PassComputations::calculatePass(gen::ScoreProfile profile, const rtt::world::World* world, const Field& field, bool keeperCanPass) {
+PassInfo PassComputations::calculatePass(gen::ScoreProfile profile, const rtt::world::World* world, const Field& field, bool keeperMustPass) {
     PassInfo passInfo;  // Struct used to store the information needed to execute the pass
-    if (world->getWorld()->getUs().size() < (keeperCanPass ? 2 : 3)) {
+    if (world->getWorld()->getUs().size() < (keeperMustPass ? 2 : 3)) {
         return passInfo;
     }
 
@@ -21,14 +21,20 @@ PassInfo PassComputations::calculatePass(gen::ScoreProfile profile, const rtt::w
 
     // Find which robot is keeper (bot closest to goal if there was not a keeper yet), store its id, and erase from us to avoid the desired keeper to be the passer
     passInfo.keeperId = InterceptionComputations::getKeeperId(us, world);
-    if (!keeperCanPass) std::erase_if(us, [passInfo](auto& bot) { return bot->getId() == passInfo.keeperId; });
+    if (!keeperMustPass) std::erase_if(us, [passInfo](auto& bot) { return bot->getId() == passInfo.keeperId; });
 
     // Remove cardId from us
     auto cardId = GameStateManager::getCurrentGameState().cardId;
     std::erase_if(us, [cardId](auto& bot) { return bot->getId() == cardId; });
 
     // Find which robot should be the passer, store its id and location, and erase from us
-    InterceptionInfo interceptionInfo = InterceptionComputations::calculateInterceptionInfoForKickingRobots(us, world);
+    InterceptionInfo interceptionInfo;
+    auto keeper = world->getWorld()->getRobotForId(passInfo.keeperId, true);
+    if (keeperMustPass && keeper) {
+        interceptionInfo = InterceptionComputations::calculateInterceptionInfoForKickingRobots({keeper.value()}, world);
+    } else {
+        interceptionInfo = InterceptionComputations::calculateInterceptionInfoForKickingRobots(us, world);
+    }
     passInfo.passerId = interceptionInfo.interceptId;
     passInfo.passLocation = interceptionInfo.interceptLocation;
     auto passerIt = std::find_if(us.begin(), us.end(), [passInfo](auto& bot) { return bot->getId() == passInfo.passerId; });
@@ -49,9 +55,9 @@ PassInfo PassComputations::calculatePass(gen::ScoreProfile profile, const rtt::w
     std::vector<Vector2> possibleReceiverLocations;
     std::vector<Vector2> possibleReceiverVelocities;
     for (const auto& robot : us) {
-        if (Constants::ROBOT_HAS_KICKER(robot->getId())) {
+        if (constants::ROBOT_HAS_KICKER(robot->getId())) {
             possibleReceiverLocations.push_back(robot->getPos());
-            possibleReceiverVelocities.push_back(robot->getPos());
+            possibleReceiverVelocities.push_back(robot->getVel());
         }
     }
     // If there are no other robots that can kick, add every other robots
@@ -60,7 +66,7 @@ PassInfo PassComputations::calculatePass(gen::ScoreProfile profile, const rtt::w
         possibleReceiverVelocities.reserve(us.size());
         for (const auto& robot : us) {
             possibleReceiverLocations.push_back(robot->getPos());
-            possibleReceiverVelocities.push_back(robot->getPos());
+            possibleReceiverVelocities.push_back(robot->getVel());
         }
     }
 
@@ -115,7 +121,11 @@ bool PassComputations::pointIsValidReceiverLocation(Vector2 point, const std::ve
     if (point.dist(passLocation) < MINIMUM_PASS_DISTANCE) return false;
     constexpr double MINIMUM_LINE_OF_SIGHT = 10.0;  // The minimum LoS to be a valid pass, otherwise, the pass will go into an enemy robot
     if (PositionScoring::scorePosition(point, gen::LineOfSight, field, world).score < MINIMUM_LINE_OF_SIGHT) return false;
-    if (!FieldComputations::pointIsValidPosition(field, point)) return false;
+    AvoidObjects avoidObj;
+    avoidObj.shouldAvoidOurDefenseArea = true;
+    avoidObj.shouldAvoidTheirDefenseArea = true;
+    avoidObj.shouldAvoidOutOfField = true;
+    if (!FieldComputations::pointIsValidPosition(field, point, avoidObj)) return false;
     // Pass is valid if the above conditions are met and there is a robot whose travel time is smaller than the balls travel time (i.e. the robot can actually receive the ball)
     auto ballTravelTime = calculateBallTravelTime(passLocation, passerLocation, passerVelocity, point);
     for (std::vector<rtt::Vector2>::size_type i = 0; i < possibleReceiverLocations.size(); i++) {
@@ -125,11 +135,11 @@ bool PassComputations::pointIsValidReceiverLocation(Vector2 point, const std::ve
 }
 
 double PassComputations::calculateRobotTravelTime(Vector2 robotPosition, Vector2 robotVelocity, Vector2 targetPosition) {
-    return Trajectory2D(robotPosition, robotVelocity, targetPosition, control::ControlUtils::getMaxVelocity(false), ai::Constants::MAX_ACC()).getTotalTime() * 1.1;
+    return Trajectory2D(robotPosition, robotVelocity, targetPosition, control::ControlUtils::getMaxVelocity(false), ai::constants::MAX_ACC).getTotalTime() * 1.1;
 }
 
 double PassComputations::calculateBallTravelTime(Vector2 passLocation, Vector2 passerLocation, Vector2 passerVelocity, Vector2 targetPosition) {
-    auto travelTime = calculateRobotTravelTime(passerLocation, passerVelocity, passLocation - (passerLocation - passLocation).stretchToLength(control_constants::ROBOT_RADIUS));
+    auto travelTime = calculateRobotTravelTime(passerLocation, passerVelocity, passLocation - (passerLocation - passLocation).stretchToLength(constants::ROBOT_RADIUS));
     auto rotateTime = (passLocation - passerLocation).toAngle().shortestAngleDiff(targetPosition - passLocation) / (M_PI);
     double ballSpeed = control::ControlUtils::determineKickForce(passLocation.dist(targetPosition), ShotType::PASS);
     auto ballTime = passLocation.dist(targetPosition) / ballSpeed;

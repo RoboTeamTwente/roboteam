@@ -12,13 +12,16 @@ proto::World WorldFilter::getWorldPrediction(const Time &time) const {
     return world;
 }
 
-void WorldFilter::process(const std::vector<proto::SSL_DetectionFrame> &frames, const std::vector<rtt::RobotsFeedback> &feedback) {
+void WorldFilter::process(const std::vector<proto::SSL_DetectionFrame> &frames, const std::vector<rtt::RobotsFeedback> &feedback, const std::vector<int> &camera_ids) {
     // Feedback is processed first, as it is not really dependent on vision packets,
     // but the vision processing may be helped by the feedback information
     feedbackFilter.process(feedback);
 
     std::vector<DetectionFrame> detectionFrames;
     for (const auto &protoFrame : frames) {
+        if (!camera_ids.empty() && std::find(camera_ids.begin(), camera_ids.end(), protoFrame.camera_id()) == camera_ids.end()) {
+            continue;
+        }
         detectionFrames.emplace_back(DetectionFrame(protoFrame));
     }
     // Sort by time

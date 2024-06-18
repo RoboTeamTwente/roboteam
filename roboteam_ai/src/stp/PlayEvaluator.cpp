@@ -9,9 +9,7 @@
 #include <stp/evaluations/game_states/KickOffThemGameStateEvaluation.h>
 #include <stp/evaluations/game_states/KickOffThemPrepareGameStateEvaluation.h>
 #include <stp/evaluations/game_states/KickOffUsGameStateEvaluation.h>
-#include <stp/evaluations/game_states/KickOffUsOrNormalGameStateEvaluation.h>
 #include <stp/evaluations/game_states/KickOffUsPrepareGameStateEvaluation.h>
-#include <stp/evaluations/game_states/NormalOrFreeKickUsGameStateEvaluation.h>
 #include <stp/evaluations/game_states/NormalPlayGameStateEvaluation.h>
 #include <stp/evaluations/game_states/PenaltyThemGameStateEvaluation.h>
 #include <stp/evaluations/game_states/PenaltyThemPrepareGameStateEvaluation.h>
@@ -56,12 +54,8 @@ uint8_t PlayEvaluator::updateGlobalEvaluation(GlobalEvaluation& evaluation, cons
             return evaluation::KickOffThemPrepareGameStateEvaluation().metricCheck(world, &field);
         case GlobalEvaluation::KickOffUsGameState:
             return evaluation::KickOffUsGameStateEvaluation().metricCheck(world, &field);
-        case GlobalEvaluation::KickOffUsOrNormalGameState:
-            return evaluation::KickOffUsOrNormalGameStateEvaluation().metricCheck(world, &field);
         case GlobalEvaluation::KickOffUsPrepareGameState:
             return evaluation::KickOffUsPrepareGameStateEvaluation().metricCheck(world, &field);
-        case GlobalEvaluation::NormalOrFreeKickUsGameState:
-            return evaluation::NormalOrFreeKickUsGameStateEvaluation().metricCheck(world, &field);
         case GlobalEvaluation::NormalPlayGameState:
             return evaluation::NormalPlayGameStateEvaluation().metricCheck(world, &field);
         case GlobalEvaluation::PenaltyThemGameState:
@@ -77,15 +71,15 @@ uint8_t PlayEvaluator::updateGlobalEvaluation(GlobalEvaluation& evaluation, cons
         case GlobalEvaluation::BallOnOurSide:
             return evaluation::BallOnOurSideGlobalEvaluation().metricCheck(world, &field);
         case GlobalEvaluation::BallOnTheirSide:
-            return stp::control_constants::FUZZY_TRUE - evaluation::BallOnOurSideGlobalEvaluation().metricCheck(world, &field);
+            return constants::FUZZY_TRUE - evaluation::BallOnOurSideGlobalEvaluation().metricCheck(world, &field);
         case GlobalEvaluation::BallInOurDefenseAreaAndStill:
             return evaluation::BallInOurDefenseAreaAndStillGlobalEvaluation().metricCheck(world, &field);
         case GlobalEvaluation::BallNotInOurDefenseAreaAndStill:
-            return stp::control_constants::FUZZY_TRUE - evaluation::BallInOurDefenseAreaAndStillGlobalEvaluation().metricCheck(world, &field);
+            return constants::FUZZY_TRUE - evaluation::BallInOurDefenseAreaAndStillGlobalEvaluation().metricCheck(world, &field);
         case GlobalEvaluation::WeWillHaveBall:
             return evaluation::WeWillHaveBallGlobalEvaluation().metricCheck(world, &field);
         case GlobalEvaluation::WeWillNotHaveBall:
-            return stp::control_constants::FUZZY_TRUE - evaluation::WeWillHaveBallGlobalEvaluation().metricCheck(world, &field);
+            return constants::FUZZY_TRUE - evaluation::WeWillHaveBallGlobalEvaluation().metricCheck(world, &field);
         case GlobalEvaluation::TheyHaveBall:
             return evaluation::TheyHaveBallGlobalEvaluation().metricCheck(world, &field);
         default:
@@ -97,16 +91,6 @@ void PlayEvaluator::clearGlobalScores() { scoresGlobal.clear(); }
 
 bool PlayEvaluator::checkEvaluation(GlobalEvaluation globalEvaluation, const rtt::world::World* world, uint8_t cutOff) noexcept {
     return getGlobalEvaluation(globalEvaluation, world) >= cutOff;
-}
-
-uint8_t PlayEvaluator::calculateScore(std::vector<PlayScoring>& scoring) {
-    double scoreTotal = 0;
-    double weightTotal = 0;
-    for (auto& factor : scoring) {
-        scoreTotal += factor.evaluationScore;
-        weightTotal += factor.weight;
-    }
-    return scoreTotal / weightTotal;
 }
 
 }  // namespace rtt::ai::stp

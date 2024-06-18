@@ -50,12 +50,6 @@ class AttackingPass : public Play {
 
    private:
     /**
-     * Counter that keeps track of how long another robot has a better interception. We need this counter. If not, as soon as we kicked the ball, another robot has a better
-     * intercept, while ballKicked() is still false, resulting in switching just after kicking the ball
-     */
-    int endPlayCounter = 0;
-
-    /**
      * @brief Check if the ball has been kicked. True if passer is done with kicking, False if it is still ongoing
      * @return Boolean that tells whether the ball has been kicked
      */

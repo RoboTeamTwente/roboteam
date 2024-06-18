@@ -3,6 +3,7 @@
 #include <cmath>
 
 #include "utilities/Constants.h"
+
 namespace rtt::ai::control {
 
 BBTrajectory2D::BBTrajectory2D(const Vector2 &initialPos, const Vector2 &initialVel, const Vector2 &finalPos, double maxVel, double maxAcc) {

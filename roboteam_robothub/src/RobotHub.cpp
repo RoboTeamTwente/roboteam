@@ -16,8 +16,8 @@ constexpr int DEFAULT_GRSIM_FEEDBACK_PORT_YELLOW_CONTROL = 30012;
 constexpr int DEFAULT_GRSIM_FEEDBACK_PORT_CONFIGURATION = 30013;
 
 // These two values are properties of our physical robots. We use these in commands for simulators
-constexpr float SIM_CHIPPER_ANGLE_DEGREES = 45.0f;     // The angle at which the chipper shoots
-constexpr float SIM_MAX_DRIBBLER_SPEED_RPM = 1021.0f;  // The theoretical maximum speed of the dribblers
+constexpr float SIM_CHIPPER_ANGLE_DEGREES = 45.0f;      // The angle at which the chipper shoots
+constexpr float SIM_MAX_DRIBBLER_SPEED_RPM = 16000.0f;  // The theoretical maximum speed of the dribblers in RPM
 
 RobotHub::RobotHub(bool shouldLog, bool logInMarpleFormat) {
     simulation::SimulatorNetworkConfiguration config = {.blueFeedbackPort = DEFAULT_GRSIM_FEEDBACK_PORT_BLUE_CONTROL,
@@ -149,7 +149,6 @@ void RobotHub::sendCommandsToBasestation(const rtt::RobotCommands &commands, rtt
         command.doChip = robotCommand.kickSpeed > 0.0 && robotCommand.kickType == KickType::CHIP;
         command.doForce = !robotCommand.waitForBall;
         command.kickChipPower = static_cast<float>(robotCommand.kickSpeed);
-        // command.dribblerOn = static_cast<float>(robotCommand.dribblerOn);
         command.dribblerOn = robotCommand.dribblerOn;
 
         command.rho = static_cast<float>(robotCommand.velocity.length());
@@ -163,11 +162,6 @@ void RobotHub::sendCommandsToBasestation(const rtt::RobotCommands &commands, rtt
         command.cameraYaw = command.useCameraYaw ? static_cast<float>(robotCommand.cameraYawOfRobot) : 0.0f;
 
         command.wheelsOff = robotCommand.wheelsOff;
-
-        // command.rho = 0;
-        // command.theta = 0;
-        // command.angularVelocity = 1;
-        // command.useYaw = 0;
 
         int bytesSent = 0;
         {

@@ -1,8 +1,7 @@
 #ifndef RTT_STPINFOENUMS_H
 #define RTT_STPINFOENUMS_H
 
-#include "stp/constants/ControlConstants.h"
-
+#include <utilities/Constants.h>
 namespace rtt::ai::stp {
 /**
  * @brief Whether this robot should kick or chip in the shoot skill

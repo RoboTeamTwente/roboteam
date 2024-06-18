@@ -51,7 +51,7 @@ std::unordered_map<std::string, v::RobotView> Dealer::distribute(std::vector<v::
     // Put all role names in a vector, for convenience
     std::vector<std::string> role_names;  // Holds all role names
     role_names.reserve(role_to_flags.size());
-    for (auto const &imap : role_to_flags) role_names.push_back(imap.first);  // Fill with rolenames, e.g. KEEPER, DEFENDER_1, etc, etc
+    for (auto const &imap : role_to_flags) role_names.emplace_back(imap.first);  // Fill with rolenames, e.g. KEEPER, DEFENDER_1, etc, etc
 
     // Create mappings between the rows and column of the cost matrix and the roles and robots. These will be modified during distribution
     std::vector<int> row_to_role(role_to_flags.size());              // maps a row to the original role
@@ -76,10 +76,6 @@ std::unordered_map<std::string, v::RobotView> Dealer::distribute(std::vector<v::
     // Loop through the role priorities from high to low : KEEPER, REQUIRED, HIGH_PRIORITY, MEDIUM_PRIORITY, LOW_PRIORITY
     for (const auto current_priority : PriorityOrder) {
         /** Example : current_priority = HIGH_PRIORITY */
-
-        // Uncomment the following line to print the current cost matrix. Useful for debugging
-        // printCostMatrix(cost_matrix, role_names, robots, role_to_flags, row_to_role, col_to_robot);
-
         // Create a new cost matrix which will hold the cost_matrix rows for the priority we're currently at
         std::vector<std::vector<double>> cost_matrix_for_priority;
         cost_matrix_for_priority.reserve(cost_matrix.size());  // Reserve rows
@@ -122,7 +118,7 @@ std::unordered_map<std::string, v::RobotView> Dealer::distribute(std::vector<v::
             if (0 <= assignments[i]) {
                 std::string role_name = role_names[row_to_role[row_indices[i]]];
                 v::RobotView robot = robots[col_to_robot[assignments[i]]];
-                role_assignment.insert({role_name, robot});
+                role_assignment.try_emplace(role_name, robot);
             }
         }
 
@@ -272,12 +268,12 @@ double Dealer::getDefaultFlagScores(const v::RobotView &robot, const Dealer::Dea
         case DealerFlagTitle::KEEPER:
             return costForProperty(robot->getId() == GameStateManager::getCurrentGameState().keeperId);
         case DealerFlagTitle::CAN_DETECT_BALL: {
-            bool hasWorkingBallSensor = Constants::ROBOT_HAS_WORKING_BALL_SENSOR(robot->getId());
-            bool hasDribblerEncoder = Constants::ROBOT_HAS_WORKING_DRIBBLER_ENCODER(robot->getId());
+            bool hasWorkingBallSensor = constants::ROBOT_HAS_WORKING_BALL_SENSOR(robot->getId());
+            bool hasDribblerEncoder = constants::ROBOT_HAS_WORKING_DRIBBLER_ENCODER(robot->getId());
             return costForProperty(hasWorkingBallSensor || hasDribblerEncoder);
         }
         case DealerFlagTitle::CAN_KICK_BALL: {
-            bool hasWorkingKicker = Constants::ROBOT_HAS_KICKER(robot->getId());
+            bool hasWorkingKicker = constants::ROBOT_HAS_KICKER(robot->getId());
             return costForProperty(hasWorkingKicker);
         }
         default: {
@@ -295,7 +291,7 @@ void Dealer::setGameStateRoleIds(std::unordered_map<std::string, v::RobotView> o
 
 // Calculate the cost for distance. The further away the target, the higher the cost for that distance.
 double Dealer::costForDistance(const v::RobotView &robot, const rtt::Vector2 target_position, const double MaxRobotVelocity) {
-    return Trajectory2D(robot->getPos(), robot->getVel(), target_position, MaxRobotVelocity, ai::Constants::MAX_ACC()).getTotalTime();
+    return Trajectory2D(robot->getPos(), robot->getVel(), target_position, MaxRobotVelocity, ai::constants::MAX_ACC).getTotalTime();
 }
 
 double Dealer::costForProperty(bool property) { return property ? 0.0 : 1.0; }

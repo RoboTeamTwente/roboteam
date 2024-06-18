@@ -5,12 +5,12 @@
 
 #include "stp/computations/PassComputations.h"
 #include "stp/computations/PositionScoring.h"
-#include "stp/constants/ControlConstants.h"
 #include "stp/roles/Keeper.h"
 #include "stp/roles/active/Chipper.h"
 #include "stp/roles/active/PassReceiver.h"
 #include "stp/roles/passive/Defender.h"
 #include "stp/roles/passive/Formation.h"
+#include "utilities/Constants.h"
 #include "world/views/RobotView.hpp"
 
 namespace rtt::ai::stp::play {
@@ -28,7 +28,7 @@ ChippingPass::ChippingPass() : Play() {
     keepPlayEvaluation.emplace_back(GlobalEvaluation::BallNotInOurDefenseAreaAndStill);
 
     // Role creation, the names should be unique. The names are used in the stpInfos-map.
-    roles = std::array<std::unique_ptr<Role>, rtt::ai::Constants::ROBOT_COUNT()>{
+    roles = std::array<std::unique_ptr<Role>, rtt::ai::constants::MAX_ROBOT_COUNT>{
         // Roles is we play 6v6
         std::make_unique<role::Keeper>("keeper"),
         std::make_unique<role::Chipper>("passer"),
@@ -109,14 +109,11 @@ bool ChippingPass::ballKicked() {
 }
 
 bool ChippingPass::shouldEndPlay() noexcept {
-    // If the receiver has the ball, the play finished successfully
-    if (stpInfos["receiver"].getRobot() && stpInfos["receiver"].getRobot().value()->hasBall()) return true;
-
-    // If the ball is moving too slow after we have kicked it, we should stop the play to get the ball
+    // If the ball is kicked, we end the play to already prepare for what happens next
     if (ballKicked()) return true;
 
     // If the passer doesn't have the ball yet and there is a better pass available, we should stop the play
-    if (!ballKicked() && stpInfos["passer"].getRobot() && !stpInfos["passer"].getRobot().value()->hasBall() &&
+    if (stpInfos["passer"].getRobot() && !stpInfos["passer"].getRobot().value()->hasBall() &&
         stp::computations::PassComputations::calculatePass(gen::ChippingPass, world, field).passScore >
             1.05 * stp::PositionScoring::scorePosition(passInfo.receiverLocation, gen::ChippingPass, field, world).score)
         return true;

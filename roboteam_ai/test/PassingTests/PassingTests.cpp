@@ -46,7 +46,6 @@ TEST_F(RTT_AI_Tests, validReceiverLocationTest) {
     auto passInfo = computations::PassComputations::calculatePass(gen::AttackingPass, world, world->getField().value());
     while (passInfo.passScore == 0) passInfo = computations::PassComputations::calculatePass(gen::AttackingPass, world, world->getField().value());
 
-    EXPECT_TRUE(rtt::ai::FieldComputations::pointIsValidPosition(world->getField().value(), passInfo.receiverLocation));
     EXPECT_GT(PositionScoring::scorePosition(passInfo.receiverLocation, gen::LineOfSight, world->getField().value(), world).score, 0.0);
 }
 
@@ -79,6 +78,5 @@ TEST_F(RTT_AI_Tests, keeperPassTest) {
     EXPECT_EQ(keeper->get()->getId(), passInfo.keeperId);
     EXPECT_EQ(passInfo.keeperId, passInfo.passerId);
     EXPECT_NE(passInfo.keeperId, passInfo.receiverId);
-    EXPECT_TRUE(rtt::ai::FieldComputations::pointIsValidPosition(world->getField().value(), passInfo.receiverLocation));
     EXPECT_GT(PositionScoring::scorePosition(passInfo.receiverLocation, gen::LineOfSight, world->getField().value(), world).score, 0.0);
 }

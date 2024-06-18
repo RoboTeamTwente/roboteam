@@ -60,7 +60,7 @@ LineSegment GoalComputations::getAimPoints(const Field &field, const Vector2 &so
     return LineSegment(leftPoint, rightPoint);
 }
 
-const LineSegment &GoalComputations::getLongestSegment(const std::vector<LineSegment> &openSegments) {
+const LineSegment GoalComputations::getLongestSegment(const std::vector<LineSegment> &openSegments) {
     return *std::max_element(openSegments.begin(), openSegments.end(),
                              [](const LineSegment &left, const LineSegment &right) { return fabs(left.start.y - left.end.y) < fabs(right.start.y - right.end.y); });
 }

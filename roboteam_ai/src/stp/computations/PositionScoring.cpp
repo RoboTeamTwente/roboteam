@@ -9,7 +9,7 @@ namespace rtt::ai::stp {
 gen::ScoredPosition PositionScoring::scorePosition(const Vector2 &position, const gen::ScoreProfile &profile, const Field &field, const world::World *world, uint8_t bias) {
     gen::PositionScores &scores = ComputationManager::calculatedScores[position];
     uint8_t positionScore = getScoreOfPosition(profile, position, scores, field, world);
-    if (bias) positionScore = (positionScore + bias > bias) ? positionScore + bias : std::numeric_limits<uint8_t>::max();  // stop overflow of uint8_t (254+2 = 1)
+    if (bias) positionScore = std::min(static_cast<uint32_t>(positionScore + bias), static_cast<uint32_t>(std::numeric_limits<uint8_t>::max()));  // Make sure we don't overflow
     return {position, positionScore};
 }
 

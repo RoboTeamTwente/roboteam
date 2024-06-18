@@ -31,6 +31,16 @@ void Play::update() noexcept {
     roleStatuses.clear();
     //    RTT_INFO("Play executing: ", getName())
 
+    // Set the kickPoint to determine whether a free kick/kickoff has been taken
+    if ((GameStateManager::getCurrentGameState().commandId == RefCommand::DIRECT_FREE_THEM || GameStateManager::getCurrentGameState().commandId == RefCommand::KICKOFF_THEM ||
+         GameStateManager::getCurrentGameState().commandId == RefCommand::DIRECT_FREE_US || GameStateManager::getCurrentGameState().commandId == RefCommand::KICKOFF_US) &&
+        !GameStateManager::getCurrentGameState().kickPoint.has_value()) {
+        GameStateManager::getCurrentGameState().kickPoint = world->getWorld()->getBall()->get()->position;
+    } else if (GameStateManager::getCurrentGameState().commandId != RefCommand::DIRECT_FREE_THEM && GameStateManager::getCurrentGameState().commandId != RefCommand::KICKOFF_THEM &&
+               GameStateManager::getCurrentGameState().commandId != RefCommand::DIRECT_FREE_US && GameStateManager::getCurrentGameState().commandId != RefCommand::KICKOFF_US) {
+        GameStateManager::getCurrentGameState().kickPoint.reset();
+    }
+    // RTT_INFO(GameStateManager::getCurrentGameState().kickPoint)
     // Check if the amount of robots changed or keeper id changed
     // If so, we will re deal the roles
     auto currentRobotNum{world->getWorld()->getRobotsNonOwning().size()};
@@ -61,7 +71,7 @@ void Play::update() noexcept {
     // If we have more robots than allowed, one drives to the edge of the field
     if (currentMaxRobots < sizeUs) {
         stpInfos[roles[currentMaxRobots]->getName()].setShouldAvoidBall(true);
-        stpInfos[roles[currentMaxRobots]->getName()].setPositionToMoveTo(Vector2(0.0, -field.playArea.width() / 2));
+        stpInfos[roles[currentMaxRobots]->getName()].setPositionToMoveTo(rtt::Vector2(0.0, -field.playArea.height() / 2));
     }
 
     // Loop through roles and update them if they are assigned to a robot
@@ -75,8 +85,7 @@ void Play::update() noexcept {
         }
         if (stpInfos.find(role->getName())->second.getRobot() &&
             stpInfos.find(role->getName())->second.getRobot()->get()->getId() == GameStateManager::getCurrentGameState().cardId &&
-            (stpInfos.find(role->getName())->second.getRobot()->get()->getPos() - Vector2(0.0, -field.playArea.height() / 2)).length() <=
-                control_constants::GO_TO_POS_ERROR_MARGIN * 4) {
+            (stpInfos.find(role->getName())->second.getRobot()->get()->getPos() - Vector2(0.0, -field.playArea.height() / 2)).length() <= constants::GO_TO_POS_ERROR_MARGIN * 4) {
             stpInfos[role->getName()].setShouldAvoidTheirRobots(false);
             stpInfos[role->getName()].setShouldAvoidOurRobots(false);
         }
@@ -86,6 +95,11 @@ void Play::update() noexcept {
 
 void Play::reassignRobots() noexcept {
     stpInfos.clear();
+    for (auto &role : roles) {
+        if (role == nullptr) continue;
+        stpInfos[role->getName()].setShouldAvoidBall(FieldComputations::getBallAvoidance());
+        stpInfos[role->getName()].setMaxRobotVelocity(control::ControlUtils::getMaxVelocity(false));
+    }
     calculateInfoForRoles();
     distributeRoles();
 }
@@ -140,7 +154,7 @@ void Play::distributeRoles() noexcept {
         flagMap[roles[currentMaxRobots]->getName()].priority = DealerFlagPriority::CARD;
         flagMap[roles[currentMaxRobots]->getName()].forcedID = cardId;
         stpInfos[roles[currentMaxRobots]->getName()].setShouldAvoidBall(true);
-        stpInfos[roles[currentMaxRobots]->getName()].setPositionToMoveTo(Vector2(0.0, -field.playArea.height() / 2));
+        stpInfos[roles[currentMaxRobots]->getName()].setPositionToMoveTo(rtt::Vector2(0.0, -field.playArea.height() / 2));
     }
     // Only keep the first n roles, where n is the amount of robots we have
     // This order is based on the order of the roles array
@@ -193,7 +207,6 @@ void Play::DrawMargins() noexcept {
                                                           field.rightDefenseArea.bottomLeft() + Vector2(-0.2, -0.2), field.rightDefenseArea.bottomRight() + Vector2(0.0, -0.2)};
     std::array<rtt::Vector2, 4> leftDefenseAreaMargin = {field.leftDefenseArea.topLeft() + Vector2(0.0, 0.2), field.leftDefenseArea.topRight() + Vector2(0.2, 0.2),
                                                          field.leftDefenseArea.bottomRight() + Vector2(0.2, -0.2), field.leftDefenseArea.bottomLeft() + Vector2(0.0, -0.2)};
-    std::array<rtt::Vector2, 1> cardId = {rtt::Vector2(0.0, -field.playArea.height() / 2)};
     std::array<rtt::Vector2, 1> placementLocation = {rtt::ai::GameStateManager::getRefereeDesignatedPosition()};
     std::array<rtt::Vector2, 2> pathToPlacementLocation = {world->getWorld()->getBall()->get()->position, world->getWorld()->getBall()->get()->position};
 
@@ -224,7 +237,8 @@ void Play::DrawMargins() noexcept {
         currentGameState == RefCommand::DIRECT_FREE_US || currentGameState == RefCommand::KICKOFF_US || currentGameState == RefCommand::KICKOFF_THEM ||
         currentGameState == RefCommand::PREPARE_FORCED_START || currentGameState == RefCommand::BALL_PLACEMENT_THEM || currentGameState == RefCommand::BALL_PLACEMENT_US ||
         currentGameState == RefCommand::BALL_PLACEMENT_US_DIRECT) {
-        if (currentGameState != RefCommand::PREPARE_FORCED_START) {
+        if (currentGameState != RefCommand::PREPARE_FORCED_START && currentGameState != RefCommand::BALL_PLACEMENT_THEM && currentGameState != RefCommand::BALL_PLACEMENT_US &&
+            currentGameState != RefCommand::BALL_PLACEMENT_US_DIRECT) {
             rtt::ai::gui::Out::draw(
                 {
                     .label = "Left defense area to avoid",
@@ -246,16 +260,18 @@ void Play::DrawMargins() noexcept {
                 },
                 rightDefenseAreaMargin);
         }
-        if (currentGameState == RefCommand::BALL_PLACEMENT_THEM || currentGameState == RefCommand::DIRECT_FREE_THEM || currentGameState == RefCommand::KICKOFF_THEM)
+        if (currentGameState == RefCommand::BALL_PLACEMENT_THEM || currentGameState == RefCommand::DIRECT_FREE_THEM || currentGameState == RefCommand::KICKOFF_THEM ||
+            (currentGameState == RefCommand::PREPARE_FORCED_START && GameStateManager::getCurrentGameState().commandFromRef != RefCommand::BALL_PLACEMENT_THEM))
             color = GameSettings::isYellow() ? proto::Drawing::YELLOW : proto::Drawing::BLUE;
         else if (currentGameState == RefCommand::BALL_PLACEMENT_US || currentGameState == RefCommand::BALL_PLACEMENT_US_DIRECT || currentGameState == RefCommand::DIRECT_FREE_US ||
-                 currentGameState == RefCommand::KICKOFF_US)
+                 currentGameState == RefCommand::KICKOFF_US ||
+                 (currentGameState == RefCommand::PREPARE_FORCED_START && GameStateManager::getCurrentGameState().commandFromRef != RefCommand::BALL_PLACEMENT_US))
             color = GameSettings::isYellow() ? proto::Drawing::BLUE : proto::Drawing::YELLOW;
         else
             color = proto::Drawing::RED;
-        
-    }
-    else color = proto::Drawing::GREY;
+
+    } else
+        color = proto::Drawing::GREY;
 
     for (auto method : {proto::Drawing::CIRCLES, proto::Drawing::LINES_CONNECTED}) {
         rtt::ai::gui::Out::draw(
@@ -286,6 +302,8 @@ void Play::DrawMargins() noexcept {
     }
 
     if (GameStateManager::getCurrentGameState().cardId != -1) {
+        std::array<rtt::Vector2, 2> sideOfTheField = {*stpInfos[roles[GameStateManager::getCurrentGameState().maxAllowedRobots]->getName()].getPositionToMoveTo(),
+                                                      stpInfos[roles[GameStateManager::getCurrentGameState().maxAllowedRobots]->getName()].getRobot()->get()->getPos()};
         rtt::ai::gui::Out::draw(
             {
                 .label = "CardID",
@@ -295,24 +313,7 @@ void Play::DrawMargins() noexcept {
                 .size = 15,
                 .thickness = 7,
             },
-            cardId);
-    }
-    std::array<std::string, 4> names = {"harasser", "passer", "receiver", "striker"};
-    std::array<proto::Drawing::Color, 4> colors = {proto::Drawing::RED, proto::Drawing::WHITE, proto::Drawing::MAGENTA, proto::Drawing::WHITE};
-    for (std::size_t i = 0; i < names.size(); i++) {
-        if (stpInfos[names[i]].getRobot()) {
-            std::array<rtt::Vector2, 1> position = {stpInfos[names[i]].getRobot()->get()->getPos()};
-            rtt::ai::gui::Out::draw(
-                {
-                    .label = names[i],
-                    .color = colors[i],
-                    .method = proto::Drawing::CIRCLES,
-                    .category = proto::Drawing::DEBUG,
-                    .size = 15,
-                    .thickness = 7,
-                },
-                position);
-        }
+            sideOfTheField);
     }
 }
 

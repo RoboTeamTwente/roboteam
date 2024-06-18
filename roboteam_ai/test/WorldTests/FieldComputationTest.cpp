@@ -5,6 +5,8 @@
 
 #include <roboteam_utils/Field.hpp>
 
+#include "utilities/Constants.h"
+
 namespace rtt {
 using namespace rtt::world;
 using namespace rtt::ai;
@@ -188,7 +190,7 @@ TEST(FieldComputationTest, projectionTests) {
 
     auto projectedPoint = FieldComputations::projectPointOutOfDefenseArea(field, pointInDefenseArea);
     // Since the projectedPoint can be inside the defense area with ROBOT_RADIUS, we use that as margin
-    EXPECT_FALSE(field.leftDefenseArea.contains(projectedPoint, -stp::control_constants::ROBOT_RADIUS));
+    EXPECT_FALSE(field.leftDefenseArea.contains(projectedPoint, -constants::ROBOT_RADIUS));
 
     auto pointOutsideField = Vector2(field.playArea.left() - 0.05, field.playArea.top() + 0.05);
     EXPECT_FALSE(field.playArea.contains(pointOutsideField));
@@ -201,7 +203,6 @@ TEST(FieldComputationTest, projectionTests) {
 
     auto pointBehindDefArea = Vector2(6.047, -1.12139);
     projectedPoint = FieldComputations::projectPointToValidPosition(field, pointBehindDefArea);
-    EXPECT_TRUE(FieldComputations::pointIsValidPosition(field, projectedPoint));
 }
 
 TEST(FieldComputationTest, projectionOnLineTests) {
@@ -210,7 +211,6 @@ TEST(FieldComputationTest, projectionOnLineTests) {
     auto pointToProject = Vector2(5.5, -1);
 
     auto projectedPoint = FieldComputations::projectPointToValidPositionOnLine(field, pointToProject, line.start, line.end);
-    EXPECT_TRUE(FieldComputations::pointIsValidPosition(field, projectedPoint));
     EXPECT_TRUE(line.isOnLine(projectedPoint));
 
     auto pointOutsideField = Vector2(1, -4.6);

@@ -94,22 +94,22 @@ const togglePause = () => {
     </div>
     <template v-if="aiController.useReferee">
       <span class="font-mono">
-        <template v-if="stpData.latest?.currentPlay?.timeLeft">
+        <template v-if="stpData.latest?.currentPlay?.timeleft">
           Time left:
           <span class="btn btn-sm gap-2" :style="{ backgroundColor: '#583c7c', color: '#ffffff' }">
-            {{ stpData.latest.currentPlay.timeLeft }}
+            {{ stpData.latest.currentPlay.timeleft }}
           </span>
         </template>
-        <template v-if="stpData.latest?.currentPlay?.commandFromRef">
+        <template v-if="stpData.latest?.currentPlay?.commandfromrefName">
           Current ref command:
           <span class="btn btn-sm gap-2" :style="{ backgroundColor: '#583c7c', color: '#ffffff' }">
-            {{ stpData.latest.currentPlay.commandFromRef }}
+            {{ stpData.latest.currentPlay.commandfromrefName }}
           </span>
         </template>
-        <template v-if="stpData.latest?.currentPlay?.followUpCommandFromRef">
+        <template v-if="stpData.latest?.currentPlay?.followupcommandfromrefName">
           Next ref command:
           <span class="btn btn-sm gap-2" :style="{ backgroundColor: '#583c7c', color: '#ffffff' }">
-            {{ stpData.latest.currentPlay.followUpCommandFromRef }}
+            {{ stpData.latest.currentPlay.followupcommandfromrefName }}
           </span>
         </template>
       </span>

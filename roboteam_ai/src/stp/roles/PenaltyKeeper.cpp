@@ -25,7 +25,7 @@ Status PenaltyKeeper::update(StpInfo const& info) noexcept {
     }
 
     // Stop Formation tactic when ball is moving, start blocking, getting the ball and pass (normal keeper behavior)
-    if (robotTactics.current_num() == 0 && info.getBall().value()->velocity.length() > control_constants::BALL_STILL_VEL) {
+    if (robotTactics.current_num() == 0 && info.getBall().value()->velocity.length() > constants::BALL_STILL_VEL) {
         forceNextTactic();
     }
 

@@ -19,12 +19,11 @@ std::optional<StpInfo> BallStandBack::calculateInfoForSkill(StpInfo const &info)
     auto robot = info.getRobot()->get();
     if (standStillCounter > STAND_STILL_THRESHOLD) {
         auto moveVector = robot->getPos() - ballTarget;
-        double stretchLength =
-            (currentGameState == RefCommand::BALL_PLACEMENT_US_DIRECT) ? control_constants::AVOID_BALL_DISTANCE_BEFORE_FREE_KICK : control_constants::AVOID_BALL_DISTANCE;
+        double stretchLength = (currentGameState == RefCommand::BALL_PLACEMENT_US_DIRECT) ? constants::AVOID_BALL_DISTANCE_BEFORE_FREE_KICK : constants::AVOID_BALL_DISTANCE;
         targetPosition = ballTarget + moveVector.stretchToLength(stretchLength);
-        bool isCloseToTarget = (robot->getPos() - targetPosition).length() < control_constants::GO_TO_POS_ERROR_MARGIN;
+        bool isCloseToTarget = (robot->getPos() - targetPosition).length() < constants::GO_TO_POS_ERROR_MARGIN;
         if ((isCloseToTarget || standBack) && currentGameState != RefCommand::BALL_PLACEMENT_US_DIRECT) {
-            targetPosition = ballTarget + (skillStpInfo.getField().value().leftGoalArea.leftLine().center() - ballTarget).stretchToLength(control_constants::AVOID_BALL_DISTANCE);
+            targetPosition = ballTarget + (skillStpInfo.getField().value().leftGoalArea.leftLine().center() - ballTarget).stretchToLength(constants::AVOID_BALL_DISTANCE);
             standBack = true;
             skillStpInfo.setShouldAvoidBall(true);
         }
@@ -45,7 +44,7 @@ std::optional<StpInfo> BallStandBack::calculateInfoForSkill(StpInfo const &info)
 
 bool BallStandBack::isTacticFailing(const StpInfo &info) noexcept {
     if (!info.getPositionToMoveTo().has_value() ||
-        (info.getBall()->get()->position - GameStateManager::getRefereeDesignatedPosition()).length() > control_constants::BALL_PLACEMENT_MARGIN) {
+        (info.getBall()->get()->position - GameStateManager::getRefereeDesignatedPosition()).length() > constants::BALL_PLACEMENT_MARGIN) {
         standStillCounter = 0;
         return true;
     }

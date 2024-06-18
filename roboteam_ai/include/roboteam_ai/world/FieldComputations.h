@@ -3,13 +3,13 @@
 
 #include <proto/messages_robocup_ssl_geometry.pb.h>
 #include <roboteam_utils/Polygon.h>
+#include <utilities/Constants.h>
 
 #include <cmath>
 #include <mutex>
 #include <roboteam_utils/Field.hpp>
 
 #include "control/ControlUtils.h"
-#include "stp/constants/ControlConstants.h"
 #include "utilities/StpInfoEnums.h"
 #include "views/WorldDataView.hpp"
 
@@ -26,7 +26,6 @@ namespace rtt::ai {
 class FieldComputations {
    private:
     static constexpr double NEGLIGIBLE_LENGTH = 0.000001; /**< If a line length is below or equal to this threshold then is it neglected during determining the blockades. */
-    static constexpr double PROJECTION_MARGIN = 0.02;     /**< Some extra padding is added when projecting positions,so that the projected position is not on lines/intersections */
 
    public:
     /**
@@ -63,7 +62,7 @@ class FieldComputations {
      * @param fieldMargin The outwards margin in which the field area will get expanded/shrunk in all directions.
      * @return True if the point is not within any area that has to be avoided according to avoidObjects, note that this does not take ball avoidance into consideration
      */
-    static bool pointIsValidPosition(const rtt::Field &field, const Vector2 &point, stp::AvoidObjects avoidObjects = {}, double fieldMargin = 0.0);
+    static bool pointIsValidPosition(const rtt::Field &field, const Vector2 &point, stp::AvoidObjects avoidObjects, double fieldMargin = 0.0);
 
     /**
      * @brief Project given position to within the field with a certain margin

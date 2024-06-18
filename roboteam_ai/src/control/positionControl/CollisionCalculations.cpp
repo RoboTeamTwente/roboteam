@@ -2,7 +2,7 @@
 
 #include <algorithm>
 
-#include "stp/constants/ControlConstants.h"
+#include "utilities/Constants.h"
 #include "world/World.hpp"
 #include "world/WorldData.hpp"
 
@@ -16,22 +16,22 @@ double CollisionCalculations::getFirstCollisionTimeMotionlessObject(const Trajec
     const auto &ourDefenseArea = FieldComputations::getDefenseArea(field, true, ourDefenseAreaMargin, 1);
     const auto &theirDefenseArea = FieldComputations::getDefenseArea(field, false, theirDefenseAreaMargin, 1);
 
-    auto leftGoalTopPost = LineSegment(field.leftGoalArea.topLeft(), field.leftGoalArea.topRight());
-    auto leftGoalBottomPost = LineSegment(field.leftGoalArea.bottomLeft(), field.leftGoalArea.bottomRight());
-    auto leftGoalBackPost = LineSegment(field.leftGoalArea.topLeft(), field.leftGoalArea.bottomLeft());
-    auto rightGoalTopPost = LineSegment(field.rightGoalArea.topLeft(), field.rightGoalArea.topRight());
-    auto rightGoalBottomPost = LineSegment(field.rightGoalArea.bottomLeft(), field.rightGoalArea.bottomRight());
-    auto rightGoalBackPost = LineSegment(field.rightGoalArea.topRight(), field.rightGoalArea.bottomRight());
+    auto leftGoalTopPost = field.leftGoalArea.topLine();
+    auto leftGoalBottomPost = field.leftGoalArea.bottomLine();
+    auto leftGoalBackPost = field.leftGoalArea.leftLine();
+    auto rightGoalTopPost = field.rightGoalArea.topLine();
+    auto rightGoalBottomPost = field.rightGoalArea.bottomLine();
+    auto rightGoalBackPost = field.rightGoalArea.rightLine();
 
     for (int checkPoint = 1; checkPoint < static_cast<int>(maxCheckPoints); checkPoint += 1) {
         auto pathLine = LineSegment(pathPoints[checkPoint - 1], pathPoints[checkPoint]);
         if (avoidObjects.shouldAvoidGoalPosts) {
-            if (pathLine.closestDistanceToLineSegment(leftGoalTopPost) < Constants::ROBOT_RADIUS() ||
-                pathLine.closestDistanceToLineSegment(leftGoalBottomPost) < Constants::ROBOT_RADIUS() ||
-                pathLine.closestDistanceToLineSegment(leftGoalBackPost) < Constants::ROBOT_RADIUS() ||
-                pathLine.closestDistanceToLineSegment(rightGoalTopPost) < Constants::ROBOT_RADIUS() ||
-                pathLine.closestDistanceToLineSegment(rightGoalBottomPost) < Constants::ROBOT_RADIUS() ||
-                pathLine.closestDistanceToLineSegment(rightGoalBackPost) < Constants::ROBOT_RADIUS()) {
+            if (pathLine.closestDistanceToLineSegment(leftGoalTopPost) < constants::ROBOT_RADIUS ||
+                pathLine.closestDistanceToLineSegment(leftGoalBottomPost) < constants::ROBOT_RADIUS ||
+                pathLine.closestDistanceToLineSegment(leftGoalBackPost) < constants::ROBOT_RADIUS ||
+                pathLine.closestDistanceToLineSegment(rightGoalTopPost) < constants::ROBOT_RADIUS ||
+                pathLine.closestDistanceToLineSegment(rightGoalBottomPost) < constants::ROBOT_RADIUS ||
+                pathLine.closestDistanceToLineSegment(rightGoalBackPost) < constants::ROBOT_RADIUS) {
                 return checkPoint * 0.1;
             }
         }
@@ -40,13 +40,13 @@ double CollisionCalculations::getFirstCollisionTimeMotionlessObject(const Trajec
                 return checkPoint * 0.1;
             }
         }
-        if (avoidObjects.shouldAvoidTheirDefenseArea && theirDefenseAreaMargin > stp::control_constants::ROBOT_RADIUS + stp::control_constants::GO_TO_POS_ERROR_MARGIN) {
+        if (avoidObjects.shouldAvoidTheirDefenseArea && theirDefenseAreaMargin > constants::ROBOT_RADIUS + constants::GO_TO_POS_ERROR_MARGIN) {
             if (theirDefenseArea.contains(pathPoints[checkPoint]) || theirDefenseArea.contains(pathPoints[checkPoint - 1]) || theirDefenseArea.doesIntersect(pathLine)) {
                 return checkPoint * 0.1;
             }
         }
         if (avoidObjects.shouldAvoidOutOfField) {
-            if (!field.playArea.contains(pathPoints[checkPoint], stp::control_constants::OUT_OF_FIELD_MARGIN)) {
+            if (!field.playArea.contains(pathPoints[checkPoint], constants::OUT_OF_FIELD_MARGIN)) {
                 return checkPoint * 0.1;
             }
         }
@@ -84,7 +84,7 @@ double CollisionCalculations::getFirstCollisionTimeMovingObject(const Trajectory
                 // If the path of the other robot is not computed, we assume it is not moving
                 if (computedPathsIt == computedPaths.end()) {
                     const Vector2 &ourOtherRobotPos = ourOtherRobot->getPos();
-                    if ((ourOtherRobotPos - positionOurRobot).length() < 2 * Constants::ROBOT_RADIUS() + additionalMargin) {
+                    if ((ourOtherRobotPos - positionOurRobot).length() < 2 * constants::ROBOT_RADIUS + additionalMargin) {
                         return checkPoint * 0.1;
                     }
                 } else {
@@ -94,7 +94,7 @@ double CollisionCalculations::getFirstCollisionTimeMovingObject(const Trajectory
                     } else {
                         pathLineOtherRobot = LineSegment(computedPathsIt->second.back(), computedPathsIt->second.back());
                     }
-                    if (pathLineOtherRobot.closestDistanceToLineSegment(pathLine) < 2 * Constants::ROBOT_RADIUS()) {
+                    if (pathLineOtherRobot.closestDistanceToLineSegment(pathLine) < 2 * constants::ROBOT_RADIUS) {
                         return checkPoint * 0.1;
                     }
                 }
@@ -103,14 +103,14 @@ double CollisionCalculations::getFirstCollisionTimeMovingObject(const Trajectory
         if (velocityOurRobot > 0.7 && avoidObjects.shouldAvoidTheirRobots) {
             if (std::any_of(theirRobots.begin(), theirRobots.end(), [&](const auto &theirRobot) {
                     return LineSegment(theirRobot->getPos() + theirRobot->getVel() * 0.1 * (checkPoint - 1), theirRobot->getPos() + theirRobot->getVel() * 0.1 * checkPoint)
-                               .closestDistanceToLineSegment(pathLine) < 2 * Constants::ROBOT_RADIUS() + additionalMargin;
+                               .closestDistanceToLineSegment(pathLine) < 2 * constants::ROBOT_RADIUS + additionalMargin;
                 })) {
                 return checkPoint * 0.1;
             }
         }
         if (avoidObjects.shouldAvoidBall) {
             auto ballPosition = FieldComputations::getBallPositionAtTime(*world->getWorld()->getBall()->get(), checkPoint * 0.1);
-            if ((ballPosition - positionOurRobot).length() < stp::control_constants::AVOID_BALL_DISTANCE + additionalMargin) {
+            if ((ballPosition - positionOurRobot).length() < constants::AVOID_BALL_DISTANCE + additionalMargin) {
                 return checkPoint * 0.1;
             }
         }
@@ -119,7 +119,7 @@ double CollisionCalculations::getFirstCollisionTimeMovingObject(const Trajectory
             auto ballPosition = FieldComputations::getBallPositionAtTime(*world->getWorld()->getBall()->get(), checkPoint * 0.1);
             auto ballPlacementPosition = GameStateManager::getRefereeDesignatedPosition();
             LineSegment ballPlacementLine(ballPosition, ballPlacementPosition);
-            if (ballPlacementLine.distanceToLine(positionOurRobot) < stp::control_constants::AVOID_BALL_DISTANCE + additionalMargin) {
+            if (ballPlacementLine.distanceToLine(positionOurRobot) < constants::AVOID_BALL_DISTANCE + additionalMargin) {
                 return checkPoint * 0.1;
             }
         }

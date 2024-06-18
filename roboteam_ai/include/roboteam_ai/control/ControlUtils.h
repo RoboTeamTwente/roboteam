@@ -22,35 +22,6 @@ namespace rtt::ai::control {
 class ControlUtils {
    public:
     /**
-     * @brief Calculates the force for a given vector and weight
-     * @param vector Direction of the force
-     * @param weight Weight that needs to be displaced
-     * @param minDistance Minimum distance the weight should move
-     * @return Force needed to displace the weight
-     */
-    static Vector2 calculateForce(const rtt::Vector2 &vector, double weight, double minDistance);
-
-    /**
-     * @brief Limits the velocity
-     * @param vel current velocity
-     * @param maxVel maximum velocity
-     * @param minVel minimum velocity
-     * @param listenToReferee listen to or ignore the referee
-     * @return limited velocity
-     */
-    static Vector2 velocityLimiter(const Vector2 &vel, double maxVel = Constants::MAX_VEL(), double minVel = 0.0, bool listenToReferee = true);
-
-    /**
-     * @brief calculates whether the object velocity will collide with a point
-     * @param objectPosition position of the object
-     * @param velocity velocity vector
-     * @param point point to check for collision
-     * @param maxDifference maximum difference between vector and point
-     * @return boolean that tells whether the object will collide with the point
-     */
-    static bool objectVelocityAimedToPoint(const Vector2 &objectPosition, const Vector2 &velocity, const Vector2 &point, double maxDifference = 0.3);
-
-    /**
      * @brief Determines the kick force based on the distance and the type of kick
      * @param distance distance to the target
      * @param shotType type of the kick

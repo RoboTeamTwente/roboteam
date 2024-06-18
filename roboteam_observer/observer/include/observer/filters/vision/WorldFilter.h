@@ -24,7 +24,7 @@ class WorldFilter {
    public:
     WorldFilter();
 
-    void process(const std::vector<proto::SSL_DetectionFrame>& frames, const std::vector<rtt::RobotsFeedback>& feedback);
+    void process(const std::vector<proto::SSL_DetectionFrame>& frames, const std::vector<rtt::RobotsFeedback>& feedback, const std::vector<int>& camera_ids);
 
     [[nodiscard]] proto::World getWorldPrediction(const Time& time) const;
 

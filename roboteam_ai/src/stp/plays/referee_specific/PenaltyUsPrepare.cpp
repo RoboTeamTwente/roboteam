@@ -17,7 +17,7 @@ PenaltyUsPrepare::PenaltyUsPrepare() : Play() {
     keepPlayEvaluation.emplace_back(GlobalEvaluation::PenaltyUsPrepareGameState);
 
     // Role creation, the names should be unique. The names are used in the stpInfos-map.
-    roles = std::array<std::unique_ptr<Role>, rtt::ai::Constants::ROBOT_COUNT()>{
+    roles = std::array<std::unique_ptr<Role>, rtt::ai::constants::MAX_ROBOT_COUNT>{
         // Roles is we play 6v6
         std::make_unique<role::Formation>("keeper"),
         std::make_unique<role::Formation>("kicker_formation"),
@@ -36,7 +36,7 @@ PenaltyUsPrepare::PenaltyUsPrepare() : Play() {
 
 uint8_t PenaltyUsPrepare::score(const rtt::Field&) noexcept {
     // If this play is valid we always want to execute this play
-    return control_constants::FUZZY_TRUE;
+    return constants::FUZZY_TRUE;
 }
 
 Dealer::FlagMap PenaltyUsPrepare::decideRoleFlags() const noexcept {
@@ -73,7 +73,7 @@ void PenaltyUsPrepare::calculateInfoForRoles() noexcept {
     auto ballPosition = world->getWorld()->getBall();
     // If there is no ball, use the default division A penalty mark position
     double ballX = ballPosition.has_value() ? ballPosition.value()->position.x : PENALTY_MARK_US_X;
-    double limitX = std::min(ballX, PENALTY_MARK_US_X) - Constants::PENALTY_DISTANCE_BEHIND_BALL();
+    double limitX = std::min(ballX, PENALTY_MARK_US_X) - constants::PENALTY_DISTANCE_BEHIND_BALL;
 
     // Then, figure out at what interval the robots will stand on a horizontal line
     double horizontalRange = std::fabs(field.playArea.left() - limitX);

@@ -92,17 +92,3 @@ add_executable(roboteam_robothub_robotControlScript
 )
 target_link_libraries(roboteam_robothub_robotControlScript PRIVATE roboteam_networking)
 target_compile_options(roboteam_robothub_robotControlScript PRIVATE "${COMPILER_FLAGS}")
-
-# Create the make file for scripts/RobotMonitor.cpp
-add_executable(roboteam_robothub_robotMonitor
-        "scripts/RobotMonitor.cpp"
-)
-target_link_libraries(roboteam_robothub_robotMonitor PRIVATE roboteam_networking)
-target_compile_options(roboteam_robothub_robotMonitor PRIVATE "${COMPILER_FLAGS}")
-
-# Create make file for simulation formation test
-add_executable(roboteam_robothub_formation
-        scripts/sendFormationToSimulator.cpp
-        )
-target_link_libraries(roboteam_robothub_formation PUBLIC simulator_manager)
-target_compile_options(roboteam_robothub_formation PRIVATE "${COMPILER_FLAGS}")

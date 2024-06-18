@@ -5,12 +5,12 @@
 
 #include "stp/computations/PassComputations.h"
 #include "stp/computations/PositionScoring.h"
-#include "stp/constants/ControlConstants.h"
 #include "stp/roles/Keeper.h"
 #include "stp/roles/active/PassReceiver.h"
 #include "stp/roles/active/Passer.h"
 #include "stp/roles/passive/Defender.h"
 #include "stp/roles/passive/Formation.h"
+#include "utilities/Constants.h"
 #include "world/views/RobotView.hpp"
 
 namespace rtt::ai::stp::play {
@@ -28,7 +28,7 @@ AttackingPass::AttackingPass() : Play() {
     keepPlayEvaluation.emplace_back(GlobalEvaluation::BallNotInOurDefenseAreaAndStill);
 
     // Role creation, the names should be unique. The names are used in the stpInfos-map.
-    roles = std::array<std::unique_ptr<Role>, rtt::ai::Constants::ROBOT_COUNT()>{
+    roles = std::array<std::unique_ptr<Role>, rtt::ai::constants::MAX_ROBOT_COUNT>{
         // Roles is we play 6v6
         std::make_unique<role::Keeper>("keeper"),
         std::make_unique<role::Passer>("passer"),
@@ -39,9 +39,9 @@ AttackingPass::AttackingPass() : Play() {
         // Additional roles if we play 11v11
         std::make_unique<role::Formation>("waller_0"),
         std::make_unique<role::Formation>("waller_1"),
-        std::make_unique<role::Formation>("attacker_1"),
         std::make_unique<role::Defender>("defender_2"),
-        std::make_unique<role::Formation>("attacker_2"),
+        std::make_unique<role::Defender>("defender_3"),
+        std::make_unique<role::Formation>("attacker_1"),
     };
 }
 
@@ -67,9 +67,9 @@ Dealer::FlagMap AttackingPass::decideRoleFlags() const noexcept {
     flagMap.insert({"defender_0", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
     flagMap.insert({"defender_1", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
     flagMap.insert({"defender_2", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
+    flagMap.insert({"defender_3", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
     flagMap.insert({"attacker_0", {DealerFlagPriority::LOW_PRIORITY, {}}});
     flagMap.insert({"attacker_1", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"attacker_2", {DealerFlagPriority::LOW_PRIORITY, {}}});
 
     return flagMap;
 }
@@ -110,26 +110,17 @@ bool AttackingPass::ballKicked() {
 }
 
 bool AttackingPass::shouldEndPlay() noexcept {
-    // If the receiver has the ball, the play finished successfully
-    if (stpInfos["receiver"].getRobot() && stpInfos["receiver"].getRobot().value()->hasBall()) return true;
-
-    // If the ball is moving too slow after we have kicked it, we should stop the play to get the ball
+    // If the ball is kicked, we end the play to already prepare for what happens next
     if (ballKicked()) return true;
-
-    // If the ball is rolling away from the receiver
-    if (ballKicked() && (world->getWorld()->getBall()->get()->position - passInfo.receiverLocation).dot(world->getWorld()->getBall()->get()->velocity) > 0) return true;
 
     auto newPassInfo = stp::computations::PassComputations::calculatePass(gen::AttackingPass, world, field);
     // If the passer doesn't have the ball yet and there is a better pass available, we should stop the play
-    if (!ballKicked() && stpInfos["passer"].getRobot() && !stpInfos["passer"].getRobot().value()->hasBall() &&
+    if (stpInfos["passer"].getRobot() && !stpInfos["passer"].getRobot().value()->hasBall() &&
         newPassInfo.passScore > 1.05 * stp::PositionScoring::scorePosition(passInfo.receiverLocation, gen::AttackingPass, field, world).score)
         return true;
-    // If the ball is not kicked yet and the passer id is different, another robot can quicker get the ball, so stop
-    if (!ballKicked() && newPassInfo.passerId != passInfo.passerId) {
-        endPlayCounter++;
-        if (endPlayCounter > 20) return true;
-    } else {
-        endPlayCounter = 0;
+    // If the passer id is different, another robot can quicker get the ball, so stop
+    if (newPassInfo.passerId != passInfo.passerId) {
+        return true;
     }
 
     return false;

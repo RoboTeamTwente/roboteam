@@ -39,7 +39,7 @@ class Handler {
     bool setupSSLClients(std::string visionip, std::string refereeip, int visionport, int refereeport);
 
     void startReplay(rtt::LogFileReader& reader);
-    void start(std::string visionip, std::string refereeip, int visionport, int refereeport, bool shouldLog = false);
+    void start(std::string visionip, std::string refereeip, int visionport, int refereeport, bool shouldLog = false, const std::vector<int>& camera_ids = {});
     std::vector<proto::SSL_WrapperPacket> receiveVisionPackets();
     std::vector<proto::Referee> receiveRefereePackets();
     void onRobotFeedback(const rtt::RobotsFeedback& feedback);

@@ -59,14 +59,6 @@ class KeeperBlockBall : public Tactic {
     static LineSegment getKeepersLineSegment(const Field &);
 
     /**
-     * @brief Estimates the trajectory of the ball, either from current velocity or from enemies that might kick it
-     * @param ball to estimate its trajectory from
-     * @param enemyRobot an enemy that might manipulate the ball
-     * @return a trajectory the ball might take
-     */
-    static std::optional<HalfLine> estimateBallTrajectory(const world::view::BallView &ball, const std::optional<world::view::RobotView> &enemyRobot);
-
-    /**
      * @brief Checks if the given trajectory goes towards our goal
      * @param ballTrajectory the trajectory of the ball
      * @param field which contains our goal
@@ -81,6 +73,30 @@ class KeeperBlockBall : public Tactic {
      * @return Target position for the keeper and a bool indicating if the keeper should avoid goal posts
      */
     static std::pair<Vector2, bool> calculateTargetPosition(const StpInfo info) noexcept;
+
+    /**
+     * @brief Calculates the target position for the keeper when the ball is shot
+     * @param info the StpInfo struct
+     * @param keepersLineSegment the lineSegment of the goal
+     * @param ballTrajectory the trajectory of the ball
+     */
+    static Vector2 calculateTargetPositionBallShot(const StpInfo info, rtt::LineSegment keepersLineSegment, rtt::LineSegment ballTrajectory) noexcept;
+
+    /**
+     * @brief Calculates the point where they will have the ball
+     * @param info the StpInfo struct
+     * @param ballTrajectory the trajectory of the ball
+     * @return the point where they will have the ball
+     */
+    static std::optional<Vector2> calculateTheirBallInterception(const StpInfo &info, rtt::LineSegment ballTrajectory) noexcept;
+
+    /**
+     * @brief Calculates the target position for the keeper when the ball is not shot
+     * @param info the StpInfo struct
+     * @param predictedBallPositionTheirRobot the predicted position of the ball when the opponent will have the ball
+     * @return the target position for the keeper
+     */
+    static Vector2 calculateTargetPositionBallNotShot(const StpInfo &info, std::optional<Vector2> predictedBallPositionTheirRobot) noexcept;
 
     /**
      * @brief Calculates the yaw the robot should have

@@ -1,6 +1,7 @@
 #include "utilities/StrategyManager.h"
 
-#include "stp/constants/ControlConstants.h"
+#include "utilities/Constants.h"
+
 namespace rtt::ai {
 
 void StrategyManager::setCurrentGameState(RefCommand command, RefCommand nextCommand, std::optional<world::view::BallView> ballOpt) {
@@ -15,7 +16,7 @@ void StrategyManager::setCurrentGameState(RefCommand command, RefCommand nextCom
                                         nextCommand == RefCommand::PREPARE_PENALTY_THEM || nextCommand == RefCommand::PREPARE_PENALTY_US)) {
         command = nextCommand;
     }
-    if (command != RefCommand::BALL_PLACEMENT_US && command != RefCommand::BALL_PLACEMENT_THEM && nextCommand == RefCommand::FORCED_START) {
+    if (command != RefCommand::BALL_PLACEMENT_US && command != RefCommand::STOP && command != RefCommand::HALT && nextCommand == RefCommand::FORCED_START) {
         command = RefCommand::PREPARE_FORCED_START;
     }
     if (command == RefCommand::FORCED_START) {
@@ -35,7 +36,9 @@ void StrategyManager::setCurrentGameState(RefCommand command, RefCommand nextCom
 
     if ((currentGameState.commandId == RefCommand::DIRECT_FREE_THEM || currentGameState.commandId == RefCommand::DIRECT_FREE_US ||
          currentGameState.commandId == RefCommand::KICKOFF_US || currentGameState.commandId == RefCommand::KICKOFF_THEM) &&
-        ballOpt.has_value() && (ballOpt.value()->velocity.length() > stp::control_constants::BALL_GOT_SHOT_LIMIT || currentGameState.timeLeft < 0.0)) {
+        ((ballOpt.has_value() && currentGameState.kickPoint.has_value() &&
+          (ballOpt.value()->position - *currentGameState.kickPoint).length() > constants::FREE_KICK_TAKEN_DISTANCE) ||
+         currentGameState.timeLeft <= 0.0)) {
         currentGameState = getGameStateForRefCommand(RefCommand::NORMAL_START);
         lastCommand = command;
         return;

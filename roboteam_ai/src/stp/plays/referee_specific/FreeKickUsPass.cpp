@@ -7,6 +7,7 @@
 #include "stp/roles/active/PassReceiver.h"
 #include "stp/roles/passive/Defender.h"
 #include "stp/roles/passive/Formation.h"
+#include "utilities/RuntimeConfig.h"
 
 namespace rtt::ai::stp::play {
 
@@ -17,11 +18,10 @@ FreeKickUsPass::FreeKickUsPass() : Play() {
 
     // Evaluations that have to be true to allow the play to continue, otherwise the play will change. Plays can also end using the shouldEndPlay().
     keepPlayEvaluation.clear();
-    keepPlayEvaluation.emplace_back(GlobalEvaluation::NormalOrFreeKickUsGameState);
-    keepPlayEvaluation.emplace_back(GlobalEvaluation::WeWillHaveBall);
+    keepPlayEvaluation.emplace_back(GlobalEvaluation::FreeKickUsGameState);
 
     // Role creation, the names should be unique. The names are used in the stpInfos-map.
-    roles = std::array<std::unique_ptr<Role>, rtt::ai::Constants::ROBOT_COUNT()>{
+    roles = std::array<std::unique_ptr<Role>, rtt::ai::constants::MAX_ROBOT_COUNT>{
         // Roles is we play 6v6
         std::make_unique<role::Keeper>("keeper"),
         std::make_unique<role::FreeKickTaker>("free_kick_taker"),
@@ -32,9 +32,9 @@ FreeKickUsPass::FreeKickUsPass() : Play() {
         // Additional roles if we play 11v11
         std::make_unique<role::Formation>("waller_0"),
         std::make_unique<role::Formation>("waller_1"),
-        std::make_unique<role::Formation>("attacker_1"),
         std::make_unique<role::Defender>("defender_2"),
-        std::make_unique<role::Formation>("attacker_2"),
+        std::make_unique<role::Defender>("defender_3"),
+        std::make_unique<role::Formation>("attacker_1"),
     };
 }
 
@@ -57,9 +57,9 @@ Dealer::FlagMap FreeKickUsPass::decideRoleFlags() const noexcept {
     flagMap.insert({"defender_0", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
     flagMap.insert({"defender_1", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
     flagMap.insert({"defender_2", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
+    flagMap.insert({"defender_3", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
     flagMap.insert({"attacker_0", {DealerFlagPriority::HIGH_PRIORITY, {}}});
     flagMap.insert({"attacker_1", {DealerFlagPriority::HIGH_PRIORITY, {}}});
-    flagMap.insert({"attacker_2", {DealerFlagPriority::HIGH_PRIORITY, {}}});
 
     return flagMap;
 }
@@ -74,7 +74,7 @@ void FreeKickUsPass::calculateInfoForRoles() noexcept {
         stpInfos["free_kick_taker"].setPositionToShootAt(passInfo.receiverLocation);
         stpInfos["free_kick_taker"].setShotType(ShotType::PASS);
         stpInfos["free_kick_taker"].setKickOrChip(KickOrChip::KICK);
-        if (GameStateManager::getCurrentGameState().timeLeft < 1.5) {
+        if (RuntimeConfig::useReferee && GameStateManager::getCurrentGameState().timeLeft < 1.5) {
             stpInfos["free_kick_taker"].setPositionToShootAt(field.rightDefenseArea.rightLine().center());
             stpInfos["free_kick_taker"].setShotType(ShotType::MAX);
         }
@@ -104,18 +104,15 @@ bool FreeKickUsPass::ballKicked() {
 }
 
 bool FreeKickUsPass::shouldEndPlay() noexcept {
-    // True if receiver has ball
-    if (stpInfos["receiver"].getRobot() && stpInfos["receiver"].getRobot().value()->hasBall()) return true;
-
-    // If the ball is moving too slow after we have kicked it, we should stop the play to get the ball
+    // If the ball is kicked, we end the play to already prepare for what happens next
     if (ballKicked()) return true;
 
     // True if a different pass has a higher score than the current pass (by some margin)- only if the passer is not already close to the ball (since we don't want to adjust our
     // target when we're in the process of shooting
-    if (!ballKicked() && stpInfos["free_kick_taker"].getRobot() && !stpInfos["free_kick_taker"].getRobot().value()->hasBall() &&
+    if (stpInfos["free_kick_taker"].getRobot() && !stpInfos["free_kick_taker"].getRobot().value()->hasBall() &&
         stp::computations::PassComputations::calculatePass(gen::AttackingPass, world, field).passScore >
             1.05 * stp::PositionScoring::scorePosition(passInfo.receiverLocation, gen::AttackingPass, field, world).score &&
-        GameStateManager::getCurrentGameState().timeLeft > 1.5)
+        (!RuntimeConfig::useReferee || GameStateManager::getCurrentGameState().timeLeft > 1.5))
         return true;
 
     return false;

@@ -5,6 +5,7 @@
 #include "stp/roles/Keeper.h"
 #include "stp/roles/active/PenaltyTaker.h"
 #include "stp/roles/passive/Halt.h"
+#include "utilities/RuntimeConfig.h"
 
 namespace rtt::ai::stp::play {
 const char* PenaltyUs::getName() const { return "Penalty Us"; }
@@ -19,7 +20,7 @@ PenaltyUs::PenaltyUs() : Play() {
     keepPlayEvaluation.emplace_back(GlobalEvaluation::PenaltyUsGameState);
 
     // Role creation, the names should be unique. The names are used in the stpInfos-map.
-    roles = std::array<std::unique_ptr<Role>, rtt::ai::Constants::ROBOT_COUNT()>{
+    roles = std::array<std::unique_ptr<Role>, rtt::ai::constants::MAX_ROBOT_COUNT>{
         // Roles is we play 6v6
         std::make_unique<role::Keeper>("keeper"), std::make_unique<role::PenaltyTaker>("kicker"), std::make_unique<role::Halt>("halt_0"), std::make_unique<role::Halt>("halt_1"),
         std::make_unique<role::Halt>("halt_2"), std::make_unique<role::Halt>("halt_3"),
@@ -30,7 +31,7 @@ PenaltyUs::PenaltyUs() : Play() {
 
 uint8_t PenaltyUs::score(const rtt::Field&) noexcept {
     // If this play is valid we always want to execute this play
-    return control_constants::FUZZY_TRUE;
+    return constants::FUZZY_TRUE;
 }
 
 Dealer::FlagMap PenaltyUs::decideRoleFlags() const noexcept {
@@ -57,7 +58,7 @@ Dealer::FlagMap PenaltyUs::decideRoleFlags() const noexcept {
 
 void PenaltyUs::calculateInfoForRoles() noexcept {
     auto positionTarget = PositionComputations::getPosition(std::nullopt, field.middleRightGrid, gen::GoalShot, field, world);
-    if (GameStateManager::getCurrentGameState().timeLeft > 3.0) {
+    if (!RuntimeConfig::useReferee || GameStateManager::getCurrentGameState().timeLeft > 3.0) {
         stpInfos["kicker"].setPositionToMoveTo(positionTarget);
     } else {
         stpInfos["kicker"].setPositionToMoveTo(stpInfos["kicker"].getRobot()->get()->getPos());

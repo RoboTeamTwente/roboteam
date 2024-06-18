@@ -24,7 +24,7 @@ var classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsForceStart =
     [ "previousKeeperId", "de/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsForceStart.html#a7164f241b13b1aa59b6e6b5c30a3094b", null ],
     [ "previousMaxRobots", "de/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsForceStart.html#a067c0013eb3e4d70eedd32a504dee10d", null ],
     [ "previousRobotNum", "de/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsForceStart.html#afc2268677ee563a2f0a7efa4acff465e", null ],
-    [ "roles", "de/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsForceStart.html#a0329d2814e2651902bb05f23659e0084", null ],
+    [ "roles", "de/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsForceStart.html#a38ffe1c2f377508d851dc649d03644c0", null ],
     [ "roleStatuses", "de/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsForceStart.html#a8750ea230c633dcf6a0f09e28e4f47b1", null ],
     [ "scoring", "de/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsForceStart.html#a4598ba530d29d7f4f53bcec0c9845100", null ],
     [ "startPlayEvaluation", "de/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsForceStart.html#a859e8c8abae48115eab588736926368f", null ],

@@ -44,9 +44,7 @@ var annotated_dup =
             [ "KickOffThemGameStateEvaluation", "d0/d0b/classrtt_1_1ai_1_1stp_1_1evaluation_1_1KickOffThemGameStateEvaluation.html", "d0/d0b/classrtt_1_1ai_1_1stp_1_1evaluation_1_1KickOffThemGameStateEvaluation" ],
             [ "KickOffThemPrepareGameStateEvaluation", "db/d78/classrtt_1_1ai_1_1stp_1_1evaluation_1_1KickOffThemPrepareGameStateEvaluation.html", "db/d78/classrtt_1_1ai_1_1stp_1_1evaluation_1_1KickOffThemPrepareGameStateEvaluation" ],
             [ "KickOffUsGameStateEvaluation", "d2/ddf/classrtt_1_1ai_1_1stp_1_1evaluation_1_1KickOffUsGameStateEvaluation.html", "d2/ddf/classrtt_1_1ai_1_1stp_1_1evaluation_1_1KickOffUsGameStateEvaluation" ],
-            [ "KickOffUsOrNormalGameStateEvaluation", "d2/da7/classrtt_1_1ai_1_1stp_1_1evaluation_1_1KickOffUsOrNormalGameStateEvaluation.html", "d2/da7/classrtt_1_1ai_1_1stp_1_1evaluation_1_1KickOffUsOrNormalGameStateEvaluation" ],
             [ "KickOffUsPrepareGameStateEvaluation", "dd/db8/classrtt_1_1ai_1_1stp_1_1evaluation_1_1KickOffUsPrepareGameStateEvaluation.html", "dd/db8/classrtt_1_1ai_1_1stp_1_1evaluation_1_1KickOffUsPrepareGameStateEvaluation" ],
-            [ "NormalOrFreeKickUsGameStateEvaluation", "de/dd9/classrtt_1_1ai_1_1stp_1_1evaluation_1_1NormalOrFreeKickUsGameStateEvaluation.html", "de/dd9/classrtt_1_1ai_1_1stp_1_1evaluation_1_1NormalOrFreeKickUsGameStateEvaluation" ],
             [ "NormalPlayGameStateEvaluation", "d1/d22/classrtt_1_1ai_1_1stp_1_1evaluation_1_1NormalPlayGameStateEvaluation.html", "d1/d22/classrtt_1_1ai_1_1stp_1_1evaluation_1_1NormalPlayGameStateEvaluation" ],
             [ "PenaltyThemGameStateEvaluation", "d8/d60/classrtt_1_1ai_1_1stp_1_1evaluation_1_1PenaltyThemGameStateEvaluation.html", "d8/d60/classrtt_1_1ai_1_1stp_1_1evaluation_1_1PenaltyThemGameStateEvaluation" ],
             [ "PenaltyThemPrepareGameStateEvaluation", "d2/d1d/classrtt_1_1ai_1_1stp_1_1evaluation_1_1PenaltyThemPrepareGameStateEvaluation.html", "d2/d1d/classrtt_1_1ai_1_1stp_1_1evaluation_1_1PenaltyThemPrepareGameStateEvaluation" ],
@@ -152,7 +150,6 @@ var annotated_dup =
           [ "TestTactic", "de/d0f/classrtt_1_1ai_1_1stp_1_1TestTactic.html", "de/d0f/classrtt_1_1ai_1_1stp_1_1TestTactic" ],
           [ "AvoidObjects", "d5/d14/namespacertt_1_1ai_1_1stp.html#d8/dcb/structrtt_1_1ai_1_1stp_1_1AvoidObjects", "d5/d14/namespacertt_1_1ai_1_1stp_d8/dcb/structrtt_1_1ai_1_1stp_1_1AvoidObjects_dup" ]
         ] ],
-        [ "Constants", "d9/dc5/classrtt_1_1ai_1_1Constants.html", "d9/dc5/classrtt_1_1ai_1_1Constants" ],
         [ "Dealer", "d7/ddc/classrtt_1_1ai_1_1Dealer.html", "d7/ddc/classrtt_1_1ai_1_1Dealer" ],
         [ "GameState", "d6/dc7/structrtt_1_1ai_1_1GameState.html", "d6/dc7/structrtt_1_1ai_1_1GameState" ],
         [ "GameStateManager", "db/de9/classrtt_1_1ai_1_1GameStateManager.html", "db/de9/classrtt_1_1ai_1_1GameStateManager" ],

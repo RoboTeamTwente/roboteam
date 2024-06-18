@@ -163,15 +163,21 @@ Static Private Member Functions</h2></td></tr>
 <tr class="memitem:a69444207b9e6d1623afacf9253d4e357"><td class="memItemLeft" align="right" valign="top">static LineSegment&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#a69444207b9e6d1623afacf9253d4e357">getKeepersLineSegment</a> (const Field &amp;)</td></tr>
 <tr class="memdesc:a69444207b9e6d1623afacf9253d4e357"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a LineSegment on which the keeper should stay while defending. Start is left of goal, end is right of goal.  <a href="../../d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#a69444207b9e6d1623afacf9253d4e357">More...</a><br /></td></tr>
 <tr class="separator:a69444207b9e6d1623afacf9253d4e357"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8e121c98829ab73ffab5702f91de4b20"><td class="memItemLeft" align="right" valign="top">static std::optional&lt; HalfLine &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#a8e121c98829ab73ffab5702f91de4b20">estimateBallTrajectory</a> (const <a class="el" href="../../d8/d17/classrtt_1_1world_1_1view_1_1BallView.html">world::view::BallView</a> &amp;ball, const std::optional&lt; <a class="el" href="../../d3/de7/classrtt_1_1world_1_1view_1_1RobotView.html">world::view::RobotView</a> &gt; &amp;enemyRobot)</td></tr>
-<tr class="memdesc:a8e121c98829ab73ffab5702f91de4b20"><td class="mdescLeft">&#160;</td><td class="mdescRight">Estimates the trajectory of the ball, either from current velocity or from enemies that might kick it.  <a href="../../d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#a8e121c98829ab73ffab5702f91de4b20">More...</a><br /></td></tr>
-<tr class="separator:a8e121c98829ab73ffab5702f91de4b20"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adf2d88cf5c448bdd7badea70cf0faf69"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#adf2d88cf5c448bdd7badea70cf0faf69">isBallHeadingTowardsOurGoal</a> (const HalfLine &amp;ballTrajectory, const Field &amp;field)</td></tr>
 <tr class="memdesc:adf2d88cf5c448bdd7badea70cf0faf69"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if the given trajectory goes towards our goal.  <a href="../../d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#adf2d88cf5c448bdd7badea70cf0faf69">More...</a><br /></td></tr>
 <tr class="separator:adf2d88cf5c448bdd7badea70cf0faf69"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aed029a6dec04c0f4d4deb50a9aa90dc4"><td class="memItemLeft" align="right" valign="top">static std::pair&lt; <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a>, bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#aed029a6dec04c0f4d4deb50a9aa90dc4">calculateTargetPosition</a> (const <a class="el" href="../../d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html">StpInfo</a> info) noexcept</td></tr>
 <tr class="memdesc:aed029a6dec04c0f4d4deb50a9aa90dc4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates the position for the keeper PID type is different for intercepting and kicking (coarse and fast or fine and slower control)  <a href="../../d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#aed029a6dec04c0f4d4deb50a9aa90dc4">More...</a><br /></td></tr>
 <tr class="separator:aed029a6dec04c0f4d4deb50a9aa90dc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a05b9b9d6ebeaef143f8f936f64b9e02b"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#a05b9b9d6ebeaef143f8f936f64b9e02b">calculateTargetPositionBallShot</a> (const <a class="el" href="../../d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html">StpInfo</a> info, rtt::LineSegment keepersLineSegment, rtt::LineSegment ballTrajectory) noexcept</td></tr>
+<tr class="memdesc:a05b9b9d6ebeaef143f8f936f64b9e02b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates the target position for the keeper when the ball is shot.  <a href="../../d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#a05b9b9d6ebeaef143f8f936f64b9e02b">More...</a><br /></td></tr>
+<tr class="separator:a05b9b9d6ebeaef143f8f936f64b9e02b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7c2bf1a368f75dfc33254cf12fc6288f"><td class="memItemLeft" align="right" valign="top">static std::optional&lt; <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#a7c2bf1a368f75dfc33254cf12fc6288f">calculateTheirBallInterception</a> (const <a class="el" href="../../d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html">StpInfo</a> &amp;info, rtt::LineSegment ballTrajectory) noexcept</td></tr>
+<tr class="memdesc:a7c2bf1a368f75dfc33254cf12fc6288f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates the point where they will have the ball.  <a href="../../d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#a7c2bf1a368f75dfc33254cf12fc6288f">More...</a><br /></td></tr>
+<tr class="separator:a7c2bf1a368f75dfc33254cf12fc6288f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca87548d163db752636b4d02ba236804"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#aca87548d163db752636b4d02ba236804">calculateTargetPositionBallNotShot</a> (const <a class="el" href="../../d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html">StpInfo</a> &amp;info, std::optional&lt; <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &gt; predictedBallPositionTheirRobot) noexcept</td></tr>
+<tr class="memdesc:aca87548d163db752636b4d02ba236804"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates the target position for the keeper when the ball is not shot.  <a href="../../d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#aca87548d163db752636b4d02ba236804">More...</a><br /></td></tr>
+<tr class="separator:aca87548d163db752636b4d02ba236804"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a94843b609e566bbf3806e3c15699a013"><td class="memItemLeft" align="right" valign="top">static Angle&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#a94843b609e566bbf3806e3c15699a013">calculateYaw</a> (const <a class="el" href="../../d8/d17/classrtt_1_1world_1_1view_1_1BallView.html">world::view::BallView</a> &amp;ball, const <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;targetKeeperPosition)</td></tr>
 <tr class="memdesc:a94843b609e566bbf3806e3c15699a013"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates the yaw the robot should have.  <a href="../../d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#a94843b609e566bbf3806e3c15699a013">More...</a><br /></td></tr>
 <tr class="separator:a94843b609e566bbf3806e3c15699a013"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -271,6 +277,150 @@ Static Private Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="aca87548d163db752636b4d02ba236804"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aca87548d163db752636b4d02ba236804">&#9670;&nbsp;</a></span>calculateTargetPositionBallNotShot()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> rtt::ai::stp::tactic::KeeperBlockBall::calculateTargetPositionBallNotShot </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="../../d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html">StpInfo</a> &amp;&#160;</td>
+          <td class="paramname"><em>info</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::optional&lt; <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &gt;&#160;</td>
+          <td class="paramname"><em>predictedBallPositionTheirRobot</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Calculates the target position for the keeper when the ball is not shot. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">info</td><td>the <a class="el" href="../../d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html">StpInfo</a> struct </td></tr>
+    <tr><td class="paramname">predictedBallPositionTheirRobot</td><td>the predicted position of the ball when the opponent will have the ball </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the target position for the keeper </dd></dl>
+
+</div>
+</div>
+<a id="a05b9b9d6ebeaef143f8f936f64b9e02b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a05b9b9d6ebeaef143f8f936f64b9e02b">&#9670;&nbsp;</a></span>calculateTargetPositionBallShot()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> rtt::ai::stp::tactic::KeeperBlockBall::calculateTargetPositionBallShot </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="../../d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html">StpInfo</a>&#160;</td>
+          <td class="paramname"><em>info</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">rtt::LineSegment&#160;</td>
+          <td class="paramname"><em>keepersLineSegment</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">rtt::LineSegment&#160;</td>
+          <td class="paramname"><em>ballTrajectory</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Calculates the target position for the keeper when the ball is shot. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">info</td><td>the <a class="el" href="../../d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html">StpInfo</a> struct </td></tr>
+    <tr><td class="paramname">keepersLineSegment</td><td>the lineSegment of the goal </td></tr>
+    <tr><td class="paramname">ballTrajectory</td><td>the trajectory of the ball </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a7c2bf1a368f75dfc33254cf12fc6288f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7c2bf1a368f75dfc33254cf12fc6288f">&#9670;&nbsp;</a></span>calculateTheirBallInterception()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt; <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &gt; rtt::ai::stp::tactic::KeeperBlockBall::calculateTheirBallInterception </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="../../d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html">StpInfo</a> &amp;&#160;</td>
+          <td class="paramname"><em>info</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">rtt::LineSegment&#160;</td>
+          <td class="paramname"><em>ballTrajectory</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Calculates the point where they will have the ball. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">info</td><td>the <a class="el" href="../../d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html">StpInfo</a> struct </td></tr>
+    <tr><td class="paramname">ballTrajectory</td><td>the trajectory of the ball </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the point where they will have the ball </dd></dl>
+
+</div>
+</div>
 <a id="a94843b609e566bbf3806e3c15699a013"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a94843b609e566bbf3806e3c15699a013">&#9670;&nbsp;</a></span>calculateYaw()</h2>
 
@@ -314,52 +464,6 @@ Static Private Member Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the yaw the robot should have </dd></dl>
-
-</div>
-</div>
-<a id="a8e121c98829ab73ffab5702f91de4b20"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8e121c98829ab73ffab5702f91de4b20">&#9670;&nbsp;</a></span>estimateBallTrajectory()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::optional&lt; HalfLine &gt; rtt::ai::stp::tactic::KeeperBlockBall::estimateBallTrajectory </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="../../d8/d17/classrtt_1_1world_1_1view_1_1BallView.html">world::view::BallView</a> &amp;&#160;</td>
-          <td class="paramname"><em>ball</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::optional&lt; <a class="el" href="../../d3/de7/classrtt_1_1world_1_1view_1_1RobotView.html">world::view::RobotView</a> &gt; &amp;&#160;</td>
-          <td class="paramname"><em>enemyRobot</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Estimates the trajectory of the ball, either from current velocity or from enemies that might kick it. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">ball</td><td>to estimate its trajectory from </td></tr>
-    <tr><td class="paramname">enemyRobot</td><td>an enemy that might manipulate the ball </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>a trajectory the ball might take </dd></dl>
 
 </div>
 </div>

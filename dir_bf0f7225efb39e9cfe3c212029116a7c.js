@@ -1,8 +1,6 @@
 var dir_bf0f7225efb39e9cfe3c212029116a7c =
 [
-    [ "Constants.h", "d1/d45/Constants_8h.html", [
-      [ "Constants", "d9/dc5/classrtt_1_1ai_1_1Constants.html", "d9/dc5/classrtt_1_1ai_1_1Constants" ]
-    ] ],
+    [ "Constants.h", "d1/d45/Constants_8h.html", "d1/d45/Constants_8h" ],
     [ "Dealer.h", "d4/dab/Dealer_8h.html", "d4/dab/Dealer_8h" ],
     [ "GameSettings.h", "d7/d66/GameSettings_8h.html", [
       [ "GameSettings", "df/db4/classrtt_1_1GameSettings.html", "df/db4/classrtt_1_1GameSettings" ]

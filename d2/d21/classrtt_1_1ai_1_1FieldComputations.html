@@ -110,9 +110,9 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:afaf2328f2ad95c4dcc4216bf2c54b8f3"><td class="memItemLeft" align="right" valign="top">static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d21/classrtt_1_1ai_1_1FieldComputations.html#afaf2328f2ad95c4dcc4216bf2c54b8f3">getBallTimeAtPosition</a> (const <a class="el" href="../../dd/db7/classrtt_1_1world_1_1ball_1_1Ball.html">rtt::world::ball::Ball</a> &amp;ball, const <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;point)</td></tr>
 <tr class="memdesc:afaf2328f2ad95c4dcc4216bf2c54b8f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the expected time it takes for the ball to reach a certain position.  <a href="../../d2/d21/classrtt_1_1ai_1_1FieldComputations.html#afaf2328f2ad95c4dcc4216bf2c54b8f3">More...</a><br /></td></tr>
 <tr class="separator:afaf2328f2ad95c4dcc4216bf2c54b8f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abbbe5c1834f2376283ab30952150c3d1"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d21/classrtt_1_1ai_1_1FieldComputations.html#abbbe5c1834f2376283ab30952150c3d1">pointIsValidPosition</a> (const rtt::Field &amp;field, const <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;point, <a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#d8/dcb/structrtt_1_1ai_1_1stp_1_1AvoidObjects">stp::AvoidObjects</a> avoidObjects={}, double fieldMargin=0.0)</td></tr>
-<tr class="memdesc:abbbe5c1834f2376283ab30952150c3d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check whether a given point is a valid position given which parts of the field should be avoided (note that shouldAvoidBall is not taken into consideration)  <a href="../../d2/d21/classrtt_1_1ai_1_1FieldComputations.html#abbbe5c1834f2376283ab30952150c3d1">More...</a><br /></td></tr>
-<tr class="separator:abbbe5c1834f2376283ab30952150c3d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6a5bf0834110b8d114b1543f1c0e52e0"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d21/classrtt_1_1ai_1_1FieldComputations.html#a6a5bf0834110b8d114b1543f1c0e52e0">pointIsValidPosition</a> (const rtt::Field &amp;field, const <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;point, <a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#d8/dcb/structrtt_1_1ai_1_1stp_1_1AvoidObjects">stp::AvoidObjects</a> avoidObjects, double fieldMargin=0.0)</td></tr>
+<tr class="memdesc:a6a5bf0834110b8d114b1543f1c0e52e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check whether a given point is a valid position given which parts of the field should be avoided (note that shouldAvoidBall is not taken into consideration)  <a href="../../d2/d21/classrtt_1_1ai_1_1FieldComputations.html#a6a5bf0834110b8d114b1543f1c0e52e0">More...</a><br /></td></tr>
+<tr class="separator:a6a5bf0834110b8d114b1543f1c0e52e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac6ac44afce2362338e2881d0c729a9d8"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d21/classrtt_1_1ai_1_1FieldComputations.html#ac6ac44afce2362338e2881d0c729a9d8">projectPointInField</a> (const rtt::Field &amp;field, <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> point, double margin=0)</td></tr>
 <tr class="memdesc:ac6ac44afce2362338e2881d0c729a9d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Project given position to within the field with a certain margin.  <a href="../../d2/d21/classrtt_1_1ai_1_1FieldComputations.html#ac6ac44afce2362338e2881d0c729a9d8">More...</a><br /></td></tr>
 <tr class="separator:ac6ac44afce2362338e2881d0c729a9d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -172,8 +172,6 @@ Static Private Member Functions</h2></td></tr>
 Static Private Attributes</h2></td></tr>
 <tr class="memitem:a3580ec8ed627658402f4fd08c236d7fd"><td class="memItemLeft" align="right" valign="top">static constexpr double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d21/classrtt_1_1ai_1_1FieldComputations.html#a3580ec8ed627658402f4fd08c236d7fd">NEGLIGIBLE_LENGTH</a> = 0.000001</td></tr>
 <tr class="separator:a3580ec8ed627658402f4fd08c236d7fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5671a7a348121ee5e1d4a57ba9c8d1aa"><td class="memItemLeft" align="right" valign="top">static constexpr double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d21/classrtt_1_1ai_1_1FieldComputations.html#a5671a7a348121ee5e1d4a57ba9c8d1aa">PROJECTION_MARGIN</a> = 0.02</td></tr>
-<tr class="separator:a5671a7a348121ee5e1d4a57ba9c8d1aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The Field Computation class does all kind of computations on the Field based on the Field class variables. </p>
@@ -973,8 +971,8 @@ Static Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="abbbe5c1834f2376283ab30952150c3d1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abbbe5c1834f2376283ab30952150c3d1">&#9670;&nbsp;</a></span>pointIsValidPosition()</h2>
+<a id="a6a5bf0834110b8d114b1543f1c0e52e0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6a5bf0834110b8d114b1543f1c0e52e0">&#9670;&nbsp;</a></span>pointIsValidPosition()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -998,7 +996,7 @@ Static Private Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#d8/dcb/structrtt_1_1ai_1_1stp_1_1AvoidObjects">stp::AvoidObjects</a>&#160;</td>
-          <td class="paramname"><em>avoidObjects</em> = <code>{}</code>, </td>
+          <td class="paramname"><em>avoidObjects</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1435,29 +1433,6 @@ Static Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <p>If a line length is below or equal to this threshold then is it neglected during determining the blockades. </p>
-
-</div>
-</div>
-<a id="a5671a7a348121ee5e1d4a57ba9c8d1aa"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5671a7a348121ee5e1d4a57ba9c8d1aa">&#9670;&nbsp;</a></span>PROJECTION_MARGIN</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr double rtt::ai::FieldComputations::PROJECTION_MARGIN = 0.02</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Some extra padding is added when projecting positions,so that the projected position is not on lines/intersections </p>
 
 </div>
 </div>

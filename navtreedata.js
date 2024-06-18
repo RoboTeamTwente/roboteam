@@ -76,18 +76,18 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"d1/d22/classrtt_1_1ai_1_1stp_1_1evaluation_1_1NormalPlayGameStateEvaluation.html#a80164c8fa4f01457c6ec28c150cb098b",
-"d3/d66/classrtt_1_1ai_1_1stp_1_1tactic_1_1Receive.html",
-"d4/d99/classrtt_1_1world_1_1robot_1_1Robot.html#a8aeb56889e7c35ddf29ece162d7bd332",
-"d5/d45/FreeKickThemGameStateEvaluation_8cpp.html",
-"d6/d47/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUsPrepare.html#a067c0013eb3e4d70eedd32a504dee10d",
+"d1/d45/Constants_8h.html#a10ed5242a17dcfbc91d8180f43fbea64",
+"d2/de6/classrtt_1_1ai_1_1gui_1_1Out.html#a988473c762bcec46998bf48a80507165",
+"d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot.html#ab5f09cfa9cd1ddb2a6990cb3c1b4d691",
+"d5/d4d/BallOnOurSideGlobalEvaluation_8cpp.html",
+"d6/d47/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUsPrepare.html#a0c13cbd482099fa139f3a5f08d964efe",
 "d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#a7439c6149abbc461640c9ecdad2ba8d6",
 "d8/dd4/RefCommand_8h.html#ac458fd2464c54331a04fc2fd54d82843abca20722938852a1d96f3ec869b939cc",
-"da/d39/classrtt_1_1world_1_1World.html#a7a081491cf90e5710bb464d553ff9790",
-"db/dd1/classrtt_1_1ai_1_1stp_1_1tactic_1_1ChipAtPos.html",
-"dc/d8f/namespacertt.html#af4c8aa161a15c716d7371108d6119b6b",
-"de/d0f/classrtt_1_1ai_1_1stp_1_1TestTactic.html#ac66cf9fe9def08172b053a6abc869ba1",
-"df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass.html#afc2268677ee563a2f0a7efa4acff465e"
+"da/d1f/namespacertt_1_1ai_1_1constants.html#afd0e5c63445cb39f43dfaed43797a409",
+"db/dd1/classrtt_1_1ai_1_1stp_1_1tactic_1_1ChipAtPos.html#ac7dba7916b5fc648439cb51181d01358",
+"dd/d0a/PenaltyTaker_8h_source.html",
+"de/d2f/namespacertt_1_1world_1_1robot.html#a6a176dae355c34efaed193f2ddb19aac",
+"dir_4fa5e563b4b41071845bfe29c171590a.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

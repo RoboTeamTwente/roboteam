@@ -100,8 +100,8 @@ $(document).ready(function(){initNavTree('dd/d66/structrtt_1_1ai_1_1control_1_1T
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ab62e55c2485eb9ca8904f09de58555d6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d66/structrtt_1_1ai_1_1control_1_1TimedPos1D.html#ab62e55c2485eb9ca8904f09de58555d6">TimedPos1D</a> (double <a class="el" href="../../dd/d66/structrtt_1_1ai_1_1control_1_1TimedPos1D.html#a3901d156a1e6f373d875cd002c1d78ba">pos</a>, double <a class="el" href="../../dd/d66/structrtt_1_1ai_1_1control_1_1TimedPos1D.html#acfe07c99df10d428fc7eb8adaf19b91b">time</a>)</td></tr>
-<tr class="separator:ab62e55c2485eb9ca8904f09de58555d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7bffece3c5966196c2f25232e3f5453c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d66/structrtt_1_1ai_1_1control_1_1TimedPos1D.html#a7bffece3c5966196c2f25232e3f5453c">TimedPos1D</a> (double <a class="el" href="../../dd/d66/structrtt_1_1ai_1_1control_1_1TimedPos1D.html#a3901d156a1e6f373d875cd002c1d78ba">pos</a>, double <a class="el" href="../../dd/d66/structrtt_1_1ai_1_1control_1_1TimedPos1D.html#acfe07c99df10d428fc7eb8adaf19b91b">time</a>, double <a class="el" href="../../dd/d66/structrtt_1_1ai_1_1control_1_1TimedPos1D.html#abcba2b3c7dad4ce814b27df10b6926f5">timeToTarget</a>)</td></tr>
+<tr class="separator:a7bffece3c5966196c2f25232e3f5453c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -109,12 +109,14 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a3901d156a1e6f373d875cd002c1d78ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acfe07c99df10d428fc7eb8adaf19b91b"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d66/structrtt_1_1ai_1_1control_1_1TimedPos1D.html#acfe07c99df10d428fc7eb8adaf19b91b">time</a></td></tr>
 <tr class="separator:acfe07c99df10d428fc7eb8adaf19b91b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abcba2b3c7dad4ce814b27df10b6926f5"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d66/structrtt_1_1ai_1_1control_1_1TimedPos1D.html#abcba2b3c7dad4ce814b27df10b6926f5">timeToTarget</a></td></tr>
+<tr class="separator:abcba2b3c7dad4ce814b27df10b6926f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class that computes the overshooting destination of the robot when it can not reach the target position in time with a full stop. Based on TIGERs TDP 2023 (<a href="https://tdp.roboteamtwente.nl/static/tdps/144/tdp.html">https://tdp.roboteamtwente.nl/static/tdps/144/tdp.html</a>). Implementation is based on their code release of 2023. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="ab62e55c2485eb9ca8904f09de58555d6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab62e55c2485eb9ca8904f09de58555d6">&#9670;&nbsp;</a></span>TimedPos1D()</h2>
+<a id="a7bffece3c5966196c2f25232e3f5453c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7bffece3c5966196c2f25232e3f5453c">&#9670;&nbsp;</a></span>TimedPos1D()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -132,7 +134,13 @@ Public Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>time</em>&#160;</td>
+          <td class="paramname"><em>time</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>timeToTarget</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -172,6 +180,20 @@ Public Attributes</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">double rtt::ai::control::TimedPos1D::time</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="abcba2b3c7dad4ce814b27df10b6926f5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abcba2b3c7dad4ce814b27df10b6926f5">&#9670;&nbsp;</a></span>timeToTarget</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double rtt::ai::control::TimedPos1D::timeToTarget</td>
         </tr>
       </table>
 </div><div class="memdoc">

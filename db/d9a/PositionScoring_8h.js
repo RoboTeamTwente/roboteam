@@ -1,4 +1,4 @@
-var GeneralizationConstants_8h =
+var PositionScoring_8h =
 [
     [ "PositionScores", "d7/d73/namespacertt_1_1ai_1_1stp_1_1gen.html#da/d40/structrtt_1_1ai_1_1stp_1_1gen_1_1PositionScores", [
       [ "scoreGoalShot", "d7/d73/namespacertt_1_1ai_1_1stp_1_1gen.html#ac6f77d94a1ffa7e2dd3db7975f1b6cce", null ],
@@ -14,9 +14,10 @@ var GeneralizationConstants_8h =
       [ "position", "d7/d73/namespacertt_1_1ai_1_1stp_1_1gen.html#a0886bdeb1935b5bae88143a9ec3c09de", null ],
       [ "score", "d7/d73/namespacertt_1_1ai_1_1stp_1_1gen.html#a53348e84fb4db6a3509e2688f0c6e3ed", null ]
     ] ],
-    [ "AttackingPass", "d0/dac/GeneralizationConstants_8h.html#a17cae51eb3b58633fc7eb7558e15e309", null ],
-    [ "ChippingPass", "d0/dac/GeneralizationConstants_8h.html#a448eb3cfd0ac3e40e42283886e1ae13d", null ],
-    [ "GoalShot", "d0/dac/GeneralizationConstants_8h.html#a736ca7f2883f470eb6c5da4bdda2c630", null ],
-    [ "LineOfSight", "d0/dac/GeneralizationConstants_8h.html#ac94673f04eeccc221d1717487000e3df", null ],
-    [ "SafePass", "d0/dac/GeneralizationConstants_8h.html#a81f2ae93f09aaefc85a709d10e6c7085", null ]
+    [ "PositionScoring", "de/de9/classrtt_1_1ai_1_1stp_1_1PositionScoring.html", "de/de9/classrtt_1_1ai_1_1stp_1_1PositionScoring" ],
+    [ "AttackingPass", "db/d9a/PositionScoring_8h.html#a17cae51eb3b58633fc7eb7558e15e309", null ],
+    [ "ChippingPass", "db/d9a/PositionScoring_8h.html#a448eb3cfd0ac3e40e42283886e1ae13d", null ],
+    [ "GoalShot", "db/d9a/PositionScoring_8h.html#a736ca7f2883f470eb6c5da4bdda2c630", null ],
+    [ "LineOfSight", "db/d9a/PositionScoring_8h.html#ac94673f04eeccc221d1717487000e3df", null ],
+    [ "SafePass", "db/d9a/PositionScoring_8h.html#a81f2ae93f09aaefc85a709d10e6c7085", null ]
 ];

@@ -25,7 +25,7 @@ var classrtt_1_1ai_1_1stp_1_1play_1_1DefendPass =
     [ "previousKeeperId", "dd/daf/classrtt_1_1ai_1_1stp_1_1play_1_1DefendPass.html#a7164f241b13b1aa59b6e6b5c30a3094b", null ],
     [ "previousMaxRobots", "dd/daf/classrtt_1_1ai_1_1stp_1_1play_1_1DefendPass.html#a067c0013eb3e4d70eedd32a504dee10d", null ],
     [ "previousRobotNum", "dd/daf/classrtt_1_1ai_1_1stp_1_1play_1_1DefendPass.html#afc2268677ee563a2f0a7efa4acff465e", null ],
-    [ "roles", "dd/daf/classrtt_1_1ai_1_1stp_1_1play_1_1DefendPass.html#a0329d2814e2651902bb05f23659e0084", null ],
+    [ "roles", "dd/daf/classrtt_1_1ai_1_1stp_1_1play_1_1DefendPass.html#a38ffe1c2f377508d851dc649d03644c0", null ],
     [ "roleStatuses", "dd/daf/classrtt_1_1ai_1_1stp_1_1play_1_1DefendPass.html#a8750ea230c633dcf6a0f09e28e4f47b1", null ],
     [ "scoring", "dd/daf/classrtt_1_1ai_1_1stp_1_1play_1_1DefendPass.html#a4598ba530d29d7f4f53bcec0c9845100", null ],
     [ "startPlayEvaluation", "dd/daf/classrtt_1_1ai_1_1stp_1_1play_1_1DefendPass.html#a859e8c8abae48115eab588736926368f", null ],

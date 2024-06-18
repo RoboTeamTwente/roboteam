@@ -25,7 +25,7 @@ var classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickThem =
     [ "previousKeeperId", "dc/d7b/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickThem.html#a7164f241b13b1aa59b6e6b5c30a3094b", null ],
     [ "previousMaxRobots", "dc/d7b/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickThem.html#a067c0013eb3e4d70eedd32a504dee10d", null ],
     [ "previousRobotNum", "dc/d7b/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickThem.html#afc2268677ee563a2f0a7efa4acff465e", null ],
-    [ "roles", "dc/d7b/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickThem.html#a0329d2814e2651902bb05f23659e0084", null ],
+    [ "roles", "dc/d7b/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickThem.html#a38ffe1c2f377508d851dc649d03644c0", null ],
     [ "roleStatuses", "dc/d7b/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickThem.html#a8750ea230c633dcf6a0f09e28e4f47b1", null ],
     [ "scoring", "dc/d7b/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickThem.html#a4598ba530d29d7f4f53bcec0c9845100", null ],
     [ "startPlayEvaluation", "dc/d7b/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickThem.html#a859e8c8abae48115eab588736926368f", null ],

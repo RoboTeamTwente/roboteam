@@ -123,9 +123,9 @@ Public Attributes</h2></td></tr>
 <tr class="separator:af40285784dad3a8f9bdd4e808c3a8260"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af33fc3db6ace71b4771fd67ab5574290"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../dc/d8f/namespacertt.html#ac458fd2464c54331a04fc2fd54d82843">RefCommand</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/dc7/structrtt_1_1ai_1_1GameState.html#af33fc3db6ace71b4771fd67ab5574290">followUpCommandId</a></td></tr>
 <tr class="separator:af33fc3db6ace71b4771fd67ab5574290"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa1042727dffb23cf07d39cdd3341375b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/dc7/structrtt_1_1ai_1_1GameState.html#aa1042727dffb23cf07d39cdd3341375b">keeperId</a> = <a class="el" href="../../d9/dc5/classrtt_1_1ai_1_1Constants.html#ab2ca99fb72c5a2b76b225f6359e6a655">Constants::DEFAULT_KEEPER_ID</a>()</td></tr>
+<tr class="memitem:aa1042727dffb23cf07d39cdd3341375b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/dc7/structrtt_1_1ai_1_1GameState.html#aa1042727dffb23cf07d39cdd3341375b">keeperId</a> = -1</td></tr>
 <tr class="separator:aa1042727dffb23cf07d39cdd3341375b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a70b400b1f10460f57578e8b6522f4a4f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/dc7/structrtt_1_1ai_1_1GameState.html#a70b400b1f10460f57578e8b6522f4a4f">maxAllowedRobots</a> = <a class="el" href="../../db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#ace5948146011dcdb71513f56f9b66688">stp::control_constants::MAX_ROBOT_COUNT</a></td></tr>
+<tr class="memitem:a70b400b1f10460f57578e8b6522f4a4f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/dc7/structrtt_1_1ai_1_1GameState.html#a70b400b1f10460f57578e8b6522f4a4f">maxAllowedRobots</a> = <a class="el" href="../../da/d1f/namespacertt_1_1ai_1_1constants.html#abaedfbbabbb1d34ed69b43c7d5e6f0a9">constants::MAX_ROBOT_COUNT</a></td></tr>
 <tr class="separator:a70b400b1f10460f57578e8b6522f4a4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
@@ -138,6 +138,8 @@ Static Public Attributes</h2></td></tr>
 <tr class="separator:a7520dc31098978b144b8dd3de37d4d62"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aecc65cc9081665a780c34551b91d725b"><td class="memItemLeft" align="right" valign="top">static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/dc7/structrtt_1_1ai_1_1GameState.html#aecc65cc9081665a780c34551b91d725b">timeLeft</a></td></tr>
 <tr class="separator:aecc65cc9081665a780c34551b91d725b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a047d01ddad5371540817cf32c1df682c"><td class="memItemLeft" align="right" valign="top">static std::optional&lt; <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/dc7/structrtt_1_1ai_1_1GameState.html#a047d01ddad5371540817cf32c1df682c">kickPoint</a></td></tr>
+<tr class="separator:a047d01ddad5371540817cf32c1df682c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a553a6c06f4073342e4e10197c5a459a0"></a>
@@ -455,9 +457,31 @@ Static Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int rtt::ai::GameState::keeperId = <a class="el" href="../../d9/dc5/classrtt_1_1ai_1_1Constants.html#ab2ca99fb72c5a2b76b225f6359e6a655">Constants::DEFAULT_KEEPER_ID</a>()</td>
+          <td class="memname">int rtt::ai::GameState::keeperId = -1</td>
         </tr>
       </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a047d01ddad5371540817cf32c1df682c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a047d01ddad5371540817cf32c1df682c">&#9670;&nbsp;</a></span>kickPoint</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt; <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &gt; rtt::ai::GameState::kickPoint</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 </div>
@@ -469,7 +493,7 @@ Static Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int rtt::ai::GameState::maxAllowedRobots = <a class="el" href="../../db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#ace5948146011dcdb71513f56f9b66688">stp::control_constants::MAX_ROBOT_COUNT</a></td>
+          <td class="memname">int rtt::ai::GameState::maxAllowedRobots = <a class="el" href="../../da/d1f/namespacertt_1_1ai_1_1constants.html#abaedfbbabbb1d34ed69b43c7d5e6f0a9">constants::MAX_ROBOT_COUNT</a></td>
         </tr>
       </table>
 </div><div class="memdoc">

@@ -1,7 +1,6 @@
 var dir_04073f17e812443a0077cb35d5b96a06 =
 [
     [ "computations", "dir_4b23724cfd3a8c462d5cc0820f5237c7.html", "dir_4b23724cfd3a8c462d5cc0820f5237c7" ],
-    [ "constants", "dir_c44785fa91ba42a5f2b7d80c42d165d0.html", "dir_c44785fa91ba42a5f2b7d80c42d165d0" ],
     [ "evaluations", "dir_10424ead6b393b1b07991cc29b882f68.html", "dir_10424ead6b393b1b07991cc29b882f68" ],
     [ "plays", "dir_76421211f0f00a23fe07bd374438a558.html", "dir_76421211f0f00a23fe07bd374438a558" ],
     [ "roles", "dir_76ed08f2360bb9c7f1a9414802716dfd.html", "dir_76ed08f2360bb9c7f1a9414802716dfd" ],

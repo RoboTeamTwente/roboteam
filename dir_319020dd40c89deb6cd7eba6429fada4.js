@@ -27,14 +27,8 @@ var dir_319020dd40c89deb6cd7eba6429fada4 =
     [ "KickOffUsGameStateEvaluation.h", "d2/dab/KickOffUsGameStateEvaluation_8h.html", [
       [ "KickOffUsGameStateEvaluation", "d2/ddf/classrtt_1_1ai_1_1stp_1_1evaluation_1_1KickOffUsGameStateEvaluation.html", "d2/ddf/classrtt_1_1ai_1_1stp_1_1evaluation_1_1KickOffUsGameStateEvaluation" ]
     ] ],
-    [ "KickOffUsOrNormalGameStateEvaluation.h", "d0/d3b/KickOffUsOrNormalGameStateEvaluation_8h.html", [
-      [ "KickOffUsOrNormalGameStateEvaluation", "d2/da7/classrtt_1_1ai_1_1stp_1_1evaluation_1_1KickOffUsOrNormalGameStateEvaluation.html", "d2/da7/classrtt_1_1ai_1_1stp_1_1evaluation_1_1KickOffUsOrNormalGameStateEvaluation" ]
-    ] ],
     [ "KickOffUsPrepareGameStateEvaluation.h", "d0/da8/KickOffUsPrepareGameStateEvaluation_8h.html", [
       [ "KickOffUsPrepareGameStateEvaluation", "dd/db8/classrtt_1_1ai_1_1stp_1_1evaluation_1_1KickOffUsPrepareGameStateEvaluation.html", "dd/db8/classrtt_1_1ai_1_1stp_1_1evaluation_1_1KickOffUsPrepareGameStateEvaluation" ]
-    ] ],
-    [ "NormalOrFreeKickUsGameStateEvaluation.h", "dd/d7f/NormalOrFreeKickUsGameStateEvaluation_8h.html", [
-      [ "NormalOrFreeKickUsGameStateEvaluation", "de/dd9/classrtt_1_1ai_1_1stp_1_1evaluation_1_1NormalOrFreeKickUsGameStateEvaluation.html", "de/dd9/classrtt_1_1ai_1_1stp_1_1evaluation_1_1NormalOrFreeKickUsGameStateEvaluation" ]
     ] ],
     [ "NormalPlayGameStateEvaluation.h", "de/dad/NormalPlayGameStateEvaluation_8h.html", [
       [ "NormalPlayGameStateEvaluation", "d1/d22/classrtt_1_1ai_1_1stp_1_1evaluation_1_1NormalPlayGameStateEvaluation.html", "d1/d22/classrtt_1_1ai_1_1stp_1_1evaluation_1_1NormalPlayGameStateEvaluation" ]

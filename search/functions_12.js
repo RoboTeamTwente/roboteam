@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['velocitylimiter_2110',['velocityLimiter',['../d0/d02/classrtt_1_1ai_1_1control_1_1ControlUtils.html#aac6fc67941e0b893a969c03b83b6e3af',1,'rtt::ai::control::ControlUtils']]]
+  ['yawpid_2064',['YawPID',['../df/d2f/classrtt_1_1YawPID.html#ac0e9dd1b11b50b3ae5a60114f56c534d',1,'rtt::YawPID']]]
 ];

@@ -38,7 +38,5 @@ var dir_4b23724cfd3a8c462d5cc0820f5237c7 =
       ] ],
       [ "PositionComputations", "dd/d2c/classrtt_1_1ai_1_1stp_1_1PositionComputations.html", "dd/d2c/classrtt_1_1ai_1_1stp_1_1PositionComputations" ]
     ] ],
-    [ "PositionScoring.h", "db/d9a/PositionScoring_8h.html", [
-      [ "PositionScoring", "de/de9/classrtt_1_1ai_1_1stp_1_1PositionScoring.html", "de/de9/classrtt_1_1ai_1_1stp_1_1PositionScoring" ]
-    ] ]
+    [ "PositionScoring.h", "db/d9a/PositionScoring_8h.html", "db/d9a/PositionScoring_8h" ]
 ];

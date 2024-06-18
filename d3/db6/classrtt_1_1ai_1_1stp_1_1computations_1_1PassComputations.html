@@ -100,9 +100,9 @@ $(document).ready(function(){initNavTree('d3/db6/classrtt_1_1ai_1_1stp_1_1comput
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:af6a65675c3cf64e4b7a19d7e2dc6ef24"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#dd/d7d/structrtt_1_1ai_1_1stp_1_1PassInfo">PassInfo</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/db6/classrtt_1_1ai_1_1stp_1_1computations_1_1PassComputations.html#af6a65675c3cf64e4b7a19d7e2dc6ef24">calculatePass</a> (<a class="el" href="../../d7/d73/namespacertt_1_1ai_1_1stp_1_1gen.html#de/d7c/structrtt_1_1ai_1_1stp_1_1gen_1_1ScoreProfile">gen::ScoreProfile</a> profile, const <a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">world::World</a> *world, const Field &amp;field, bool keeperCanPass=false)</td></tr>
-<tr class="memdesc:af6a65675c3cf64e4b7a19d7e2dc6ef24"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates which robot should pass where, and which robot should receive it.  <a href="../../d3/db6/classrtt_1_1ai_1_1stp_1_1computations_1_1PassComputations.html#af6a65675c3cf64e4b7a19d7e2dc6ef24">More...</a><br /></td></tr>
-<tr class="separator:af6a65675c3cf64e4b7a19d7e2dc6ef24"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3ac6e08d38719d0e9f1264344e48fe0b"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#dd/d7d/structrtt_1_1ai_1_1stp_1_1PassInfo">PassInfo</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/db6/classrtt_1_1ai_1_1stp_1_1computations_1_1PassComputations.html#a3ac6e08d38719d0e9f1264344e48fe0b">calculatePass</a> (<a class="el" href="../../d7/d73/namespacertt_1_1ai_1_1stp_1_1gen.html#de/d7c/structrtt_1_1ai_1_1stp_1_1gen_1_1ScoreProfile">gen::ScoreProfile</a> profile, const <a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">world::World</a> *world, const Field &amp;field, bool keeperMustPass=false)</td></tr>
+<tr class="memdesc:a3ac6e08d38719d0e9f1264344e48fe0b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates which robot should pass where, and which robot should receive it.  <a href="../../d3/db6/classrtt_1_1ai_1_1stp_1_1computations_1_1PassComputations.html#a3ac6e08d38719d0e9f1264344e48fe0b">More...</a><br /></td></tr>
+<tr class="separator:a3ac6e08d38719d0e9f1264344e48fe0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-static-methods"></a>
 Static Private Member Functions</h2></td></tr>
@@ -179,8 +179,8 @@ Static Private Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="af6a65675c3cf64e4b7a19d7e2dc6ef24"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af6a65675c3cf64e4b7a19d7e2dc6ef24">&#9670;&nbsp;</a></span>calculatePass()</h2>
+<a id="a3ac6e08d38719d0e9f1264344e48fe0b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3ac6e08d38719d0e9f1264344e48fe0b">&#9670;&nbsp;</a></span>calculatePass()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -210,7 +210,7 @@ Static Private Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>keeperCanPass</em> = <code>false</code>&#160;</td>
+          <td class="paramname"><em>keeperMustPass</em> = <code>false</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -231,7 +231,7 @@ Static Private Member Functions</h2></td></tr>
     <tr><td class="paramname">profile</td><td>the profile to be used when scoring the pass location </td></tr>
     <tr><td class="paramname">world</td><td>the current world state </td></tr>
     <tr><td class="paramname">field</td><td>the current field </td></tr>
-    <tr><td class="paramname">keeperCanPass</td><td>indicate whether the keeper can pass and be passed to </td></tr>
+    <tr><td class="paramname">keeperMustPass</td><td>indicate whether the keeper must pass </td></tr>
   </table>
   </dd>
 </dl>

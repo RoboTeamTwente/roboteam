@@ -20,8 +20,8 @@ var searchData=
   ['attackingpass_20',['AttackingPass',['../df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass.html#a9926b38bf3af64fb7e657fcaa5be29d9',1,'rtt::ai::stp::play::AttackingPass::AttackingPass()'],['../d7/d73/namespacertt_1_1ai_1_1stp_1_1gen.html#a17cae51eb3b58633fc7eb7558e15e309',1,'rtt::ai::stp::gen::AttackingPass()'],['../df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass.html',1,'rtt::ai::stp::play::AttackingPass']]],
   ['attackingpass_2ecpp_21',['AttackingPass.cpp',['../d7/d39/AttackingPass_8cpp.html',1,'']]],
   ['attackingpass_2eh_22',['AttackingPass.h',['../dd/d29/AttackingPass_8h.html',1,'']]],
-  ['avoid_5fball_5fdistance_23',['AVOID_BALL_DISTANCE',['../db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#a8ac896036838a0c21ff0b72a6c35612e',1,'rtt::ai::stp::control_constants']]],
-  ['avoid_5fball_5fdistance_5fbefore_5ffree_5fkick_24',['AVOID_BALL_DISTANCE_BEFORE_FREE_KICK',['../db/d17/namespacertt_1_1ai_1_1stp_1_1control__constants.html#a8fa01669dc4aaee68b979a785e121e8b',1,'rtt::ai::stp::control_constants']]],
+  ['avoid_5fball_5fdistance_23',['AVOID_BALL_DISTANCE',['../da/d1f/namespacertt_1_1ai_1_1constants.html#a7e9aa043fa26ab0f44ca02c3a4e1b98a',1,'rtt::ai::constants']]],
+  ['avoid_5fball_5fdistance_5fbefore_5ffree_5fkick_24',['AVOID_BALL_DISTANCE_BEFORE_FREE_KICK',['../da/d1f/namespacertt_1_1ai_1_1constants.html#a88971beeab969d2d349db9aa58c3ef7c',1,'rtt::ai::constants']]],
   ['avoidobjects_25',['avoidObjects',['../d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#a410c71825d572f4fc63f0df9ba8f7b35',1,'rtt::ai::stp::StpInfo']]],
   ['avoidobjects_26',['AvoidObjects',['../d5/d14/namespacertt_1_1ai_1_1stp.html#d8/dcb/structrtt_1_1ai_1_1stp_1_1AvoidObjects',1,'rtt::ai::stp']]]
 ];

@@ -1,8 +1,8 @@
 var searchData=
 [
-  ['can_5fdetect_5fball_2432',['CAN_DETECT_BALL',['../d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67a55ce2fe53a7b2039f6acfcac2eed55e9',1,'rtt::ai']]],
-  ['can_5fkick_5fball_2433',['CAN_KICK_BALL',['../d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67af7d59f4e29c18dc164f77922c6c0145b',1,'rtt::ai']]],
-  ['card_2434',['CARD',['../d4/dcc/namespacertt_1_1ai.html#a749f4888e489115d32ef0cf1417cd617a5a81822ea736ae6bf53dc995d87203df',1,'rtt::ai']]],
-  ['chip_2435',['CHIP',['../d5/d14/namespacertt_1_1ai_1_1stp.html#a8a168b78725926f5901d2f6370784113aed8e8497a6a4c2315790d3d56b7c5065',1,'rtt::ai::stp']]],
-  ['contendedball_2436',['CONTENDEDBALL',['../d7/d54/classrtt_1_1ai_1_1BallPossession.html#aac3b04b1d08a6333049eba6c02d5ebc9aed01a837adcdd64c9d0104980153d2ab',1,'rtt::ai::BallPossession']]]
+  ['can_5fdetect_5fball_2386',['CAN_DETECT_BALL',['../d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67a55ce2fe53a7b2039f6acfcac2eed55e9',1,'rtt::ai']]],
+  ['can_5fkick_5fball_2387',['CAN_KICK_BALL',['../d4/dcc/namespacertt_1_1ai.html#af94a343fb77dcbf6d2e2d24393ab4c67af7d59f4e29c18dc164f77922c6c0145b',1,'rtt::ai']]],
+  ['card_2388',['CARD',['../d4/dcc/namespacertt_1_1ai.html#a749f4888e489115d32ef0cf1417cd617a5a81822ea736ae6bf53dc995d87203df',1,'rtt::ai']]],
+  ['chip_2389',['CHIP',['../d5/d14/namespacertt_1_1ai_1_1stp.html#a8a168b78725926f5901d2f6370784113aed8e8497a6a4c2315790d3d56b7c5065',1,'rtt::ai::stp']]],
+  ['contendedball_2390',['CONTENDEDBALL',['../d7/d54/classrtt_1_1ai_1_1BallPossession.html#aac3b04b1d08a6333049eba6c02d5ebc9aed01a837adcdd64c9d0104980153d2ab',1,'rtt::ai::BallPossession']]]
 ];

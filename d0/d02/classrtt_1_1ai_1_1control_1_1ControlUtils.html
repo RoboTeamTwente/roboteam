@@ -96,15 +96,6 @@ $(document).ready(function(){initNavTree('d0/d02/classrtt_1_1ai_1_1control_1_1Co
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a94fc63fb464ca4b57f20f294c644c115"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d02/classrtt_1_1ai_1_1control_1_1ControlUtils.html#a94fc63fb464ca4b57f20f294c644c115">calculateForce</a> (const <a class="el" href="../../dd/d6d/ControlUtilsTest_8cpp.html#acfb8903fac5809ad6180aee41b325f82">rtt::Vector2</a> &amp;vector, double weight, double minDistance)</td></tr>
-<tr class="memdesc:a94fc63fb464ca4b57f20f294c644c115"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates the force for a given vector and weight.  <a href="../../d0/d02/classrtt_1_1ai_1_1control_1_1ControlUtils.html#a94fc63fb464ca4b57f20f294c644c115">More...</a><br /></td></tr>
-<tr class="separator:a94fc63fb464ca4b57f20f294c644c115"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aac6fc67941e0b893a969c03b83b6e3af"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d02/classrtt_1_1ai_1_1control_1_1ControlUtils.html#aac6fc67941e0b893a969c03b83b6e3af">velocityLimiter</a> (const <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;vel, double maxVel=<a class="el" href="../../d9/dc5/classrtt_1_1ai_1_1Constants.html#a9113165eb919d1bbb08eeda60d35d9b0">Constants::MAX_VEL</a>(), double minVel=0.0, bool listenToReferee=true)</td></tr>
-<tr class="memdesc:aac6fc67941e0b893a969c03b83b6e3af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Limits the velocity.  <a href="../../d0/d02/classrtt_1_1ai_1_1control_1_1ControlUtils.html#aac6fc67941e0b893a969c03b83b6e3af">More...</a><br /></td></tr>
-<tr class="separator:aac6fc67941e0b893a969c03b83b6e3af"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a409196842b57352c0d22e5d388c8f90f"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d02/classrtt_1_1ai_1_1control_1_1ControlUtils.html#a409196842b57352c0d22e5d388c8f90f">objectVelocityAimedToPoint</a> (const <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;objectPosition, const <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;velocity, const <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;point, double maxDifference=0.3)</td></tr>
-<tr class="memdesc:a409196842b57352c0d22e5d388c8f90f"><td class="mdescLeft">&#160;</td><td class="mdescRight">calculates whether the object velocity will collide with a point  <a href="../../d0/d02/classrtt_1_1ai_1_1control_1_1ControlUtils.html#a409196842b57352c0d22e5d388c8f90f">More...</a><br /></td></tr>
-<tr class="separator:a409196842b57352c0d22e5d388c8f90f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad4c9f77efa7e4d281119074b2a278501"><td class="memItemLeft" align="right" valign="top">static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d02/classrtt_1_1ai_1_1control_1_1ControlUtils.html#ad4c9f77efa7e4d281119074b2a278501">determineKickForce</a> (const double distance, <a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#a40e85934b4fd4ca9ddfa2553886a87ab">stp::ShotType</a> shotType) noexcept</td></tr>
 <tr class="memdesc:ad4c9f77efa7e4d281119074b2a278501"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines the kick force based on the distance and the type of kick.  <a href="../../d0/d02/classrtt_1_1ai_1_1control_1_1ControlUtils.html#ad4c9f77efa7e4d281119074b2a278501">More...</a><br /></td></tr>
 <tr class="separator:ad4c9f77efa7e4d281119074b2a278501"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -118,60 +109,6 @@ Static Public Member Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class with useful functions used for robot control </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a94fc63fb464ca4b57f20f294c644c115"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a94fc63fb464ca4b57f20f294c644c115">&#9670;&nbsp;</a></span>calculateForce()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> rtt::ai::control::ControlUtils::calculateForce </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="../../dd/d6d/ControlUtilsTest_8cpp.html#acfb8903fac5809ad6180aee41b325f82">rtt::Vector2</a> &amp;&#160;</td>
-          <td class="paramname"><em>vector</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>weight</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>minDistance</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Calculates the force for a given vector and weight. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">vector</td><td>Direction of the force </td></tr>
-    <tr><td class="paramname">weight</td><td>Weight that needs to be displaced </td></tr>
-    <tr><td class="paramname">minDistance</td><td>Minimum distance the weight should move </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Force needed to displace the weight</dd></dl>
-<p>Calculate the force of a given vector + a certain type. the basic formula is: force = weight/distance^2 * unit vector </p>
-
-</div>
-</div>
 <a id="a3cc08e6ebe348b3e6e043f9ee2e0b0c5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3cc08e6ebe348b3e6e043f9ee2e0b0c5">&#9670;&nbsp;</a></span>determineChipForce()</h2>
 
@@ -287,127 +224,6 @@ Static Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The max allowed velocity for this robot </dd></dl>
-
-</div>
-</div>
-<a id="a409196842b57352c0d22e5d388c8f90f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a409196842b57352c0d22e5d388c8f90f">&#9670;&nbsp;</a></span>objectVelocityAimedToPoint()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool rtt::ai::control::ControlUtils::objectVelocityAimedToPoint </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;&#160;</td>
-          <td class="paramname"><em>objectPosition</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;&#160;</td>
-          <td class="paramname"><em>velocity</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;&#160;</td>
-          <td class="paramname"><em>point</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>maxDifference</em> = <code>0.3</code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>calculates whether the object velocity will collide with a point </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">objectPosition</td><td>position of the object </td></tr>
-    <tr><td class="paramname">velocity</td><td>velocity vector </td></tr>
-    <tr><td class="paramname">point</td><td>point to check for collision </td></tr>
-    <tr><td class="paramname">maxDifference</td><td>maximum difference between vector and point </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>boolean that tells whether the object will collide with the point </dd></dl>
-
-</div>
-</div>
-<a id="aac6fc67941e0b893a969c03b83b6e3af"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aac6fc67941e0b893a969c03b83b6e3af">&#9670;&nbsp;</a></span>velocityLimiter()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> rtt::ai::control::ControlUtils::velocityLimiter </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &amp;&#160;</td>
-          <td class="paramname"><em>vel</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>maxVel</em> = <code><a class="el" href="../../d9/dc5/classrtt_1_1ai_1_1Constants.html#a9113165eb919d1bbb08eeda60d35d9b0">Constants::MAX_VEL</a>()</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>minVel</em> = <code>0.0</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>listenToReferee</em> = <code>true</code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Limits the velocity. </p>
-<p>Limits velocity to maximum velocity. it defaults to the max velocity stored in Referee.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">vel</td><td>current velocity </td></tr>
-    <tr><td class="paramname">maxVel</td><td>maximum velocity </td></tr>
-    <tr><td class="paramname">minVel</td><td>minimum velocity </td></tr>
-    <tr><td class="paramname">listenToReferee</td><td>listen to or ignore the referee </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>limited velocity </dd></dl>
 
 </div>
 </div>

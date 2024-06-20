@@ -78,6 +78,15 @@ class InterceptionComputations {
      * @return HarasserInfo with the id and the time to the ball
      */
     static InterceptionInfo calculateInterceptionInfoExcludingKeeperAndCarded(const rtt::world::World *world) noexcept;
+
+    /**
+     * @brief Calculates the point where they will have the ball
+     * @param info the StpInfo struct
+     * @param ballTrajectory the trajectory of the ball
+     * @return the point where they will have the ball
+     */
+    static std::optional<Vector2> calculateTheirBallInterception(const rtt::world::World *world, rtt::LineSegment ballTrajectory) noexcept;
+
 };
 }  // namespace rtt::ai::stp
 #endif  // RTT_INTERCEPTIONCOMPUTATIONS_H

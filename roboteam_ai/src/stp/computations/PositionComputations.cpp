@@ -53,7 +53,6 @@ void PositionComputations::setAmountOfWallers(const rtt::Field &field, rtt::worl
     auto lineToBottomPost = ballPos - field.leftGoalArea.bottomRight();
     auto lineToTopPost = ballPos - field.leftGoalArea.topRight();
     auto angleBetweenLines = lineToBottomPost.toAngle().shortestAngleDiff(lineToTopPost.toAngle());
-    RTT_INFO("Angle between lines  ", angleBetweenLines)
     if (angleBetweenLines > 0.25) PositionComputations::amountOfWallers = 4;
     else if (angleBetweenLines < 0.1) PositionComputations::amountOfWallers = 2;
     else if (angleBetweenLines < 0.2) PositionComputations::amountOfWallers = 3;
@@ -77,8 +76,9 @@ std::vector<Vector2> PositionComputations::determineWallPositions(const rtt::Fie
     const double radius = constants::ROBOT_RADIUS;
     const double spacingRobots = radius * 0.5;
     RefCommand currentGameState = GameStateManager::getCurrentGameState().getCommandId();
-
-    Vector2 ballPos = world->getWorld().value().getBall()->get()->position;
+    auto ball = world->getWorld().value().getBall()->get();
+    const LineSegment ballTrajectory(ball->position, ball->expectedEndPosition);
+    Vector2 ballPos = ball->position;
 
     // Calculate the position of the ball, projected onto the field
     if (currentGameState == RefCommand::BALL_PLACEMENT_THEM || currentGameState == RefCommand::BALL_PLACEMENT_US || currentGameState == RefCommand::BALL_PLACEMENT_US_DIRECT ||
@@ -88,6 +88,8 @@ std::vector<Vector2> PositionComputations::determineWallPositions(const rtt::Fie
     } else if (field.leftDefenseArea.contains(ballPos)) {
         // If the ball is in our defense area, project it out of it
         ballPos = FieldComputations::projectPointOutOfDefenseArea(field, ballPos, true, false);
+    } else if ((world->getWorld().value().getBall()->get()->velocity).length() > constants::BALL_GOT_SHOT_LIMIT && InterceptionComputations::calculateTheirBallInterception(world, ballTrajectory).has_value()){
+        ballPos = *InterceptionComputations::calculateTheirBallInterception(world, ballTrajectory);
     } else {
         // Project the ball into the field and use that location
         ballPos = FieldComputations::projectPointInField(field, ballPos, constants::BALL_RADIUS);
@@ -280,6 +282,7 @@ Vector2 PositionComputations::calculatePositionOutsideOfShape(Vector2 targetPosi
 void PositionComputations::calculateInfoForHarasser(std::unordered_map<std::string, StpInfo> &stpInfos, std::array<std::unique_ptr<Role>, constants::MAX_ROBOT_COUNT> *roles,
                                                     const Field &field, world::World *world, Vector2 interceptionLocation) noexcept {
     auto enemyClosestToBall = world->getWorld()->getRobotClosestToPoint(world->getWorld()->getBall()->get()->position, world::them);
+    auto harasserAngle = stpInfos["harasser"].getYaw();
     // If there is no enemy or we don't have a harasser yet, estimate the position to move to
     if (!stpInfos["harasser"].getRobot() || !enemyClosestToBall) {
         stpInfos["harasser"].setPositionToMoveTo(interceptionLocation);
@@ -287,7 +290,6 @@ void PositionComputations::calculateInfoForHarasser(std::unordered_map<std::stri
         return;
     }
     auto enemyAngle = enemyClosestToBall->get()->getYaw();
-    auto harasserAngle = stpInfos["harasser"].getYaw();
     // If enemy is not facing our goal AND does have the ball, stand between the enemy and our goal
     if (enemyClosestToBall->get()->hasBall() && enemyAngle.shortestAngleDiff(harasserAngle) < M_PI / 1.5) {
         auto enemyPos = enemyClosestToBall->get()->getPos();
@@ -296,8 +298,17 @@ void PositionComputations::calculateInfoForHarasser(std::unordered_map<std::stri
         stpInfos["harasser"].setYaw((world->getWorld()->getBall()->get()->position - targetPos).angle());
     } else {
         auto harasser = std::find_if(roles->begin(), roles->end(), [](const std::unique_ptr<Role> &role) { return role != nullptr && role->getName() == "harasser"; });
-        if (harasser != roles->end() && !harasser->get()->finished() && strcmp(harasser->get()->getCurrentTactic()->getName(), "Formation") == 0)
-            harasser->get()->forceNextTactic();
+        if (harasser != roles->end() && !harasser->get()->finished() && strcmp(harasser->get()->getCurrentTactic()->getName(), "Formation") == 0) {
+            auto enemyPos = enemyClosestToBall->get()->getPos();
+            auto targetPos = enemyPos + (world->getWorld()->getBall()->get()->position - enemyPos).stretchToLength(constants::ROBOT_RADIUS * 3);
+            if (enemyClosestToBall->get()->hasBall() &&
+                ((stpInfos["harasser"].getRobot()->get()->getPos() - targetPos).length() > 1.5 * constants::GO_TO_POS_ERROR_MARGIN)) {
+                stpInfos["harasser"].setPositionToMoveTo(targetPos);
+                stpInfos["harasser"].setYaw((world->getWorld()->getBall()->get()->position - targetPos).angle());
+            } else {
+                harasser->get()->forceNextTactic();
+            }
+        }
     }
 }
 
@@ -309,7 +320,6 @@ void PositionComputations::calculateInfoForDefendersAndWallers(std::unordered_ma
     auto wallerNames = std::vector<std::string>{};
     auto additionalWallerNames = std::vector<std::string>{};
     PositionComputations::setAmountOfWallers(field, world);
-    RTT_INFO("Waller amount ", PositionComputations::amountOfWallers)
     for (size_t i = 0; i < world->getWorld()->getUs().size(); i++) {
         if (roles[i]->getName().find("waller") != std::string::npos && wallerNames.size() < PositionComputations::amountOfWallers) {
             wallerNames.emplace_back(roles[i]->getName());

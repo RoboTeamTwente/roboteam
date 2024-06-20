@@ -272,9 +272,9 @@ void Play::DrawMargins() noexcept {
         else
             color = proto::Drawing::RED;
 
-    } else
-        color = proto::Drawing::GREY;
-
+    } else if (!world->getWorld()->getBall()->get()->visible) color = proto::Drawing::CYAN;
+    else color = proto::Drawing::GREY;
+    
     for (auto method : {proto::Drawing::CIRCLES, proto::Drawing::LINES_CONNECTED}) {
         rtt::ai::gui::Out::draw(
             {

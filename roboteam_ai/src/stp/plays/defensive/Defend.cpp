@@ -52,9 +52,10 @@ Dealer::FlagMap Defend::decideRoleFlags() const noexcept {
     flagMap.insert({"keeper", {DealerFlagPriority::KEEPER, {keeperFlag}}});
     flagMap.insert({"harasser", {DealerFlagPriority::REQUIRED, {}, harasserInfo.interceptId}});
     for (int i = 0; i < Play::waller_count; i++) {
-        if (i <= PositionComputations::amountOfWallers)  {
+        if (i <= PositionComputations::amountOfWallers) {
             flagMap.insert({"waller_" + std::to_string(i), {DealerFlagPriority::HIGH_PRIORITY}});
-        } else flagMap.insert({"waller_" + std::to_string(i), {DealerFlagPriority::MEDIUM_PRIORITY}});
+        } else
+            flagMap.insert({"waller_" + std::to_string(i), {DealerFlagPriority::MEDIUM_PRIORITY}});
     }
     flagMap.insert({"defender_0", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
     flagMap.insert({"defender_1", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});

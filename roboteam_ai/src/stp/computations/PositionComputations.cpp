@@ -44,8 +44,8 @@ void PositionComputations::setAmountOfWallers(const rtt::Field &field, rtt::worl
         ballPos = GameStateManager::getRefereeDesignatedPosition();
     } else {
         ballPos = FieldComputations::projectPointInField(field, world->getWorld().value().getBall()->get()->position, constants::BALL_RADIUS);
-    }    
-    
+    }
+
     if (field.rightPlayArea.contains(ballPos)) {
         PositionComputations::amountOfWallers = 2;
         return;
@@ -53,9 +53,12 @@ void PositionComputations::setAmountOfWallers(const rtt::Field &field, rtt::worl
     auto lineToBottomPost = ballPos - field.leftGoalArea.bottomRight();
     auto lineToTopPost = ballPos - field.leftGoalArea.topRight();
     auto angleBetweenLines = lineToBottomPost.toAngle().shortestAngleDiff(lineToTopPost.toAngle());
-    if (angleBetweenLines > 0.25) PositionComputations::amountOfWallers = 4;
-    else if (angleBetweenLines < 0.1) PositionComputations::amountOfWallers = 2;
-    else if (angleBetweenLines < 0.2) PositionComputations::amountOfWallers = 3;
+    if (angleBetweenLines > 0.25)
+        PositionComputations::amountOfWallers = 4;
+    else if (angleBetweenLines < 0.1)
+        PositionComputations::amountOfWallers = 2;
+    else if (angleBetweenLines < 0.2)
+        PositionComputations::amountOfWallers = 3;
 }
 
 Vector2 PositionComputations::getWallPosition(int index, int amountDefenders, const rtt::Field &field, rtt::world::World *world) {
@@ -88,7 +91,8 @@ std::vector<Vector2> PositionComputations::determineWallPositions(const rtt::Fie
     } else if (field.leftDefenseArea.contains(ballPos)) {
         // If the ball is in our defense area, project it out of it
         ballPos = FieldComputations::projectPointOutOfDefenseArea(field, ballPos, true, false);
-    } else if ((world->getWorld().value().getBall()->get()->velocity).length() > constants::BALL_GOT_SHOT_LIMIT && InterceptionComputations::calculateTheirBallInterception(world, ballTrajectory).has_value()){
+    } else if ((world->getWorld().value().getBall()->get()->velocity).length() > constants::BALL_GOT_SHOT_LIMIT &&
+               InterceptionComputations::calculateTheirBallInterception(world, ballTrajectory).has_value()) {
         ballPos = *InterceptionComputations::calculateTheirBallInterception(world, ballTrajectory);
     } else {
         // Project the ball into the field and use that location
@@ -103,7 +107,8 @@ std::vector<Vector2> PositionComputations::determineWallPositions(const rtt::Fie
 
     // Find the intersection of the ball-to-goal line with the border of the defense area
     LineSegment ball2GoalLine = LineSegment(ballPos, field.leftGoalArea.rightLine().center());
-    std::vector<Vector2> lineBorderIntersects = FieldComputations::getDefenseArea(field, true, std::get<1>(FieldComputations::getDefenseAreaMargin()), 0).intersections(ball2GoalLine);
+    std::vector<Vector2> lineBorderIntersects =
+        FieldComputations::getDefenseArea(field, true, std::get<1>(FieldComputations::getDefenseAreaMargin()), 0).intersections(ball2GoalLine);
     // If the ball is in our defense area, project it outside, otherwise use the intersection with our defense area
     std::sort(lineBorderIntersects.begin(), lineBorderIntersects.end(), [](Vector2 a, Vector2 b) { return a.x > b.x; });
     projectedPosition = lineBorderIntersects.front() + extraLength;
@@ -301,8 +306,7 @@ void PositionComputations::calculateInfoForHarasser(std::unordered_map<std::stri
         if (harasser != roles->end() && !harasser->get()->finished() && strcmp(harasser->get()->getCurrentTactic()->getName(), "Formation") == 0) {
             auto enemyPos = enemyClosestToBall->get()->getPos();
             auto targetPos = enemyPos + (world->getWorld()->getBall()->get()->position - enemyPos).stretchToLength(constants::ROBOT_RADIUS * 3);
-            if (enemyClosestToBall->get()->hasBall() &&
-                ((stpInfos["harasser"].getRobot()->get()->getPos() - targetPos).length() > 1.5 * constants::GO_TO_POS_ERROR_MARGIN)) {
+            if (enemyClosestToBall->get()->hasBall() && ((stpInfos["harasser"].getRobot()->get()->getPos() - targetPos).length() > 1.5 * constants::GO_TO_POS_ERROR_MARGIN)) {
                 stpInfos["harasser"].setPositionToMoveTo(targetPos);
                 stpInfos["harasser"].setYaw((world->getWorld()->getBall()->get()->position - targetPos).angle());
             } else {

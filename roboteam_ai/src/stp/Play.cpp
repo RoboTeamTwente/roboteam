@@ -142,7 +142,7 @@ void Play::distributeRoles() noexcept {
         auto roleName{role->getName()};
         stpInfos[roleName].setRoleName(roleName);
     }
-    Play::waller_count = std::count_if(roles.begin(), roles.end(), [](const std::unique_ptr<Role>& role) { return role && role->getName().find("waller") != std::string::npos; });
+    Play::waller_count = std::count_if(roles.begin(), roles.end(), [](const std::unique_ptr<Role> &role) { return role && role->getName().find("waller") != std::string::npos; });
 
     auto flagMap = decideRoleFlags();
 
@@ -272,9 +272,11 @@ void Play::DrawMargins() noexcept {
         else
             color = proto::Drawing::RED;
 
-    } else if (!world->getWorld()->getBall()->get()->visible) color = proto::Drawing::CYAN;
-    else color = proto::Drawing::GREY;
-    
+    } else if (!world->getWorld()->getBall()->get()->visible)
+        color = proto::Drawing::CYAN;
+    else
+        color = proto::Drawing::GREY;
+
     for (auto method : {proto::Drawing::CIRCLES, proto::Drawing::LINES_CONNECTED}) {
         rtt::ai::gui::Out::draw(
             {

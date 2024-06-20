@@ -86,7 +86,6 @@ class InterceptionComputations {
      * @return the point where they will have the ball
      */
     static std::optional<Vector2> calculateTheirBallInterception(const rtt::world::World *world, rtt::LineSegment ballTrajectory) noexcept;
-
 };
 }  // namespace rtt::ai::stp
 #endif  // RTT_INTERCEPTIONCOMPUTATIONS_H

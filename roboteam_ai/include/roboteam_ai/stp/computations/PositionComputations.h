@@ -60,7 +60,7 @@ class PositionComputations {
      * @param world
      * @return The amount of wallers needed
      */
-    static void setAmountOfWallers(const rtt::Field &field, rtt::world::World *world) noexcept; 
+    static void setAmountOfWallers(const rtt::Field &field, rtt::world::World *world) noexcept;
 
     /**
      * @brief Makes a wall if not ready done, saves it in calculatedWallPositions and deals the index
@@ -159,6 +159,7 @@ class PositionComputations {
     static void calculateInfoForAvoidBallHarasser(std::unordered_map<std::string, StpInfo> &stpInfos, world::World *world) noexcept;
 
     static int amountOfWallers;
+
    private:
     /**
      * @brief Calculates a position outside of a given shape

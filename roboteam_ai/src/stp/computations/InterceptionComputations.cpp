@@ -48,7 +48,6 @@ KeeperInterceptionInfo InterceptionComputations::calculateKeeperInterceptionInfo
 
 InterceptionInfo InterceptionComputations::calculateInterceptionInfo(const std::vector<world::view::RobotView> &ourRobots, const world::World *world) {
     InterceptionInfo interceptionInfo;
-    int LineOfSightScore = 50;
     auto maxRobotVelocity = GameStateManager::getCurrentGameState().getRuleSet().getMaxRobotVel();
     auto ballPosition = world->getWorld()->getBall()->get()->position;
     auto pastBallPosition = ballPosition;

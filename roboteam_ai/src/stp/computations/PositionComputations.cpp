@@ -325,7 +325,7 @@ void PositionComputations::calculateInfoForDefendersAndWallers(std::unordered_ma
     auto additionalWallerNames = std::vector<std::string>{};
     PositionComputations::setAmountOfWallers(field, world);
     for (size_t i = 0; i < world->getWorld()->getUs().size(); i++) {
-        if (roles[i]->getName().find("waller") != std::string::npos && wallerNames.size() < PositionComputations::amountOfWallers) {
+        if (roles[i]->getName().find("waller") != std::string::npos && static_cast<int>(wallerNames.size()) < PositionComputations::amountOfWallers) {
             wallerNames.emplace_back(roles[i]->getName());
         } else if (roles[i]->getName().find("waller") != std::string::npos) {
             defenderNames.emplace_back(roles[i]->getName());

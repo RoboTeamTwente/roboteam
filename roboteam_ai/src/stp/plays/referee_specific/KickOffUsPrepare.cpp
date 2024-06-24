@@ -64,7 +64,7 @@ void KickOffUsPrepare::calculateInfoForRoles() noexcept {
     PositionComputations::calculateInfoForFormationOurSide(stpInfos, roles, field, world);
 
     // The "kicker" will go to the ball
-    stpInfos["kicker"].setPositionToMoveTo(Vector2(-constants::AVOID_BALL_DISTANCE, 0.0));
+    stpInfos["kicker"].setPositionToMoveTo(Vector2(-constants::AVOID_BALL_DISTANCE, -constants::AVOID_BALL_DISTANCE));
 }
 
 const char* KickOffUsPrepare::getName() const { return "Kick Off Us Prepare"; }

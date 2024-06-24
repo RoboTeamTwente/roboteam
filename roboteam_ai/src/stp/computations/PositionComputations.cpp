@@ -15,7 +15,7 @@
 #include "world/World.hpp"
 
 namespace rtt::ai::stp {
-int PositionComputations::amountOfWallers;
+int PositionComputations::amountOfWallers = 4;
 
 gen::ScoredPosition PositionComputations::getPosition(std::optional<rtt::Vector2> currentPosition, const Grid &searchGrid, gen::ScoreProfile profile, const Field &field,
                                                       const world::World *world) {
@@ -45,20 +45,23 @@ void PositionComputations::setAmountOfWallers(const rtt::Field &field, rtt::worl
     } else {
         ballPos = FieldComputations::projectPointInField(field, world->getWorld().value().getBall()->get()->position, constants::BALL_RADIUS);
     }
-
-    if (field.rightPlayArea.contains(ballPos)) {
-        PositionComputations::amountOfWallers = 2;
-        return;
-    }
     auto lineToBottomPost = ballPos - field.leftGoalArea.bottomRight();
     auto lineToTopPost = ballPos - field.leftGoalArea.topRight();
     auto angleBetweenLines = lineToBottomPost.toAngle().shortestAngleDiff(lineToTopPost.toAngle());
-    if (angleBetweenLines > 0.25)
-        PositionComputations::amountOfWallers = 4;
-    else if (angleBetweenLines < 0.1)
+    if (field.rightPlayArea.contains(ballPos, -0.1)) {
         PositionComputations::amountOfWallers = 2;
-    else if (angleBetweenLines < 0.2)
-        PositionComputations::amountOfWallers = 3;
+    } else if (field.leftPlayArea.contains(ballPos)) {
+        if (angleBetweenLines > 0.25)
+            PositionComputations::amountOfWallers = 4;
+        else if (angleBetweenLines > 0.2)
+            PositionComputations::amountOfWallers = std::clamp(PositionComputations::amountOfWallers, 4, 3);
+        else if (angleBetweenLines > 0.13)
+            PositionComputations::amountOfWallers = 3;
+        else if (angleBetweenLines > 0.1)
+            PositionComputations::amountOfWallers = std::clamp(PositionComputations::amountOfWallers, 3, 2);
+        else
+            PositionComputations::amountOfWallers = 2;
+    }
 }
 
 Vector2 PositionComputations::getWallPosition(int index, int amountDefenders, const rtt::Field &field, rtt::world::World *world) {

@@ -161,13 +161,6 @@ std::vector<Vector2> PositionComputations::determineWallPositions(const rtt::Fie
             wallLine.end = intersectionOther.value();
         }
     }
-    // if (wallLine.length() == 0) {
-    //     RTT_WARNING("Wall line length is 0");
-    //     double lineX = field.leftDefenseArea.right();
-    //     double lineYTop = field.playArea.top();
-    //     double lineYBottom = field.playArea.bottom();
-    //     wallLine = LineSegment({lineX, lineYBottom}, {lineX, lineYTop});
-    // }
 
     size_t defendersCount = static_cast<size_t>(amountDefenders);
     int i = 1;
@@ -517,11 +510,7 @@ void PositionComputations::calculateInfoForFormationOurSide(std::unordered_map<s
     }
     for (size_t i = 0; i < formationFrontNames.size(); i++) {
         double y = -height / 2 + height / (formationFrontNames.size() + 1) * (i + 1);
-        // Make sure no robot is between our passer and receiver
-        if (formationFrontNames.size() % 2 != 0 && i == formationFrontNames.size() / 2) {
-            y += 0.7;
-        }
-        stpInfos[formationFrontNames[i]].setPositionToMoveTo(Vector2{-width / 15, y});
+        stpInfos[formationFrontNames[i]].setPositionToMoveTo(Vector2{-constants::ROBOT_RADIUS * 1.5, y});
     }
 }
 

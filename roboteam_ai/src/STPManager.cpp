@@ -22,7 +22,6 @@
 #include "stp/plays/defensive/KeeperKickBall.h"
 #include "stp/plays/offensive/Attack.h"
 #include "stp/plays/offensive/AttackingPass.h"
-#include "stp/plays/offensive/ChippingPass.h"
 #include "stp/plays/referee_specific/BallPlacementThem.h"
 #include "stp/plays/referee_specific/BallPlacementUsForceStart.h"
 #include "stp/plays/referee_specific/BallPlacementUsFreeKick.h"
@@ -52,7 +51,6 @@ const STPManager::PlaysVec STPManager::plays = ([] {
     auto plays = std::vector<std::unique_ptr<ai::stp::Play>>();
 
     plays.emplace_back(std::make_unique<plays::AttackingPass>());
-    // plays.emplace_back(std::make_unique<rtt::ai::stp::play::ChippingPass>());
     plays.emplace_back(std::make_unique<plays::Attack>());
     plays.emplace_back(std::make_unique<plays::Halt>());
     plays.emplace_back(std::make_unique<plays::Defend>());

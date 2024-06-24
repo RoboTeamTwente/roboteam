@@ -81,8 +81,8 @@ void AttackingPass::calculateInfoForRoles() noexcept {
 
     if (!ballKicked()) {
         stpInfos["passer"].setPositionToShootAt(passInfo.receiverLocation);
-        stpInfos["passer"].setShotType(ShotType::PASS);
-        stpInfos["passer"].setKickOrChip(KickOrChip::KICK);
+        stpInfos["passer"].setShotPower(ShotPower::PASS);
+        stpInfos["passer"].setKickOrChip(KickType::KICK);
         stpInfos["receiver"].setPositionToMoveTo(passInfo.receiverLocation);
     } else {
         // Receiver goes to the receiverLocation projected on the trajectory of the ball

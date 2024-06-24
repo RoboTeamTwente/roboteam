@@ -72,11 +72,11 @@ void FreeKickUsPass::calculateInfoForRoles() noexcept {
     if (!ballKicked()) {
         stpInfos["receiver"].setPositionToMoveTo(passInfo.receiverLocation);
         stpInfos["free_kick_taker"].setPositionToShootAt(passInfo.receiverLocation);
-        stpInfos["free_kick_taker"].setShotType(ShotType::PASS);
-        stpInfos["free_kick_taker"].setKickOrChip(KickOrChip::KICK);
+        stpInfos["free_kick_taker"].setShotPower(ShotPower::PASS);
+        stpInfos["free_kick_taker"].setKickOrChip(KickType::KICK);
         if (RuntimeConfig::useReferee && GameStateManager::getCurrentGameState().timeLeft < 1.5) {
             stpInfos["free_kick_taker"].setPositionToShootAt(field.rightDefenseArea.rightLine().center());
-            stpInfos["free_kick_taker"].setShotType(ShotType::MAX);
+            stpInfos["free_kick_taker"].setShotPower(ShotPower::MAX);
         }
     } else {
         // Receiver goes to the receiverLocation projected on the trajectory of the ball

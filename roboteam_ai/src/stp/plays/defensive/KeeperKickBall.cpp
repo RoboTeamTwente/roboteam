@@ -41,7 +41,7 @@ KeeperKickBall::KeeperKickBall() : Play() {
 
 uint8_t KeeperKickBall::score(const rtt::Field& field) noexcept {
     // Calculate passInfo to be used during the play
-    passInfo = stp::computations::PassComputations::calculatePass(gen::SafePass, world, field, true);
+    passInfo = stp::computations::PassComputations::calculatePass(gen::ChippingPass, world, field, true);
 
     // If this play is valid, the ball is in the defense area and still, and we always want to execute this play
     return constants::FUZZY_TRUE;
@@ -75,7 +75,8 @@ void KeeperKickBall::calculateInfoForRoles() noexcept {
     if (!ballKicked()) {
         stpInfos["receiver"].setPositionToMoveTo(passInfo.receiverLocation);
         stpInfos["keeper"].setPositionToShootAt(passInfo.receiverLocation);
-        stpInfos["keeper"].setShotType(ShotType::PASS);
+        stpInfos["keeper"].setShotPower(ShotPower::PASS);
+        stpInfos["keeper"].setKickOrChip(KickType::CHIP);
     } else {
         auto ball = world->getWorld()->getBall().value();
         // Receiver goes to the receiverLocation projected on the trajectory of the ball
@@ -97,8 +98,8 @@ bool KeeperKickBall::shouldEndPlay() noexcept {
 
     // If the keeper doesn't have the ball yet and there is a better pass available, we should stop the play
     if (stpInfos["keeper"].getRobot() && !stpInfos["keeper"].getRobot().value()->hasBall() &&
-        stp::computations::PassComputations::calculatePass(gen::SafePass, world, field, true).passScore >
-            1.05 * stp::PositionScoring::scorePosition(passInfo.receiverLocation, gen::SafePass, field, world).score)
+        stp::computations::PassComputations::calculatePass(gen::ChippingPass, world, field, true).passScore >
+            1.05 * stp::PositionScoring::scorePosition(passInfo.receiverLocation, gen::ChippingPass, field, world).score)
         return true;
 
     return false;

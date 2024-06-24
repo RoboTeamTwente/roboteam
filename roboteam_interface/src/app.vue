@@ -7,7 +7,6 @@ import { useVisionDataStore } from './modules/stores/data-stores/vision-data-sto
 import SidebarResizer from './modules/components/layout/sidebar-resizer.vue'
 import ConnectModal from './modules/components/connect-modal.vue'
 import { useAiController } from './modules/composables/ai-controller'
-
 import PixiApp from './modules/components/canvas/pixi-app.vue'
 import FieldLines from './modules/components/canvas/field-lines.vue'
 import Ball from './modules/components/canvas/ball.vue'
@@ -68,6 +67,26 @@ const bottomPanelSize = computed(() => `${uiStore.panelSize('bottomPanel')}px`)
         <ball />
         <robots />
         <visualizations />
+        <!-- Display the battery percentages of all robots -->
+        <div class="right-side">
+          <div :style="{ color: '#ffff'}">
+            Battery Levels
+          </div>
+        <p v-for="robot in visionData.ourRobots!">
+            <div v-if="robot.feedbackInfo?.ballSensorIsWorking == null" :style="{ color: '#808080'}">
+              {{robot.id}} : {{robot.feedbackInfo?.batteryLevel}}
+            </div>
+            <div v-if="robot.feedbackInfo?.batteryLevel < 21" :style="{ color: '#8a0000'}">
+              {{robot.id}} : {{robot.feedbackInfo?.batteryLevel}}
+            </div>
+            <div v-if="robot.feedbackInfo?.batteryLevel < 23.1" :style="{ color: '#ffff00'}">
+              {{robot.id}} : {{robot.feedbackInfo?.batteryLevel}}
+            </div>
+            <div v-else :style="{ color: '#00a01e'}">
+              {{robot.id}} : {{robot.feedbackInfo?.batteryLevel}}
+            </div>
+        </p>
+      </div>
       </pixi-app>
       <div v-else class="alert alert-warning justify-start">
         <font-awesome-icon icon="fa-circle-exclamation" />
@@ -125,6 +144,14 @@ const bottomPanelSize = computed(() => `${uiStore.panelSize('bottomPanel')}px`)
 
 .bottom-sidebar {
   grid-area: bsb;
+}
+
+.right-side {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 20px;
+  background-color: #303030;
 }
 
 .bottom-sidebar-resize {

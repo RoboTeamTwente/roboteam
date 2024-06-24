@@ -47,9 +47,9 @@ Dealer::FlagMap StopFormation::decideRoleFlags() const noexcept {
     flagMap.insert({"harasser", {DealerFlagPriority::REQUIRED, {}}});
     for (int i = 0; i < Play::waller_count; i++) {
         if (i <= PositionComputations::amountOfWallers) {
-            flagMap.insert({"waller_" + std::to_string(i), {DealerFlagPriority::HIGH_PRIORITY}});
+            flagMap.insert({"waller_" + std::to_string(i), {DealerFlagPriority::HIGH_PRIORITY, {}}});
         } else
-            flagMap.insert({"waller_" + std::to_string(i), {DealerFlagPriority::MEDIUM_PRIORITY}});
+            flagMap.insert({"waller_" + std::to_string(i), {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
     }
     flagMap.insert({"defender_0", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
     flagMap.insert({"defender_1", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});

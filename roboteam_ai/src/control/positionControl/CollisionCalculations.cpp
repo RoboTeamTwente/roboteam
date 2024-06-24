@@ -120,7 +120,7 @@ double CollisionCalculations::getFirstCollisionTimeMovingObject(const Trajectory
             bool isBallPlacementCollision = true;
             for (int i = checkPoint; i < checkPoint + 10; i++) {
                 auto ballPosition = FieldComputations::getBallPositionAtTime(*world->getWorld()->getBall()->get(), checkPoint * 0.1);
-                if (i >= pathPoints.size()) {
+                if (i >= static_cast<int>(pathPoints.size())) {
                     isBallPlacementCollision = false;
                     break;
                 }

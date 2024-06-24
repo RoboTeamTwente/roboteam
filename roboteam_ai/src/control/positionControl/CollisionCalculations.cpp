@@ -135,11 +135,13 @@ bool CollisionCalculations::isCollidingWithMovingObject(const Trajectory2D &Traj
 
 double CollisionCalculations::getFirstCollisionTime(const Trajectory2D &Trajectory, stp::AvoidObjects avoidObjects, const Field &field, int &robotId, const world::World *world,
                                                     const std::unordered_map<int, std::vector<Vector2>> &computedPaths) {
-    double collisionTime = getFirstCollisionTimeMotionlessObject(Trajectory, avoidObjects, field);
-    if (collisionTime != -1.0) {
-        return collisionTime;
-    }
-    return getFirstCollisionTimeMovingObject(Trajectory, avoidObjects, robotId, world, computedPaths);
+    double collisionTimeMotionless = getFirstCollisionTimeMotionlessObject(Trajectory, avoidObjects, field);
+    double collisionTimeMoving = getFirstCollisionTimeMovingObject(Trajectory, avoidObjects, robotId, world, computedPaths);
+
+    return (collisionTimeMotionless == -1.0 && collisionTimeMoving == -1.0) ? -1.0
+           : (collisionTimeMotionless == -1.0)                              ? collisionTimeMoving
+           : (collisionTimeMoving == -1.0)                                  ? collisionTimeMotionless
+                                                                            : std::min(collisionTimeMotionless, collisionTimeMoving);
 }
 
 bool CollisionCalculations::isColliding(const Trajectory2D &Trajectory, stp::AvoidObjects avoidObjects, const Field &field, int &robotId, const world::World *world,

@@ -277,18 +277,16 @@ void Play::DrawMargins() noexcept {
     else
         color = proto::Drawing::GREY;
 
-    for (auto method : {proto::Drawing::CIRCLES, proto::Drawing::LINES_CONNECTED}) {
-        rtt::ai::gui::Out::draw(
-            {
-                .label = method == proto::Drawing::CIRCLES ? "Ball area to avoid" : "Path to placement location",
-                .color = method == proto::Drawing::CIRCLES ? color : proto::Drawing::BLACK,
-                .method = method,
-                .category = proto::Drawing::MARGINS,
-                .size = method == proto::Drawing::CIRCLES ? 52 : 8,
-                .thickness = method == proto::Drawing::CIRCLES ? 4 : 8,
-            },
-            pathToPlacementLocation);
-    }
+    rtt::ai::gui::Out::draw(
+        {
+            .label = "Ballplacement area",
+            .color = color,
+            .method = proto::Drawing::TUBES,
+            .category = proto::Drawing::MARGINS,
+            .size = 52,
+            .thickness = 4,
+        },
+        pathToPlacementLocation);
 
     // Drawing all figures regarding ball placement location and the path towards it
     if (currentGameState == RefCommand::BALL_PLACEMENT_THEM || currentGameState == RefCommand::BALL_PLACEMENT_US || currentGameState == RefCommand::BALL_PLACEMENT_US_DIRECT ||

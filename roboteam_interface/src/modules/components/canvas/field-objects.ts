@@ -375,13 +375,30 @@ export class ShapeDrawing extends Container {
         graphicsPrototype.lineStyle(data.thickness, protoColorToHex(data.color!))
         graphicsPrototype.drawCircle(0, 0, data.size)
         break
+      case proto.Drawing.Method.TUBES:
+        if (points.length >= 2) {
+          const [startPoint, endPoint] = points;
+          const angle = Math.atan2(endPoint.y - startPoint.y, endPoint.x - startPoint.x);
+          const radius = data.size; // 'size' is the radius of the tube ends
+          graphicsPrototype.lineStyle(data.thickness, protoColorToHex(data.color!), 1);
+          // Draw outward-oriented semi-circles at the ends of the tube
+          graphicsPrototype.arc(startPoint.x, startPoint.y, radius, angle - Math.PI / 2, angle + Math.PI / 2, true);
+          graphicsPrototype.arc(endPoint.x, endPoint.y, radius, angle + Math.PI / 2, angle - Math.PI / 2, true);
+          graphicsPrototype.closePath();
+        }
+        break;
     }
-    points.forEach((point) => {
-      const graphics = graphicsPrototype.clone()
-      graphics.x = point.x
-      graphics.y = point.y
-      this.addChild(graphics)
-    })
+    if (data.method !== proto.Drawing.Method.TUBES) {
+      points.forEach((point) => {
+        const graphics = graphicsPrototype.clone();
+        graphics.x = point.x;
+        graphics.y = point.y;
+        this.addChild(graphics);
+      });
+    } else {
+      const graphics = graphicsPrototype.clone();
+      this.addChild(graphics);
+    }
   }
 }
 

@@ -13,6 +13,7 @@ message Drawing {
         CROSSES = 2;
         PLUSES = 3;
         CIRCLES = 4;
+        TUBES = 5;
     }
 
     enum Color {

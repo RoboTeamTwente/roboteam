@@ -29,28 +29,13 @@ export const useVisionDataStore = defineStore('visionDataStore', () => {
       latestField.value = msg.field?.field ?? null
     }
 
-    for (const robot in aiData.state?.gameSettings?.isYellow ? latestWorld.value?.yellow : latestWorld.value?.blue) {
-      if ( robot.feedbackInfo?.batteryLevel != null ) {
-        
-      }
-    }
-
-    if (ourRobots) {
-      for (const robot of ourRobots) {
-        const id = robot.id;
-        const batteryLevel = robot.feedbackInfo?.batteryLevel;
-        // if (id == 1) batteryLevel == null
-        // if (id == 4) batteryLevel == 22
-        // if (id == 8) batteryLevel == 25
-        // if (id == 9) batteryLevel == 30
-
-        if (batteryLevel !== null && batteryLevel !== undefined && batteryLevel >= 18 && batteryLevel <= 25.2) {
-          knownBatteryLevels.value[id] = batteryLevel;
-        } else if (batteryLevel === null || batteryLevel < 18) {
-          robot.feedbackInfo = robot.feedbackInfo || {};
-          robot.feedbackInfo.batteryLevel = knownBatteryLevels.value[id];
-        }
-      }
+    if (ourRobots && ourRobots.value) {
+      ourRobots.value
+        .forEach((robot) => {
+          if (robot.feedbackInfo?.batteryLevel && robot.id) {
+            knownBatteryLevels.value[robot.id] = robot.feedbackInfo?.batteryLevel;
+          }
+        });
     }
   }
 
@@ -65,6 +50,7 @@ export const useVisionDataStore = defineStore('visionDataStore', () => {
     latestField: readonly(latestField),
     $reset,
     processVisionMsg,
-    ourRobots
+    ourRobots,
+    knownBatteryLevels: readonly(knownBatteryLevels),
   }
 })

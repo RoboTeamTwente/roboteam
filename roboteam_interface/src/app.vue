@@ -72,21 +72,12 @@ const bottomPanelSize = computed(() => `${uiStore.panelSize('bottomPanel')}px`)
           <div :style="{ color: '#ffff'}">
             Battery Levels
           </div>
-        <p v-for="robot in visionData.ourRobots!">
-            <div v-if="robot.feedbackInfo?.ballSensorIsWorking == null" :style="{ color: '#808080'}">
-              {{robot.id}} : {{robot.feedbackInfo?.batteryLevel}}
+          <div v-for="(voltage, key) in visionData.knownBatteryLevels" :key="key">
+            <div :style="{ color: voltage == null ? '#808080' : voltage < 21 ? '#8a0000' : voltage < 23.1 ? '#ffff00' : '#00a01e'}">
+              {{ key }} : {{ voltage ?? 'N/A' }}
             </div>
-            <div v-if="robot.feedbackInfo?.batteryLevel < 21" :style="{ color: '#8a0000'}">
-              {{robot.id}} : {{robot.feedbackInfo?.batteryLevel}}
-            </div>
-            <div v-if="robot.feedbackInfo?.batteryLevel < 23.1" :style="{ color: '#ffff00'}">
-              {{robot.id}} : {{robot.feedbackInfo?.batteryLevel}}
-            </div>
-            <div v-else :style="{ color: '#00a01e'}">
-              {{robot.id}} : {{robot.feedbackInfo?.batteryLevel}}
-            </div>
-        </p>
-      </div>
+          </div>
+        </div>
       </pixi-app>
       <div v-else class="alert alert-warning justify-start">
         <font-awesome-icon icon="fa-circle-exclamation" />

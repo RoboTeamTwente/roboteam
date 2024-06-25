@@ -129,7 +129,7 @@ void GroundBallExtendedKalmanFilter::predict(Time timeStamp) {
 
     // Prevent division by zero by checking if velocity is very low
     if (vel <= BALL_STILL_VELOCITY) {
-        F.setIdentity(); // Use identity matrix when ball is nearly or completely still
+        F.setIdentity();  // Use identity matrix when ball is nearly or completely still
     } else {
         double velCubed = vel * vel * vel;
         double vysq = currentVel.y() * currentVel.y() / velCubed;
@@ -154,7 +154,7 @@ void GroundBallExtendedKalmanFilter::predict(Time timeStamp) {
         X.head<2>() = currentPos + currentVel * dt + 0.5 * currentVel / vel * acceleration * dt * dt;
         X.tail<2>() = currentVel + currentVel / vel * acceleration * dt;
     } else {
-        X.tail<2>() = Eigen::Vector2d::Zero(); // Set velocity to zero if ball is nearly still
+        X.tail<2>() = Eigen::Vector2d::Zero();  // Set velocity to zero if ball is nearly still
     }
 
     // Update the covariance matrix P

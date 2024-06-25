@@ -32,7 +32,7 @@ export const useVisionDataStore = defineStore('visionDataStore', () => {
     if (ourRobots && ourRobots.value) {
       ourRobots.value
         .forEach((robot) => {
-          if (robot.feedbackInfo?.batteryLevel && robot.id) {
+          if (robot.feedbackInfo?.batteryLevel && robot.id !== undefined && robot.id !== null) {
             knownBatteryLevels.value[robot.id] = robot.feedbackInfo?.batteryLevel;
           }
         });

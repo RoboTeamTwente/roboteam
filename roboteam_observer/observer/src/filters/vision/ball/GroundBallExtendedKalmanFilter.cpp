@@ -6,8 +6,8 @@ void GroundBallExtendedKalmanFilter::update(const Eigen::Vector2d &observation) 
     y = observation - (H * X);
     // Variance of innovation
     Eigen::Matrix2d S = H * P * H.transpose() + R;
-    // compute kalman gain. For small matrices, Eigen's inverse function is efficient
-    Eigen::Matrix<double, 4, 2> K = P * H.transpose() * S.inverse();
+    // compute kalman gain. For small matrices, Eigen's inverse function is efficient, but this is more numerically stable
+    Eigen::Matrix<double, 4, 2> K = P * H.transpose() * S.llt().solve(Eigen::Matrix2d::Identity());
     // update state with prediction
     X = X + K * y;
     // update covariance
@@ -127,37 +127,36 @@ void GroundBallExtendedKalmanFilter::predict(Time timeStamp) {
         dt = -vel / acceleration;
     }
 
-    // update the transition matrix
-    double velCubed = vel * vel * vel;
-    double vysq = currentVel.y() * currentVel.y() / velCubed;
-    double vxvy = -currentVel.x() * currentVel.y() / velCubed;
-    double vxsq = currentVel.x() * currentVel.x() / velCubed;
-
-    // To prevent division by zero, we simply put the velocity of the ball to zero if the ball is almost lying still
+    // Prevent division by zero by checking if velocity is very low
     if (vel <= BALL_STILL_VELOCITY) {
-        vxsq = 0.0;
-        vxvy = 0.0;
-        vysq = 0.0;
+        F.setIdentity(); // Use identity matrix when ball is nearly or completely still
+    } else {
+        double velCubed = vel * vel * vel;
+        double vysq = currentVel.y() * currentVel.y() / velCubed;
+        double vxvy = -currentVel.x() * currentVel.y() / velCubed;
+        double vxsq = currentVel.x() * currentVel.x() / velCubed;
+
+        F(0, 2) = dt + 0.5 * vysq * acceleration * dt * dt;
+        F(0, 3) = 0.5 * vxvy * acceleration * dt * dt;
+        F(1, 2) = 0.5 * vxvy * acceleration * dt * dt;
+        F(1, 3) = dt + 0.5 * vxsq * acceleration * dt * dt;
+        F(2, 2) = 1 + vysq * acceleration * dt;
+        F(2, 3) = vxvy * acceleration * dt;
+        F(3, 2) = vxvy * acceleration * dt;
+        F(3, 3) = 1 + vxsq * acceleration * dt;
     }
 
-    F(0, 2) = dt + 0.5 * vysq * acceleration * dt * dt;
-    F(0, 3) = 0.5 * vxvy * acceleration * dt * dt;
-    F(1, 2) = 0.5 * vxvy * acceleration * dt * dt;
-    F(1, 3) = dt + 0.5 * vxsq * acceleration * dt * dt;
-    F(2, 2) = 1 + vysq * acceleration * dt;
-    F(2, 3) = vxvy * acceleration * dt;
-    F(3, 2) = vxvy * acceleration * dt;
-    F(3, 3) = 1 + vxsq * acceleration * dt;
-
-    // setting the process noise matrix (Q)
+    // Update the process noise matrix Q
     setProccessNoise(frame_dt);
 
-    // now update the state given the transition function
+    // Update the state X based on the transition matrix F
     if (vel > BALL_STILL_VELOCITY) {
         X.head<2>() = currentPos + currentVel * dt + 0.5 * currentVel / vel * acceleration * dt * dt;
         X.tail<2>() = currentVel + currentVel / vel * acceleration * dt;
-    } else {  // Set the velocity of the ball to zero
-        X.tail<2>() = Eigen::Vector2d::Zero();
+    } else {
+        X.tail<2>() = Eigen::Vector2d::Zero(); // Set velocity to zero if ball is nearly still
     }
+
+    // Update the covariance matrix P
     P = F * P * F.transpose() + Q;
 }

@@ -210,11 +210,14 @@ void WorldFilter::processBalls(const DetectionFrame &frame) {
     }
 }
 void WorldFilter::addBallPredictionsToMessage(proto::World &world, Time time) const {
-    if (!balls.empty()) {
-        auto bestFilter = std::max_element(balls.begin(), balls.end(), [](const BallFilter &best, const BallFilter &filter) { return best.getHealth() < filter.getHealth(); });
+    std::vector<BallFilter> filteredBalls;
+    std::copy_if(balls.begin(), balls.end(), std::back_inserter(filteredBalls), [](const BallFilter &filter) { return filter.getNumObservations() > 3; });
+
+    if (!filteredBalls.empty()) {
+        auto bestFilter =
+            std::max_element(filteredBalls.begin(), filteredBalls.end(), [](const BallFilter &best, const BallFilter &filter) { return best.getHealth() < filter.getHealth(); });
 
         FilteredBall bestBall = bestFilter->mergeBalls(time);
-
         world.mutable_ball()->CopyFrom(bestBall.asWorldBall());
     }
 }

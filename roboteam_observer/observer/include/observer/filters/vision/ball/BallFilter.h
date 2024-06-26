@@ -49,6 +49,11 @@ class BallFilter {
      */
     [[nodiscard]] double getHealth() const;
 
+    /**
+     * @return The number of observations the filter has seen
+     */
+    [[nodiscard]] double getNumObservations() const;
+
    private:
     std::map<int, CameraGroundBallFilter> groundFilters;
 };

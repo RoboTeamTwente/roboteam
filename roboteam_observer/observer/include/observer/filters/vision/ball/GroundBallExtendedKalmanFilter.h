@@ -39,7 +39,6 @@ class GroundBallExtendedKalmanFilter {
 
     [[nodiscard]] Eigen::Vector4d state() const;
     [[nodiscard]] Eigen::Matrix4d covariance() const;
-    void resetCovariance();
 
    private:
     void setProccessNoise(double dt);

@@ -109,11 +109,6 @@ Eigen::Vector4d GroundBallExtendedKalmanFilter::state() const { return X; }
 
 Eigen::Matrix4d GroundBallExtendedKalmanFilter::covariance() const { return P; }
 
-void GroundBallExtendedKalmanFilter::resetCovariance() {
-    P.setZero();
-    P.diagonal() << 0.001, 0.001, 0.001, 0.001;
-}
-
 void GroundBallExtendedKalmanFilter::predict(Time timeStamp) {
     assert(timeStamp >= lastUpdateTime);
     double frame_dt = (timeStamp - lastUpdateTime).asSeconds();

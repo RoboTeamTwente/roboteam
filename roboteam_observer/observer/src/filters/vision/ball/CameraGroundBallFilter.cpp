@@ -64,7 +64,6 @@ bool CameraGroundBallFilter::checkRobotCollision(const FilteredRobot& robot, con
         outVel += robotVel;
         Eigen::Vector2d outVelEigen(outVel.x, outVel.y);
         ekf.setVelocity(outVelEigen);
-        ekf.resetCovariance();
         return true;
     }
 
@@ -84,7 +83,6 @@ bool CameraGroundBallFilter::checkRobotCollision(const FilteredRobot& robot, con
         outVel += robotVel;
         Eigen::Vector2d outVelEigen(outVel.x, outVel.y);
         ekf.setVelocity(outVelEigen);
-        ekf.resetCovariance();
         return true;
     }
 

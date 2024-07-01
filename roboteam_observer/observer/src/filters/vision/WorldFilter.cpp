@@ -189,8 +189,11 @@ void WorldFilter::addRobotPredictionsToMessage(proto::World &world, Time time) c
 void WorldFilter::processBalls(const DetectionFrame &frame) {
     std::vector<CameraGroundBallPrediction> predictions(balls.size());
     // get predictions from cameras
+    std::vector<FilteredRobot> blueRobots = getHealthiestRobotsMerged(true, frame.timeCaptured);
+    std::vector<FilteredRobot> yellowRobots = getHealthiestRobotsMerged(false, frame.timeCaptured);
+
     for (std::size_t i = 0; i < balls.size(); ++i) {
-        predictions[i] = balls[i].predictCam(frame.cameraID, frame.timeCaptured).prediction;
+        predictions[i] = balls[i].predictCam(frame.cameraID, frame.timeCaptured, yellowRobots, blueRobots).prediction;
     }
     // assign observations to relevant filters
     BallAssignmentResult assignment = BallAssigner::assign_balls(predictions, frame.balls);
@@ -210,11 +213,19 @@ void WorldFilter::processBalls(const DetectionFrame &frame) {
     }
 }
 void WorldFilter::addBallPredictionsToMessage(proto::World &world, Time time) const {
-    if (!balls.empty()) {
-        auto bestFilter = std::max_element(balls.begin(), balls.end(), [](const BallFilter &best, const BallFilter &filter) { return best.getHealth() < filter.getHealth(); });
-
+    const BallFilter *bestFilter = nullptr;
+    double bestHealth = -1.0;
+    for (const auto &filter : balls) {
+        if (filter.getNumObservations() > 3) {
+            double currentHealth = filter.getHealth();
+            if (!bestFilter || currentHealth > bestHealth) {
+                bestFilter = &filter;
+                bestHealth = currentHealth;
+            }
+        }
+    }
+    if (bestFilter) {
         FilteredBall bestBall = bestFilter->mergeBalls(time);
-
         world.mutable_ball()->CopyFrom(bestBall.asWorldBall());
     }
 }

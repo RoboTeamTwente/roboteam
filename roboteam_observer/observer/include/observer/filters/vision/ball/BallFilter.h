@@ -26,9 +26,11 @@ class BallFilter {
      * If the camera is not tracked by the current filter, information from other camera's is used.
      * @param cameraID to predict the ball for
      * @param until Time to predict the ball at
+     * @param yellowRobots Filtered robots used for collision prediction
+     * @param blueRobots Filtered robots used for collision prediction
      * @return The prediction
      */
-    [[nodiscard]] GroundBallPrediction predictCam(int cameraID, Time until) const;
+    [[nodiscard]] GroundBallPrediction predictCam(int cameraID, Time until, std::vector<FilteredRobot> yellowRobots, std::vector<FilteredRobot> blueRobots);
 
     /**
      * Updates the ground filter with a given camera ID with Prediction Observation pairs.
@@ -48,6 +50,11 @@ class BallFilter {
      * @return Gets the health of the ball filter
      */
     [[nodiscard]] double getHealth() const;
+
+    /**
+     * @return The number of observations the filter has seen
+     */
+    [[nodiscard]] double getNumObservations() const;
 
    private:
     std::map<int, CameraGroundBallFilter> groundFilters;

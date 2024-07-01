@@ -37,8 +37,8 @@ AttackingPass::AttackingPass() : Play() {
         std::make_unique<role::Defender>("defender_1"),
         std::make_unique<role::Formation>("attacker_0"),
         // Additional roles if we play 11v11
-        std::make_unique<role::Formation>("waller_0"),
-        std::make_unique<role::Formation>("waller_1"),
+        std::make_unique<role::Defender>("waller_0"),
+        std::make_unique<role::Defender>("waller_1"),
         std::make_unique<role::Defender>("defender_2"),
         std::make_unique<role::Defender>("defender_3"),
         std::make_unique<role::Formation>("attacker_1"),
@@ -81,8 +81,8 @@ void AttackingPass::calculateInfoForRoles() noexcept {
 
     if (!ballKicked()) {
         stpInfos["passer"].setPositionToShootAt(passInfo.receiverLocation);
-        stpInfos["passer"].setShotType(ShotType::PASS);
-        stpInfos["passer"].setKickOrChip(KickOrChip::KICK);
+        stpInfos["passer"].setShotPower(ShotPower::PASS);
+        stpInfos["passer"].setKickOrChip(KickType::KICK);
         stpInfos["receiver"].setPositionToMoveTo(passInfo.receiverLocation);
     } else {
         // Receiver goes to the receiverLocation projected on the trajectory of the ball

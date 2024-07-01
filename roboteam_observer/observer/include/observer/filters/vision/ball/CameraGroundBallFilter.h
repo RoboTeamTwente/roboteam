@@ -6,6 +6,7 @@
 #include "FilteredBall.h"
 #include "GroundBallExtendedKalmanFilter.h"
 #include "observer/filters/vision/CameraObjectFilter.h"
+#include "observer/filters/vision/robot/RobotFilter.h"
 
 struct CameraGroundBallPrediction {
     CameraGroundBallPrediction() = default;
@@ -24,11 +25,13 @@ class CameraGroundBallFilter : public CameraObjectFilter {
     [[nodiscard]] FilteredBall getEstimate(Time time) const;
     [[nodiscard]] Eigen::Vector2d getVelocityEstimate(Time time) const;
 
-    [[nodiscard]] CameraGroundBallPrediction predict(Time time) const;
+    [[nodiscard]] CameraGroundBallPrediction predict(Time time, std::vector<FilteredRobot> yellowRobots, std::vector<FilteredRobot> blueRobots);
 
     bool processDetections(const CameraGroundBallPredictionObservationPair& prediction_observation_pair);
 
    private:
+    bool checkRobots(const std::vector<FilteredRobot>& robots, const Eigen::Vector2d& positionEstimate, const Eigen::Vector2d& velocityEstimate);
+    bool checkRobotCollision(const FilteredRobot& robot, const Eigen::Vector2d& positionEstimate, const Eigen::Vector2d& velocityEstimate);
     void predictFilter(const CameraGroundBallPrediction& prediction);
     void update(const BallObservation& observation);
     bool updateNotSeen(Time time);

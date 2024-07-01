@@ -14,30 +14,6 @@ Status GoToPos::onUpdate(const StpInfo &info) noexcept {
     auto ballLocation = info.getBall()->get()->position;
     RefCommand currentGameState = GameStateManager::getCurrentGameState().getCommandId();
 
-    if (currentGameState == RefCommand::BALL_PLACEMENT_THEM) {
-        auto ballPlacementPos = GameStateManager::getRefereeDesignatedPosition();
-        auto robotToTarget = LineSegment(robot->getPos(), targetPos);
-        auto ballToReferee = LineSegment(ballLocation, ballPlacementPos);
-        if (robotToTarget.doesIntersect(ballToReferee)) {
-            double distance1 = (robot->getPos() - ballLocation).length() + (ballLocation - targetPos).length();
-            double distance2 = (robot->getPos() - ballPlacementPos).length() + (ballPlacementPos - targetPos).length();
-            Vector2 point1 = ballLocation - (ballPlacementPos - ballLocation).stretchToLength(0.8);
-            Vector2 point2 = ballPlacementPos - (robot->getPos() - ballPlacementPos).stretchToLength(0.8);
-            bool point1InField = field.playArea.contains(point1, constants::OUT_OF_FIELD_MARGIN);
-            bool point2InField = field.playArea.contains(point2, constants::OUT_OF_FIELD_MARGIN);
-            if (point1InField && point2InField) {
-                targetPos = (distance1 < distance2) ? point1 : point2;
-            } else if (point1InField) {
-                targetPos = point1;
-            } else if (point2InField) {
-                targetPos = point2;
-            } else {
-                targetPos = FieldComputations::projectPointToValidPosition(field, targetPos, avoidObj);
-            }
-            targetPos = targetPos - (robot->getPos() - targetPos).stretchToLength(0.8);
-        }
-    }
-
     if (!FieldComputations::pointIsValidPosition(field, targetPos, avoidObj) && roleName != "ball_placer") {
         targetPos = FieldComputations::projectPointToValidPosition(field, targetPos, avoidObj);
     }

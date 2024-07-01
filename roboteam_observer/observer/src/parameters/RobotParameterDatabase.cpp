@@ -28,7 +28,7 @@ TwoTeamRobotParameters RobotParameterDatabase::getParams() const {
 
 RobotParameters RobotParameterDatabase::getTeamParameters(const std::string &teamName) {
     // These teamnames should be the same as set in
-    // https://github.com/RoboCup-SSL/ssl-game-controller/blob/master/src/components/settings/team/TeamName.vue
+    // https://github.com/RoboCup-SSL/ssl-game-controller/blob/master/internal/app/engine/config.go
     // TODO: add teams we play against here.
     if (teamName == "RoboTeam Twente") {
         return RobotParameters::from_rtt2020();

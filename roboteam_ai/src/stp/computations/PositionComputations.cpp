@@ -15,6 +15,7 @@
 #include "world/World.hpp"
 
 namespace rtt::ai::stp {
+int PositionComputations::amountOfWallers = 4;
 
 gen::ScoredPosition PositionComputations::getPosition(std::optional<rtt::Vector2> currentPosition, const Grid &searchGrid, gen::ScoreProfile profile, const Field &field,
                                                       const world::World *world) {
@@ -34,6 +35,35 @@ gen::ScoredPosition PositionComputations::getPosition(std::optional<rtt::Vector2
     return bestPosition;
 }
 
+void PositionComputations::setAmountOfWallers(const rtt::Field &field, rtt::world::World *world) noexcept {
+    Vector2 ballPos;
+    RefCommand currentGameState = GameStateManager::getCurrentGameState().getCommandId();
+
+    if (currentGameState == RefCommand::BALL_PLACEMENT_THEM || currentGameState == RefCommand::BALL_PLACEMENT_US || currentGameState == RefCommand::BALL_PLACEMENT_US_DIRECT ||
+        currentGameState == RefCommand::PREPARE_FORCED_START) {
+        ballPos = GameStateManager::getRefereeDesignatedPosition();
+    } else {
+        ballPos = FieldComputations::projectPointInField(field, world->getWorld().value().getBall()->get()->position, constants::BALL_RADIUS);
+    }
+    auto lineToBottomPost = ballPos - field.leftGoalArea.bottomRight();
+    auto lineToTopPost = ballPos - field.leftGoalArea.topRight();
+    auto angleBetweenLines = lineToBottomPost.toAngle().shortestAngleDiff(lineToTopPost.toAngle());
+    if (field.rightPlayArea.contains(ballPos, -0.1)) {
+        PositionComputations::amountOfWallers = 2;
+    } else if (field.leftPlayArea.contains(ballPos)) {
+        if (angleBetweenLines > 0.25)
+            PositionComputations::amountOfWallers = 4;
+        else if (angleBetweenLines > 0.2)
+            PositionComputations::amountOfWallers = std::clamp(PositionComputations::amountOfWallers, 4, 3);
+        else if (angleBetweenLines > 0.13)
+            PositionComputations::amountOfWallers = 3;
+        else if (angleBetweenLines > 0.1)
+            PositionComputations::amountOfWallers = std::clamp(PositionComputations::amountOfWallers, 3, 2);
+        else
+            PositionComputations::amountOfWallers = 2;
+    }
+}
+
 Vector2 PositionComputations::getWallPosition(int index, int amountDefenders, const rtt::Field &field, rtt::world::World *world) {
     if (ComputationManager::calculatedWallPositions.empty()) {
         ComputationManager::calculatedWallPositions = determineWallPositions(field, world, amountDefenders);
@@ -51,33 +81,40 @@ std::vector<Vector2> PositionComputations::determineWallPositions(const rtt::Fie
     // Constants for positioning the defenders
     const double radius = constants::ROBOT_RADIUS;
     const double spacingRobots = radius * 0.5;
-    const double spaceBetweenDefenseArea = 2 * radius;
     RefCommand currentGameState = GameStateManager::getCurrentGameState().getCommandId();
-
-    Vector2 ballPos;
+    auto ball = world->getWorld().value().getBall()->get();
+    const LineSegment ballTrajectory(ball->position, ball->expectedEndPosition);
+    Vector2 ballPos = ball->position;
 
     // Calculate the position of the ball, projected onto the field
     if (currentGameState == RefCommand::BALL_PLACEMENT_THEM || currentGameState == RefCommand::BALL_PLACEMENT_US || currentGameState == RefCommand::BALL_PLACEMENT_US_DIRECT ||
         currentGameState == RefCommand::PREPARE_FORCED_START) {
+        // If the ball has to be placed somewhere on the field, assume the ball is already there
         ballPos = GameStateManager::getRefereeDesignatedPosition();
+    } else if (field.leftDefenseArea.contains(ballPos)) {
+        // If the ball is in our defense area, project it out of it
+        ballPos = FieldComputations::projectPointOutOfDefenseArea(field, ballPos, true, false);
+    } else if ((world->getWorld().value().getBall()->get()->velocity).length() > constants::BALL_GOT_SHOT_LIMIT &&
+               InterceptionComputations::calculateTheirBallInterception(world, ballTrajectory).has_value()) {
+        ballPos = *InterceptionComputations::calculateTheirBallInterception(world, ballTrajectory);
     } else {
-        ballPos = FieldComputations::projectPointInField(field, world->getWorld().value().getBall()->get()->position);
+        // Project the ball into the field and use that location
+        ballPos = FieldComputations::projectPointInField(field, ballPos, constants::BALL_RADIUS);
     }
+    // Dynamic distance, the further the ball is from our goal, the further forwards our wall stands.
+    double theirDistanceToGoal = std::clamp(((ballPos - field.leftGoalArea.rightLine().center()).length() - 4) / 2, 0.0, field.playArea.width() / 10) + 2 * constants::ROBOT_RADIUS;
+    auto extraLength = (ballPos - field.leftGoalArea.rightLine().center()).stretchToLength(theirDistanceToGoal);
 
     std::vector<Vector2> positions = {};
     Vector2 projectedPosition;
 
     // Find the intersection of the ball-to-goal line with the border of the defense area
     LineSegment ball2GoalLine = LineSegment(ballPos, field.leftGoalArea.rightLine().center());
-    std::vector<Vector2> lineBorderIntersects = FieldComputations::getDefenseArea(field, true, spaceBetweenDefenseArea, 0).intersections(ball2GoalLine);
-
-    // If there are intersections, sort them and use the first one. Otherwise, use a default position
-    if (!lineBorderIntersects.empty()) {
-        std::sort(lineBorderIntersects.begin(), lineBorderIntersects.end(), [](Vector2 a, Vector2 b) { return a.x > b.x; });
-        projectedPosition = lineBorderIntersects.front();
-    } else {
-        projectedPosition = Vector2{field.leftGoalArea.rightLine().center().x, field.leftDefenseArea.bottom()};
-    }
+    std::vector<Vector2> lineBorderIntersects =
+        FieldComputations::getDefenseArea(field, true, std::get<1>(FieldComputations::getDefenseAreaMargin()), 0).intersections(ball2GoalLine);
+    // If the ball is in our defense area, project it outside, otherwise use the intersection with our defense area
+    std::sort(lineBorderIntersects.begin(), lineBorderIntersects.end(), [](Vector2 a, Vector2 b) { return a.x > b.x; });
+    projectedPosition = lineBorderIntersects.front() + extraLength;
 
     // Initialize the wallLine
     LineSegment wallLine;
@@ -90,18 +127,18 @@ std::vector<Vector2> PositionComputations::determineWallPositions(const rtt::Fie
 
     if (ballPos.y < field.leftDefenseArea.top() && ballPos.y > field.leftDefenseArea.bottom()) {
         // Case when it is to the right of our defense area
-        double lineX = field.leftDefenseArea.right() + spaceBetweenDefenseArea;
-        double lineYTop = field.playArea.top();
-        double lineYBottom = field.playArea.bottom();
+        double lineX = field.leftDefenseArea.right() + extraLength.x;
+        double lineYTop = field.playArea.top() + extraLength.y;
+        double lineYBottom = field.playArea.bottom() + extraLength.y;
         wallLine = LineSegment({lineX, lineYBottom}, {lineX, lineYTop});
-    } else if (ballPos.x < field.leftDefenseArea.right() + spaceBetweenDefenseArea) {
+    } else if (ballPos.x < field.leftDefenseArea.right()) {
         // Case when the projected position is below or above our defense area
         if (ballPos.y < 0) {
             wallLine = LineSegment(defenseAreaOur[0], defenseAreaTheir[0]);
-            wallLine.move({0, -spaceBetweenDefenseArea});
+            wallLine.move({extraLength.x, extraLength.y});
         } else {
             wallLine = LineSegment(defenseAreaOur[3], defenseAreaTheir[3]);
-            wallLine.move({0, spaceBetweenDefenseArea});
+            wallLine.move({extraLength.x, extraLength.y});
         }
     } else {
         // We put the wall line perpendicular to the ball-goal line
@@ -126,13 +163,6 @@ std::vector<Vector2> PositionComputations::determineWallPositions(const rtt::Fie
             // Then limit this side of the wall line until this intersection
             wallLine.end = intersectionOther.value();
         }
-    }
-    if (wallLine.length() == 0) {
-        RTT_WARNING("Wall line length is 0");
-        double lineX = field.leftDefenseArea.right() + spaceBetweenDefenseArea;
-        double lineYTop = field.playArea.top();
-        double lineYBottom = field.playArea.bottom();
-        wallLine = LineSegment({lineX, lineYBottom}, {lineX, lineYTop});
     }
 
     size_t defendersCount = static_cast<size_t>(amountDefenders);
@@ -253,6 +283,7 @@ Vector2 PositionComputations::calculatePositionOutsideOfShape(Vector2 targetPosi
 void PositionComputations::calculateInfoForHarasser(std::unordered_map<std::string, StpInfo> &stpInfos, std::array<std::unique_ptr<Role>, constants::MAX_ROBOT_COUNT> *roles,
                                                     const Field &field, world::World *world, Vector2 interceptionLocation) noexcept {
     auto enemyClosestToBall = world->getWorld()->getRobotClosestToPoint(world->getWorld()->getBall()->get()->position, world::them);
+    auto harasserAngle = stpInfos["harasser"].getYaw();
     // If there is no enemy or we don't have a harasser yet, estimate the position to move to
     if (!stpInfos["harasser"].getRobot() || !enemyClosestToBall) {
         stpInfos["harasser"].setPositionToMoveTo(interceptionLocation);
@@ -260,7 +291,6 @@ void PositionComputations::calculateInfoForHarasser(std::unordered_map<std::stri
         return;
     }
     auto enemyAngle = enemyClosestToBall->get()->getYaw();
-    auto harasserAngle = stpInfos["harasser"].getYaw();
     // If enemy is not facing our goal AND does have the ball, stand between the enemy and our goal
     if (enemyClosestToBall->get()->hasBall() && enemyAngle.shortestAngleDiff(harasserAngle) < M_PI / 1.5) {
         auto enemyPos = enemyClosestToBall->get()->getPos();
@@ -269,8 +299,16 @@ void PositionComputations::calculateInfoForHarasser(std::unordered_map<std::stri
         stpInfos["harasser"].setYaw((world->getWorld()->getBall()->get()->position - targetPos).angle());
     } else {
         auto harasser = std::find_if(roles->begin(), roles->end(), [](const std::unique_ptr<Role> &role) { return role != nullptr && role->getName() == "harasser"; });
-        if (harasser != roles->end() && !harasser->get()->finished() && strcmp(harasser->get()->getCurrentTactic()->getName(), "Formation") == 0)
-            harasser->get()->forceNextTactic();
+        if (harasser != roles->end() && !harasser->get()->finished() && strcmp(harasser->get()->getCurrentTactic()->getName(), "Formation") == 0) {
+            auto enemyPos = enemyClosestToBall->get()->getPos();
+            auto targetPos = enemyPos + (world->getWorld()->getBall()->get()->position - enemyPos).stretchToLength(constants::ROBOT_RADIUS * 3);
+            if (enemyClosestToBall->get()->hasBall() && ((stpInfos["harasser"].getRobot()->get()->getPos() - targetPos).length() > 1.5 * constants::GO_TO_POS_ERROR_MARGIN)) {
+                stpInfos["harasser"].setPositionToMoveTo(targetPos);
+                stpInfos["harasser"].setYaw((world->getWorld()->getBall()->get()->position - targetPos).angle());
+            } else {
+                harasser->get()->forceNextTactic();
+            }
+        }
     }
 }
 
@@ -281,9 +319,12 @@ void PositionComputations::calculateInfoForDefendersAndWallers(std::unordered_ma
     auto defenderNames = std::vector<std::string>{};
     auto wallerNames = std::vector<std::string>{};
     auto additionalWallerNames = std::vector<std::string>{};
+    PositionComputations::setAmountOfWallers(field, world);
     for (size_t i = 0; i < world->getWorld()->getUs().size(); i++) {
-        if (roles[i]->getName().find("waller") != std::string::npos) {
+        if (roles[i]->getName().find("waller") != std::string::npos && static_cast<int>(wallerNames.size()) < PositionComputations::amountOfWallers) {
             wallerNames.emplace_back(roles[i]->getName());
+        } else if (roles[i]->getName().find("waller") != std::string::npos) {
+            defenderNames.emplace_back(roles[i]->getName());
         } else if (roles[i]->getName().find("defender") != std::string::npos) {
             defenderNames.emplace_back(roles[i]->getName());
         }
@@ -322,12 +363,12 @@ void PositionComputations::calculateInfoForDefendersAndWallers(std::unordered_ma
             if (mustStayOnOurSide && defendPostion.x > 0) {
                 defendPostion.x = 0.0;
             }
-            stpInfos["defender_" + std::to_string(i)].setPositionToDefend(defendPostion);
+            stpInfos[defenderNames[i]].setPositionToDefend(defendPostion);
             ComputationManager::calculatedEnemyMapIds.emplace_back(enemyMap.begin()->second.id);
             enemyMap.erase(enemyMap.begin());
         }
         for (size_t i = loopSize; i < defenderNames.size(); i++) {
-            additionalWallerNames.emplace_back("defender_" + std::to_string(i));
+            additionalWallerNames.emplace_back(defenderNames[i]);
         }
     } else {
         // Calculate the distance between the defenders and their enemies
@@ -472,11 +513,7 @@ void PositionComputations::calculateInfoForFormationOurSide(std::unordered_map<s
     }
     for (size_t i = 0; i < formationFrontNames.size(); i++) {
         double y = -height / 2 + height / (formationFrontNames.size() + 1) * (i + 1);
-        // Make sure no robot is between our passer and receiver
-        if (formationFrontNames.size() % 2 != 0 && i == formationFrontNames.size() / 2) {
-            y += 0.7;
-        }
-        stpInfos[formationFrontNames[i]].setPositionToMoveTo(Vector2{-width / 15, y});
+        stpInfos[formationFrontNames[i]].setPositionToMoveTo(Vector2{-constants::ROBOT_RADIUS * 1.5, y});
     }
 }
 

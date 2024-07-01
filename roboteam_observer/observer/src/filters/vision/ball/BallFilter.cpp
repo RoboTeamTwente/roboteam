@@ -3,10 +3,10 @@
 #include <utility>
 
 BallFilter::BallFilter(const BallObservation &observation) : groundFilters{std::make_pair(observation.cameraID, CameraGroundBallFilter(observation))} {}
-GroundBallPrediction BallFilter::predictCam(int cameraID, Time until) const {
+GroundBallPrediction BallFilter::predictCam(int cameraID, Time until, std::vector<FilteredRobot> yellowRobots, std::vector<FilteredRobot> blueRobots) {
     auto camera_filter = groundFilters.find(cameraID);
     if (camera_filter != groundFilters.end()) {
-        GroundBallPrediction prediction(camera_filter->second.predict(until), true);
+        GroundBallPrediction prediction(camera_filter->second.predict(until, yellowRobots, blueRobots), true);
         return prediction;
     }
     // no information for this camera available; we merge data from available camera's
@@ -62,6 +62,13 @@ double BallFilter::getHealth() const {
         maxHealth = fmax(filter.second.getHealth(), maxHealth);
     }
     return maxHealth;
+}
+double BallFilter::getNumObservations() const {
+    double maxTotalObservations = 0.0;
+    for (const auto &filter : groundFilters) {
+        maxTotalObservations = fmax(filter.second.numObservations(), maxTotalObservations);
+    }
+    return maxTotalObservations;
 }
 GroundBallPrediction::GroundBallPrediction(CameraGroundBallPrediction prediction, bool hadRequestedCamera)
     : prediction{std::move(prediction)}, hadRequestedCamera{hadRequestedCamera} {}

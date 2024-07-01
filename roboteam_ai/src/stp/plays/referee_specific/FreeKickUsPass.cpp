@@ -30,8 +30,8 @@ FreeKickUsPass::FreeKickUsPass() : Play() {
         std::make_unique<role::Defender>("defender_1"),
         std::make_unique<role::Formation>("attacker_0"),
         // Additional roles if we play 11v11
-        std::make_unique<role::Formation>("waller_0"),
-        std::make_unique<role::Formation>("waller_1"),
+        std::make_unique<role::Defender>("waller_0"),
+        std::make_unique<role::Defender>("waller_1"),
         std::make_unique<role::Defender>("defender_2"),
         std::make_unique<role::Defender>("defender_3"),
         std::make_unique<role::Formation>("attacker_1"),
@@ -72,11 +72,11 @@ void FreeKickUsPass::calculateInfoForRoles() noexcept {
     if (!ballKicked()) {
         stpInfos["receiver"].setPositionToMoveTo(passInfo.receiverLocation);
         stpInfos["free_kick_taker"].setPositionToShootAt(passInfo.receiverLocation);
-        stpInfos["free_kick_taker"].setShotType(ShotType::PASS);
-        stpInfos["free_kick_taker"].setKickOrChip(KickOrChip::KICK);
+        stpInfos["free_kick_taker"].setShotPower(ShotPower::PASS);
+        stpInfos["free_kick_taker"].setKickOrChip(KickType::KICK);
         if (RuntimeConfig::useReferee && GameStateManager::getCurrentGameState().timeLeft < 1.5) {
             stpInfos["free_kick_taker"].setPositionToShootAt(field.rightDefenseArea.rightLine().center());
-            stpInfos["free_kick_taker"].setShotType(ShotType::MAX);
+            stpInfos["free_kick_taker"].setShotPower(ShotPower::MAX);
         }
     } else {
         // Receiver goes to the receiverLocation projected on the trajectory of the ball

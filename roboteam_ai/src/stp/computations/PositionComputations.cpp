@@ -102,7 +102,8 @@ std::vector<Vector2> PositionComputations::determineWallPositions(const rtt::Fie
         ballPos = FieldComputations::projectPointInField(field, ballPos, constants::BALL_RADIUS);
     }
     // Dynamic distance, the further the ball is from our goal, the further forwards our wall stands.
-    double theirDistanceToGoal = std::clamp(((ballPos - field.leftGoalArea.rightLine().center()).length() - 4) / 2, 0.0, field.playArea.width() / 10) + 2 * constants::ROBOT_RADIUS;
+    double theirDistanceToGoal = std::clamp(((ballPos - field.leftGoalArea.rightLine().center()).length() - 4) / 2, -constants::ROBOT_RADIUS * 1.9, field.playArea.width() / 10) +
+                                 2 * constants::ROBOT_RADIUS;
     auto extraLength = (ballPos - field.leftGoalArea.rightLine().center()).stretchToLength(theirDistanceToGoal);
 
     std::vector<Vector2> positions = {};

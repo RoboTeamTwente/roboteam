@@ -127,14 +127,14 @@ InterceptionInfo InterceptionComputations::calculateInterceptionInfo(const std::
             continue;
         } else if (world->getField().value().leftDefenseArea.contains(futureBallPosition) || world->getField().value().rightDefenseArea.contains(futureBallPosition)) {
             // project futureBallPos to where it enters the defense area
-            auto intersections = FieldComputations::getDefenseArea(world->getField().value(), world->getField().value().leftDefenseArea.contains(futureBallPosition), 0, 0)
+            auto intersections = FieldComputations::getDefenseArea(world->getField().value(), world->getField().value().leftDefenseArea.contains(futureBallPosition), 0, 0.5)
                                      .intersections({pastBallPosition, futureBallPosition});
             if (intersections.size() == 1) {
                 futureBallPosition = intersections.at(0);
             }
         } else if (world->getField().value().leftDefenseArea.contains(pastBallPosition) || world->getField().value().rightDefenseArea.contains(pastBallPosition)) {
             // project pastBallPos to where it exits the defense area
-            auto intersections = FieldComputations::getDefenseArea(world->getField().value(), world->getField().value().leftDefenseArea.contains(pastBallPosition), 0, 0)
+            auto intersections = FieldComputations::getDefenseArea(world->getField().value(), world->getField().value().leftDefenseArea.contains(pastBallPosition), 0, 0.5)
                                      .intersections({pastBallPosition, futureBallPosition});
             if (intersections.size() == 1) {
                 pastBallPosition = intersections.at(0);

@@ -23,7 +23,6 @@ Status KeeperPasser::update(StpInfo const& info) noexcept {
         } else if (robotTactics.current_num() == 2) {
             auto intersections = ourDefenseArea.intersections(LineSegment(info.getField().value().leftGoalArea.leftLine().center(), info.getRobot().value()->getPos()));
 
-
             if (intersections.size() == 2) {
                 Vector2 intersection_one = intersections[0];
 

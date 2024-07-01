@@ -14,7 +14,9 @@ uint8_t WeWillHaveBallGlobalEvaluation::metricCheck(const world::World* world, c
     // If we have no bots, we will not get the ball
     if (us.empty()) return constants::FUZZY_FALSE;
 
-    if (world->getWorld()->getRobotClosestToBall(world::them)->get()->getPos().dist(ballPosition) < constants::ROBOT_RADIUS * 1.3 && world->getWorld()->getRobotClosestToBall(world::us)->get()->getPos().dist(ballPosition) < constants::ROBOT_RADIUS * 1.3) return false;
+    if (world->getWorld()->getRobotClosestToBall(world::them)->get()->getPos().dist(ballPosition) < constants::ROBOT_RADIUS * 1.3 &&
+        world->getWorld()->getRobotClosestToBall(world::us)->get()->getPos().dist(ballPosition) < constants::ROBOT_RADIUS * 1.3)
+        return false;
 
     // If any of our robots has the ball, we will get the ball
     if (std::any_of(us.begin(), us.end(), [](auto& robot) { return robot->hasBall(); })) return constants::FUZZY_TRUE;

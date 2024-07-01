@@ -18,28 +18,24 @@ const transformCoordinates = (point: IPoint) => {
 }
 
 export const zoom = (factor: number, x: number, y: number, stage: Container) => {
-  factor = factor > 0 ? 1.1 : 0.9
+  factor = factor > 0 ? 1.1 : 0.9;
 
   const worldPos = {
     x: (x - stage.x) / stage.scale.x,
-    y: (y - stage.y) / stage.scale.y
-  }
+    y: (y - stage.y) / stage.scale.y,
+  };
 
-  const newScale = {
-    x: stage.scale.x * factor,
-    y: stage.scale.y * factor
-  }
+  stage.scale.x *= factor;
+  stage.scale.y *= factor;
 
   const newScreenPos = {
-    x: worldPos.x * newScale.x + stage.x,
-    y: worldPos.y * newScale.y + stage.y
-  }
+    x: worldPos.x * stage.scale.x + stage.x,
+    y: worldPos.y * stage.scale.y + stage.y,
+  };
 
-  stage.x -= newScreenPos.x - x
-  stage.y -= newScreenPos.y - y
-  stage.scale.x = newScale.x
-  stage.scale.y = newScale.y
-}
+  stage.x -= newScreenPos.x - x;
+  stage.y -= newScreenPos.y - y;
+};
 
 export const useMoveCamera = (
   canvasRef: Ref<HTMLCanvasElement | null>,
@@ -49,7 +45,6 @@ export const useMoveCamera = (
   let lastPos: null | { x: number; y: number } = null
 
   useEventListener(canvasRef, 'wheel', (e: WheelEvent) => {
-    if (!ctrlKey.value) return
     if (appRef.value?.stage === null) return
     zoom(e.deltaY, e.offsetX, e.offsetY, appRef.value!.stage!)
   })

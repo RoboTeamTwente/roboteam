@@ -61,10 +61,11 @@ class PositionControl {
      * @param world a pointer to the current world
      * @param field the field object, used onwards by the collision detector
      * @param currentPosition the current position of the robot
+     * @param targetPosition the desired position that the robot has to reach
      * @param avoidObjects whether or not to avoid objects
      * @return A new target position
      */
-    Vector2 handleBallPlacementCollision(const rtt::world::World *world, const rtt::Field &field, Vector2 currentPosition, stp::AvoidObjects avoidObjects);
+    Vector2 handleBallPlacementCollision(const rtt::world::World *world, const rtt::Field &field, Vector2 currentPosition, Vector2 targetPosition, stp::AvoidObjects avoidObjects);
 
     /**
      * @brief Handles the collision with the defense area at the current position, will move away from the defense area as quickly as possible.

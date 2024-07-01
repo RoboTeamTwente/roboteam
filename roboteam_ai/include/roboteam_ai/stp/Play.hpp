@@ -25,6 +25,8 @@ class Play {
 
     std::vector<GlobalEvaluation> startPlayEvaluation; /**< Invariant vector that contains invariants that need to be true to start this play */
 
+    static int waller_count;
+
     /**
      * @brief Initializes stpInfos struct, distributes roles, sets the previousRobotNum variable and calls onInitialize()
      */

@@ -83,14 +83,6 @@ class KeeperBlockBall : public Tactic {
     static Vector2 calculateTargetPositionBallShot(const StpInfo info, rtt::LineSegment keepersLineSegment, rtt::LineSegment ballTrajectory) noexcept;
 
     /**
-     * @brief Calculates the point where they will have the ball
-     * @param info the StpInfo struct
-     * @param ballTrajectory the trajectory of the ball
-     * @return the point where they will have the ball
-     */
-    static std::optional<Vector2> calculateTheirBallInterception(const StpInfo &info, rtt::LineSegment ballTrajectory) noexcept;
-
-    /**
      * @brief Calculates the target position for the keeper when the ball is not shot
      * @param info the StpInfo struct
      * @param predictedBallPositionTheirRobot the predicted position of the ball when the opponent will have the ball

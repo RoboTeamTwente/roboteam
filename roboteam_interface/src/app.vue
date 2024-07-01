@@ -7,7 +7,6 @@ import { useVisionDataStore } from './modules/stores/data-stores/vision-data-sto
 import SidebarResizer from './modules/components/layout/sidebar-resizer.vue'
 import ConnectModal from './modules/components/connect-modal.vue'
 import { useAiController } from './modules/composables/ai-controller'
-
 import PixiApp from './modules/components/canvas/pixi-app.vue'
 import FieldLines from './modules/components/canvas/field-lines.vue'
 import Ball from './modules/components/canvas/ball.vue'
@@ -68,6 +67,17 @@ const bottomPanelSize = computed(() => `${uiStore.panelSize('bottomPanel')}px`)
         <ball />
         <robots />
         <visualizations />
+        <!-- Display the battery percentages of all robots -->
+        <div class="right-side">
+          <div :style="{ color: '#ffff'}">
+            Battery Levels
+          </div>
+          <div v-for="(voltage, key) in visionData.knownBatteryLevels" :key="key">
+            <div :style="{ color: voltage == null ? '#808080' : voltage < 21 ? '#8a0000' : voltage < 23.1 ? '#ffff00' : '#00a01e'}">
+              {{ key }} : {{ voltage ?? 'N/A' }}
+            </div>
+          </div>
+        </div>
       </pixi-app>
       <div v-else class="alert alert-warning justify-start">
         <font-awesome-icon icon="fa-circle-exclamation" />
@@ -125,6 +135,14 @@ const bottomPanelSize = computed(() => `${uiStore.panelSize('bottomPanel')}px`)
 
 .bottom-sidebar {
   grid-area: bsb;
+}
+
+.right-side {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 20px;
+  background-color: #303030;
 }
 
 .bottom-sidebar-resize {

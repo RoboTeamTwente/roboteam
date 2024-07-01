@@ -10,7 +10,7 @@ Status Kick::onUpdate(const StpInfo &info) noexcept {
 
     // Clamp and set kick velocity
     float kickVelocity = std::clamp(info.getKickChipVelocity(), constants::MIN_KICK_POWER, constants::MAX_KICK_POWER);
-    command.kickType = KickType::KICK;
+    command.kickType = info.getKickOrChip();
     command.kickSpeed = kickVelocity;
 
     command.dribblerOn = info.getDribblerOn();

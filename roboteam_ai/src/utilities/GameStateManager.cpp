@@ -143,8 +143,7 @@ void GameStateManager::updateInterfaceGameState(const char* name) {
         {"Time Out", {RefCommand::TIMEOUT_US, RuleSet::RULESET_HALT()}},
         {"Attacking Pass", {RefCommand::NORMAL_START, RuleSet::RULESET_DEFAULT()}},
         {"Attack", {RefCommand::NORMAL_START, RuleSet::RULESET_DEFAULT()}},
-        {"Defend Shot", {RefCommand::NORMAL_START, RuleSet::RULESET_DEFAULT()}},
-        {"Defend Pass", {RefCommand::NORMAL_START, RuleSet::RULESET_DEFAULT()}},
+        {"Defend", {RefCommand::NORMAL_START, RuleSet::RULESET_DEFAULT()}},
         {"Keeper Kick Ball", {RefCommand::NORMAL_START, RuleSet::RULESET_DEFAULT()}},
     };
 

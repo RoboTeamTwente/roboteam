@@ -281,7 +281,8 @@ export namespace proto {
             DOTS = 1,
             CROSSES = 2,
             PLUSES = 3,
-            CIRCLES = 4
+            CIRCLES = 4,
+            TUBES = 5
         }
 
         /** Color enum. */

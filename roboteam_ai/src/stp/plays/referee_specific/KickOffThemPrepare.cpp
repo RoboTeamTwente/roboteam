@@ -18,17 +18,17 @@ KickOffThemPrepare::KickOffThemPrepare() : Play() {
     roles = std::array<std::unique_ptr<Role>, rtt::ai::constants::MAX_ROBOT_COUNT>{
         // Roles is we play 6v6
         std::make_unique<role::Keeper>("keeper"),
-        std::make_unique<role::Formation>("formation_back_0"),
+        std::make_unique<role::Formation>("waller_0"),
+        std::make_unique<role::Formation>("waller_1"),
         std::make_unique<role::Formation>("formation_mid_0"),
         std::make_unique<role::Formation>("formation_front_0"),
-        std::make_unique<role::Formation>("formation_back_1"),
-        std::make_unique<role::Formation>("formation_mid_1"),
-        // Additional roles if we play 11v11
         std::make_unique<role::Formation>("formation_front_1"),
-        std::make_unique<role::Formation>("formation_back_2"),
-        std::make_unique<role::Formation>("formation_mid_2"),
         std::make_unique<role::Formation>("formation_front_2"),
-        std::make_unique<role::Formation>("formation_mid_3"),
+        // Additional roles if we play 11v11
+        std::make_unique<role::Formation>("formation_front_3"),
+        std::make_unique<role::Formation>("formation_front_4"),
+        std::make_unique<role::Formation>("formation_front_5"),
+        std::make_unique<role::Formation>("formation_front_6"),
     };
 }
 
@@ -42,23 +42,23 @@ Dealer::FlagMap KickOffThemPrepare::decideRoleFlags() const noexcept {
     Dealer::DealerFlag keeperFlag(DealerFlagTitle::KEEPER);
 
     flagMap.insert({"keeper", {DealerFlagPriority::KEEPER, {keeperFlag}}});
-    flagMap.insert({"formation_back_0", {DealerFlagPriority::HIGH_PRIORITY, {}}});
-    flagMap.insert({"formation_back_1", {DealerFlagPriority::HIGH_PRIORITY, {}}});
-    flagMap.insert({"formation_back_2", {DealerFlagPriority::HIGH_PRIORITY, {}}});
+    flagMap.insert({"waller_0", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
+    flagMap.insert({"waller_1", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
     flagMap.insert({"formation_mid_0", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"formation_mid_1", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"formation_mid_2", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"formation_mid_3", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"formation_front_0", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
-    flagMap.insert({"formation_front_1", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
-    flagMap.insert({"formation_front_2", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
+    flagMap.insert({"formation_front_0", {DealerFlagPriority::HIGH_PRIORITY, {}}});
+    flagMap.insert({"formation_front_1", {DealerFlagPriority::HIGH_PRIORITY, {}}});
+    flagMap.insert({"formation_front_2", {DealerFlagPriority::HIGH_PRIORITY, {}}});
+    flagMap.insert({"formation_front_3", {DealerFlagPriority::HIGH_PRIORITY, {}}});
+    flagMap.insert({"formation_front_4", {DealerFlagPriority::HIGH_PRIORITY, {}}});
+    flagMap.insert({"formation_front_5", {DealerFlagPriority::HIGH_PRIORITY, {}}});
+    flagMap.insert({"formation_front_6", {DealerFlagPriority::HIGH_PRIORITY, {}}});
 
     return flagMap;
 }
 
 void KickOffThemPrepare::calculateInfoForRoles() noexcept {
+    PositionComputations::calculateInfoForDefendersAndWallers(stpInfos, roles, field, world, true);
     PositionComputations::calculateInfoForFormationOurSide(stpInfos, roles, field, world);
-    stpInfos["formation_front_0"].setPositionToMoveTo(Vector2(-0.73, 0));
 }
 const char* KickOffThemPrepare::getName() const { return "Kick Off Them Prepare"; }
 

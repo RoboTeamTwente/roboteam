@@ -99,7 +99,7 @@ std::pair<Vector2, bool> KeeperBlockBall::calculateTargetPosition(const StpInfo 
 
     if (ball->position.x >= field.leftGoalArea.rightLine().center().x - MAX_DISTANCE_BALL_BEHIND_GOAL) {
         auto shouldAvoidGoalPosts = true;
-        std::optional<Vector2> predictedBallPositionTheirRobot = calculateTheirBallInterception(info, ballTrajectory);
+        std::optional<Vector2> predictedBallPositionTheirRobot = InterceptionComputations::calculateTheirBallInterception(info.getCurrentWorld(), ballTrajectory);
         return {calculateTargetPositionBallNotShot(info, predictedBallPositionTheirRobot), shouldAvoidGoalPosts};
     }
 
@@ -213,41 +213,6 @@ Vector2 KeeperBlockBall::calculateTargetPositionBallNotShot(const StpInfo &info,
         },
         goalPostArr);
     return targetPositionNew;
-}
-
-std::optional<Vector2> KeeperBlockBall::calculateTheirBallInterception(const StpInfo &info, rtt::LineSegment ballTrajectory) noexcept {
-    std::optional<Vector2> predictedBallPositionTheirRobot = std::nullopt;
-    const auto ball = info.getBall().value();
-    double minDistanceToBall = std::numeric_limits<double>::max();
-    for (const auto &theirRobot : info.getCurrentWorld()->getWorld()->getThem()) {
-        std::optional<rtt::Vector2> vecPts = ballTrajectory.project(theirRobot.get()->getPos());
-        // see if the distance between the projected point and the robot is less than 0.5m
-        if (vecPts.value().dist(theirRobot.get()->getPos()) < 0.5) {
-            double dist = vecPts.value().dist(ball->position);
-            if (dist < minDistanceToBall) {
-                minDistanceToBall = dist;
-                predictedBallPositionTheirRobot = vecPts.value();
-                predictedBallPositionTheirRobot =
-                    predictedBallPositionTheirRobot.value() + (ball->position - predictedBallPositionTheirRobot.value()).normalize() * constants::CENTER_TO_FRONT;
-            }
-        }
-    }
-    if (predictedBallPositionTheirRobot) {
-        std::vector<rtt::Vector2> vec = {predictedBallPositionTheirRobot.value()};
-        std::span<rtt::Vector2> spanVec = vec;
-
-        rtt::ai::gui::Out::draw(
-            {
-                .label = "Interception Point",
-                .color = proto::Drawing::CYAN,
-                .method = proto::Drawing::CIRCLES,
-                .category = proto::Drawing::DEBUG,
-                .size = 15,
-                .thickness = 7,
-            },
-            spanVec);
-    }
-    return predictedBallPositionTheirRobot;
 }
 
 Angle KeeperBlockBall::calculateYaw(const world::view::BallView &ball, const Vector2 &targetKeeperPosition) {

@@ -17,18 +17,6 @@ Ball::Ball(const proto::WorldBall& copy, const World* data) : position{copy.pos(
     }
     updateBallAtRobotPosition(data);
     updateExpectedBallEndPosition();
-
-    if (position != Vector2()) {
-        std::array<rtt::Vector2, 1> point = {position};
-        rtt::ai::gui::Out::draw(
-            {
-                .label = "position_ball_AI",
-                .color = proto::Drawing::CYAN,
-                .method = proto::Drawing::CIRCLES,
-                .size = 4,
-            },
-            point);
-    }
 }
 
 void Ball::initBallAtExpectedPosition(const world::World* data) noexcept {

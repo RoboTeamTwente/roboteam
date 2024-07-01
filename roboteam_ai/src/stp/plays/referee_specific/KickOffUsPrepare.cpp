@@ -19,16 +19,16 @@ KickOffUsPrepare::KickOffUsPrepare() : Play() {
         // Roles is we play 6v6
         std::make_unique<role::Keeper>("keeper"),
         std::make_unique<role::Formation>("kicker"),
-        std::make_unique<role::Formation>("formation_mid_0"),
+        std::make_unique<role::Formation>("waller_0"),
+        std::make_unique<role::Formation>("waller_1"),
         std::make_unique<role::Formation>("formation_front_0"),
         std::make_unique<role::Formation>("formation_front_1"),
         std::make_unique<role::Formation>("formation_front_2"),
         // Additional roles if we play 11v11
-        std::make_unique<role::Formation>("formation_back_0"),
-        std::make_unique<role::Formation>("formation_back_1"),
         std::make_unique<role::Formation>("formation_front_3"),
         std::make_unique<role::Formation>("formation_front_4"),
         std::make_unique<role::Formation>("formation_front_5"),
+        std::make_unique<role::Formation>("formation_front_6"),
     };
 }
 
@@ -46,24 +46,25 @@ Dealer::FlagMap KickOffUsPrepare::decideRoleFlags() const noexcept {
 
     flagMap.insert({"keeper", {DealerFlagPriority::KEEPER, {keeperFlag}}});
     flagMap.insert({"kicker", {DealerFlagPriority::REQUIRED, {kickerFlag, detectionFlag}}});
-    flagMap.insert({"formation_back_0", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
-    flagMap.insert({"formation_back_1", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
-    flagMap.insert({"formation_mid_0", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"waller_0", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
+    flagMap.insert({"waller_1", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
     flagMap.insert({"formation_front_0", {DealerFlagPriority::HIGH_PRIORITY, {}}});
     flagMap.insert({"formation_front_1", {DealerFlagPriority::HIGH_PRIORITY, {}}});
     flagMap.insert({"formation_front_2", {DealerFlagPriority::HIGH_PRIORITY, {}}});
     flagMap.insert({"formation_front_3", {DealerFlagPriority::HIGH_PRIORITY, {}}});
     flagMap.insert({"formation_front_4", {DealerFlagPriority::HIGH_PRIORITY, {}}});
     flagMap.insert({"formation_front_5", {DealerFlagPriority::HIGH_PRIORITY, {}}});
+    flagMap.insert({"formation_front_6", {DealerFlagPriority::LOW_PRIORITY, {}}});
 
     return flagMap;
 }
 
 void KickOffUsPrepare::calculateInfoForRoles() noexcept {
+    PositionComputations::calculateInfoForDefendersAndWallers(stpInfos, roles, field, world, true);
     PositionComputations::calculateInfoForFormationOurSide(stpInfos, roles, field, world);
 
     // The "kicker" will go to the ball
-    stpInfos["kicker"].setPositionToMoveTo(Vector2(-constants::AVOID_BALL_DISTANCE, 0.0));
+    stpInfos["kicker"].setPositionToMoveTo(Vector2(-constants::AVOID_BALL_DISTANCE, -constants::AVOID_BALL_DISTANCE));
 }
 
 const char* KickOffUsPrepare::getName() const { return "Kick Off Us Prepare"; }

@@ -18,16 +18,16 @@ double ControlUtils::getMaxVelocity(bool hasBall) {
 }
 
 /// Calculate the kick force
-double ControlUtils::determineKickForce(const double distance, stp::ShotType shotType) noexcept {
-    if (shotType == stp::ShotType::MAX) return constants::MAX_KICK_POWER;
+double ControlUtils::determineKickForce(const double distance, stp::ShotPower shotPower) noexcept {
+    if (shotPower == stp::ShotPower::MAX) return constants::MAX_KICK_POWER;
 
     double kickForce;
-    if (shotType == stp::ShotType::PASS) {
+    if (shotPower == stp::ShotPower::PASS) {
         kickForce = 1.8;
-    } else if (shotType == stp::ShotType::TARGET) {
+    } else if (shotPower == stp::ShotPower::TARGET) {
         kickForce = 0.5;
     } else {
-        RTT_WARNING("No shotType set! Setting kickForce to 0")
+        RTT_WARNING("No shotPower set! Setting kickForce to 0")
         kickForce = 0;
     }
     // Calculate the velocity based on this function with the previously set limitingFactor

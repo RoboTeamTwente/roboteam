@@ -116,10 +116,22 @@ double CollisionCalculations::getFirstCollisionTimeMovingObject(const Trajectory
         }
         if (GameStateManager::getCurrentGameState().getCommandId() == RefCommand::BALL_PLACEMENT_THEM ||
             GameStateManager::getCurrentGameState().getCommandId() == RefCommand::PREPARE_FORCED_START) {
-            auto ballPosition = FieldComputations::getBallPositionAtTime(*world->getWorld()->getBall()->get(), checkPoint * 0.1);
             auto ballPlacementPosition = GameStateManager::getRefereeDesignatedPosition();
-            LineSegment ballPlacementLine(ballPosition, ballPlacementPosition);
-            if (ballPlacementLine.distanceToLine(positionOurRobot) < constants::AVOID_BALL_DISTANCE + additionalMargin) {
+            bool isBallPlacementCollision = true;
+            for (int i = checkPoint; i < checkPoint + 10; i++) {
+                auto ballPosition = FieldComputations::getBallPositionAtTime(*world->getWorld()->getBall()->get(), checkPoint * 0.1);
+                if (i >= static_cast<int>(pathPoints.size())) {
+                    isBallPlacementCollision = false;
+                    break;
+                }
+                auto positionOurRobot = Trajectory.getPosition(i * 0.1);
+                auto ballPlacementLine = LineSegment(ballPlacementPosition, ballPosition);
+                if (ballPlacementLine.distanceToLine(positionOurRobot) > constants::AVOID_BALL_DISTANCE + additionalMargin) {
+                    isBallPlacementCollision = false;
+                    break;
+                }
+            }
+            if (isBallPlacementCollision) {
                 return checkPoint * 0.1;
             }
         }
@@ -135,11 +147,13 @@ bool CollisionCalculations::isCollidingWithMovingObject(const Trajectory2D &Traj
 
 double CollisionCalculations::getFirstCollisionTime(const Trajectory2D &Trajectory, stp::AvoidObjects avoidObjects, const Field &field, int &robotId, const world::World *world,
                                                     const std::unordered_map<int, std::vector<Vector2>> &computedPaths) {
-    double collisionTime = getFirstCollisionTimeMotionlessObject(Trajectory, avoidObjects, field);
-    if (collisionTime != -1.0) {
-        return collisionTime;
-    }
-    return getFirstCollisionTimeMovingObject(Trajectory, avoidObjects, robotId, world, computedPaths);
+    double collisionTimeMotionless = getFirstCollisionTimeMotionlessObject(Trajectory, avoidObjects, field);
+    double collisionTimeMoving = getFirstCollisionTimeMovingObject(Trajectory, avoidObjects, robotId, world, computedPaths);
+
+    return (collisionTimeMotionless == -1.0 && collisionTimeMoving == -1.0) ? -1.0
+           : (collisionTimeMotionless == -1.0)                              ? collisionTimeMoving
+           : (collisionTimeMoving == -1.0)                                  ? collisionTimeMotionless
+                                                                            : std::min(collisionTimeMotionless, collisionTimeMoving);
 }
 
 bool CollisionCalculations::isColliding(const Trajectory2D &Trajectory, stp::AvoidObjects avoidObjects, const Field &field, int &robotId, const world::World *world,

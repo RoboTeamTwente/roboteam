@@ -14,6 +14,13 @@ class KeeperPasser : public Role {
      * @param name The name of the role
      */
     KeeperPasser(std::string name);
+
+    /**
+     * @brief Besides the default update from base class Role, it also switches between tactics depending on the ball position
+     * @param info TacticInfo to be passed to update()
+     * @return The status that the current tactic returns
+     */
+    [[nodiscard]] Status update(StpInfo const& info) noexcept override;
 };
 }  // namespace rtt::ai::stp::role
 

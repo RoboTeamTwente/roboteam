@@ -614,6 +614,7 @@ export const proto = $root.proto = (() => {
                 case 2:
                 case 3:
                 case 4:
+                case 5:
                     break;
                 }
             if (message.points != null && message.hasOwnProperty("points")) {
@@ -733,6 +734,10 @@ export const proto = $root.proto = (() => {
             case "CIRCLES":
             case 4:
                 message.method = 4;
+                break;
+            case "TUBES":
+            case 5:
+                message.method = 5;
                 break;
             }
             if (object.points) {
@@ -862,6 +867,7 @@ export const proto = $root.proto = (() => {
          * @property {number} CROSSES=2 CROSSES value
          * @property {number} PLUSES=3 PLUSES value
          * @property {number} CIRCLES=4 CIRCLES value
+         * @property {number} TUBES=5 TUBES value
          */
         Drawing.Method = (function() {
             const valuesById = {}, values = Object.create(valuesById);
@@ -870,6 +876,7 @@ export const proto = $root.proto = (() => {
             values[valuesById[2] = "CROSSES"] = 2;
             values[valuesById[3] = "PLUSES"] = 3;
             values[valuesById[4] = "CIRCLES"] = 4;
+            values[valuesById[5] = "TUBES"] = 5;
             return values;
         })();
 

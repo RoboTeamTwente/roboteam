@@ -77,6 +77,7 @@ void FreeKickUsPass::calculateInfoForRoles() noexcept {
         if (RuntimeConfig::useReferee && GameStateManager::getCurrentGameState().timeLeft < 1.5) {
             stpInfos["free_kick_taker"].setPositionToShootAt(field.rightDefenseArea.rightLine().center());
             stpInfos["free_kick_taker"].setShotPower(ShotPower::MAX);
+            stpInfos["free_kick_taker"].setKickOrChip(KickType::CHIP);
         }
     } else {
         // Receiver goes to the receiverLocation projected on the trajectory of the ball

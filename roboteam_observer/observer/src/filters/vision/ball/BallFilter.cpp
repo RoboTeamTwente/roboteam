@@ -29,29 +29,36 @@ bool BallFilter::processDetections(const CameraGroundBallPredictionObservationPa
     }
     return groundFilters.empty();
 }
-FilteredBall BallFilter::mergeBalls(Time time) const {
+FilteredBall BallFilter::mergeBalls(Time time) {
     FilteredBall ball;
     ball.position = Eigen::Vector2d(0, 0);
     ball.velocity = Eigen::Vector2d(0, 0);
-    ball.posUncertainty = 0.0;
-    ball.velocityUncertainty = 0.0;
+    ball.positionCamera = Eigen::Vector2d(0, 0);
+    ball.time = time;
+    auto posUncertainty = 0.0;
+    auto velocityUncertainty = 0.0;
     constexpr double mergeFactor = 1.5;
-    for (const auto &filter : groundFilters) {
-        FilteredBall estimate = filter.second.getEstimate(time);
+    for (auto &filter : groundFilters) {
+        auto estimate = filter.second.getEstimate(time);
         double weight = 100.0 / estimate.health;
         double posWeight = std::pow(estimate.posUncertainty * weight, -mergeFactor);
         double velWeight = std::pow(estimate.velocityUncertainty * weight, -mergeFactor);
         ball.position += estimate.position * posWeight;
         ball.velocity += estimate.velocity * velWeight;
-        ball.posUncertainty += posWeight;
-        ball.velocityUncertainty += velWeight;
+        ball.positionCamera += filter.second.getLastObservation().position * posWeight;
+        posUncertainty += posWeight;
+        velocityUncertainty += velWeight;
+        if (filter.second.getLastObservationAvailableAndReset()) {
+            ball.currentObservation = filter.second.getLastObservation();
+        }
     }
     constexpr double limit = 1e-10;
-    if (ball.posUncertainty >= limit) {
-        ball.position /= ball.posUncertainty;
+    if (posUncertainty >= limit) {
+        ball.position /= posUncertainty;
+        ball.positionCamera /= posUncertainty;
     }
-    if (ball.velocityUncertainty >= limit) {
-        ball.velocity /= ball.velocityUncertainty;
+    if (velocityUncertainty >= limit) {
+        ball.velocity /= velocityUncertainty;
     }
 
     return ball;

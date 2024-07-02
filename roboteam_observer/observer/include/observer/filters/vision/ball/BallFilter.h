@@ -44,7 +44,7 @@ class BallFilter {
      * @param time
      * @return The Predicted/Filtered ball
      */
-    [[nodiscard]] FilteredBall mergeBalls(Time time) const;
+    [[nodiscard]] FilteredBall mergeBalls(Time time);
 
     /**
      * @return Gets the health of the ball filter

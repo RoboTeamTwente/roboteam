@@ -15,6 +15,7 @@ bool CameraGroundBallFilter::processDetections(const CameraGroundBallPredictionO
     predictFilter(prediction_observation_pair.prediction);
     bool removeFilter = false;
     if (prediction_observation_pair.observation.has_value()) {
+        setLastObservation(prediction_observation_pair.observation.value());
         update(prediction_observation_pair.observation.value());
     } else {
         removeFilter = updateNotSeen(prediction_observation_pair.prediction.time);
@@ -111,9 +112,23 @@ CameraGroundBallPrediction CameraGroundBallFilter::predict(Time time, std::vecto
     return prediction;
 }
 
-FilteredBall CameraGroundBallFilter::getEstimate(Time time) const {
-    FilteredBall ball(ekf.getPositionEstimate(time), ekf.getVelocityEstimate(time), getHealth(), ekf.getPositionUncertainty().norm(), ekf.getVelocityUncertainty().norm());
+BallEstimate CameraGroundBallFilter::getEstimate(Time time) const {
+    BallEstimate ball(ekf.getPositionEstimate(time), ekf.getVelocityEstimate(time), getHealth(), ekf.getPositionUncertainty().norm(), ekf.getVelocityUncertainty().norm());
     return ball;
 }
 
 CameraGroundBallPrediction::CameraGroundBallPrediction(Eigen::Vector2d pos, Eigen::Vector2d vel, Time time) : position{std::move(pos)}, velocity{std::move(vel)}, time{time} {}
+
+BallObservation CameraGroundBallFilter::getLastObservation() const { return lastObservation; }
+void CameraGroundBallFilter::setLastObservation(const BallObservation& observation) {
+    lastObservationUsed = false;
+    lastObservation = observation;
+}
+
+bool CameraGroundBallFilter::getLastObservationAvailableAndReset() {
+    if (lastObservationUsed) {
+        return false;
+    }
+    lastObservationUsed = true;
+    return true;
+}

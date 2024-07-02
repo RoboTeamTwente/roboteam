@@ -6,7 +6,9 @@
 #include <proto/messages_robocup_ssl_geometry.pb.h>
 
 #include "DetectionFrame.h"
+#include "GeometryFilter.h"
 #include "RobotFeedbackFilter.h"
+#include "observer/filters/vision/CameraMap.h"
 #include "observer/filters/vision/ball/BallFilter.h"
 #include "observer/filters/vision/robot/RobotFilter.h"
 #include "observer/parameters/RobotParameterDatabase.h"
@@ -24,7 +26,8 @@ class WorldFilter {
    public:
     WorldFilter();
 
-    void process(const std::vector<proto::SSL_DetectionFrame>& frames, const std::vector<rtt::RobotsFeedback>& feedback, const std::vector<int>& camera_ids);
+    void process(const std::vector<proto::SSL_DetectionFrame>& frames, const std::vector<rtt::RobotsFeedback>& feedback, const std::vector<int>& camera_ids,
+                 GeometryFilter& geomFilter);
 
     [[nodiscard]] proto::World getWorldPrediction(const Time& time) const;
 

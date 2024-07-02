@@ -12,7 +12,14 @@ proto::World WorldFilter::getWorldPrediction(const Time &time) const {
     return world;
 }
 
-void WorldFilter::process(const std::vector<proto::SSL_DetectionFrame> &frames, const std::vector<rtt::RobotsFeedback> &feedback, const std::vector<int> &camera_ids) {
+void WorldFilter::process(const std::vector<proto::SSL_DetectionFrame> &frames, const std::vector<rtt::RobotsFeedback> &feedback, const std::vector<int> &camera_ids,
+                          GeometryFilter &geomFilter) {
+    // populate cameraMap
+    for (const auto &camera : geomFilter.getCameras()) {
+        if (!cameraMap.hasCamera(camera.first)) {
+            cameraMap.addCamera(Camera(camera.second));
+        }
+    }
     // Feedback is processed first, as it is not really dependent on vision packets,
     // but the vision processing may be helped by the feedback information
     feedbackFilter.process(feedback);

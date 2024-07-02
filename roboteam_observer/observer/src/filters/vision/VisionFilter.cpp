@@ -26,7 +26,7 @@ void VisionFilter::processDetections(const std::vector<proto::SSL_WrapperPacket>
             }
         }
     }
-    worldFilter.process(detectionFrames, robotData, camera_ids);
+    worldFilter.process(detectionFrames, robotData, camera_ids, geomFilter);
 }
 void VisionFilter::updateRobotParameters(const TwoTeamRobotParameters& parameters) { worldFilter.updateRobotParameters(parameters); }
 std::optional<proto::SSL_GeometryData> VisionFilter::getGeometry() const {

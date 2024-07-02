@@ -10,7 +10,7 @@ GroundBallPrediction BallFilter::predictCam(int cameraID, Time until, std::vecto
         return prediction;
     }
     // no information for this camera available; we merge data from available camera's
-    FilteredBall estimate = mergeBalls(until);
+    FilteredBall estimate = mergeBalls(until, false);
     GroundBallPrediction prediction(CameraGroundBallPrediction(estimate.position, estimate.velocity, until), false);
     return prediction;
 }
@@ -29,7 +29,7 @@ bool BallFilter::processDetections(const CameraGroundBallPredictionObservationPa
     }
     return groundFilters.empty();
 }
-FilteredBall BallFilter::mergeBalls(Time time) {
+FilteredBall BallFilter::mergeBalls(Time time, bool consumeObservations) {
     FilteredBall ball;
     ball.position = Eigen::Vector2d(0, 0);
     ball.velocity = Eigen::Vector2d(0, 0);
@@ -48,7 +48,7 @@ FilteredBall BallFilter::mergeBalls(Time time) {
         ball.positionCamera += filter.second.getLastObservation().position * posWeight;
         posUncertainty += posWeight;
         velocityUncertainty += velWeight;
-        if (filter.second.getLastObservationAvailableAndReset()) {
+        if (!consumeObservations || filter.second.getLastObservationAvailableAndReset()) {
             ball.currentObservation = filter.second.getLastObservation();
         }
     }

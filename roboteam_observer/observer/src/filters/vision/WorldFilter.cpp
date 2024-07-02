@@ -3,7 +3,7 @@
 #include "filters/vision/ball/BallAssigner.h"
 WorldFilter::WorldFilter() {}
 
-proto::World WorldFilter::getWorldPrediction(const Time &time) const {
+proto::World WorldFilter::getWorldPrediction(const Time &time) {
     proto::World world;
     addRobotPredictionsToMessage(world, time);
     addBallPredictionsToMessage(world, time);
@@ -219,10 +219,123 @@ void WorldFilter::processBalls(const DetectionFrame &frame) {
         balls.emplace_back(BallFilter(newBall));
     }
 }
-void WorldFilter::addBallPredictionsToMessage(proto::World &world, Time time) const {
-    const BallFilter *bestFilter = nullptr;
+
+void WorldFilter::kickDetector(FilteredBall bestBall, Time time) {
+    // Check if there's no current observation, return early
+    if (!bestBall.currentObservation.has_value() || bestBall.currentObservation.value().confidence < 0.1) {
+        return;
+    }
+
+    // Get the healthiest robots for both teams
+    std::vector<FilteredRobot> blueRobots = getHealthiestRobotsMerged(true, time);
+    std::vector<FilteredRobot> yellowRobots = getHealthiestRobotsMerged(false, time);
+    addRecentData(blueRobots, yellowRobots, bestBall);
+
+    // If not enough frames in history, return early
+    if (frameHistory.size() < 5) {
+        return;
+    }
+
+    // Check if the last kick was too recent, return early
+    if ((frameHistory.front().filteredBall->time - lastKickTime).asSeconds() < 0.1) {
+        return;
+    }
+
+    // Gather all balls and robots within a certain proximity
+    std::vector<FilteredBall> allBalls;
+    std::map<TeamRobotID, std::vector<FilteredRobot>> allRobots;
+    auto firstBallCameraPosition = frameHistory.front().filteredBall->positionCamera;
+    for (const auto &data : frameHistory) {
+        allBalls.push_back(data.filteredBall.value());
+        for (const auto &robot : data.blue) {
+            if ((robot.position.position - firstBallCameraPosition).norm() < 1.0) allRobots[robot.id].push_back(robot);
+        }
+        for (const auto &robot : data.yellow) {
+            if ((robot.position.position - firstBallCameraPosition).norm() < 1.0) allRobots[robot.id].push_back(robot);
+        }
+    }
+
+    // Remove robots if there's insufficient data
+    for (auto it = allRobots.begin(); it != allRobots.end();) {
+        if (it->second.size() < 5) {
+            it = allRobots.erase(it);
+        } else {
+            ++it;
+        }
+    }
+
+    for (const auto &[id, filteredRobots] : allRobots) {
+        if (!checkDistance(filteredRobots, allBalls)) {
+            continue;
+        }
+        if (!checkVelocity(allBalls)) {
+            continue;
+        }
+        if (!checkOrientation(filteredRobots, allBalls)) {
+            continue;
+        }
+        if (!checkIncreasingDistance(filteredRobots, allBalls)) {
+            continue;
+        }
+
+        // Kick detected, update last kick time and print the result
+        lastKickTime = frameHistory.front().filteredBall->time;
+        std::cout << "Kick detected by robot " << id.robot_id.robotID << " from team " << (id.team == TeamColor::BLUE ? "blue" : "yellow") << std::endl;
+        break;
+    }
+}
+
+bool WorldFilter::checkDistance(const std::vector<FilteredRobot> &robots, const std::vector<FilteredBall> &balls) {
+    double initialDistance = (robots[0].position.position - balls[0].currentObservation.value().position).norm();
+    double maxDistance = initialDistance;
+    if (initialDistance > 0.17) return false;
+
+    for (size_t i = 1; i < 5; ++i) {
+        double distance = (robots[i].position.position - balls[i].currentObservation.value().position).norm();
+        if (distance < initialDistance) return false;
+        if (distance > maxDistance) maxDistance = distance;
+    }
+
+    return maxDistance >= 0.16;
+}
+
+bool WorldFilter::checkVelocity(const std::vector<FilteredBall> &balls) {
+    int validVelocities = 0;
+    for (size_t i = 1; i < 5; ++i) {
+        auto previousBall = balls[i - 1].currentObservation.value();
+        auto currentBall = balls[i].currentObservation.value();
+        double velocity = (currentBall.position - previousBall.position).norm() / (currentBall.timeCaptured - previousBall.timeCaptured).asSeconds();
+        if (velocity > 0.6) validVelocities++;
+    }
+    return validVelocities >= 2;
+}
+
+bool WorldFilter::checkOrientation(const std::vector<FilteredRobot> &robots, const std::vector<FilteredBall> &balls) {
+    for (size_t i = 0; i < 5; ++i) {
+        const auto &robot = robots[i];
+        const auto &ballPosition = balls[i].currentObservation.value().position;
+        Eigen::Vector2d robotToBall = ballPosition - robot.position.position;
+        double angle = std::atan2(robotToBall.y(), robotToBall.x());
+        double angleDiff = std::abs(robot.position.yaw - rtt::Angle(angle));
+        if (angleDiff > 0.8) return false;
+    }
+    return true;
+}
+
+bool WorldFilter::checkIncreasingDistance(const std::vector<FilteredRobot> &robots, const std::vector<FilteredBall> &balls) {
+    double previousDistance = (robots[0].position.position - balls[0].currentObservation.value().position).norm();
+    for (size_t i = 1; i < 5; ++i) {
+        double currentDistance = (robots[i].position.position - balls[i].currentObservation.value().position).norm();
+        if (currentDistance < previousDistance) return false;
+        previousDistance = currentDistance;
+    }
+    return true;
+}
+
+void WorldFilter::addBallPredictionsToMessage(proto::World &world, Time time) {
+    BallFilter *bestFilter = nullptr;
     double bestHealth = -1.0;
-    for (const auto &filter : balls) {
+    for (auto &filter : balls) {
         if (filter.getNumObservations() > 3) {
             double currentHealth = filter.getHealth();
             if (!bestFilter || currentHealth > bestHealth) {
@@ -231,8 +344,11 @@ void WorldFilter::addBallPredictionsToMessage(proto::World &world, Time time) co
             }
         }
     }
-    if (bestFilter) {
-        FilteredBall bestBall = bestFilter->mergeBalls(time);
-        world.mutable_ball()->CopyFrom(bestBall.asWorldBall());
+    if (!bestFilter) {
+        return;
     }
+    FilteredBall bestBall = bestFilter->mergeBalls(time);
+    kickDetector(bestBall, time);
+
+    world.mutable_ball()->CopyFrom(bestBall.asWorldBall());
 }

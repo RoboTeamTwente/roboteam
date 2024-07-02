@@ -116,7 +116,7 @@ void Handler::start(std::string visionip, std::string refereeip, int visionport,
                 }
             }
         },
-        100);
+        80);
 }
 bool Handler::initializeNetworkers() {
     this->worldPublisher = std::make_unique<rtt::net::WorldPublisher>();

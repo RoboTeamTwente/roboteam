@@ -47,6 +47,15 @@ class WorldFilter {
         std::vector<FilteredRobot> yellow;
         std::optional<FilteredBall> filteredBall;
     };
+    struct KickEvent {
+        TeamRobotID kickingBot;
+        RobotPos kickingBotPos;
+        Eigen::Vector2d ballPosition;
+        Time time;
+        std::vector<FilteredBall> ballsSinceKick;
+    };
+    std::optional<KickEvent> mostRecentKick;
+
     std::deque<RecentData> frameHistory;
     void addRecentData(const std::vector<FilteredRobot>& blue, const std::vector<FilteredRobot>& yellow, const std::optional<FilteredBall>& filteredBall) {
         if (frameHistory.size() >= 5) {

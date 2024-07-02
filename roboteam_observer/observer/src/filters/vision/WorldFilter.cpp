@@ -278,9 +278,9 @@ void WorldFilter::kickDetector(FilteredBall bestBall, Time time) {
             continue;
         }
 
-        // Kick detected, update last kick time and print the result
         lastKickTime = frameHistory.front().filteredBall->time;
-        std::cout << "Kick detected by robot " << id.robot_id.robotID << " from team " << (id.team == TeamColor::BLUE ? "blue" : "yellow") << std::endl;
+        mostRecentKick = KickEvent{id, filteredRobots[0].position, allBalls[0].positionCamera, lastKickTime, allBalls};
+        // std::cout << "Kick detected by robot " << id.robot_id.robotID << " from team " << (id.team == TeamColor::BLUE ? "blue" : "yellow") << std::endl;
         break;
     }
 }

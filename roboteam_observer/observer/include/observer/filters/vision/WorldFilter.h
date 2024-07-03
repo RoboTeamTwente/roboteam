@@ -12,6 +12,7 @@
 #include "RobotFeedbackFilter.h"
 #include "observer/filters/vision/CameraMap.h"
 #include "observer/filters/vision/ball/BallFilter.h"
+#include "observer/filters/vision/ball/BallParameters.h"
 #include "observer/filters/vision/robot/RobotFilter.h"
 #include "observer/parameters/RobotParameterDatabase.h"
 
@@ -30,8 +31,9 @@ class WorldFilter {
 
     void process(const std::vector<proto::SSL_DetectionFrame>& frames, const std::vector<rtt::RobotsFeedback>& feedback, const std::vector<int>& camera_ids,
                  GeometryFilter& geomFilter);
-    void kickDetector(FilteredBall bestBall, Time time);
-    [[nodiscard]] proto::World getWorldPrediction(const Time& time);
+    void kickDetector(FilteredBall bestBall, Time time, const BallParameters& ballParameters);
+    [[nodiscard]] proto::World getWorldPrediction(const Time& time, const BallParameters& ballParameters);
+    [[nodiscard]] BallParameters getBallParameters(const std::optional<proto::SSL_GeometryData>& geometry) const;
 
     void updateRobotParameters(const TwoTeamRobotParameters& robotInfo);
 
@@ -46,13 +48,6 @@ class WorldFilter {
         std::vector<FilteredRobot> blue;
         std::vector<FilteredRobot> yellow;
         std::optional<FilteredBall> filteredBall;
-    };
-    struct KickEvent {
-        TeamRobotID kickingBot;
-        RobotPos kickingBotPos;
-        Eigen::Vector2d ballPosition;
-        Time time;
-        std::vector<FilteredBall> ballsSinceKick;
     };
     std::optional<KickEvent> mostRecentKick;
 
@@ -83,7 +78,7 @@ class WorldFilter {
     [[nodiscard]] std::vector<FilteredRobot> getHealthiestRobotsMerged(bool blueBots, Time time) const;
     [[nodiscard]] std::vector<FilteredRobot> oneCameraHealthyRobots(bool blueBots, int camera_id, Time time) const;
     void addRobotPredictionsToMessage(proto::World& world, Time time) const;
-    void addBallPredictionsToMessage(proto::World& world, Time time);
+    void addBallPredictionsToMessage(proto::World& world, Time time, const BallParameters& ballParameters);
 
     // take care, although these method are static, they typically DO modify the current object as they have a robotMap reference
     static void predictRobots(const DetectionFrame& frame, robotMap& robots);

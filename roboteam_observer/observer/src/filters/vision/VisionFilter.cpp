@@ -5,8 +5,9 @@ proto::World VisionFilter::process(const std::vector<proto::SSL_WrapperPacket>& 
 
     // TODO for now not extrapolating because grsim sends packets from 1970...
     Time extroplatedToTime = getExtrapolationTimeForPolicy();
+    BallParameters ballParameters = worldFilter.getBallParameters(getGeometry());
 
-    return worldFilter.getWorldPrediction(extroplatedToTime);
+    return worldFilter.getWorldPrediction(extroplatedToTime, ballParameters);
 }
 void VisionFilter::processGeometry(const std::vector<proto::SSL_WrapperPacket>& packets) {
     for (const auto& packet : packets) {

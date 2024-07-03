@@ -3,13 +3,21 @@
 #include "filters/vision/ball/BallAssigner.h"
 WorldFilter::WorldFilter() {}
 
-proto::World WorldFilter::getWorldPrediction(const Time &time) {
+proto::World WorldFilter::getWorldPrediction(const Time &time, const BallParameters &ballParameters) {
     proto::World world;
     addRobotPredictionsToMessage(world, time);
-    addBallPredictionsToMessage(world, time);
+    addBallPredictionsToMessage(world, time, ballParameters);
     world.set_time(time.asNanoSeconds());
 
     return world;
+}
+
+BallParameters WorldFilter::getBallParameters(const std::optional<proto::SSL_GeometryData> &geometry) const {
+    BallParameters ballParameters;
+    if (geometry.has_value()) {
+        ballParameters = BallParameters(geometry.value());
+    }
+    return ballParameters;
 }
 
 void WorldFilter::process(const std::vector<proto::SSL_DetectionFrame> &frames, const std::vector<rtt::RobotsFeedback> &feedback, const std::vector<int> &camera_ids,
@@ -220,7 +228,7 @@ void WorldFilter::processBalls(const DetectionFrame &frame) {
     }
 }
 
-void WorldFilter::kickDetector(FilteredBall bestBall, Time time) {
+void WorldFilter::kickDetector(FilteredBall bestBall, Time time, const BallParameters &ballParameters) {
     // Check if there's no current observation, return early
     if (!bestBall.currentObservation.has_value() || bestBall.currentObservation.value().confidence < 0.1) {
         return;
@@ -332,7 +340,7 @@ bool WorldFilter::checkIncreasingDistance(const std::vector<FilteredRobot> &robo
     return true;
 }
 
-void WorldFilter::addBallPredictionsToMessage(proto::World &world, Time time) {
+void WorldFilter::addBallPredictionsToMessage(proto::World &world, Time time, const BallParameters &ballParameters) {
     BallFilter *bestFilter = nullptr;
     double bestHealth = -1.0;
     for (auto &filter : balls) {

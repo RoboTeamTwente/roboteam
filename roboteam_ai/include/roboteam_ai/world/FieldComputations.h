@@ -38,7 +38,7 @@ class FieldComputations {
      * @brief Get ball avoidance based on current game state
      * @return A bool indicating whether ball avoidance should be used or not
      */
-    static bool getBallAvoidance();
+    static bool getBallAvoidance(std::string roleName);
 
     /**
      * @brief Get the expected ball position after a certain amount of time

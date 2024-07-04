@@ -23,11 +23,12 @@ std::tuple<double, double> FieldComputations::getDefenseAreaMargin() {
     return std::make_tuple(theirDefenseAreaMargin, ourDefenseAreaMargin);
 }
 
-bool FieldComputations::getBallAvoidance() {
+bool FieldComputations::getBallAvoidance(std::string roleName) {
     RuleSetName ruleSetTitle = GameStateManager::getCurrentGameState().getRuleSet().getTitle();
     RefCommand currentGameState = GameStateManager::getCurrentGameState().getCommandId();
 
-    if (ruleSetTitle == RuleSetName::STOP || currentGameState == RefCommand::DIRECT_FREE_THEM || currentGameState == RefCommand::KICKOFF_THEM) {
+    if (ruleSetTitle == RuleSetName::STOP || currentGameState == RefCommand::DIRECT_FREE_THEM || currentGameState == RefCommand::KICKOFF_THEM ||
+        currentGameState == RefCommand::BALL_PLACEMENT_THEM || currentGameState == RefCommand::PREPARE_FORCED_START || (currentGameState == RefCommand::DIRECT_FREE_US_STOP || currentGameState == RefCommand::DIRECT_FREE_US && roleName != "free_kick_taker") || currentGameState == RefCommand::DIRECT_FREE_THEM_STOP) {
         return true;
     }
 

@@ -12,7 +12,7 @@ void Play::initialize() noexcept {
     }
     for (auto &role : roles) {
         if (role == nullptr) continue;
-        stpInfos[role->getName()].setShouldAvoidBall(FieldComputations::getBallAvoidance());
+        stpInfos[role->getName()].setShouldAvoidBall(FieldComputations::getBallAvoidance(role->getName()));
         stpInfos[role->getName()].setMaxRobotVelocity(control::ControlUtils::getMaxVelocity(false));
     }
     calculateInfoForRoles();
@@ -97,7 +97,7 @@ void Play::reassignRobots() noexcept {
     stpInfos.clear();
     for (auto &role : roles) {
         if (role == nullptr) continue;
-        stpInfos[role->getName()].setShouldAvoidBall(FieldComputations::getBallAvoidance());
+        stpInfos[role->getName()].setShouldAvoidBall(FieldComputations::getBallAvoidance(role->getName()));
         stpInfos[role->getName()].setMaxRobotVelocity(control::ControlUtils::getMaxVelocity(false));
     }
     calculateInfoForRoles();
@@ -119,7 +119,7 @@ void Play::refreshData() noexcept {
             // Set max velocity depending on the gamestate rules and whether we have the ball
             if (stpInfo->second.getRobot()) {
                 stpInfo->second.setMaxRobotVelocity(control::ControlUtils::getMaxVelocity(stpInfo->second.getRobot().value()->hasBall()));
-                stpInfo->second.setShouldAvoidBall(FieldComputations::getBallAvoidance());
+                stpInfo->second.setShouldAvoidBall(FieldComputations::getBallAvoidance(role->getName()));
             }
 
             // The keeper does not need to avoid our defense area
@@ -261,11 +261,11 @@ void Play::DrawMargins() noexcept {
                 rightDefenseAreaMargin);
         }
         if (currentGameState == RefCommand::BALL_PLACEMENT_THEM || currentGameState == RefCommand::DIRECT_FREE_THEM || currentGameState == RefCommand::KICKOFF_THEM ||
-            (currentGameState == RefCommand::PREPARE_FORCED_START && GameStateManager::getCurrentGameState().commandFromRef != RefCommand::BALL_PLACEMENT_THEM))
+            (currentGameState == RefCommand::PREPARE_FORCED_START && GameStateManager::getCurrentGameState().commandFromRef != RefCommand::BALL_PLACEMENT_US))
             color = GameSettings::isYellow() ? proto::Drawing::YELLOW : proto::Drawing::BLUE;
         else if (currentGameState == RefCommand::BALL_PLACEMENT_US || currentGameState == RefCommand::BALL_PLACEMENT_US_DIRECT || currentGameState == RefCommand::DIRECT_FREE_US ||
                  currentGameState == RefCommand::KICKOFF_US ||
-                 (currentGameState == RefCommand::PREPARE_FORCED_START && GameStateManager::getCurrentGameState().commandFromRef != RefCommand::BALL_PLACEMENT_US))
+                 (currentGameState == RefCommand::PREPARE_FORCED_START && GameStateManager::getCurrentGameState().commandFromRef != RefCommand::BALL_PLACEMENT_THEM))
             color = GameSettings::isYellow() ? proto::Drawing::BLUE : proto::Drawing::YELLOW;
         else
             color = proto::Drawing::RED;

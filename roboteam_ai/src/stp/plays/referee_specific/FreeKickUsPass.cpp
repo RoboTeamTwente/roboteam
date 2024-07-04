@@ -32,9 +32,9 @@ FreeKickUsPass::FreeKickUsPass() : Play() {
         // Additional roles if we play 11v11
         std::make_unique<role::Formation>("waller_0"),
         std::make_unique<role::Formation>("waller_1"),
-        std::make_unique<role::Formation>("attacker_1"),
         std::make_unique<role::Defender>("defender_2"),
-        std::make_unique<role::Formation>("attacker_2"),
+        std::make_unique<role::Defender>("defender_3"),
+        std::make_unique<role::Formation>("attacker_1"),
     };
 }
 
@@ -57,9 +57,9 @@ Dealer::FlagMap FreeKickUsPass::decideRoleFlags() const noexcept {
     flagMap.insert({"defender_0", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
     flagMap.insert({"defender_1", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
     flagMap.insert({"defender_2", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
+    flagMap.insert({"defender_3", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
     flagMap.insert({"attacker_0", {DealerFlagPriority::HIGH_PRIORITY, {}}});
     flagMap.insert({"attacker_1", {DealerFlagPriority::HIGH_PRIORITY, {}}});
-    flagMap.insert({"attacker_2", {DealerFlagPriority::HIGH_PRIORITY, {}}});
 
     return flagMap;
 }

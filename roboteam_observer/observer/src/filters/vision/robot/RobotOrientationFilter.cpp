@@ -14,14 +14,14 @@ double RobotOrientationFilter::limitAngle(double yaw) {
 void RobotOrientationFilter::update(const double &position) {
     // We need to do something about the rotation's discontinuities at -pi/pi so it works correctly.
     // We allow the state to go outside of bounds [-PI,PI) in between updates, but then simply make sure the observation difference is correct
-    double stateRot = filter.state()[0];
-    double limitedRot = limitAngle(stateRot);
-    if (stateRot != limitedRot) {
-        setPosition(limitedRot);  // We're adjusting the value of the Kalman Filter here, be careful.
-                                  // We're only doing this so we don't get flips from -inf to inf and loss of double precision at high values.
+    if (position < -0.5 * M_PI && lastObservation > 0.5 * M_PI) {
+        orientationTurns++;
     }
-    double difference = limitAngle(position - stateRot);
-    double correctedObservation = limitedRot + difference;
+    if (position > 0.5 * M_PI && lastObservation < -0.5 * M_PI) {
+        orientationTurns--;
+    }
+    lastObservation = position;
+    double correctedObservation = position + 2 * M_PI * orientationTurns;
     PosVelFilter1D::update(correctedObservation);
 }
 

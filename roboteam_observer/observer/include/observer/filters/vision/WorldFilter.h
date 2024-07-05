@@ -10,6 +10,8 @@
 #include "DetectionFrame.h"
 #include "GeometryFilter.h"
 #include "RobotFeedbackFilter.h"
+#include "observer/filters/shot/ShotEvent.h"
+#include "observer/filters/shot/KickEstimator.h"
 #include "observer/filters/vision/CameraMap.h"
 #include "observer/filters/vision/ball/BallFilter.h"
 #include "observer/filters/vision/ball/BallParameters.h"
@@ -44,12 +46,13 @@ class WorldFilter {
     std::vector<BallFilter> balls;
     CameraMap cameraMap;
     Time lastKickTime = Time::now();
+    std::optional<KickEstimator> kickEstimator;
     struct RecentData {
         std::vector<FilteredRobot> blue;
         std::vector<FilteredRobot> yellow;
         std::optional<FilteredBall> filteredBall;
     };
-    std::optional<KickEvent> mostRecentKick;
+    std::optional<ShotEvent> mostRecentShot;
 
     std::deque<RecentData> frameHistory;
     void addRecentData(const std::vector<FilteredRobot>& blue, const std::vector<FilteredRobot>& yellow, const std::optional<FilteredBall>& filteredBall) {

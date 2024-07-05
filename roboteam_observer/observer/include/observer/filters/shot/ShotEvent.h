@@ -1,5 +1,5 @@
-#ifndef KICKEVENT_H
-#define KICKEVENT_H
+#ifndef SHOTEVENT_H
+#define SHOTEVENT_H
 
 #include "observer/filters/vision/CameraMap.h"
 #include "observer/filters/vision/DetectionFrame.h"
@@ -9,12 +9,16 @@
 #include "observer/filters/vision/robot/RobotFilter.h"
 #include "observer/parameters/RobotParameterDatabase.h"
 
-struct KickEvent {
-    TeamRobotID kickingBot;
-    RobotPos kickingBotPos;
+struct ShotEvent {
+    TeamRobotID shootingBot;
+    RobotPos shottingBotPos;
     Eigen::Vector2d ballPosition;
     Time time;
-    std::vector<FilteredBall> ballsSinceKick;
+    std::vector<FilteredBall> ballsSinceShot;
+};
+struct ShotState {
+    Eigen::Vector3d pos;
+    Eigen::Vector3d vel;
 };
 
-#endif  // KICKEVENT_H
+#endif  // SHOTEVENT_H

@@ -287,8 +287,10 @@ void WorldFilter::kickDetector(FilteredBall bestBall, Time time, const BallParam
         }
 
         lastKickTime = frameHistory.front().filteredBall->time;
-        mostRecentKick = KickEvent{id, filteredRobots[0].position, allBalls[0].positionCamera, lastKickTime, allBalls};
-        // std::cout << "Kick detected by robot " << id.robot_id.robotID << " from team " << (id.team == TeamColor::BLUE ? "blue" : "yellow") << std::endl;
+        mostRecentShot = ShotEvent{id, filteredRobots[0].position, allBalls[0].positionCamera, lastKickTime, allBalls};
+        kickEstimator = KickEstimator(*mostRecentShot, ballParameters);
+        // chipEstimator = ChipEstimator(*mostRecentShot, ballParameters, cameraMap);
+        std::cout << "Kick detected by robot " << id.robot_id.robotID << " from team " << (id.team == TeamColor::BLUE ? "blue" : "yellow") << std::endl;
         break;
     }
 }
@@ -356,7 +358,18 @@ void WorldFilter::addBallPredictionsToMessage(proto::World &world, Time time, co
         return;
     }
     FilteredBall bestBall = bestFilter->mergeBalls(time);
-    kickDetector(bestBall, time);
+    kickDetector(bestBall, time, ballParameters);
+    if (bestBall.currentObservation.has_value()) {
+        if (kickEstimator.has_value()) {
+            kickEstimator->addFilteredBall(bestBall.currentObservation.value());
+            if (kickEstimator->getAverageDistance() > 0.1) {
+                std::cout << "\033[31mRemoved straight kick estimator\033[0m" << std::endl;
+                kickEstimator = std::nullopt;
+            } else {
+                std::cout << "[KICK] Average distance: " << kickEstimator->getAverageDistance() << std::endl;
+            }
+        }
+    }
 
     world.mutable_ball()->CopyFrom(bestBall.asWorldBall());
 }

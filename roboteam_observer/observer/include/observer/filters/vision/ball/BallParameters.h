@@ -12,7 +12,7 @@ class BallParameters {
     double chipDampingZ;
 
    public:
-    BallParameters() : ballRadius(0), accSlide(0), accRoll(0), inertiaDistribution(0), chipDampingXYFirstHop(0), chipDampingXYOtherHops(0), chipDampingZ(0) {}
+    BallParameters() : accSlide(0), accRoll(0), chipDampingXYFirstHop(0), chipDampingXYOtherHops(0), chipDampingZ(0) {}
 
     explicit BallParameters(const proto::SSL_GeometryData& geometryData) : BallParameters() {
         if (geometryData.models().has_straight_two_phase()) {

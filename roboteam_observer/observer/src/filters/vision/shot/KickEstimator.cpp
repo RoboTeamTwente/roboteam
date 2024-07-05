@@ -1,4 +1,5 @@
 #include "filters/shot/KickEstimator.h"
+
 #include <Eigen/Dense>
 
 KickEstimator::KickEstimator(const ShotEvent& shotEvent, const BallParameters& ballParameters) : shotEvent(shotEvent), ballParameters(ballParameters) {
@@ -12,7 +13,7 @@ KickEstimator::KickEstimator(const ShotEvent& shotEvent, const BallParameters& b
 void KickEstimator::addFilteredBall(const BallObservation& newBall) {
     ballsSinceShot.push_back(newBall);
     if (ballsSinceShot.size() > 50) {
-        ballsSinceShot.erase(ballsSinceShot.begin(), ballsSinceShot.begin() + pruneIndex);
+        ballsSinceShot.erase(ballsSinceShot.begin() + pruneIndex);
         pruneIndex++;
         if (pruneIndex > 40) {
             pruneIndex = 1;
@@ -35,9 +36,7 @@ void KickEstimator::addFilteredBall(const BallObservation& newBall) {
         bestShotPos = nonLinPosVel.first;
         bestShotVel = nonLinPosVel.second;
     }
-    std::cout << std::endl;
 }
-
 
 std::pair<Eigen::Vector3d, Eigen::Vector3d> KickEstimator::noSpinBall() {
     auto dir = getKickDir();
@@ -45,7 +44,7 @@ std::pair<Eigen::Vector3d, Eigen::Vector3d> KickEstimator::noSpinBall() {
         Eigen::Vector3d shotPos(params(0), params(1), 0);
         auto shotVelInt = dir * params(2);
         Eigen::Vector3d shotVel(shotVelInt.x(), shotVelInt.y(), 0);
-        Eigen::Vector2d shotSpin(0, 0); 
+        Eigen::Vector2d shotSpin(0, 0);
         return getAverageDistance(shotPos, shotVel, shotSpin);
     };
 
@@ -71,10 +70,7 @@ std::pair<Eigen::Vector3d, Eigen::Vector3d> KickEstimator::noSpinBall() {
         }
     }
     try {
-        dlib::find_min_bobyqa(objectiveFunction, initialParams, 7,
-                              x_lower, x_upper, 0.2, 
-                              1e-3,
-                              50);
+        dlib::find_min_bobyqa(objectiveFunction, initialParams, 7, x_lower, x_upper, 0.2, 1e-3, 50);
     } catch (const dlib::bobyqa_failure& e) {
     }
 
@@ -138,7 +134,7 @@ std::pair<Eigen::Vector3d, Eigen::Vector3d> KickEstimator::slidingBall() {
         return std::make_pair(Eigen::Vector3d(0, 0, 0), Eigen::Vector3d(0, 0, 0));
     }
     dir *= x(2) / dir.norm();
-    auto shotPos =  Eigen::Vector3d(x(0), x(1), 0);
+    auto shotPos = Eigen::Vector3d(x(0), x(1), 0);
     auto shotVel = Eigen::Vector3d(dir.x(), dir.y(), 0);
     return std::make_pair(shotPos, shotVel);
 }
@@ -147,7 +143,7 @@ double KickEstimator::getAverageDistance(Eigen::Vector3d shotPos, Eigen::Vector3
     KickTrajectory kickTrajectory = KickTrajectory(shotPos, shotVel, shotSpin, ballParameters);
     auto tZero = ballsSinceShot[0].timeCaptured;
     double totalDistance = 0;
-    for (int i = 0; i < ballsSinceShot.size(); i++) {
+    for (std::size_t i = 0; i < ballsSinceShot.size(); i++) {
         double time = (ballsSinceShot[i].timeCaptured - tZero).asSeconds();
         auto trajState = kickTrajectory.getPositionAtTime(time);
         auto pos2d = trajState.pos.head<2>();

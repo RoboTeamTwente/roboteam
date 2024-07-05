@@ -3,8 +3,9 @@
 
 #include <Eigen/Dense>
 #include <cmath>
-#include "observer/filters/vision/ball/BallParameters.h"
+
 #include "observer/filters/shot/ShotEvent.h"
+#include "observer/filters/vision/ball/BallParameters.h"
 
 class KickTrajectory {
    private:

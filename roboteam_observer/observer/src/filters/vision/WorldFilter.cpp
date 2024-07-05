@@ -289,7 +289,7 @@ void WorldFilter::kickDetector(FilteredBall bestBall, Time time, const BallParam
         lastKickTime = frameHistory.front().filteredBall->time;
         mostRecentShot = ShotEvent{id, filteredRobots[0].position, allBalls[0].positionCamera, lastKickTime, allBalls};
         kickEstimator = KickEstimator(*mostRecentShot, ballParameters);
-        // chipEstimator = ChipEstimator(*mostRecentShot, ballParameters, cameraMap);
+        chipEstimator = ChipEstimator(*mostRecentShot, ballParameters, cameraMap);
         std::cout << "Kick detected by robot " << id.robot_id.robotID << " from team " << (id.team == TeamColor::BLUE ? "blue" : "yellow") << std::endl;
         break;
     }
@@ -365,11 +365,25 @@ void WorldFilter::addBallPredictionsToMessage(proto::World &world, Time time, co
             if (kickEstimator->getAverageDistance() > 0.1) {
                 std::cout << "\033[31mRemoved straight kick estimator\033[0m" << std::endl;
                 kickEstimator = std::nullopt;
-            } else {
-                std::cout << "[KICK] Average distance: " << kickEstimator->getAverageDistance() << std::endl;
+            }
+        }
+
+        if (chipEstimator.has_value()) {
+            chipEstimator->addFilteredBall(bestBall.currentObservation.value());
+            if (chipEstimator->getAverageDistance() > 0.1) {
+                std::cout << "\033[31mRemoved chip estimator\033[0m" << std::endl;
+                chipEstimator = std::nullopt;
             }
         }
     }
+
+    // if (kickEstimator.has_value() && !chipEstimator.has_value()) {
+    //     std::cout << "\033[32mStraight kick detected\033[0m" << std::endl;
+    //     // kickEstimator = std::nullopt;
+    // } else if (chipEstimator.has_value() && !kickEstimator.has_value()) {
+    //     std::cout << "\033[32mChip detected\033[0m" << std::endl;
+    //     // chipEstimator = std::nullopt;
+    // }
 
     world.mutable_ball()->CopyFrom(bestBall.asWorldBall());
 }

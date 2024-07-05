@@ -1,6 +1,7 @@
 #include "observer/filters/shot/KickTrajectory.h"
-#include <cmath>
+
 #include <Eigen/Dense>
+#include <cmath>
 
 KickTrajectory::KickTrajectory(const Eigen::Vector2d& initialPos, const Eigen::Vector2d& initialVel, const Eigen::Vector2d& initialSpin, const BallParameters& ballParameters)
     : initialPos(initialPos), initialVel(initialVel), initialSpin(initialSpin), parameters(ballParameters) {
@@ -10,7 +11,7 @@ KickTrajectory::KickTrajectory(const Eigen::Vector2d& initialPos, const Eigen::V
         accSlide = initialVel.normalized() * parameters.getAccRoll();
         accSlideSpin = accSlide / parameters.getBallRadius();
         tSwitch = 0.0;
-    // Ball is sliding
+        // Ball is sliding
     } else {
         accSlide = contactVelocity.normalized() * parameters.getAccSlide();
         accSlideSpin = accSlide / (parameters.getBallRadius() * parameters.getInertiaDistribution());
@@ -32,12 +33,10 @@ KickTrajectory::KickTrajectory(const Eigen::Vector2d& initialPos, const Eigen::V
 }
 
 KickTrajectory::KickTrajectory(const Eigen::Vector2d& initialPos, const Eigen::Vector2d& initialVel, const BallParameters& ballParameters)
-    : KickTrajectory(initialPos, initialVel, Eigen::Vector2d::Zero(), ballParameters) {
-}
+    : KickTrajectory(initialPos, initialVel, Eigen::Vector2d::Zero(), ballParameters) {}
 
 KickTrajectory::KickTrajectory(const Eigen::Vector3d& initialPos, const Eigen::Vector3d& initialVel, const Eigen::Vector2d& initialSpin, const BallParameters& ballParameters)
-    : KickTrajectory(Eigen::Vector2d(initialPos.head<2>()), Eigen::Vector2d(initialVel.head<2>()), initialSpin, ballParameters) {
-}
+    : KickTrajectory(Eigen::Vector2d(initialPos.head<2>()), Eigen::Vector2d(initialVel.head<2>()), initialSpin, ballParameters) {}
 
 ShotState KickTrajectory::getPositionAtTime(double time) {
     if (time < tSwitch) {

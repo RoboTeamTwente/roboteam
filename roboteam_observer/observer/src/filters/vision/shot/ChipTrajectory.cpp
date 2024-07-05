@@ -1,17 +1,15 @@
 #include "observer/filters/shot/ChipTrajectory.h"
+
 #include <Eigen/Dense>
 
 ChipTrajectory::ChipTrajectory(const Eigen::Vector3d& initialPos, const Eigen::Vector3d& initialVel, const Eigen::Vector2d& initialSpin, const BallParameters& ballParameters)
-    : initialPos(initialPos), initialVel(initialVel), initialSpin(initialSpin), parameters(ballParameters) {
-}
+    : initialPos(initialPos), initialVel(initialVel), initialSpin(initialSpin), parameters(ballParameters) {}
 
 ChipTrajectory::ChipTrajectory(const Eigen::Vector3d& initialPos, const Eigen::Vector3d& initialVel, const BallParameters& ballParameters)
-    : initialPos(initialPos), initialVel(initialVel), initialSpin(Eigen::Vector2d::Zero()), parameters(ballParameters) {
-}
+    : initialPos(initialPos), initialVel(initialVel), initialSpin(Eigen::Vector2d::Zero()), parameters(ballParameters) {}
 
 ChipTrajectory::ChipTrajectory(const Eigen::Vector2d& initialPos, const Eigen::Vector3d& initialVel, const BallParameters& ballParameters)
-    : initialPos(initialPos.x(), initialPos.y(), 0), initialVel(initialVel), initialSpin(Eigen::Vector2d::Zero()), parameters(ballParameters) {
-}
+    : initialPos(initialPos.x(), initialPos.y(), 0), initialVel(initialVel), initialSpin(Eigen::Vector2d::Zero()), parameters(ballParameters) {}
 
 ShotState ChipTrajectory::getPositionAtTime(double time) {
     Eigen::Vector3d posNow = initialPos;
@@ -24,7 +22,7 @@ ShotState ChipTrajectory::getPositionAtTime(double time) {
         if ((tNow + tFly) > time) {
             double t = time - tNow;
             posNow += velNow * t;
-            posNow.z() += - 0.5 * 9.81 * t * t;
+            posNow.z() -= 0.5 * 9.81 * t * t;
             velNow.z() -= 9.81 * t;
             return ShotState{posNow, velNow};
         }

@@ -3,8 +3,9 @@
 
 #include <Eigen/Dense>
 #include <cmath>
-#include "observer/filters/vision/ball/BallParameters.h"
+
 #include "observer/filters/shot/ShotEvent.h"
+#include "observer/filters/vision/ball/BallParameters.h"
 
 class ChipTrajectory {
    private:
@@ -14,7 +15,6 @@ class ChipTrajectory {
     BallParameters parameters;
 
    public:
-
     ChipTrajectory(const Eigen::Vector3d& initialPos, const Eigen::Vector3d& initialVel, const Eigen::Vector2d& initialSpin, const BallParameters& ballParameters);
     ChipTrajectory(const Eigen::Vector3d& initialPos, const Eigen::Vector3d& initialVel, const BallParameters& ballParameters);
     ChipTrajectory(const Eigen::Vector2d& initialPos, const Eigen::Vector3d& initialVel, const BallParameters& ballParameters);

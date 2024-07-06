@@ -15,6 +15,19 @@ void BBTrajectory2D::generateTrajectory(const Vector2 &initialPos, const Vector2
 }
 
 void BBTrajectory2D::generateSyncedTrajectory(const Vector2 &initialPos, const Vector2 &initialVel, const Vector2 &finalPos, double maxVel, double maxAcc) {
+    // find distance to final position as length
+    double dx = finalPos.x - initialPos.x;
+    double dy = finalPos.y - initialPos.y;
+    double length = sqrt(dx * dx + dy * dy);
+    if (length < 0.5) {
+        maxVel = 1;
+    }
+    if (length < 0.3) {
+        maxVel = 0.5;
+    }
+    if (length < 0.1) {
+        maxVel = length;
+    }
     // The idea is to do a binary search over alpha to find a trajectory in x and y direction (which is minimal time)
     double inc = M_PI_4 * 0.5;
     double alpha = M_PI_4;

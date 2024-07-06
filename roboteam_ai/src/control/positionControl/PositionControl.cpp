@@ -10,8 +10,8 @@
 namespace rtt::ai::control {
 std::vector<Vector2> PositionControl::getComputedPath(int ID) { return computedPaths[ID]; }
 
-std::pair<Vector2,Vector2> PositionControl::computeAndTrackTrajectory(const world::World *world, const Field &field, int robotId, Vector2 currentPosition, Vector2 currentVelocity,
-                                                   Vector2 targetPosition, double maxRobotVelocity, stp::AvoidObjects avoidObjects) {
+std::pair<Vector2, Vector2> PositionControl::computeAndTrackTrajectory(const world::World *world, const Field &field, int robotId, Vector2 currentPosition, Vector2 currentVelocity,
+                                                                       Vector2 targetPosition, double maxRobotVelocity, stp::AvoidObjects avoidObjects) {
     double timeStep = 0.1;
     auto [theirDefenseAreaMargin, ourDefenseAreaMargin] = FieldComputations::getDefenseAreaMargin();
     if (avoidObjects.shouldAvoidBall && (currentPosition - world->getWorld()->getBall()->get()->position).length() < ai::constants::AVOID_BALL_DISTANCE) {
@@ -47,31 +47,9 @@ std::pair<Vector2,Vector2> PositionControl::computeAndTrackTrajectory(const worl
             .thickness = 1,
         },
         computedPaths[robotId]);
-    // Since our acceleration is 3.5 m/s^2, this means we will move if we need to move more than
-    // 2*(1/2*3.5*0.145^2) (2 times the distance we move in 0.145/2s under constant (de)acceleration (1/2 * a * t^2))
-    // This is 0.07m, so we will move if we need to move more than 0.07m
-    auto acc = computedTrajectories[robotId].getAcceleration(0.021);
-    auto vel = computedTrajectories[robotId].getVelocity(0.02);
-    // if (targetPosition.dist(currentPosition) < 0.3 && (vel.length2() < computedTrajectories[robotId].getVelocity(0.05).length2() || (vel.length2() < computedTrajectories[robotId].getVelocity(0.03).length2()))) {
-    //     acc = Vector2(0,0);
-    // }
-    auto maxAcc = std::min(targetPosition.dist(currentPosition), acc.length());
-    std::cout << "Current vel: " << vel.length() << std::endl;
-    std::cout << "0.005 vel: " << computedTrajectories[robotId].getVelocity(0.025).length() << std::endl;
-    std::cout << "0.05 vel: " << computedTrajectories[robotId].getVelocity(0.05).length() << std::endl;
-    std::cout << "" << std::endl;
-    if (targetPosition.dist(currentPosition) < 0.3 && (currentVelocity.length() < vel.length())) {
-        acc = acc.scale(maxAcc/acc.length());
-    }
-    
-    // if (computedTrajectories[robotId].getAcceleration(0.15).length() < 0.1 && vel.length() > 1.1) {
-    //     acc = Vector2(0,0);
-    // }
 
-    if (targetPosition.dist(currentPosition) < 0.01) {
-        acc = Vector2(0,0);
-        vel = Vector2(0,0);
-    }
+    auto acc = computedTrajectories[robotId].getAcceleration(0.04);
+    auto vel = computedTrajectories[robotId].getVelocity(0.04);
     return std::make_pair(vel, acc);
 }
 

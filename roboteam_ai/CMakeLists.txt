@@ -133,10 +133,12 @@ target_include_directories(roboteam_ai_control
         PRIVATE include/roboteam_ai
 )
 target_link_libraries(roboteam_ai_control
+        PRIVATE ruckig
         PRIVATE roboteam_networking
         PRIVATE roboteam_utils
         PUBLIC Qt5::Network
 )
+target_compile_features(roboteam_ai_control PUBLIC cxx_std_17)
 target_compile_options(roboteam_ai_control PRIVATE "${COMPILER_FLAGS}")
 
 ###### INTERFACE #######

@@ -135,7 +135,8 @@ bool PassComputations::pointIsValidReceiverLocation(Vector2 point, const std::ve
 }
 
 double PassComputations::calculateRobotTravelTime(Vector2 robotPosition, Vector2 robotVelocity, Vector2 targetPosition) {
-    return Trajectory2D(robotPosition, robotVelocity, targetPosition, control::ControlUtils::getMaxVelocity(false), ai::constants::MAX_ACC).getTotalTime() * 1.1;
+    // TODO: JANKY AF, FIX THIS
+    return Trajectory2D(robotPosition, robotVelocity, Vector2(0, 0), targetPosition, control::ControlUtils::getMaxVelocity(false), 99, ai::constants::MAX_ACC).getTotalTime() * 1.1;
 }
 
 double PassComputations::calculateBallTravelTime(Vector2 passLocation, Vector2 passerLocation, Vector2 passerVelocity, Vector2 targetPosition) {

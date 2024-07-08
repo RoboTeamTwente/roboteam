@@ -51,13 +51,14 @@ Status GoToPos::onUpdate(const StpInfo &info) noexcept {
         targetPos = PositionComputations::calculateAvoidBallPosition(targetPos, ballLocation, field, avoidObj);
     }
 
+    // TODO:: SET JERK TO A NORMAL VALUE, from stp info or something
+    double mJerk = 12;
+    double maxJerk = mJerk / (0.04 * 60);
     auto [vel, acc] = info.getCurrentWorld()->getRobotPositionController()->computeAndTrackTrajectory(info.getCurrentWorld(), field, robot->getId(), robot->getPos(),
-                                                                                                       robot->getVel(), targetPos, info.getMaxRobotVelocity(), avoidObj);
-    // command.velocity = info.getCurrentWorld()->getRobotPositionController()->computeAndTrackTrajectory(info.getCurrentWorld(), field, robot->getId(), robot->getPos(),
-                                                                                                    //    robot->getVel(), targetPos, info.getMaxRobotVelocity(), avoidObj);
+                                                                                                      robot->getVel(), targetPos, info.getMaxRobotVelocity(), maxJerk, avoidObj);
     command.velocity = vel;
     command.acceleration = acc;
-    
+
     auto distanceToTarget = (robot->getPos() - targetPos).length();
     command.yaw = distanceToTarget <= 0.5 ? info.getYaw() : robot->getYaw() + rtt::Angle(0.5 / distanceToTarget * (info.getYaw() - robot->getYaw()));
 

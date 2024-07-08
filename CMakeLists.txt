@@ -95,6 +95,9 @@ if(UNIX AND NOT APPLE)
 endif()
 
 find_package(Qt5Network REQUIRED)
+find_package(ruckig REQUIRED)
+# include_directories(${CMAKE_SOURCE_DIR}/ruckig/include)
+# link_directories(${CMAKE_SOURCE_DIR}/ruckig/build/lib)
 
 # internal projects
 add_subdirectory(roboteam_networking)

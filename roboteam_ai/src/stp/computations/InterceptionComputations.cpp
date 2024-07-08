@@ -36,7 +36,8 @@ KeeperInterceptionInfo InterceptionComputations::calculateKeeperInterceptionInfo
                 return keeperInterceptionInfo;
             }
             // If we can reach the ball in time, we will intercept
-            if (Trajectory2D(keeper->getPos(), keeper->getVel(), futureBallPosition, maxRobotVelocity, ai::constants::MAX_ACC).getTotalTime() < loopTime) {
+            // TODO: FUNKY AF AGAIN
+            if (Trajectory2D(keeper->getPos(), keeper->getVel(), Vector2(0, 0), futureBallPosition, maxRobotVelocity, 99, ai::constants::MAX_ACC).getTotalTime() < loopTime) {
                 keeperInterceptionInfo.interceptLocation = futureBallPosition;
                 keeperInterceptionInfo.canIntercept = true;
                 return keeperInterceptionInfo;
@@ -80,7 +81,8 @@ InterceptionInfo InterceptionComputations::calculateInterceptionInfo(const std::
             }
             double minTimeToTarget = std::numeric_limits<double>::max();
             for (const auto &robot : ourRobots) {
-                auto trajectory = Trajectory2D(robot->getPos(), robot->getVel(), interceptionInfo.interceptLocation, maxRobotVelocity, ai::constants::MAX_ACC);
+                // TODO, JANKY AF
+                auto trajectory = Trajectory2D(robot->getPos(), robot->getVel(), Vector2(0, 0), interceptionInfo.interceptLocation, maxRobotVelocity, 99, ai::constants::MAX_ACC);
                 if (trajectory.getTotalTime() < minTimeToTarget) {
                     minTimeToTarget = trajectory.getTotalTime();
                     interceptionInfo.interceptId = robot->getId();
@@ -104,7 +106,8 @@ InterceptionInfo InterceptionComputations::calculateInterceptionInfo(const std::
 
         double minTimeToTarget = std::numeric_limits<double>::max();
         for (const auto &robot : ourRobots) {
-            auto trajectory = Trajectory2D(robot->getPos(), robot->getVel(), targetPosition, maxRobotVelocity, ai::constants::MAX_ACC);
+            // TODO: JANKY AF
+            auto trajectory = Trajectory2D(robot->getPos(), robot->getVel(), Vector2(0, 0), targetPosition, maxRobotVelocity, 99, ai::constants::MAX_ACC);
             if (trajectory.getTotalTime() < minTimeToTarget) {
                 minTimeToTarget = trajectory.getTotalTime();
                 interceptionInfo.interceptLocation = targetPosition;

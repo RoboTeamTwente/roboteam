@@ -22,6 +22,7 @@ class PositionControl {
     std::unordered_map<int, Trajectory2D> computedTrajectories;  /**< Map of computed trajectories for each robot */
     std::unordered_map<int, std::vector<Vector2>> computedPaths; /**< Map of computed paths for each robot */
     std::unordered_map<int, Vector2> lastUsedNormalizedPoints;   /**< Map of last used normalized points for each robot */
+    std::unordered_map<int, Vector2> lastAcceleration;           /**< Map of last acceleration for each robot */
 
    public:
     /**
@@ -41,10 +42,11 @@ class PositionControl {
      * @param currentVelocity its velocity
      * @param targetPosition the desired position that the robot has to reach
      * @param maxRobotVelocity the maximum velocity that the robot is allowed to have
+     * @param maxJerk the maximum jerk that the robot is allowed to have
      * @return A RobotCommand and optional with the location of the first collision on the path
      */
-    std::pair<Vector2,Vector2> computeAndTrackTrajectory(const rtt::world::World *world, const rtt::Field &field, int robotId, Vector2 currentPosition, Vector2 currentVelocity,
-                                      Vector2 targetPosition, double maxRobotVelocity, stp::AvoidObjects avoidObjects);
+    std::pair<Vector2, Vector2> computeAndTrackTrajectory(const rtt::world::World *world, const rtt::Field &field, int robotId, Vector2 currentPosition, Vector2 currentVelocity,
+                                                          Vector2 targetPosition, double maxRobotVelocity, double maxJerk, stp::AvoidObjects avoidObjects);
 
     /**
      * @brief Handles the collision with the ball at the current position. This function will calculate a new target, moving away from the ball as quickly as possible.
@@ -89,7 +91,7 @@ class PositionControl {
      * @return An optional with a new path
      */
     Trajectory2D findNewTrajectory(const rtt::world::World *world, const rtt::Field &field, int robotId, Vector2 &currentPosition, Vector2 &currentVelocity,
-                                   Vector2 &targetPosition, double maxRobotVelocity, double timeStep, stp::AvoidObjects AvoidObjects);
+                                   Vector2 &currentAcceleration, Vector2 &targetPosition, double maxRobotVelocity, double maxJerk, double timeStep, stp::AvoidObjects AvoidObjects);
 
     /**
      * @brief Creates normalized random points, which will be used to create intermediate points

@@ -102,8 +102,7 @@ std::vector<Vector2> PositionComputations::determineWallPositions(const rtt::Fie
         ballPos = FieldComputations::projectPointInField(field, ballPos, constants::BALL_RADIUS);
     }
     // Dynamic distance, the further the ball is from our goal, the further forwards our wall stands.
-    double theirDistanceToGoal = std::clamp(((ballPos - field.leftGoalArea.rightLine().center()).length() - 4) / 2, -constants::ROBOT_RADIUS * 1.9, field.playArea.width() / 10) +
-                                 2 * constants::ROBOT_RADIUS;
+    double theirDistanceToGoal = std::clamp(((ballPos - field.leftGoalArea.rightLine().center()).length() - 4) / 2, 0.0, field.playArea.width() / 10);
     auto extraLength = (ballPos - field.leftGoalArea.rightLine().center()).stretchToLength(theirDistanceToGoal);
 
     std::vector<Vector2> positions = {};
@@ -123,9 +122,10 @@ std::vector<Vector2> PositionComputations::determineWallPositions(const rtt::Fie
     // Define the defense areas
     auto defenseAreaOur = FieldComputations::getDefenseArea(field, true, 0, 0);
     auto defenseAreaTheir = FieldComputations::getDefenseArea(field, false, 0, 0);
+    auto topRightDefense = field.leftDefenseArea.topRight();
+    auto bottomRightDefense = field.leftDefenseArea.bottomRight();
 
     // Determine the wall line based on the ball's position
-
     if (ballPos.y < field.leftDefenseArea.top() && ballPos.y > field.leftDefenseArea.bottom()) {
         // Case when it is to the right of our defense area
         double lineX = field.leftDefenseArea.right() + extraLength.x;
@@ -142,6 +142,10 @@ std::vector<Vector2> PositionComputations::determineWallPositions(const rtt::Fie
             wallLine.move({extraLength.x, extraLength.y});
         }
     } else {
+        // Move the projectedposition a bit forward, to make sure our defenders positons are not in the defense area        
+        auto closestPoint = ((ballPos - topRightDefense).length() < (ballPos - bottomRightDefense).length()) ? topRightDefense : bottomRightDefense;
+        projectedPosition -= (field.leftGoalArea.rightLine().center() - ballPos).stretchToLength((projectedPosition - closestPoint).length() / 1.8);
+
         // We put the wall line perpendicular to the ball-goal line
         wallLine = LineSegment(ballPos, field.leftGoalArea.rightLine().center());
         wallLine.rotate(M_PI / 2, projectedPosition);

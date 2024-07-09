@@ -1,11 +1,9 @@
 var namespacertt_1_1ai_1_1stp_1_1play =
 [
-    [ "DefendPass", "dd/daf/classrtt_1_1ai_1_1stp_1_1play_1_1DefendPass.html", "dd/daf/classrtt_1_1ai_1_1stp_1_1play_1_1DefendPass" ],
-    [ "DefendShot", "d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot.html", "d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot" ],
+    [ "Defend", "d3/de3/classrtt_1_1ai_1_1stp_1_1play_1_1Defend.html", "d3/de3/classrtt_1_1ai_1_1stp_1_1play_1_1Defend" ],
     [ "KeeperKickBall", "d5/dc4/classrtt_1_1ai_1_1stp_1_1play_1_1KeeperKickBall.html", "d5/dc4/classrtt_1_1ai_1_1stp_1_1play_1_1KeeperKickBall" ],
     [ "Attack", "db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html", "db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack" ],
     [ "AttackingPass", "df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass.html", "df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass" ],
-    [ "ChippingPass", "dc/d26/classrtt_1_1ai_1_1stp_1_1play_1_1ChippingPass.html", "dc/d26/classrtt_1_1ai_1_1stp_1_1play_1_1ChippingPass" ],
     [ "BallPlacementThem", "d7/d43/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementThem.html", "d7/d43/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementThem" ],
     [ "BallPlacementUsForceStart", "de/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsForceStart.html", "de/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsForceStart" ],
     [ "BallPlacementUsFreeKick", "d9/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsFreeKick.html", "d9/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsFreeKick" ],

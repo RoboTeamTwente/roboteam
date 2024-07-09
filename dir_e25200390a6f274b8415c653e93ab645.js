@@ -3,9 +3,6 @@ var dir_e25200390a6f274b8415c653e93ab645 =
     [ "BallPlacer.h", "d3/d88/BallPlacer_8h.html", [
       [ "BallPlacer", "dc/d18/classrtt_1_1ai_1_1stp_1_1role_1_1BallPlacer.html", "dc/d18/classrtt_1_1ai_1_1stp_1_1role_1_1BallPlacer" ]
     ] ],
-    [ "Chipper.h", "d5/d8d/Chipper_8h.html", [
-      [ "Chipper", "de/d3e/classrtt_1_1ai_1_1stp_1_1role_1_1Chipper.html", "de/d3e/classrtt_1_1ai_1_1stp_1_1role_1_1Chipper" ]
-    ] ],
     [ "FreeKickTaker.h", "d6/d01/FreeKickTaker_8h.html", [
       [ "FreeKickTaker", "d5/d5f/classrtt_1_1ai_1_1stp_1_1role_1_1FreeKickTaker.html", "d5/d5f/classrtt_1_1ai_1_1stp_1_1role_1_1FreeKickTaker" ]
     ] ],

@@ -1,8 +1,5 @@
 var dir_109afb4864b1f0d416209139ffba855f =
 [
-    [ "ChipAtPos.h", "d1/d0a/ChipAtPos_8h.html", [
-      [ "ChipAtPos", "db/dd1/classrtt_1_1ai_1_1stp_1_1tactic_1_1ChipAtPos.html", "db/dd1/classrtt_1_1ai_1_1stp_1_1tactic_1_1ChipAtPos" ]
-    ] ],
     [ "DriveWithBall.h", "d4/db3/DriveWithBall_8h.html", [
       [ "DriveWithBall", "d2/d25/classrtt_1_1ai_1_1stp_1_1tactic_1_1DriveWithBall.html", "d2/d25/classrtt_1_1ai_1_1stp_1_1tactic_1_1DriveWithBall" ]
     ] ],

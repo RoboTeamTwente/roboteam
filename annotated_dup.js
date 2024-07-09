@@ -67,12 +67,10 @@ var annotated_dup =
             [ "ScoredPosition", "d7/d73/namespacertt_1_1ai_1_1stp_1_1gen.html#d3/d07/structrtt_1_1ai_1_1stp_1_1gen_1_1ScoredPosition", "d7/d73/namespacertt_1_1ai_1_1stp_1_1gen_d3/d07/structrtt_1_1ai_1_1stp_1_1gen_1_1ScoredPosition_dup" ]
           ] ],
           [ "play", "d8/d32/namespacertt_1_1ai_1_1stp_1_1play.html", [
-            [ "DefendPass", "dd/daf/classrtt_1_1ai_1_1stp_1_1play_1_1DefendPass.html", "dd/daf/classrtt_1_1ai_1_1stp_1_1play_1_1DefendPass" ],
-            [ "DefendShot", "d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot.html", "d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot" ],
+            [ "Defend", "d3/de3/classrtt_1_1ai_1_1stp_1_1play_1_1Defend.html", "d3/de3/classrtt_1_1ai_1_1stp_1_1play_1_1Defend" ],
             [ "KeeperKickBall", "d5/dc4/classrtt_1_1ai_1_1stp_1_1play_1_1KeeperKickBall.html", "d5/dc4/classrtt_1_1ai_1_1stp_1_1play_1_1KeeperKickBall" ],
             [ "Attack", "db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html", "db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack" ],
             [ "AttackingPass", "df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass.html", "df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass" ],
-            [ "ChippingPass", "dc/d26/classrtt_1_1ai_1_1stp_1_1play_1_1ChippingPass.html", "dc/d26/classrtt_1_1ai_1_1stp_1_1play_1_1ChippingPass" ],
             [ "BallPlacementThem", "d7/d43/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementThem.html", "d7/d43/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementThem" ],
             [ "BallPlacementUsForceStart", "de/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsForceStart.html", "de/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsForceStart" ],
             [ "BallPlacementUsFreeKick", "d9/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsFreeKick.html", "d9/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsFreeKick" ],
@@ -93,7 +91,6 @@ var annotated_dup =
           ] ],
           [ "role", "d6/dca/namespacertt_1_1ai_1_1stp_1_1role.html", [
             [ "BallPlacer", "dc/d18/classrtt_1_1ai_1_1stp_1_1role_1_1BallPlacer.html", "dc/d18/classrtt_1_1ai_1_1stp_1_1role_1_1BallPlacer" ],
-            [ "Chipper", "de/d3e/classrtt_1_1ai_1_1stp_1_1role_1_1Chipper.html", "de/d3e/classrtt_1_1ai_1_1stp_1_1role_1_1Chipper" ],
             [ "FreeKickTaker", "d5/d5f/classrtt_1_1ai_1_1stp_1_1role_1_1FreeKickTaker.html", "d5/d5f/classrtt_1_1ai_1_1stp_1_1role_1_1FreeKickTaker" ],
             [ "Harasser", "df/d87/classrtt_1_1ai_1_1stp_1_1role_1_1Harasser.html", "df/d87/classrtt_1_1ai_1_1stp_1_1role_1_1Harasser" ],
             [ "KeeperPasser", "dd/d12/classrtt_1_1ai_1_1stp_1_1role_1_1KeeperPasser.html", "dd/d12/classrtt_1_1ai_1_1stp_1_1role_1_1KeeperPasser" ],
@@ -108,7 +105,6 @@ var annotated_dup =
             [ "PenaltyKeeper", "d3/de8/classrtt_1_1ai_1_1stp_1_1role_1_1PenaltyKeeper.html", "d3/de8/classrtt_1_1ai_1_1stp_1_1role_1_1PenaltyKeeper" ]
           ] ],
           [ "skill", "db/dca/namespacertt_1_1ai_1_1stp_1_1skill.html", [
-            [ "Chip", "db/de8/classrtt_1_1ai_1_1stp_1_1skill_1_1Chip.html", "db/de8/classrtt_1_1ai_1_1stp_1_1skill_1_1Chip" ],
             [ "GoToPos", "de/d21/classrtt_1_1ai_1_1stp_1_1skill_1_1GoToPos.html", "de/d21/classrtt_1_1ai_1_1stp_1_1skill_1_1GoToPos" ],
             [ "Kick", "d5/dd7/classrtt_1_1ai_1_1stp_1_1skill_1_1Kick.html", "d5/dd7/classrtt_1_1ai_1_1stp_1_1skill_1_1Kick" ],
             [ "Orbit", "d5/db9/classrtt_1_1ai_1_1stp_1_1skill_1_1Orbit.html", "d5/db9/classrtt_1_1ai_1_1stp_1_1skill_1_1Orbit" ],
@@ -117,7 +113,6 @@ var annotated_dup =
             [ "TestSkill", "d8/d57/classrtt_1_1ai_1_1stp_1_1skill_1_1TestSkill.html", "d8/d57/classrtt_1_1ai_1_1stp_1_1skill_1_1TestSkill" ]
           ] ],
           [ "tactic", "d5/dbb/namespacertt_1_1ai_1_1stp_1_1tactic.html", [
-            [ "ChipAtPos", "db/dd1/classrtt_1_1ai_1_1stp_1_1tactic_1_1ChipAtPos.html", "db/dd1/classrtt_1_1ai_1_1stp_1_1tactic_1_1ChipAtPos" ],
             [ "DriveWithBall", "d2/d25/classrtt_1_1ai_1_1stp_1_1tactic_1_1DriveWithBall.html", "d2/d25/classrtt_1_1ai_1_1stp_1_1tactic_1_1DriveWithBall" ],
             [ "GetBall", "d8/d8e/classrtt_1_1ai_1_1stp_1_1tactic_1_1GetBall.html", "d8/d8e/classrtt_1_1ai_1_1stp_1_1tactic_1_1GetBall" ],
             [ "GetBehindBallInDirection", "d9/d65/classrtt_1_1ai_1_1stp_1_1tactic_1_1GetBehindBallInDirection.html", "d9/d65/classrtt_1_1ai_1_1stp_1_1tactic_1_1GetBehindBallInDirection" ],

@@ -1,6 +1,5 @@
 var namespacertt_1_1ai_1_1stp_1_1tactic =
 [
-    [ "ChipAtPos", "db/dd1/classrtt_1_1ai_1_1stp_1_1tactic_1_1ChipAtPos.html", "db/dd1/classrtt_1_1ai_1_1stp_1_1tactic_1_1ChipAtPos" ],
     [ "DriveWithBall", "d2/d25/classrtt_1_1ai_1_1stp_1_1tactic_1_1DriveWithBall.html", "d2/d25/classrtt_1_1ai_1_1stp_1_1tactic_1_1DriveWithBall" ],
     [ "GetBall", "d8/d8e/classrtt_1_1ai_1_1stp_1_1tactic_1_1GetBall.html", "d8/d8e/classrtt_1_1ai_1_1stp_1_1tactic_1_1GetBall" ],
     [ "GetBehindBallInDirection", "d9/d65/classrtt_1_1ai_1_1stp_1_1tactic_1_1GetBehindBallInDirection.html", "d9/d65/classrtt_1_1ai_1_1stp_1_1tactic_1_1GetBehindBallInDirection" ],

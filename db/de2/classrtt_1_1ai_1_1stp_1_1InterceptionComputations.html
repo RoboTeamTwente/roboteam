@@ -114,6 +114,9 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a700fff9af330e959f6bb9fc294b8cdef"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="../../d5/d14/namespacertt_1_1ai_1_1stp.html#d9/d71/structrtt_1_1ai_1_1stp_1_1InterceptionInfo">InterceptionInfo</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/de2/classrtt_1_1ai_1_1stp_1_1InterceptionComputations.html#a700fff9af330e959f6bb9fc294b8cdef">calculateInterceptionInfoExcludingKeeperAndCarded</a> (const <a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">rtt::world::World</a> *world) noexcept</td></tr>
 <tr class="memdesc:a700fff9af330e959f6bb9fc294b8cdef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates the interceptionInfo using the calculateInterceptionInfo function, considering robots that can not kick or are the keeper.  <a href="../../db/de2/classrtt_1_1ai_1_1stp_1_1InterceptionComputations.html#a700fff9af330e959f6bb9fc294b8cdef">More...</a><br /></td></tr>
 <tr class="separator:a700fff9af330e959f6bb9fc294b8cdef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8a8d7981fb2c660e1ebe649acb3cb762"><td class="memItemLeft" align="right" valign="top">static std::optional&lt; <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/de2/classrtt_1_1ai_1_1stp_1_1InterceptionComputations.html#a8a8d7981fb2c660e1ebe649acb3cb762">calculateTheirBallInterception</a> (const <a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">rtt::world::World</a> *world, rtt::LineSegment ballTrajectory) noexcept</td></tr>
+<tr class="memdesc:a8a8d7981fb2c660e1ebe649acb3cb762"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates the point where they will have the ball.  <a href="../../db/de2/classrtt_1_1ai_1_1stp_1_1InterceptionComputations.html#a8a8d7981fb2c660e1ebe649acb3cb762">More...</a><br /></td></tr>
+<tr class="separator:a8a8d7981fb2c660e1ebe649acb3cb762"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>class with computations about positions </p>
@@ -288,6 +291,52 @@ Static Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>struct with information about the keeper intercept </dd></dl>
+
+</div>
+</div>
+<a id="a8a8d7981fb2c660e1ebe649acb3cb762"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8a8d7981fb2c660e1ebe649acb3cb762">&#9670;&nbsp;</a></span>calculateTheirBallInterception()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt; <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a> &gt; rtt::ai::stp::InterceptionComputations::calculateTheirBallInterception </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="../../da/d39/classrtt_1_1world_1_1World.html">rtt::world::World</a> *&#160;</td>
+          <td class="paramname"><em>world</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">rtt::LineSegment&#160;</td>
+          <td class="paramname"><em>ballTrajectory</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Calculates the point where they will have the ball. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">info</td><td>the <a class="el" href="../../d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html">StpInfo</a> struct </td></tr>
+    <tr><td class="paramname">ballTrajectory</td><td>the trajectory of the ball </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the point where they will have the ball </dd></dl>
 
 </div>
 </div>

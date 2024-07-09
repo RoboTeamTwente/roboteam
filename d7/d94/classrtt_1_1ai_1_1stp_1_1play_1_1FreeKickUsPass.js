@@ -31,5 +31,6 @@ var classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass =
     [ "scoring", "d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#a4598ba530d29d7f4f53bcec0c9845100", null ],
     [ "startPlayEvaluation", "d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#a859e8c8abae48115eab588736926368f", null ],
     [ "stpInfos", "d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#a08a78e2b6bb5fb4f75d0c9dc572d25fa", null ],
+    [ "waller_count", "d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#a8515cad2a57c969a52163f4ad9c084da", null ],
     [ "world", "d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#a0c13cbd482099fa139f3a5f08d964efe", null ]
 ];

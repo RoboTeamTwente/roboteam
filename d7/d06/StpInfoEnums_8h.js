@@ -9,14 +9,10 @@ var StpInfoEnums_8h =
       [ "shouldAvoidTheirDefenseArea", "d5/d14/namespacertt_1_1ai_1_1stp.html#abf3fc673f7da9233055642facee1450c", null ],
       [ "shouldAvoidTheirRobots", "d5/d14/namespacertt_1_1ai_1_1stp.html#a273d29c57e9e598eeda54c59d1074cf8", null ]
     ] ],
-    [ "KickOrChip", "d7/d06/StpInfoEnums_8h.html#a8a168b78725926f5901d2f6370784113", [
-      [ "KICK", "d7/d06/StpInfoEnums_8h.html#a8a168b78725926f5901d2f6370784113a959a795d5524bd9054026703a33afb87", null ],
-      [ "CHIP", "d7/d06/StpInfoEnums_8h.html#a8a168b78725926f5901d2f6370784113aed8e8497a6a4c2315790d3d56b7c5065", null ]
-    ] ],
-    [ "ShotType", "d7/d06/StpInfoEnums_8h.html#a40e85934b4fd4ca9ddfa2553886a87ab", [
-      [ "PASS", "d7/d06/StpInfoEnums_8h.html#a40e85934b4fd4ca9ddfa2553886a87aba7a95bf926a0333f57705aeac07a362a2", null ],
-      [ "TARGET", "d7/d06/StpInfoEnums_8h.html#a40e85934b4fd4ca9ddfa2553886a87aba730950ad798a77ad508aa9e2564d013f", null ],
-      [ "MAX", "d7/d06/StpInfoEnums_8h.html#a40e85934b4fd4ca9ddfa2553886a87aba26a4b44a837bf97b972628509912b4a5", null ]
+    [ "ShotPower", "d7/d06/StpInfoEnums_8h.html#a3415479aad9be6d3397774dc147c012c", [
+      [ "PASS", "d7/d06/StpInfoEnums_8h.html#a3415479aad9be6d3397774dc147c012ca7a95bf926a0333f57705aeac07a362a2", null ],
+      [ "TARGET", "d7/d06/StpInfoEnums_8h.html#a3415479aad9be6d3397774dc147c012ca730950ad798a77ad508aa9e2564d013f", null ],
+      [ "MAX", "d7/d06/StpInfoEnums_8h.html#a3415479aad9be6d3397774dc147c012ca26a4b44a837bf97b972628509912b4a5", null ]
     ] ],
     [ "Status", "d7/d06/StpInfoEnums_8h.html#a3055c554f88c993b2e023c90717631d3", [
       [ "Waiting", "d7/d06/StpInfoEnums_8h.html#a3055c554f88c993b2e023c90717631d3a5706de961fb376d701be6e7762d8b09c", null ],

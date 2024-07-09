@@ -1,8 +1,5 @@
 var dir_0edf149c2945bbed201cf92bd29c7b10 =
 [
-    [ "Chip.h", "d9/d55/Chip_8h.html", [
-      [ "Chip", "db/de8/classrtt_1_1ai_1_1stp_1_1skill_1_1Chip.html", "db/de8/classrtt_1_1ai_1_1stp_1_1skill_1_1Chip" ]
-    ] ],
     [ "GoToPos.h", "dc/d84/GoToPos_8h.html", [
       [ "GoToPos", "de/d21/classrtt_1_1ai_1_1stp_1_1skill_1_1GoToPos.html", "de/d21/classrtt_1_1ai_1_1stp_1_1skill_1_1GoToPos" ]
     ] ],

@@ -95,9 +95,7 @@ $(document).ready(function(){initNavTree('functions_s.html',''); initResizable()
 , <a class="el" href="d7/d43/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementThem.html#aee8c5693b91a4d42adc8dfda1fd63ddd">rtt::ai::stp::play::BallPlacementThem</a>
 , <a class="el" href="de/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsForceStart.html#a5cad72522fb5823fbd698b847342df76">rtt::ai::stp::play::BallPlacementUsForceStart</a>
 , <a class="el" href="d9/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsFreeKick.html#ab0e26c9631e33b1d221eca8bdfa7ae71">rtt::ai::stp::play::BallPlacementUsFreeKick</a>
-, <a class="el" href="dc/d26/classrtt_1_1ai_1_1stp_1_1play_1_1ChippingPass.html#a90e485a90c05bcd61d4808fdc214b90c">rtt::ai::stp::play::ChippingPass</a>
-, <a class="el" href="dd/daf/classrtt_1_1ai_1_1stp_1_1play_1_1DefendPass.html#a8f07669662ebec7f82ed54f608075d57">rtt::ai::stp::play::DefendPass</a>
-, <a class="el" href="d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot.html#ae67ca3f7620f349a73a3bafec170f8c4">rtt::ai::stp::play::DefendShot</a>
+, <a class="el" href="d3/de3/classrtt_1_1ai_1_1stp_1_1play_1_1Defend.html#a457a70fe85bbe237bf9e61bc543c052c">rtt::ai::stp::play::Defend</a>
 , <a class="el" href="dc/d7b/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickThem.html#ad918504526f4f0d666f3c15dc7480e33">rtt::ai::stp::play::FreeKickThem</a>
 , <a class="el" href="dd/dc8/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsAtGoal.html#a74af43184e4831efef654d9604b8c069">rtt::ai::stp::play::FreeKickUsAtGoal</a>
 , <a class="el" href="d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#ae713bbd8072641ccd24ad755f62a9713">rtt::ai::stp::play::FreeKickUsPass</a>
@@ -139,6 +137,9 @@ $(document).ready(function(){initNavTree('functions_s.html',''); initResizable()
 </li>
 <li>sendPacketToSimulator()
 : <a class="el" href="d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#abc76eed70ddeb37a3f42b37cedf85f48">rtt::ai::io::IOManager</a>
+</li>
+<li>setAmountOfWallers()
+: <a class="el" href="dd/d2c/classrtt_1_1ai_1_1stp_1_1PositionComputations.html#abc4854105feb26b4e3aabc532d55898f">rtt::ai::stp::PositionComputations</a>
 </li>
 <li>setAngleDiffToBall()
 : <a class="el" href="d4/d99/classrtt_1_1world_1_1robot_1_1Robot.html#a1c45bfbf85ad94ea92e065b9e54af34b">rtt::world::robot::Robot</a>
@@ -186,7 +187,7 @@ $(document).ready(function(){initNavTree('functions_s.html',''); initResizable()
 : <a class="el" href="d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#af3eb785277f9b02ecebd597d3e1cd31b">rtt::ai::stp::StpInfo</a>
 </li>
 <li>setKickOrChip()
-: <a class="el" href="d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#a5f45976c3e9bd95cf5800776287350c1">rtt::ai::stp::StpInfo</a>
+: <a class="el" href="d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#a30f14a798e20f53dabac8a959db00428">rtt::ai::stp::StpInfo</a>
 </li>
 <li>setLeft()
 : <a class="el" href="df/db4/classrtt_1_1GameSettings.html#a1a39949b86051915090b2793aee57c72">rtt::GameSettings</a>
@@ -221,8 +222,8 @@ $(document).ready(function(){initNavTree('functions_s.html',''); initResizable()
 <li>setRuleSetName()
 : <a class="el" href="d7/d9e/classrtt_1_1ai_1_1interface_1_1Output.html#a01205f6a56f921c525e3dd301712dd0d">rtt::ai::interface::Output</a>
 </li>
-<li>setShotType()
-: <a class="el" href="d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#afa7b1db3829313ed298aca9b2d835dbc">rtt::ai::stp::StpInfo</a>
+<li>setShotPower()
+: <a class="el" href="d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#aff4da96e247357608a4e555e50454ed5">rtt::ai::stp::StpInfo</a>
 </li>
 <li>setShouldAvoidBall()
 : <a class="el" href="d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#ae2db90d4930bdd5383c88f6d9a2b10b2">rtt::ai::stp::StpInfo</a>
@@ -274,8 +275,8 @@ $(document).ready(function(){initNavTree('functions_s.html',''); initResizable()
 <li>setYellow()
 : <a class="el" href="df/db4/classrtt_1_1GameSettings.html#a4668cb84480e6755edc1bdebc47f1378">rtt::GameSettings</a>
 </li>
-<li>shotType
-: <a class="el" href="d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#a46c27add1a6e70188efdb2edd2f5f9d0">rtt::ai::stp::StpInfo</a>
+<li>shotPower
+: <a class="el" href="d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#a8cb50d30b1ba8d0d4cd9c40291da27d5">rtt::ai::stp::StpInfo</a>
 </li>
 <li>shouldAvoidBall
 : <a class="el" href="d5/d14/namespacertt_1_1ai_1_1stp.html#ade390346237ed980f3b50fa3cb0a0b14">rtt::ai::stp::AvoidObjects</a>
@@ -301,7 +302,6 @@ $(document).ready(function(){initNavTree('functions_s.html',''); initResizable()
 <li>shouldEndPlay()
 : <a class="el" href="db/df2/classrtt_1_1ai_1_1stp_1_1play_1_1Attack.html#a649407297dee6638920185ca497148cb">rtt::ai::stp::play::Attack</a>
 , <a class="el" href="df/de8/classrtt_1_1ai_1_1stp_1_1play_1_1AttackingPass.html#a69c151bdcb58496794b8ef9fa46a2286">rtt::ai::stp::play::AttackingPass</a>
-, <a class="el" href="dc/d26/classrtt_1_1ai_1_1stp_1_1play_1_1ChippingPass.html#af287374ebee423c2829620d0df398012">rtt::ai::stp::play::ChippingPass</a>
 , <a class="el" href="dd/dc8/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsAtGoal.html#a37398798ad20c2a95f9d51b35bdd58bd">rtt::ai::stp::play::FreeKickUsAtGoal</a>
 , <a class="el" href="d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#af9b2205d1663fcd57360215aff23c4e2">rtt::ai::stp::play::FreeKickUsPass</a>
 , <a class="el" href="d5/dc4/classrtt_1_1ai_1_1stp_1_1play_1_1KeeperKickBall.html#a75285f5ba087c4fec511022d614f1d0a">rtt::ai::stp::play::KeeperKickBall</a>
@@ -313,7 +313,6 @@ $(document).ready(function(){initNavTree('functions_s.html',''); initResizable()
 : <a class="el" href="d4/d01/classMockTactic.html#a5b71704c2e3a289abb3075e248577d30">MockTactic</a>
 , <a class="el" href="d3/dc2/classrtt_1_1ai_1_1stp_1_1tactic_1_1BallStandBack.html#aca881751397df9e73d9c84b36ac84e84">rtt::ai::stp::tactic::BallStandBack</a>
 , <a class="el" href="df/dac/classrtt_1_1ai_1_1stp_1_1tactic_1_1BlockBall.html#a867dd6ba6847937dfd7f22fcaa936544">rtt::ai::stp::tactic::BlockBall</a>
-, <a class="el" href="db/dd1/classrtt_1_1ai_1_1stp_1_1tactic_1_1ChipAtPos.html#a77be44d11be3b9d842715ed64d704414">rtt::ai::stp::tactic::ChipAtPos</a>
 , <a class="el" href="d2/d25/classrtt_1_1ai_1_1stp_1_1tactic_1_1DriveWithBall.html#a01328342628815ac1a1eb3bd5c648112">rtt::ai::stp::tactic::DriveWithBall</a>
 , <a class="el" href="d6/d0f/classrtt_1_1ai_1_1stp_1_1tactic_1_1Formation.html#a0cb8c6fc9dffb0c616cadd776092ddf4">rtt::ai::stp::tactic::Formation</a>
 , <a class="el" href="d8/d8e/classrtt_1_1ai_1_1stp_1_1tactic_1_1GetBall.html#aff0cc2917cc5a5ea00b624b1507cad1a">rtt::ai::stp::tactic::GetBall</a>

@@ -1,7 +1,6 @@
 var namespacertt_1_1ai_1_1stp_1_1role =
 [
     [ "BallPlacer", "dc/d18/classrtt_1_1ai_1_1stp_1_1role_1_1BallPlacer.html", "dc/d18/classrtt_1_1ai_1_1stp_1_1role_1_1BallPlacer" ],
-    [ "Chipper", "de/d3e/classrtt_1_1ai_1_1stp_1_1role_1_1Chipper.html", "de/d3e/classrtt_1_1ai_1_1stp_1_1role_1_1Chipper" ],
     [ "FreeKickTaker", "d5/d5f/classrtt_1_1ai_1_1stp_1_1role_1_1FreeKickTaker.html", "d5/d5f/classrtt_1_1ai_1_1stp_1_1role_1_1FreeKickTaker" ],
     [ "Harasser", "df/d87/classrtt_1_1ai_1_1stp_1_1role_1_1Harasser.html", "df/d87/classrtt_1_1ai_1_1stp_1_1role_1_1Harasser" ],
     [ "KeeperPasser", "dd/d12/classrtt_1_1ai_1_1stp_1_1role_1_1KeeperPasser.html", "dd/d12/classrtt_1_1ai_1_1stp_1_1role_1_1KeeperPasser" ],

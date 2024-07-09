@@ -31,5 +31,6 @@ var classrtt_1_1ai_1_1stp_1_1Play =
     [ "scoring", "d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#a4598ba530d29d7f4f53bcec0c9845100", null ],
     [ "startPlayEvaluation", "d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#a859e8c8abae48115eab588736926368f", null ],
     [ "stpInfos", "d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#a08a78e2b6bb5fb4f75d0c9dc572d25fa", null ],
+    [ "waller_count", "d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#a8515cad2a57c969a52163f4ad9c084da", null ],
     [ "world", "d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#a0c13cbd482099fa139f3a5f08d964efe", null ]
 ];

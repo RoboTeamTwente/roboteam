@@ -1,7 +1,6 @@
 var dir_8f6aefef7690cc09b464fd2591dfc406 =
 [
     [ "BallPlacer.cpp", "d7/d82/BallPlacer_8cpp.html", null ],
-    [ "Chipper.cpp", "d1/d2c/Chipper_8cpp.html", null ],
     [ "FreeKickTaker.cpp", "d8/d51/FreeKickTaker_8cpp.html", null ],
     [ "Harasser.cpp", "d7/d82/Harasser_8cpp.html", null ],
     [ "KeeperPasser.cpp", "df/d99/KeeperPasser_8cpp.html", null ],

@@ -76,18 +76,18 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"d1/d45/Constants_8h.html#a10ed5242a17dcfbc91d8180f43fbea64",
-"d2/de6/classrtt_1_1ai_1_1gui_1_1Out.html#a988473c762bcec46998bf48a80507165",
-"d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot.html#ab5f09cfa9cd1ddb2a6990cb3c1b4d691",
-"d5/d4d/BallOnOurSideGlobalEvaluation_8cpp.html",
-"d6/d47/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUsPrepare.html#a0c13cbd482099fa139f3a5f08d964efe",
-"d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#a7439c6149abbc461640c9ecdad2ba8d6",
-"d8/dd4/RefCommand_8h.html#ac458fd2464c54331a04fc2fd54d82843abca20722938852a1d96f3ec869b939cc",
-"da/d1f/namespacertt_1_1ai_1_1constants.html#afd0e5c63445cb39f43dfaed43797a409",
-"db/dd1/classrtt_1_1ai_1_1stp_1_1tactic_1_1ChipAtPos.html#ac7dba7916b5fc648439cb51181d01358",
-"dd/d0a/PenaltyTaker_8h_source.html",
-"de/d2f/namespacertt_1_1world_1_1robot.html#a6a176dae355c34efaed193f2ddb19aac",
-"dir_4fa5e563b4b41071845bfe29c171590a.html"
+"d1/d45/Constants_8h.html#a17220f0a7b3e993c261d742c493d72ed",
+"d2/de6/classrtt_1_1ai_1_1gui_1_1Out.html#aaa6d7a2544d399ed45c39c43d32906f5",
+"d4/d01/classMockTactic.html#af4a9f63577d36c0cf178aae99fb0fd00",
+"d5/d50/WeWillHaveBallGlobalEvaluation_8h_source.html",
+"d6/d47/classrtt_1_1ai_1_1stp_1_1play_1_1PenaltyUsPrepare.html#a38ffe1c2f377508d851dc649d03644c0",
+"d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#a805621fd748e3dfd6399ff69570f7e56",
+"d8/dd4/RefCommand_8h.html#ac458fd2464c54331a04fc2fd54d82843abafba8df79d3bc511dadfaf088ca4382",
+"da/d1f/namespacertt_1_1ai_1_1constants.html#af0b607a20f6d33d6d0d75d463e5e090b",
+"db/de2/classrtt_1_1ai_1_1stp_1_1InterceptionComputations.html#a9ead1700c1a0a7cceb407f2f1da81645",
+"dd/d2c/classrtt_1_1ai_1_1stp_1_1PositionComputations.html#a71417bbfb99fac660ec23dd91484837f",
+"de/dec/GetBehindBallInDirection_8cpp.html",
+"functions_vars_e.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

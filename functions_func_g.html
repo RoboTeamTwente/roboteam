@@ -261,6 +261,9 @@ $(document).ready(function(){initNavTree('functions_func_g.html',''); initResiza
 <li>getKickChipVelocity()
 : <a class="el" href="d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#af8b436bd205fe5b5dd724eac5b4fa953">rtt::ai::stp::StpInfo</a>
 </li>
+<li>getKickOrChip()
+: <a class="el" href="d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#a3d5988e52a48ca0443b30e9d1c9ec133">rtt::ai::stp::StpInfo</a>
+</li>
 <li>getLastScore()
 : <a class="el" href="d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#a7439c6149abbc461640c9ecdad2ba8d6">rtt::ai::stp::Play</a>
 </li>
@@ -309,9 +312,7 @@ $(document).ready(function(){initNavTree('functions_func_g.html',''); initResiza
 , <a class="el" href="d7/d43/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementThem.html#afd36854b3fa2fcde6bb75185f898da91">rtt::ai::stp::play::BallPlacementThem</a>
 , <a class="el" href="de/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsForceStart.html#a185f8b4ba9db2f7c98967dcbda67689b">rtt::ai::stp::play::BallPlacementUsForceStart</a>
 , <a class="el" href="d9/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsFreeKick.html#a480baf512666763a3a83eebd94d66350">rtt::ai::stp::play::BallPlacementUsFreeKick</a>
-, <a class="el" href="dc/d26/classrtt_1_1ai_1_1stp_1_1play_1_1ChippingPass.html#acb487148454d3f71d7fe8153f7e9c5a9">rtt::ai::stp::play::ChippingPass</a>
-, <a class="el" href="dd/daf/classrtt_1_1ai_1_1stp_1_1play_1_1DefendPass.html#ac31f319dc520b09dc0e52834aa8fa586">rtt::ai::stp::play::DefendPass</a>
-, <a class="el" href="d4/d37/classrtt_1_1ai_1_1stp_1_1play_1_1DefendShot.html#af8495d8ff9e59726b4744fb0cef93207">rtt::ai::stp::play::DefendShot</a>
+, <a class="el" href="d3/de3/classrtt_1_1ai_1_1stp_1_1play_1_1Defend.html#aaf681fb7991fcdc3f9e7e229b340b777">rtt::ai::stp::play::Defend</a>
 , <a class="el" href="dc/d7b/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickThem.html#ac6beffcf942c99fecf124b8be10035bb">rtt::ai::stp::play::FreeKickThem</a>
 , <a class="el" href="dd/dc8/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsAtGoal.html#acfa43f0274ff5cf5f4921b04d07bbfe0">rtt::ai::stp::play::FreeKickUsAtGoal</a>
 , <a class="el" href="d7/d94/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsPass.html#a554c384fee1f7d5d689355b3cd9573ee">rtt::ai::stp::play::FreeKickUsPass</a>
@@ -329,7 +330,6 @@ $(document).ready(function(){initNavTree('functions_func_g.html',''); initResiza
 , <a class="el" href="d6/daa/classrtt_1_1ai_1_1stp_1_1play_1_1PrepareForcedStart.html#a60b554f7086156246f35d8fd41ba19d8">rtt::ai::stp::play::PrepareForcedStart</a>
 , <a class="el" href="d0/d1d/classrtt_1_1ai_1_1stp_1_1play_1_1StopFormation.html#a2c7cc3de3219660ab9da00fd1fdef3ed">rtt::ai::stp::play::StopFormation</a>
 , <a class="el" href="d2/d9f/classrtt_1_1ai_1_1stp_1_1Role.html#a4ff09c5a0803236b90ca9e14abb1ae6e">rtt::ai::stp::Role</a>
-, <a class="el" href="db/de8/classrtt_1_1ai_1_1stp_1_1skill_1_1Chip.html#a2984fe2530af5354bbc39e987af40377">rtt::ai::stp::skill::Chip</a>
 , <a class="el" href="da/da2/classrtt_1_1ai_1_1stp_1_1Skill.html#a8efad4f44b27d9d2a8cf2983d9b59d88">rtt::ai::stp::Skill</a>
 , <a class="el" href="de/d21/classrtt_1_1ai_1_1stp_1_1skill_1_1GoToPos.html#a37b4212b9e3fee14dac3696858239532">rtt::ai::stp::skill::GoToPos</a>
 , <a class="el" href="d5/dd7/classrtt_1_1ai_1_1stp_1_1skill_1_1Kick.html#affe193599eaf9b56decfad928013f297">rtt::ai::stp::skill::Kick</a>
@@ -339,7 +339,6 @@ $(document).ready(function(){initNavTree('functions_func_g.html',''); initResiza
 , <a class="el" href="d8/d57/classrtt_1_1ai_1_1stp_1_1skill_1_1TestSkill.html#a81322ea82e04b0ee8bc318f9dfec8f32">rtt::ai::stp::skill::TestSkill</a>
 , <a class="el" href="d3/dc2/classrtt_1_1ai_1_1stp_1_1tactic_1_1BallStandBack.html#a3980e34a266bc158ee16bb272ac9e2b3">rtt::ai::stp::tactic::BallStandBack</a>
 , <a class="el" href="df/dac/classrtt_1_1ai_1_1stp_1_1tactic_1_1BlockBall.html#a55f0dd9b285db6b396119e0fcf1b8d65">rtt::ai::stp::tactic::BlockBall</a>
-, <a class="el" href="db/dd1/classrtt_1_1ai_1_1stp_1_1tactic_1_1ChipAtPos.html#a7b46f686df7448297b5739d2df55b63d">rtt::ai::stp::tactic::ChipAtPos</a>
 , <a class="el" href="d2/d25/classrtt_1_1ai_1_1stp_1_1tactic_1_1DriveWithBall.html#a78172b4882b55c20460ce48c503d503f">rtt::ai::stp::tactic::DriveWithBall</a>
 , <a class="el" href="d6/d0f/classrtt_1_1ai_1_1stp_1_1tactic_1_1Formation.html#ae3c48407cf0e288159f5c0587ee238c5">rtt::ai::stp::tactic::Formation</a>
 , <a class="el" href="d8/d8e/classrtt_1_1ai_1_1stp_1_1tactic_1_1GetBall.html#a36b6dfcfe1a0075caad58aaa0dbdf436">rtt::ai::stp::tactic::GetBall</a>
@@ -452,8 +451,8 @@ $(document).ready(function(){initNavTree('functions_func_g.html',''); initResiza
 <li>getScoreOfPosition()
 : <a class="el" href="de/de9/classrtt_1_1ai_1_1stp_1_1PositionScoring.html#a91cc9045de71a96c8ab289ce63d99057">rtt::ai::stp::PositionScoring</a>
 </li>
-<li>getShotType()
-: <a class="el" href="d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#a12448dd09ecc0fe6a5cafdc08acedc99">rtt::ai::stp::StpInfo</a>
+<li>getShotPower()
+: <a class="el" href="d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#ab9b052b82f49ac89a0366ae3ac8fcaea">rtt::ai::stp::StpInfo</a>
 </li>
 <li>getState()
 : <a class="el" href="d0/d42/classrtt_1_1ai_1_1io_1_1IOManager.html#a7a60af9ed7afea21381003f92e05c89e">rtt::ai::io::IOManager</a>

@@ -29,5 +29,6 @@ var classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsAtGoal =
     [ "scoring", "dd/dc8/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsAtGoal.html#a4598ba530d29d7f4f53bcec0c9845100", null ],
     [ "startPlayEvaluation", "dd/dc8/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsAtGoal.html#a859e8c8abae48115eab588736926368f", null ],
     [ "stpInfos", "dd/dc8/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsAtGoal.html#a08a78e2b6bb5fb4f75d0c9dc572d25fa", null ],
+    [ "waller_count", "dd/dc8/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsAtGoal.html#a8515cad2a57c969a52163f4ad9c084da", null ],
     [ "world", "dd/dc8/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickUsAtGoal.html#a0c13cbd482099fa139f3a5f08d964efe", null ]
 ];

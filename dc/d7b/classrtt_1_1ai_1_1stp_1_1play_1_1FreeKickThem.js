@@ -30,5 +30,6 @@ var classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickThem =
     [ "scoring", "dc/d7b/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickThem.html#a4598ba530d29d7f4f53bcec0c9845100", null ],
     [ "startPlayEvaluation", "dc/d7b/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickThem.html#a859e8c8abae48115eab588736926368f", null ],
     [ "stpInfos", "dc/d7b/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickThem.html#a08a78e2b6bb5fb4f75d0c9dc572d25fa", null ],
+    [ "waller_count", "dc/d7b/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickThem.html#a8515cad2a57c969a52163f4ad9c084da", null ],
     [ "world", "dc/d7b/classrtt_1_1ai_1_1stp_1_1play_1_1FreeKickThem.html#a0c13cbd482099fa139f3a5f08d964efe", null ]
 ];

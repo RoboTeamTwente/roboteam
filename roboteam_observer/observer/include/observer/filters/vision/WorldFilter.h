@@ -5,9 +5,17 @@
 #include <proto/WorldRobot.pb.h>
 #include <proto/messages_robocup_ssl_geometry.pb.h>
 
+#include <deque>
+
 #include "DetectionFrame.h"
+#include "GeometryFilter.h"
 #include "RobotFeedbackFilter.h"
+#include "observer/filters/shot/ChipEstimator.h"
+#include "observer/filters/shot/KickEstimator.h"
+#include "observer/filters/shot/ShotEvent.h"
+#include "observer/filters/vision/CameraMap.h"
 #include "observer/filters/vision/ball/BallFilter.h"
+#include "observer/filters/vision/ball/BallParameters.h"
 #include "observer/filters/vision/robot/RobotFilter.h"
 #include "observer/parameters/RobotParameterDatabase.h"
 
@@ -24,9 +32,11 @@ class WorldFilter {
    public:
     WorldFilter();
 
-    void process(const std::vector<proto::SSL_DetectionFrame>& frames, const std::vector<rtt::RobotsFeedback>& feedback, const std::vector<int>& camera_ids);
-
-    [[nodiscard]] proto::World getWorldPrediction(const Time& time) const;
+    void process(const std::vector<proto::SSL_DetectionFrame>& frames, const std::vector<rtt::RobotsFeedback>& feedback, const std::vector<int>& camera_ids,
+                 GeometryFilter& geomFilter);
+    void kickDetector(FilteredBall bestBall, Time time, const BallParameters& ballParameters);
+    [[nodiscard]] proto::World getWorldPrediction(const Time& time, const BallParameters& ballParameters);
+    [[nodiscard]] BallParameters getBallParameters(const std::optional<proto::SSL_GeometryData>& geometry) const;
 
     void updateRobotParameters(const TwoTeamRobotParameters& robotInfo);
 
@@ -35,6 +45,28 @@ class WorldFilter {
     robotMap blue;
     robotMap yellow;
     std::vector<BallFilter> balls;
+    CameraMap cameraMap;
+    Time lastKickTime = Time::now();
+    std::optional<KickEstimator> kickEstimator;
+    std::optional<ChipEstimator> chipEstimator;
+    struct RecentData {
+        std::vector<FilteredRobot> blue;
+        std::vector<FilteredRobot> yellow;
+        std::optional<FilteredBall> filteredBall;
+    };
+    std::optional<ShotEvent> mostRecentShot;
+
+    std::deque<RecentData> frameHistory;
+    void addRecentData(const std::vector<FilteredRobot>& blue, const std::vector<FilteredRobot>& yellow, const std::optional<FilteredBall>& filteredBall) {
+        if (frameHistory.size() >= 5) {
+            frameHistory.pop_front();
+        }
+        frameHistory.push_back({blue, yellow, filteredBall});
+    }
+    bool checkDistance(const std::vector<FilteredRobot>& robots, const std::vector<FilteredBall>& balls);
+    bool checkVelocity(const std::vector<FilteredBall>& balls);
+    bool checkOrientation(const std::vector<FilteredRobot>& robots, const std::vector<FilteredBall>& balls);
+    bool checkIncreasingDistance(const std::vector<FilteredRobot>& robots, const std::vector<FilteredBall>& balls);
 
     RobotParameters blueParams;
     RobotParameters yellowParams;
@@ -51,7 +83,7 @@ class WorldFilter {
     [[nodiscard]] std::vector<FilteredRobot> getHealthiestRobotsMerged(bool blueBots, Time time) const;
     [[nodiscard]] std::vector<FilteredRobot> oneCameraHealthyRobots(bool blueBots, int camera_id, Time time) const;
     void addRobotPredictionsToMessage(proto::World& world, Time time) const;
-    void addBallPredictionsToMessage(proto::World& world, Time time) const;
+    void addBallPredictionsToMessage(proto::World& world, Time time, const BallParameters& ballParameters);
 
     // take care, although these method are static, they typically DO modify the current object as they have a robotMap reference
     static void predictRobots(const DetectionFrame& frame, robotMap& robots);

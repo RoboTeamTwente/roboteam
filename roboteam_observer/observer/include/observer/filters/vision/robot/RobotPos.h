@@ -50,6 +50,20 @@ struct TeamRobotID {
     TeamRobotID(unsigned int robotID, TeamColor color) : robot_id(robotID), team{color} {}
     bool operator==(const TeamRobotID& other) const { return robot_id == other.robot_id && team == other.team; }
     bool operator!=(const TeamRobotID& other) const { return !(*this == other); }
+    bool operator<(const TeamRobotID& other) const {
+        if (team == other.team) {
+            return robot_id < other.robot_id;
+        }
+        return team == TeamColor::YELLOW;
+    }
+    bool operator>(const TeamRobotID& other) const {
+        if (team == other.team) {
+            return robot_id > other.robot_id;
+        }
+        return team == TeamColor::BLUE;
+    }
+    bool operator<=(const TeamRobotID& other) const { return *this < other || *this == other; }
+    bool operator>=(const TeamRobotID& other) const { return *this > other || *this == other; }
     RobotID robot_id;
     TeamColor team;
 };

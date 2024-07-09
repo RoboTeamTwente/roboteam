@@ -3,16 +3,31 @@
 #include "filters/vision/ball/BallAssigner.h"
 WorldFilter::WorldFilter() {}
 
-proto::World WorldFilter::getWorldPrediction(const Time &time) const {
+proto::World WorldFilter::getWorldPrediction(const Time &time, const BallParameters &ballParameters) {
     proto::World world;
     addRobotPredictionsToMessage(world, time);
-    addBallPredictionsToMessage(world, time);
+    addBallPredictionsToMessage(world, time, ballParameters);
     world.set_time(time.asNanoSeconds());
 
     return world;
 }
 
-void WorldFilter::process(const std::vector<proto::SSL_DetectionFrame> &frames, const std::vector<rtt::RobotsFeedback> &feedback, const std::vector<int> &camera_ids) {
+BallParameters WorldFilter::getBallParameters(const std::optional<proto::SSL_GeometryData> &geometry) const {
+    BallParameters ballParameters;
+    if (geometry.has_value()) {
+        ballParameters = BallParameters(geometry.value());
+    }
+    return ballParameters;
+}
+
+void WorldFilter::process(const std::vector<proto::SSL_DetectionFrame> &frames, const std::vector<rtt::RobotsFeedback> &feedback, const std::vector<int> &camera_ids,
+                          GeometryFilter &geomFilter) {
+    // populate cameraMap
+    for (const auto &camera : geomFilter.getCameras()) {
+        if (!cameraMap.hasCamera(camera.first)) {
+            cameraMap.addCamera(Camera(camera.second));
+        }
+    }
     // Feedback is processed first, as it is not really dependent on vision packets,
     // but the vision processing may be helped by the feedback information
     feedbackFilter.process(feedback);
@@ -192,7 +207,11 @@ void WorldFilter::processBalls(const DetectionFrame &frame) {
     std::vector<FilteredRobot> blueRobots = getHealthiestRobotsMerged(true, frame.timeCaptured);
     std::vector<FilteredRobot> yellowRobots = getHealthiestRobotsMerged(false, frame.timeCaptured);
 
+    std::vector<FilteredRobot> blueRobots = getHealthiestRobotsMerged(true, frame.timeCaptured);
+    std::vector<FilteredRobot> yellowRobots = getHealthiestRobotsMerged(false, frame.timeCaptured);
+
     for (std::size_t i = 0; i < balls.size(); ++i) {
+        predictions[i] = balls[i].predictCam(frame.cameraID, frame.timeCaptured, yellowRobots, blueRobots).prediction;
         predictions[i] = balls[i].predictCam(frame.cameraID, frame.timeCaptured, yellowRobots, blueRobots).prediction;
     }
     // assign observations to relevant filters
@@ -212,10 +231,125 @@ void WorldFilter::processBalls(const DetectionFrame &frame) {
         balls.emplace_back(BallFilter(newBall));
     }
 }
-void WorldFilter::addBallPredictionsToMessage(proto::World &world, Time time) const {
-    const BallFilter *bestFilter = nullptr;
+
+void WorldFilter::kickDetector(FilteredBall bestBall, Time time, const BallParameters &ballParameters) {
+    // Check if there's no current observation, return early
+    if (!bestBall.currentObservation.has_value() || bestBall.currentObservation.value().confidence < 0.1) {
+        return;
+    }
+
+    // Get the healthiest robots for both teams
+    std::vector<FilteredRobot> blueRobots = getHealthiestRobotsMerged(true, time);
+    std::vector<FilteredRobot> yellowRobots = getHealthiestRobotsMerged(false, time);
+    addRecentData(blueRobots, yellowRobots, bestBall);
+
+    // If not enough frames in history, return early
+    if (frameHistory.size() < 5) {
+        return;
+    }
+
+    // Check if the last kick was too recent, return early
+    if ((frameHistory.front().filteredBall->time - lastKickTime).asSeconds() < 0.1) {
+        return;
+    }
+
+    // Gather all balls and robots within a certain proximity
+    std::vector<FilteredBall> allBalls;
+    std::map<TeamRobotID, std::vector<FilteredRobot>> allRobots;
+    auto firstBallCameraPosition = frameHistory.front().filteredBall->positionCamera;
+    for (const auto &data : frameHistory) {
+        allBalls.push_back(data.filteredBall.value());
+        for (const auto &robot : data.blue) {
+            if ((robot.position.position - firstBallCameraPosition).norm() < 1.0) allRobots[robot.id].push_back(robot);
+        }
+        for (const auto &robot : data.yellow) {
+            if ((robot.position.position - firstBallCameraPosition).norm() < 1.0) allRobots[robot.id].push_back(robot);
+        }
+    }
+
+    // Remove robots if there's insufficient data
+    for (auto it = allRobots.begin(); it != allRobots.end();) {
+        if (it->second.size() < 5) {
+            it = allRobots.erase(it);
+        } else {
+            ++it;
+        }
+    }
+
+    for (const auto &[id, filteredRobots] : allRobots) {
+        if (!checkDistance(filteredRobots, allBalls)) {
+            continue;
+        }
+        if (!checkVelocity(allBalls)) {
+            continue;
+        }
+        if (!checkOrientation(filteredRobots, allBalls)) {
+            continue;
+        }
+        if (!checkIncreasingDistance(filteredRobots, allBalls)) {
+            continue;
+        }
+
+        lastKickTime = frameHistory.front().filteredBall->time;
+        mostRecentShot = ShotEvent{id, filteredRobots[0].position, allBalls[0].positionCamera, lastKickTime, allBalls};
+        kickEstimator = KickEstimator(*mostRecentShot, ballParameters);
+        chipEstimator = ChipEstimator(*mostRecentShot, ballParameters, cameraMap);
+        std::cout << "Kick detected by robot " << id.robot_id.robotID << " from team " << (id.team == TeamColor::BLUE ? "blue" : "yellow") << std::endl;
+        break;
+    }
+}
+
+bool WorldFilter::checkDistance(const std::vector<FilteredRobot> &robots, const std::vector<FilteredBall> &balls) {
+    double initialDistance = (robots[0].position.position - balls[0].currentObservation.value().position).norm();
+    double maxDistance = initialDistance;
+    if (initialDistance > 0.17) return false;
+
+    for (size_t i = 1; i < 5; ++i) {
+        double distance = (robots[i].position.position - balls[i].currentObservation.value().position).norm();
+        if (distance < initialDistance) return false;
+        if (distance > maxDistance) maxDistance = distance;
+    }
+
+    return maxDistance >= 0.16;
+}
+
+bool WorldFilter::checkVelocity(const std::vector<FilteredBall> &balls) {
+    int validVelocities = 0;
+    for (size_t i = 1; i < 5; ++i) {
+        auto previousBall = balls[i - 1].currentObservation.value();
+        auto currentBall = balls[i].currentObservation.value();
+        double velocity = (currentBall.position - previousBall.position).norm() / (currentBall.timeCaptured - previousBall.timeCaptured).asSeconds();
+        if (velocity > 0.6) validVelocities++;
+    }
+    return validVelocities >= 2;
+}
+
+bool WorldFilter::checkOrientation(const std::vector<FilteredRobot> &robots, const std::vector<FilteredBall> &balls) {
+    for (size_t i = 0; i < 5; ++i) {
+        const auto &robot = robots[i];
+        const auto &ballPosition = balls[i].currentObservation.value().position;
+        Eigen::Vector2d robotToBall = ballPosition - robot.position.position;
+        double angle = std::atan2(robotToBall.y(), robotToBall.x());
+        double angleDiff = std::abs(robot.position.yaw - rtt::Angle(angle));
+        if (angleDiff > 0.8) return false;
+    }
+    return true;
+}
+
+bool WorldFilter::checkIncreasingDistance(const std::vector<FilteredRobot> &robots, const std::vector<FilteredBall> &balls) {
+    double previousDistance = (robots[0].position.position - balls[0].currentObservation.value().position).norm();
+    for (size_t i = 1; i < 5; ++i) {
+        double currentDistance = (robots[i].position.position - balls[i].currentObservation.value().position).norm();
+        if (currentDistance < previousDistance) return false;
+        previousDistance = currentDistance;
+    }
+    return true;
+}
+
+void WorldFilter::addBallPredictionsToMessage(proto::World &world, Time time, const BallParameters &ballParameters) {
+    BallFilter *bestFilter = nullptr;
     double bestHealth = -1.0;
-    for (const auto &filter : balls) {
+    for (auto &filter : balls) {
         if (filter.getNumObservations() > 3) {
             double currentHealth = filter.getHealth();
             if (!bestFilter || currentHealth > bestHealth) {
@@ -224,8 +358,36 @@ void WorldFilter::addBallPredictionsToMessage(proto::World &world, Time time) co
             }
         }
     }
-    if (bestFilter) {
-        FilteredBall bestBall = bestFilter->mergeBalls(time);
-        world.mutable_ball()->CopyFrom(bestBall.asWorldBall());
+    if (!bestFilter) {
+        return;
     }
+    FilteredBall bestBall = bestFilter->mergeBalls(time);
+    kickDetector(bestBall, time, ballParameters);
+    if (bestBall.currentObservation.has_value()) {
+        if (kickEstimator.has_value()) {
+            kickEstimator->addFilteredBall(bestBall.currentObservation.value());
+            if (kickEstimator->getAverageDistance() > 0.1) {
+                std::cout << "\033[31mRemoved straight kick estimator\033[0m" << std::endl;
+                kickEstimator = std::nullopt;
+            }
+        }
+
+        if (chipEstimator.has_value()) {
+            chipEstimator->addFilteredBall(bestBall.currentObservation.value());
+            if (chipEstimator->getAverageDistance() > 0.1) {
+                std::cout << "\033[31mRemoved chip estimator\033[0m" << std::endl;
+                chipEstimator = std::nullopt;
+            }
+        }
+    }
+
+    // if (kickEstimator.has_value() && !chipEstimator.has_value()) {
+    //     std::cout << "\033[32mStraight kick detected\033[0m" << std::endl;
+    //     // kickEstimator = std::nullopt;
+    // } else if (chipEstimator.has_value() && !kickEstimator.has_value()) {
+    //     std::cout << "\033[32mChip detected\033[0m" << std::endl;
+    //     // chipEstimator = std::nullopt;
+    // }
+
+    world.mutable_ball()->CopyFrom(bestBall.asWorldBall());
 }

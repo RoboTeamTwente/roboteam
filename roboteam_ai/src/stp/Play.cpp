@@ -12,7 +12,7 @@ void Play::initialize() noexcept {
     }
     for (auto &role : roles) {
         if (role == nullptr) continue;
-        stpInfos[role->getName()].setShouldAvoidBall(FieldComputations::getBallAvoidance(role->getName()));
+        stpInfos[role->getName()].setShouldAvoidBall(FieldComputations::getBallAvoidance());
         stpInfos[role->getName()].setMaxRobotVelocity(control::ControlUtils::getMaxVelocity(false));
     }
     calculateInfoForRoles();
@@ -97,7 +97,7 @@ void Play::reassignRobots() noexcept {
     stpInfos.clear();
     for (auto &role : roles) {
         if (role == nullptr) continue;
-        stpInfos[role->getName()].setShouldAvoidBall(FieldComputations::getBallAvoidance(role->getName()));
+        stpInfos[role->getName()].setShouldAvoidBall(FieldComputations::getBallAvoidance());
         stpInfos[role->getName()].setMaxRobotVelocity(control::ControlUtils::getMaxVelocity(false));
     }
     calculateInfoForRoles();
@@ -119,7 +119,7 @@ void Play::refreshData() noexcept {
             // Set max velocity depending on the gamestate rules and whether we have the ball
             if (stpInfo->second.getRobot()) {
                 stpInfo->second.setMaxRobotVelocity(control::ControlUtils::getMaxVelocity(stpInfo->second.getRobot().value()->hasBall()));
-                stpInfo->second.setShouldAvoidBall(FieldComputations::getBallAvoidance(role->getName()));
+                stpInfo->second.setShouldAvoidBall(FieldComputations::getBallAvoidance());
             }
 
             // The keeper does not need to avoid our defense area

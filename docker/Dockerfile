@@ -33,7 +33,8 @@ RUN apk add --no-cache bash build-base cmake make musl-dev libtool \
     libzmq zeromq-dev libzmq-static eigen-dev gtest-dev \
     libtbb-dev curl unzip wget zlib-dev zip nodejs npm \
     openssl-dev sdl2-dev libudev-zero libudev-zero-dev libusb libusb-dev \
-    qt5-qtbase-dev qt5-qtcharts-dev qt5-qtdeclarative-dev qt5-qtsvg-dev
+    qt5-qtbase-dev qt5-qtcharts-dev qt5-qtdeclarative-dev qt5-qtsvg-dev \
+    libdlib-dev
 RUN npm install -g yarn
 
 WORKDIR /root/protobuf
@@ -67,6 +68,7 @@ RUN apk add --no-cache \
     libtbb-dev zlib-dev \
     openssl-dev sdl2-dev  \
     qt5-qtbase-dev qt5-qtcharts-dev qt5-qtdeclarative-dev qt5-qtsvg-dev \
+    libdlib-dev \
     sudo nodejs npm
 RUN npm install -g yarn
 

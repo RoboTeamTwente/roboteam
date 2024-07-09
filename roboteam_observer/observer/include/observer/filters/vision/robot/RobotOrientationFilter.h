@@ -30,6 +30,8 @@ class RobotOrientationFilter : public PosVelFilter1D {
      * @return the limited yaw
      */
     [[nodiscard]] static double limitAngle(double yaw);
+    double lastObservation = 0.0;
+    int orientationTurns = 0;
 };
 
 #endif  // RTT_ROBOTEAM_OBSERVER_OBSERVER_SRC_FILTERS_VISION_ROBOT_ROBOTORIENTATIONFILTER_H_

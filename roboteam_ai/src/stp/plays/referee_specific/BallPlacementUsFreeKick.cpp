@@ -77,7 +77,6 @@ void BallPlacementUsFreeKick::calculateInfoForRoles() noexcept {
         ballTarget = world->getWorld()->get()->getBall()->get()->position;
     }
 
-    // stpInfos["ball_placer"].setPositionToShootAt(ballTarget);
     for (auto& stpInfo : stpInfos) {
         stpInfo.second.setShouldAvoidOurDefenseArea(false);
         stpInfo.second.setShouldAvoidTheirDefenseArea(false);

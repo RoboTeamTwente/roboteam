@@ -79,8 +79,7 @@ std::vector<Vector2> PositionComputations::determineWallPositions(const rtt::Fie
     }
 
     // Constants for positioning the defenders
-    const double radius = constants::ROBOT_RADIUS;
-    const double spacingRobots = radius * 0.5;
+    const double spacingRobots = constants::ROBOT_RADIUS * 0.5;
     RefCommand currentGameState = GameStateManager::getCurrentGameState().getCommandId();
     auto ball = world->getWorld().value().getBall()->get();
     const LineSegment ballTrajectory(ball->position, ball->expectedEndPosition);
@@ -102,7 +101,7 @@ std::vector<Vector2> PositionComputations::determineWallPositions(const rtt::Fie
         ballPos = FieldComputations::projectPointInField(field, ballPos, constants::BALL_RADIUS);
     }
     // Dynamic distance, the further the ball is from our goal, the further forwards our wall stands.
-    double theirDistanceToGoal = std::clamp(((ballPos - field.leftGoalArea.rightLine().center()).length() - 4) / 2, 0.0, field.playArea.width() / 10) + 2 * constants::ROBOT_RADIUS;
+    double theirDistanceToGoal = std::clamp(((ballPos - field.leftGoalArea.rightLine().center()).length() - 4) / 2, 0.0, field.playArea.width() / 10);
     auto extraLength = (ballPos - field.leftGoalArea.rightLine().center()).stretchToLength(theirDistanceToGoal);
 
     std::vector<Vector2> positions = {};
@@ -110,43 +109,48 @@ std::vector<Vector2> PositionComputations::determineWallPositions(const rtt::Fie
 
     // Find the intersection of the ball-to-goal line with the border of the defense area
     LineSegment ball2GoalLine = LineSegment(ballPos, field.leftGoalArea.rightLine().center());
-    std::vector<Vector2> lineBorderIntersects =
-        FieldComputations::getDefenseArea(field, true, std::get<1>(FieldComputations::getDefenseAreaMargin()), 0).intersections(ball2GoalLine);
+    std::vector<Vector2> lineBorderIntersects = FieldComputations::getDefenseArea(field, true, extraLength.length(), 0).intersections(ball2GoalLine);
     // If the ball is in our defense area, project it outside, otherwise use the intersection with our defense area
     std::sort(lineBorderIntersects.begin(), lineBorderIntersects.end(), [](Vector2 a, Vector2 b) { return a.x > b.x; });
-    projectedPosition = lineBorderIntersects.front() + extraLength;
+    projectedPosition = lineBorderIntersects.front();
 
     // Initialize the wallLine
     LineSegment wallLine;
 
-    // Define the defense areas
-    auto defenseAreaOur = FieldComputations::getDefenseArea(field, true, 0, 0);
-    auto defenseAreaTheir = FieldComputations::getDefenseArea(field, false, 0, 0);
+    // Define the top and bottom of our defense area and the closest and farthers point from the ball
+    auto topRightDefense = field.leftDefenseArea.topRight();
+    auto bottomRightDefense = field.leftDefenseArea.bottomRight();
+    auto closestPoint = ((ballPos - topRightDefense).length() < (ballPos - bottomRightDefense).length()) ? topRightDefense : bottomRightDefense;
+    auto farthestPoint = ((ballPos - topRightDefense).length() > (ballPos - bottomRightDefense).length()) ? topRightDefense : bottomRightDefense;
 
-    // Determine the wall line based on the ball's position
-
-    if (ballPos.y < field.leftDefenseArea.top() && ballPos.y > field.leftDefenseArea.bottom()) {
-        // Case when it is to the right of our defense area
-        double lineX = field.leftDefenseArea.right() + extraLength.x;
-        double lineYTop = field.playArea.top() + extraLength.y;
-        double lineYBottom = field.playArea.bottom() + extraLength.y;
-        wallLine = LineSegment({lineX, lineYBottom}, {lineX, lineYTop});
-    } else if (ballPos.x < field.leftDefenseArea.right()) {
-        // Case when the projected position is below or above our defense area
-        if (ballPos.y < 0) {
-            wallLine = LineSegment(defenseAreaOur[0], defenseAreaTheir[0]);
-            wallLine.move({extraLength.x, extraLength.y});
+    // Determine the wall position based on the ball position
+    if (extraLength.length() == 0) {
+        // If we don't want to stand in front of the defense area, we want to tightly hug the defense area
+        if (projectedPosition.x < field.leftDefenseArea.right()) {
+            // If the ball is above or below our defense area
+            auto pointOnOurBackLine = FieldComputations::projectPointToValidPositionOnLine(field, projectedPosition, field.leftPlayArea.topLeft(), field.leftPlayArea.bottomLeft());
+            auto pointOnTheirBackLine =
+                FieldComputations::projectPointToValidPositionOnLine(field, projectedPosition, field.rightPlayArea.topLeft(), field.rightPlayArea.bottomLeft());
+            wallLine = LineSegment(pointOnOurBackLine, pointOnTheirBackLine);
         } else {
-            wallLine = LineSegment(defenseAreaOur[3], defenseAreaTheir[3]);
-            wallLine.move({extraLength.x, extraLength.y});
+            // If the ball is in front of our defense area
+            auto pointOnTopSideLine = FieldComputations::projectPointToValidPositionOnLine(field, projectedPosition, field.leftPlayArea.topLeft(), field.leftPlayArea.topRight());
+            auto pointOnBottomSideLine =
+                FieldComputations::projectPointToValidPositionOnLine(field, projectedPosition, field.leftPlayArea.bottomLeft(), field.leftPlayArea.bottomRight());
+            wallLine = LineSegment(pointOnTopSideLine, pointOnBottomSideLine);
         }
     } else {
+        if ((projectedPosition - closestPoint).length() < amountDefenders / 2 * (spacingRobots + 2 * constants::ROBOT_RADIUS)) {
+            // If the position for the wall is too close to the defense area, we have to push it a bit forward to prevent robots from standing in the defense area
+            projectedPosition -= (field.leftGoalArea.rightLine().center() - ballPos).stretchToLength((projectedPosition - closestPoint).length() / 1.8);
+        }
+
         // We put the wall line perpendicular to the ball-goal line
         wallLine = LineSegment(ballPos, field.leftGoalArea.rightLine().center());
         wallLine.rotate(M_PI / 2, projectedPosition);
 
         // And resize it to make sure enough robots can fit on it
-        double newLength = 2 * std::max(field.playArea.width(), field.playArea.height());
+        double newLength = 2 * field.playArea.width();
         wallLine.resize(newLength);
 
         // Limit this resizing to the edges of the field (we don't want to place robots outside of the field)
@@ -165,30 +169,71 @@ std::vector<Vector2> PositionComputations::determineWallPositions(const rtt::Fie
         }
     }
 
+    if (wallLine.length() == 0) {
+        RTT_WARNING("Wall line length is 0");
+        double lineX = field.leftDefenseArea.right();
+        double lineYTop = field.playArea.top();
+        double lineYBottom = field.playArea.bottom();
+        wallLine = LineSegment({lineX, lineYBottom}, {lineX, lineYTop});
+    }
+
     size_t defendersCount = static_cast<size_t>(amountDefenders);
     int i = 1;
 
-    // If the number of defenders is even, start just outside of the projected position to make sure the projected position is the middle of the wall
-    if (amountDefenders % 2 == 0) {
-        int j = 1;
+    if ((projectedPosition - wallLine.start).length() < constants::ROBOT_RADIUS * 2 + spacingRobots) {
+        // If the the middle of the wall is close to our goalline, assemble the wall from the goalline to ensure proper placement of robots
+        double distance = constants::ROBOT_RADIUS;
         while (positions.size() < defendersCount) {
-            double circleRadius = (i - 0.5) * spacingRobots + j * radius;
-            Circle circle = Circle(projectedPosition, circleRadius);
-            std::vector<Vector2> intersects = circle.intersects(wallLine);
-            positions.insert(positions.end(), intersects.begin(), intersects.end());
-            j += 2;
-            i += 1;
+            auto positionWaller = wallLine.start - (wallLine.start - wallLine.end).stretchToLength(distance);
+            distance += (spacingRobots + 2 * constants::ROBOT_RADIUS);
+            positions.insert(positions.end(), positionWaller);
+        }
+    } else {
+        // If the number of defenders is even, start just outside of the projected position to make sure the projected position is the middle of the wall
+        if (amountDefenders % 2 == 0) {
+            int j = 1;
+            while (positions.size() < defendersCount) {
+                double circleRadius = (i - 0.5) * spacingRobots + j * constants::ROBOT_RADIUS;
+                Circle circle = Circle(projectedPosition, circleRadius);
+                std::vector<Vector2> intersects = circle.intersects(wallLine);
+                positions.insert(positions.end(), intersects.begin(), intersects.end());
+                j += 2;
+                i += 1;
+            }
+        }
+        // If the number of defenders is odd, start positioning from the projected position
+        else {
+            positions.push_back(projectedPosition);
+            while (positions.size() < defendersCount) {
+                double circleRadius = i * 2 * constants::ROBOT_RADIUS + spacingRobots * i;
+                Circle circle = Circle(projectedPosition, circleRadius);
+                std::vector<Vector2> intersects = circle.intersects(wallLine);
+                positions.insert(positions.end(), intersects.begin(), intersects.end());
+                i += 1;
+            }
         }
     }
-    // If the number of defenders is odd, start positioning from the projected position
-    else {
-        positions.push_back(projectedPosition);
-        while (positions.size() < defendersCount) {
-            double circleRadius = i * 2 * radius + spacingRobots * i;
-            Circle circle = Circle(projectedPosition, circleRadius);
-            std::vector<Vector2> intersects = circle.intersects(wallLine);
-            positions.insert(positions.end(), intersects.begin(), intersects.end());
-            i += 1;
+
+    if (extraLength.length() == 0) {
+        // If we do not want to stand in front of the defense area, we want to check whether all robots are as close to the defense area as they could
+        int k = 1;
+        int m = 0;
+        for (auto &position : positions) {
+            auto distance = (k - 0.5) * spacingRobots + 2 * k * constants::ROBOT_RADIUS;
+            if (position.x - constants::ROBOT_RADIUS > field.leftDefenseArea.right()) {
+                // If the robot is standing too far to the right
+                auto positionWaller = closestPoint - (closestPoint - farthestPoint).stretchToLength(distance);
+                positions[m] = positionWaller;
+                k++;
+            } else if (position.y + constants::ROBOT_RADIUS < field.leftDefenseArea.bottom() || position.y - constants::ROBOT_RADIUS > field.leftDefenseArea.top()) {
+                // If the robot is standing above or below our defense area
+                auto pointOnOurBackLine =
+                    FieldComputations::projectPointToValidPositionOnLine(field, projectedPosition, field.leftPlayArea.topLeft(), field.leftPlayArea.bottomLeft());
+                auto positionWaller = closestPoint - (closestPoint - pointOnOurBackLine).stretchToLength(distance);
+                positions[m] = positionWaller;
+                k++;
+            }
+            m++;
         }
     }
 
@@ -283,7 +328,6 @@ Vector2 PositionComputations::calculatePositionOutsideOfShape(Vector2 targetPosi
 void PositionComputations::calculateInfoForHarasser(std::unordered_map<std::string, StpInfo> &stpInfos, std::array<std::unique_ptr<Role>, constants::MAX_ROBOT_COUNT> *roles,
                                                     const Field &field, world::World *world, Vector2 interceptionLocation) noexcept {
     auto enemyClosestToBall = world->getWorld()->getRobotClosestToPoint(world->getWorld()->getBall()->get()->position, world::them);
-    auto harasserAngle = stpInfos["harasser"].getYaw();
     // If there is no enemy or we don't have a harasser yet, estimate the position to move to
     if (!stpInfos["harasser"].getRobot() || !enemyClosestToBall) {
         stpInfos["harasser"].setPositionToMoveTo(interceptionLocation);
@@ -291,6 +335,7 @@ void PositionComputations::calculateInfoForHarasser(std::unordered_map<std::stri
         return;
     }
     auto enemyAngle = enemyClosestToBall->get()->getYaw();
+    auto harasserAngle = stpInfos["harasser"].getYaw();
     // If enemy is not facing our goal AND does have the ball, stand between the enemy and our goal
     if (enemyClosestToBall->get()->hasBall() && enemyAngle.shortestAngleDiff(harasserAngle) < M_PI / 1.5) {
         auto enemyPos = enemyClosestToBall->get()->getPos();
@@ -302,7 +347,8 @@ void PositionComputations::calculateInfoForHarasser(std::unordered_map<std::stri
         if (harasser != roles->end() && !harasser->get()->finished() && strcmp(harasser->get()->getCurrentTactic()->getName(), "Formation") == 0) {
             auto enemyPos = enemyClosestToBall->get()->getPos();
             auto targetPos = enemyPos + (world->getWorld()->getBall()->get()->position - enemyPos).stretchToLength(constants::ROBOT_RADIUS * 3);
-            if (enemyClosestToBall->get()->hasBall() && ((stpInfos["harasser"].getRobot()->get()->getPos() - targetPos).length() > 1.5 * constants::GO_TO_POS_ERROR_MARGIN)) {
+            // prevent the harasser from being stuck on the side of the enemy
+            if (enemyClosestToBall->get()->hasBall() && ((stpInfos["harasser"].getRobot()->get()->getPos() - targetPos).length() > constants::ROBOT_RADIUS)) {
                 stpInfos["harasser"].setPositionToMoveTo(targetPos);
                 stpInfos["harasser"].setYaw((world->getWorld()->getBall()->get()->position - targetPos).angle());
             } else {

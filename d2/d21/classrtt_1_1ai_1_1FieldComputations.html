@@ -102,7 +102,7 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memdesc:a2b91936d7a902cafabaec8aa5e9709c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the margin that should be used for the defense area avoidance.  <a href="../../d2/d21/classrtt_1_1ai_1_1FieldComputations.html#a2b91936d7a902cafabaec8aa5e9709c9">More...</a><br /></td></tr>
 <tr class="separator:a2b91936d7a902cafabaec8aa5e9709c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a956e75cd5b56896215f2fa117882ca68"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d21/classrtt_1_1ai_1_1FieldComputations.html#a956e75cd5b56896215f2fa117882ca68">getBallAvoidance</a> ()</td></tr>
-<tr class="memdesc:a956e75cd5b56896215f2fa117882ca68"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get ball avoidance based on current game state.  <a href="../../d2/d21/classrtt_1_1ai_1_1FieldComputations.html#a956e75cd5b56896215f2fa117882ca68">More...</a><br /></td></tr>
+<tr class="memdesc:a956e75cd5b56896215f2fa117882ca68"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get ball avoidance based on current game state. This functions only handles state where we are not allowed to touch the ball because of the game state.  <a href="../../d2/d21/classrtt_1_1ai_1_1FieldComputations.html#a956e75cd5b56896215f2fa117882ca68">More...</a><br /></td></tr>
 <tr class="separator:a956e75cd5b56896215f2fa117882ca68"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a714e1656650ae507cb3729297ca19e76"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">Vector2</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d21/classrtt_1_1ai_1_1FieldComputations.html#a714e1656650ae507cb3729297ca19e76">getBallPositionAtTime</a> (const <a class="el" href="../../dd/db7/classrtt_1_1world_1_1ball_1_1Ball.html">rtt::world::ball::Ball</a> &amp;ball, double time)</td></tr>
 <tr class="memdesc:a714e1656650ae507cb3729297ca19e76"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the expected ball position after a certain amount of time.  <a href="../../d2/d21/classrtt_1_1ai_1_1FieldComputations.html#a714e1656650ae507cb3729297ca19e76">More...</a><br /></td></tr>
@@ -199,7 +199,7 @@ Static Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Get ball avoidance based on current game state. </p>
+<p>Get ball avoidance based on current game state. This functions only handles state where we are not allowed to touch the ball because of the game state. </p>
 <dl class="section return"><dt>Returns</dt><dd>A bool indicating whether ball avoidance should be used or not </dd></dl>
 
 </div>

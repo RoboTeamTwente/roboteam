@@ -142,7 +142,7 @@ std::vector<Vector2> PositionComputations::determineWallPositions(const rtt::Fie
             wallLine.move({extraLength.x, extraLength.y});
         }
     } else {
-        // Move the projectedposition a bit forward, to make sure our defenders positons are not in the defense area        
+        // Move the projectedposition a bit forward, to make sure our defenders positons are not in the defense area
         auto closestPoint = ((ballPos - topRightDefense).length() < (ballPos - bottomRightDefense).length()) ? topRightDefense : bottomRightDefense;
         projectedPosition -= (field.leftGoalArea.rightLine().center() - ballPos).stretchToLength((projectedPosition - closestPoint).length() / 1.8);
 
@@ -288,7 +288,6 @@ Vector2 PositionComputations::calculatePositionOutsideOfShape(Vector2 targetPosi
 void PositionComputations::calculateInfoForHarasser(std::unordered_map<std::string, StpInfo> &stpInfos, std::array<std::unique_ptr<Role>, constants::MAX_ROBOT_COUNT> *roles,
                                                     const Field &field, world::World *world, Vector2 interceptionLocation) noexcept {
     auto enemyClosestToBall = world->getWorld()->getRobotClosestToPoint(world->getWorld()->getBall()->get()->position, world::them);
-    auto harasserAngle = stpInfos["harasser"].getYaw();
     // If there is no enemy or we don't have a harasser yet, estimate the position to move to
     if (!stpInfos["harasser"].getRobot() || !enemyClosestToBall) {
         stpInfos["harasser"].setPositionToMoveTo(interceptionLocation);
@@ -296,6 +295,7 @@ void PositionComputations::calculateInfoForHarasser(std::unordered_map<std::stri
         return;
     }
     auto enemyAngle = enemyClosestToBall->get()->getYaw();
+    auto harasserAngle = stpInfos["harasser"].getYaw();
     // If enemy is not facing our goal AND does have the ball, stand between the enemy and our goal
     if (enemyClosestToBall->get()->hasBall() && enemyAngle.shortestAngleDiff(harasserAngle) < M_PI / 1.5) {
         auto enemyPos = enemyClosestToBall->get()->getPos();
@@ -307,7 +307,8 @@ void PositionComputations::calculateInfoForHarasser(std::unordered_map<std::stri
         if (harasser != roles->end() && !harasser->get()->finished() && strcmp(harasser->get()->getCurrentTactic()->getName(), "Formation") == 0) {
             auto enemyPos = enemyClosestToBall->get()->getPos();
             auto targetPos = enemyPos + (world->getWorld()->getBall()->get()->position - enemyPos).stretchToLength(constants::ROBOT_RADIUS * 3);
-            if (enemyClosestToBall->get()->hasBall() && ((stpInfos["harasser"].getRobot()->get()->getPos() - targetPos).length() > 1.5 * constants::GO_TO_POS_ERROR_MARGIN)) {
+            // prevent the harasser from being stuck on the side of the enemy
+            if (enemyClosestToBall->get()->hasBall() && ((stpInfos["harasser"].getRobot()->get()->getPos() - targetPos).length() > constants::ROBOT_RADIUS)) {
                 stpInfos["harasser"].setPositionToMoveTo(targetPos);
                 stpInfos["harasser"].setYaw((world->getWorld()->getBall()->get()->position - targetPos).angle());
             } else {

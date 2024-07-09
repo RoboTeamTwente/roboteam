@@ -14,20 +14,23 @@ KeeperPasser::KeeperPasser(std::string name) : Role(std::move(name)) {
 }
 
 Status KeeperPasser::update(StpInfo const& info) noexcept {
+    if (!info.getBall() || !info.getRobot() || !info.getField()) {
+        RTT_WARNING("Required information missing in the tactic info for ", roleName)
+        return Status::Failure;
+    }
+
     StpInfo skillStpInfo = info;
-    if (info.getRobot() && info.getField() && info.getBall()) {
-        auto ourDefenseArea = FieldComputations::getDefenseArea(*info.getField(), true, -0.4, 0.0);
-        // Stop Formation tactic when ball is moving, start blocking, getting the ball and pass (normal keeper behavior)
-        if (robotTactics.current_num() == 2 && ourDefenseArea.contains(info.getBall().value()->position)) {
-            forceNextTactic();
-        } else if (robotTactics.current_num() == 2) {
-            auto intersections = ourDefenseArea.intersections(LineSegment(info.getField().value().leftGoalArea.leftLine().center(), info.getRobot().value()->getPos()));
+    auto shootArea = FieldComputations::getDefenseArea(*info.getField(), true, -0.4, 0.0);
+    // Stop Formation tactic when ball is moving, start blocking, getting the ball and pass (normal keeper behavior)
+    if (robotTactics.current_num() == 2 && shootArea.contains(info.getBall().value()->position)) {
+        forceNextTactic();
+    } else if (robotTactics.current_num() == 2) {
+        auto intersections = shootArea.intersections(LineSegment(info.getField().value().leftGoalArea.leftLine().center(), info.getRobot().value()->getPos()));
 
-            if (intersections.size() == 2) {
-                Vector2 intersection_one = intersections[0];
+        if (intersections.size() == 2) {
+            Vector2 intersection_one = intersections[0];
 
-                skillStpInfo.setPositionToMoveTo(intersection_one);
-            }
+            skillStpInfo.setPositionToMoveTo(intersection_one);
         }
     }
 

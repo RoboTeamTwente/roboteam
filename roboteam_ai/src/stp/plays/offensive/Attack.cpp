@@ -34,8 +34,8 @@ Attack::Attack() : Play() {
         std::make_unique<role::Defender>("defender_1"),
         std::make_unique<role::Defender>("defender_2"),
         // Additional roles if we play 11v11
-        std::make_unique<role::Formation>("waller_0"),
-        std::make_unique<role::Formation>("waller_1"),
+        std::make_unique<role::Defender>("waller_0"),
+        std::make_unique<role::Defender>("waller_1"),
         std::make_unique<role::Formation>("attacker_1"),
         std::make_unique<role::Defender>("defender_3"),
         std::make_unique<role::Formation>("attacker_2"),
@@ -76,8 +76,8 @@ void Attack::calculateInfoForRoles() noexcept {
     auto goalTarget = computations::GoalComputations::calculateGoalTarget(world, field);
     goalTarget.y = std::clamp(goalTarget.y, field.rightGoalArea.bottom() + 0.2, field.rightGoalArea.top() - 0.2);
     stpInfos["striker"].setPositionToShootAt(goalTarget);
-    stpInfos["striker"].setKickOrChip(KickOrChip::KICK);
-    stpInfos["striker"].setShotType(ShotType::MAX);
+    stpInfos["striker"].setKickOrChip(KickType::KICK);
+    stpInfos["striker"].setShotPower(ShotPower::MAX);
     PositionComputations::recalculateInfoForNonPassers(stpInfos, field, world, goalTarget);
 }
 

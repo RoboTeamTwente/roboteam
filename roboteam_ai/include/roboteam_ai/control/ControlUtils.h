@@ -24,10 +24,10 @@ class ControlUtils {
     /**
      * @brief Determines the kick force based on the distance and the type of kick
      * @param distance distance to the target
-     * @param shotType type of the kick
+     * @param shotPower type of the kick
      * @return a kick speed between min and max kick speed
      */
-    static double determineKickForce(const double distance, stp::ShotType shotType) noexcept;
+    static double determineKickForce(const double distance, stp::ShotPower shotPower) noexcept;
     /**
      * @brief Determines the chip force based on the distance and the type of chip
      * @param distance distance to the target

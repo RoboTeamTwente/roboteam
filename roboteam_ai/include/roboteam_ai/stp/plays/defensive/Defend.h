@@ -1,5 +1,5 @@
-#ifndef RTT_DEFENDPASS_H
-#define RTT_DEFENDPASS_H
+#ifndef RTT_DEFEND_H
+#define RTT_DEFEND_H
 
 #include <stp/computations/InterceptionComputations.h>
 
@@ -8,16 +8,16 @@
 namespace rtt::ai::stp::play {
 
 /**
- * @brief DefendPass Play is executed when the opponent has or is close to the ball but not necessarily on our side of the field.
- * In this case the opponent most likely will pass to another robot. Our robots will namely block off robots that can
- * be passed to.
+ * @brief Defend Play is executed when the opponent has or is close to the ball.
+ * In this case they most likely will try to score. Some defenders defend the goal by blocking the path between enemy
+ * robots and the goal. Other defenders block other enemy robots to avoid passes to them.
  */
-class DefendPass : public Play {
+class Defend : public Play {
    public:
     /**
      * @brief Constructor that initializes roles with roles that are necessary for this play
      */
-    DefendPass();
+    Defend();
 
     /**
      * @brief Calculates the score of this play to determine which play is best in this situation
@@ -38,8 +38,7 @@ class DefendPass : public Play {
     void calculateInfoForRoles() noexcept override;
 
     /**
-     * @brief Retrieves the name of the play
-     * @return The name of the play as string
+     * @brief Gets the play name
      */
     const char* getName() const override;
 
@@ -47,4 +46,4 @@ class DefendPass : public Play {
 };
 }  // namespace rtt::ai::stp::play
 
-#endif  // RTT_DEFENDPASS_H
+#endif  // RTT_DEFEND_H

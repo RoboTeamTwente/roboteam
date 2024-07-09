@@ -2,7 +2,6 @@
 
 #include "stp/roles/Keeper.h"
 #include "stp/roles/active/FreeKickTaker.h"
-#include "stp/roles/active/PassReceiver.h"
 #include "stp/roles/passive/Halt.h"
 #include "utilities/GameStateManager.hpp"
 
@@ -20,11 +19,19 @@ KickOffUs::KickOffUs() : Play() {
     // Role creation, the names should be unique. The names are used in the stpInfos-map.
     roles = std::array<std::unique_ptr<Role>, rtt::ai::constants::MAX_ROBOT_COUNT>{
         // Roles is we play 6v6
-        std::make_unique<role::Keeper>("keeper"), std::make_unique<role::FreeKickTaker>("kick_off_taker"), std::make_unique<role::PassReceiver>("receiver"),
-        std::make_unique<role::Halt>("halt_0"), std::make_unique<role::Halt>("halt_1"), std::make_unique<role::Halt>("halt_2"),
+        std::make_unique<role::Keeper>("keeper"),
+        std::make_unique<role::FreeKickTaker>("kick_off_taker"),
+        std::make_unique<role::Halt>("halt_0"),
+        std::make_unique<role::Halt>("halt_1"),
+        std::make_unique<role::Halt>("halt_2"),
+        std::make_unique<role::Halt>("halt_3"),
         // Additional roles if we play 11v11
-        std::make_unique<role::Halt>("halt_3"), std::make_unique<role::Halt>("halt_4"), std::make_unique<role::Halt>("halt_5"), std::make_unique<role::Halt>("halt_6"),
-        std::make_unique<role::Halt>("halt_7")};
+        std::make_unique<role::Halt>("halt_4"),
+        std::make_unique<role::Halt>("halt_5"),
+        std::make_unique<role::Halt>("halt_6"),
+        std::make_unique<role::Halt>("halt_7"),
+        std::make_unique<role::Halt>("halt_8"),
+    };
 }
 
 uint8_t KickOffUs::score(const rtt::Field &) noexcept {
@@ -42,7 +49,6 @@ Dealer::FlagMap KickOffUs::decideRoleFlags() const noexcept {
 
     flagMap.insert({"keeper", {DealerFlagPriority::KEEPER, {keeperFlag}}});
     flagMap.insert({"kick_off_taker", {DealerFlagPriority::REQUIRED, {kickerFlag, detectionFlag}}});
-    flagMap.insert({"receiver", {DealerFlagPriority::HIGH_PRIORITY, {detectionFlag}}});
     flagMap.insert({"halt_0", {DealerFlagPriority::LOW_PRIORITY, {}}});
     flagMap.insert({"halt_1", {DealerFlagPriority::LOW_PRIORITY, {}}});
     flagMap.insert({"halt_2", {DealerFlagPriority::LOW_PRIORITY, {}}});
@@ -51,30 +57,21 @@ Dealer::FlagMap KickOffUs::decideRoleFlags() const noexcept {
     flagMap.insert({"halt_5", {DealerFlagPriority::LOW_PRIORITY, {}}});
     flagMap.insert({"halt_6", {DealerFlagPriority::LOW_PRIORITY, {}}});
     flagMap.insert({"halt_7", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"halt_8", {DealerFlagPriority::LOW_PRIORITY, {}}});
 
     return flagMap;
 }
 
 void KickOffUs::calculateInfoForRoles() noexcept {
-    Vector2 receiverLocation = Vector2(-field.playArea.width() / 5, 0);
-    stpInfos["kick_off_taker"].setPositionToShootAt(receiverLocation);
-    stpInfos["kick_off_taker"].setShotType(ShotType::PASS);
-    stpInfos["kick_off_taker"].setKickOrChip(KickOrChip::KICK);
-    if (!ballKicked()) {
-        stpInfos["receiver"].setPositionToMoveTo(receiverLocation);
-    } else {
-        stpInfos["kick_off_taker"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.middleRightGrid, gen::AttackingPass, field, world));
-        auto ball = world->getWorld()->getBall()->get();
-        auto ballTrajectory = LineSegment(ball->position, ball->position + ball->velocity.stretchToLength(field.playArea.width()));
-        stpInfos["receiver"].setPositionToMoveTo(FieldComputations::projectPointToValidPositionOnLine(field, receiverLocation, ballTrajectory.start, ballTrajectory.end));
-    }
+    Vector2 theirGoal = Vector2(6, 0);
+    stpInfos["kick_off_taker"].setPositionToShootAt(theirGoal);
+    stpInfos["kick_off_taker"].setShotPower(ShotPower::PASS);
+    stpInfos["kick_off_taker"].setKickOrChip(KickType::CHIP);
 }
 
 bool KickOffUs::shouldEndPlay() noexcept {
     // If the ball is kicked, we end the play to already prepare for what happens next
     if (ballKicked()) return true;
-    if (stpInfos["receiver"].getRobot() && world->getWorld()->getBall()->get()->position.x < stpInfos["receiver"].getRobot()->get()->getPos().x) return true;
-
     return false;
 }
 

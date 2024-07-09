@@ -25,12 +25,12 @@ FreeKickUsAtGoal::FreeKickUsAtGoal() : Play() {
         std::make_unique<role::FreeKickTaker>("free_kick_taker"),
         std::make_unique<role::Defender>("defender_0"),
         std::make_unique<role::Defender>("defender_1"),
-        std::make_unique<role::Formation>("waller_0"),
+        std::make_unique<role::Defender>("waller_0"),
         std::make_unique<role::Defender>("defender_2"),
         // Additional roles if we play 11v11
         std::make_unique<role::Defender>("defender_3"),
         std::make_unique<role::Formation>("attacker_0"),
-        std::make_unique<role::Formation>("waller_1"),
+        std::make_unique<role::Defender>("waller_1"),
         std::make_unique<role::Defender>("defender_4"),
         std::make_unique<role::Defender>("defender_5"),
     };
@@ -70,7 +70,7 @@ void FreeKickUsAtGoal::calculateInfoForRoles() noexcept {
     auto goalTarget = computations::GoalComputations::calculateGoalTarget(world, field);
     stpInfos["free_kick_taker"].setPositionToShootAt(goalTarget);
     stpInfos["free_kick_taker"].setKickOrChip(KickOrChip::KICK);
-    stpInfos["free_kick_taker"].setShotType(ShotType::MAX);
+    stpInfos["free_kick_taker"].setShotPower(ShotType::MAX);
     PositionComputations::recalculateInfoForNonPassers(stpInfos, field, world, goalTarget);
 }
 

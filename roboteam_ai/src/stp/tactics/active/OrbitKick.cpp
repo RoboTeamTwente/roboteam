@@ -16,7 +16,7 @@ std::optional<StpInfo> OrbitKick::calculateInfoForSkill(const StpInfo &info) noe
     skillStpInfo.setYaw(angleToTarget);
 
     double distanceBallToTarget = (info.getBall()->get()->position - info.getPositionToShootAt().value()).length();
-    skillStpInfo.setKickChipVelocity(control::ControlUtils::determineKickForce(distanceBallToTarget, skillStpInfo.getShotType()));
+    skillStpInfo.setKickChipVelocity(control::ControlUtils::determineKickForce(distanceBallToTarget, skillStpInfo.getShotPower()));
 
     skillStpInfo.setDribblerOn(true);
 

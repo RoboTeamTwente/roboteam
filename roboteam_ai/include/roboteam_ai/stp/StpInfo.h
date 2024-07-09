@@ -3,6 +3,7 @@
 
 #include <optional>
 #include <roboteam_utils/Field.hpp>
+#include <roboteam_utils/RobotCommands.hpp>
 
 #include "computations/PositionScoring.h"
 #include "utilities/StpInfoEnums.h"
@@ -46,10 +47,11 @@ struct StpInfo {
     bool getDribblerOn() const { return dribblerOn; }
     void setDribblerOn(bool dribblerOn) { this->dribblerOn = dribblerOn; }
 
-    ShotType getShotType() const { return shotType; }
-    void setShotType(ShotType shotType) { this->shotType = shotType; }
+    ShotPower getShotPower() const { return shotPower; }
+    void setShotPower(ShotPower shotPower) { this->shotPower = shotPower; }
 
-    void setKickOrChip(const std::optional<KickOrChip>& kickOrChip) { StpInfo::kickOrChip = kickOrChip; }
+    rtt::KickType getKickOrChip() const { return kickOrChip; }
+    void setKickOrChip(rtt::KickType kickOrChip) { this->kickOrChip = kickOrChip; }
 
     world::World* getCurrentWorld() const { return currentWorld; }
     /// This function is used in a lambda, [[maybe_unused]] is to suppress 'unused' warnings
@@ -149,7 +151,7 @@ struct StpInfo {
     /**
      * Type of the kick/chip
      */
-    ShotType shotType{};
+    ShotPower shotPower{};
 
     /**
      * Reference yaw of the robot
@@ -164,7 +166,7 @@ struct StpInfo {
     /**
      * Set the shot to be a kick or chip
      */
-    std::optional<KickOrChip> kickOrChip;
+    rtt::KickType kickOrChip = rtt::KickType::NO_KICK;
 
     /**
      * The maximum velocity the robot is allowed to have

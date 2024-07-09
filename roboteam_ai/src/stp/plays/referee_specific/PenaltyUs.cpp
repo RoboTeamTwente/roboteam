@@ -62,10 +62,12 @@ void PenaltyUs::calculateInfoForRoles() noexcept {
         stpInfos["kicker"].setPositionToMoveTo(positionTarget);
     } else {
         stpInfos["kicker"].setPositionToMoveTo(stpInfos["kicker"].getRobot()->get()->getPos());
+        // set kick
+        stpInfos["kicker"].setKickOrChip(KickType::KICK);
     }
     auto goalTarget = computations::GoalComputations::calculateGoalTarget(world, field);
     stpInfos["kicker"].setPositionToShootAt(goalTarget);
-    stpInfos["kicker"].setShotType(ShotType::MAX);
+    stpInfos["kicker"].setShotPower(ShotPower::MAX);
     if (stpInfos["kicker"].getRobot().has_value() && stpInfos["kicker"].getRobot()->get()->hasBall()) {
         stpInfos["kicker"].setMaxRobotVelocity((stpInfos["kicker"].getRobot()->get()->getPos() - positionTarget.position).length() * 4.8);
     }

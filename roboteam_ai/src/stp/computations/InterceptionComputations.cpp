@@ -223,12 +223,12 @@ std::optional<Vector2> InterceptionComputations::calculateTheirBallInterception(
     double minimumDistanceToBall = std::numeric_limits<double>::max();
     for (const auto &opponentRobot : world->getWorld()->get()->getThem()) {
         auto projectedPoint = ballTrajectory.project(opponentRobot->getPos());
-        if (projectedPoint && projectedPoint->dist(opponentRobot->getPos()) < 0.5) {
-            double distanceToBallFromProjectedPoint = projectedPoint->dist(ball.position);
+        if (projectedPoint.dist(opponentRobot->getPos()) < 0.5) {
+            double distanceToBallFromProjectedPoint = projectedPoint.dist(ball->position);
             if (distanceToBallFromProjectedPoint < minimumDistanceToBall) {
                 minimumDistanceToBall = distanceToBallFromProjectedPoint;
-                Vector2 adjustmentVector = (ball.position - *projectedPoint).normalize() * constants::CENTER_TO_FRONT;
-                closestInterceptionPoint = *projectedPoint + adjustmentVector;
+                Vector2 adjustmentVector = (ball->position - projectedPoint).normalize() * constants::CENTER_TO_FRONT;
+                closestInterceptionPoint = projectedPoint + adjustmentVector;
             }
         }
     }

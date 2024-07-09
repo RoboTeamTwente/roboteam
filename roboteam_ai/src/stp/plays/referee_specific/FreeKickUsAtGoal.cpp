@@ -67,11 +67,11 @@ void FreeKickUsAtGoal::calculateInfoForRoles() noexcept {
     PositionComputations::calculateInfoForDefendersAndWallers(stpInfos, roles, field, world, true);
     PositionComputations::calculateInfoForAttackers(stpInfos, roles, field, world);
 
-    // FreeKickTaker
     auto goalTarget = computations::GoalComputations::calculateGoalTarget(world, field);
     stpInfos["free_kick_taker"].setPositionToShootAt(goalTarget);
     stpInfos["free_kick_taker"].setKickOrChip(KickType::KICK);
     stpInfos["free_kick_taker"].setShotPower(ShotPower::MAX);
+    PositionComputations::recalculateInfoForNonPassers(stpInfos, field, world, goalTarget);
 }
 
 bool FreeKickUsAtGoal::shouldEndPlay() noexcept {

@@ -56,11 +56,11 @@ InterceptionInfo InterceptionComputations::calculateInterceptionInfo(const std::
     bool shouldReturn = false;
     interceptionInfo.interceptLocation = ballPosition;
     const LineSegment ballTrajectory(world->getWorld()->getBall()->get()->position, world->getWorld()->getBall()->get()->expectedEndPosition);
+    auto interceptRobot = calculateTheirBallInterception(world, ballTrajectory);
 
     // Helper function to calculate the intercept info for a given target position
     auto calculateIntercept = [&](const Vector2 &targetPosition) {
         // Check if they are able to intercept the ball at the part of the trajectory we are checking
-        auto interceptRobot = calculateTheirBallInterception(world, ballTrajectory);
         if (interceptRobot && (*interceptRobot - pastBallPosition).length() < (futureBallPosition - pastBallPosition).length()) {
             auto minDistance = (*interceptRobot - pastBallPosition).length();
             auto robotCloseToBallPos = *interceptRobot;
@@ -216,23 +216,23 @@ InterceptionInfo InterceptionComputations::calculateInterceptionInfoExcludingKee
 }
 
 std::optional<Vector2> InterceptionComputations::calculateTheirBallInterception(const world::World *world, rtt::LineSegment ballTrajectory) noexcept {
-    std::optional<Vector2> predictedBallPositionTheirRobot = std::nullopt;
-    const auto ball = world->getWorld()->getBall().value();
-    double minDistanceToBall = std::numeric_limits<double>::max();
-    for (const auto &theirRobot : world->getWorld()->get()->getThem()) {
-        std::optional<rtt::Vector2> vecPts = ballTrajectory.project(theirRobot.get()->getPos());
-        // see if the distance between the projected point and the robot is less than 0.5m
-        if (vecPts.value().dist(theirRobot.get()->getPos()) < 0.5) {
-            double dist = vecPts.value().dist(ball->position);
-            if (dist < minDistanceToBall) {
-                minDistanceToBall = dist;
-                predictedBallPositionTheirRobot = vecPts.value();
-                predictedBallPositionTheirRobot =
-                    predictedBallPositionTheirRobot.value() + (ball->position - predictedBallPositionTheirRobot.value()).normalize() * constants::CENTER_TO_FRONT;
+    auto ballOpt = world->getWorld()->getBall();
+    if (!ballOpt) return std::nullopt;
+    auto ball = ballOpt.value();
+    std::optional<Vector2> closestInterceptionPoint = std::nullopt;
+    double minimumDistanceToBall = std::numeric_limits<double>::max();
+    for (const auto &opponentRobot : world->getWorld()->get()->getThem()) {
+        auto projectedPoint = ballTrajectory.project(opponentRobot->getPos());
+        if (projectedPoint && projectedPoint->dist(opponentRobot->getPos()) < 0.5) {
+            double distanceToBallFromProjectedPoint = projectedPoint->dist(ball.position);
+            if (distanceToBallFromProjectedPoint < minimumDistanceToBall) {
+                minimumDistanceToBall = distanceToBallFromProjectedPoint;
+                Vector2 adjustmentVector = (ball.position - *projectedPoint).normalize() * constants::CENTER_TO_FRONT;
+                closestInterceptionPoint = *projectedPoint + adjustmentVector;
             }
         }
     }
-    return predictedBallPositionTheirRobot;
+    return closestInterceptionPoint;
 }
 
 }  // namespace rtt::ai::stp

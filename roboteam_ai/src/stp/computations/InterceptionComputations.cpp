@@ -49,7 +49,6 @@ KeeperInterceptionInfo InterceptionComputations::calculateKeeperInterceptionInfo
 
 InterceptionInfo InterceptionComputations::calculateInterceptionInfo(const std::vector<world::view::RobotView> &ourRobots, const world::World *world) {
     InterceptionInfo interceptionInfo;
-    int LineOfSightScore = 50;
     auto maxRobotVelocity = GameStateManager::getCurrentGameState().getRuleSet().getMaxRobotVel();
     auto ballPosition = world->getWorld()->getBall()->get()->position;
     auto pastBallPosition = ballPosition;
@@ -57,27 +56,20 @@ InterceptionInfo InterceptionComputations::calculateInterceptionInfo(const std::
     auto ballVelocity = world->getWorld()->getBall()->get()->velocity;
     bool shouldReturn = false;
     interceptionInfo.interceptLocation = ballPosition;
+    const LineSegment ballTrajectory(world->getWorld()->getBall()->get()->position, world->getWorld()->getBall()->get()->expectedEndPosition);
+    auto interceptRobot = calculateTheirBallInterception(world, ballTrajectory);
 
     // Helper function to calculate the intercept info for a given target position
     auto calculateIntercept = [&](const Vector2 &targetPosition) {
-        // If the LoS score is too low
-        if (PositionScoring::scorePosition(futureBallPosition, gen::LineOfSight, world->getField().value(), world).score < LineOfSightScore) {
-            auto minDistance = std::numeric_limits<double>::max();
-            auto theirRobots = world->getWorld()->getThem();
-            Vector2 robotCloseToBallPos;
-            for (const auto &theirRobot : theirRobots) {
-                auto distance = LineSegment(futureBallPosition, pastBallPosition).distanceToLine(theirRobot->getPos());
-                if (distance < minDistance) {
-                    minDistance = distance;
-                    robotCloseToBallPos = theirRobot->getPos();
-                }
-            }
+        // Check if they are able to intercept the ball at the part of the trajectory we are checking
+        if (interceptRobot && (*interceptRobot - pastBallPosition).length() < (futureBallPosition - pastBallPosition).length()) {
+            auto minDistance = (*interceptRobot - pastBallPosition).length();
+            auto robotCloseToBallPos = *interceptRobot;
             if ((world->getWorld()->getRobotClosestToBall(world::us)->get()->getPos() - pastBallPosition).length() < minDistance) {
                 interceptionInfo.interceptLocation =
                     LineSegment(futureBallPosition, pastBallPosition).project(world->getWorld()->getRobotClosestToBall(world::us)->get()->getPos());
             } else {
-                interceptionInfo.interceptLocation =
-                    robotCloseToBallPos + (world->getWorld()->getBall()->get()->position - robotCloseToBallPos).stretchToLength(constants::ROBOT_RADIUS * 3);
+                interceptionInfo.interceptLocation = robotCloseToBallPos;
             }
             double minTimeToTarget = std::numeric_limits<double>::max();
             for (const auto &robot : ourRobots) {
@@ -138,14 +130,14 @@ InterceptionInfo InterceptionComputations::calculateInterceptionInfo(const std::
             continue;
         } else if (world->getField().value().leftDefenseArea.contains(futureBallPosition) || world->getField().value().rightDefenseArea.contains(futureBallPosition)) {
             // project futureBallPos to where it enters the defense area
-            auto intersections = FieldComputations::getDefenseArea(world->getField().value(), world->getField().value().leftDefenseArea.contains(futureBallPosition), 0, 0)
+            auto intersections = FieldComputations::getDefenseArea(world->getField().value(), world->getField().value().leftDefenseArea.contains(futureBallPosition), 0, 0.5)
                                      .intersections({pastBallPosition, futureBallPosition});
             if (intersections.size() == 1) {
                 futureBallPosition = intersections.at(0);
             }
         } else if (world->getField().value().leftDefenseArea.contains(pastBallPosition) || world->getField().value().rightDefenseArea.contains(pastBallPosition)) {
             // project pastBallPos to where it exits the defense area
-            auto intersections = FieldComputations::getDefenseArea(world->getField().value(), world->getField().value().leftDefenseArea.contains(pastBallPosition), 0, 0)
+            auto intersections = FieldComputations::getDefenseArea(world->getField().value(), world->getField().value().leftDefenseArea.contains(pastBallPosition), 0, 0.5)
                                      .intersections({pastBallPosition, futureBallPosition});
             if (intersections.size() == 1) {
                 pastBallPosition = intersections.at(0);
@@ -225,4 +217,25 @@ InterceptionInfo InterceptionComputations::calculateInterceptionInfoExcludingKee
 
     return calculateInterceptionInfoForKickingRobots(ourRobots, world);
 }
+
+std::optional<Vector2> InterceptionComputations::calculateTheirBallInterception(const world::World *world, rtt::LineSegment ballTrajectory) noexcept {
+    auto ballOpt = world->getWorld()->getBall();
+    if (!ballOpt) return std::nullopt;
+    auto ball = ballOpt.value();
+    std::optional<Vector2> closestInterceptionPoint = std::nullopt;
+    double minimumDistanceToBall = std::numeric_limits<double>::max();
+    for (const auto &opponentRobot : world->getWorld()->get()->getThem()) {
+        auto projectedPoint = ballTrajectory.project(opponentRobot->getPos());
+        if (projectedPoint.dist(opponentRobot->getPos()) < 0.5) {
+            double distanceToBallFromProjectedPoint = projectedPoint.dist(ball->position);
+            if (distanceToBallFromProjectedPoint < minimumDistanceToBall) {
+                minimumDistanceToBall = distanceToBallFromProjectedPoint;
+                Vector2 adjustmentVector = (ball->position - projectedPoint).normalize() * constants::CENTER_TO_FRONT;
+                closestInterceptionPoint = projectedPoint + adjustmentVector;
+            }
+        }
+    }
+    return closestInterceptionPoint;
+}
+
 }  // namespace rtt::ai::stp

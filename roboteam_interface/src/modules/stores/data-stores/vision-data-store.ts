@@ -10,10 +10,12 @@ export const useVisionDataStore = defineStore('visionDataStore', () => {
 
   const latestWorld = shallowRef<IWorld | null>(null)
   const latestField = shallowRef<ISSL_GeometryFieldSize | null>(null)
+  const knownBatteryLevels = shallowRef<{ [robotId: number]: number }>({});
 
   const $reset = () => {
     latestWorld.value = null
     latestField.value = null
+    knownBatteryLevels.value = {}
   }
 
   const processVisionMsg = (msg: proto.IState) => {
@@ -25,6 +27,15 @@ export const useVisionDataStore = defineStore('visionDataStore', () => {
     // Update field geometry only if it has changed
     if (JSON.stringify(msg.field?.field) !== JSON.stringify(latestField.value)) {
       latestField.value = msg.field?.field ?? null
+    }
+
+    if (ourRobots && ourRobots.value) {
+      ourRobots.value
+        .forEach((robot) => {
+          if (robot.feedbackInfo?.batteryLevel && robot.id !== undefined && robot.id !== null) {
+            knownBatteryLevels.value[robot.id] = robot.feedbackInfo?.batteryLevel;
+          }
+        });
     }
   }
 
@@ -39,6 +50,7 @@ export const useVisionDataStore = defineStore('visionDataStore', () => {
     latestField: readonly(latestField),
     $reset,
     processVisionMsg,
-    ourRobots
+    ourRobots,
+    knownBatteryLevels: readonly(knownBatteryLevels),
   }
 })

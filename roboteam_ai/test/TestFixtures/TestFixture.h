@@ -19,8 +19,7 @@
 /**
  * Plays are included here
  */
-#include "stp/plays/defensive/DefendPass.h"
-#include "stp/plays/defensive/DefendShot.h"
+#include "stp/plays/defensive/Defend.h"
 #include "stp/plays/defensive/KeeperKickBall.h"
 #include "stp/plays/offensive/Attack.h"
 #include "stp/plays/offensive/AttackingPass.h"
@@ -97,8 +96,7 @@ class RTT_AI_Tests : public ::testing::Test {
         plays.emplace_back(std::make_unique<rtt::ai::stp::play::AttackingPass>());
         plays.emplace_back(std::make_unique<rtt::ai::stp::play::Attack>());
         plays.emplace_back(std::make_unique<rtt::ai::stp::play::Halt>());
-        plays.emplace_back(std::make_unique<rtt::ai::stp::play::DefendShot>());
-        plays.emplace_back(std::make_unique<rtt::ai::stp::play::DefendPass>());
+        plays.emplace_back(std::make_unique<rtt::ai::stp::play::Defend>());
         plays.emplace_back(std::make_unique<rtt::ai::stp::play::KeeperKickBall>());
         plays.emplace_back(std::make_unique<rtt::ai::stp::play::StopFormation>());
         plays.emplace_back(std::make_unique<rtt::ai::stp::play::PrepareForcedStart>());

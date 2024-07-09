@@ -65,9 +65,7 @@ const props = defineProps<{
           </li>
           <li>
             Zoom in/out:
-            <div class="kbd kbd-sm font-mono">ctrl</div>
-            +
-            <div class="kbd kbd-sm font-mono">wheel</div>
+            <div class="kbd kbd-sm font-mono">scroll wheel</div>
           </li>
 
           <li>

@@ -24,12 +24,12 @@ BallPlacementUsForceStart::BallPlacementUsForceStart() : Play() {
         std::make_unique<role::BallPlacer>("ball_placer"),
         std::make_unique<role::Defender>("defender_0"),
         std::make_unique<role::Defender>("defender_1"),
-        std::make_unique<role::Formation>("waller_0"),
+        std::make_unique<role::Defender>("waller_0"),
         std::make_unique<role::Defender>("defender_2"),
         // Additional roles if we play 11v11
         std::make_unique<role::Defender>("defender_3"),
         std::make_unique<role::Formation>("attacker_0"),
-        std::make_unique<role::Formation>("waller_1"),
+        std::make_unique<role::Defender>("waller_1"),
         std::make_unique<role::Defender>("defender_4"),
         std::make_unique<role::Defender>("defender_5"),
     };
@@ -82,7 +82,6 @@ void BallPlacementUsForceStart::calculateInfoForRoles() noexcept {
         stpInfo.second.setShouldAvoidTheirDefenseArea(false);
         stpInfo.second.setShouldAvoidBall(true);
     }
-    stpInfos["ball_placer"].setPositionToShootAt(ballTarget);
     stpInfos["ball_placer"].setPositionToMoveTo(ballTarget);
     stpInfos["ball_placer"].setShouldAvoidOutOfField(false);
     stpInfos["ball_placer"].setShouldAvoidBall(false);

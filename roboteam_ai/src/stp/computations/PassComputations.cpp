@@ -142,7 +142,7 @@ double PassComputations::calculateRobotTravelTime(Vector2 robotPosition, Vector2
 double PassComputations::calculateBallTravelTime(Vector2 passLocation, Vector2 passerLocation, Vector2 passerVelocity, Vector2 targetPosition) {
     auto travelTime = calculateRobotTravelTime(passerLocation, passerVelocity, passLocation - (passerLocation - passLocation).stretchToLength(constants::ROBOT_RADIUS));
     auto rotateTime = (passLocation - passerLocation).toAngle().shortestAngleDiff(targetPosition - passLocation) / (M_PI);
-    double ballSpeed = control::ControlUtils::determineKickForce(passLocation.dist(targetPosition), ShotType::PASS);
+    double ballSpeed = control::ControlUtils::determineKickForce(passLocation.dist(targetPosition), ShotPower::PASS);
     auto ballTime = passLocation.dist(targetPosition) / ballSpeed;
     return travelTime + rotateTime + ballTime;
 }

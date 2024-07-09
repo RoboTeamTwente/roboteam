@@ -27,8 +27,8 @@ BallPlacementUsFreeKick::BallPlacementUsFreeKick() : Play() {
         std::make_unique<role::Defender>("defender_1"),
         std::make_unique<role::Formation>("attacker_1"),
         // Additional roles if we play 11v11
-        std::make_unique<role::Formation>("waller_0"),
-        std::make_unique<role::Formation>("waller_1"),
+        std::make_unique<role::Defender>("waller_0"),
+        std::make_unique<role::Defender>("waller_1"),
         std::make_unique<role::Formation>("attacker_2"),
         std::make_unique<role::Defender>("defender_2"),
         std::make_unique<role::Formation>("attacker_3"),
@@ -77,7 +77,6 @@ void BallPlacementUsFreeKick::calculateInfoForRoles() noexcept {
         ballTarget = world->getWorld()->get()->getBall()->get()->position;
     }
 
-    // stpInfos["ball_placer"].setPositionToShootAt(ballTarget);
     for (auto& stpInfo : stpInfos) {
         stpInfo.second.setShouldAvoidOurDefenseArea(false);
         stpInfo.second.setShouldAvoidTheirDefenseArea(false);

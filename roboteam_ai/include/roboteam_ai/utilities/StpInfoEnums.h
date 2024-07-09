@@ -4,14 +4,9 @@
 #include <utilities/Constants.h>
 namespace rtt::ai::stp {
 /**
- * @brief Whether this robot should kick or chip in the shoot skill
- */
-enum class KickOrChip { KICK, CHIP };
-
-/**
  * @brief The type of shot this robot should use. Used for determining kick/chip velocity
  */
-enum class ShotType { PASS, TARGET, MAX };
+enum class ShotPower { PASS, TARGET, MAX };
 
 /**
  * @brief The status that a skill/tactic can return

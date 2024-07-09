@@ -26,8 +26,8 @@ std::tuple<double, double> FieldComputations::getDefenseAreaMargin() {
 bool FieldComputations::getBallAvoidance() {
     RuleSetName ruleSetTitle = GameStateManager::getCurrentGameState().getRuleSet().getTitle();
     RefCommand currentGameState = GameStateManager::getCurrentGameState().getCommandId();
-
-    if (ruleSetTitle == RuleSetName::STOP || currentGameState == RefCommand::DIRECT_FREE_THEM || currentGameState == RefCommand::KICKOFF_THEM) {
+    if (ruleSetTitle == RuleSetName::STOP || currentGameState == RefCommand::BALL_PLACEMENT_THEM || currentGameState == RefCommand::KICKOFF_THEM ||
+        currentGameState == RefCommand::DIRECT_FREE_THEM) {
         return true;
     }
 

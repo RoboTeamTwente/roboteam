@@ -25,7 +25,7 @@ std::pair<Vector2, Vector2> PositionControl::computeAndTrackTrajectory(const wor
                 GameStateManager::getCurrentGameState().getCommandId() == RefCommand::PREPARE_FORCED_START) &&
                LineSegment(world->getWorld()->getBall()->get()->position, GameStateManager::getRefereeDesignatedPosition()).distanceToLine(currentPosition) <
                    ai::constants::AVOID_BALL_DISTANCE) {
-        targetPosition = handleBallPlacementCollision(world, field, currentPosition, avoidObjects);
+        targetPosition = handleBallPlacementCollision(world, field, currentPosition, targetPosition, avoidObjects);
         computedTrajectories[robotId] = Trajectory2D(currentPosition, currentVelocity, currentAcceleration, targetPosition, maxRobotVelocity, maxJerk, ai::constants::MAX_ACC);
     } else if ((avoidObjects.shouldAvoidOurDefenseArea && FieldComputations::getDefenseArea(field, true, ourDefenseAreaMargin, 1).contains(currentPosition)) ||
                (avoidObjects.shouldAvoidTheirDefenseArea && theirDefenseAreaMargin > constants::ROBOT_RADIUS + constants::GO_TO_POS_ERROR_MARGIN &&
@@ -67,7 +67,7 @@ Vector2 PositionControl::handleBallCollision(const world::World *world, const Fi
         return targetPosition;
     }
     int rotationStepDegrees = 10;
-    int maxRotationDegrees = 180;
+    int maxRotationDegrees = 330;
     for (int i = rotationStepDegrees; i <= maxRotationDegrees; i += rotationStepDegrees) {
         for (int sign : {1, -1}) {
             double rotation = sign * i * M_PI / 180;
@@ -81,28 +81,41 @@ Vector2 PositionControl::handleBallCollision(const world::World *world, const Fi
     return currentPosition + direction.stretchToLength(constants::AVOID_BALL_DISTANCE * 2).rotate(M_PI / 2);
 }
 
-Vector2 PositionControl::handleBallPlacementCollision(const world::World *world, const Field &field, Vector2 currentPosition, stp::AvoidObjects avoidObjects) {
+Vector2 PositionControl::handleBallPlacementCollision(const world::World *world, const Field &field, Vector2 currentPosition, Vector2 targetPosition,
+                                                      stp::AvoidObjects avoidObjects) {
+    if ((targetPosition - currentPosition).length() < constants::AVOID_BALL_DISTANCE * 2) {
+        return targetPosition;
+    }
     auto placementPos = GameStateManager::getRefereeDesignatedPosition();
     auto ballPos = world->getWorld()->getBall()->get()->position;
     auto direction = (placementPos - ballPos).stretchToLength(constants::AVOID_BALL_DISTANCE * 2);
     direction = direction.rotate((currentPosition - ballPos).cross(placementPos - ballPos) < 0 ? M_PI / 2 : -M_PI / 2);
-    Vector2 targetPosition = currentPosition + direction;
-    if (FieldComputations::pointIsValidPosition(field, targetPosition, avoidObjects, constants::OUT_OF_FIELD_MARGIN)) {
-        return targetPosition;
+    auto distance = LineSegment(ballPos, placementPos).distanceToLine(currentPosition);
+    Vector2 targetPositionOne = currentPosition + direction.stretchToLength(constants::AVOID_BALL_DISTANCE - distance);
+    Vector2 targetPositionTwo = currentPosition - direction.stretchToLength(constants::AVOID_BALL_DISTANCE + distance);
+    bool targetOneIsValid = FieldComputations::pointIsValidPosition(field, targetPositionOne, avoidObjects, constants::OUT_OF_FIELD_MARGIN);
+    bool targetTwoIsValid = FieldComputations::pointIsValidPosition(field, targetPositionTwo, avoidObjects, constants::OUT_OF_FIELD_MARGIN);
+    if (targetOneIsValid && !targetTwoIsValid) {
+        return currentPosition + direction;
     }
-    int rotationStepDegrees = 10;
-    int maxRotationDegrees = 180;
-    for (int i = rotationStepDegrees; i <= maxRotationDegrees; i += rotationStepDegrees) {
-        for (int sign : {1, -1}) {
-            double rotation = sign * i * M_PI / 180;
-            Vector2 rotatedDirection = direction.rotate(rotation);
-            Vector2 potentialTargetPosition = currentPosition + rotatedDirection;
-            if (FieldComputations::pointIsValidPosition(field, potentialTargetPosition, avoidObjects, constants::OUT_OF_FIELD_MARGIN)) {
-                return potentialTargetPosition;
-            }
+    if (!targetOneIsValid && targetTwoIsValid) {
+        return currentPosition - direction;
+    }
+    if (targetOneIsValid && targetTwoIsValid) {
+        auto intersectionTargetOne = LineSegment(targetPositionOne, targetPosition).doesIntersect(LineSegment(ballPos, placementPos));
+        auto intersectionTargetTwo = LineSegment(targetPositionTwo, targetPosition).doesIntersect(LineSegment(ballPos, placementPos));
+        if (!intersectionTargetOne && intersectionTargetTwo) {
+            return currentPosition + direction;
+        } else if (intersectionTargetOne && !intersectionTargetTwo) {
+            return currentPosition - direction;
         }
+        return ((targetPosition - targetPositionOne).length() + constants::AVOID_BALL_DISTANCE - distance) <
+                       ((targetPosition - targetPositionTwo).length() + constants::AVOID_BALL_DISTANCE + distance)
+                   ? currentPosition + direction
+                   : currentPosition - direction;
+    } else {
+        return currentPosition + direction;
     }
-    return targetPosition;
 }
 
 Vector2 PositionControl::handleDefenseAreaCollision(const Field &field, Vector2 currentPosition) {

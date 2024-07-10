@@ -55,7 +55,7 @@ std::pair<Vector2, Vector2> PositionControl::computeAndTrackTrajectory(const wor
 
     auto acc = computedTrajectories[robotId].getAcceleration(constants::SEND_TIME_IN_FUTURE());
     auto vel = computedTrajectories[robotId].getVelocity(constants::SEND_TIME_IN_FUTURE());
-    lastAcceleration[robotId] = acc;
+    lastAcceleration[robotId] = computedTrajectories[robotId].getAcceleration(0.04);
     return std::make_pair(vel, acc);
 }
 

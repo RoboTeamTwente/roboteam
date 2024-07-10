@@ -29,7 +29,6 @@ jobs:
               sudo apt-get update
               sudo apt-get upgrade -y
               sudo apt-get install -y cmake g++ qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools libqt5charts5-dev libsdl2-dev libzmq3-dev libeigen3-dev libgtest-dev ninja-build ccache
-              sudo dpkg -i ruckig-0.12.2-x86_64.deb
         
       - name: Build Protobuf
         if: steps.cache-build-restore.outputs.cache-hit != 'true'
@@ -49,6 +48,18 @@ jobs:
               cd protobuf
               sudo make install
               sudo ldconfig
+      
+      - name: Build & Install Ruckig
+        if: steps.cache-build-restore.outputs.cache-hit != 'true'
+        run: |
+              git clone https://github.com/pantor/ruckig.git ruckig
+              cd ruckig
+              git checkout 0.12.2
+              mkdir build
+              cd build
+              cmake .. -DCMAKE_BUILD_TYPE=Release
+              make -j $(nproc)
+              sudo make install
             
       - name: Build tests
         if: steps.cache-build-restore.outputs.cache-hit != 'true'

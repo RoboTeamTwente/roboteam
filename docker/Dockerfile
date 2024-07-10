@@ -38,12 +38,11 @@ RUN npm install -g yarn
 
 WORKDIR /tmp
 RUN wget https://github.com/pantor/ruckig/archive/refs/tags/v0.12.2.tar.gz \
-    && tar -xzvf v0.12.2.tar.gz
-
-WORKDIR /tmp/ruckig-0.12.2
-RUN mkdir build && cd build \
-    && cmake .. \
-    && make \
+    && tar -xzvf v0.12.2.tar.gz \
+    && mkdir /tmp/ruckig-0.12.2/build \
+    && cd /tmp/ruckig-0.12.2/build \
+    && cmake -DCMAKE_BUILD_TYPE=Release .. \
+    && make -j$(nproc) \
     && make install
 
 WORKDIR /root/protobuf
@@ -82,12 +81,11 @@ RUN npm install -g yarn
 
 WORKDIR /tmp
 RUN wget https://github.com/pantor/ruckig/archive/refs/tags/v0.12.2.tar.gz \
-    && tar -xzvf v0.12.2.tar.gz
-
-WORKDIR /tmp/ruckig-0.12.2
-RUN mkdir build && cd build \
-    && cmake .. \
-    && make \
+    && tar -xzvf v0.12.2.tar.gz \
+    && mkdir /tmp/ruckig-0.12.2/build \
+    && cd /tmp/ruckig-0.12.2/build \
+    && cmake -DCMAKE_BUILD_TYPE=Release .. \
+    && make -j$(nproc) \
     && make install
 
 COPY --from=development --chown=root:root /usr/local/lib/libprotobuf.so.31 /usr/local/lib/libprotobuf.so.31

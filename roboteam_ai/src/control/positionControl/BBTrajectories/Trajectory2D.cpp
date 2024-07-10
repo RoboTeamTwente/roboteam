@@ -1,17 +1,15 @@
 #include "control/positionControl/BBTrajectories/Trajectory2D.h"
 
 #include <cmath>
-#include <iostream>
 #include <ruckig/ruckig.hpp>
 
 #include "control/positionControl/BBTrajectories/BBTrajectory2D.h"
 #include "roboteam_utils/Print.h"
 
 using namespace ruckig;
-
 namespace rtt {
 
-Trajectory2D::Trajectory2D(const Vector2 &initialPos, const Vector2 &initialVel, const Vector2 &initialAcc, const Vector2 &finalPos, double maxVel, double maxJerk, double maxAcc) {
+Trajectory2D::Trajectory2D(const Vector2 &initialPos, const Vector2 &initialVel, const Vector2 &initialAcc, const Vector2 &finalPos, double maxVel, double maxAcc, double maxJerk) {
     // The idea is to do a binary search over alpha to find a trajectory in x and y direction (which is minimal time)
     double inc = M_PI_4 * 0.5;
     double alpha = M_PI_4;
@@ -31,7 +29,6 @@ Trajectory2D::Trajectory2D(const Vector2 &initialPos, const Vector2 &initialVel,
         Ruckig<1> ruckigX;
         ruckigX.calculate(inputX, x);
 
-        // same for y
         InputParameter<1> inputY;
         inputY.current_position[0] = initialPos.y;
         inputY.current_velocity[0] = initialVel.y;

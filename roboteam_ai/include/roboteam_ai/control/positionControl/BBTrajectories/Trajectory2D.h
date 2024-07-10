@@ -1,7 +1,6 @@
 #ifndef RTT_TRAJECTORY2D_H
 #define RTT_TRAJECTORY2D_H
 
-#include <iostream>
 #include <ruckig/ruckig.hpp>
 #include <vector>
 
@@ -30,7 +29,7 @@ class Trajectory2D {
      * @param maxVel Maximum allowed velocity
      * @param maxAcc Maximum allowed acceleration or deceleration
      */
-    Trajectory2D(const Vector2 &initialPos, const Vector2 &initialVel, const Vector2 &initialAcc, const Vector2 &finalPos, double maxVel, double maxJerk, double maxAcc);
+    Trajectory2D(const Vector2 &initialPos, const Vector2 &initialVel, const Vector2 &initialAcc, const Vector2 &finalPos, double maxVel, double maxAcc, double maxJerk);
 
     /**
      * @brief Stores the trajectory

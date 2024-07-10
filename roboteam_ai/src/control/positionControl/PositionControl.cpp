@@ -20,20 +20,20 @@ std::pair<Vector2, Vector2> PositionControl::computeAndTrackTrajectory(const wor
     }
     if (avoidObjects.shouldAvoidBall && (currentPosition - world->getWorld()->getBall()->get()->position).length() < ai::constants::AVOID_BALL_DISTANCE) {
         targetPosition = handleBallCollision(world, field, currentPosition, avoidObjects);
-        computedTrajectories[robotId] = Trajectory2D(currentPosition, currentVelocity, currentAcceleration, targetPosition, maxRobotVelocity, maxJerk, ai::constants::MAX_ACC);
+        computedTrajectories[robotId] = Trajectory2D(currentPosition, currentVelocity, currentAcceleration, targetPosition, maxRobotVelocity, , ai::constants::MAX_ACC, maxJerk);
     } else if ((GameStateManager::getCurrentGameState().getCommandId() == RefCommand::BALL_PLACEMENT_THEM ||
                 GameStateManager::getCurrentGameState().getCommandId() == RefCommand::PREPARE_FORCED_START) &&
                LineSegment(world->getWorld()->getBall()->get()->position, GameStateManager::getRefereeDesignatedPosition()).distanceToLine(currentPosition) <
                    ai::constants::AVOID_BALL_DISTANCE) {
         targetPosition = handleBallPlacementCollision(world, field, currentPosition, targetPosition, avoidObjects);
-        computedTrajectories[robotId] = Trajectory2D(currentPosition, currentVelocity, currentAcceleration, targetPosition, maxRobotVelocity, maxJerk, ai::constants::MAX_ACC);
+        computedTrajectories[robotId] = Trajectory2D(currentPosition, currentVelocity, currentAcceleration, targetPosition, maxRobotVelocity, ai::constants::MAX_ACC, maxJerk);
     } else if ((avoidObjects.shouldAvoidOurDefenseArea && FieldComputations::getDefenseArea(field, true, ourDefenseAreaMargin, 1).contains(currentPosition)) ||
                (avoidObjects.shouldAvoidTheirDefenseArea && theirDefenseAreaMargin > constants::ROBOT_RADIUS + constants::GO_TO_POS_ERROR_MARGIN &&
                 FieldComputations::getDefenseArea(field, false, theirDefenseAreaMargin, 1).contains(currentPosition))) {
         targetPosition = handleDefenseAreaCollision(field, currentPosition);
-        computedTrajectories[robotId] = Trajectory2D(currentPosition, currentVelocity, currentAcceleration, targetPosition, maxRobotVelocity, maxJerk, ai::constants::MAX_ACC);
+        computedTrajectories[robotId] = Trajectory2D(currentPosition, currentVelocity, currentAcceleration, targetPosition, maxRobotVelocity, ai::constants::MAX_ACC, maxJerk);
     } else {
-        computedTrajectories[robotId] = Trajectory2D(currentPosition, currentVelocity, currentAcceleration, targetPosition, maxRobotVelocity, maxJerk, ai::constants::MAX_ACC);
+        computedTrajectories[robotId] = Trajectory2D(currentPosition, currentVelocity, currentAcceleration, targetPosition, maxRobotVelocity, ai::constants::MAX_ACC, maxJerk);
         auto hasCollsion = CollisionCalculations::isColliding(computedTrajectories[robotId], avoidObjects, field, robotId, world, computedPaths);
         if (hasCollsion) {
             computedTrajectories[robotId] =
@@ -154,7 +154,7 @@ Trajectory2D PositionControl::findNewTrajectory(const world::World *world, const
         }
     }
     lastUsedNormalizedPoints.erase(robotId);
-    return Trajectory2D(currentPosition, currentVelocity, currentAcceleration, currentPosition, maxRobotVelocity, maxJerk, ai::constants::MAX_ACC);
+    return Trajectory2D(currentPosition, currentVelocity, currentAcceleration, currentPosition, maxRobotVelocity, ai::constants::MAX_ACC, maxJerk);
     ;
 }
 

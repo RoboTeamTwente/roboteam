@@ -37,10 +37,10 @@ RUN apk add --no-cache bash build-base cmake make musl-dev libtool \
 RUN npm install -g yarn
 
 WORKDIR /tmp
-RUN wget https://github.com/pantor/ruckig/archive/refs/tags/v0.12.2.tar.gz \
-    && tar -xzvf v0.12.2.tar.gz \
-    && mkdir /tmp/ruckig-0.12.2/build \
-    && cd /tmp/ruckig-0.12.2/build \
+RUN git clone https://github.com/pantor/ruckig.git /tmp/ruckig \
+    && cd /tmp/ruckig \
+    && git checkout dae82835ec043a54ed6bc775f0776e1a7ff99124 \
+    && mkdir build && cd build \
     && cmake -DCMAKE_BUILD_TYPE=Release .. \
     && make -j$(nproc) \
     && make install
@@ -80,15 +80,16 @@ RUN apk add --no-cache \
 RUN npm install -g yarn
 
 WORKDIR /tmp
-RUN wget https://github.com/pantor/ruckig/archive/refs/tags/v0.12.2.tar.gz \
-    && tar -xzvf v0.12.2.tar.gz \
-    && mkdir /tmp/ruckig-0.12.2/build \
-    && cd /tmp/ruckig-0.12.2/build \
+RUN git clone https://github.com/pantor/ruckig.git /tmp/ruckig \
+    && cd /tmp/ruckig \
+    && git checkout dae82835ec043a54ed6bc775f0776e1a7ff99124 \
+    && mkdir build && cd build \
     && cmake -DCMAKE_BUILD_TYPE=Release .. \
     && make -j$(nproc) \
     && make install
 
 COPY --from=development --chown=root:root /usr/local/lib/libprotobuf.so.31 /usr/local/lib/libprotobuf.so.31
+COPY --from=development --chown=root:root /usr/local/lib/libruckig.so /usr/local/lib/libruckig.so
 COPY --from=development --chown=root:root /usr/local/bin/protoc /usr/local/bin/protoc
 
 RUN adduser -D $USER && \

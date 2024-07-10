@@ -54,7 +54,7 @@ jobs:
         run: |
               git clone https://github.com/pantor/ruckig.git ruckig
               cd ruckig
-              git checkout v0.12.2
+              git checkout dae82835ec043a54ed6bc775f0776e1a7ff99124
               mkdir build
               cd build
               cmake .. -DCMAKE_BUILD_TYPE=Release

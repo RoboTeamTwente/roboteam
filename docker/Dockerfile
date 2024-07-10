@@ -34,8 +34,18 @@ RUN apk add --no-cache bash build-base cmake make musl-dev libtool \
     libtbb-dev curl unzip wget zlib-dev zip nodejs npm \
     openssl-dev sdl2-dev libudev-zero libudev-zero-dev libusb libusb-dev \
     qt5-qtbase-dev qt5-qtcharts-dev qt5-qtdeclarative-dev qt5-qtsvg-dev \
-    libdlib-dev libblas-dev liblapack-dev
 RUN npm install -g yarn
+
+WORKDIR /tmp
+RUN wget http://dlib.net/files/dlib-19.21.tar.bz2 \
+    && tar xvf dlib-19.21.tar.bz2 \
+    && cd dlib-19.21 \
+    && mkdir build \
+    && cd build \
+    && cmake .. \
+    && make \
+    && make install \
+    && rm -rf /tmp/dlib-19.21 /tmp/dlib-19.21.tar.bz2
 
 WORKDIR /root/protobuf
 RUN wget https://github.com/protocolbuffers/protobuf/releases/download/v3.20.3/protobuf-cpp-3.20.3.zip -O protobuf.zip && unzip protobuf.zip && rm protobuf.zip
@@ -68,7 +78,6 @@ RUN apk add --no-cache \
     libtbb-dev zlib-dev \
     openssl-dev sdl2-dev  \
     qt5-qtbase-dev qt5-qtcharts-dev qt5-qtdeclarative-dev qt5-qtsvg-dev \
-    libdlib-dev libblas-dev liblapack-dev \
     sudo nodejs npm
 RUN npm install -g yarn
 

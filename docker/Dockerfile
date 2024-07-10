@@ -107,6 +107,5 @@ ENV LD_LIBRARY_PATH=$HOME/lib/
 
 # Copy just build binaries (roboteam software) from volume to container home
 # Note: cannot COPY from outside context, build from parent folder
-# print all dirs
 RUN ls -l ../
 COPY --chown=$USER:$USER ../build/release/ $HOME/

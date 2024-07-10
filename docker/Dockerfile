@@ -33,7 +33,7 @@ RUN apk add --no-cache bash build-base cmake make musl-dev libtool \
     libzmq zeromq-dev libzmq-static eigen-dev gtest-dev \
     libtbb-dev curl unzip wget zlib-dev zip nodejs npm \
     openssl-dev sdl2-dev libudev-zero libudev-zero-dev libusb libusb-dev \
-    qt5-qtbase-dev qt5-qtcharts-dev qt5-qtdeclarative-dev qt5-qtsvg-dev \
+    qt5-qtbase-dev qt5-qtcharts-dev qt5-qtdeclarative-dev qt5-qtsvg-dev
 RUN npm install -g yarn
 
 WORKDIR /tmp

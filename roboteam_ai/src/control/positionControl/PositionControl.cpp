@@ -20,7 +20,7 @@ std::pair<Vector2, Vector2> PositionControl::computeAndTrackTrajectory(const wor
     }
     if (avoidObjects.shouldAvoidBall && (currentPosition - world->getWorld()->getBall()->get()->position).length() < ai::constants::AVOID_BALL_DISTANCE) {
         targetPosition = handleBallCollision(world, field, currentPosition, avoidObjects);
-        computedTrajectories[robotId] = Trajectory2D(currentPosition, currentVelocity, currentAcceleration, targetPosition, maxRobotVelocity, , ai::constants::MAX_ACC, maxJerk);
+        computedTrajectories[robotId] = Trajectory2D(currentPosition, currentVelocity, currentAcceleration, targetPosition, maxRobotVelocity, ai::constants::MAX_ACC, maxJerk);
     } else if ((GameStateManager::getCurrentGameState().getCommandId() == RefCommand::BALL_PLACEMENT_THEM ||
                 GameStateManager::getCurrentGameState().getCommandId() == RefCommand::PREPARE_FORCED_START) &&
                LineSegment(world->getWorld()->getBall()->get()->position, GameStateManager::getRefereeDesignatedPosition()).distanceToLine(currentPosition) <
@@ -53,8 +53,8 @@ std::pair<Vector2, Vector2> PositionControl::computeAndTrackTrajectory(const wor
         },
         computedPaths[robotId]);
 
-    auto acc = computedTrajectories[robotId].getAcceleration(0.04);
-    auto vel = computedTrajectories[robotId].getVelocity(0.04);
+    auto acc = computedTrajectories[robotId].getAcceleration(constants::SEND_TIME_IN_FUTURE());
+    auto vel = computedTrajectories[robotId].getVelocity(constants::SEND_TIME_IN_FUTURE());
     lastAcceleration[robotId] = acc;
     return std::make_pair(vel, acc);
 }

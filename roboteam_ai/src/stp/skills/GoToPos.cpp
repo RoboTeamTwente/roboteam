@@ -28,8 +28,7 @@ Status GoToPos::onUpdate(const StpInfo &info) noexcept {
     }
 
     // TODO:: SET JERK TO A NORMAL VALUE, from stp info or something
-    double mJerk = 12;
-    double maxJerk = mJerk / (0.04 * 60);
+    double maxJerk = 12;
     auto [vel, acc] = info.getCurrentWorld()->getRobotPositionController()->computeAndTrackTrajectory(info.getCurrentWorld(), field, robot->getId(), robot->getPos(),
                                                                                                       robot->getVel(), targetPos, info.getMaxRobotVelocity(), maxJerk, avoidObj);
     command.velocity = vel;

@@ -81,6 +81,17 @@ RUN apk add --no-cache \
     sudo nodejs npm
 RUN npm install -g yarn
 
+WORKDIR /tmp
+RUN wget http://dlib.net/files/dlib-19.21.tar.bz2 \
+    && tar xvf dlib-19.21.tar.bz2 \
+    && cd dlib-19.21 \
+    && mkdir build \
+    && cd build \
+    && cmake .. \
+    && make \
+    && make install \
+    && rm -rf /tmp/dlib-19.21 /tmp/dlib-19.21.tar.bz2
+
 COPY --from=development --chown=root:root /usr/local/lib/libprotobuf.so.31 /usr/local/lib/libprotobuf.so.31
 COPY --from=development --chown=root:root /usr/local/bin/protoc /usr/local/bin/protoc
 
@@ -96,4 +107,6 @@ ENV LD_LIBRARY_PATH=$HOME/lib/
 
 # Copy just build binaries (roboteam software) from volume to container home
 # Note: cannot COPY from outside context, build from parent folder
+# print all dirs
+RUN ls -l ../
 COPY --chown=$USER:$USER ../build/release/ $HOME/

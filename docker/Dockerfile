@@ -36,6 +36,16 @@ RUN apk add --no-cache bash build-base cmake make musl-dev libtool \
     qt5-qtbase-dev qt5-qtcharts-dev qt5-qtdeclarative-dev qt5-qtsvg-dev
 RUN npm install -g yarn
 
+WORKDIR /tmp
+RUN wget https://github.com/pantor/ruckig/archive/refs/tags/v0.12.2.tar.gz \
+    && tar -xzvf v0.12.2.tar.gz
+
+WORKDIR /tmp/ruckig-0.12.2
+RUN mkdir build && cd build \
+    && cmake .. \
+    && make \
+    && make install
+
 WORKDIR /root/protobuf
 RUN wget https://github.com/protocolbuffers/protobuf/releases/download/v3.20.3/protobuf-cpp-3.20.3.zip -O protobuf.zip && unzip protobuf.zip && rm protobuf.zip
 WORKDIR /root/protobuf/protobuf-3.20.3
@@ -69,6 +79,16 @@ RUN apk add --no-cache \
     qt5-qtbase-dev qt5-qtcharts-dev qt5-qtdeclarative-dev qt5-qtsvg-dev \
     sudo nodejs npm
 RUN npm install -g yarn
+
+WORKDIR /tmp
+RUN wget https://github.com/pantor/ruckig/archive/refs/tags/v0.12.2.tar.gz \
+    && tar -xzvf v0.12.2.tar.gz
+
+WORKDIR /tmp/ruckig-0.12.2
+RUN mkdir build && cd build \
+    && cmake .. \
+    && make \
+    && make install
 
 COPY --from=development --chown=root:root /usr/local/lib/libprotobuf.so.31 /usr/local/lib/libprotobuf.so.31
 COPY --from=development --chown=root:root /usr/local/bin/protoc /usr/local/bin/protoc

@@ -54,6 +54,7 @@ InterceptionInfo InterceptionComputations::calculateInterceptionInfo(const std::
     auto futureBallPosition = ballPosition;
     auto ballVelocity = world->getWorld()->getBall()->get()->velocity;
     bool shouldReturn = false;
+    bool canIntercept = true;
     interceptionInfo.interceptLocation = ballPosition;
     const LineSegment ballTrajectory(world->getWorld()->getBall()->get()->position, world->getWorld()->getBall()->get()->expectedEndPosition);
     auto interceptRobot = calculateTheirBallInterception(world, ballTrajectory);
@@ -103,7 +104,7 @@ InterceptionInfo InterceptionComputations::calculateInterceptionInfo(const std::
                 interceptionInfo.interceptId = robot->getId();
                 interceptionInfo.timeToIntercept = minTimeToTarget;
                 auto theirClosestToBall = world->getWorld()->getRobotClosestToBall(world::them);
-                if (!theirClosestToBall || (robot->getPos() - targetPosition).length() < (theirClosestToBall->get()->getPos() - targetPosition).length()) {
+                if (!theirClosestToBall || (robot->getPos() - targetPosition).length() < (theirClosestToBall->get()->getPos() - targetPosition).length() && canIntercept) {
                     interceptionInfo.isInterceptable = true;
                 }
             }
@@ -146,6 +147,9 @@ InterceptionInfo InterceptionComputations::calculateInterceptionInfo(const std::
             if (world->getField().value().playArea.contains(ballPosition, constants::BALL_RADIUS)) {
                 futureBallPosition =
                     FieldComputations::projectPointIntoFieldOnLine(world->getField().value(), futureBallPosition, ballPosition, futureBallPosition, constants::BALL_RADIUS);
+                auto robot = world->getWorld()->getRobotClosestToBall(world::us)->get();
+                auto trajectory = Trajectory2D(robot->getPos(), robot->getVel(), futureBallPosition, maxRobotVelocity, ai::constants::MAX_ACC);
+                if (trajectory.getTotalTime() > 0.1) canIntercept = false;
                 calculateIntercept(futureBallPosition);
             } else {
                 calculateIntercept(ballPosition);

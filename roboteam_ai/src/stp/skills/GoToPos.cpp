@@ -26,11 +26,8 @@ Status GoToPos::onUpdate(const StpInfo &info) noexcept {
                                       currentGameState == RefCommand::BALL_PLACEMENT_US_DIRECT)) {
         targetPos = PositionComputations::calculateAvoidBallPosition(targetPos, ballLocation, field, avoidObj);
     }
-
-    // TODO:: SET JERK TO A NORMAL VALUE, from stp info or something
-    double maxJerk = 12;
-    auto [vel, acc] = info.getCurrentWorld()->getRobotPositionController()->computeAndTrackTrajectory(info.getCurrentWorld(), field, robot->getId(), robot->getPos(),
-                                                                                                      robot->getVel(), targetPos, info.getMaxRobotVelocity(), maxJerk, avoidObj);
+    auto [vel, acc] = info.getCurrentWorld()->getRobotPositionController()->computeAndTrackTrajectory(
+        info.getCurrentWorld(), field, robot->getId(), robot->getPos(), robot->getVel(), targetPos, info.getMaxRobotVelocity(), info.getMaxJerk(), avoidObj);
     command.velocity = vel;
     command.acceleration = acc;
 

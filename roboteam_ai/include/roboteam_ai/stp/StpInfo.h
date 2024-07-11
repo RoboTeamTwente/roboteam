@@ -32,6 +32,9 @@ struct StpInfo {
     void setPositionToMoveTo(const std::optional<Vector2>& position) { this->positionToMoveTo = position; }
     void setPositionToMoveTo(const std::optional<gen::ScoredPosition>& scoredPosition) { setPositionToMoveTo(scoredPosition->position); }
 
+    const double getMaxJerk() const { return maxJerk; }
+    void setMaxJerk(double maxJerk) { this->maxJerk = maxJerk; }
+
     const std::optional<Vector2>& getPositionToShootAt() const { return positionToShootAt; }
     void setPositionToShootAt(const std::optional<Vector2>& position) { this->positionToShootAt = position; }
 
@@ -132,6 +135,11 @@ struct StpInfo {
      * Position to move to
      */
     std::optional<Vector2> positionToMoveTo;
+
+    /**
+     * Jerk to move with
+     */
+    double maxJerk = ai::constants::MAX_JERK_DEFAULT;
 
     /**
      * Position to kick or chip at

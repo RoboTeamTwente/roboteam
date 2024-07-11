@@ -46,8 +46,8 @@ constexpr double MIN_YAW = -M_PI;             /**< Minimum yaw the robot can hav
 constexpr double MAX_YAW = M_PI;              /**< Maximum yaw the robot can have */
 constexpr double MAX_ACC = 3.5;               /**< Maximum acceleration of the robot */
 constexpr double MAX_VEL = 4.0;               /**< Maximum allowed velocity of the robot */
-constexpr double MAX_JERK_OVERSHOOT = 100; /**< Jerk limit for overshoot */
-constexpr double MAX_JERK_DEFAULT = 12;   /**< Default jerk limit */
+constexpr double MAX_JERK_OVERSHOOT = 100;    /**< Jerk limit for overshoot */
+constexpr double MAX_JERK_DEFAULT = 12;       /**< Default jerk limit */
 
 /// GoToPos Constants
 // Distance margin for 'goToPos'. If the robot is within this margin, goToPos is successful

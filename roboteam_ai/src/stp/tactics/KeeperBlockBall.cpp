@@ -38,14 +38,15 @@ std::optional<StpInfo> KeeperBlockBall::calculateInfoForSkill(const StpInfo &inf
     }
 
     const auto targetPosition = calculateTargetPosition(info);
-    skillStpInfo.setPositionToMoveTo(targetPosition.first);
-    skillStpInfo.setShouldAvoidGoalPosts(targetPosition.second);
-    skillStpInfo.setShouldAvoidOutOfField(targetPosition.second);
-    skillStpInfo.setShouldAvoidOurRobots(targetPosition.second);
-    skillStpInfo.setShouldAvoidTheirRobots(targetPosition.second);
+    skillStpInfo.setPositionToMoveTo(std::get<0>(targetPosition));
+    skillStpInfo.setShouldAvoidGoalPosts(std::get<1>(targetPosition));
+    skillStpInfo.setShouldAvoidOutOfField(std::get<1>(targetPosition));
+    skillStpInfo.setShouldAvoidOurRobots(std::get<1>(targetPosition));
+    skillStpInfo.setShouldAvoidTheirRobots(std::get<1>(targetPosition));
 
-    const auto yaw = calculateYaw(info.getBall().value(), targetPosition.first);
+    const auto yaw = calculateYaw(info.getBall().value(), std::get<0>(targetPosition));
     skillStpInfo.setYaw(yaw);
+    skillStpInfo.setMaxJerk(std::get<2>(targetPosition));
 
     return skillStpInfo;
 }
@@ -75,7 +76,7 @@ bool KeeperBlockBall::isBallHeadingTowardsOurGoal(const HalfLine &ballTrajectory
     return intersectionWithGoalLine.has_value() && goalLineSegment.distanceToLine(intersectionWithGoalLine.value()) < MAX_DISTANCE_HEADING_TOWARDS_GOAL;
 }
 
-std::pair<Vector2, bool> KeeperBlockBall::calculateTargetPosition(const StpInfo info) noexcept {
+std::tuple<Vector2, bool, double> KeeperBlockBall::calculateTargetPosition(const StpInfo info) noexcept {
     const auto &field = info.getField().value();
     const auto &ball = info.getBall().value();
 
@@ -85,7 +86,8 @@ std::pair<Vector2, bool> KeeperBlockBall::calculateTargetPosition(const StpInfo 
 
     if (ballHeadsTowardsOurGoal) {
         auto shouldAvoidGoalPosts = false;
-        return {calculateTargetPositionBallShot(info, keepersLineSegment, ballTrajectory), shouldAvoidGoalPosts};
+        auto [targetPosition, maxJerk] = calculateTargetPositionBallShot(info, keepersLineSegment, ballTrajectory);
+        return std::make_tuple(targetPosition, shouldAvoidGoalPosts, maxJerk);
     }
 
     // This lets the keeper intercept the ball in the defense area when it's not heading towards our goal. This did not work well at the Schubert open, since we always just barely
@@ -100,15 +102,15 @@ std::pair<Vector2, bool> KeeperBlockBall::calculateTargetPosition(const StpInfo 
     if (ball->position.x >= field.leftGoalArea.rightLine().center().x - MAX_DISTANCE_BALL_BEHIND_GOAL) {
         auto shouldAvoidGoalPosts = true;
         std::optional<Vector2> predictedBallPositionTheirRobot = InterceptionComputations::calculateTheirBallInterception(info.getCurrentWorld(), ballTrajectory);
-        return {calculateTargetPositionBallNotShot(info, predictedBallPositionTheirRobot), shouldAvoidGoalPosts};
+        return {calculateTargetPositionBallNotShot(info, predictedBallPositionTheirRobot), shouldAvoidGoalPosts, ai::constants::MAX_JERK_DEFAULT};
     }
 
     // Default case: go to the center of the goal
     auto shouldAvoidGoalPosts = true;
-    return {Vector2(keepersLineSegment.start.x, 0), shouldAvoidGoalPosts};
+    return {Vector2(keepersLineSegment.start.x, 0), shouldAvoidGoalPosts, ai::constants::MAX_JERK_DEFAULT};
 }
 
-Vector2 KeeperBlockBall::calculateTargetPositionBallShot(const StpInfo info, rtt::LineSegment keepersLineSegment, rtt::LineSegment ballTrajectory) noexcept {
+std::pair<Vector2, double> KeeperBlockBall::calculateTargetPositionBallShot(const StpInfo info, rtt::LineSegment keepersLineSegment, rtt::LineSegment ballTrajectory) noexcept {
     const auto &field = info.getField().value();
     const auto &ball = info.getBall().value();
     const auto &robot = info.getRobot().value();
@@ -124,7 +126,8 @@ Vector2 KeeperBlockBall::calculateTargetPositionBallShot(const StpInfo info, rtt
         auto [targetPosition, timeToTarget] = control::OvershootComputations::overshootingDestination(robotPosition, closestPointToGoal.value(), robotVelocity, maxRobotVelocity,
                                                                                                       maxRobotAcceleration, ballTimeAtClosestPoint);
         if (timeToTarget <= ballTimeAtClosestPoint) {
-            return targetPosition;
+            // TODO ROBOCUP 2024: TWEAK THIS VALUE
+            return {targetPosition, 100};
         }
     }
 
@@ -147,7 +150,8 @@ Vector2 KeeperBlockBall::calculateTargetPositionBallShot(const StpInfo info, rtt
             optimalTarget = currentTarget;
         }
     }
-    return optimalTarget;
+    // TODO ROBOCUP 2024: TWEAK THIS VALUE
+    return {optimalTarget, 100};
 }
 
 Vector2 KeeperBlockBall::calculateTargetPositionBallNotShot(const StpInfo &info, std::optional<Vector2> predictedBallPositionTheirRobot) noexcept {

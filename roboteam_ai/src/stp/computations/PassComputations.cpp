@@ -143,8 +143,7 @@ bool PassComputations::pointIsValidReceiverLocation(Vector2 point, const std::ve
 }
 
 double PassComputations::calculateRobotTravelTime(Vector2 robotPosition, Vector2 robotVelocity, int robotId, Vector2 targetPosition) {
-    // TODO ROBOCUP 2024: FIX JERK USED HERE
-    return Trajectory2D(robotPosition, robotVelocity, targetPosition, control::ControlUtils::getMaxVelocity(false), ai::constants::MAX_ACC, 99, robotId).getTotalTime() * 1.1;
+    return Trajectory2D(robotPosition, robotVelocity, targetPosition, control::ControlUtils::getMaxVelocity(false), ai::constants::MAX_ACC, ai::constants::MAX_JERK_DEFAULT, robotId).getTotalTime() * 1.1;
 }
 
 double PassComputations::calculateBallTravelTime(Vector2 passLocation, Vector2 passerLocation, int passerId, Vector2 passerVelocity, Vector2 targetPosition) {

@@ -70,7 +70,7 @@ std::pair<Eigen::Vector3d, Eigen::Vector3d> KickEstimator::noSpinBall() {
         }
     }
     try {
-        dlib::find_min_bobyqa(objectiveFunction, initialParams, 7, x_lower, x_upper, 0.2, 1e-3, 50);
+        dlib::find_min_bobyqa(objectiveFunction, initialParams, 7, x_lower, x_upper, 0.2, 1e-3, 400);
     } catch (const dlib::bobyqa_failure& e) {
     }
 

@@ -61,10 +61,12 @@ void PenaltyUs::calculateInfoForRoles() noexcept {
     if (!RuntimeConfig::useReferee || GameStateManager::getCurrentGameState().timeLeft < 3.0 ||
         (stpInfos["kicker"].getRobot() && (positionTarget.position - stpInfos["kicker"].getRobot()->get()->getPos()).length() < 1 ||
          (positionTarget.position - world->getWorld()->getBall()->get()->position).length() < 2)) {
+        // Kick the ball at the goal if time is running out or if we are close enough
         auto goalTarget = computations::GoalComputations::calculateGoalTarget(world, field);
         stpInfos["kicker"].setPositionToShootAt(goalTarget);
         stpInfos["kicker"].setShotPower(ShotPower::MAX);
     } else if (stpInfos["kicker"].getRobot()) {
+        // Shoot the ball a bit ahead to cover ground towards the goal quickly
         auto targetPosition = (positionTarget.position - stpInfos["kicker"].getRobot()->get()->getPos())
                                   .stretchToLength((positionTarget.position - stpInfos["kicker"].getRobot()->get()->getPos()).length() / 1.7);
         stpInfos["kicker"].setPositionToShootAt(targetPosition);

@@ -12,7 +12,7 @@ namespace rtt::ai::constants {
 constexpr bool FEEDBACK_ENABLED = true; /**< Checks whether robot feedback is enabled */
 // Kick and chip constants
 constexpr double MAX_KICK_POWER = 6.5; /**< Maximum allowed kicking power */
-constexpr double MIN_KICK_POWER = 3.0; /**< Minimum allowed kicking power */
+constexpr double MIN_KICK_POWER = 0.1; /**< Minimum allowed kicking power */
 constexpr double MAX_CHIP_POWER = 6.5; /**< Maximum allowed chipping power */
 constexpr double MIN_CHIP_POWER = 4.5; /**< Minimum allowed chipping power */
 

@@ -58,19 +58,19 @@ Dealer::FlagMap PenaltyUs::decideRoleFlags() const noexcept {
 
 void PenaltyUs::calculateInfoForRoles() noexcept {
     auto positionTarget = PositionComputations::getPosition(std::nullopt, field.middleRightGrid, gen::GoalShot, field, world);
-    if (!RuntimeConfig::useReferee || GameStateManager::getCurrentGameState().timeLeft > 3.0) {
-        stpInfos["kicker"].setPositionToMoveTo(positionTarget);
-    } else {
-        stpInfos["kicker"].setPositionToMoveTo(stpInfos["kicker"].getRobot()->get()->getPos());
-        // set kick
-        stpInfos["kicker"].setKickOrChip(KickType::KICK);
-    }
-    auto goalTarget = computations::GoalComputations::calculateGoalTarget(world, field);
-    stpInfos["kicker"].setPositionToShootAt(goalTarget);
-    stpInfos["kicker"].setShotPower(ShotPower::MAX);
-    if (stpInfos["kicker"].getRobot().has_value() && stpInfos["kicker"].getRobot()->get()->hasBall()) {
-        stpInfos["kicker"].setMaxRobotVelocity((stpInfos["kicker"].getRobot()->get()->getPos() - positionTarget.position).length() * 4.8);
-    }
+    if (!RuntimeConfig::useReferee || GameStateManager::getCurrentGameState().timeLeft < 3.0 ||
+        (stpInfos["kicker"].getRobot() && (positionTarget.position - stpInfos["kicker"].getRobot()->get()->getPos()).length() < 1 ||
+         (positionTarget.position - world->getWorld()->getBall()->get()->position).length() < 2)) {
+        auto goalTarget = computations::GoalComputations::calculateGoalTarget(world, field);
+        stpInfos["kicker"].setPositionToShootAt(goalTarget);
+        stpInfos["kicker"].setShotPower(ShotPower::MAX);
+    } else if (stpInfos["kicker"].getRobot()) {
+        auto targetPosition = (positionTarget.position - stpInfos["kicker"].getRobot()->get()->getPos())
+                                  .stretchToLength((positionTarget.position - stpInfos["kicker"].getRobot()->get()->getPos()).length() / 1.7);
+        stpInfos["kicker"].setPositionToShootAt(targetPosition);
+        stpInfos["kicker"].setShotPower(ShotPower::TARGET);
+    } else
+        stpInfos["kicker"].setPositionToMoveTo(world->getWorld()->getBall()->get()->position);
 }
 
 }  // namespace rtt::ai::stp::play

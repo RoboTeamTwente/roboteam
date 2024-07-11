@@ -49,7 +49,18 @@ Dealer::FlagMap PenaltyThem::decideRoleFlags() const noexcept {
     return flagMap;
 }
 
-void PenaltyThem::calculateInfoForRoles() noexcept { stpInfos["keeper"].setPositionToMoveTo(field.leftGoalArea.rightLine().center()); }
+void PenaltyThem::calculateInfoForRoles() noexcept {
+    if (stpInfos["keeper"].getRobot() && field.leftDefenseArea.rightLine().distanceToLine(world->getWorld()->getBall()->get()->position) < 0.8 &&
+        field.leftDefenseArea.rightLine().center().x < world->getWorld()->getBall()->get()->position.x &&
+        world->getWorld()->getBall()->get()->velocity.length() < constants::BALL_GOT_SHOT_LIMIT) {
+        // If the ball gets close to the goal, we want to get closer towards the ball to make it harder to score
+        auto targetPosition = world->getWorld()->getBall()->get()->position -
+                              (world->getWorld()->getBall()->get()->position - field.leftGoalArea.rightLine().center()).stretchToLength(constants::ROBOT_RADIUS * 2.5);
+        stpInfos["keeper"].setPositionToMoveTo(targetPosition);
+    } else
+        // Just stand in the middle of the goal
+        stpInfos["keeper"].setPositionToMoveTo(field.leftGoalArea.rightLine().center());
+}
 
 const char* PenaltyThem::getName() const { return "Penalty Them"; }
 }  // namespace rtt::ai::stp::play

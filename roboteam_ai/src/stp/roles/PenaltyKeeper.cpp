@@ -3,7 +3,6 @@
 #include <roboteam_utils/Print.h>
 
 #include "stp/tactics/KeeperBlockBall.h"
-#include "stp/tactics/active/GetBall.h"
 #include "stp/tactics/passive/Formation.h"
 
 namespace rtt::ai::stp::role {
@@ -14,12 +13,12 @@ namespace rtt::ai::stp::role {
 
 PenaltyKeeper::PenaltyKeeper(std::string name) : Keeper(std::move(name)) {
     // create state machine and initializes the first state
-    robotTactics = collections::state_machine<Tactic, Status, StpInfo>{tactic::Formation(), tactic::KeeperBlockBall()};
+    robotTactics = collections::state_machine<Tactic, Status, StpInfo>{tactic::Formation(), tactic::KeeperBlockBall(), tactic::Formation()};
 }
 
 Status PenaltyKeeper::update(StpInfo const& info) noexcept {
     // Failure if the required data is not present
-    if (!info.getBall() || !info.getRobot() || !info.getField()) {
+    if (!info.getBall() || !info.getRobot() || !info.getField() || !info.getCurrentWorld()) {
         RTT_WARNING("Required information missing in the tactic info for ", roleName)
         return Status::Failure;
     }
@@ -28,6 +27,13 @@ Status PenaltyKeeper::update(StpInfo const& info) noexcept {
     if (robotTactics.current_num() == 0 && info.getBall().value()->velocity.length() > constants::BALL_STILL_VEL) {
         forceNextTactic();
     }
+    if (info.getField().value().leftDefenseArea.rightLine().distanceToLine(info.getBall().value()->position) < 0.8 &&
+        info.getField().value().leftDefenseArea.rightLine().center().x < info.getBall().value()->position.x &&
+        info.getBall().value()->velocity.length() < constants::BALL_GOT_SHOT_LIMIT) {
+        // If the ball is getting close to our goal, get out of the goal to increase our chances of saving it
+        forceLastTactic();
+    } else if (robotTactics.current_num() == 2)
+        reset();
 
     return Role::update(info);
 }

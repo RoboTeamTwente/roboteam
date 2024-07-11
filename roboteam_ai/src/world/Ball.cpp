@@ -14,8 +14,8 @@ namespace rtt::world::ball {
 Ball::Ball(const proto::WorldBall& copy, const World* data) : position{copy.pos().x(), copy.pos().y()}, velocity{copy.vel().x(), copy.vel().y()}, visible{copy.visible()} {
     if (!visible || position == Vector2()) {
         initBallAtExpectedPosition(data);
+        updateBallAtRobotPosition(data);
     }
-    updateBallAtRobotPosition(data);
     updateExpectedBallEndPosition();
 }
 

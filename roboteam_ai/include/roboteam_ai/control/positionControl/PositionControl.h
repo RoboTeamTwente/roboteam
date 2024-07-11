@@ -22,7 +22,6 @@ class PositionControl {
     std::unordered_map<int, Trajectory2D> computedTrajectories;  /**< Map of computed trajectories for each robot */
     std::unordered_map<int, std::vector<Vector2>> computedPaths; /**< Map of computed paths for each robot */
     std::unordered_map<int, Vector2> lastUsedNormalizedPoints;   /**< Map of last used normalized points for each robot */
-    std::unordered_map<int, Vector2> lastAcceleration;           /**< Map of last acceleration for each robot */
 
    public:
     /**
@@ -92,7 +91,7 @@ class PositionControl {
      * @return An optional with a new path
      */
     Trajectory2D findNewTrajectory(const rtt::world::World *world, const rtt::Field &field, int robotId, Vector2 &currentPosition, Vector2 &currentVelocity,
-                                   Vector2 &currentAcceleration, Vector2 &targetPosition, double maxRobotVelocity, double maxJerk, double timeStep, stp::AvoidObjects AvoidObjects);
+                                   Vector2 &targetPosition, double maxRobotVelocity, double maxJerk, double timeStep, stp::AvoidObjects AvoidObjects);
 
     /**
      * @brief Creates normalized random points, which will be used to create intermediate points

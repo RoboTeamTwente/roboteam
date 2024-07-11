@@ -8,6 +8,11 @@
 
 using namespace ruckig;
 namespace rtt {
+std::unordered_map<int, Vector2> Trajectory2D::lastAcceleration;
+
+Trajectory2D::Trajectory2D(const Vector2 &initialPos, const Vector2 &initialVel, const Vector2 &finalPos, double maxVel, double maxAcc, double maxJerk, int robotId)
+    : Trajectory2D(initialPos, initialVel, Trajectory2D::lastAcceleration.contains(robotId) ? Trajectory2D::lastAcceleration[robotId] : Vector2(0, 0), finalPos, maxVel, maxAcc,
+                   maxJerk) {}
 
 Trajectory2D::Trajectory2D(const Vector2 &initialPos, const Vector2 &initialVel, const Vector2 &initialAcc, const Vector2 &finalPos, double maxVel, double maxAcc, double maxJerk) {
     // The idea is to do a binary search over alpha to find a trajectory in x and y direction (which is minimal time)

@@ -79,7 +79,9 @@ constexpr static float SIMULATION_FRICTION = 0.71; /**< The expected movement fr
 constexpr static float REAL_FRICTION = 0.44;       /**< The expected movement friction of the ball on the field */
 
 static inline double HAS_BALL_DISTANCE() { return (GameSettings::getRobotHubMode() == net::RobotHubMode::BASESTATION) ? 0.11 : 0.12; }
-static inline double SEND_TIME_IN_FUTURE() { return (GameSettings::getRobotHubMode() == net::RobotHubMode::BASESTATION) ? 0.04 : 0.145; } // Simulator doesn't have mass feedforward, so we need to send a bigger difference
+static inline double SEND_TIME_IN_FUTURE() {
+    return (GameSettings::getRobotHubMode() == net::RobotHubMode::BASESTATION) ? 0.04 : 0.145;
+}  // Simulator doesn't have mass feedforward, so we need to send a bigger difference
 
 static std::map<int, bool> ROBOTS_WITH_WORKING_DRIBBLER() {
     static std::map<int, bool> workingDribblerRobots;

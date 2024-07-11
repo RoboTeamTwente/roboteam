@@ -77,6 +77,9 @@ void KeeperKickBall::calculateInfoForRoles() noexcept {
         stpInfos["keeper"].setPositionToShootAt(passInfo.receiverLocation);
         stpInfos["keeper"].setShotPower(ShotPower::PASS);
         stpInfos["keeper"].setKickOrChip(KickType::CHIP);
+        if (stpInfos["keeper"].getRobot() && stpInfos["keeper"].getRobot()->get()->hasBall()) {
+            stpInfos["keeper"].setMaxRobotVelocity(0.2);
+        }
     } else {
         auto ball = world->getWorld()->getBall().value();
         // Receiver goes to the receiverLocation projected on the trajectory of the ball

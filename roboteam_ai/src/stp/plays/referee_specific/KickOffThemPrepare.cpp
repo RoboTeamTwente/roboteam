@@ -20,7 +20,7 @@ KickOffThemPrepare::KickOffThemPrepare() : Play() {
         std::make_unique<role::Keeper>("keeper"),
         std::make_unique<role::Formation>("waller_0"),
         std::make_unique<role::Formation>("waller_1"),
-        std::make_unique<role::Formation>("waller_2"),
+        std::make_unique<role::Formation>("formation_mid_0"),
         std::make_unique<role::Formation>("formation_front_0"),
         std::make_unique<role::Formation>("formation_front_1"),
         std::make_unique<role::Formation>("formation_front_2"),
@@ -44,7 +44,7 @@ Dealer::FlagMap KickOffThemPrepare::decideRoleFlags() const noexcept {
     flagMap.insert({"keeper", {DealerFlagPriority::KEEPER, {keeperFlag}}});
     flagMap.insert({"waller_0", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
     flagMap.insert({"waller_1", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
-    flagMap.insert({"waller_2", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"formation_mid_0", {DealerFlagPriority::LOW_PRIORITY, {}}});
     flagMap.insert({"formation_front_0", {DealerFlagPriority::HIGH_PRIORITY, {}}});
     flagMap.insert({"formation_front_1", {DealerFlagPriority::HIGH_PRIORITY, {}}});
     flagMap.insert({"formation_front_2", {DealerFlagPriority::HIGH_PRIORITY, {}}});

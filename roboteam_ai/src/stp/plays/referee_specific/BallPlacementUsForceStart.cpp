@@ -82,7 +82,6 @@ void BallPlacementUsForceStart::calculateInfoForRoles() noexcept {
         stpInfo.second.setShouldAvoidTheirDefenseArea(false);
         stpInfo.second.setShouldAvoidBall(true);
     }
-    stpInfos["ball_placer"].setPositionToShootAt(ballTarget);
     stpInfos["ball_placer"].setPositionToMoveTo(ballTarget);
     stpInfos["ball_placer"].setShouldAvoidOutOfField(false);
     stpInfos["ball_placer"].setShouldAvoidBall(false);

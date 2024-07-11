@@ -12,7 +12,9 @@ std::optional<StpInfo> DriveWithBall::calculateInfoForSkill(const StpInfo &info)
 
     StpInfo skillStpInfo = info;
     auto angleToTarget = (info.getPositionToMoveTo().value() - info.getRobot()->get()->getPos()).angle();
-    skillStpInfo.setYaw(skills.current_num() == 0 ? angleToTarget : (info.getPositionToMoveTo().value() - info.getBall()->get()->position).angle());
+    if (info.getRoleName() != "keeper") {
+        skillStpInfo.setYaw(skills.current_num() == 0 ? angleToTarget : (info.getPositionToMoveTo().value() - info.getBall()->get()->position).angle());
+    }
     skillStpInfo.setDribblerOn(true);
 
     return skillStpInfo;

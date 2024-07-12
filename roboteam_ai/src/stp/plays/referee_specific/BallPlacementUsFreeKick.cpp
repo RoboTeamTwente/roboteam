@@ -90,7 +90,7 @@ void BallPlacementUsFreeKick::calculateInfoForRoles() noexcept {
         for (auto& role : roles)
             if (role->getName() == "ball_placer") role->forceLastTactic();
     }
-    if (stpInfos["ball_placer"].getRobot() && stpInfos["ball_placer"].getRobot()->get()->getDistanceToBall() < 1.0) stpInfos["ball_placer"].setMaxRobotVelocity(0.75);
+    if (stpInfos["ball_placer"].getRobot() && stpInfos["ball_placer"].getRobot()->get()->hasBall()) stpInfos["ball_placer"].setMaxRobotVelocity(0.75);
     if (stpInfos["ball_placer"].getRobot() && stpInfos["ball_placer"].getRobot()->get()->getDistanceToBall() < constants::TURN_ON_DRIBBLER_DISTANCE) {
         stpInfos["ball_placer"].setDribblerOn(true);
     }

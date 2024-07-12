@@ -18,6 +18,7 @@ std::optional<StpInfo> BallStandBack::calculateInfoForSkill(StpInfo const &info)
     Vector2 ballTarget = info.getBall()->get()->position;
     auto robot = info.getRobot()->get();
     if (standStillCounter > STAND_STILL_THRESHOLD) {
+        skillStpInfo.setDribblerOn(false);
         auto moveVector = robot->getPos() - ballTarget;
         double stretchLength = (currentGameState == RefCommand::BALL_PLACEMENT_US_DIRECT) ? constants::AVOID_BALL_DISTANCE_BEFORE_FREE_KICK : constants::AVOID_BALL_DISTANCE;
         targetPosition = ballTarget + moveVector.stretchToLength(stretchLength);
@@ -28,6 +29,7 @@ std::optional<StpInfo> BallStandBack::calculateInfoForSkill(StpInfo const &info)
             skillStpInfo.setShouldAvoidBall(true);
         }
     } else {
+        skillStpInfo.setDribblerOn(true);
         standBack = false;
         standStillCounter++;
         targetPosition = robot->getPos();
@@ -37,7 +39,6 @@ std::optional<StpInfo> BallStandBack::calculateInfoForSkill(StpInfo const &info)
     double yaw = (info.getBall()->get()->position - targetPosition).angle();
     skillStpInfo.setPositionToMoveTo(targetPosition);
     skillStpInfo.setYaw(yaw);
-    skillStpInfo.setDribblerOn(false);
 
     return skillStpInfo;
 }

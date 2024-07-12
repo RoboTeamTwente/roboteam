@@ -35,7 +35,7 @@ struct StpInfo {
     const Vector2& getTargetVelocity() const { return targetVelocity; }
     void setTargetVelocity(const Vector2& targetVelocity) { this->targetVelocity = targetVelocity; }
 
-    const double getMaxJerk() const { return maxJerk; }
+    double getMaxJerk() const { return maxJerk; }
     void setMaxJerk(double maxJerk) { this->maxJerk = maxJerk; }
 
     const std::optional<Vector2>& getPositionToShootAt() const { return positionToShootAt; }

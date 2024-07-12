@@ -90,7 +90,7 @@ InterceptionInfo InterceptionComputations::calculateInterceptionInfo(const std::
             auto ballToRobot = (robot->getPos() - ballPosition);
             auto ballToFutPos = (futureBallPosition - ballPosition);
             // FutPos and Robot are on opposite sides of the ball, don't consider this robot
-            if ((targetPosition - ballPosition).dot(robot->getPos() - ballPosition) < 0) {
+            if (ballToRobot.dot(ballToFutPos) < 0) {
                 continue;
             }
             // If the robot is already close to the line, project it's position onto the line to prevent always moving to the 0.1 second mark

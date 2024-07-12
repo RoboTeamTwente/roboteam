@@ -32,8 +32,7 @@ Status GoToPos::onUpdate(const StpInfo &info) noexcept {
     command.velocity = vel;
     command.acceleration = acc;
 
-    auto distanceToTarget = (robot->getPos() - targetPos).length();
-    command.yaw = distanceToTarget <= 0.5 ? info.getYaw() : robot->getYaw() + rtt::Angle(0.5 / distanceToTarget * (info.getYaw() - robot->getYaw()));
+    command.yaw = info.getYaw();
 
     command.dribblerOn = info.getDribblerOn();
 
@@ -45,7 +44,7 @@ Status GoToPos::onUpdate(const StpInfo &info) noexcept {
 
     // Check if successful
     auto distanceError = (robot->getPos() - targetPos).length();
-    if (robot->hasBall() && distanceError <= constants::BALL_PLACEMENT_MARGIN - constants::GO_TO_POS_ERROR_MARGIN) {
+    if (robot->hasBall() && info.getRoleName() != "ball_placer") || (robot->hasBall() && distanceError <= constants::BALL_PLACEMENT_MARGIN - constants::GO_TO_POS_ERROR_MARGIN) {
         return Status::Success;
     } else {
         return Status::Running;

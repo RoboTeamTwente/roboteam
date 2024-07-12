@@ -18,18 +18,17 @@ Vector2 Trajectory2D::getLastAcceleration(int robotId) {
     }
 }
 Trajectory2D::Trajectory2D(const Vector2 &initialPos, const Vector2 &initialVel, const Vector2 &finalPos, double maxVel, double maxAcc, double maxJerk, int robotId)
-    : Trajectory2D(initialPos, initialVel, getLastAcceleration(robotId), finalPos, Vector2(0, 0), maxVel, maxAcc, maxJerk){}
+    : Trajectory2D(initialPos, initialVel, getLastAcceleration(robotId), finalPos, Vector2(0, 0), maxVel, maxAcc, maxJerk) {}
 
-      Trajectory2D::Trajectory2D(const Vector2 &initialPos, const Vector2 &initialVel, const Vector2 &finalPos, const Vector2 &finalVel, double maxVel, double maxAcc,
-                                 double maxJerk, int robotId)
-    : Trajectory2D(initialPos, initialVel, getLastAcceleration(robotId), finalPos, finalVel, maxVel, maxAcc, maxJerk){}
+Trajectory2D::Trajectory2D(const Vector2 &initialPos, const Vector2 &initialVel, const Vector2 &finalPos, const Vector2 &finalVel, double maxVel, double maxAcc, double maxJerk,
+                           int robotId)
+    : Trajectory2D(initialPos, initialVel, getLastAcceleration(robotId), finalPos, finalVel, maxVel, maxAcc, maxJerk) {}
 
-      Trajectory2D::Trajectory2D(const Vector2 &initialPos, const Vector2 &initialVel, const Vector2 &initialAcc, const Vector2 &finalPos, double maxVel, double maxAcc,
-                                 double maxJerk)
-    : Trajectory2D(initialPos, initialVel, initialAcc, finalPos, Vector2(0, 0), maxVel, maxAcc, maxJerk){}
+Trajectory2D::Trajectory2D(const Vector2 &initialPos, const Vector2 &initialVel, const Vector2 &initialAcc, const Vector2 &finalPos, double maxVel, double maxAcc, double maxJerk)
+    : Trajectory2D(initialPos, initialVel, initialAcc, finalPos, Vector2(0, 0), maxVel, maxAcc, maxJerk) {}
 
-      Trajectory2D::Trajectory2D(const Vector2 &initialPos, const Vector2 &initialVel, const Vector2 &initialAcc, const Vector2 &finalPos, const Vector2 &finalVel, double maxVel,
-                                 double maxAcc, double maxJerk) {
+Trajectory2D::Trajectory2D(const Vector2 &initialPos, const Vector2 &initialVel, const Vector2 &initialAcc, const Vector2 &finalPos, const Vector2 &finalVel, double maxVel,
+                           double maxAcc, double maxJerk) {
     // The idea is to do a binary search over alpha to find a trajectory in x and y direction (which is minimal time)
     double inc = M_PI_4 * 0.5;
     double alpha = M_PI_4;

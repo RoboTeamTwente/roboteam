@@ -21,6 +21,7 @@ namespace rtt::ai::stp {
 
 struct InterceptionInfo {
     Vector2 interceptLocation;
+    Vector2 interceptVelocity;
     int interceptId = -1;
     double timeToIntercept = std::numeric_limits<double>::max();
     bool isInterceptable = false;

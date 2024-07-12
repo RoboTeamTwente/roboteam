@@ -11,7 +11,8 @@ namespace rtt::ai::control {
 std::vector<Vector2> PositionControl::getComputedPath(int ID) { return computedPaths[ID]; }
 
 std::pair<Vector2, Vector2> PositionControl::computeAndTrackTrajectory(const world::World *world, const Field &field, int robotId, Vector2 currentPosition, Vector2 currentVelocity,
-                                                                       Vector2 targetPosition, double maxRobotVelocity, double maxJerk, stp::AvoidObjects avoidObjects) {
+                                                                       Vector2 targetPosition, Vector2 targetVelocity, double maxRobotVelocity, double maxJerk,
+                                                                       stp::AvoidObjects avoidObjects) {
     double timeStep = 0.1;
     auto [theirDefenseAreaMargin, ourDefenseAreaMargin] = FieldComputations::getDefenseAreaMargin();
     if (avoidObjects.shouldAvoidBall && (currentPosition - world->getWorld()->getBall()->get()->position).length() < ai::constants::AVOID_BALL_DISTANCE) {
@@ -29,11 +30,11 @@ std::pair<Vector2, Vector2> PositionControl::computeAndTrackTrajectory(const wor
         targetPosition = handleDefenseAreaCollision(field, currentPosition);
         computedTrajectories[robotId] = Trajectory2D(currentPosition, currentVelocity, targetPosition, maxRobotVelocity, ai::constants::MAX_ACC, maxJerk, robotId);
     } else {
-        computedTrajectories[robotId] = Trajectory2D(currentPosition, currentVelocity, targetPosition, maxRobotVelocity, ai::constants::MAX_ACC, maxJerk, robotId);
+        computedTrajectories[robotId] = Trajectory2D(currentPosition, currentVelocity, targetPosition, targetVelocity, maxRobotVelocity, ai::constants::MAX_ACC, maxJerk, robotId);
         auto hasCollsion = CollisionCalculations::isColliding(computedTrajectories[robotId], avoidObjects, field, robotId, world, computedPaths);
         if (hasCollsion) {
             computedTrajectories[robotId] =
-                findNewTrajectory(world, field, robotId, currentPosition, currentVelocity, targetPosition, maxRobotVelocity, maxJerk, timeStep, avoidObjects);
+                findNewTrajectory(world, field, robotId, currentPosition, currentVelocity, targetPosition, targetVelocity, maxRobotVelocity, maxJerk, timeStep, avoidObjects);
         }
     }
     computedPaths[robotId] = computedTrajectories[robotId].getPathApproach(0.05);
@@ -124,7 +125,8 @@ Vector2 PositionControl::handleDefenseAreaCollision(const Field &field, Vector2 
 }
 
 Trajectory2D PositionControl::findNewTrajectory(const world::World *world, const Field &field, int robotId, Vector2 &currentPosition, Vector2 &currentVelocity,
-                                                Vector2 &targetPosition, double maxRobotVelocity, double maxJerk, double timeStep, stp::AvoidObjects avoidObjects) {
+                                                Vector2 &targetPosition, Vector2 &targetVelocity, double maxRobotVelocity, double maxJerk, double timeStep,
+                                                stp::AvoidObjects avoidObjects) {
     std::vector<Vector2> normalizedPoints = generateNormalizedPoints(robotId);
     timeStep *= 2;
     Vector2 startToDest = targetPosition - currentPosition;
@@ -139,8 +141,8 @@ Trajectory2D PositionControl::findNewTrajectory(const world::World *world, const
             Vector2 newStartPosition = trajectoryToIntermediatePoint.getPosition(loopTime);
             Vector2 newStartVelocity = trajectoryToIntermediatePoint.getVelocity(loopTime);
             Vector2 newStartAcceleration = trajectoryToIntermediatePoint.getAcceleration(loopTime);
-            Trajectory2D trajectoryFromIntermediateToTarget(newStartPosition, newStartVelocity, newStartAcceleration, targetPosition, maxRobotVelocity, maxJerk,
-                                                            ai::constants::MAX_ACC);
+            Trajectory2D trajectoryFromIntermediateToTarget(newStartPosition, newStartVelocity, newStartAcceleration, targetPosition, targetVelocity, maxRobotVelocity,
+                                                            ai::constants::MAX_ACC, maxJerk);
             auto hasCollision = CollisionCalculations::isColliding(trajectoryFromIntermediateToTarget, avoidObjects, field, robotId, world, computedPaths);
             if (!hasCollision) {
                 trajectoryToIntermediatePoint.addTrajectory(trajectoryFromIntermediateToTarget, loopTime);

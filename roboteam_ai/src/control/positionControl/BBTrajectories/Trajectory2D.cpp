@@ -10,11 +10,26 @@ using namespace ruckig;
 namespace rtt {
 std::unordered_map<int, Vector2> Trajectory2D::lastAcceleration;
 
+Vector2 Trajectory2D::getLastAcceleration(int robotId) {
+    if (Trajectory2D::lastAcceleration.contains(robotId)) {
+        return Trajectory2D::lastAcceleration[robotId];
+    } else {
+        return Vector2(0, 0);
+    }
+}
 Trajectory2D::Trajectory2D(const Vector2 &initialPos, const Vector2 &initialVel, const Vector2 &finalPos, double maxVel, double maxAcc, double maxJerk, int robotId)
-    : Trajectory2D(initialPos, initialVel, Trajectory2D::lastAcceleration.contains(robotId) ? Trajectory2D::lastAcceleration[robotId] : Vector2(0, 0), finalPos, maxVel, maxAcc,
-                   maxJerk) {}
+    : Trajectory2D(initialPos, initialVel, getLastAcceleration(robotId), finalPos, Vector2(0, 0), maxVel, maxAcc, maxJerk){}
 
-Trajectory2D::Trajectory2D(const Vector2 &initialPos, const Vector2 &initialVel, const Vector2 &initialAcc, const Vector2 &finalPos, double maxVel, double maxAcc, double maxJerk) {
+      Trajectory2D::Trajectory2D(const Vector2 &initialPos, const Vector2 &initialVel, const Vector2 &finalPos, const Vector2 &finalVel, double maxVel, double maxAcc,
+                                 double maxJerk, int robotId)
+    : Trajectory2D(initialPos, initialVel, getLastAcceleration(robotId), finalPos, finalVel, maxVel, maxAcc, maxJerk){}
+
+      Trajectory2D::Trajectory2D(const Vector2 &initialPos, const Vector2 &initialVel, const Vector2 &initialAcc, const Vector2 &finalPos, double maxVel, double maxAcc,
+                                 double maxJerk)
+    : Trajectory2D(initialPos, initialVel, initialAcc, finalPos, Vector2(0, 0), maxVel, maxAcc, maxJerk){}
+
+      Trajectory2D::Trajectory2D(const Vector2 &initialPos, const Vector2 &initialVel, const Vector2 &initialAcc, const Vector2 &finalPos, const Vector2 &finalVel, double maxVel,
+                                 double maxAcc, double maxJerk) {
     // The idea is to do a binary search over alpha to find a trajectory in x and y direction (which is minimal time)
     double inc = M_PI_4 * 0.5;
     double alpha = M_PI_4;
@@ -26,9 +41,9 @@ Trajectory2D::Trajectory2D(const Vector2 &initialPos, const Vector2 &initialVel,
         inputX.current_velocity[0] = initialVel.x;
         inputX.current_acceleration[0] = initialAcc.x;
         inputX.target_position[0] = finalPos.x;
-        inputX.target_velocity[0] = 0;
+        inputX.target_velocity[0] = finalVel.x;
         inputX.target_acceleration[0] = 0;
-        inputX.max_velocity[0] = maxVel * cos(alpha);
+        inputX.max_velocity[0] = std::max(maxVel * cos(alpha), std::abs(finalVel.x));
         inputX.max_acceleration[0] = maxAcc * cos(alpha);
         inputX.max_jerk[0] = maxJerk * cos(alpha);
         Ruckig<1> ruckigX;
@@ -39,9 +54,9 @@ Trajectory2D::Trajectory2D(const Vector2 &initialPos, const Vector2 &initialVel,
         inputY.current_velocity[0] = initialVel.y;
         inputY.current_acceleration[0] = initialAcc.y;
         inputY.target_position[0] = finalPos.y;
-        inputY.target_velocity[0] = 0;
+        inputY.target_velocity[0] = finalVel.y;
         inputY.target_acceleration[0] = 0;
-        inputY.max_velocity[0] = maxVel * sin(alpha);
+        inputY.max_velocity[0] = std::max(maxVel * sin(alpha), std::abs(finalVel.y));
         inputY.max_acceleration[0] = maxAcc * sin(alpha);
         inputY.max_jerk[0] = maxJerk * sin(alpha);
         Ruckig<1> ruckigY;

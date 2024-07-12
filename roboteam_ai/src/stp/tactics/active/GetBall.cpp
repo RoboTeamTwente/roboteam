@@ -30,11 +30,13 @@ std::optional<StpInfo> GetBall::calculateInfoForSkill(const StpInfo &info) noexc
     auto maxRobotVelocity = GameStateManager::getCurrentGameState().getRuleSet().getMaxRobotVel();
     auto interceptionInfo = InterceptionComputations::calculateInterceptionInfo({info.getRobot().value()}, info.getCurrentWorld());
     Vector2 interceptionPosition = interceptionInfo.interceptLocation;
+    Vector2 interceptionVelocity = interceptionInfo.interceptVelocity;
 
-    if (info.getRobot()->get()->hasBall()) {
-        maxRobotVelocity = std::clamp(info.getBall().value()->velocity.length() * 0.8, 0.5, maxRobotVelocity);
-        skillStpInfo.setMaxRobotVelocity(maxRobotVelocity);
-    }
+    // TODO ROBOCUP 2024: CHECK IF NEEDED
+    // if (info.getRobot()->get()->hasBall()) {
+    // maxRobotVelocity = std::clamp(info.getBall().value()->velocity.length() * 0.8, 0.5, maxRobotVelocity);
+    // skillStpInfo.setMaxRobotVelocity(maxRobotVelocity);
+    // }
 
     double distanceToInterception = (interceptionPosition - robotPosition).length();
     double distanceToBall = (ballPosition - robotPosition).length();
@@ -46,14 +48,17 @@ std::optional<StpInfo> GetBall::calculateInfoForSkill(const StpInfo &info) noexc
     // This makes sure we always hit the ball with our front assembly, and we never go to the wrong 'side' of the ball.
     if (info.getRobot()->get()->getAngleDiffToBall() > constants::HAS_BALL_ANGLE && distanceToBall < constants::ROBOT_CLOSE_TO_POINT) {
         skillStpInfo.setPositionToMoveTo(info.getRobot()->get()->getPos());
+        skillStpInfo.setTargetVelocity(Vector2(0, 0));
     } else if (info.getBall()->get()->velocity.length() > constants::BALL_IS_MOVING_SLOW_LIMIT) {
         auto newRobotPos = interceptionPosition + (interceptionPosition - ballPosition).stretchToLength(constants::CENTER_TO_FRONT);
         skillStpInfo.setPositionToMoveTo(newRobotPos);
+        skillStpInfo.setTargetVelocity(interceptionVelocity);
     } else {
         auto getBallDistance = std::max(distanceToInterception - constants::CENTER_TO_FRONT, MIN_DISTANCE_TO_TARGET);
         Vector2 newRobotPosition = robotPosition + (interceptionPosition - robotPosition).stretchToLength(getBallDistance);
         newRobotPosition = FieldComputations::projectPointToValidPosition(info.getField().value(), newRobotPosition, info.getObjectsToAvoid());
         skillStpInfo.setPositionToMoveTo(newRobotPosition);
+        skillStpInfo.setTargetVelocity(interceptionVelocity);
     }
 
     skillStpInfo.setYaw((ballPosition - robotPosition).angle());

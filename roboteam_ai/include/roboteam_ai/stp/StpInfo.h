@@ -32,6 +32,9 @@ struct StpInfo {
     void setPositionToMoveTo(const std::optional<Vector2>& position) { this->positionToMoveTo = position; }
     void setPositionToMoveTo(const std::optional<gen::ScoredPosition>& scoredPosition) { setPositionToMoveTo(scoredPosition->position); }
 
+    const Vector2& getTargetVelocity() const { return targetVelocity; }
+    void setTargetVelocity(const Vector2& targetVelocity) { this->targetVelocity = targetVelocity; }
+
     const double getMaxJerk() const { return maxJerk; }
     void setMaxJerk(double maxJerk) { this->maxJerk = maxJerk; }
 
@@ -135,6 +138,11 @@ struct StpInfo {
      * Position to move to
      */
     std::optional<Vector2> positionToMoveTo;
+
+    /**
+     * Target velocity to move with
+     */
+    Vector2 targetVelocity;
 
     /**
      * Jerk to move with

@@ -37,7 +37,11 @@ Trajectory2D::Trajectory2D(const Vector2 &initialPos, const Vector2 &initialVel,
     while (inc > iterationLimit) {
         InputParameter<1> inputX;
         inputX.current_position[0] = initialPos.x;
-        inputX.current_velocity[0] = initialVel.x;
+        if (initialVel.x > 0) {
+            inputX.current_velocity[0] = std::min(initialVel.x, std::max(maxVel * cos(alpha), std::abs(finalVel.x)));
+        } else {
+            inputX.current_velocity[0] = std::max(initialVel.x, -std::max(maxVel * cos(alpha), std::abs(finalVel.x)));
+        }
         inputX.current_acceleration[0] = initialAcc.x;
         inputX.target_position[0] = finalPos.x;
         inputX.target_velocity[0] = finalVel.x;
@@ -50,7 +54,11 @@ Trajectory2D::Trajectory2D(const Vector2 &initialPos, const Vector2 &initialVel,
 
         InputParameter<1> inputY;
         inputY.current_position[0] = initialPos.y;
-        inputY.current_velocity[0] = initialVel.y;
+        if (initialVel.y > 0) {
+            inputY.current_velocity[0] = std::min(initialVel.y, std::max(maxVel * sin(alpha), std::abs(finalVel.y)));
+        } else {
+            inputY.current_velocity[0] = std::max(initialVel.y, -std::max(maxVel * sin(alpha), std::abs(finalVel.y)));
+        }
         inputY.current_acceleration[0] = initialAcc.y;
         inputY.target_position[0] = finalPos.y;
         inputY.target_velocity[0] = finalVel.y;

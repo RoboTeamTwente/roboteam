@@ -20,8 +20,10 @@ Status BallPlacer::update(StpInfo const& info) noexcept {
 
     // Stop Get Ball tactic when we have the ball
     if (robotTactics.current_num() == 0 && info.getRobot()->get()->hasBall()) {
-        RTT_INFO("FORCING NEXT TACTIC CAUSAE ROBOT HAS THE BALL WOOP WOOP!!!!!!!!!")
         forceNextTactic();
+    }
+    if (robotTactics.current_num() < 2 && (info.getBall()->get()->position - GameStateManager::getRefereeDesignatedPosition()).length() < constants::BALL_PLACER_MARGIN) {
+        forceLastTactic();
     }
 
     return Role::update(info);

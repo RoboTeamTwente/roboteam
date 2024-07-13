@@ -44,7 +44,7 @@ Status GoToPos::onUpdate(const StpInfo &info) noexcept {
 
     // Check if successful
     auto distanceError = (robot->getPos() - targetPos).length();
-    if ((robot->hasBall() && info.getRoleName() != "ball_placer") || (robot->hasBall() && distanceError <= constants::BALL_PLACEMENT_MARGIN - constants::GO_TO_POS_ERROR_MARGIN)) {
+    if ((robot->hasBall() && info.getRoleName() != "ball_placer") || (robot->hasBall() && distanceError <= constants::BALL_PLACER_MARGIN)) {
         return Status::Success;
     } else {
         return Status::Running;

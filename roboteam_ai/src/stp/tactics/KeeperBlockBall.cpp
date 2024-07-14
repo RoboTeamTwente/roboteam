@@ -45,7 +45,19 @@ std::optional<StpInfo> KeeperBlockBall::calculateInfoForSkill(const StpInfo &inf
     skillStpInfo.setShouldAvoidTheirRobots(std::get<1>(targetPosition));
 
     const auto yaw = calculateYaw(info.getBall().value(), std::get<0>(targetPosition));
-    skillStpInfo.setYaw(yaw);
+
+    // TODO ROBOCUP 2024: MAKEW MORE PRETTY
+    const auto &field = info.getField().value();
+    const auto &ball = info.getBall().value();
+    const auto keepersLineSegment = getKeepersLineSegment(field);
+    const LineSegment ballTrajectory(ball->position, ball->expectedEndPosition);
+    bool ballHeadsTowardsOurGoal = ballTrajectory.intersects(keepersLineSegment).has_value();
+    if (ballHeadsTowardsOurGoal) {
+        skillStpInfo.setYaw(skillStpInfo.getRobot()->get()->getYaw());
+    } else {
+        skillStpInfo.setYaw(yaw);
+    }
+
     skillStpInfo.setMaxJerk(std::get<2>(targetPosition));
 
     return skillStpInfo;
@@ -85,6 +97,10 @@ std::tuple<Vector2, bool, double> KeeperBlockBall::calculateTargetPosition(const
     const auto keepersLineSegment = getKeepersLineSegment(field);
     const LineSegment ballTrajectory(ball->position, ball->expectedEndPosition);
     bool ballHeadsTowardsOurGoal = ballTrajectory.intersects(keepersLineSegment).has_value();
+    // TODO ROBOCUP 2024: CHECK AND PERHAPS MAKE MORE PRETTY
+    if (ballHeadsTowardsOurGoal && ballTrajectory.intersects(keepersLineSegment).value().dist(info.getRobot().value()->getPos()) < 0.03) {
+        return std::make_tuple(info.getRobot().value()->getPos(), false, 12);
+    }
 
     if (ballHeadsTowardsOurGoal) {
         auto shouldAvoidGoalPosts = false;
@@ -129,7 +145,7 @@ std::pair<Vector2, double> KeeperBlockBall::calculateTargetPositionBallShot(cons
                                                                                                       maxRobotAcceleration, ballTimeAtClosestPoint);
         if (timeToTarget <= ballTimeAtClosestPoint) {
             // TODO ROBOCUP 2024: TWEAK THIS VALUE
-            auto jerk = (1 - std::min((ballTimeAtClosestPoint - timeToTarget), 0.2) / 0.2) * ai::constants::MAX_JERK_OVERSHOOT + ai::constants::MAX_JERK_DEFAULT;
+            auto jerk = (1 - std::min((ballTimeAtClosestPoint - timeToTarget), 0.2) / 0.2) * 80 + ai::constants::MAX_JERK_DEFAULT;
             return {targetPosition, jerk};
         }
     }
@@ -153,7 +169,7 @@ std::pair<Vector2, double> KeeperBlockBall::calculateTargetPositionBallShot(cons
             maxTimeLeftWhenArrived = timeLeftWhenArrived;
             optimalTarget = currentTarget;
             // TODO ROBOCUP 2024: TWEAK THIS VALUE
-            jerk = (1 - std::min(std::max(timeLeftWhenArrived, 0.0), 0.2) / 0.2) * ai::constants::MAX_JERK_OVERSHOOT + ai::constants::MAX_JERK_DEFAULT;
+            jerk = (1 - std::min(std::max(timeLeftWhenArrived, 0.0), 0.2) / 0.2) * 80 + ai::constants::MAX_JERK_DEFAULT;
         }
     }
     return {optimalTarget, jerk};
@@ -226,8 +242,8 @@ Vector2 KeeperBlockBall::calculateTargetPositionBallNotShot(const StpInfo &info,
 
 Angle KeeperBlockBall::calculateYaw(const world::view::BallView &ball, const Vector2 &targetKeeperPosition) {
     // Look towards ball to ensure ball hits the front assembly to reduce odds of ball reflecting in goal
-    const auto keeperToBall = (ball->position - targetKeeperPosition) / 1.6;
-    return keeperToBall.angle();
+    const auto keeperToBall = (ball->position - targetKeeperPosition);
+    return keeperToBall.angle()/1.3;
 }
 
 }  // namespace rtt::ai::stp::tactic

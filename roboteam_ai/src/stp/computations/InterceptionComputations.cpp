@@ -110,7 +110,8 @@ InterceptionInfo InterceptionComputations::calculateInterceptionInfo(const std::
             auto robotToBall = (ballPosition - robot->getPos());
             auto angle = Angle(robotToBall).shortestAngleDiff(Angle(targetVelocity));
             // TODO ROBOCUP 2024: TWEAK THIS NOT MAGIC NUMBER
-            if (std::abs(angle) < M_PI / 4) {
+            auto circle = Circle(ballPosition - targetVelocity.stretchToLength(0.5), 0.5);
+            if (std::abs(angle) < M_PI / 4 || circle.contains(robot->getPos())) {
                 usedTargetVelocity = targetVelocity;
             } else {
                 usedTargetVelocity = Vector2(0, 0);

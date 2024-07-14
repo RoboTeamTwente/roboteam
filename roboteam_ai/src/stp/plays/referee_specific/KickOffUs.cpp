@@ -67,6 +67,7 @@ void KickOffUs::calculateInfoForRoles() noexcept {
     stpInfos["kick_off_taker"].setPositionToShootAt(theirGoal);
     stpInfos["kick_off_taker"].setShotPower(ShotPower::PASS);
     stpInfos["kick_off_taker"].setKickOrChip(KickType::CHIP);
+    stpInfos["kick_off_taker"].setShootOnFirstTouch(true);
 }
 
 bool KickOffUs::shouldEndPlay() noexcept {

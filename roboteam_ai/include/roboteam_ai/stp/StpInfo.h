@@ -56,6 +56,9 @@ struct StpInfo {
     ShotPower getShotPower() const { return shotPower; }
     void setShotPower(ShotPower shotPower) { this->shotPower = shotPower; }
 
+    bool getShootOnFirstTouch() const { return shootOnFirstTouch; }
+    void setShootOnFirstTouch(bool shootOnFirstTouch) { this->shootOnFirstTouch = shootOnFirstTouch; }
+
     rtt::KickType getKickOrChip() const { return kickOrChip; }
     void setKickOrChip(rtt::KickType kickOrChip) { this->kickOrChip = kickOrChip; }
 
@@ -168,6 +171,11 @@ struct StpInfo {
      * Type of the kick/chip
      */
     ShotPower shotPower{};
+
+    /**
+     * Shoot as soon as we see the ball, also when we are not in a kick skill
+     */
+    bool shootOnFirstTouch = false;
 
     /**
      * Reference yaw of the robot

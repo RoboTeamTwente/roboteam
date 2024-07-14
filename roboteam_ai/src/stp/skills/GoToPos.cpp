@@ -39,6 +39,13 @@ Status GoToPos::onUpdate(const StpInfo &info) noexcept {
     // set command ID
     command.id = robot->getId();
 
+    if (info.getShootOnFirstTouch() && info.getKickOrChip() != rtt::KickType::NO_KICK && info.getPositionToShootAt()) {
+        double distanceBallToTarget = (info.getBall()->get()->position - info.getPositionToShootAt().value()).length();
+        auto kickChipVelocity = control::ControlUtils::determineKickForce(distanceBallToTarget, info.getShotPower());
+        command.kickType = info.getKickOrChip();
+        command.kickSpeed = std::clamp(kickChipVelocity, constants::MIN_KICK_POWER, constants::MAX_KICK_POWER);
+    }
+
     // forward the generated command to the ControlModule, for checking and limiting
     forwardRobotCommand();
 

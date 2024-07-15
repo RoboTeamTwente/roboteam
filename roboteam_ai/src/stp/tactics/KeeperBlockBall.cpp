@@ -243,7 +243,7 @@ Vector2 KeeperBlockBall::calculateTargetPositionBallNotShot(const StpInfo &info,
 Angle KeeperBlockBall::calculateYaw(const world::view::BallView &ball, const Vector2 &targetKeeperPosition) {
     // Look towards ball to ensure ball hits the front assembly to reduce odds of ball reflecting in goal
     const auto keeperToBall = (ball->position - targetKeeperPosition);
-    return keeperToBall.angle()/1.3;
+    return keeperToBall.angle() / 1.3;
 }
 
 }  // namespace rtt::ai::stp::tactic

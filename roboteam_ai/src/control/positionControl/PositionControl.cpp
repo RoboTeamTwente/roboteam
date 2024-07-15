@@ -32,6 +32,14 @@ std::pair<Vector2, Vector2> PositionControl::computeAndTrackTrajectory(const wor
     } else if (avoidObjects.shouldAvoidOutOfField && !field.playArea.contains(currentPosition, constants::OUT_OF_FIELD_MARGIN)) {
         targetPosition = FieldComputations::projectPointInField(field, currentPosition, constants::OUT_OF_FIELD_MARGIN + 0.1);
         computedTrajectories[robotId] = Trajectory2D(currentPosition, currentVelocity, targetPosition, maxRobotVelocity, ai::constants::MAX_ACC, maxJerk, robotId);
+    } else if (avoidObjects.shouldAvoidGoalPosts && ((field.leftGoalArea.topLine().distanceToLine(currentPosition) < constants::ROBOT_RADIUS - 0.02) ||
+                                                     (field.leftGoalArea.bottomLine().distanceToLine(currentPosition) < constants::ROBOT_RADIUS - 0.02) ||
+                                                     (field.leftGoalArea.leftLine().distanceToLine(currentPosition) < constants::ROBOT_RADIUS - 0.02) ||
+                                                     (field.rightGoalArea.topLine().distanceToLine(currentPosition) < constants::ROBOT_RADIUS - 0.02) ||
+                                                     (field.rightGoalArea.bottomLine().distanceToLine(currentPosition) < constants::ROBOT_RADIUS - 0.02) ||
+                                                     (field.rightGoalArea.rightLine().distanceToLine(currentPosition) < constants::ROBOT_RADIUS - 0.02))) {
+        targetPosition = Vector2(0, 0);
+        computedTrajectories[robotId] = Trajectory2D(currentPosition, currentVelocity, targetPosition, maxRobotVelocity, ai::constants::MAX_ACC, maxJerk, robotId);
     } else {
         computedTrajectories[robotId] = Trajectory2D(currentPosition, currentVelocity, targetPosition, targetVelocity, maxRobotVelocity, ai::constants::MAX_ACC, maxJerk, robotId);
         auto hasCollsion = CollisionCalculations::isColliding(computedTrajectories[robotId], avoidObjects, field, robotId, world, computedPaths);

@@ -32,10 +32,6 @@ double CollisionCalculations::getFirstCollisionTimeMotionlessObject(const Trajec
                 pathLine.closestDistanceToLineSegment(rightGoalTopPost) < constants::ROBOT_RADIUS ||
                 pathLine.closestDistanceToLineSegment(rightGoalBottomPost) < constants::ROBOT_RADIUS ||
                 pathLine.closestDistanceToLineSegment(rightGoalBackPost) < constants::ROBOT_RADIUS) {
-                // TODO ROBOCUP 2024: CHECK THIS
-                if (checkPoint > 1) {
-                    return checkPoint * 0.1;
-                }
             }
         }
         if (avoidObjects.shouldAvoidOurDefenseArea) {

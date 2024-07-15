@@ -68,7 +68,7 @@ constexpr double FUZZY_DEFAULT_CUTOFF = 127; /**< Value at which the fuzzy logic
 /// Distance constants
 constexpr double ROBOT_CLOSE_TO_POINT = 0.2;        /**< Distance from the robot to a position at which the robot is considered close to that position */
 constexpr double DISTANCE_TO_PASS_TRAJECTORY = 0.5; /**< Distance from the robot to the pass trajectory at which the robot is considered too close to the pass trajectory */
-constexpr double OUT_OF_FIELD_MARGIN = 0.2;      /**< Distance that the center of the robot is allowed to go out of the field during play (not for end location, only for paths) */
+constexpr double OUT_OF_FIELD_MARGIN = 0.2;       /**< Distance that the center of the robot is allowed to go out of the field during play (not for end location, only for paths) */
 constexpr double FREE_KICK_TAKEN_DISTANCE = 0.07; /**< Distance that the ball must travel before we can say a kickoff or free kick has been taken */
 constexpr double PENALTY_DISTANCE_BEHIND_BALL = 1.5; /**< The minimum distance the robots have to be behind the ball during a penalty, default is 1 meter, but do 1.5 to be sure */
 ;

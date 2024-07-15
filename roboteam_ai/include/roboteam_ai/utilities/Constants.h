@@ -46,14 +46,18 @@ constexpr double MIN_YAW = -M_PI;             /**< Minimum yaw the robot can hav
 constexpr double MAX_YAW = M_PI;              /**< Maximum yaw the robot can have */
 constexpr double MAX_ACC = 3.5;               /**< Maximum acceleration of the robot */
 constexpr double MAX_VEL = 4.0;               /**< Maximum allowed velocity of the robot */
+constexpr double MAX_JERK_OVERSHOOT = 100;    /**< Jerk limit for overshoot */
+// TODO ROBOCUP 2024: FIX THIS MAGIC
+constexpr double MAX_JERK_DEFAULT = 6; /**< Default jerk limit */
 
 /// GoToPos Constants
 // Distance margin for 'goToPos'. If the robot is within this margin, goToPos is successful
-constexpr double GO_TO_POS_ERROR_MARGIN = 0.01; /**< Distance error for a robot to be considered to have reached a position */
+constexpr double GO_TO_POS_ERROR_MARGIN = 0.02; /**< Distance error for a robot to be considered to have reached a position */
 // Angle margin for 'goToPos'. If the robot is within this margin, goToPos is successful
 constexpr double GO_TO_POS_ANGLE_ERROR_MARGIN = 0.01; /**< Angle error for a robot to be considered to have reached a position */
 // Maximum inaccuracy during ballplacement
-constexpr double BALL_PLACEMENT_MARGIN = 0.15 - BALL_RADIUS - 0.02; /**< Distance error for the ball to be considered to have reached the ball placement position*/
+constexpr double BALL_PLACEMENT_MARGIN = 0.15 - BALL_RADIUS - 0.01; /**< Distance error for the ball to be considered to have reached the ball placement position*/
+constexpr double BALL_PLACER_MARGIN = BALL_PLACEMENT_MARGIN - 0.05; /**< Distance before the ball placer moves away from hte ball*/
 constexpr double ENEMY_ALREADY_ASSIGNED_MULTIPLIER = 0.9;           /**< Multiplication factor for the distance to goal used by the dealer when the enemy is already assigned */
 
 /// Invariant constants
@@ -64,21 +68,24 @@ constexpr double FUZZY_DEFAULT_CUTOFF = 127; /**< Value at which the fuzzy logic
 /// Distance constants
 constexpr double ROBOT_CLOSE_TO_POINT = 0.2;        /**< Distance from the robot to a position at which the robot is considered close to that position */
 constexpr double DISTANCE_TO_PASS_TRAJECTORY = 0.5; /**< Distance from the robot to the pass trajectory at which the robot is considered too close to the pass trajectory */
-constexpr double OUT_OF_FIELD_MARGIN = 0.17;      /**< Distance that the center of the robot is allowed to go out of the field during play (not for end location, only for paths) */
+constexpr double OUT_OF_FIELD_MARGIN = 0.2;       /**< Distance that the center of the robot is allowed to go out of the field during play (not for end location, only for paths) */
 constexpr double FREE_KICK_TAKEN_DISTANCE = 0.07; /**< Distance that the ball must travel before we can say a kickoff or free kick has been taken */
 constexpr double PENALTY_DISTANCE_BEHIND_BALL = 1.5; /**< The minimum distance the robots have to be behind the ball during a penalty, default is 1 meter, but do 1.5 to be sure */
 ;
 
 /// GameState constants
-constexpr double AVOID_BALL_DISTANCE = 0.5 + ROBOT_RADIUS + GO_TO_POS_ERROR_MARGIN + BALL_RADIUS + 0.1; /**< Minimum distance all robots should keep when avoiding the ball */
+constexpr double AVOID_BALL_DISTANCE = 0.5 + ROBOT_RADIUS + BALL_RADIUS + 0.05; /**< Minimum distance all robots should keep when avoiding the ball */
 constexpr double AVOID_BALL_DISTANCE_BEFORE_FREE_KICK =
-    0.05 + ROBOT_RADIUS + GO_TO_POS_ERROR_MARGIN + BALL_RADIUS + 0.01; /**< Minimum distance all robots should keep when avoiding the ball before a free kick */
+    0.05 + ROBOT_RADIUS + BALL_RADIUS + 0.01; /**< Minimum distance all robots should keep when avoiding the ball before a free kick */
 
 /// Friction constants
 constexpr static float SIMULATION_FRICTION = 0.71; /**< The expected movement friction of the ball during simulation */
 constexpr static float REAL_FRICTION = 0.44;       /**< The expected movement friction of the ball on the field */
 
 static inline double HAS_BALL_DISTANCE() { return (GameSettings::getRobotHubMode() == net::RobotHubMode::BASESTATION) ? 0.11 : 0.12; }
+static inline double SEND_TIME_IN_FUTURE() {
+    return (GameSettings::getRobotHubMode() == net::RobotHubMode::BASESTATION) ? 0.04 : 0.145;
+}  // Simulator doesn't have mass feedforward, so we need to send a bigger difference
 
 static std::map<int, bool> ROBOTS_WITH_WORKING_DRIBBLER() {
     static std::map<int, bool> workingDribblerRobots;

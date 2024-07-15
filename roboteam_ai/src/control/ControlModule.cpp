@@ -12,6 +12,8 @@ namespace rtt::ai::control {
 void ControlModule::rotateRobotCommand(rtt::RobotCommand& command) {
     command.velocity.x = -command.velocity.x;
     command.velocity.y = -command.velocity.y;
+    command.acceleration.x = -command.acceleration.x;
+    command.acceleration.y = -command.acceleration.y;
     command.yaw += M_PI;
 }
 

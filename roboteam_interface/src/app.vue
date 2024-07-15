@@ -74,7 +74,7 @@ const bottomPanelSize = computed(() => `${uiStore.panelSize('bottomPanel')}px`)
           </div>
           <div v-for="(voltage, key) in visionData.knownBatteryLevels" :key="key">
             <div :style="{ color: voltage == null ? '#808080' : voltage < 21 ? '#8a0000' : voltage < 23.1 ? '#ffff00' : '#00a01e'}">
-              {{ key }} : {{ voltage ?? 'N/A' }}
+              {{ key }} : {{ voltage != null ? Number(voltage).toFixed(2) : 'N/A' }}
             </div>
           </div>
         </div>

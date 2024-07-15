@@ -27,6 +27,8 @@ message RobotCommand {
 
     bool dribbler_on = 13; // If true, the robot will turn on its dribbler
     bool wheels_off = 14;    // If true, the robot will not move its wheels
+    double acceleration_x = 15;     // (m/s^2) Target x acceleration of the robot
+    double acceleration_y = 16;     // (m/s^2) Target y acceleration of the robot
 }
 
 message RobotCommands {

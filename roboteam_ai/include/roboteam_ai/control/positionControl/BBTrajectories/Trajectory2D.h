@@ -1,11 +1,13 @@
 #ifndef RTT_TRAJECTORY2D_H
 #define RTT_TRAJECTORY2D_H
 
+#include <ruckig/ruckig.hpp>
 #include <vector>
 
 #include "Trajectory1D.h"
 #include "roboteam_utils/Vector2.h"
 
+using namespace ruckig;
 namespace rtt {
 
 /**
@@ -19,15 +21,11 @@ class Trajectory2D {
      */
     Trajectory2D() = default;
 
-    /**
-     * @brief Constructor of the Trajectory2D class
-     * @param initialPos Initial position of the robot
-     * @param initialVel Initial velocity of the robot
-     * @param finalPos Target position to got to
-     * @param maxVel Maximum allowed velocity
-     * @param maxAcc Maximum allowed acceleration or deceleration
-     */
-    Trajectory2D(const Vector2 &initialPos, const Vector2 &initialVel, const Vector2 &finalPos, double maxVel, double maxAcc);
+    Trajectory2D(const Vector2 &initialPos, const Vector2 &initialVel, const Vector2 &finalPos, double maxVel, double maxAcc, double maxJerk, int robotId);
+    Trajectory2D(const Vector2 &initialPos, const Vector2 &initialVel, const Vector2 &finalPos, const Vector2 &finalVel, double maxVel, double maxAcc, double maxJerk, int robotId);
+    Trajectory2D(const Vector2 &initialPos, const Vector2 &initialVel, const Vector2 &initialAcc, const Vector2 &finalPos, double maxVel, double maxAcc, double maxJerk);
+    Trajectory2D(const Vector2 &initialPos, const Vector2 &initialVel, const Vector2 &initialAcc, const Vector2 &finalPos, const Vector2 &finalVel, double maxVel, double maxAcc,
+                 double maxJerk);
 
     /**
      * @brief Stores the trajectory
@@ -76,10 +74,16 @@ class Trajectory2D {
      * @return Total time of the trajectory to end point
      */
     [[nodiscard]] double getTotalTime() const;
+    static std::unordered_map<int, Vector2> lastAcceleration; /**< Map of last acceleration for each robot */
+
+    Vector2 getLastAcceleration(int robotId);
 
    private:
-    Trajectory1D x; /**< 1D x component of the 2D Trajectory */
-    Trajectory1D y; /**< 1D y component of the 2D Trajectory */
+    Trajectory<1> x; /**< 1D x component of the 2D Trajectory */
+    std::optional<Trajectory<1>> xAdded;
+    Trajectory<1> y; /**< 1D y component of the 2D Trajectory */
+    std::optional<Trajectory<1>> yAdded;
+    double addedFromTime = std::numeric_limits<double>::infinity();
 };
 
 }  // namespace rtt

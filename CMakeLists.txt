@@ -95,6 +95,7 @@ if(UNIX AND NOT APPLE)
 endif()
 
 find_package(Qt5Network REQUIRED)
+find_package(ruckig REQUIRED)
 
 # internal projects
 add_subdirectory(roboteam_networking)

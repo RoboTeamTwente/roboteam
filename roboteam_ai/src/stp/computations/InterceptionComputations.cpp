@@ -36,7 +36,8 @@ KeeperInterceptionInfo InterceptionComputations::calculateKeeperInterceptionInfo
                 return keeperInterceptionInfo;
             }
             // If we can reach the ball in time, we will intercept
-            if (Trajectory2D(keeper->getPos(), keeper->getVel(), futureBallPosition, maxRobotVelocity, ai::constants::MAX_ACC).getTotalTime() < loopTime) {
+            if (Trajectory2D(keeper->getPos(), keeper->getVel(), futureBallPosition, maxRobotVelocity, ai::constants::MAX_ACC, ai::constants::MAX_JERK_DEFAULT, keeper->getId())
+                    .getTotalTime() < loopTime) {
                 keeperInterceptionInfo.interceptLocation = futureBallPosition;
                 keeperInterceptionInfo.canIntercept = true;
                 return keeperInterceptionInfo;
@@ -59,7 +60,7 @@ InterceptionInfo InterceptionComputations::calculateInterceptionInfo(const std::
     auto interceptRobot = calculateTheirBallInterception(world, ballTrajectory);
 
     // Helper function to calculate the intercept info for a given target position
-    auto calculateIntercept = [&](const Vector2 &targetPosition) {
+    auto calculateIntercept = [&](const Vector2 &targetPosition, const Vector2 &targetVelocity) {
         // Check if they are able to intercept the ball at the part of the trajectory we are checking
         if (interceptRobot && (*interceptRobot - pastBallPosition).length() < (futureBallPosition - pastBallPosition).length()) {
             auto minDistance = (*interceptRobot - pastBallPosition).length();
@@ -72,21 +73,30 @@ InterceptionInfo InterceptionComputations::calculateInterceptionInfo(const std::
             }
             double minTimeToTarget = std::numeric_limits<double>::max();
             for (const auto &robot : ourRobots) {
-                auto trajectory = Trajectory2D(robot->getPos(), robot->getVel(), interceptionInfo.interceptLocation, maxRobotVelocity, ai::constants::MAX_ACC);
+                auto trajectory = Trajectory2D(robot->getPos(), robot->getVel(), interceptionInfo.interceptLocation, maxRobotVelocity, ai::constants::MAX_ACC,
+                                               ai::constants::MAX_JERK_DEFAULT, robot->getId());
                 if (trajectory.getTotalTime() < minTimeToTarget) {
                     minTimeToTarget = trajectory.getTotalTime();
                     interceptionInfo.interceptId = robot->getId();
                     interceptionInfo.timeToIntercept = minTimeToTarget;
                 }
             }
+            interceptionInfo.interceptVelocity = Vector2(0, 0);
             shouldReturn = true;
             return;
         }
 
         for (const auto &robot : ourRobots) {
+            auto ballToRobot = (robot->getPos() - ballPosition);
+            auto ballToFutPos = (futureBallPosition - ballPosition);
+            // FutPos and Robot are on opposite sides of the ball, don't consider this robot
+            if (ballToRobot.dot(ballToFutPos) < 0) {
+                continue;
+            }
             // If the robot is already close to the line, project it's position onto the line to prevent always moving to the 0.1 second mark
             if (LineSegment(pastBallPosition, futureBallPosition).distanceToLine(robot->getPos()) < 1.5 * constants::ROBOT_RADIUS) {
                 interceptionInfo.interceptLocation = LineSegment(pastBallPosition, futureBallPosition).project(robot->getPos());
+                interceptionInfo.interceptVelocity = Vector2(0, 0);
                 interceptionInfo.interceptId = robot->getId();
                 interceptionInfo.timeToIntercept = 0;
                 interceptionInfo.isInterceptable = true;
@@ -96,10 +106,22 @@ InterceptionInfo InterceptionComputations::calculateInterceptionInfo(const std::
 
         double minTimeToTarget = std::numeric_limits<double>::max();
         for (const auto &robot : ourRobots) {
-            auto trajectory = Trajectory2D(robot->getPos(), robot->getVel(), targetPosition, maxRobotVelocity, ai::constants::MAX_ACC);
+            Vector2 usedTargetVelocity;
+            auto robotToBall = (ballPosition - robot->getPos());
+            auto angle = Angle(robotToBall).shortestAngleDiff(Angle(targetVelocity));
+            // TODO ROBOCUP 2024: TWEAK THIS NOT MAGIC NUMBER
+            auto circle = Circle(ballPosition - targetVelocity.stretchToLength(0.5), 0.5);
+            if (std::abs(angle) < M_PI / 4 || circle.contains(robot->getPos())) {
+                usedTargetVelocity = targetVelocity;
+            } else {
+                usedTargetVelocity = Vector2(0, 0);
+            }
+            auto trajectory = Trajectory2D(robot->getPos(), robot->getVel(), targetPosition, usedTargetVelocity, maxRobotVelocity, ai::constants::MAX_ACC,
+                                           ai::constants::MAX_JERK_OVERSHOOT, robot->getId());
             if (trajectory.getTotalTime() < minTimeToTarget) {
                 minTimeToTarget = trajectory.getTotalTime();
                 interceptionInfo.interceptLocation = targetPosition;
+                interceptionInfo.interceptVelocity = usedTargetVelocity;
                 interceptionInfo.interceptId = robot->getId();
                 interceptionInfo.timeToIntercept = minTimeToTarget;
                 auto theirClosestToBall = world->getWorld()->getRobotClosestToBall(world::them);
@@ -112,7 +134,8 @@ InterceptionInfo InterceptionComputations::calculateInterceptionInfo(const std::
 
     // If the ball is not moving, we use the current ball position
     if (ballVelocity.length() <= constants::BALL_STILL_VEL) {
-        calculateIntercept(ballPosition);
+        calculateIntercept(ballPosition, Vector2(0, 0));
+        interceptionInfo.interceptVelocity = Vector2(0, 0);
         return interceptionInfo;
     }
 
@@ -146,14 +169,15 @@ InterceptionInfo InterceptionComputations::calculateInterceptionInfo(const std::
             if (world->getField().value().playArea.contains(ballPosition, constants::BALL_RADIUS)) {
                 futureBallPosition =
                     FieldComputations::projectPointIntoFieldOnLine(world->getField().value(), futureBallPosition, ballPosition, futureBallPosition, constants::BALL_RADIUS);
-                calculateIntercept(futureBallPosition);
+                calculateIntercept(futureBallPosition, Vector2(0, 0));
             } else {
-                calculateIntercept(ballPosition);
+                calculateIntercept(ballPosition, Vector2(0, 0));
             }
             return interceptionInfo;
         }
-
-        calculateIntercept(futureBallPosition);
+        // TODO ROBOCUP 2024: PLEASE FIX :{}
+        auto ballVelFuture = (futureBallPosition - pastBallPosition) / 0.1;
+        calculateIntercept(futureBallPosition, ballVelFuture);
         // If any robot can intercept the ball in time, return that info
         if (loopTime >= interceptionInfo.timeToIntercept) {
             interceptionInfo.isInterceptable = true;

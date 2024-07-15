@@ -53,6 +53,8 @@ proto::RobotCommands robotCommandsToProto(const rtt::RobotCommands& commands) {
 
         protoCommand->set_dribbler_on(command.dribblerOn);
         protoCommand->set_wheels_off(command.wheelsOff);
+        protoCommand->set_acceleration_x(command.acceleration.x);
+        protoCommand->set_acceleration_y(command.acceleration.y);
     }
 
     return protoCommands;
@@ -64,6 +66,7 @@ rtt::RobotCommands protoToRobotCommands(const proto::RobotCommands& protoCommand
     for (const auto& protoCommand : protoCommands.robot_commands()) {
         rtt::RobotCommand robotCommand = {.id = protoCommand.id(),
                                           .velocity = Vector2(protoCommand.velocity_x(), protoCommand.velocity_y()),
+                                          .acceleration = Vector2(protoCommand.acceleration_x(), protoCommand.acceleration_y()),
                                           .yaw = protoCommand.yaw(),
                                           .targetAngularVelocity = protoCommand.angular_velocity(),
                                           .useAngularVelocity = protoCommand.use_angular_velocity(),

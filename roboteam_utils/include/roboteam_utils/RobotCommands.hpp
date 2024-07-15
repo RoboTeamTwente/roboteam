@@ -20,6 +20,7 @@ typedef struct RobotCommand {
 
     // Positioning related variables
     Vector2 velocity;                    // (m/s) Target velocity of the robot
+    Vector2 acceleration;                // (m/s^2) Target acceleration of the robot
     Angle yaw;                           // (rad) [-PI, PI] The target yaw of the robot
     double targetAngularVelocity = 0.0;  // (rad/s) The target angular velocity of the robot
     bool useAngularVelocity = 0.0;       // True if angular velocity should be used instead of yaw
@@ -29,7 +30,7 @@ typedef struct RobotCommand {
 
     // Action related variables
     double kickSpeed = 0.0;                 // (m/s) [0, 6.5] The target speed of the ball. Speed of <= 0.0 is undefined
-    bool waitForBall = false;               // Will make the robot wait with kicking until it has the ball
+    bool waitForBall = true;                // Will make the robot wait with kicking until it has the ball
     KickType kickType = KickType::NO_KICK;  // Defines the type of kicking, either normal(horizontal) or chipping(vertical), or no kick
     bool kickAtYaw = false;                 // Makes robot kick once it arrives at the specified yaw, used in combination with angular velocity
 

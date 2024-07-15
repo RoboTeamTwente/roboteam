@@ -145,9 +145,10 @@ class Dealer {
      * @param robot the robot for which the cost will be determined
      * @param target_position the position the robot will be travelling to
      * @param MaxRobotVelocity the maximum velocity a robot can have
+     * @param MaxRobotJerk the maximum jerk a robot can have
      * @return Cost of travelling that distance
      */
-    static double costForDistance(const v::RobotView &robot, const rtt::Vector2 target_position, const double MaxRobotVelocity);
+    static double costForDistance(const v::RobotView &robot, const rtt::Vector2 target_position, const double MaxRobotVelocity, const double MaxRobotJerk);
 
     /**
      * @brief Calculates the cost of a property of a robot

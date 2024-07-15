@@ -36,6 +36,15 @@ RUN apk add --no-cache bash build-base cmake make musl-dev libtool \
     qt5-qtbase-dev qt5-qtcharts-dev qt5-qtdeclarative-dev qt5-qtsvg-dev
 RUN npm install -g yarn
 
+WORKDIR /tmp
+RUN git clone https://github.com/pantor/ruckig.git /tmp/ruckig \
+    && cd /tmp/ruckig \
+    && git checkout dae82835ec043a54ed6bc775f0776e1a7ff99124 \
+    && mkdir build && cd build \
+    && cmake -DCMAKE_BUILD_TYPE=Release .. \
+    && make -j$(nproc) \
+    && make install
+
 WORKDIR /root/protobuf
 RUN wget https://github.com/protocolbuffers/protobuf/releases/download/v3.20.3/protobuf-cpp-3.20.3.zip -O protobuf.zip && unzip protobuf.zip && rm protobuf.zip
 WORKDIR /root/protobuf/protobuf-3.20.3
@@ -70,7 +79,17 @@ RUN apk add --no-cache \
     sudo nodejs npm
 RUN npm install -g yarn
 
+WORKDIR /tmp
+RUN git clone https://github.com/pantor/ruckig.git /tmp/ruckig \
+    && cd /tmp/ruckig \
+    && git checkout dae82835ec043a54ed6bc775f0776e1a7ff99124 \
+    && mkdir build && cd build \
+    && cmake -DCMAKE_BUILD_TYPE=Release .. \
+    && make -j$(nproc) \
+    && make install
+
 COPY --from=development --chown=root:root /usr/local/lib/libprotobuf.so.31 /usr/local/lib/libprotobuf.so.31
+COPY --from=development --chown=root:root /usr/local/lib/libruckig.so /usr/local/lib/libruckig.so
 COPY --from=development --chown=root:root /usr/local/bin/protoc /usr/local/bin/protoc
 
 RUN adduser -D $USER && \

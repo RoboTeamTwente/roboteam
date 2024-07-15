@@ -10,6 +10,7 @@ var dir_4b23724cfd3a8c462d5cc0820f5237c7 =
       [ "InterceptionInfo", "d5/d14/namespacertt_1_1ai_1_1stp.html#d9/d71/structrtt_1_1ai_1_1stp_1_1InterceptionInfo", [
         [ "interceptId", "d5/d14/namespacertt_1_1ai_1_1stp.html#a0ca96cfae9f78936d9f1796e3e389552", null ],
         [ "interceptLocation", "d5/d14/namespacertt_1_1ai_1_1stp.html#abf065dbec3c4aa317db20ecb6e468d84", null ],
+        [ "interceptVelocity", "d5/d14/namespacertt_1_1ai_1_1stp.html#a0396ad06e1977a281331ecc270843766", null ],
         [ "isInterceptable", "d5/d14/namespacertt_1_1ai_1_1stp.html#a7f5aa39c5386974d433907ac5368e8b3", null ],
         [ "timeToIntercept", "d5/d14/namespacertt_1_1ai_1_1stp.html#a7b26231103e9fea21fe78e0b347e1c34", null ]
       ] ],

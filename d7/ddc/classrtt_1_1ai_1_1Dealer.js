@@ -13,7 +13,7 @@ var classrtt_1_1ai_1_1Dealer =
     [ "FlagMap", "d7/ddc/classrtt_1_1ai_1_1Dealer.html#a239709eb792970c058e595f1340b397d", null ],
     [ "Dealer", "d7/ddc/classrtt_1_1ai_1_1Dealer.html#a38e5570d819dc8de80c478c5deba6703", null ],
     [ "~Dealer", "d7/ddc/classrtt_1_1ai_1_1Dealer.html#aad8a4055abc33454fce6cf0966ee3d9e", null ],
-    [ "costForDistance", "d7/ddc/classrtt_1_1ai_1_1Dealer.html#a175c8f978efe7506b0007e24671e608a", null ],
+    [ "costForDistance", "d7/ddc/classrtt_1_1ai_1_1Dealer.html#acce29329ba18931273d334e3f73abca3", null ],
     [ "costForProperty", "d7/ddc/classrtt_1_1ai_1_1Dealer.html#a18f662b889ef52c85aa211ba5c133c72", null ],
     [ "distribute", "d7/ddc/classrtt_1_1ai_1_1Dealer.html#a444db4b2230cdcee01993e4146716777", null ],
     [ "distributeFixedIds", "d7/ddc/classrtt_1_1ai_1_1Dealer.html#a03a176cf1ad988aa9439cf26f78f99f9", null ],

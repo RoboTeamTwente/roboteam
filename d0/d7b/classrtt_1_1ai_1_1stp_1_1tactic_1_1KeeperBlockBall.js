@@ -2,9 +2,9 @@ var classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall =
 [
     [ "KeeperBlockBall", "d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#a90925906e42a4da8344a7f568dd77c79", null ],
     [ "calculateInfoForSkill", "d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#aa6d4654c89847534172684fea5ef6843", null ],
-    [ "calculateTargetPosition", "d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#aed029a6dec04c0f4d4deb50a9aa90dc4", null ],
+    [ "calculateTargetPosition", "d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#ae4d6f59f0eaaa94c8be7884e82007c7d", null ],
     [ "calculateTargetPositionBallNotShot", "d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#aca87548d163db752636b4d02ba236804", null ],
-    [ "calculateTargetPositionBallShot", "d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#a05b9b9d6ebeaef143f8f936f64b9e02b", null ],
+    [ "calculateTargetPositionBallShot", "d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#a1accc4107e685270e1c33685dd7e0074", null ],
     [ "calculateYaw", "d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#a94843b609e566bbf3806e3c15699a013", null ],
     [ "getCurrentSkill", "d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#a483d158a091f8347c3c25983b22d015f", null ],
     [ "getKeepersLineSegment", "d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#a69444207b9e6d1623afacf9253d4e357", null ],

@@ -1,7 +1,7 @@
 var classrtt_1_1ai_1_1control_1_1PositionControl =
 [
-    [ "computeAndTrackTrajectory", "dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#a5c1e7be14e823a4062cff155dcd259cd", null ],
-    [ "findNewTrajectory", "dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#a57bc97198120edc88ef5143a7d66d524", null ],
+    [ "computeAndTrackTrajectory", "dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#a1379cc4446b25c9281aee45e231bc27f", null ],
+    [ "findNewTrajectory", "dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#a539dd63c55bd74e7591d4a95494db444", null ],
     [ "generateNormalizedPoints", "dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#a13095d31e027fd9c335befd29855d3a4", null ],
     [ "getComputedPath", "dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#abf40e5bec88c3741b9d17eaf8ca0ecd3", null ],
     [ "handleBallCollision", "dd/db5/classrtt_1_1ai_1_1control_1_1PositionControl.html#a7943031e42b3ac839733a4271f5eeebb", null ],

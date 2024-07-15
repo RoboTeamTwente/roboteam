@@ -134,8 +134,8 @@ var NAVTREEINDEX0 =
 "d0/d74/PrepareForcedStartGameStateEvaluation_8cpp.html":[3,0,0,1,3,1,0,15],
 "d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html":[2,0,0,0,4,6,6],
 "d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#a01fefb6157aa529288d27781343554c3":[2,0,0,0,4,6,6,13],
-"d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#a05b9b9d6ebeaef143f8f936f64b9e02b":[2,0,0,0,4,6,6,4],
 "d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#a0dd3439d999970125264ce7fccadff49":[2,0,0,0,4,6,6,18],
+"d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#a1accc4107e685270e1c33685dd7e0074":[2,0,0,0,4,6,6,4],
 "d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#a2406ddec88191f369b72206849a1d9a4":[2,0,0,0,4,6,6,10],
 "d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#a242748b42fbc99613b65f6500eb12f8f":[2,0,0,0,4,6,6,19],
 "d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#a483d158a091f8347c3c25983b22d015f":[2,0,0,0,4,6,6,6],
@@ -150,7 +150,7 @@ var NAVTREEINDEX0 =
 "d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#ac7dba7916b5fc648439cb51181d01358":[2,0,0,0,4,6,6,16],
 "d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#aca87548d163db752636b4d02ba236804":[2,0,0,0,4,6,6,3],
 "d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#adf2d88cf5c448bdd7badea70cf0faf69":[2,0,0,0,4,6,6,11],
-"d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#aed029a6dec04c0f4d4deb50a9aa90dc4":[2,0,0,0,4,6,6,2],
+"d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#ae4d6f59f0eaaa94c8be7884e82007c7d":[2,0,0,0,4,6,6,2],
 "d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#af4a9f63577d36c0cf178aae99fb0fd00":[2,0,0,0,4,6,6,14],
 "d0/d7b/classrtt_1_1ai_1_1stp_1_1tactic_1_1KeeperBlockBall.html#afacaf830284bc5c6dcd7652f0e1bab69":[2,0,0,0,4,6,6,8],
 "d0/d85/TacticTests_8cpp.html":[3,0,0,2,5,1],
@@ -245,9 +245,9 @@ var NAVTREEINDEX0 =
 "d1/d40/TestRole_8cpp.html":[3,0,0,1,3,3,4],
 "d1/d45/Constants_8h.html":[3,0,0,0,0,4,0],
 "d1/d45/Constants_8h.html#a0049ac47fb403555f4edf83760f6b1bd":[3,0,0,0,0,4,0,6],
-"d1/d45/Constants_8h.html#a039c173630e2e8a4a1439ef6104b94a5":[3,0,0,0,0,4,0,28],
-"d1/d45/Constants_8h.html#a0989191c188168d339b17231aa71ff1e":[3,0,0,0,0,4,0,11],
+"d1/d45/Constants_8h.html#a039c173630e2e8a4a1439ef6104b94a5":[3,0,0,0,0,4,0,30],
+"d1/d45/Constants_8h.html#a0989191c188168d339b17231aa71ff1e":[3,0,0,0,0,4,0,12],
 "d1/d45/Constants_8h.html#a0fae3bc127c61c8c63ef70c2e800b0d6":[3,0,0,0,0,4,0,7],
-"d1/d45/Constants_8h.html#a10ed5242a17dcfbc91d8180f43fbea64":[3,0,0,0,0,4,0,38],
-"d1/d45/Constants_8h.html#a12546dd8cb5e4caffaaad5e6d67d35c7":[3,0,0,0,0,4,0,48]
+"d1/d45/Constants_8h.html#a10ed5242a17dcfbc91d8180f43fbea64":[3,0,0,0,0,4,0,42],
+"d1/d45/Constants_8h.html#a12546dd8cb5e4caffaaad5e6d67d35c7":[3,0,0,0,0,4,0,52]
 };

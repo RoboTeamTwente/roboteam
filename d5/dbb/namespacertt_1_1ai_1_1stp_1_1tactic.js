@@ -17,6 +17,7 @@ var namespacertt_1_1ai_1_1stp_1_1tactic =
     [ "KEEPER_GOAL_DECREASE_AT_ONE_SIDE", "d5/dbb/namespacertt_1_1ai_1_1stp_1_1tactic.html#aaa155577589617b454d8fee2ea755e51", null ],
     [ "MAX_DISTANCE_BALL_BEHIND_GOAL", "d5/dbb/namespacertt_1_1ai_1_1stp_1_1tactic.html#ac175fe0237ffc965210b36f9b58ef4e9", null ],
     [ "MAX_DISTANCE_HEADING_TOWARDS_GOAL", "d5/dbb/namespacertt_1_1ai_1_1stp_1_1tactic.html#ac67952380d471ce18b24284d08028877", null ],
+    [ "MOVE_AFTER_DRIBBLER_OFF", "d5/dbb/namespacertt_1_1ai_1_1stp_1_1tactic.html#a39382371c883d1cc7897bf59b3badd40", null ],
     [ "PROJECT_BALL_DISTANCE_TO_GOAL", "d5/dbb/namespacertt_1_1ai_1_1stp_1_1tactic.html#a9e4cffb1bae4ff229b1e0cdfaa1c0bf5", null ],
     [ "STAND_STILL_THRESHOLD", "d5/dbb/namespacertt_1_1ai_1_1stp_1_1tactic.html#acffd3e77654ac22c44494543015e090b", null ]
 ];

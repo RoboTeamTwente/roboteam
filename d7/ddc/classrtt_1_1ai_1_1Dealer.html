@@ -165,9 +165,9 @@ Static Private Member Functions</h2></td></tr>
 <tr class="memitem:a9c3ea880f0bfdd05727d3d0a661d2ceb"><td class="memItemLeft" align="right" valign="top">static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/ddc/classrtt_1_1ai_1_1Dealer.html#a9c3ea880f0bfdd05727d3d0a661d2ceb">getWeightForPriority</a> (const <a class="el" href="../../d4/dcc/namespacertt_1_1ai.html#a749f4888e489115d32ef0cf1417cd617">DealerFlagPriority</a> &amp;flagPriority)</td></tr>
 <tr class="memdesc:a9c3ea880f0bfdd05727d3d0a661d2ceb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Translates a priority into a double.  <a href="../../d7/ddc/classrtt_1_1ai_1_1Dealer.html#a9c3ea880f0bfdd05727d3d0a661d2ceb">More...</a><br /></td></tr>
 <tr class="separator:a9c3ea880f0bfdd05727d3d0a661d2ceb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a175c8f978efe7506b0007e24671e608a"><td class="memItemLeft" align="right" valign="top">static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/ddc/classrtt_1_1ai_1_1Dealer.html#a175c8f978efe7506b0007e24671e608a">costForDistance</a> (const <a class="el" href="../../d3/de7/classrtt_1_1world_1_1view_1_1RobotView.html">v::RobotView</a> &amp;robot, const <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">rtt::Vector2</a> target_position, const double MaxRobotVelocity)</td></tr>
-<tr class="memdesc:a175c8f978efe7506b0007e24671e608a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates the cost of travelling a certain distance.  <a href="../../d7/ddc/classrtt_1_1ai_1_1Dealer.html#a175c8f978efe7506b0007e24671e608a">More...</a><br /></td></tr>
-<tr class="separator:a175c8f978efe7506b0007e24671e608a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acce29329ba18931273d334e3f73abca3"><td class="memItemLeft" align="right" valign="top">static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/ddc/classrtt_1_1ai_1_1Dealer.html#acce29329ba18931273d334e3f73abca3">costForDistance</a> (const <a class="el" href="../../d3/de7/classrtt_1_1world_1_1view_1_1RobotView.html">v::RobotView</a> &amp;robot, const <a class="el" href="../../d5/df1/ControlUtils_8h.html#acfb8903fac5809ad6180aee41b325f82">rtt::Vector2</a> target_position, const double MaxRobotVelocity, const double MaxRobotJerk)</td></tr>
+<tr class="memdesc:acce29329ba18931273d334e3f73abca3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates the cost of travelling a certain distance.  <a href="../../d7/ddc/classrtt_1_1ai_1_1Dealer.html#acce29329ba18931273d334e3f73abca3">More...</a><br /></td></tr>
+<tr class="separator:acce29329ba18931273d334e3f73abca3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a18f662b889ef52c85aa211ba5c133c72"><td class="memItemLeft" align="right" valign="top">static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/ddc/classrtt_1_1ai_1_1Dealer.html#a18f662b889ef52c85aa211ba5c133c72">costForProperty</a> (bool property)</td></tr>
 <tr class="memdesc:a18f662b889ef52c85aa211ba5c133c72"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates the cost of a property of a robot.  <a href="../../d7/ddc/classrtt_1_1ai_1_1Dealer.html#a18f662b889ef52c85aa211ba5c133c72">More...</a><br /></td></tr>
 <tr class="separator:a18f662b889ef52c85aa211ba5c133c72"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -336,8 +336,8 @@ priority</td>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a175c8f978efe7506b0007e24671e608a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a175c8f978efe7506b0007e24671e608a">&#9670;&nbsp;</a></span>costForDistance()</h2>
+<a id="acce29329ba18931273d334e3f73abca3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acce29329ba18931273d334e3f73abca3">&#9670;&nbsp;</a></span>costForDistance()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -361,7 +361,13 @@ priority</td>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const double&#160;</td>
-          <td class="paramname"><em>MaxRobotVelocity</em>&#160;</td>
+          <td class="paramname"><em>MaxRobotVelocity</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>MaxRobotJerk</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -382,6 +388,7 @@ priority</td>
     <tr><td class="paramname">robot</td><td>the robot for which the cost will be determined </td></tr>
     <tr><td class="paramname">target_position</td><td>the position the robot will be travelling to </td></tr>
     <tr><td class="paramname">MaxRobotVelocity</td><td>the maximum velocity a robot can have </td></tr>
+    <tr><td class="paramname">MaxRobotJerk</td><td>the maximum jerk a robot can have </td></tr>
   </table>
   </dd>
 </dl>

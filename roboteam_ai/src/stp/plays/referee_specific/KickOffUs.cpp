@@ -65,7 +65,7 @@ Dealer::FlagMap KickOffUs::decideRoleFlags() const noexcept {
 void KickOffUs::calculateInfoForRoles() noexcept {
     Vector2 theirGoal = Vector2(6, 0);
     stpInfos["kick_off_taker"].setPositionToShootAt(theirGoal);
-    stpInfos["kick_off_taker"].setShotPower(ShotPower::PASS);
+    stpInfos["kick_off_taker"].setShotPower(ShotPower::MAX);
     stpInfos["kick_off_taker"].setKickOrChip(KickType::CHIP);
     stpInfos["kick_off_taker"].setShootOnFirstTouch(true);
 }

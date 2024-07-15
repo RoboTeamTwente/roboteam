@@ -70,7 +70,7 @@ ARG USERNAME=roboteamtwente
 ENV HOME=/home/$USERNAME
 ENV USER=$USERNAME
 
-RUN apk add --no-cache \
+RUN apk add --no-cache git cmake make \
     libtool libzmq libzmq-static libudev-zero libusb \
     zeromq-dev eigen-dev gtest-dev \
     libtbb-dev zlib-dev \

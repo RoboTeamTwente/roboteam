@@ -154,6 +154,9 @@ void RobotHub::sendCommandsToBasestation(const rtt::RobotCommands &commands, rtt
         command.rho = static_cast<float>(robotCommand.velocity.length());
         command.theta = static_cast<float>(robotCommand.velocity.angle());
 
+        command.acceleration_angle = static_cast<float>(robotCommand.acceleration.angle());
+        command.acceleration_magnitude = static_cast<float>(robotCommand.acceleration.length());
+
         command.useYaw = !robotCommand.useAngularVelocity;
         command.yaw = static_cast<float>(robotCommand.yaw.getValue());
         command.angularVelocity = static_cast<float>(robotCommand.targetAngularVelocity);

@@ -72,7 +72,7 @@ class KeeperBlockBall : public Tactic {
      * @param info the StpInfo struct
      * @return Target position for the keeper and a bool indicating if the keeper should avoid goal posts
      */
-    static std::pair<Vector2, bool> calculateTargetPosition(const StpInfo info) noexcept;
+    static std::tuple<Vector2, bool, double> calculateTargetPosition(const StpInfo info) noexcept;
 
     /**
      * @brief Calculates the target position for the keeper when the ball is shot
@@ -80,7 +80,7 @@ class KeeperBlockBall : public Tactic {
      * @param keepersLineSegment the lineSegment of the goal
      * @param ballTrajectory the trajectory of the ball
      */
-    static Vector2 calculateTargetPositionBallShot(const StpInfo info, rtt::LineSegment keepersLineSegment, rtt::LineSegment ballTrajectory) noexcept;
+    static std::pair<Vector2, double> calculateTargetPositionBallShot(const StpInfo info, rtt::LineSegment keepersLineSegment, rtt::LineSegment ballTrajectory) noexcept;
 
     /**
      * @brief Calculates the target position for the keeper when the ball is not shot

@@ -32,6 +32,12 @@ struct StpInfo {
     void setPositionToMoveTo(const std::optional<Vector2>& position) { this->positionToMoveTo = position; }
     void setPositionToMoveTo(const std::optional<gen::ScoredPosition>& scoredPosition) { setPositionToMoveTo(scoredPosition->position); }
 
+    const Vector2& getTargetVelocity() const { return targetVelocity; }
+    void setTargetVelocity(const Vector2& targetVelocity) { this->targetVelocity = targetVelocity; }
+
+    double getMaxJerk() const { return maxJerk; }
+    void setMaxJerk(double maxJerk) { this->maxJerk = maxJerk; }
+
     const std::optional<Vector2>& getPositionToShootAt() const { return positionToShootAt; }
     void setPositionToShootAt(const std::optional<Vector2>& position) { this->positionToShootAt = position; }
 
@@ -49,6 +55,9 @@ struct StpInfo {
 
     ShotPower getShotPower() const { return shotPower; }
     void setShotPower(ShotPower shotPower) { this->shotPower = shotPower; }
+
+    bool getShootOnFirstTouch() const { return shootOnFirstTouch; }
+    void setShootOnFirstTouch(bool shootOnFirstTouch) { this->shootOnFirstTouch = shootOnFirstTouch; }
 
     rtt::KickType getKickOrChip() const { return kickOrChip; }
     void setKickOrChip(rtt::KickType kickOrChip) { this->kickOrChip = kickOrChip; }
@@ -134,6 +143,16 @@ struct StpInfo {
     std::optional<Vector2> positionToMoveTo;
 
     /**
+     * Target velocity to move with
+     */
+    Vector2 targetVelocity;
+
+    /**
+     * Jerk to move with
+     */
+    double maxJerk = ai::constants::MAX_JERK_DEFAULT;
+
+    /**
      * Position to kick or chip at
      */
     std::optional<Vector2> positionToShootAt;
@@ -152,6 +171,11 @@ struct StpInfo {
      * Type of the kick/chip
      */
     ShotPower shotPower{};
+
+    /**
+     * Shoot as soon as we see the ball, also when we are not in a kick skill
+     */
+    bool shootOnFirstTouch = false;
 
     /**
      * Reference yaw of the robot

@@ -38,7 +38,7 @@ const uiStore = useUIStore()
             data-tip="Battery level"
           >
             <font-awesome-icon icon="battery" class="h-3 w-3 mr-1" />
-            {{ robot.feedbackInfo?.batteryLevel }}
+            {{ robot.feedbackInfo?.batteryLevel != null ? Number(robot.feedbackInfo.batteryLevel).toFixed(2) : 'N/A' }}
           </div>
           <div
             class="badge badge-sm badge-secondary tooltip tooltip-bottom"

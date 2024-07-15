@@ -14,6 +14,7 @@ class BallPlacer : public Role {
      * @param name The name of the role
      */
     BallPlacer(std::string name);
+    [[nodiscard]] Status update(StpInfo const& info) noexcept override;
 };
 }  // namespace rtt::ai::stp::role
 

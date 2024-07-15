@@ -256,7 +256,7 @@ double Dealer::getRobotScoreForDistance(const stp::StpInfo &stpInfo, const v::Ro
         return 0;
     }
 
-    return costForDistance(robot, *target_position, stpInfo.getMaxRobotVelocity());
+    return costForDistance(robot, *target_position, stpInfo.getMaxRobotVelocity(), stpInfo.getMaxJerk());
 }
 
 double Dealer::getDefaultFlagScores(const v::RobotView &robot, const Dealer::DealerFlag &flag) {
@@ -290,8 +290,8 @@ void Dealer::setGameStateRoleIds(std::unordered_map<std::string, v::RobotView> o
 }
 
 // Calculate the cost for distance. The further away the target, the higher the cost for that distance.
-double Dealer::costForDistance(const v::RobotView &robot, const rtt::Vector2 target_position, const double MaxRobotVelocity) {
-    return Trajectory2D(robot->getPos(), robot->getVel(), target_position, MaxRobotVelocity, ai::constants::MAX_ACC).getTotalTime();
+double Dealer::costForDistance(const v::RobotView &robot, const rtt::Vector2 target_position, const double MaxRobotVelocity, const double MaxRobotJerk) {
+    return Trajectory2D(robot->getPos(), robot->getVel(), target_position, MaxRobotVelocity, ai::constants::MAX_ACC, MaxRobotJerk, robot->getId()).getTotalTime();
 }
 
 double Dealer::costForProperty(bool property) { return property ? 0.0 : 1.0; }

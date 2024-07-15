@@ -18,7 +18,7 @@ Status Kick::onUpdate(const StpInfo &info) noexcept {
     // Set yaw command
     command.yaw = robot->getYaw();
 
-    command.waitForBall = false;
+    // command.waitForBall = false;
 
     // set command ID
     command.id = robot->getId();

@@ -29,6 +29,9 @@ std::pair<Vector2, Vector2> PositionControl::computeAndTrackTrajectory(const wor
                 FieldComputations::getDefenseArea(field, false, theirDefenseAreaMargin, 1).contains(currentPosition))) {
         targetPosition = handleDefenseAreaCollision(field, currentPosition);
         computedTrajectories[robotId] = Trajectory2D(currentPosition, currentVelocity, targetPosition, maxRobotVelocity, ai::constants::MAX_ACC, maxJerk, robotId);
+    } else if (avoidObjects.shouldAvoidOutOfField && !field.playArea.contains(currentPosition, constants::OUT_OF_FIELD_MARGIN)) {
+        targetPosition = FieldComputations::projectPointInField(field, currentPosition, constants::OUT_OF_FIELD_MARGIN + 0.1);
+        computedTrajectories[robotId] = Trajectory2D(currentPosition, currentVelocity, targetPosition, maxRobotVelocity, ai::constants::MAX_ACC, maxJerk, robotId);
     } else {
         computedTrajectories[robotId] = Trajectory2D(currentPosition, currentVelocity, targetPosition, targetVelocity, maxRobotVelocity, ai::constants::MAX_ACC, maxJerk, robotId);
         auto hasCollsion = CollisionCalculations::isColliding(computedTrajectories[robotId], avoidObjects, field, robotId, world, computedPaths);
@@ -60,7 +63,7 @@ std::pair<Vector2, Vector2> PositionControl::computeAndTrackTrajectory(const wor
 Vector2 PositionControl::handleBallCollision(const world::World *world, const Field &field, Vector2 currentPosition, stp::AvoidObjects avoidObjects) {
     auto ballPos = world->getWorld()->getBall()->get()->position;
     auto direction = currentPosition - ballPos;
-    Vector2 targetPosition = currentPosition + direction.stretchToLength(constants::AVOID_BALL_DISTANCE * 2);
+    Vector2 targetPosition = currentPosition + direction.stretchToLength(constants::AVOID_BALL_DISTANCE);
     if (FieldComputations::pointIsValidPosition(field, targetPosition, avoidObjects, constants::OUT_OF_FIELD_MARGIN)) {
         return targetPosition;
     }
@@ -76,7 +79,7 @@ Vector2 PositionControl::handleBallCollision(const world::World *world, const Fi
             }
         }
     }
-    return currentPosition + direction.stretchToLength(constants::AVOID_BALL_DISTANCE * 2).rotate(M_PI / 2);
+    return currentPosition + direction.stretchToLength(constants::AVOID_BALL_DISTANCE).rotate(M_PI / 2);
 }
 
 Vector2 PositionControl::handleBallPlacementCollision(const world::World *world, const Field &field, Vector2 currentPosition, Vector2 targetPosition,

@@ -6,8 +6,8 @@ file(GLOB_RECURSE OBSERVER_SOURCES
         "${CMAKE_CURRENT_SOURCE_DIR}/include/observer/filters/vision/*.h"
 )
 
-add_library(observer STATIC ${OBSERVER_SOURCES})
 find_package(dlib REQUIRED)
+add_library(observer STATIC ${OBSERVER_SOURCES})
 target_link_libraries(observer
         PUBLIC dlib::dlib
         PUBLIC roboteam_networking

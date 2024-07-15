@@ -1,6 +1,5 @@
 #ifndef KICKESTIMATOR_H
 #define KICKESTIMATOR_H
-#include <dlib/optimization.h>
 
 #include <vector>
 

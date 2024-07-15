@@ -1,5 +1,7 @@
 #include "filters/shot/ChipEstimator.h"
 
+#include <dlib/optimization.h>
+
 #include <Eigen/Dense>
 
 ChipEstimator::ChipEstimator(const ShotEvent& shotEvent, const BallParameters& ballParameters, const CameraMap& cameraMap)

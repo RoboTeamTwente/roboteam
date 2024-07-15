@@ -1,5 +1,7 @@
 #include "filters/shot/KickEstimator.h"
 
+#include <dlib/optimization.h>
+
 #include <Eigen/Dense>
 
 KickEstimator::KickEstimator(const ShotEvent& shotEvent, const BallParameters& ballParameters) : shotEvent(shotEvent), ballParameters(ballParameters) {

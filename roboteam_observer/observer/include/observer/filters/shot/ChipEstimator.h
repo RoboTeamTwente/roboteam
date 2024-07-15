@@ -1,8 +1,6 @@
 #ifndef CHIPESTIMATOR_H
 #define CHIPESTIMATOR_H
 
-#include <dlib/optimization.h>
-
 #include <Eigen/Dense>
 #include <iostream>
 #include <tuple>

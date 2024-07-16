@@ -105,28 +105,21 @@ InterceptionInfo InterceptionComputations::calculateInterceptionInfo(const std::
         }
 
         double minTimeToTarget = std::numeric_limits<double>::max();
+        std::vector<Vector2> velocities = {targetVelocity, Vector2(0, 0)};
         for (const auto &robot : ourRobots) {
-            Vector2 usedTargetVelocity;
-            auto robotToBall = (ballPosition - robot->getPos());
-            auto angle = Angle(robotToBall).shortestAngleDiff(Angle(targetVelocity));
-            // TODO ROBOCUP 2024: TWEAK THIS NOT MAGIC NUMBER
-            auto circle = Circle(ballPosition - targetVelocity.stretchToLength(0.5), 0.5);
-            if (std::abs(angle) < M_PI / 4 || circle.contains(robot->getPos())) {
-                usedTargetVelocity = targetVelocity;
-            } else {
-                usedTargetVelocity = Vector2(0, 0);
-            }
-            auto trajectory = Trajectory2D(robot->getPos(), robot->getVel(), targetPosition, usedTargetVelocity, maxRobotVelocity, ai::constants::MAX_ACC,
-                                           ai::constants::MAX_JERK_OVERSHOOT, robot->getId());
-            if (trajectory.getTotalTime() < minTimeToTarget) {
-                minTimeToTarget = trajectory.getTotalTime();
-                interceptionInfo.interceptLocation = targetPosition;
-                interceptionInfo.interceptVelocity = usedTargetVelocity;
-                interceptionInfo.interceptId = robot->getId();
-                interceptionInfo.timeToIntercept = minTimeToTarget;
-                auto theirClosestToBall = world->getWorld()->getRobotClosestToBall(world::them);
-                if (!theirClosestToBall || (robot->getPos() - targetPosition).length() < (theirClosestToBall->get()->getPos() - targetPosition).length()) {
-                    interceptionInfo.isInterceptable = true;
+            for (const auto &velocity : velocities) {
+                auto trajectory = Trajectory2D(robot->getPos(), robot->getVel(), targetPosition, velocity, maxRobotVelocity, ai::constants::MAX_ACC,
+                                               ai::constants::MAX_JERK_OVERSHOOT, robot->getId());
+                if (trajectory.getTotalTime() < minTimeToTarget) {
+                    minTimeToTarget = trajectory.getTotalTime();
+                    interceptionInfo.interceptLocation = targetPosition;
+                    interceptionInfo.interceptVelocity = velocity;
+                    interceptionInfo.interceptId = robot->getId();
+                    interceptionInfo.timeToIntercept = minTimeToTarget;
+                    auto theirClosestToBall = world->getWorld()->getRobotClosestToBall(world::them);
+                    if (!theirClosestToBall || (robot->getPos() - targetPosition).length() < (theirClosestToBall->get()->getPos() - targetPosition).length()) {
+                        interceptionInfo.isInterceptable = true;
+                    }
                 }
             }
         }
@@ -134,7 +127,7 @@ InterceptionInfo InterceptionComputations::calculateInterceptionInfo(const std::
 
     // If the ball is not moving, we use the current ball position
     if (ballVelocity.length() <= constants::BALL_STILL_VEL) {
-        calculateIntercept(ballPosition, Vector2(0, 0));
+        calculateIntercept(ballPosition, ballVelocity);
         interceptionInfo.interceptVelocity = Vector2(0, 0);
         return interceptionInfo;
     }

@@ -80,7 +80,7 @@ constexpr double AVOID_BALL_DISTANCE_BEFORE_FREE_KICK =
 
 /// Friction constants
 constexpr static float SIMULATION_FRICTION = 0.71; /**< The expected movement friction of the ball during simulation */
-constexpr static float REAL_FRICTION = 0.44;       /**< The expected movement friction of the ball on the field */
+constexpr static float REAL_FRICTION = 0.526;       /**< The expected movement friction of the ball on the field */
 
 static inline double HAS_BALL_DISTANCE() { return (GameSettings::getRobotHubMode() == net::RobotHubMode::BASESTATION) ? 0.11 : 0.12; }
 static inline double SEND_TIME_IN_FUTURE() {

@@ -141,7 +141,7 @@ std::pair<Vector2, double> KeeperBlockBall::calculateTargetPositionBallShot(cons
                                                                                                       maxRobotAcceleration, ballTimeAtClosestPoint);
         if (timeToTarget <= ballTimeAtClosestPoint) {
             // TODO ROBOCUP 2024: TWEAK THIS VALUE
-            auto jerk = (1 - std::min((ballTimeAtClosestPoint - timeToTarget), 0.2) / 0.2) * 80 + ai::constants::MAX_JERK_DEFAULT;
+            auto jerk = (1 - std::min((ballTimeAtClosestPoint - timeToTarget), 0.2) / 0.2) * 160 + ai::constants::MAX_JERK_DEFAULT;
             return {targetPosition, jerk};
         }
     }
@@ -165,7 +165,7 @@ std::pair<Vector2, double> KeeperBlockBall::calculateTargetPositionBallShot(cons
             maxTimeLeftWhenArrived = timeLeftWhenArrived;
             optimalTarget = currentTarget;
             // TODO ROBOCUP 2024: TWEAK THIS VALUE
-            jerk = (1 - std::min(std::max(timeLeftWhenArrived, 0.0), 0.2) / 0.2) * 80 + ai::constants::MAX_JERK_DEFAULT;
+            jerk = (1 - std::min(std::max(timeLeftWhenArrived, 0.0), 0.2) / 0.2) * 160 + ai::constants::MAX_JERK_DEFAULT;
         }
     }
     return {optimalTarget, jerk};

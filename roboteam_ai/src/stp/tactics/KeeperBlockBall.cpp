@@ -97,10 +97,6 @@ std::tuple<Vector2, bool, double> KeeperBlockBall::calculateTargetPosition(const
     const auto keepersLineSegment = getKeepersLineSegment(field);
     const LineSegment ballTrajectory(ball->position, ball->expectedEndPosition);
     bool ballHeadsTowardsOurGoal = ballTrajectory.intersects(keepersLineSegment).has_value();
-    // TODO ROBOCUP 2024: CHECK AND PERHAPS MAKE MORE PRETTY
-    if (ballHeadsTowardsOurGoal && ballTrajectory.intersects(keepersLineSegment).value().dist(info.getRobot().value()->getPos()) < 0.03) {
-        return std::make_tuple(info.getRobot().value()->getPos(), false, 12);
-    }
 
     if (ballHeadsTowardsOurGoal) {
         auto shouldAvoidGoalPosts = false;

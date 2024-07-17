@@ -155,7 +155,12 @@ void WorldFilter::addRobotPredictionsToMessage(proto::World &world, Time time) c
     auto feedbackBots = feedbackFilter.getRecentFeedback();
 
     std::vector<FilteredRobot> blueRobots = getHealthiestRobotsMerged(true, time);
+    int blueCount = 0;
     for (const auto &blueBot : blueRobots) {
+        if (blueCount >= 11) {
+            break; // Only 11 robots per team, if vision is bad, we might have more robots, making ai crash
+        }
+        blueCount++;
         auto worldBot = blueBot.asWorldRobot();
         auto feedback_it = std::find_if(feedbackBots.begin(), feedbackBots.end(), [&](const std::pair<TeamRobotID, proto::RobotProcessedFeedback> &bot) {
             return bot.first.team == TeamColor::BLUE && bot.first.robot_id == RobotID(worldBot.id());
@@ -167,7 +172,12 @@ void WorldFilter::addRobotPredictionsToMessage(proto::World &world, Time time) c
         world.mutable_blue()->Add()->CopyFrom(worldBot);
     }
     std::vector<FilteredRobot> yellowRobots = getHealthiestRobotsMerged(false, time);
+    int yellowCount = 0;
     for (const auto &yellowBot : yellowRobots) {
+        if (yellowCount >= 11) {
+            break; // Only 11 robots per team, if vision is bad, we might have more robots, making ai crash
+        }
+        yellowCount++;
         auto worldBot = yellowBot.asWorldRobot();
         auto feedback_it = std::find_if(feedbackBots.begin(), feedbackBots.end(), [&](const std::pair<TeamRobotID, proto::RobotProcessedFeedback> &bot) {
             return bot.first.team == TeamColor::YELLOW && bot.first.robot_id == RobotID(worldBot.id());

@@ -98,11 +98,28 @@ double CollisionCalculations::getFirstCollisionTimeMovingObject(const Trajectory
                     }
                 }
             }
+        } else {
+            for (const auto &ourOtherRobot : ourRobots) {
+                const int &ourOtherRobotId = ourOtherRobot->getId();
+                if (ourOtherRobotId == robotId) {
+                    continue;
+                }
+                const Vector2 &ourOtherRobotPos = ourOtherRobot->getPos();
+                if ((ourOtherRobotPos - positionOurRobot).length() < 2 * constants::CENTER_TO_FRONT) {
+                    return checkPoint * 0.1;
+                }
+            }
         }
-        if (velocityOurRobot > 0.7 && avoidObjects.shouldAvoidTheirRobots) {
+        if (velocityOurRobot > 0.4 && avoidObjects.shouldAvoidTheirRobots) {
             if (std::any_of(theirRobots.begin(), theirRobots.end(), [&](const auto &theirRobot) {
                     return LineSegment(theirRobot->getPos() + theirRobot->getVel() * 0.1 * (checkPoint - 1), theirRobot->getPos() + theirRobot->getVel() * 0.1 * checkPoint)
                                .closestDistanceToLineSegment(pathLine) < 2 * constants::ROBOT_RADIUS + additionalMargin;
+                })) {
+                return checkPoint * 0.1;
+            }
+        } else {
+            if (std::any_of(theirRobots.begin(), theirRobots.end(), [&](const auto &theirRobot) {
+                    return (theirRobot->getPos() - positionOurRobot).length() < 2 * constants::CENTER_TO_FRONT;
                 })) {
                 return checkPoint * 0.1;
             }

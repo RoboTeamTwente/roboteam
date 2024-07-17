@@ -63,5 +63,12 @@ double BallFilter::getHealth() const {
     }
     return maxHealth;
 }
+double BallFilter::getNumObservations() const {
+    double maxTotalObservations = 0.0;
+    for (const auto &filter : groundFilters) {
+        maxTotalObservations = fmax(filter.second.numObservations(), maxTotalObservations);
+    }
+    return maxTotalObservations;
+}
 GroundBallPrediction::GroundBallPrediction(CameraGroundBallPrediction prediction, bool hadRequestedCamera)
     : prediction{std::move(prediction)}, hadRequestedCamera{hadRequestedCamera} {}

@@ -118,9 +118,8 @@ double CollisionCalculations::getFirstCollisionTimeMovingObject(const Trajectory
                 return checkPoint * 0.1;
             }
         } else {
-            if (std::any_of(theirRobots.begin(), theirRobots.end(), [&](const auto &theirRobot) {
-                    return (theirRobot->getPos() - positionOurRobot).length() < 2 * constants::CENTER_TO_FRONT;
-                })) {
+            if (std::any_of(theirRobots.begin(), theirRobots.end(),
+                            [&](const auto &theirRobot) { return (theirRobot->getPos() - positionOurRobot).length() < 2 * constants::CENTER_TO_FRONT; })) {
                 return checkPoint * 0.1;
             }
         }

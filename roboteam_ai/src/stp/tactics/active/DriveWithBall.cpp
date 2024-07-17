@@ -22,9 +22,7 @@ std::optional<StpInfo> DriveWithBall::calculateInfoForSkill(const StpInfo &info)
 
 bool DriveWithBall::isTacticFailing(const StpInfo &info) noexcept { return !info.getRobot().value()->hasBall() || !info.getPositionToMoveTo(); }
 
-bool DriveWithBall::shouldTacticReset(const StpInfo &info) noexcept {
-    return false;
-}
+bool DriveWithBall::shouldTacticReset(const StpInfo &info) noexcept { return false; }
 
 bool DriveWithBall::isEndTactic() noexcept { return false; }
 

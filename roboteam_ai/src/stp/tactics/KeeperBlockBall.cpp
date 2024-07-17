@@ -58,9 +58,7 @@ bool KeeperBlockBall::isEndTactic() noexcept { return true; }
 
 bool KeeperBlockBall::isTacticFailing(const StpInfo &) noexcept { return false; }
 
-bool KeeperBlockBall::shouldTacticReset(const StpInfo &info) noexcept {
-    return false;
-}
+bool KeeperBlockBall::shouldTacticReset(const StpInfo &info) noexcept { return false; }
 
 const char *KeeperBlockBall::getName() { return "Keeper Block Ball"; }
 

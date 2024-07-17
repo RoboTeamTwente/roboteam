@@ -21,9 +21,7 @@ std::optional<StpInfo> Receive::calculateInfoForSkill(StpInfo const &info) noexc
 
 bool Receive::isTacticFailing(const StpInfo &info) noexcept { return !info.getPositionToMoveTo(); }
 
-bool Receive::shouldTacticReset(const StpInfo &info) noexcept {
-    return false;
-}
+bool Receive::shouldTacticReset(const StpInfo &info) noexcept { return false; }
 
 bool Receive::isEndTactic() noexcept { return true; }
 

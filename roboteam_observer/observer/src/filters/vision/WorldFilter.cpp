@@ -158,7 +158,7 @@ void WorldFilter::addRobotPredictionsToMessage(proto::World &world, Time time) c
     int blueCount = 0;
     for (const auto &blueBot : blueRobots) {
         if (blueCount >= 11) {
-            break; // Only 11 robots per team, if vision is bad, we might have more robots, making ai crash
+            break;  // Only 11 robots per team, if vision is bad, we might have more robots, making ai crash
         }
         blueCount++;
         auto worldBot = blueBot.asWorldRobot();
@@ -175,7 +175,7 @@ void WorldFilter::addRobotPredictionsToMessage(proto::World &world, Time time) c
     int yellowCount = 0;
     for (const auto &yellowBot : yellowRobots) {
         if (yellowCount >= 11) {
-            break; // Only 11 robots per team, if vision is bad, we might have more robots, making ai crash
+            break;  // Only 11 robots per team, if vision is bad, we might have more robots, making ai crash
         }
         yellowCount++;
         auto worldBot = yellowBot.asWorldRobot();
@@ -220,11 +220,20 @@ void WorldFilter::processBalls(const DetectionFrame &frame) {
     }
 }
 void WorldFilter::addBallPredictionsToMessage(proto::World &world, Time time) const {
-    if (!balls.empty()) {
-        auto bestFilter = std::max_element(balls.begin(), balls.end(), [](const BallFilter &best, const BallFilter &filter) { return best.getHealth() < filter.getHealth(); });
-
-        FilteredBall bestBall = bestFilter->mergeBalls(time);
-
-        world.mutable_ball()->CopyFrom(bestBall.asWorldBall());
+    const BallFilter *bestFilter = nullptr;
+    double bestHealth = -1.0;
+    for (auto &filter : balls) {
+        if (filter.getNumObservations() > 3) {
+            double currentHealth = filter.getHealth();
+            if (!bestFilter || currentHealth > bestHealth) {
+                bestFilter = &filter;
+                bestHealth = currentHealth;
+            }
+        }
     }
+    if (!bestFilter) {
+        return;
+    }
+    FilteredBall bestBall = bestFilter->mergeBalls(time);
+    world.mutable_ball()->CopyFrom(bestBall.asWorldBall());
 }

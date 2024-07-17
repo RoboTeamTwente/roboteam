@@ -18,7 +18,7 @@ services:
       - LD_LIBRARY_PATH=/home/roboteamtwente/lib/
     volumes:
       - ../../build/release/:/home/roboteamtwente/
-    profiles: ["simulator","diff","game"]
+    profiles: ["simulator","diff","game", "robocup"]
   
   roboteam_secondary_ai:
     image: roboteamtwente/roboteam:development
@@ -90,7 +90,7 @@ services:
       - LD_LIBRARY_PATH=/home/roboteamtwente/lib/
     volumes:
       - ../../build/release/:/home/roboteamtwente/
-    profiles: ["game","autoref"]
+    profiles: ["game","autoref", "robocup"]
 
   roboteam_robothub_sim:
     image: roboteamtwente/roboteam:development
@@ -135,7 +135,7 @@ services:
     privileged: true
     devices:
       - /dev/rtt-basestation:/dev/ttyACM1
-    profiles: ["game"]
+    profiles: ["game", "robocup"]
 
   roboteam_interface:
     image: roboteamtwente/roboteam:development
@@ -147,7 +147,7 @@ services:
       - 8080:8080
     volumes:
       - ../../roboteam_interface/:/home/roboteamtwente/
-    profiles: ["simulator","diff","game"]
+    profiles: ["simulator","diff","game", "robocup"]
 
   roboteam_autoref:
     image: gradle:8.4.0-jdk17

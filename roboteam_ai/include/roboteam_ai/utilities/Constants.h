@@ -46,7 +46,7 @@ constexpr double MIN_YAW = -M_PI;             /**< Minimum yaw the robot can hav
 constexpr double MAX_YAW = M_PI;              /**< Maximum yaw the robot can have */
 constexpr double MAX_ACC = 3.5;               /**< Maximum acceleration of the robot */
 constexpr double MAX_VEL = 4.0;               /**< Maximum allowed velocity of the robot */
-constexpr double MAX_JERK_OVERSHOOT = 8;    /**< Jerk limit for overshoot */
+constexpr double MAX_JERK_OVERSHOOT = 8;      /**< Jerk limit for overshoot */
 // TODO ROBOCUP 2024: FIX THIS MAGIC
 constexpr double MAX_JERK_DEFAULT = 6; /**< Default jerk limit */
 
@@ -80,7 +80,7 @@ constexpr double AVOID_BALL_DISTANCE_BEFORE_FREE_KICK =
 
 /// Friction constants
 constexpr static float SIMULATION_FRICTION = 0.71; /**< The expected movement friction of the ball during simulation */
-constexpr static float REAL_FRICTION = 0.526;       /**< The expected movement friction of the ball on the field */
+constexpr static float REAL_FRICTION = 0.526;      /**< The expected movement friction of the ball on the field */
 
 static inline double HAS_BALL_DISTANCE() { return (GameSettings::getRobotHubMode() == net::RobotHubMode::BASESTATION) ? 0.11 : 0.12; }
 static inline double SEND_TIME_IN_FUTURE() {

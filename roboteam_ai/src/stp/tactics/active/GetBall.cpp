@@ -49,15 +49,9 @@ std::optional<StpInfo> GetBall::calculateInfoForSkill(const StpInfo &info) noexc
     if (info.getRobot()->get()->getAngleDiffToBall() > constants::HAS_BALL_ANGLE && distanceToBall < constants::ROBOT_CLOSE_TO_POINT) {
         skillStpInfo.setPositionToMoveTo(info.getRobot()->get()->getPos());
         skillStpInfo.setTargetVelocity(Vector2(0, 0));
-    } else if (info.getBall()->get()->velocity.length() > constants::BALL_IS_MOVING_SLOW_LIMIT) {
+    } else {
         auto newRobotPos = interceptionPosition + (interceptionPosition - ballPosition).stretchToLength(constants::CENTER_TO_FRONT);
         skillStpInfo.setPositionToMoveTo(newRobotPos);
-        skillStpInfo.setTargetVelocity(interceptionVelocity);
-    } else {
-        auto getBallDistance = std::max(distanceToInterception - constants::CENTER_TO_FRONT, MIN_DISTANCE_TO_TARGET);
-        Vector2 newRobotPosition = robotPosition + (interceptionPosition - robotPosition).stretchToLength(getBallDistance);
-        newRobotPosition = FieldComputations::projectPointToValidPosition(info.getField().value(), newRobotPosition, info.getObjectsToAvoid());
-        skillStpInfo.setPositionToMoveTo(newRobotPosition);
         skillStpInfo.setTargetVelocity(interceptionVelocity);
     }
     // TODO ROBOCUP 2024: Tweak better??

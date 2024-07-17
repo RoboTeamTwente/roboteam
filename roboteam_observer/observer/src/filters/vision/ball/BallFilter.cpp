@@ -3,14 +3,14 @@
 #include <utility>
 
 BallFilter::BallFilter(const BallObservation &observation) : groundFilters{std::make_pair(observation.cameraID, CameraGroundBallFilter(observation))} {}
-GroundBallPrediction BallFilter::predictCam(int cameraID, Time until) const {
+GroundBallPrediction BallFilter::predictCam(int cameraID, Time until, std::vector<FilteredRobot> yellowRobots, std::vector<FilteredRobot> blueRobots) {
     auto camera_filter = groundFilters.find(cameraID);
     if (camera_filter != groundFilters.end()) {
-        GroundBallPrediction prediction(camera_filter->second.predict(until), true);
+        GroundBallPrediction prediction(camera_filter->second.predict(until, yellowRobots, blueRobots), true);
         return prediction;
     }
     // no information for this camera available; we merge data from available camera's
-    FilteredBall estimate = mergeBalls(until);
+    FilteredBall estimate = mergeBalls(until, false);
     GroundBallPrediction prediction(CameraGroundBallPrediction(estimate.position, estimate.velocity, until), false);
     return prediction;
 }
@@ -29,29 +29,36 @@ bool BallFilter::processDetections(const CameraGroundBallPredictionObservationPa
     }
     return groundFilters.empty();
 }
-FilteredBall BallFilter::mergeBalls(Time time) const {
+FilteredBall BallFilter::mergeBalls(Time time, bool consumeObservations) {
     FilteredBall ball;
     ball.position = Eigen::Vector2d(0, 0);
     ball.velocity = Eigen::Vector2d(0, 0);
-    ball.posUncertainty = 0.0;
-    ball.velocityUncertainty = 0.0;
+    ball.positionCamera = Eigen::Vector2d(0, 0);
+    ball.time = time;
+    auto posUncertainty = 0.0;
+    auto velocityUncertainty = 0.0;
     constexpr double mergeFactor = 1.5;
-    for (const auto &filter : groundFilters) {
-        FilteredBall estimate = filter.second.getEstimate(time);
+    for (auto &filter : groundFilters) {
+        auto estimate = filter.second.getEstimate(time);
         double weight = 100.0 / estimate.health;
         double posWeight = std::pow(estimate.posUncertainty * weight, -mergeFactor);
         double velWeight = std::pow(estimate.velocityUncertainty * weight, -mergeFactor);
         ball.position += estimate.position * posWeight;
         ball.velocity += estimate.velocity * velWeight;
-        ball.posUncertainty += posWeight;
-        ball.velocityUncertainty += velWeight;
+        ball.positionCamera += filter.second.getLastObservation().position * posWeight;
+        posUncertainty += posWeight;
+        velocityUncertainty += velWeight;
+        if (!consumeObservations || filter.second.getLastObservationAvailableAndReset()) {
+            ball.currentObservation = filter.second.getLastObservation();
+        }
     }
     constexpr double limit = 1e-10;
-    if (ball.posUncertainty >= limit) {
-        ball.position /= ball.posUncertainty;
+    if (posUncertainty >= limit) {
+        ball.position /= posUncertainty;
+        ball.positionCamera /= posUncertainty;
     }
-    if (ball.velocityUncertainty >= limit) {
-        ball.velocity /= ball.velocityUncertainty;
+    if (velocityUncertainty >= limit) {
+        ball.velocity /= velocityUncertainty;
     }
 
     return ball;
@@ -62,6 +69,13 @@ double BallFilter::getHealth() const {
         maxHealth = fmax(filter.second.getHealth(), maxHealth);
     }
     return maxHealth;
+}
+double BallFilter::getNumObservations() const {
+    double maxTotalObservations = 0.0;
+    for (const auto &filter : groundFilters) {
+        maxTotalObservations = fmax(filter.second.numObservations(), maxTotalObservations);
+    }
+    return maxTotalObservations;
 }
 GroundBallPrediction::GroundBallPrediction(CameraGroundBallPrediction prediction, bool hadRequestedCamera)
     : prediction{std::move(prediction)}, hadRequestedCamera{hadRequestedCamera} {}

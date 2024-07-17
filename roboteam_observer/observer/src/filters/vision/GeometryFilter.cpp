@@ -24,6 +24,9 @@ bool GeometryFilter::process(const proto::SSL_GeometryData& geometryData) {
     if (geometryData.has_field()) {
         combinedGeometry.mutable_field()->CopyFrom(geometryData.field());
     }
+    if (geometryData.has_models()) {
+        combinedGeometry.mutable_models()->CopyFrom(geometryData.models());
+    }
     return true;
 }
 

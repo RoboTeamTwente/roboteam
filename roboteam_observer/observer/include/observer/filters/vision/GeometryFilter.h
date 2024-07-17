@@ -21,6 +21,7 @@ class GeometryFilter {
      * @return The most recent filtered geometry
      */
     proto::SSL_GeometryData getGeometry() const;
+    const std::map<unsigned int, proto::SSL_GeometryCameraCalibration>& getCameras() const { return cameras; }
 
    private:
     std::string lastGeometryString;

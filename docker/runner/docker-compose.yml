@@ -1,5 +1,3 @@
-version: '3'
-
 services:
 
   roboteam_primary_ai:
@@ -167,10 +165,9 @@ services:
     profiles: ["simulator","diff","game","autoref"]
 
   erforce_autoref_sim:
-    image: roboteamtwente/roboteam:development
+    image:  roboticserlangen/autoref
     container_name: RTT_erforce_autoref_sim
     restart: always
-    working_dir: "/home/roboteamtwente/external/autoref/build/bin/"
     command: sh -c "./autoref-cli --vision-port 10020 --tracker-port 10010 --gc-port 10003"
     network_mode: "host" # Workaround to connect from interface on host to AI websocket, please fix
     expose:
@@ -182,10 +179,9 @@ services:
     profiles: ["simulator","diff"]
 
   erforce_autoref_game:
-    image: roboteamtwente/roboteam:development
+    image:  roboticserlangen/autoref
     container_name: RTT_erforce_autoref_game
     restart: always
-    working_dir: "/home/roboteamtwente/external/autoref/build/bin/"
     command: sh -c "./autoref-cli --vision-port 10006 --tracker-port 10010 --gc-port 10003"
     network_mode: "host" # Workaround to connect from interface on host to AI websocket, please fix
     expose:
@@ -197,10 +193,9 @@ services:
     profiles: ["game"]
 
   erforce_simulator:
-    image: roboteamtwente/roboteam:development
+    image: roboticserlangen/simulatorcli
     container_name: RTT_erforce_simulator
     restart: always
-    working_dir: "/home/roboteamtwente/external/framework/build/bin/"
     command: sh -c "./simulator-cli"
     network_mode: "host" # Workaround to connect from interface on host to AI websocket, please fix
     expose:

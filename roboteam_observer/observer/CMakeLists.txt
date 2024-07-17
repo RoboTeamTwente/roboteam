@@ -1,35 +1,15 @@
-add_library(observer STATIC
-        src/filters/Scaling.h
-        src/Observer.cpp
-        src/parameters/RobotParameterDatabase.cpp
-        src/filters/referee/RefereeFilter.cpp
-        src/filters/vision/CameraObjectFilter.cpp
-        src/filters/vision/robot/CameraRobotFilter.cpp
-        src/filters/vision/ball/CameraGroundBallFilter.cpp
-        src/filters/vision/WorldFilter.cpp
-        src/filters/vision/GeometryFilter.cpp
-        src/filters/vision/VisionFilter.cpp
-        src/filters/vision/robot/RobotFilter.cpp
-        src/filters/vision/ball/BallFilter.cpp
-        src/filters/vision/PosVelFilter2D.cpp
-        src/filters/vision/robot/RobotOrientationFilter.cpp
-        src/filters/vision/PosVelFilter1D.cpp
-        src/filters/vision/robot/RobotObservation.cpp
-        src/filters/vision/robot/RobotPos.cpp
-        src/filters/vision/robot/FilteredRobot.cpp
-        src/filters/vision/DetectionFrame.cpp
-        src/filters/vision/ball/BallObservation.cpp
-        include/observer/filters/vision/KalmanFilter.h
-        src/filters/vision/ball/GroundBallExtendedKalmanFilter.cpp
-        src/filters/vision/ball/FilteredBall.cpp
-        src/filters/vision/ball/BallAssigner.cpp
-        src/data/RobotParameters.cpp
-        src/filters/vision/Camera.cpp
-        src/filters/vision/CameraMap.cpp
-        src/filters/vision/RobotFeedbackFilter.cpp
-        )
+file(GLOB_RECURSE OBSERVER_SOURCES 
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/filters/vision/*.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/filters/vision/*.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/include/observer/filters/vision/*.h"
+)
 
+find_package(dlib REQUIRED)
+add_library(observer STATIC ${OBSERVER_SOURCES})
 target_link_libraries(observer
+        PUBLIC dlib::dlib
         PUBLIC roboteam_networking
         PRIVATE roboteam_utils
         PUBLIC Eigen3::Eigen

@@ -69,29 +69,6 @@ then
             pushd roboteam_interface
                 yarn install
             popd
-            if [ $SKIP == 0 ];
-            then
-                pushd external
-                    echo -e "${GREEN}Building external${RESET}"
-                    pushd framework
-                        echo -e "${GREEN}Building external/framework${RESET}"
-                        mkdir -p build
-                        pushd build
-                        cmake ..
-                        make simulator-cli -j$(nproc)
-                        popd
-                    popd
-                    pushd autoref
-                        echo -e "${GREEN}Building external/autoref${RESET}"
-                        mkdir -p build
-                        pushd build
-                        cmake ..
-                        make autoref-cli -j$(nproc)
-                        popd
-                    popd
-                popd
-            fi
-            echo -e "${GREEN}Done, exiting builder..${RESET}"
         else
             echo -e "${GREEN}Checking submodules${RESET}"
             git submodule update --init --recursive

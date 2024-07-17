@@ -116,7 +116,7 @@ void Handler::start(std::string visionip, std::string refereeip, int visionport,
                 }
             }
         },
-        100);
+        80);
 }
 bool Handler::initializeNetworkers() {
     this->worldPublisher = std::make_unique<rtt::net::WorldPublisher>();
@@ -202,7 +202,9 @@ void Handler::startReplay(rtt::LogFileReader& reader) {
         auto check = observer.process(visionPackets, refereePackets, feedbackPackets);
 
         numMessagesProcessed++;
-        std::cout << "Num Messages processed: " << numMessagesProcessed << "\n";
+        if(numMessagesProcessed % 1000 == 0){
+            std::cout << "Num Messages processed: " << numMessagesProcessed << "\n";
+        }
     }
 }
 

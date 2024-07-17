@@ -17,5 +17,5 @@ proto::WorldBall FilteredBall::asWorldBall() const {
 
     return proto_ball;
 }
-FilteredBall::FilteredBall(Eigen::Vector2d pos, Eigen::Vector2d vel, double health, double posUncertainty, double velocityUncertainty)
-    : position{std::move(pos)}, velocity{std::move(vel)}, health{health}, posUncertainty{posUncertainty}, velocityUncertainty{velocityUncertainty} {}
+FilteredBall::FilteredBall(Eigen::Vector2d pos, Eigen::Vector2d vel, Time time, Eigen::Vector2d positionCamera, std::optional<BallObservation> currentObservation)
+    : position(std::move(pos)), velocity(std::move(vel)), time(time), positionCamera(std::move(positionCamera)), currentObservation(std::move(currentObservation)) {}

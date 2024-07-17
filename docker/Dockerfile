@@ -37,6 +37,16 @@ RUN apk add --no-cache bash build-base cmake make musl-dev libtool \
 RUN npm install -g yarn
 
 WORKDIR /tmp
+RUN wget http://dlib.net/files/dlib-19.21.tar.bz2 \
+    && tar xvf dlib-19.21.tar.bz2 \
+    && cd dlib-19.21 \
+    && mkdir build \
+    && cd build \
+    && cmake .. \
+    && make \
+    && make install \
+    && rm -rf /tmp/dlib-19.21 /tmp/dlib-19.21.tar.bz2
+
 RUN git clone https://github.com/pantor/ruckig.git /tmp/ruckig \
     && cd /tmp/ruckig \
     && git checkout dae82835ec043a54ed6bc775f0776e1a7ff99124 \
@@ -80,6 +90,16 @@ RUN apk add --no-cache build-base git cmake make clang \
 RUN npm install -g yarn
 
 WORKDIR /tmp
+RUN wget http://dlib.net/files/dlib-19.21.tar.bz2 \
+    && tar xvf dlib-19.21.tar.bz2 \
+    && cd dlib-19.21 \
+    && mkdir build \
+    && cd build \
+    && cmake .. \
+    && make \
+    && make install \
+    && rm -rf /tmp/dlib-19.21 /tmp/dlib-19.21.tar.bz2
+
 RUN git clone https://github.com/pantor/ruckig.git /tmp/ruckig \
     && cd /tmp/ruckig \
     && git checkout dae82835ec043a54ed6bc775f0776e1a7ff99124 \

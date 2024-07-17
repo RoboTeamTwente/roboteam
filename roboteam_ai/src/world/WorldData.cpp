@@ -26,15 +26,19 @@ WorldData::WorldData(const World *data, proto::World &protoMsg) noexcept : time{
     // }
 
     for (auto &each : ours) {
-        if (isnan(each.pos().x())) {
-            RTT_ERROR("WATCH OUT! ROBOT WITH NAN VALUES RECEIVED FROM OBSERVER! Omitting robot for now..")
+        if (!isfinite(each.pos().x()) || !isfinite(each.pos().y()) || 
+            !isfinite(each.vel().x()) || !isfinite(each.vel().y()) || 
+            !isfinite(each.yaw()) || !isfinite(each.w())) {
+            RTT_ERROR("WATCH OUT! ROBOT WITH NAN OR INFINITE POSITION/VELOCITY/YAW/W VALUES RECEIVED FROM OBSERVER! Omitting robot for now..");
         } else {
             robots.emplace_back(each, Team::us, getBall());
         }
     }
     for (auto &each : others) {
-        if (isnan(each.pos().x())) {
-            RTT_ERROR("WATCH OUT! ROBOT WITH NAN VALUES RECEIVED FROM OBSERVER! Omitting robot for now..")
+        if (!isfinite(each.pos().x()) || !isfinite(each.pos().y()) || 
+            !isfinite(each.vel().x()) || !isfinite(each.vel().y()) || 
+            !isfinite(each.yaw()) || !isfinite(each.w())) {
+            RTT_ERROR("WATCH OUT! ROBOT WITH NAN OR INFINITE POSITION/VELOCITY/YAW/W VALUES RECEIVED FROM OBSERVER! Omitting robot for now..");
         } else {
             robots.emplace_back(each, Team::them, getBall());
         }

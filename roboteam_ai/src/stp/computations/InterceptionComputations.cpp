@@ -105,7 +105,7 @@ InterceptionInfo InterceptionComputations::calculateInterceptionInfo(const std::
         }
 
         double minTimeToTarget = std::numeric_limits<double>::max();
-        std::vector<Vector2> velocities = {targetVelocity, Vector2(0, 0), ballVelocity.normalize() * 0.5};
+        std::vector<Vector2> velocities = {targetVelocity, Vector2(0, 0)};
         for (const auto &robot : ourRobots) {
             for (const auto &velocity : velocities) {
                 auto trajectory = Trajectory2D(robot->getPos(), robot->getVel(), targetPosition, velocity, maxRobotVelocity, ai::constants::MAX_ACC,

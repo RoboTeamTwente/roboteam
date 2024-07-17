@@ -27,16 +27,10 @@ Status OrbitAngular::onUpdate(const StpInfo &info) noexcept {
     // Construct the robot command
     command.id = robot->getId();
     command.velocity = targetVelocity;
-    // Commented for the control code before the Schubert open on 3 April 2024. Possible wise to use again somewhere in the distant future.
-    // We could also switch to _just_ using yaw, as on all other places in the code. The magic numbers here might still need some love after testing irl.
-    // command.useAngularVelocity = true;
-    // command.targetAngularVelocity = targetAngularVelocity;
-    // command.yaw = yaw;
 
     // target yaw is angular velocity times the time step (1/60th of a second) in basestation
     // in simulator, we multiple by 1/2.5 because of how the simulator works and the pid controller is tuned
     if (rtt::GameSettings::getRobotHubMode() == rtt::net::RobotHubMode::BASESTATION) {
-        // TODO ROBOCUP 2024: FIX THIS
         command.yaw = currentYaw + Angle(targetAngularVelocity * 1 / 4);
     } else {
         command.yaw = currentYaw + Angle(targetAngularVelocity * 1 / 2.5);

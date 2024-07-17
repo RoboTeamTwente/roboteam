@@ -59,10 +59,6 @@ bool KeeperBlockBall::isEndTactic() noexcept { return true; }
 bool KeeperBlockBall::isTacticFailing(const StpInfo &) noexcept { return false; }
 
 bool KeeperBlockBall::shouldTacticReset(const StpInfo &info) noexcept {
-    // const double errorMargin = constants::GO_TO_POS_ERROR_MARGIN * M_PI;
-    // const auto distanceToTarget = (info.getRobot().value()->getPos() - info.getPositionToMoveTo().value()).length();
-    // return distanceToTarget > errorMargin;
-    // TODO ROBOCUP 2024: CHECK IF THIS IS LEGIT, or if we do need reset
     return false;
 }
 
@@ -159,7 +155,6 @@ std::pair<Vector2, double> KeeperBlockBall::calculateTargetPositionBallShot(cons
         if (timeLeftWhenArrived > maxTimeLeftWhenArrived) {
             maxTimeLeftWhenArrived = timeLeftWhenArrived;
             optimalTarget = currentTarget;
-            // TODO ROBOCUP 2024: TWEAK THIS VALUE
             jerk = (1 - std::min(std::max(timeLeftWhenArrived, 0.0), 0.2) / 0.2) * 160 + ai::constants::MAX_JERK_DEFAULT;
         }
     }

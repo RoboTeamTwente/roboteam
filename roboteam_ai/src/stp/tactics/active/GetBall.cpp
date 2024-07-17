@@ -31,13 +31,6 @@ std::optional<StpInfo> GetBall::calculateInfoForSkill(const StpInfo &info) noexc
     Vector2 interceptionPosition = interceptionInfo.interceptLocation;
     Vector2 interceptionVelocity = interceptionInfo.interceptVelocity;
 
-    // TODO ROBOCUP 2024: CHECK IF NEEDED for ball placer
-    // auto maxRobotVelocity = GameStateManager::getCurrentGameState().getRuleSet().getMaxRobotVel();
-    // if (info.getRobot()->get()->hasBall()) {
-    // maxRobotVelocity = std::clamp(info.getBall().value()->velocity.length() * 0.8, 0.5, maxRobotVelocity);
-    // skillStpInfo.setMaxRobotVelocity(maxRobotVelocity);
-    // }
-
     double distanceToInterception = (interceptionPosition - robotPosition).length();
     double distanceToBall = (ballPosition - robotPosition).length();
 
@@ -54,8 +47,7 @@ std::optional<StpInfo> GetBall::calculateInfoForSkill(const StpInfo &info) noexc
         skillStpInfo.setPositionToMoveTo(newRobotPos);
         skillStpInfo.setTargetVelocity(interceptionVelocity);
     }
-    // TODO ROBOCUP 2024: Tweak better??
-    skillStpInfo.setMaxJerk(constants::MAX_JERK_OVERSHOOT);
+    skillStpInfo.setMaxJerk(constants::MAX_JERK_DEFAULT);
 
     skillStpInfo.setYaw((ballPosition - robotPosition).angle());
 

@@ -46,8 +46,6 @@ constexpr double MIN_YAW = -M_PI;             /**< Minimum yaw the robot can hav
 constexpr double MAX_YAW = M_PI;              /**< Maximum yaw the robot can have */
 constexpr double MAX_ACC = 3.5;               /**< Maximum acceleration of the robot */
 constexpr double MAX_VEL = 4.0;               /**< Maximum allowed velocity of the robot */
-constexpr double MAX_JERK_OVERSHOOT = 8;      /**< Jerk limit for overshoot */
-// TODO ROBOCUP 2024: FIX THIS MAGIC
 constexpr double MAX_JERK_DEFAULT = 6; /**< Default jerk limit */
 
 /// GoToPos Constants

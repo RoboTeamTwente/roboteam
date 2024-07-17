@@ -43,6 +43,9 @@ Time VisionFilter::getExtrapolationTimeForPolicy() const {
             auto now = Time::now();
             double msDelay = (now-lastPacketTime).asMilliSeconds();
             std::cout<<"Delay since last packet: "<<msDelay<<"ms \n";
+            if(msDelay <= 0.0){
+                return lastPacketTime;
+            }
             if(msDelay > 50.0){
                 return lastPacketTime + Time(0.050);
             }

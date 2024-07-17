@@ -74,7 +74,7 @@ InterceptionInfo InterceptionComputations::calculateInterceptionInfo(const std::
             double minTimeToTarget = std::numeric_limits<double>::max();
             for (const auto &robot : ourRobots) {
                 auto trajectory = Trajectory2D(robot->getPos(), robot->getVel(), interceptionInfo.interceptLocation, maxRobotVelocity, ai::constants::MAX_ACC,
-                                               ai::constants::MAX_JERK_DEFAULT, robot->getId());
+                                               ai::constants::MAX_JERK_OVERSHOOT, robot->getId());
                 if (trajectory.getTotalTime() < minTimeToTarget) {
                     minTimeToTarget = trajectory.getTotalTime();
                     interceptionInfo.interceptId = robot->getId();

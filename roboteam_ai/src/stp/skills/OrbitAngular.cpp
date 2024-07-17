@@ -15,7 +15,6 @@ Status OrbitAngular::onUpdate(const StpInfo &info) noexcept {
 
     // Determine direction and speed factor
     int direction = yaw.rotateDirection(currentYaw) ? -1 : 1;
-    // TODO ROBOCUP 2024: FIX THIS
     double speedFactor = std::clamp(currentYaw.shortestAngleDiff(yaw) * 1.4 * M_PI, 0.0, M_PI);
 
     // Calculate target angular velocity and normal vector

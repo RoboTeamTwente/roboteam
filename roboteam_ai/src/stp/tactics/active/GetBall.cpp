@@ -61,7 +61,7 @@ std::optional<StpInfo> GetBall::calculateInfoForSkill(const StpInfo &info) noexc
         skillStpInfo.setTargetVelocity(interceptionVelocity);
     }
     // TODO ROBOCUP 2024: Tweak better??
-    skillStpInfo.setMaxJerk(12);
+    skillStpInfo.setMaxJerk(constants::MAX_JERK_OVERSHOOT);
 
     skillStpInfo.setYaw((ballPosition - robotPosition).angle());
 

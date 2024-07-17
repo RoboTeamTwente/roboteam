@@ -1,8 +1,9 @@
 #include <filters/vision/ball/CameraGroundBallFilter.h>
 #include <roboteam_utils/RobotShape.h>
+
 #include <utility>
 
-void CameraGroundBallFilter::update(const BallObservation &observation) {
+void CameraGroundBallFilter::update(const BallObservation& observation) {
     ekf.update(observation.position);
     objectSeen(observation.timeCaptured);
 }
@@ -10,7 +11,7 @@ bool CameraGroundBallFilter::updateNotSeen(Time time) {
     objectInvisible(time);
     return getHealth() <= 0.0 && consecutiveFramesNotSeen() >= 3;
 }
-bool CameraGroundBallFilter::processDetections(const CameraGroundBallPredictionObservationPair &prediction_observation_pair) {
+bool CameraGroundBallFilter::processDetections(const CameraGroundBallPredictionObservationPair& prediction_observation_pair) {
     predictFilter(prediction_observation_pair.prediction);
     bool removeFilter = false;
     if (prediction_observation_pair.observation.has_value()) {
@@ -20,12 +21,12 @@ bool CameraGroundBallFilter::processDetections(const CameraGroundBallPredictionO
     }
     return removeFilter;
 }
-void CameraGroundBallFilter::predictFilter(const CameraGroundBallPrediction &prediction) {
+void CameraGroundBallFilter::predictFilter(const CameraGroundBallPrediction& prediction) {
     // simple function for now but may become complicated with collisions
     ekf.predict(prediction.time);
 }
 Eigen::Vector2d CameraGroundBallFilter::getVelocityEstimate(Time time) const { return ekf.getVelocityEstimate(time); }
-CameraGroundBallFilter::CameraGroundBallFilter(const BallObservation &observation, const Eigen::Vector2d &velocity_estimate)
+CameraGroundBallFilter::CameraGroundBallFilter(const BallObservation& observation, const Eigen::Vector2d& velocity_estimate)
     : CameraObjectFilter(0.2, 1 / 60.0, 15, 3, observation.timeCaptured) {
     Eigen::Vector4d startState = {observation.position.x(), observation.position.y(), velocity_estimate.x(), velocity_estimate.y()};
     Eigen::Matrix4d startCovariance = Eigen::Matrix4d::Zero();
@@ -49,7 +50,7 @@ CameraGroundBallPrediction CameraGroundBallFilter::predict(Time time, std::vecto
     if (!checkRobots(yellowRobots, positionEstimate, velocityEstimate)) {
         checkRobots(blueRobots, positionEstimate, velocityEstimate);
     }
-    const auto &estimate = ekf.getStateEstimate(time);
+    const auto& estimate = ekf.getStateEstimate(time);
     CameraGroundBallPrediction prediction(estimate.head<2>(), estimate.tail<2>(), time);
     return prediction;
 }

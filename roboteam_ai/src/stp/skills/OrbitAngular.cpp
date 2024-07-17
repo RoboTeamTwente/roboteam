@@ -15,7 +15,8 @@ Status OrbitAngular::onUpdate(const StpInfo &info) noexcept {
 
     // Determine direction and speed factor
     int direction = yaw.rotateDirection(currentYaw) ? -1 : 1;
-    double speedFactor = std::clamp(currentYaw.shortestAngleDiff(yaw) * 2 * M_PI, 0.0, M_PI);
+    // TODO ROBOCUP 2024: FIX THIS
+    double speedFactor = std::clamp(currentYaw.shortestAngleDiff(yaw) * 1.4 * M_PI, 0.0, M_PI);
 
     // Calculate target angular velocity and normal vector
     double targetAngularVelocity = direction * speedFactor;
@@ -37,7 +38,7 @@ Status OrbitAngular::onUpdate(const StpInfo &info) noexcept {
     // in simulator, we multiple by 1/2.5 because of how the simulator works and the pid controller is tuned
     if (rtt::GameSettings::getRobotHubMode() == rtt::net::RobotHubMode::BASESTATION) {
         // TODO ROBOCUP 2024: FIX THIS
-        command.yaw = currentYaw + Angle(targetAngularVelocity * 1 / 15);
+        command.yaw = currentYaw + Angle(targetAngularVelocity * 1 / 4);
     } else {
         command.yaw = currentYaw + Angle(targetAngularVelocity * 1 / 2.5);
     }
@@ -54,7 +55,7 @@ Status OrbitAngular::onUpdate(const StpInfo &info) noexcept {
     }
 
     // Check whether the robot has been within the margin
-    return (withinMarginCount > 3) ? Status::Success : Status::Running;
+    return (withinMarginCount > 0) ? Status::Success : Status::Running;
 }
 
 const char *OrbitAngular::getName() { return "OrbitAngular"; }

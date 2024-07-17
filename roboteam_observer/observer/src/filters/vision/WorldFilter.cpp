@@ -113,6 +113,11 @@ std::vector<FilteredRobot> WorldFilter::getHealthiestRobotsMerged(bool blueBots,
             continue;
             ;
         }
+        bool allSmall = std::all_of(oneIDFilters.second.begin(), oneIDFilters.second.end(), [](const RobotFilter &filter) { return filter.getNumObservations() <= 3; });
+        if (allSmall) {
+            continue;
+        }
+
         double maxHealth = -std::numeric_limits<double>::infinity();
         auto bestFilter = oneIDFilters.second.begin();
         for (auto robotFilter = oneIDFilters.second.begin(); robotFilter != oneIDFilters.second.end(); ++robotFilter) {

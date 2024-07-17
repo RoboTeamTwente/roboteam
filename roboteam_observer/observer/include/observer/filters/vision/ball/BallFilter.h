@@ -28,7 +28,7 @@ class BallFilter {
      * @param until Time to predict the ball at
      * @return The prediction
      */
-    [[nodiscard]] GroundBallPrediction predictCam(int cameraID, Time until) const;
+    [[nodiscard]] GroundBallPrediction predictCam(int cameraID, Time until, std::vector<FilteredRobot> yellowRobots, std::vector<FilteredRobot> blueRobots);
 
     /**
      * Updates the ground filter with a given camera ID with Prediction Observation pairs.

@@ -203,9 +203,11 @@ void WorldFilter::addRobotPredictionsToMessage(proto::World &world, Time time) c
 }
 void WorldFilter::processBalls(const DetectionFrame &frame) {
     std::vector<CameraGroundBallPrediction> predictions(balls.size());
+    std::vector<FilteredRobot> blueRobots = getHealthiestRobotsMerged(true, frame.timeCaptured);
+    std::vector<FilteredRobot> yellowRobots = getHealthiestRobotsMerged(false, frame.timeCaptured);
     // get predictions from cameras
     for (std::size_t i = 0; i < balls.size(); ++i) {
-        predictions[i] = balls[i].predictCam(frame.cameraID, frame.timeCaptured).prediction;
+        predictions[i] = balls[i].predictCam(frame.cameraID, frame.timeCaptured, yellowRobots, blueRobots).prediction;
     }
     // assign observations to relevant filters
     BallAssignmentResult assignment = BallAssigner::assign_balls(predictions, frame.balls);

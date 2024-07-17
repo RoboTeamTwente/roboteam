@@ -82,13 +82,13 @@ class WorldFilter {
     void processBalls(const DetectionFrame& frame);
     [[nodiscard]] std::vector<FilteredRobot> getHealthiestRobotsMerged(bool blueBots, Time time) const;
     [[nodiscard]] std::vector<FilteredRobot> oneCameraHealthyRobots(bool blueBots, int camera_id, Time time) const;
-    void addRobotPredictionsToMessage(proto::World& world, Time time) const;
+    void addRobotPredictionsToMessage(proto::World& world, Time time);
     void addBallPredictionsToMessage(proto::World& world, Time time, const BallParameters& ballParameters);
 
     // take care, although these method are static, they typically DO modify the current object as they have a robotMap reference
     static void predictRobots(const DetectionFrame& frame, robotMap& robots);
     static void updateRobots(robotMap& robots, const std::vector<RobotObservation>& detectedRobots);
-    static void updateRobotsNotSeen(const DetectionFrame& frame, robotMap& robots);
+    static void updateRobotsNotSeen(const DetectionFrame& frame, robotMap& robots, bool blueBots);
 };
 
 #endif  // ROBOTEAM_OBSERVER_KALMANFILTER_H

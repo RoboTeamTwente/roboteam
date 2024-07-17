@@ -91,8 +91,8 @@ std::vector<Vector2> PositionComputations::determineWallPositions(const rtt::Fie
         // If the ball has to be placed somewhere on the field, assume the ball is already there
         ballPos = GameStateManager::getRefereeDesignatedPosition();
     } else if (field.leftDefenseArea.contains(ballPos)) {
-        // If the ball is in our defense area, project it out of it
-        ballPos = FieldComputations::projectPointOutOfDefenseArea(field, ballPos, true, false);
+        // move the ball in the direction of the ball speed, until it is outside the defense area
+        ballPos = FieldComputations::projectPointToValidPositionOnLine(field, ballPos, ballPos, ballPos + ball->velocity.stretchToLength(5), 0);
     } else if ((world->getWorld().value().getBall()->get()->velocity).length() > constants::BALL_GOT_SHOT_LIMIT &&
                InterceptionComputations::calculateTheirBallInterception(world, ballTrajectory).has_value()) {
         ballPos = *InterceptionComputations::calculateTheirBallInterception(world, ballTrajectory);
@@ -109,7 +109,8 @@ std::vector<Vector2> PositionComputations::determineWallPositions(const rtt::Fie
 
     // Find the intersection of the ball-to-goal line with the border of the defense area
     LineSegment ball2GoalLine = LineSegment(ballPos, field.leftGoalArea.rightLine().center());
-    std::vector<Vector2> lineBorderIntersects = FieldComputations::getDefenseArea(field, true, extraLength.length(), 0).intersections(ball2GoalLine);
+    auto [theirDefenseAreaMargin, ourDefenseAreaMargin] = FieldComputations::getDefenseAreaMargin();
+    std::vector<Vector2> lineBorderIntersects = FieldComputations::getDefenseArea(field, true, extraLength.length() + ourDefenseAreaMargin, 0).intersections(ball2GoalLine);
     // If the ball is in our defense area, project it outside, otherwise use the intersection with our defense area
     std::sort(lineBorderIntersects.begin(), lineBorderIntersects.end(), [](Vector2 a, Vector2 b) { return a.x > b.x; });
     projectedPosition = lineBorderIntersects.front();

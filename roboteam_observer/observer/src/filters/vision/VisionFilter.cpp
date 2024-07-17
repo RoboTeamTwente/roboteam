@@ -39,8 +39,16 @@ std::optional<proto::SSL_GeometryData> VisionFilter::getGeometry() const {
 
 Time VisionFilter::getExtrapolationTimeForPolicy() const {
     switch (extrapolationPolicy) {
-        case TimeExtrapolationPolicy::REALTIME:
-            return Time::now();
+        case TimeExtrapolationPolicy::REALTIME:{
+            auto now = Time::now();
+            double msDelay = (now-lastPacketTime).asMilliSeconds();
+            std::cout<<"Delay since last packet: "<<msDelay<<"ms \n";
+            if(msDelay > 50.0){
+                return lastPacketTime + Time(0.050);
+            }
+            return now;
+
+        }
         case TimeExtrapolationPolicy::LAST_RECEIVED_PACKET_TIME:
             return lastPacketTime;
     }

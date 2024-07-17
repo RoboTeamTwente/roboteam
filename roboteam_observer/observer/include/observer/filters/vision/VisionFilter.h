@@ -53,7 +53,7 @@ class VisionFilter {
     GeometryFilter geomFilter;
     WorldFilter worldFilter;
     Time lastPacketTime;
-    TimeExtrapolationPolicy extrapolationPolicy = TimeExtrapolationPolicy::LAST_RECEIVED_PACKET_TIME;
+    TimeExtrapolationPolicy extrapolationPolicy = TimeExtrapolationPolicy::REALTIME;
 };
 
 #endif  // RTT_ROBOTEAM_OBSERVER_OBSERVER_SRC_FILTERS_VISION_VISIONFILTER_H_

@@ -69,7 +69,11 @@ InterceptionInfo InterceptionComputations::calculateInterceptionInfo(const std::
                 interceptionInfo.interceptLocation =
                     LineSegment(futureBallPosition, pastBallPosition).project(world->getWorld()->getRobotClosestToBall(world::us)->get()->getPos());
             } else {
-                interceptionInfo.interceptLocation = robotCloseToBallPos;
+                if (world->getWorld()->getRobotClosestToBall(world::them)->get()->hasBall()) {
+                    interceptionInfo.interceptLocation = robotCloseToBallPos;
+                } else {
+                    interceptionInfo.interceptLocation = robotCloseToBallPos + (ballPosition - robotCloseToBallPos).stretchToLength(0.3);
+                }
             }
             double minTimeToTarget = std::numeric_limits<double>::max();
             for (const auto &robot : ourRobots) {
@@ -137,25 +141,25 @@ InterceptionInfo InterceptionComputations::calculateInterceptionInfo(const std::
         pastBallPosition = FieldComputations::getBallPositionAtTime(*(world->getWorld()->getBall()->get()), loopTime - 0.1);
 
         // If futureBallPos and pastBallPos are in the defense area, continue since interception is not possible
-        if ((world->getField().value().leftDefenseArea.contains(futureBallPosition) && world->getField().value().leftDefenseArea.contains(pastBallPosition)) ||
-            (world->getField().value().rightDefenseArea.contains(futureBallPosition) && world->getField().value().rightDefenseArea.contains(pastBallPosition))) {
-            pastBallPosition = futureBallPosition;
-            continue;
-        } else if (world->getField().value().leftDefenseArea.contains(futureBallPosition) || world->getField().value().rightDefenseArea.contains(futureBallPosition)) {
-            // project futureBallPos to where it enters the defense area
-            auto intersections = FieldComputations::getDefenseArea(world->getField().value(), world->getField().value().leftDefenseArea.contains(futureBallPosition), 0, 0.5)
-                                     .intersections({pastBallPosition, futureBallPosition});
-            if (intersections.size() == 1) {
-                futureBallPosition = intersections.at(0);
-            }
-        } else if (world->getField().value().leftDefenseArea.contains(pastBallPosition) || world->getField().value().rightDefenseArea.contains(pastBallPosition)) {
-            // project pastBallPos to where it exits the defense area
-            auto intersections = FieldComputations::getDefenseArea(world->getField().value(), world->getField().value().leftDefenseArea.contains(pastBallPosition), 0, 0.5)
-                                     .intersections({pastBallPosition, futureBallPosition});
-            if (intersections.size() == 1) {
-                pastBallPosition = intersections.at(0);
-            }
-        }
+        // if ((world->getField().value().leftDefenseArea.contains(futureBallPosition) && world->getField().value().leftDefenseArea.contains(pastBallPosition)) ||
+        //     (world->getField().value().rightDefenseArea.contains(futureBallPosition) && world->getField().value().rightDefenseArea.contains(pastBallPosition))) {
+        //     pastBallPosition = futureBallPosition;
+        //     continue;
+        // } else if (world->getField().value().leftDefenseArea.contains(futureBallPosition) || world->getField().value().rightDefenseArea.contains(futureBallPosition)) {
+        //     // project futureBallPos to where it enters the defense area
+        //     auto intersections = FieldComputations::getDefenseArea(world->getField().value(), world->getField().value().leftDefenseArea.contains(futureBallPosition), 0, 0.5)
+        //                              .intersections({pastBallPosition, futureBallPosition});
+        //     if (intersections.size() == 1) {
+        //         futureBallPosition = intersections.at(0);
+        //     }
+        // } else if (world->getField().value().leftDefenseArea.contains(pastBallPosition) || world->getField().value().rightDefenseArea.contains(pastBallPosition)) {
+        //     // project pastBallPos to where it exits the defense area
+        //     auto intersections = FieldComputations::getDefenseArea(world->getField().value(), world->getField().value().leftDefenseArea.contains(pastBallPosition), 0, 0.5)
+        //                              .intersections({pastBallPosition, futureBallPosition});
+        //     if (intersections.size() == 1) {
+        //         pastBallPosition = intersections.at(0);
+        //     }
+        // }
 
         // If the ball is out of the field, we intercept at the projected position in the field, unless the ball is already out of the field
         if (!world->getField().value().playArea.contains(futureBallPosition, constants::BALL_RADIUS)) {

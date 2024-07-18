@@ -79,7 +79,7 @@ double CollisionCalculations::getFirstCollisionTimeMovingObject(const Trajectory
                 if (ourOtherRobotId == robotId) {
                     continue;
                 }
-                
+
                 const auto computedPathsIt = computedPaths.find(ourOtherRobotId);
                 // If the path of the other robot is not computed, we assume it is not moving
                 if (computedPathsIt == computedPaths.end()) {

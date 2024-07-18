@@ -44,8 +44,8 @@ constexpr double MAX_VEL_WHEN_HAS_BALL = 3.0; /**< Maximum allowed velocity that
 constexpr double MAX_ANGULAR_VELOCITY = 6.0;  /**< Maximum allowed angular velocity that can be send to the robot */
 constexpr double MIN_YAW = -M_PI;             /**< Minimum yaw the robot can have */
 constexpr double MAX_YAW = M_PI;              /**< Maximum yaw the robot can have */
-constexpr double MAX_ACC = 3.5;               /**< Maximum acceleration of the robot */
-constexpr double MAX_VEL = 4.0;               /**< Maximum allowed velocity of the robot */
+constexpr double MAX_ACC = 2.0;               /**< Maximum acceleration of the robot */
+constexpr double MAX_VEL = 2.0;               /**< Maximum allowed velocity of the robot */
 constexpr double MAX_JERK_DEFAULT = 6;        /**< Default jerk limit */
 
 /// GoToPos Constants
@@ -55,7 +55,7 @@ constexpr double GO_TO_POS_ERROR_MARGIN = 0.02; /**< Distance error for a robot 
 constexpr double GO_TO_POS_ANGLE_ERROR_MARGIN = 0.01; /**< Angle error for a robot to be considered to have reached a position */
 // Maximum inaccuracy during ballplacement
 constexpr double BALL_PLACEMENT_MARGIN = 0.15 - BALL_RADIUS - 0.01; /**< Distance error for the ball to be considered to have reached the ball placement position*/
-constexpr double BALL_PLACER_MARGIN = BALL_PLACEMENT_MARGIN - 0.05; /**< Distance before the ball placer moves away from hte ball*/
+constexpr double BALL_PLACER_MARGIN = BALL_PLACEMENT_MARGIN - 0.07; /**< Distance before the ball placer moves away from hte ball*/
 constexpr double ENEMY_ALREADY_ASSIGNED_MULTIPLIER = 0.9;           /**< Multiplication factor for the distance to goal used by the dealer when the enemy is already assigned */
 
 /// Invariant constants

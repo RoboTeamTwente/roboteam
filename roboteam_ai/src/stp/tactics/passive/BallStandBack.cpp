@@ -6,7 +6,7 @@
 namespace rtt::ai::stp::tactic {
 
 const int STAND_STILL_THRESHOLD = 60;
-const int MOVE_AFTER_DRIBBLER_OFF = 20;
+const int MOVE_AFTER_DRIBBLER_OFF = 60;
 
 BallStandBack::BallStandBack() { skills = rtt::collections::state_machine<Skill, Status, StpInfo>{skill::GoToPos()}; }
 
@@ -19,6 +19,8 @@ std::optional<StpInfo> BallStandBack::calculateInfoForSkill(StpInfo const &info)
     Vector2 ballTarget = info.getBall()->get()->position;
     auto robot = info.getRobot()->get();
     if (standStillCounter > STAND_STILL_THRESHOLD) {
+        skillStpInfo.setMaxRobotVelocity(0.5);
+        skillStpInfo.setMaxJerk(1);
         skillStpInfo.setDribblerOn(false);
         if (standStillCounter > STAND_STILL_THRESHOLD + MOVE_AFTER_DRIBBLER_OFF) {
             auto moveVector = robot->getPos() - ballTarget;

@@ -2,7 +2,7 @@
 
 #include <roboteam_utils/Hungarian.h>
 #include <roboteam_utils/LineSegment.h>
-
+#include "stp/roles/passive/Halt.h"
 #include "stp/computations/PassComputations.h"
 #include "stp/computations/PositionScoring.h"
 #include "stp/roles/Keeper.h"
@@ -32,35 +32,37 @@ AttackingPass::AttackingPass() : Play() {
         std::make_unique<role::PassReceiver>("receiver"),
         std::make_unique<role::Formation>("attacker_0"),
         std::make_unique<role::Formation>("attacker_1"),
-        std::make_unique<role::Defender>("attacker_2"),
-        std::make_unique<role::Defender>("attacker_3"),
-        std::make_unique<role::Defender>("attacker_4"),
-        std::make_unique<role::Defender>("attacker_5"),
-        std::make_unique<role::Defender>("attacker_6"),
-        std::make_unique<role::Defender>("attacker_7"),
-        std::make_unique<role::Defender>("attacker_8"),
+        std::make_unique<role::Formation>("attacker_2"),
+        std::make_unique<role::Formation>("attacker_3"),
+        std::make_unique<role::Halt>("halt_0"),
+        std::make_unique<role::Halt>("halt_1"),
+        std::make_unique<role::Halt>("halt_2"),
+        std::make_unique<role::Halt>("halt_3"),
+        std::make_unique<role::Halt>("halt_4"),
 
     };
 }
 
 uint8_t AttackingPass::score(const rtt::Field& field) noexcept {
-    return constants::FUZZY_TRUE;
+    passInfo = stp::computations::PassComputations::calculatePass(gen::SafePass, world, field);
+    return passInfo.passScore;
 }
+
 
 Dealer::FlagMap AttackingPass::decideRoleFlags() const noexcept {
     Dealer::FlagMap flagMap;
 
     flagMap.insert({"passer", {DealerFlagPriority::REQUIRED, {}, passInfo.passerId}});
     flagMap.insert({"receiver", {DealerFlagPriority::REQUIRED, {}, passInfo.receiverId}});
-    flagMap.insert({"attacker_0", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"attacker_1", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"attacker_2", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"attacker_3", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"attacker_4", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"attacker_5", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"attacker_6", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"attacker_7", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"attacker_8", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"attacker_0", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
+    flagMap.insert({"attacker_1", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
+    flagMap.insert({"attacker_2", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
+    flagMap.insert({"attacker_3", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
+    flagMap.insert({"halt_0", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"halt_1", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"halt_2", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"halt_3", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"halt_4", {DealerFlagPriority::LOW_PRIORITY, {}}});
 
     return flagMap;
 }
@@ -85,12 +87,12 @@ bool AttackingPass::shouldEndPlay() noexcept {
     // If the ball is kicked, we end the play to already prepare for what happens next
     if (ballKicked()) return true;
 
-    auto newPassInfo = stp::computations::PassComputations::calculatePass(gen::AttackingPass, world, field);
-    // If the passer doesn't have the ball yet and there is a better pass available, we should stop the play
+    auto newPassInfo = stp::computations::PassComputations::calculatePass(gen::SafePass, world, field);
+    // // If the passer doesn't have the ball yet and there is a better pass available, we should stop the play
     if (stpInfos["passer"].getRobot() && !stpInfos["passer"].getRobot().value()->hasBall() &&
-        newPassInfo.passScore > 1.05 * stp::PositionScoring::scorePosition(passInfo.receiverLocation, gen::AttackingPass, field, world).score)
+        newPassInfo.passScore > 1.05 * stp::PositionScoring::scorePosition(passInfo.receiverLocation, gen::SafePass, field, world).score)
         return true;
-    // If the passer id is different, another robot can quicker get the ball, so stop
+    // // If the passer id is different, another robot can quicker get the ball, so stop
     if (newPassInfo.passerId != passInfo.passerId) {
         return true;
     }

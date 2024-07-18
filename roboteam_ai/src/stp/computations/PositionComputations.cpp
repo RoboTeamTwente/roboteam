@@ -480,27 +480,32 @@ void PositionComputations::calculateInfoForAttackers(std::unordered_map<std::str
             attackerNames.emplace_back(roles[i]->getName());
         }
     }
+    auto bestGrid = Grid(-4.5, -3, 9, 6, 9, 6);
+    auto nxGrid = Grid(-4.5, -3, 4.5, 6, 9, 6);
+    auto pxGrid = Grid(0, -3, 4.5, 6, 9, 6);
+
+
     if (attackerNames.size() == 0)
         ;  // Do nothing
     else if (attackerNames.size() == 1) {
-        stpInfos["attacker_0"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.middleRightGrid, gen::AttackingPass, field, world));
+        stpInfos["attacker_0"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, bestGrid, gen::SafePass, field, world));
     } else if (attackerNames.size() == 2) {
-        stpInfos["attacker_0"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.topRightGrid, gen::AttackingPass, field, world));
-        stpInfos["attacker_1"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.bottomRightGrid, gen::AttackingPass, field, world));
+        stpInfos["attacker_0"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, nxGrid, gen::SafePass, field, world));
+        stpInfos["attacker_1"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, pxGrid, gen::SafePass, field, world));
     } else if (attackerNames.size() >= 3) {
-        stpInfos["attacker_0"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.topRightGrid, gen::SafePass, field, world));
-        stpInfos["attacker_1"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.middleRightGrid, gen::AttackingPass, field, world));
-        stpInfos["attacker_2"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.bottomRightGrid, gen::SafePass, field, world));
+        stpInfos["attacker_0"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, bestGrid, gen::SafePass, field, world));
+        stpInfos["attacker_1"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, bestGrid, gen::SafePass, field, world));
+        stpInfos["attacker_2"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, bestGrid, gen::SafePass, field, world));
     }
     if (attackerNames.size() == 4) {
-        stpInfos["attacker_3"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.middleMidGrid, gen::AttackingPass, field, world));
+        stpInfos["attacker_3"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.middleMidGrid, gen::SafePass, field, world));
     } else if (attackerNames.size() == 5) {
-        stpInfos["attacker_3"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.topMidGrid, gen::AttackingPass, field, world));
-        stpInfos["attacker_4"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.bottomMidGrid, gen::AttackingPass, field, world));
+        stpInfos["attacker_3"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.topMidGrid, gen::SafePass, field, world));
+        stpInfos["attacker_4"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.bottomMidGrid, gen::SafePass, field, world));
     } else if (attackerNames.size() >= 6) {
-        stpInfos["attacker_3"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.topMidGrid, gen::AttackingPass, field, world));
+        stpInfos["attacker_3"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.topMidGrid, gen::SafePass, field, world));
         stpInfos["attacker_4"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.middleMidGrid, gen::SafePass, field, world));
-        stpInfos["attacker_5"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.bottomMidGrid, gen::AttackingPass, field, world));
+        stpInfos["attacker_5"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.bottomMidGrid, gen::SafePass, field, world));
     }
 }
 

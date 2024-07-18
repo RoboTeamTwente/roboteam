@@ -20,7 +20,7 @@ PassInfo PassComputations::calculatePass(gen::ScoreProfile profile, const rtt::w
     auto us = world->getWorld()->getUs();
 
     // Find which robot is keeper (bot closest to goal if there was not a keeper yet), store its id, and erase from us to avoid the desired keeper to be the passer
-    passInfo.keeperId = InterceptionComputations::getKeeperId(us, world);
+    passInfo.keeperId = -1;
     if (!keeperMustPass) std::erase_if(us, [passInfo](auto& bot) { return bot->getId() == passInfo.keeperId; });
 
     // Remove cardId from us
@@ -125,7 +125,7 @@ Grid PassComputations::getPassGrid(const Field& field) {
 bool PassComputations::pointIsValidReceiverLocation(Vector2 point, const std::vector<Vector2>& possibleReceiverLocations, const std::vector<Vector2>& possibleReceiverVelocities,
                                                     const std::vector<int>& possibleReceiverIds, Vector2 passLocation, Vector2 passerLocation, Vector2 passerVelocity, int passerId,
                                                     const Field& field, const world::World* world) {
-    constexpr double MINIMUM_PASS_DISTANCE = 3.0;  // This can be dribbled instead of passed
+    constexpr double MINIMUM_PASS_DISTANCE = 1.0;  // This can be dribbled instead of passed
     if (point.dist(passLocation) < MINIMUM_PASS_DISTANCE) return false;
     constexpr double MINIMUM_LINE_OF_SIGHT = 10.0;  // The minimum LoS to be a valid pass, otherwise, the pass will go into an enemy robot
     if (PositionScoring::scorePosition(point, gen::LineOfSight, field, world).score < MINIMUM_LINE_OF_SIGHT) return false;

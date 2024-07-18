@@ -39,7 +39,7 @@ double PositionScoring::determineOpenScore(Vector2 &point, const rtt::Field &fie
     for (auto &enemyRobot : them) {
         enemyDistances.push_back(point.dist(enemyRobot->getPos()));
     }
-    auto radius = field.playArea.width() / 4.0;
+    auto radius = field.playArea.width();
     return (scores.scoreOpen = stp::evaluation::OpennessEvaluation::metricCheck(enemyDistances, radius)).value();
 }
 

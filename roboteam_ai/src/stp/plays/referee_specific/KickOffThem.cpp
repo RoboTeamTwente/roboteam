@@ -18,7 +18,6 @@ KickOffThem::KickOffThem() : Play() {
     // Role creation, the names should be unique. The names are used in the stpInfos-map.
     roles = std::array<std::unique_ptr<Role>, rtt::ai::constants::MAX_ROBOT_COUNT>{
         // Roles is we play 6v6
-        std::make_unique<role::Keeper>("keeper"),
         std::make_unique<role::Halt>("halt_0"),
         std::make_unique<role::Halt>("halt_1"),
         std::make_unique<role::Halt>("halt_2"),
@@ -30,6 +29,7 @@ KickOffThem::KickOffThem() : Play() {
         std::make_unique<role::Halt>("halt_7"),
         std::make_unique<role::Halt>("halt_8"),
         std::make_unique<role::Halt>("halt_9"),
+        std::make_unique<role::Halt>("halt_10"),
     };
 }
 
@@ -42,7 +42,6 @@ Dealer::FlagMap KickOffThem::decideRoleFlags() const noexcept {
     Dealer::FlagMap flagMap;
     Dealer::DealerFlag keeperFlag(DealerFlagTitle::KEEPER);
 
-    flagMap.insert({"keeper", {DealerFlagPriority::KEEPER, {keeperFlag}}});
     flagMap.insert({"halt_0", {DealerFlagPriority::LOW_PRIORITY, {}}});
     flagMap.insert({"halt_1", {DealerFlagPriority::LOW_PRIORITY, {}}});
     flagMap.insert({"halt_2", {DealerFlagPriority::LOW_PRIORITY, {}}});
@@ -53,6 +52,7 @@ Dealer::FlagMap KickOffThem::decideRoleFlags() const noexcept {
     flagMap.insert({"halt_7", {DealerFlagPriority::LOW_PRIORITY, {}}});
     flagMap.insert({"halt_8", {DealerFlagPriority::LOW_PRIORITY, {}}});
     flagMap.insert({"halt_9", {DealerFlagPriority::LOW_PRIORITY, {}}});
+    flagMap.insert({"halt_10", {DealerFlagPriority::LOW_PRIORITY, {}}});
 
     return flagMap;
 }

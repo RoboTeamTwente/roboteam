@@ -15,7 +15,7 @@ Status OrbitAngular::onUpdate(const StpInfo &info) noexcept {
 
     // Determine direction and speed factor
     int direction = yaw.rotateDirection(currentYaw) ? -1 : 1;
-    double speedFactor = std::clamp(currentYaw.shortestAngleDiff(yaw) * 1.4 * M_PI, 0.0, M_PI);
+    double speedFactor = std::clamp(currentYaw.shortestAngleDiff(yaw) * 2 * M_PI, 0.0, M_PI);
 
     // Calculate target angular velocity and normal vector
     double targetAngularVelocity = direction * speedFactor;

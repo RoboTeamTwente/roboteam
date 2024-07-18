@@ -23,7 +23,7 @@ double ControlUtils::determineKickForce(const double distance, stp::ShotPower sh
 
     double kickForce;
     if (shotPower == stp::ShotPower::PASS) {
-        kickForce = 1.8;
+        kickForce = 1.0;
     } else if (shotPower == stp::ShotPower::TARGET) {
         kickForce = 0.5;
     } else {

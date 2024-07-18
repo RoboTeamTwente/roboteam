@@ -19,25 +19,12 @@
  */
 #include "gui/Out.h"
 #include "stp/plays/defensive/Defend.h"
-#include "stp/plays/defensive/KeeperKickBall.h"
-#include "stp/plays/offensive/Attack.h"
 #include "stp/plays/offensive/AttackingPass.h"
-#include "stp/plays/referee_specific/BallPlacementThem.h"
-#include "stp/plays/referee_specific/BallPlacementUsForceStart.h"
-#include "stp/plays/referee_specific/BallPlacementUsFreeKick.h"
-#include "stp/plays/referee_specific/FreeKickThem.h"
-#include "stp/plays/referee_specific/FreeKickUsAtGoal.h"
-#include "stp/plays/referee_specific/FreeKickUsPass.h"
 #include "stp/plays/referee_specific/Halt.h"
 #include "stp/plays/referee_specific/KickOffThem.h"
 #include "stp/plays/referee_specific/KickOffThemPrepare.h"
 #include "stp/plays/referee_specific/KickOffUs.h"
 #include "stp/plays/referee_specific/KickOffUsPrepare.h"
-#include "stp/plays/referee_specific/PenaltyThem.h"
-#include "stp/plays/referee_specific/PenaltyThemPrepare.h"
-#include "stp/plays/referee_specific/PenaltyUs.h"
-#include "stp/plays/referee_specific/PenaltyUsPrepare.h"
-#include "stp/plays/referee_specific/PrepareForcedStart.h"
 #include "stp/plays/referee_specific/StopFormation.h"
 
 namespace io = rtt::ai::io;
@@ -51,25 +38,11 @@ const STPManager::PlaysVec STPManager::plays = ([] {
     auto plays = std::vector<std::unique_ptr<ai::stp::Play>>();
 
     plays.emplace_back(std::make_unique<plays::AttackingPass>());
-    plays.emplace_back(std::make_unique<plays::Attack>());
     plays.emplace_back(std::make_unique<plays::Halt>());
     plays.emplace_back(std::make_unique<plays::Defend>());
-    plays.emplace_back(std::make_unique<plays::KeeperKickBall>());
-    plays.emplace_back(std::make_unique<plays::PrepareForcedStart>());
     plays.emplace_back(std::make_unique<plays::StopFormation>());
-    plays.emplace_back(std::make_unique<plays::BallPlacementUsFreeKick>());
-    plays.emplace_back(std::make_unique<plays::BallPlacementUsForceStart>());
-    plays.emplace_back(std::make_unique<plays::BallPlacementThem>());
-    // plays.emplace_back(std::make_unique<play::TimeOut>());
-    plays.emplace_back(std::make_unique<plays::PenaltyThemPrepare>());
-    plays.emplace_back(std::make_unique<plays::PenaltyUsPrepare>());
-    plays.emplace_back(std::make_unique<plays::PenaltyThem>());
-    plays.emplace_back(std::make_unique<plays::PenaltyUs>());
     plays.emplace_back(std::make_unique<plays::KickOffUsPrepare>());
     plays.emplace_back(std::make_unique<plays::KickOffThemPrepare>());
-    plays.emplace_back(std::make_unique<plays::FreeKickThem>());
-    plays.emplace_back(std::make_unique<plays::FreeKickUsAtGoal>());
-    plays.emplace_back(std::make_unique<plays::FreeKickUsPass>());
     plays.emplace_back(std::make_unique<plays::KickOffUs>());
     plays.emplace_back(std::make_unique<plays::KickOffThem>());
     return plays;

@@ -47,7 +47,6 @@ Dealer::FlagMap KickOffUs::decideRoleFlags() const noexcept {
     Dealer::DealerFlag kickerFlag(DealerFlagTitle::CAN_KICK_BALL);
     Dealer::DealerFlag detectionFlag(DealerFlagTitle::CAN_DETECT_BALL);
 
-    flagMap.insert({"keeper", {DealerFlagPriority::KEEPER, {keeperFlag}}});
     flagMap.insert({"kick_off_taker", {DealerFlagPriority::REQUIRED, {kickerFlag, detectionFlag}}});
     flagMap.insert({"halt_0", {DealerFlagPriority::LOW_PRIORITY, {}}});
     flagMap.insert({"halt_1", {DealerFlagPriority::LOW_PRIORITY, {}}});
@@ -63,10 +62,10 @@ Dealer::FlagMap KickOffUs::decideRoleFlags() const noexcept {
 }
 
 void KickOffUs::calculateInfoForRoles() noexcept {
-    Vector2 theirGoal = Vector2(6, 0);
-    stpInfos["kick_off_taker"].setPositionToShootAt(theirGoal);
-    stpInfos["kick_off_taker"].setShotPower(ShotPower::MAX);
-    stpInfos["kick_off_taker"].setKickOrChip(KickType::CHIP);
+    Vector2 ourGoal = Vector2(-6, 0);
+    stpInfos["kick_off_taker"].setPositionToShootAt(ourGoal);
+    stpInfos["kick_off_taker"].setShotPower(ShotPower::PASS);
+    stpInfos["kick_off_taker"].setKickOrChip(KickType::KICK);
     stpInfos["kick_off_taker"].setShootOnFirstTouch(true);
 }
 

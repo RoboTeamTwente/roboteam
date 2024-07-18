@@ -43,8 +43,7 @@ std::optional<StpInfo> GetBall::calculateInfoForSkill(const StpInfo &info) noexc
         skillStpInfo.setPositionToMoveTo(info.getRobot()->get()->getPos());
         skillStpInfo.setTargetVelocity(Vector2(0, 0));
     } else {
-        auto newRobotPos = interceptionPosition + (interceptionPosition - ballPosition).stretchToLength(constants::CENTER_TO_FRONT);
-        skillStpInfo.setPositionToMoveTo(newRobotPos);
+        skillStpInfo.setPositionToMoveTo(interceptionPosition);
         skillStpInfo.setTargetVelocity(interceptionVelocity);
     }
     skillStpInfo.setMaxJerk(constants::MAX_JERK_DEFAULT);

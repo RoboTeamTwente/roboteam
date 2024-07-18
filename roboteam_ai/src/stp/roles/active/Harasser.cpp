@@ -5,5 +5,5 @@
 
 namespace rtt::ai::stp::role {
 
-Harasser::Harasser(std::string name) : Role(std::move(name)) { robotTactics = collections::state_machine<Tactic, Status, StpInfo>{tactic::Formation(), tactic::GetBall()}; }
+Harasser::Harasser(std::string name) : Role(std::move(name)) { robotTactics = collections::state_machine<Tactic, Status, StpInfo>{tactic::GetBall()}; }
 }  // namespace rtt::ai::stp::role

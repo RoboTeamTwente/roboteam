@@ -22,17 +22,10 @@ Defend::Defend() : Play() {
     // Role creation, the names should be unique. The names are used in the stpInfos-map.
     roles = std::array<std::unique_ptr<Role>, rtt::ai::constants::MAX_ROBOT_COUNT>{
         // Roles is we play 6v6
-        std::make_unique<role::Harasser>("harasser"),
-        std::make_unique<role::Defender>("defender_0"),
-        std::make_unique<role::Defender>("defender_1"),
-        std::make_unique<role::Defender>("defender_2"),
-        std::make_unique<role::Defender>("defender_3"),
-        std::make_unique<role::Defender>("defender_4"),
-        std::make_unique<role::Defender>("defender_5"),
-        std::make_unique<role::Defender>("defender_6"),
-        std::make_unique<role::Defender>("defender_7"),
-        std::make_unique<role::Defender>("defender_8"),
-        std::make_unique<role::Defender>("defender_9"),
+        std::make_unique<role::Harasser>("harasser"),   std::make_unique<role::Defender>("defender_0"), std::make_unique<role::Defender>("defender_1"),
+        std::make_unique<role::Defender>("defender_2"), std::make_unique<role::Defender>("defender_3"), std::make_unique<role::Defender>("defender_4"),
+        std::make_unique<role::Defender>("defender_5"), std::make_unique<role::Defender>("defender_6"), std::make_unique<role::Defender>("defender_7"),
+        std::make_unique<role::Defender>("defender_8"), std::make_unique<role::Defender>("defender_9"),
 
     };
 }

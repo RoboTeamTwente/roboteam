@@ -2,7 +2,7 @@
 
 #include <roboteam_utils/Hungarian.h>
 #include <roboteam_utils/LineSegment.h>
-#include "stp/roles/passive/Halt.h"
+
 #include "stp/computations/PassComputations.h"
 #include "stp/computations/PositionScoring.h"
 #include "stp/roles/Keeper.h"
@@ -10,6 +10,7 @@
 #include "stp/roles/active/Passer.h"
 #include "stp/roles/passive/Defender.h"
 #include "stp/roles/passive/Formation.h"
+#include "stp/roles/passive/Halt.h"
 #include "utilities/Constants.h"
 #include "world/views/RobotView.hpp"
 
@@ -28,17 +29,10 @@ AttackingPass::AttackingPass() : Play() {
     // Role creation, the names should be unique. The names are used in the stpInfos-map.
     roles = std::array<std::unique_ptr<Role>, rtt::ai::constants::MAX_ROBOT_COUNT>{
         // Roles is we play 6v6
-        std::make_unique<role::Passer>("passer"),
-        std::make_unique<role::PassReceiver>("receiver"),
-        std::make_unique<role::Formation>("attacker_0"),
-        std::make_unique<role::Formation>("attacker_1"),
-        std::make_unique<role::Formation>("attacker_2"),
-        std::make_unique<role::Formation>("attacker_3"),
-        std::make_unique<role::Halt>("halt_0"),
-        std::make_unique<role::Halt>("halt_1"),
-        std::make_unique<role::Halt>("halt_2"),
-        std::make_unique<role::Halt>("halt_3"),
-        std::make_unique<role::Halt>("halt_4"),
+        std::make_unique<role::Passer>("passer"),        std::make_unique<role::PassReceiver>("receiver"), std::make_unique<role::Formation>("attacker_0"),
+        std::make_unique<role::Formation>("attacker_1"), std::make_unique<role::Formation>("attacker_2"),  std::make_unique<role::Formation>("attacker_3"),
+        std::make_unique<role::Halt>("halt_0"),          std::make_unique<role::Halt>("halt_1"),           std::make_unique<role::Halt>("halt_2"),
+        std::make_unique<role::Halt>("halt_3"),          std::make_unique<role::Halt>("halt_4"),
 
     };
 }
@@ -47,7 +41,6 @@ uint8_t AttackingPass::score(const rtt::Field& field) noexcept {
     passInfo = stp::computations::PassComputations::calculatePass(gen::SafePass, world, field);
     return passInfo.passScore;
 }
-
 
 Dealer::FlagMap AttackingPass::decideRoleFlags() const noexcept {
     Dealer::FlagMap flagMap;

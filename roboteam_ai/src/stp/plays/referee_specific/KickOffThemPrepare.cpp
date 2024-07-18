@@ -54,9 +54,7 @@ Dealer::FlagMap KickOffThemPrepare::decideRoleFlags() const noexcept {
     return flagMap;
 }
 
-void KickOffThemPrepare::calculateInfoForRoles() noexcept {
-    PositionComputations::calculateInfoForFormationOurSide(stpInfos, roles, field, world);
-}
+void KickOffThemPrepare::calculateInfoForRoles() noexcept { PositionComputations::calculateInfoForFormationOurSide(stpInfos, roles, field, world); }
 const char* KickOffThemPrepare::getName() const { return "Kick Off Them Prepare"; }
 
 }  // namespace rtt::ai::stp::play

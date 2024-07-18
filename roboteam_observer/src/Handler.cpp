@@ -202,7 +202,7 @@ void Handler::startReplay(rtt::LogFileReader& reader) {
         auto check = observer.process(visionPackets, refereePackets, feedbackPackets);
 
         numMessagesProcessed++;
-        if(numMessagesProcessed % 1000 == 0){
+        if (numMessagesProcessed % 1000 == 0) {
             std::cout << "Num Messages processed: " << numMessagesProcessed << "\n";
         }
     }

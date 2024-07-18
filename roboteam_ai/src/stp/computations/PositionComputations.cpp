@@ -484,7 +484,6 @@ void PositionComputations::calculateInfoForAttackers(std::unordered_map<std::str
     auto nxGrid = Grid(-4.5, -3, 4.5, 6, 9, 6);
     auto pxGrid = Grid(0, -3, 4.5, 6, 9, 6);
 
-
     if (attackerNames.size() == 0)
         ;  // Do nothing
     else if (attackerNames.size() == 1) {

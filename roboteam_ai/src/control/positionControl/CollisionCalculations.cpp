@@ -79,6 +79,7 @@ double CollisionCalculations::getFirstCollisionTimeMovingObject(const Trajectory
                 if (ourOtherRobotId == robotId) {
                     continue;
                 }
+                
                 const auto computedPathsIt = computedPaths.find(ourOtherRobotId);
                 // If the path of the other robot is not computed, we assume it is not moving
                 if (computedPathsIt == computedPaths.end()) {
@@ -105,7 +106,7 @@ double CollisionCalculations::getFirstCollisionTimeMovingObject(const Trajectory
                     continue;
                 }
                 const Vector2 &ourOtherRobotPos = ourOtherRobot->getPos();
-                if ((ourOtherRobotPos - positionOurRobot).length() < 1.8 * constants::CENTER_TO_FRONT) {
+                if ((ourOtherRobotPos - positionOurRobot).length() < 1.4 * constants::ROBOT_RADIUS) {
                     return checkPoint * 0.1;
                 }
             }

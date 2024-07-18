@@ -71,12 +71,12 @@ bool CameraGroundBallFilter::checkRobotCollision(const FilteredRobot& robot, con
     rtt::Vector2 ballVel = rtt::Vector2(velocityEstimate.x(), velocityEstimate.y());
     rtt::Vector2 robotVel = rtt::Vector2(robot.velocity.velocity.x(), robot.velocity.velocity.y());
 
-    if (!rtt::RobotShape(robotPos, 0.06, 0.08, robotYaw).contains(ballPos)) {
+    if (!rtt::RobotShape(robotPos, 0.05, 0.07, robotYaw).contains(ballPos)) {
         return false;
     }
 
     auto ballVelUsed = ballVel - robotVel;
-    auto robotShape = rtt::RobotShape(robotPos, 0.06 + 0.0213, 0.08 + 0.0213, robotYaw);
+    auto robotShape = rtt::RobotShape(robotPos, 0.05 + 0.0213, 0.07 + 0.0213, robotYaw);
     auto frontLine = robotShape.kicker();
     auto ballVelLine = rtt::LineSegment(ballPos, ballPos - ballVelUsed.stretchToLength(0.09 * 5));
 

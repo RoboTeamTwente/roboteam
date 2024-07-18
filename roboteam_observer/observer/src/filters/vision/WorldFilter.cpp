@@ -220,9 +220,9 @@ void WorldFilter::addRobotPredictionsToMessage(proto::World &world, Time time) {
         }
         if(botHasNonsensicalValue(worldBot)){
             std::cout<<"Nonsense values detected for blue "<<worldBot.id()<<", resetting all its filters!!\n";
-            yellow[RobotID(world.id())].clear(); //Nuclear, simply remove all robot filters for this robot...
+            blue[RobotID(world.id())].clear(); //Nuclear, simply remove all robot filters for this robot...
         }else{
-            world.mutable_yellow()->Add()->CopyFrom(worldBot);
+            world.mutable_blue()->Add()->CopyFrom(worldBot);
         }
     }
     std::vector<FilteredRobot> yellowRobots = getHealthiestRobotsMerged(false, time);

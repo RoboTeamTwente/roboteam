@@ -72,8 +72,8 @@ double CollisionCalculations::getFirstCollisionTimeMovingObject(const Trajectory
         auto pathLine = LineSegment(pathPoints[checkPoint - 1], pathPoints[checkPoint]);
         double velocityOurRobot = Trajectory.getVelocity(checkPoint * 0.1).length();
         auto positionOurRobot = Trajectory.getPosition(checkPoint * 0.1);
-        double additionalMargin = std::pow(std::min(maxVel, velocityOurRobot) / maxVel, 2) * 0.2;
-        if (velocityOurRobot > 0.4 && avoidObjects.shouldAvoidOurRobots) {
+        double additionalMargin = std::pow(std::min(3.5, velocityOurRobot) / 3.5, 2) * 0.2;
+        if (velocityOurRobot > 0.7 && avoidObjects.shouldAvoidOurRobots) {
             for (const auto &ourOtherRobot : ourRobots) {
                 const int &ourOtherRobotId = ourOtherRobot->getId();
                 if (ourOtherRobotId == robotId) {
@@ -111,7 +111,7 @@ double CollisionCalculations::getFirstCollisionTimeMovingObject(const Trajectory
                 }
             }
         }
-        if (velocityOurRobot > 0.4 && avoidObjects.shouldAvoidTheirRobots) {
+        if (velocityOurRobot > 0.7 && avoidObjects.shouldAvoidTheirRobots) {
             if (std::any_of(theirRobots.begin(), theirRobots.end(), [&](const auto &theirRobot) {
                     return LineSegment(theirRobot->getPos() + theirRobot->getVel() * 0.1 * (checkPoint - 1), theirRobot->getPos() + theirRobot->getVel() * 0.1 * checkPoint)
                                .closestDistanceToLineSegment(pathLine) < 2 * constants::ROBOT_RADIUS + additionalMargin;

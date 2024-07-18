@@ -338,25 +338,25 @@ void PositionComputations::calculateInfoForHarasser(std::unordered_map<std::stri
     auto enemyAngle = enemyClosestToBall->get()->getYaw();
     auto harasserAngle = stpInfos["harasser"].getYaw();
     // If enemy is not facing our goal AND does have the ball, stand between the enemy and our goal
-    if (enemyClosestToBall->get()->hasBall() && enemyAngle.shortestAngleDiff(harasserAngle) < M_PI / 1.5) {
-        auto enemyPos = enemyClosestToBall->get()->getPos();
-        auto targetPos = enemyPos + (field.leftGoalArea.leftLine().center() - enemyPos).stretchToLength(constants::ROBOT_RADIUS * 4);
-        stpInfos["harasser"].setPositionToMoveTo(targetPos);
-        stpInfos["harasser"].setYaw((world->getWorld()->getBall()->get()->position - targetPos).angle());
-    } else {
-        auto harasser = std::find_if(roles->begin(), roles->end(), [](const std::unique_ptr<Role> &role) { return role != nullptr && role->getName() == "harasser"; });
-        if (harasser != roles->end() && !harasser->get()->finished() && strcmp(harasser->get()->getCurrentTactic()->getName(), "Formation") == 0) {
-            auto enemyPos = enemyClosestToBall->get()->getPos();
-            auto targetPos = enemyPos + (world->getWorld()->getBall()->get()->position - enemyPos).stretchToLength(constants::ROBOT_RADIUS * 3);
-            // prevent the harasser from being stuck on the side of the enemy
-            if (enemyClosestToBall->get()->hasBall() && ((stpInfos["harasser"].getRobot()->get()->getPos() - targetPos).length() > constants::ROBOT_RADIUS)) {
-                stpInfos["harasser"].setPositionToMoveTo(targetPos);
-                stpInfos["harasser"].setYaw((world->getWorld()->getBall()->get()->position - targetPos).angle());
-            } else {
-                harasser->get()->forceNextTactic();
-            }
-        }
-    }
+    // if (false && enemyClosestToBall->get()->hasBall() && enemyAngle.shortestAngleDiff(harasserAngle) < M_PI / 1.5) {
+    //     auto enemyPos = enemyClosestToBall->get()->getPos();
+    //     auto targetPos = enemyPos + (field.leftGoalArea.leftLine().center() - enemyPos).stretchToLength(constants::ROBOT_RADIUS * 4);
+    //     stpInfos["harasser"].setPositionToMoveTo(targetPos);
+    //     stpInfos["harasser"].setYaw((world->getWorld()->getBall()->get()->position - targetPos).angle());
+    // } else {
+    //     auto harasser = std::find_if(roles->begin(), roles->end(), [](const std::unique_ptr<Role> &role) { return role != nullptr && role->getName() == "harasser"; });
+    //     if (harasser != roles->end() && !harasser->get()->finished() && strcmp(harasser->get()->getCurrentTactic()->getName(), "Formation") == 0) {
+    //         auto enemyPos = enemyClosestToBall->get()->getPos();
+    //         auto targetPos = enemyPos + (world->getWorld()->getBall()->get()->position - enemyPos).stretchToLength(constants::ROBOT_RADIUS * 3);
+    //         // prevent the harasser from being stuck on the side of the enemy
+    //         if (enemyClosestToBall->get()->hasBall() && ((stpInfos["harasser"].getRobot()->get()->getPos() - targetPos).length() > constants::ROBOT_RADIUS)) {
+    //             stpInfos["harasser"].setPositionToMoveTo(targetPos);
+    //             stpInfos["harasser"].setYaw((world->getWorld()->getBall()->get()->position - targetPos).angle());
+    //         } else {
+    //             harasser->get()->forceNextTactic();
+    //         }
+    //     }
+    // }
 }
 
 void PositionComputations::calculateInfoForDefendersAndWallers(std::unordered_map<std::string, StpInfo> &stpInfos,

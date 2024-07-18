@@ -3,7 +3,51 @@
 #include "filters/vision/ball/BallAssigner.h"
 WorldFilter::WorldFilter() {}
 
-proto::World WorldFilter::getWorldPrediction(const Time &time) const {
+bool botHasNonsensicalValue(const proto::WorldRobot& bot){
+    double xPos = bot.pos().x();
+    double yPos = bot.pos().y();
+
+    for(const double value : {xPos,yPos}){
+        if(std::isnan(value) || std::isinf(value) || value < -10 || value > 10){
+            return true;
+        }
+    }
+    double xVel = bot.vel().x();
+    double yVel = bot.vel().y();
+    for(const double value : {xVel,yVel}){
+        if(std::isnan(value) || std::isinf(value) || value < -20 || value > 20){
+            return true;
+        }
+    }
+    if(bot.yaw() > 2 * M_PI || bot.yaw() < -2 * M_PI){
+        return true;
+    }
+    if(bot.w() > 20 * M_PI || bot.w() < -20 * M_PI){
+        return true;
+    }
+    return false;
+}
+
+bool ballHasNonsensicalValue(const proto::WorldBall& ball){
+    double xPos = ball.pos().x();
+    double yPos = ball.pos().y();
+
+    for(const double value : {xPos,yPos}){
+        if(std::isnan(value) || std::isinf(value) || value < -10 || value > 10){
+            return true;
+        }
+    }
+    double xVel = ball.vel().x();
+    double yVel = ball.vel().y();
+    for(const double value : {xVel,yVel}){
+        if(std::isnan(value) || std::isinf(value) || value < -20 || value > 20){
+            return true;
+        }
+    }
+    return false;
+}
+
+proto::World WorldFilter::getWorldPrediction(const Time &time) {
     proto::World world;
     addRobotPredictionsToMessage(world, time);
     addBallPredictionsToMessage(world, time);
@@ -156,7 +200,7 @@ std::vector<FilteredRobot> WorldFilter::oneCameraHealthyRobots(bool blueBots, in
     }
     return robots;
 }
-void WorldFilter::addRobotPredictionsToMessage(proto::World &world, Time time) const {
+void WorldFilter::addRobotPredictionsToMessage(proto::World &world, Time time) {
     auto feedbackBots = feedbackFilter.getRecentFeedback();
 
     std::vector<FilteredRobot> blueRobots = getHealthiestRobotsMerged(true, time);
@@ -174,7 +218,12 @@ void WorldFilter::addRobotPredictionsToMessage(proto::World &world, Time time) c
             worldBot.mutable_feedbackinfo()->CopyFrom(feedback_it->second);
             feedbackBots.erase(feedback_it);
         }
-        world.mutable_blue()->Add()->CopyFrom(worldBot);
+        if(botHasNonsensicalValue(worldBot)){
+            std::cout<<"Nonsense values detected for blue "<<worldBot.id()<<", resetting all its filters!!\n";
+            yellow[RobotID(world.id())].clear(); //Nuclear, simply remove all robot filters for this robot...
+        }else{
+            world.mutable_yellow()->Add()->CopyFrom(worldBot);
+        }
     }
     std::vector<FilteredRobot> yellowRobots = getHealthiestRobotsMerged(false, time);
     int yellowCount = 0;
@@ -191,7 +240,12 @@ void WorldFilter::addRobotPredictionsToMessage(proto::World &world, Time time) c
             worldBot.mutable_feedbackinfo()->CopyFrom(feedback_it->second);
             feedbackBots.erase(feedback_it);
         }
-        world.mutable_yellow()->Add()->CopyFrom(worldBot);
+        if(botHasNonsensicalValue(worldBot)){
+            std::cout<<"Nonsense values detected for yellow "<<worldBot.id()<<", resetting all its filters!!\n";
+            yellow[RobotID(world.id())].clear(); //Nuclear, simply remove all robot filters for this robot...
+        }else{
+            world.mutable_yellow()->Add()->CopyFrom(worldBot);
+        }
     }
     // Any remaining feedback of robots is put into the lonely category
     for (const auto &bot : feedbackBots) {
@@ -226,7 +280,7 @@ void WorldFilter::processBalls(const DetectionFrame &frame) {
         balls.emplace_back(BallFilter(newBall));
     }
 }
-void WorldFilter::addBallPredictionsToMessage(proto::World &world, Time time) const {
+void WorldFilter::addBallPredictionsToMessage(proto::World &world, Time time) {
     const BallFilter *bestFilter = nullptr;
     double bestHealth = -1.0;
     for (auto &filter : balls) {
@@ -242,5 +296,11 @@ void WorldFilter::addBallPredictionsToMessage(proto::World &world, Time time) co
         return;
     }
     FilteredBall bestBall = bestFilter->mergeBalls(time);
-    world.mutable_ball()->CopyFrom(bestBall.asWorldBall());
+    auto protoBall = bestBall.asWorldBall();
+    if(ballHasNonsensicalValue(protoBall)){
+        std::cout<<"Nonsense values detected for the ball, nuking all ball filters...\n";
+        balls.clear();
+    }else{
+        world.mutable_ball()->CopyFrom(protoBall);
+    }
 }

@@ -65,7 +65,7 @@ InterceptionInfo InterceptionComputations::calculateInterceptionInfo(const std::
         if (interceptRobot && (*interceptRobot - pastBallPosition).length() < (futureBallPosition - pastBallPosition).length()) {
             auto minDistance = (*interceptRobot - pastBallPosition).length();
             auto robotCloseToBallPos = *interceptRobot;
-            if ((world->getWorld()->getRobotClosestToBall(world::us) && world->getWorld()->getRobotClosestToBall(world::us)->get()->getPos() - pastBallPosition).length() < minDistance) {
+            if (world->getWorld()->getRobotClosestToBall(world::us) && (world->getWorld()->getRobotClosestToBall(world::us)->get()->getPos() - pastBallPosition).length() < minDistance) {
                 interceptionInfo.interceptLocation =
                     LineSegment(futureBallPosition, pastBallPosition).project(world->getWorld()->getRobotClosestToBall(world::us)->get()->getPos());
             } else {

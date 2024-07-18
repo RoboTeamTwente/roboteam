@@ -21,8 +21,8 @@ gen::ScoredPosition PositionComputations::getPosition(std::optional<rtt::Vector2
                                                       const world::World *world) {
     gen::ScoredPosition bestPosition;
     AvoidObjects avoidObj;
-    avoidObj.shouldAvoidOurDefenseArea = true;
-    avoidObj.shouldAvoidTheirDefenseArea = true;
+    avoidObj.shouldAvoidOurDefenseArea = false;
+    avoidObj.shouldAvoidTheirDefenseArea = false;
     avoidObj.shouldAvoidOutOfField = true;
     (currentPosition.has_value()) ? bestPosition = PositionScoring::scorePosition(currentPosition.value(), profile, field, world, 2) : bestPosition = {{0, 0}, 0};
     for (const auto &nestedPoints : searchGrid.getPoints()) {

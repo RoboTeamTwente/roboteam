@@ -75,8 +75,8 @@ double FieldComputations::getBallTimeAtPosition(const rtt::world::ball::Ball &ba
 bool FieldComputations::pointIsValidPosition(const rtt::Field &field, const Vector2 &point, stp::AvoidObjects avoidObjects, double fieldMargin) {
     auto [theirDefenseAreaMargin, ourDefenseAreaMargin] = getDefenseAreaMargin();
     if (avoidObjects.shouldAvoidOutOfField && !field.playArea.contains(point, fieldMargin)) return false;
-    if (avoidObjects.shouldAvoidOurDefenseArea && (field.leftDefenseArea.contains(point, ourDefenseAreaMargin))) return false;
-    if (avoidObjects.shouldAvoidTheirDefenseArea && (field.rightDefenseArea.contains(point, theirDefenseAreaMargin))) return false;
+    // if (avoidObjects.shouldAvoidOurDefenseArea && (field.leftDefenseArea.contains(point, ourDefenseAreaMargin))) return false;
+    // if (avoidObjects.shouldAvoidTheirDefenseArea && (field.rightDefenseArea.contains(point, theirDefenseAreaMargin))) return false;
     auto leftGoalTopPost = field.leftGoalArea.topLine();
     auto leftGoalBottomPost = field.leftGoalArea.bottomLine();
     auto rightGoalTopPost = field.rightGoalArea.topLine();
@@ -331,7 +331,7 @@ Vector2 FieldComputations::projectPointOutOfDefenseArea(const Field &field, Vect
 Vector2 FieldComputations::projectPointToValidPosition(const Field &field, Vector2 point, stp::AvoidObjects avoidObjects) {
     Vector2 projectedPos = point;
     if (avoidObjects.shouldAvoidOutOfField) projectedPos = projectPointInField(field, projectedPos);
-    projectedPos = projectPointOutOfDefenseArea(field, projectedPos, avoidObjects.shouldAvoidOurDefenseArea, avoidObjects.shouldAvoidTheirDefenseArea);
+    // projectedPos = projectPointOutOfDefenseArea(field, projectedPos, avoidObjects.shouldAvoidOurDefenseArea, avoidObjects.shouldAvoidTheirDefenseArea);
     if (avoidObjects.shouldAvoidGoalPosts) {
         auto leftGoalTopPost = field.leftGoalArea.topLine();
         auto leftGoalBottomPost = field.leftGoalArea.bottomLine();

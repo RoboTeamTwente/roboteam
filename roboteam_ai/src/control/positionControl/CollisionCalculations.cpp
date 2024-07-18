@@ -34,16 +34,16 @@ double CollisionCalculations::getFirstCollisionTimeMotionlessObject(const Trajec
                 pathLine.closestDistanceToLineSegment(rightGoalBackPost) < constants::ROBOT_RADIUS) {
             }
         }
-        if (avoidObjects.shouldAvoidOurDefenseArea) {
-            if (ourDefenseArea.contains(pathPoints[checkPoint]) || ourDefenseArea.contains(pathPoints[checkPoint - 1]) || ourDefenseArea.doesIntersect(pathLine)) {
-                return checkPoint * 0.1;
-            }
-        }
-        if (avoidObjects.shouldAvoidTheirDefenseArea && theirDefenseAreaMargin > constants::ROBOT_RADIUS + constants::GO_TO_POS_ERROR_MARGIN) {
-            if (theirDefenseArea.contains(pathPoints[checkPoint]) || theirDefenseArea.contains(pathPoints[checkPoint - 1]) || theirDefenseArea.doesIntersect(pathLine)) {
-                return checkPoint * 0.1;
-            }
-        }
+        // if (avoidObjects.shouldAvoidOurDefenseArea) {
+        //     if (ourDefenseArea.contains(pathPoints[checkPoint]) || ourDefenseArea.contains(pathPoints[checkPoint - 1]) || ourDefenseArea.doesIntersect(pathLine)) {
+        //         return checkPoint * 0.1;
+        //     }
+        // }
+        // if (avoidObjects.shouldAvoidTheirDefenseArea && theirDefenseAreaMargin > constants::ROBOT_RADIUS + constants::GO_TO_POS_ERROR_MARGIN) {
+        //     if (theirDefenseArea.contains(pathPoints[checkPoint]) || theirDefenseArea.contains(pathPoints[checkPoint - 1]) || theirDefenseArea.doesIntersect(pathLine)) {
+        //         return checkPoint * 0.1;
+        //     }
+        // }
         if (avoidObjects.shouldAvoidOutOfField) {
             if (!field.playArea.contains(pathPoints[checkPoint], constants::OUT_OF_FIELD_MARGIN)) {
                 return checkPoint * 0.1;
@@ -129,27 +129,27 @@ double CollisionCalculations::getFirstCollisionTimeMovingObject(const Trajectory
                 return checkPoint * 0.1;
             }
         }
-        if (GameStateManager::getCurrentGameState().getCommandId() == RefCommand::BALL_PLACEMENT_THEM ||
-            GameStateManager::getCurrentGameState().getCommandId() == RefCommand::PREPARE_FORCED_START) {
-            auto ballPlacementPosition = GameStateManager::getRefereeDesignatedPosition();
-            bool isBallPlacementCollision = true;
-            for (int i = checkPoint; i < checkPoint + 10; i++) {
-                auto ballPosition = FieldComputations::getBallPositionAtTime(*world->getWorld()->getBall()->get(), checkPoint * 0.1);
-                if (i >= static_cast<int>(pathPoints.size())) {
-                    isBallPlacementCollision = false;
-                    break;
-                }
-                auto positionOurRobot = Trajectory.getPosition(i * 0.1);
-                auto ballPlacementLine = LineSegment(ballPlacementPosition, ballPosition);
-                if (ballPlacementLine.distanceToLine(positionOurRobot) > constants::AVOID_BALL_DISTANCE + additionalMargin) {
-                    isBallPlacementCollision = false;
-                    break;
-                }
-            }
-            if (isBallPlacementCollision) {
-                return checkPoint * 0.1;
-            }
-        }
+        // if (GameStateManager::getCurrentGameState().getCommandId() == RefCommand::BALL_PLACEMENT_THEM ||
+        //     GameStateManager::getCurrentGameState().getCommandId() == RefCommand::PREPARE_FORCED_START) {
+        //     auto ballPlacementPosition = GameStateManager::getRefereeDesignatedPosition();
+        //     bool isBallPlacementCollision = true;
+        //     for (int i = checkPoint; i < checkPoint + 10; i++) {
+        //         auto ballPosition = FieldComputations::getBallPositionAtTime(*world->getWorld()->getBall()->get(), checkPoint * 0.1);
+        //         if (i >= static_cast<int>(pathPoints.size())) {
+        //             isBallPlacementCollision = false;
+        //             break;
+        //         }
+        //         auto positionOurRobot = Trajectory.getPosition(i * 0.1);
+        //         auto ballPlacementLine = LineSegment(ballPlacementPosition, ballPosition);
+        //         if (ballPlacementLine.distanceToLine(positionOurRobot) > constants::AVOID_BALL_DISTANCE + additionalMargin) {
+        //             isBallPlacementCollision = false;
+        //             break;
+        //         }
+        //     }
+        //     if (isBallPlacementCollision) {
+        //         return checkPoint * 0.1;
+        //     }
+        // }
     }
     return -1.0;  // Return -1 if no collision occurred
 }

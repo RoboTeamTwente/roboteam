@@ -130,8 +130,8 @@ bool PassComputations::pointIsValidReceiverLocation(Vector2 point, const std::ve
     constexpr double MINIMUM_LINE_OF_SIGHT = 10.0;  // The minimum LoS to be a valid pass, otherwise, the pass will go into an enemy robot
     if (PositionScoring::scorePosition(point, gen::LineOfSight, field, world).score < MINIMUM_LINE_OF_SIGHT) return false;
     AvoidObjects avoidObj;
-    avoidObj.shouldAvoidOurDefenseArea = true;
-    avoidObj.shouldAvoidTheirDefenseArea = true;
+    avoidObj.shouldAvoidOurDefenseArea = false;
+    avoidObj.shouldAvoidTheirDefenseArea = false;
     avoidObj.shouldAvoidOutOfField = true;
     if (!FieldComputations::pointIsValidPosition(field, point, avoidObj)) return false;
     // Pass is valid if the above conditions are met and there is a robot whose travel time is smaller than the balls travel time (i.e. the robot can actually receive the ball)

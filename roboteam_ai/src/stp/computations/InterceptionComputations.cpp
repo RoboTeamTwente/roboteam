@@ -65,11 +65,15 @@ InterceptionInfo InterceptionComputations::calculateInterceptionInfo(const std::
         if (interceptRobot && (*interceptRobot - pastBallPosition).length() < (futureBallPosition - pastBallPosition).length()) {
             auto minDistance = (*interceptRobot - pastBallPosition).length();
             auto robotCloseToBallPos = *interceptRobot;
-            if ((world->getWorld()->getRobotClosestToBall(world::us)->get()->getPos() - pastBallPosition).length() < minDistance) {
+            if ((world->getWorld()->getRobotClosestToBall(world::us) && world->getWorld()->getRobotClosestToBall(world::us)->get()->getPos() - pastBallPosition).length() < minDistance) {
                 interceptionInfo.interceptLocation =
                     LineSegment(futureBallPosition, pastBallPosition).project(world->getWorld()->getRobotClosestToBall(world::us)->get()->getPos());
             } else {
-                interceptionInfo.interceptLocation = robotCloseToBallPos;
+                if (world->getWorld()->getRobotClosestToBall(world::them) && world->getWorld()->getRobotClosestToBall(world::them)->get()->hasBall()) {
+                    interceptionInfo.interceptLocation = robotCloseToBallPos;
+                } else {
+                    interceptionInfo.interceptLocation = robotCloseToBallPos + (ballPosition - robotCloseToBallPos).stretchToLength(std::min(0.2, (ballPosition - robotCloseToBallPos).length()));
+                }
             }
             double minTimeToTarget = std::numeric_limits<double>::max();
             for (const auto &robot : ourRobots) {

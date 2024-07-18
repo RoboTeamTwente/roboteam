@@ -38,7 +38,9 @@ FreeKickUsAtGoal::FreeKickUsAtGoal() : Play() {
 
 uint8_t FreeKickUsAtGoal::score(const rtt::Field& field) noexcept {
     // If we are in the FreeKickUsAtGoal gameState, we always want to execute this play
-    return PositionScoring::scorePosition(world->getWorld()->getBall().value()->position, gen::GoalShot, field, world).score * (rand() % (2) + 1);
+    double random_value = rand() % (2) + 1;
+    if (field.leftPlayArea.contains(world->getWorld()->getBall().value()->position) || (world->getWorld()->getBall().value()->position.x > field.rightDefenseArea.leftLine().center().x && PositionScoring::scorePosition(field.rightGoalArea.leftLine().center(), gen::LineOfSight, field, world).score < 230)) random_value = 0.0;
+    return PositionScoring::scorePosition(world->getWorld()->getBall().value()->position, gen::GoalShot, field, world).score * random_value;
 }
 
 Dealer::FlagMap FreeKickUsAtGoal::decideRoleFlags() const noexcept {

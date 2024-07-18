@@ -44,7 +44,10 @@ Attack::Attack() : Play() {
 
 uint8_t Attack::score(const rtt::Field& field) noexcept {
     // Score the position of the ball based on the odds of scoring
-    return PositionScoring::scorePosition(world->getWorld()->getBall().value()->position, gen::GoalShot, field, world).score * (rand() % (2) + 1);
+    // Multiply the score with a random value when the ball is on their side
+    double random_value = rand() % (2) + 1;
+    if (field.leftPlayArea.contains(world->getWorld()->getBall().value()->position) || (world->getWorld()->getBall().value()->position.x > field.rightDefenseArea.leftLine().center().x && PositionScoring::scorePosition(field.rightGoalArea.leftLine().center(), gen::LineOfSight, field, world).score < 200)) random_value = 0.0;
+    return PositionScoring::scorePosition(world->getWorld()->getBall().value()->position, gen::GoalShot, field, world).score * random_value;
 }
 
 Dealer::FlagMap Attack::decideRoleFlags() const noexcept {

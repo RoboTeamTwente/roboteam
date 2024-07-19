@@ -72,13 +72,12 @@ void FreeKickUsPass::calculateInfoForRoles() noexcept {
 
     if (!ballKicked()) {
         stpInfos["receiver"].setPositionToMoveTo(passInfo.receiverLocation);
-        stpInfos["free_kick_taker"].setPositionToShootAt(passInfo.receiverLocation);
-        stpInfos["free_kick_taker"].setShotPower(ShotPower::PASS);
-        stpInfos["free_kick_taker"].setKickOrChip(KickType::KICK);
+        stpInfos["free_kick_taker"].setPositionToShootAt(field.rightGoalArea.rightLine().center());
+        stpInfos["free_kick_taker"].setKickOrChip(KickType::CHIP);
+        stpInfos["free_kick_taker"].setShotPower(ShotPower::MAX);
         if (world->getWorld()->getBall().value() && world->getWorld()->getBall().value()->position.x > field.rightDefenseArea.leftLine().center().x) {
-            stpInfos["free_kick_taker"].setKickOrChip(KickType::CHIP);
             // set shot power to max
-            stpInfos["free_kick_taker"].setShotPower(ShotPower::MAX);
+            stpInfos["free_kick_taker"].setPositionToShootAt(passInfo.receiverLocation);
         }
         stpInfos["free_kick_taker"].setShootOnFirstTouch(true);
         if (RuntimeConfig::useReferee && GameStateManager::getCurrentGameState().timeLeft < 1.5) {

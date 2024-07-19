@@ -21,12 +21,7 @@ std::optional<StpInfo> Receive::calculateInfoForSkill(StpInfo const &info) noexc
 
 bool Receive::isTacticFailing(const StpInfo &info) noexcept { return !info.getPositionToMoveTo(); }
 
-bool Receive::shouldTacticReset(const StpInfo &info) noexcept {
-    // double errorMargin = constants::GO_TO_POS_ERROR_MARGIN * M_PI;
-    // return (info.getRobot().value()->getPos() - info.getPositionToMoveTo().value()).length() > errorMargin;
-    // TODO ROBOCUP 2024: CHECK IF NEEDED
-    return false;
-}
+bool Receive::shouldTacticReset(const StpInfo &info) noexcept { return false; }
 
 bool Receive::isEndTactic() noexcept { return true; }
 

@@ -26,7 +26,7 @@ class WorldFilter {
 
     void process(const std::vector<proto::SSL_DetectionFrame>& frames, const std::vector<rtt::RobotsFeedback>& feedback, const std::vector<int>& camera_ids);
 
-    [[nodiscard]] proto::World getWorldPrediction(const Time& time) const;
+    [[nodiscard]] proto::World getWorldPrediction(const Time& time);
 
     void updateRobotParameters(const TwoTeamRobotParameters& robotInfo);
 
@@ -50,8 +50,8 @@ class WorldFilter {
     void processBalls(const DetectionFrame& frame);
     [[nodiscard]] std::vector<FilteredRobot> getHealthiestRobotsMerged(bool blueBots, Time time) const;
     [[nodiscard]] std::vector<FilteredRobot> oneCameraHealthyRobots(bool blueBots, int camera_id, Time time) const;
-    void addRobotPredictionsToMessage(proto::World& world, Time time) const;
-    void addBallPredictionsToMessage(proto::World& world, Time time) const;
+    void addRobotPredictionsToMessage(proto::World& world, Time time);
+    void addBallPredictionsToMessage(proto::World& world, Time time);
 
     // take care, although these method are static, they typically DO modify the current object as they have a robotMap reference
     static void predictRobots(const DetectionFrame& frame, robotMap& robots);

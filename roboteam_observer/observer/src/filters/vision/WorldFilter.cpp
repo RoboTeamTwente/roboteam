@@ -3,7 +3,51 @@
 #include "filters/vision/ball/BallAssigner.h"
 WorldFilter::WorldFilter() {}
 
-proto::World WorldFilter::getWorldPrediction(const Time &time) const {
+bool botHasNonsensicalValue(const proto::WorldRobot &bot) {
+    double xPos = bot.pos().x();
+    double yPos = bot.pos().y();
+
+    for (const double value : {xPos, yPos}) {
+        if (std::isnan(value) || std::isinf(value) || value < -10 || value > 10) {
+            return true;
+        }
+    }
+    double xVel = bot.vel().x();
+    double yVel = bot.vel().y();
+    for (const double value : {xVel, yVel}) {
+        if (std::isnan(value) || std::isinf(value) || value < -20 || value > 20) {
+            return true;
+        }
+    }
+    if (bot.yaw() > 2 * M_PI || bot.yaw() < -2 * M_PI) {
+        return true;
+    }
+    if (bot.w() > 20 * M_PI || bot.w() < -20 * M_PI) {
+        return true;
+    }
+    return false;
+}
+
+bool ballHasNonsensicalValue(const proto::WorldBall &ball) {
+    double xPos = ball.pos().x();
+    double yPos = ball.pos().y();
+
+    for (const double value : {xPos, yPos}) {
+        if (std::isnan(value) || std::isinf(value) || value < -10 || value > 10) {
+            return true;
+        }
+    }
+    double xVel = ball.vel().x();
+    double yVel = ball.vel().y();
+    for (const double value : {xVel, yVel}) {
+        if (std::isnan(value) || std::isinf(value) || value < -20 || value > 20) {
+            return true;
+        }
+    }
+    return false;
+}
+
+proto::World WorldFilter::getWorldPrediction(const Time &time) {
     proto::World world;
     addRobotPredictionsToMessage(world, time);
     addBallPredictionsToMessage(world, time);
@@ -113,6 +157,11 @@ std::vector<FilteredRobot> WorldFilter::getHealthiestRobotsMerged(bool blueBots,
             continue;
             ;
         }
+        bool allSmall = std::all_of(oneIDFilters.second.begin(), oneIDFilters.second.end(), [](const RobotFilter &filter) { return filter.getNumObservations() <= 3; });
+        if (allSmall) {
+            continue;
+        }
+
         double maxHealth = -std::numeric_limits<double>::infinity();
         auto bestFilter = oneIDFilters.second.begin();
         for (auto robotFilter = oneIDFilters.second.begin(); robotFilter != oneIDFilters.second.end(); ++robotFilter) {
@@ -151,11 +200,16 @@ std::vector<FilteredRobot> WorldFilter::oneCameraHealthyRobots(bool blueBots, in
     }
     return robots;
 }
-void WorldFilter::addRobotPredictionsToMessage(proto::World &world, Time time) const {
+void WorldFilter::addRobotPredictionsToMessage(proto::World &world, Time time) {
     auto feedbackBots = feedbackFilter.getRecentFeedback();
 
     std::vector<FilteredRobot> blueRobots = getHealthiestRobotsMerged(true, time);
+    int blueCount = 0;
     for (const auto &blueBot : blueRobots) {
+        if (blueCount >= 11) {
+            break;  // Only 11 robots per team, if vision is bad, we might have more robots, making ai crash
+        }
+        blueCount++;
         auto worldBot = blueBot.asWorldRobot();
         auto feedback_it = std::find_if(feedbackBots.begin(), feedbackBots.end(), [&](const std::pair<TeamRobotID, proto::RobotProcessedFeedback> &bot) {
             return bot.first.team == TeamColor::BLUE && bot.first.robot_id == RobotID(worldBot.id());
@@ -164,10 +218,20 @@ void WorldFilter::addRobotPredictionsToMessage(proto::World &world, Time time) c
             worldBot.mutable_feedbackinfo()->CopyFrom(feedback_it->second);
             feedbackBots.erase(feedback_it);
         }
-        world.mutable_blue()->Add()->CopyFrom(worldBot);
+        if (botHasNonsensicalValue(worldBot)) {
+            std::cout << "Nonsense values detected for blue " << worldBot.id() << ", resetting all its filters!!\n";
+            blue[RobotID(world.id())].clear();  // Nuclear, simply remove all robot filters for this robot...
+        } else {
+            world.mutable_blue()->Add()->CopyFrom(worldBot);
+        }
     }
     std::vector<FilteredRobot> yellowRobots = getHealthiestRobotsMerged(false, time);
+    int yellowCount = 0;
     for (const auto &yellowBot : yellowRobots) {
+        if (yellowCount >= 11) {
+            break;  // Only 11 robots per team, if vision is bad, we might have more robots, making ai crash
+        }
+        yellowCount++;
         auto worldBot = yellowBot.asWorldRobot();
         auto feedback_it = std::find_if(feedbackBots.begin(), feedbackBots.end(), [&](const std::pair<TeamRobotID, proto::RobotProcessedFeedback> &bot) {
             return bot.first.team == TeamColor::YELLOW && bot.first.robot_id == RobotID(worldBot.id());
@@ -176,7 +240,12 @@ void WorldFilter::addRobotPredictionsToMessage(proto::World &world, Time time) c
             worldBot.mutable_feedbackinfo()->CopyFrom(feedback_it->second);
             feedbackBots.erase(feedback_it);
         }
-        world.mutable_yellow()->Add()->CopyFrom(worldBot);
+        if (botHasNonsensicalValue(worldBot)) {
+            std::cout << "Nonsense values detected for yellow " << worldBot.id() << ", resetting all its filters!!\n";
+            yellow[RobotID(world.id())].clear();  // Nuclear, simply remove all robot filters for this robot...
+        } else {
+            world.mutable_yellow()->Add()->CopyFrom(worldBot);
+        }
     }
     // Any remaining feedback of robots is put into the lonely category
     for (const auto &bot : feedbackBots) {
@@ -188,9 +257,11 @@ void WorldFilter::addRobotPredictionsToMessage(proto::World &world, Time time) c
 }
 void WorldFilter::processBalls(const DetectionFrame &frame) {
     std::vector<CameraGroundBallPrediction> predictions(balls.size());
+    std::vector<FilteredRobot> blueRobots = getHealthiestRobotsMerged(true, frame.timeCaptured);
+    std::vector<FilteredRobot> yellowRobots = getHealthiestRobotsMerged(false, frame.timeCaptured);
     // get predictions from cameras
     for (std::size_t i = 0; i < balls.size(); ++i) {
-        predictions[i] = balls[i].predictCam(frame.cameraID, frame.timeCaptured).prediction;
+        predictions[i] = balls[i].predictCam(frame.cameraID, frame.timeCaptured, yellowRobots, blueRobots).prediction;
     }
     // assign observations to relevant filters
     BallAssignmentResult assignment = BallAssigner::assign_balls(predictions, frame.balls);
@@ -209,12 +280,27 @@ void WorldFilter::processBalls(const DetectionFrame &frame) {
         balls.emplace_back(BallFilter(newBall));
     }
 }
-void WorldFilter::addBallPredictionsToMessage(proto::World &world, Time time) const {
-    if (!balls.empty()) {
-        auto bestFilter = std::max_element(balls.begin(), balls.end(), [](const BallFilter &best, const BallFilter &filter) { return best.getHealth() < filter.getHealth(); });
-
-        FilteredBall bestBall = bestFilter->mergeBalls(time);
-
-        world.mutable_ball()->CopyFrom(bestBall.asWorldBall());
+void WorldFilter::addBallPredictionsToMessage(proto::World &world, Time time) {
+    const BallFilter *bestFilter = nullptr;
+    double bestHealth = -1.0;
+    for (auto &filter : balls) {
+        if (filter.getNumObservations() > 3) {
+            double currentHealth = filter.getHealth();
+            if (!bestFilter || currentHealth > bestHealth) {
+                bestFilter = &filter;
+                bestHealth = currentHealth;
+            }
+        }
+    }
+    if (!bestFilter) {
+        return;
+    }
+    FilteredBall bestBall = bestFilter->mergeBalls(time);
+    auto protoBall = bestBall.asWorldBall();
+    if (ballHasNonsensicalValue(protoBall)) {
+        std::cout << "Nonsense values detected for the ball, nuking all ball filters...\n";
+        balls.clear();
+    } else {
+        world.mutable_ball()->CopyFrom(protoBall);
     }
 }

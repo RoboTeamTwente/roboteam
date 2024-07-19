@@ -18,7 +18,7 @@ services:
       - LD_LIBRARY_PATH=/home/roboteamtwente/lib/
     volumes:
       - ../../build/release/:/home/roboteamtwente/
-    profiles: ["simulator","diff","game"]
+    profiles: ["simulator","diff","game", "robocup"]
   
   roboteam_secondary_ai:
     image: roboteamtwente/roboteam:development
@@ -61,7 +61,7 @@ services:
     container_name: RTT_roboteam_observer_sim
     restart: always
     working_dir: "/home/roboteamtwente/"
-    command: sh -c "./bin/roboteam_observer --vision-ip 224.5.23.2 --referee-ip 224.5.23.1 --vision-port 10020 --referee-port 10003"
+    command: sh -c "./bin/roboteam_observer --vision-ip 224.5.23.2 --referee-ip 224.5.23.1 --vision-port 10020 --referee-port 10003 --log"
     network_mode: "host" # Workaround to connect from interface on host to AI websocket, please fix
     expose:
       - 1-65535:1-65535 # For zeromq ports
@@ -79,7 +79,7 @@ services:
     container_name: RTT_roboteam_observer_game
     restart: always
     working_dir: "/home/roboteamtwente/"
-    command: sh -c "./bin/roboteam_observer --vision-ip 224.5.23.2 --referee-ip 224.5.23.1 --vision-port 10006 --referee-port 10003"
+    command: sh -c "./bin/roboteam_observer --vision-ip 224.5.23.2 --referee-ip 224.5.23.1 --vision-port 10006 --referee-port 10003 --log"
     network_mode: "host" # Workaround to connect from interface on host to AI websocket, please fix
     expose:
       - 1-65535:1-65535 # For zeromq ports
@@ -90,7 +90,7 @@ services:
       - LD_LIBRARY_PATH=/home/roboteamtwente/lib/
     volumes:
       - ../../build/release/:/home/roboteamtwente/
-    profiles: ["game","autoref"]
+    profiles: ["game","autoref", "robocup"]
 
   roboteam_robothub_sim:
     image: roboteamtwente/roboteam:development
@@ -135,7 +135,7 @@ services:
     privileged: true
     devices:
       - /dev/rtt-basestation:/dev/ttyACM1
-    profiles: ["game"]
+    profiles: ["game", "robocup"]
 
   roboteam_interface:
     image: roboteamtwente/roboteam:development
@@ -147,7 +147,7 @@ services:
       - 8080:8080
     volumes:
       - ../../roboteam_interface/:/home/roboteamtwente/
-    profiles: ["simulator","diff","game"]
+    profiles: ["simulator","diff","game", "robocup"]
 
   roboteam_autoref:
     image: gradle:8.4.0-jdk17

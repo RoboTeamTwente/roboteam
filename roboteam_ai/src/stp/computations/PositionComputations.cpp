@@ -91,8 +91,8 @@ std::vector<Vector2> PositionComputations::determineWallPositions(const rtt::Fie
         // If the ball has to be placed somewhere on the field, assume the ball is already there
         ballPos = GameStateManager::getRefereeDesignatedPosition();
     } else if (field.leftDefenseArea.contains(ballPos)) {
-        // If the ball is in our defense area, project it out of it
-        ballPos = FieldComputations::projectPointOutOfDefenseArea(field, ballPos, true, false);
+        // move the ball in the direction of the ball speed, until it is outside the defense area
+        ballPos = FieldComputations::projectPointToValidPositionOnLine(field, ballPos, ballPos, ballPos + ball->velocity.stretchToLength(5), 0);
     } else if ((world->getWorld().value().getBall()->get()->velocity).length() > constants::BALL_GOT_SHOT_LIMIT &&
                InterceptionComputations::calculateTheirBallInterception(world, ballTrajectory).has_value()) {
         ballPos = *InterceptionComputations::calculateTheirBallInterception(world, ballTrajectory);
@@ -109,7 +109,8 @@ std::vector<Vector2> PositionComputations::determineWallPositions(const rtt::Fie
 
     // Find the intersection of the ball-to-goal line with the border of the defense area
     LineSegment ball2GoalLine = LineSegment(ballPos, field.leftGoalArea.rightLine().center());
-    std::vector<Vector2> lineBorderIntersects = FieldComputations::getDefenseArea(field, true, extraLength.length(), 0).intersections(ball2GoalLine);
+    auto [theirDefenseAreaMargin, ourDefenseAreaMargin] = FieldComputations::getDefenseAreaMargin();
+    std::vector<Vector2> lineBorderIntersects = FieldComputations::getDefenseArea(field, true, extraLength.length() + ourDefenseAreaMargin, 0).intersections(ball2GoalLine);
     // If the ball is in our defense area, project it outside, otherwise use the intersection with our defense area
     std::sort(lineBorderIntersects.begin(), lineBorderIntersects.end(), [](Vector2 a, Vector2 b) { return a.x > b.x; });
     projectedPosition = lineBorderIntersects.front();
@@ -337,23 +338,23 @@ void PositionComputations::calculateInfoForHarasser(std::unordered_map<std::stri
     auto enemyAngle = enemyClosestToBall->get()->getYaw();
     auto harasserAngle = stpInfos["harasser"].getYaw();
     // If enemy is not facing our goal AND does have the ball, stand between the enemy and our goal
-    if (enemyClosestToBall->get()->hasBall() && enemyAngle.shortestAngleDiff(harasserAngle) < M_PI / 1.5) {
+    LineSegment ourToBall = LineSegment(stpInfos["harasser"].getRobot()->get()->getPos(), world->getWorld()->getBall()->get()->position);
+    // project their point on the line
+    Vector2 projectedPoint = ourToBall.project(enemyClosestToBall->get()->getPos());
+    bool theyAreBetween = (projectedPoint != world->getWorld()->getBall()->get()->position);
+    bool theyAreCloser = (enemyClosestToBall->get()->getPos() - world->getWorld()->getBall()->get()->position).length() < (stpInfos["harasser"].getRobot()->get()->getPos() - world->getWorld()->getBall()->get()->position).length();
+    auto harasser = std::find_if(roles->begin(), roles->end(), [](const std::unique_ptr<Role> &role) { return role != nullptr && role->getName() == "harasser"; });
+    if (theyAreBetween && theyAreCloser) {
         auto enemyPos = enemyClosestToBall->get()->getPos();
-        auto targetPos = enemyPos + (field.leftGoalArea.leftLine().center() - enemyPos).stretchToLength(constants::ROBOT_RADIUS * 4);
+        auto targetPos = world->getWorld()->getBall()->get()->position - (enemyPos - world->getWorld()->getBall()->get()->position).stretchToLength(constants::ROBOT_RADIUS * 3);
+        if (harasser != roles->end()) {
+            harasser->get()->reset();
+        }
         stpInfos["harasser"].setPositionToMoveTo(targetPos);
         stpInfos["harasser"].setYaw((world->getWorld()->getBall()->get()->position - targetPos).angle());
     } else {
-        auto harasser = std::find_if(roles->begin(), roles->end(), [](const std::unique_ptr<Role> &role) { return role != nullptr && role->getName() == "harasser"; });
-        if (harasser != roles->end() && !harasser->get()->finished() && strcmp(harasser->get()->getCurrentTactic()->getName(), "Formation") == 0) {
-            auto enemyPos = enemyClosestToBall->get()->getPos();
-            auto targetPos = enemyPos + (world->getWorld()->getBall()->get()->position - enemyPos).stretchToLength(constants::ROBOT_RADIUS * 3);
-            // prevent the harasser from being stuck on the side of the enemy
-            if (enemyClosestToBall->get()->hasBall() && ((stpInfos["harasser"].getRobot()->get()->getPos() - targetPos).length() > constants::ROBOT_RADIUS)) {
-                stpInfos["harasser"].setPositionToMoveTo(targetPos);
-                stpInfos["harasser"].setYaw((world->getWorld()->getBall()->get()->position - targetPos).angle());
-            } else {
-                harasser->get()->forceNextTactic();
-            }
+        if (harasser != roles->end()) {
+            harasser->get()->forceLastTactic();
         }
     }
 }

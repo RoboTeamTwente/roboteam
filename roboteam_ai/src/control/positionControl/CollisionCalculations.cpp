@@ -106,7 +106,7 @@ double CollisionCalculations::getFirstCollisionTimeMovingObject(const Trajectory
                     continue;
                 }
                 const Vector2 &ourOtherRobotPos = ourOtherRobot->getPos();
-                if ((ourOtherRobotPos - positionOurRobot).length() < 1.4 * constants::ROBOT_RADIUS) {
+                if ((ourOtherRobotPos - positionOurRobot).length() < 2 * constants::ROBOT_RADIUS) {
                     return checkPoint * 0.05;
                 }
             }

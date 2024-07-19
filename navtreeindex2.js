@@ -1,6 +1,5 @@
 var NAVTREEINDEX2 =
 {
-"d2/de6/classrtt_1_1ai_1_1gui_1_1Out.html#a6b5c8c0a385ccff148fd869619b3d874":[2,0,0,0,1,1,0,0],
 "d2/de6/classrtt_1_1ai_1_1gui_1_1Out.html#a7e42bf46abefd1251f30b8ff6ab71d30":[2,0,0,0,1,1,2],
 "d2/de6/classrtt_1_1ai_1_1gui_1_1Out.html#a9554ea6e37c32eb18ff7880454c14130":[2,0,0,0,1,1,1],
 "d2/de6/classrtt_1_1ai_1_1gui_1_1Out.html#a988473c762bcec46998bf48a80507165":[2,0,0,0,1,1,3],
@@ -30,7 +29,6 @@ var NAVTREEINDEX2 =
 "d3/d12/PenaltyThemGameStateEvaluation_8h_source.html":[3,0,0,0,0,3,1,0,11],
 "d3/d18/KeeperBlockBall_8cpp.html":[3,0,0,1,3,5,2],
 "d3/d18/KeeperBlockBall_8cpp.html#a1347bfea32205f058b8f6beaaf2f591a":[3,0,0,1,3,5,2,0],
-"d3/d18/KeeperBlockBall_8cpp.html#a9e4cffb1bae4ff229b1e0cdfaa1c0bf5":[3,0,0,1,3,5,2,4],
 "d3/d18/KeeperBlockBall_8cpp.html#aaa155577589617b454d8fee2ea755e51":[3,0,0,1,3,5,2,1],
 "d3/d18/KeeperBlockBall_8cpp.html#ac175fe0237ffc965210b36f9b58ef4e9":[3,0,0,1,3,5,2,2],
 "d3/d18/KeeperBlockBall_8cpp.html#ac67952380d471ce18b24284d08028877":[3,0,0,1,3,5,2,3],
@@ -249,5 +247,7 @@ var NAVTREEINDEX2 =
 "d3/dfa/structrtt_1_1ai_1_1stp_1_1StpInfo.html#aff4da96e247357608a4e555e50454ed5":[2,0,0,0,4,22,33],
 "d4/d01/classMockTactic.html":[2,0,2],
 "d4/d01/classMockTactic.html#a017146fe91303cedde7a38f919dbdd51":[2,0,2,8],
-"d4/d01/classMockTactic.html#a0dd3439d999970125264ce7fccadff49":[2,0,2,15]
+"d4/d01/classMockTactic.html#a0dd3439d999970125264ce7fccadff49":[2,0,2,15],
+"d4/d01/classMockTactic.html#a2406ddec88191f369b72206849a1d9a4":[2,0,2,5],
+"d4/d01/classMockTactic.html#a242748b42fbc99613b65f6500eb12f8f":[2,0,2,16]
 };

@@ -1,9 +1,5 @@
 var NAVTREEINDEX11 =
 {
-"de/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsForceStart.html#a3eee34c793189abc4a9f9b98340a5cdb":[2,0,0,0,4,3,5,2],
-"de/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsForceStart.html#a4598ba530d29d7f4f53bcec0c9845100":[2,0,0,0,4,3,5,26],
-"de/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsForceStart.html#a52fc8b6075367b48ae05021829ebcc8f":[2,0,0,0,4,3,5,16],
-"de/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsForceStart.html#a58560de6d2d6ca91e467deb1071aadbd":[2,0,0,0,4,3,5,10],
 "de/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsForceStart.html#a5be299fd1dab79b7f656ca37631d6ef6":[2,0,0,0,4,3,5,9],
 "de/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsForceStart.html#a5cad72522fb5823fbd698b847342df76":[2,0,0,0,4,3,5,13],
 "de/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsForceStart.html#a7164f241b13b1aa59b6e6b5c30a3094b":[2,0,0,0,4,3,5,21],
@@ -249,5 +245,9 @@ var NAVTREEINDEX11 =
 "functions_func_m.html":[2,3,1,10],
 "functions_func_o.html":[2,3,1,11],
 "functions_func_p.html":[2,3,1,12],
-"functions_func_r.html":[2,3,1,13]
+"functions_func_r.html":[2,3,1,13],
+"functions_func_s.html":[2,3,1,14],
+"functions_func_t.html":[2,3,1,15],
+"functions_func_u.html":[2,3,1,16],
+"functions_func_w.html":[2,3,1,17]
 };

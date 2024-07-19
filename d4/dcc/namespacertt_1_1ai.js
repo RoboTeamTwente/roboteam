@@ -37,7 +37,6 @@ var namespacertt_1_1ai =
       [ "MAX_ANGULAR_VELOCITY", "da/d1f/namespacertt_1_1ai_1_1constants.html#afe8e746730d605e6ce9e84a6955f6acc", null ],
       [ "MAX_CHIP_POWER", "da/d1f/namespacertt_1_1ai_1_1constants.html#a703764a504752a9c1df0aefd33484d69", null ],
       [ "MAX_JERK_DEFAULT", "da/d1f/namespacertt_1_1ai_1_1constants.html#a1bfe0aa9bdff13704f1936ebe643ae3e", null ],
-      [ "MAX_JERK_OVERSHOOT", "da/d1f/namespacertt_1_1ai_1_1constants.html#a1c98a2934c91e6b5b1476c11f5730966", null ],
       [ "MAX_KICK_POWER", "da/d1f/namespacertt_1_1ai_1_1constants.html#a99de22b9bc380ab8adb3402d4c1bd053", null ],
       [ "MAX_ROBOT_COUNT", "da/d1f/namespacertt_1_1ai_1_1constants.html#abaedfbbabbb1d34ed69b43c7d5e6f0a9", null ],
       [ "MAX_VEL", "da/d1f/namespacertt_1_1ai_1_1constants.html#a19fcf349c26c4031671ace5ded20a430", null ],

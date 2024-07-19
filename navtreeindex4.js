@@ -1,7 +1,5 @@
 var NAVTREEINDEX4 =
 {
-"d5/d3d/classrtt_1_1ai_1_1stp_1_1tactic_1_1OrbitKick.html#a69a1fd27f2854ceb733c5b5686aa36bc":[2,0,0,0,4,6,4,3],
-"d5/d3d/classrtt_1_1ai_1_1stp_1_1tactic_1_1OrbitKick.html#ab7650037eb092459aca7247ea77f2ad4":[2,0,0,0,4,6,4,4],
 "d5/d3d/classrtt_1_1ai_1_1stp_1_1tactic_1_1OrbitKick.html#ab9652946b0ab747c1e17ce073a5d907d":[2,0,0,0,4,6,4,9],
 "d5/d3d/classrtt_1_1ai_1_1stp_1_1tactic_1_1OrbitKick.html#abbf6e76d81e85ea48f9b4a4d528eea64":[2,0,0,0,4,6,4,1],
 "d5/d3d/classrtt_1_1ai_1_1stp_1_1tactic_1_1OrbitKick.html#ac66cf9fe9def08172b053a6abc869ba1":[2,0,0,0,4,6,4,11],
@@ -130,11 +128,10 @@ var NAVTREEINDEX4 =
 "d5/dbb/namespacertt_1_1ai_1_1stp_1_1tactic.html#a2def88d12071f2fa89f83a57c50c4f76":[1,0,1,0,5,6,11],
 "d5/dbb/namespacertt_1_1ai_1_1stp_1_1tactic.html#a39382371c883d1cc7897bf59b3badd40":[1,0,1,0,5,6,17],
 "d5/dbb/namespacertt_1_1ai_1_1stp_1_1tactic.html#a945c56cfc6c60c8a72b550bba24402d7":[1,0,1,0,5,6,12],
-"d5/dbb/namespacertt_1_1ai_1_1stp_1_1tactic.html#a9e4cffb1bae4ff229b1e0cdfaa1c0bf5":[1,0,1,0,5,6,18],
 "d5/dbb/namespacertt_1_1ai_1_1stp_1_1tactic.html#aaa155577589617b454d8fee2ea755e51":[1,0,1,0,5,6,14],
 "d5/dbb/namespacertt_1_1ai_1_1stp_1_1tactic.html#ac175fe0237ffc965210b36f9b58ef4e9":[1,0,1,0,5,6,15],
 "d5/dbb/namespacertt_1_1ai_1_1stp_1_1tactic.html#ac67952380d471ce18b24284d08028877":[1,0,1,0,5,6,16],
-"d5/dbb/namespacertt_1_1ai_1_1stp_1_1tactic.html#acffd3e77654ac22c44494543015e090b":[1,0,1,0,5,6,19],
+"d5/dbb/namespacertt_1_1ai_1_1stp_1_1tactic.html#acffd3e77654ac22c44494543015e090b":[1,0,1,0,5,6,18],
 "d5/dc3/classrtt_1_1ai_1_1stp_1_1tactic_1_1Halt.html":[2,0,0,0,4,6,10],
 "d5/dc3/classrtt_1_1ai_1_1stp_1_1tactic_1_1Halt.html#a0107104c2a6d3bd8234784c3b2f500a2":[2,0,0,0,4,6,10,6],
 "d5/dc3/classrtt_1_1ai_1_1stp_1_1tactic_1_1Halt.html#a0dd3439d999970125264ce7fccadff49":[2,0,0,0,4,6,10,12],
@@ -249,5 +246,8 @@ var NAVTREEINDEX4 =
 "d6/d0f/classrtt_1_1ai_1_1stp_1_1tactic_1_1Formation.html#ac7dba7916b5fc648439cb51181d01358":[2,0,0,0,4,6,9,10],
 "d6/d0f/classrtt_1_1ai_1_1stp_1_1tactic_1_1Formation.html#ad739e12d64d22b7d8bd6abdac9413955":[2,0,0,0,4,6,9,6],
 "d6/d0f/classrtt_1_1ai_1_1stp_1_1tactic_1_1Formation.html#ae3c48407cf0e288159f5c0587ee238c5":[2,0,0,0,4,6,9,3],
-"d6/d0f/classrtt_1_1ai_1_1stp_1_1tactic_1_1Formation.html#ae948f71d74d717b256481c10994404c3":[2,0,0,0,4,6,9,7]
+"d6/d0f/classrtt_1_1ai_1_1stp_1_1tactic_1_1Formation.html#ae948f71d74d717b256481c10994404c3":[2,0,0,0,4,6,9,7],
+"d6/d0f/classrtt_1_1ai_1_1stp_1_1tactic_1_1Formation.html#af4a9f63577d36c0cf178aae99fb0fd00":[2,0,0,0,4,6,9,8],
+"d6/d14/BallPlacementUsGameStateEvaluation_8h.html":[3,0,0,0,0,3,1,0,2],
+"d6/d14/BallPlacementUsGameStateEvaluation_8h_source.html":[3,0,0,0,0,3,1,0,2]
 };

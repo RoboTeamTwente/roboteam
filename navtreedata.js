@@ -77,17 +77,17 @@ var NAVTREEINDEX =
 [
 "annotated.html",
 "d1/d45/Constants_8h.html#a17220f0a7b3e993c261d742c493d72ed",
-"d2/de6/classrtt_1_1ai_1_1gui_1_1Out.html#a6b5c8c0a385ccff148fd869619b3d874",
-"d4/d01/classMockTactic.html#a2406ddec88191f369b72206849a1d9a4",
-"d5/d3d/classrtt_1_1ai_1_1stp_1_1tactic_1_1OrbitKick.html#a69a1fd27f2854ceb733c5b5686aa36bc",
-"d6/d0f/classrtt_1_1ai_1_1stp_1_1tactic_1_1Formation.html#af4a9f63577d36c0cf178aae99fb0fd00",
-"d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#a08a78e2b6bb5fb4f75d0c9dc572d25fa",
-"d8/dd4/RefCommand_8h.html#ac458fd2464c54331a04fc2fd54d82843a0db45d2a4141101bdfe48e3314cfbca3",
-"da/d1f/namespacertt_1_1ai_1_1constants.html#a703764a504752a9c1df0aefd33484d69",
-"db/d97/WorldResetTests_8cpp.html#aa9f8ecc47aa946bcb5d128a78074c070",
-"dd/d1e/namespacertt_1_1ai_1_1io.html#a3a3059343c59e8dc266f41990749c3ef",
-"de/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsForceStart.html#a3eee34c793189abc4a9f9b98340a5cdb",
-"functions_func_s.html"
+"d2/de6/classrtt_1_1ai_1_1gui_1_1Out.html#a7e42bf46abefd1251f30b8ff6ab71d30",
+"d4/d01/classMockTactic.html#a483d158a091f8347c3c25983b22d015f",
+"d5/d3d/classrtt_1_1ai_1_1stp_1_1tactic_1_1OrbitKick.html#ab9652946b0ab747c1e17ce073a5d907d",
+"d6/d14/BlockBall_8h.html",
+"d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#a1bff3910044942d4910c9551a7fc3ce1",
+"d8/dd4/RefCommand_8h.html#ac458fd2464c54331a04fc2fd54d82843a43cad1b6fd7d5153cb60f7d88d9f0f31",
+"da/d1f/namespacertt_1_1ai_1_1constants.html#a888f3a6a3d578fc25f434a84bf7a55b2",
+"db/d9a/PositionScoring_8h.html#a448eb3cfd0ac3e40e42283886e1ae13d",
+"dd/d25/structrtt_1_1ai_1_1Dealer_1_1DealerFlag.html#a16e607c86f0a605e25561caf3ecb7099",
+"de/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsForceStart.html#a5be299fd1dab79b7f656ca37631d6ef6",
+"functions_func_y.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

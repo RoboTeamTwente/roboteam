@@ -1,7 +1,5 @@
 var NAVTREEINDEX3 =
 {
-"d4/d01/classMockTactic.html#a2406ddec88191f369b72206849a1d9a4":[2,0,2,5],
-"d4/d01/classMockTactic.html#a242748b42fbc99613b65f6500eb12f8f":[2,0,2,16],
 "d4/d01/classMockTactic.html#a483d158a091f8347c3c25983b22d015f":[2,0,2,2],
 "d4/d01/classMockTactic.html#a49d621f1e9da8062c6fbc67afd09f566":[2,0,2,9],
 "d4/d01/classMockTactic.html#a5b71704c2e3a289abb3075e248577d30":[2,0,2,12],
@@ -249,5 +247,7 @@ var NAVTREEINDEX3 =
 "d5/d3d/classrtt_1_1ai_1_1stp_1_1tactic_1_1OrbitKick.html#a242748b42fbc99613b65f6500eb12f8f":[2,0,0,0,4,6,4,13],
 "d5/d3d/classrtt_1_1ai_1_1stp_1_1tactic_1_1OrbitKick.html#a483d158a091f8347c3c25983b22d015f":[2,0,0,0,4,6,4,2],
 "d5/d3d/classrtt_1_1ai_1_1stp_1_1tactic_1_1OrbitKick.html#a557abc1bba78f4fdae7e0da6bf150354":[2,0,0,0,4,6,4,0],
-"d5/d3d/classrtt_1_1ai_1_1stp_1_1tactic_1_1OrbitKick.html#a67646f2ac02414ac376dfce16a8e9cd3":[2,0,0,0,4,6,4,6]
+"d5/d3d/classrtt_1_1ai_1_1stp_1_1tactic_1_1OrbitKick.html#a67646f2ac02414ac376dfce16a8e9cd3":[2,0,0,0,4,6,4,6],
+"d5/d3d/classrtt_1_1ai_1_1stp_1_1tactic_1_1OrbitKick.html#a69a1fd27f2854ceb733c5b5686aa36bc":[2,0,0,0,4,6,4,3],
+"d5/d3d/classrtt_1_1ai_1_1stp_1_1tactic_1_1OrbitKick.html#ab7650037eb092459aca7247ea77f2ad4":[2,0,0,0,4,6,4,4]
 };

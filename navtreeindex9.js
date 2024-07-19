@@ -1,9 +1,5 @@
 var NAVTREEINDEX9 =
 {
-"db/d97/WorldResetTests_8cpp.html#aa9f8ecc47aa946bcb5d128a78074c070":[3,0,0,2,8,5,3],
-"db/d97/WorldResetTests_8cpp.html#abcbd27c1e6f09507adb722d93ecb022d":[3,0,0,2,8,5,0],
-"db/d9a/PositionScoring_8h.html":[3,0,0,0,0,3,0,5],
-"db/d9a/PositionScoring_8h.html#a17cae51eb3b58633fc7eb7558e15e309":[3,0,0,0,0,3,0,5,4],
 "db/d9a/PositionScoring_8h.html#a448eb3cfd0ac3e40e42283886e1ae13d":[3,0,0,0,0,3,0,5,5],
 "db/d9a/PositionScoring_8h.html#a736ca7f2883f470eb6c5da4bdda2c630":[3,0,0,0,0,3,0,5,6],
 "db/d9a/PositionScoring_8h.html#a81f2ae93f09aaefc85a709d10e6c7085":[3,0,0,0,0,3,0,5,8],
@@ -249,5 +245,9 @@ var NAVTREEINDEX9 =
 "dd/d16/classrtt_1_1ai_1_1control_1_1ControlModule.html#abb4d047769239c8684b254bc7224d93d":[2,0,0,0,0,0,3],
 "dd/d1a/FreeKickUsPass_8cpp.html":[3,0,0,1,3,2,2,5],
 "dd/d1d/tactics_2passive_2Halt_8cpp.html":[3,0,0,1,3,5,1,3],
-"dd/d1e/namespacertt_1_1ai_1_1io.html":[1,0,1,0,4]
+"dd/d1e/namespacertt_1_1ai_1_1io.html":[1,0,1,0,4],
+"dd/d1e/namespacertt_1_1ai_1_1io.html#a3a3059343c59e8dc266f41990749c3ef":[1,0,1,0,4,1],
+"dd/d23/STPManager_8h.html":[3,0,0,0,0,6],
+"dd/d23/STPManager_8h_source.html":[3,0,0,0,0,6],
+"dd/d25/structrtt_1_1ai_1_1Dealer_1_1DealerFlag.html":[2,0,0,0,5,0]
 };

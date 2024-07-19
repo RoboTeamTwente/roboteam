@@ -1,9 +1,5 @@
 var NAVTREEINDEX10 =
 {
-"dd/d1e/namespacertt_1_1ai_1_1io.html#a3a3059343c59e8dc266f41990749c3ef":[1,0,1,0,4,1],
-"dd/d23/STPManager_8h.html":[3,0,0,0,0,6],
-"dd/d23/STPManager_8h_source.html":[3,0,0,0,0,6],
-"dd/d25/structrtt_1_1ai_1_1Dealer_1_1DealerFlag.html":[2,0,0,0,5,0],
 "dd/d25/structrtt_1_1ai_1_1Dealer_1_1DealerFlag.html#a16e607c86f0a605e25561caf3ecb7099":[2,0,0,0,5,0,1],
 "dd/d25/structrtt_1_1ai_1_1Dealer_1_1DealerFlag.html#a90954c3ad173501afe950348b4cdb6e3":[2,0,0,0,5,0,0],
 "dd/d26/structrtt_1_1ai_1_1RuleSet.html":[2,0,0,0,8],
@@ -48,14 +44,14 @@ var NAVTREEINDEX10 =
 "dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#a28d536c1496554806f9fc37023f45fba":[2,0,0,0,4,18,1],
 "dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#a4c981f92e8bca5864cf26f0cee2886ab":[2,0,0,0,4,18,5],
 "dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#a51bce1d5d8502db006cdced1300f36da":[2,0,0,0,4,18,4],
-"dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#a561e7c7a141d7525f0e0df7f8eccaebc":[2,0,0,0,4,18,0,1],
 "dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#a561e7c7a141d7525f0e0df7f8eccaebc":[3,0,0,0,0,3,8,1,1],
+"dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#a561e7c7a141d7525f0e0df7f8eccaebc":[2,0,0,0,4,18,0,1],
 "dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#a60674abf0185e5577b287300f3a20d49":[2,0,0,0,4,18,2],
-"dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#ac0ae5e8a81a8d7a94e5927977b638422":[2,0,0,0,4,18,0,0],
 "dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#ac0ae5e8a81a8d7a94e5927977b638422":[3,0,0,0,0,3,8,1,0],
+"dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#ac0ae5e8a81a8d7a94e5927977b638422":[2,0,0,0,4,18,0,0],
 "dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#afdcb1e9041507c8a71b63521041203b2":[2,0,0,0,4,18,3],
-"dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#d9/dd7/structrtt_1_1ai_1_1stp_1_1PlayEvaluator_1_1PlayScoring":[3,0,0,0,0,3,8,1],
 "dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#d9/dd7/structrtt_1_1ai_1_1stp_1_1PlayEvaluator_1_1PlayScoring":[2,0,0,0,4,18,0],
+"dd/d34/classrtt_1_1ai_1_1stp_1_1PlayEvaluator.html#d9/dd7/structrtt_1_1ai_1_1stp_1_1PlayEvaluator_1_1PlayScoring":[3,0,0,0,0,3,8,1],
 "dd/d4b/classrtt_1_1ai_1_1stp_1_1evaluation_1_1StopGameStateEvaluation.html":[2,0,0,0,4,1,17],
 "dd/d4b/classrtt_1_1ai_1_1stp_1_1evaluation_1_1StopGameStateEvaluation.html#a293504db20d6b1a7e6d40c5060b60a89":[2,0,0,0,4,1,17,1],
 "dd/d4b/classrtt_1_1ai_1_1stp_1_1evaluation_1_1StopGameStateEvaluation.html#a9f8cc42698553fc84df4ce7e4b1a68b9":[2,0,0,0,4,1,17,0],
@@ -249,5 +245,9 @@ var NAVTREEINDEX10 =
 "de/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsForceStart.html#a1d25436d84cf05e9d164139d1038591d":[2,0,0,0,4,3,5,1],
 "de/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsForceStart.html#a1dc216d51c90eb0e6ddb0298e1ad034e":[2,0,0,0,4,3,5,18],
 "de/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsForceStart.html#a358a48626283256f2578740c456da625":[2,0,0,0,4,3,5,0],
-"de/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsForceStart.html#a38ffe1c2f377508d851dc649d03644c0":[2,0,0,0,4,3,5,24]
+"de/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsForceStart.html#a38ffe1c2f377508d851dc649d03644c0":[2,0,0,0,4,3,5,24],
+"de/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsForceStart.html#a3eee34c793189abc4a9f9b98340a5cdb":[2,0,0,0,4,3,5,2],
+"de/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsForceStart.html#a4598ba530d29d7f4f53bcec0c9845100":[2,0,0,0,4,3,5,26],
+"de/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsForceStart.html#a52fc8b6075367b48ae05021829ebcc8f":[2,0,0,0,4,3,5,16],
+"de/de4/classrtt_1_1ai_1_1stp_1_1play_1_1BallPlacementUsForceStart.html#a58560de6d2d6ca91e467deb1071aadbd":[2,0,0,0,4,3,5,10]
 };

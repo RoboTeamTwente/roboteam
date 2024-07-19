@@ -1,8 +1,5 @@
 var NAVTREEINDEX5 =
 {
-"d6/d0f/classrtt_1_1ai_1_1stp_1_1tactic_1_1Formation.html#af4a9f63577d36c0cf178aae99fb0fd00":[2,0,0,0,4,6,9,8],
-"d6/d14/BallPlacementUsGameStateEvaluation_8h.html":[3,0,0,0,0,3,1,0,2],
-"d6/d14/BallPlacementUsGameStateEvaluation_8h_source.html":[3,0,0,0,0,3,1,0,2],
 "d6/d14/BlockBall_8h.html":[3,0,0,0,0,3,5,1,1],
 "d6/d14/BlockBall_8h_source.html":[3,0,0,0,0,3,5,1,1],
 "d6/d23/RobotView_8cpp.html":[3,0,0,1,5,0,1],
@@ -249,5 +246,8 @@ var NAVTREEINDEX5 =
 "d7/d82/BallPlacer_8cpp.html":[3,0,0,1,3,3,0,0],
 "d7/d82/Harasser_8cpp.html":[3,0,0,1,3,3,0,2],
 "d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html":[2,0,0,0,4,15],
-"d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#a067c0013eb3e4d70eedd32a504dee10d":[2,0,0,0,4,15,24]
+"d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#a067c0013eb3e4d70eedd32a504dee10d":[2,0,0,0,4,15,24],
+"d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#a08a78e2b6bb5fb4f75d0c9dc572d25fa":[2,0,0,0,4,15,30],
+"d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#a0c13cbd482099fa139f3a5f08d964efe":[2,0,0,0,4,15,32],
+"d7/d91/classrtt_1_1ai_1_1stp_1_1Play.html#a17fc7a716064d918aa29c072832c2ef8":[2,0,0,0,4,15,21]
 };

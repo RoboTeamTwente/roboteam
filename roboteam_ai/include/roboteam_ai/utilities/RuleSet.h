@@ -49,9 +49,9 @@ struct RuleSet {
         }
     }
 
-    static constexpr RuleSet RULESET_DEFAULT() { return {RuleSetName::DEFAULT, 4.0}; }
+    static constexpr RuleSet RULESET_DEFAULT() { return {RuleSetName::DEFAULT, 2.0}; }
     static constexpr RuleSet RULESET_HALT() { return {RuleSetName::HALT, 0.0}; }
-    static constexpr RuleSet RULESET_STOP() { return {RuleSetName::STOP, 1.3}; }
+    static constexpr RuleSet RULESET_STOP() { return {RuleSetName::STOP, 1.0}; }
 
     static constexpr std::array<RuleSet, 3> ruleSets() {
         return {

@@ -30,6 +30,7 @@ class RobotFilter {
     bool processNotSeen(int cameraID, const Time& time);
 
     [[nodiscard]] double getHealth() const;
+    [[nodiscard]] size_t getNumObservations() const;
     /**
      * @brief Merges robot estimates from different cameras into a single robot estimate
      * @param time to estimate the robot position at

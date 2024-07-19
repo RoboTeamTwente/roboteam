@@ -31,13 +31,6 @@ std::optional<StpInfo> GetBall::calculateInfoForSkill(const StpInfo &info) noexc
     Vector2 interceptionPosition = interceptionInfo.interceptLocation;
     Vector2 interceptionVelocity = interceptionInfo.interceptVelocity;
 
-    // TODO ROBOCUP 2024: CHECK IF NEEDED for ball placer
-    // auto maxRobotVelocity = GameStateManager::getCurrentGameState().getRuleSet().getMaxRobotVel();
-    // if (info.getRobot()->get()->hasBall()) {
-    // maxRobotVelocity = std::clamp(info.getBall().value()->velocity.length() * 0.8, 0.5, maxRobotVelocity);
-    // skillStpInfo.setMaxRobotVelocity(maxRobotVelocity);
-    // }
-
     double distanceToInterception = (interceptionPosition - robotPosition).length();
     double distanceToBall = (ballPosition - robotPosition).length();
 
@@ -49,17 +42,11 @@ std::optional<StpInfo> GetBall::calculateInfoForSkill(const StpInfo &info) noexc
     if (info.getRobot()->get()->getAngleDiffToBall() > constants::HAS_BALL_ANGLE && distanceToBall < constants::ROBOT_CLOSE_TO_POINT) {
         skillStpInfo.setPositionToMoveTo(info.getRobot()->get()->getPos());
         skillStpInfo.setTargetVelocity(Vector2(0, 0));
-    } else if (info.getBall()->get()->velocity.length() > constants::BALL_IS_MOVING_SLOW_LIMIT) {
-        auto newRobotPos = interceptionPosition + (interceptionPosition - ballPosition).stretchToLength(constants::CENTER_TO_FRONT);
-        skillStpInfo.setPositionToMoveTo(newRobotPos);
-        skillStpInfo.setTargetVelocity(interceptionVelocity);
     } else {
-        auto getBallDistance = std::max(distanceToInterception - constants::CENTER_TO_FRONT, MIN_DISTANCE_TO_TARGET);
-        Vector2 newRobotPosition = robotPosition + (interceptionPosition - robotPosition).stretchToLength(getBallDistance);
-        newRobotPosition = FieldComputations::projectPointToValidPosition(info.getField().value(), newRobotPosition, info.getObjectsToAvoid());
-        skillStpInfo.setPositionToMoveTo(newRobotPosition);
+        skillStpInfo.setPositionToMoveTo(interceptionPosition);
         skillStpInfo.setTargetVelocity(interceptionVelocity);
     }
+    skillStpInfo.setMaxJerk(constants::MAX_JERK_DEFAULT);
 
     skillStpInfo.setYaw((ballPosition - robotPosition).angle());
 

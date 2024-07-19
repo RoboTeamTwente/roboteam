@@ -58,6 +58,13 @@ double RobotFilter::getHealth() const {
     }
     return maxHealth;
 }
+size_t RobotFilter::getNumObservations() const {
+    size_t numObservations = 0.0;
+    for (const auto &filter : cameraFilters) {
+        numObservations += filter.second.numObservations();
+    }
+    return numObservations;
+}
 FilteredRobot RobotFilter::mergeRobots(const Time &time) const {
     double mergeFactor = 1.5;
     Eigen::Vector2d vel(0, 0);

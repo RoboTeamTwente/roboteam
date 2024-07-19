@@ -56,12 +56,13 @@ PassInfo PassComputations::calculatePass(gen::ScoreProfile profile, const rtt::w
 
     // If the ball is above or below their defense area, chip to the border of their defense area
     if (world->getWorld()->getBall().value() && world->getWorld()->getBall().value()->position.x > field.rightDefenseArea.leftLine().center().x) {
-        auto intersections = FieldComputations::getDefenseArea(world->getField().value(), false, 0.0, 0.5)
-                            .intersections(LineSegment(world->getWorld()->getBall().value()->position, Vector2{field.rightDefenseArea.leftLine().center().x, -world->getWorld()->getBall().value()->position.y}));
-        if (intersections.size() >= 2) {
-            passInfo.receiverLocation = intersections[0];
-        }
-        else passInfo.receiverLocation = field.rightDefenseArea.leftLine().center() + Vector2{0.2, 0};
+        // auto intersections = FieldComputations::getDefenseArea(world->getField().value(), false, 0.0, 0.5)
+                            // .intersections(LineSegment(world->getWorld()->getBall().value()->position, Vector2{field.rightDefenseArea.leftLine().center().x, -world->getWorld()->getBall().value()->position.y}));
+        // if (intersections.size() >= 2) {
+        //     passInfo.receiverLocation = intersections[0];
+        // }
+        passInfo.receiverLocation = field.rightDefenseArea.leftLine().center() + Vector2{0.2, 0};
+        passInfo.passScore = 255;
         return passInfo;
     }
 

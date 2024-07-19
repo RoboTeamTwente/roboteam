@@ -68,12 +68,18 @@ void FreeKickUsPass::calculateInfoForRoles() noexcept {
     PositionComputations::calculateInfoForDefendersAndWallers(stpInfos, roles, field, world, true);
     PositionComputations::calculateInfoForAttackers(stpInfos, roles, field, world);
     PositionComputations::recalculateInfoForNonPassers(stpInfos, field, world, passInfo.receiverLocation);
+    RTT_INFO(passInfo.receiverLocation)
 
     if (!ballKicked()) {
         stpInfos["receiver"].setPositionToMoveTo(passInfo.receiverLocation);
         stpInfos["free_kick_taker"].setPositionToShootAt(passInfo.receiverLocation);
         stpInfos["free_kick_taker"].setShotPower(ShotPower::PASS);
         stpInfos["free_kick_taker"].setKickOrChip(KickType::KICK);
+        if (world->getWorld()->getBall().value() && world->getWorld()->getBall().value()->position.x > field.rightDefenseArea.leftLine().center().x) {
+            stpInfos["free_kick_taker"].setKickOrChip(KickType::CHIP);
+            // set shot power to max
+            stpInfos["free_kick_taker"].setShotPower(ShotPower::MAX);
+        }
         stpInfos["free_kick_taker"].setShootOnFirstTouch(true);
         if (RuntimeConfig::useReferee && GameStateManager::getCurrentGameState().timeLeft < 1.5) {
             stpInfos["free_kick_taker"].setPositionToShootAt(field.rightDefenseArea.rightLine().center());
@@ -112,11 +118,11 @@ bool FreeKickUsPass::shouldEndPlay() noexcept {
 
     // True if a different pass has a higher score than the current pass (by some margin)- only if the passer is not already close to the ball (since we don't want to adjust our
     // target when we're in the process of shooting
-    if (stpInfos["free_kick_taker"].getRobot() && !stpInfos["free_kick_taker"].getRobot().value()->hasBall() &&
-        stp::computations::PassComputations::calculatePass(gen::AttackingPass, world, field).passScore >
-            1.05 * stp::PositionScoring::scorePosition(passInfo.receiverLocation, gen::AttackingPass, field, world).score &&
-        (!RuntimeConfig::useReferee || GameStateManager::getCurrentGameState().timeLeft > 1.5))
-        return true;
+    // if (stpInfos["free_kick_taker"].getRobot() && !stpInfos["free_kick_taker"].getRobot().value()->hasBall() &&
+    //     stp::computations::PassComputations::calculatePass(gen::AttackingPass, world, field).passScore >
+    //         1.05 * stp::PositionScoring::scorePosition(passInfo.receiverLocation, gen::AttackingPass, field, world).score &&
+    //     (!RuntimeConfig::useReferee || GameStateManager::getCurrentGameState().timeLeft > 1.5))
+    //     return true;
 
     return false;
 }

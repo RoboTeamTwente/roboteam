@@ -85,6 +85,12 @@ void AttackingPass::calculateInfoForRoles() noexcept {
         stpInfos["passer"].setPositionToShootAt(passInfo.receiverLocation);
         stpInfos["passer"].setShotPower(ShotPower::PASS);
         stpInfos["passer"].setKickOrChip(KickType::KICK);
+        if (world->getWorld()->getBall().value() && world->getWorld()->getBall().value()->position.x > field.rightDefenseArea.leftLine().center().x) {
+            stpInfos["passer"].setKickOrChip(KickType::CHIP);
+            // set shot power to max
+            stpInfos["passer"].setShotPower(ShotPower::MAX);
+        }
+
         stpInfos["receiver"].setPositionToMoveTo(passInfo.receiverLocation);
     } else {
         // Receiver goes to the receiverLocation projected on the trajectory of the ball

@@ -140,6 +140,8 @@ bool PassComputations::pointIsValidReceiverLocation(Vector2 point, const std::ve
                                                     const Field& field, const world::World* world) {
     constexpr double MINIMUM_PASS_DISTANCE = 3.0;  // This can be dribbled instead of passed
     if (point.dist(passLocation) < MINIMUM_PASS_DISTANCE) return false;
+    if (point.x < passerLocation.x && passerLocation.x < 2.5) return false;
+    if (point.x < 2.5 && passerLocation.x > 2.5) return false;
     constexpr double MINIMUM_LINE_OF_SIGHT = 10.0;  // The minimum LoS to be a valid pass, otherwise, the pass will go into an enemy robot
     if (PositionScoring::scorePosition(point, gen::LineOfSight, field, world).score < MINIMUM_LINE_OF_SIGHT) return false;
     AvoidObjects avoidObj;

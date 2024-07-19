@@ -95,7 +95,7 @@ bool CameraGroundBallFilter::checkRobotCollision(const FilteredRobot& robot, con
         return true;
     }
 
-    auto botCircle = rtt::Circle(robotPos, 0.08 + 0.0213);
+    auto botCircle = rtt::Circle(robotPos, 0.07 + 0.0213);
     auto intersects = botCircle.intersects(ballVelLine);
 
     if (!intersects.empty()) {

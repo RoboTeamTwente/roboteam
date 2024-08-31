@@ -342,7 +342,8 @@ void PositionComputations::calculateInfoForHarasser(std::unordered_map<std::stri
     // project their point on the line
     Vector2 projectedPoint = ourToBall.project(enemyClosestToBall->get()->getPos());
     bool theyAreBetween = (projectedPoint != world->getWorld()->getBall()->get()->position);
-    bool theyAreCloser = (enemyClosestToBall->get()->getPos() - world->getWorld()->getBall()->get()->position).length() < (stpInfos["harasser"].getRobot()->get()->getPos() - world->getWorld()->getBall()->get()->position).length();
+    bool theyAreCloser = (enemyClosestToBall->get()->getPos() - world->getWorld()->getBall()->get()->position).length() <
+                         (stpInfos["harasser"].getRobot()->get()->getPos() - world->getWorld()->getBall()->get()->position).length();
     auto harasser = std::find_if(roles->begin(), roles->end(), [](const std::unique_ptr<Role> &role) { return role != nullptr && role->getName() == "harasser"; });
     if (theyAreBetween && theyAreCloser) {
         auto enemyPos = enemyClosestToBall->get()->getPos();

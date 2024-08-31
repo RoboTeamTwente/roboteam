@@ -16,6 +16,7 @@ protobuf_generate_cpp(NET_PROTO_SRCS NET_PROTO_HDRS
     "ssl_simulation_robot_feedback.proto" 
     "ssl_vision_geometry.proto"
 
+    # Our own messages
     "RobotCommands.proto"
     "RobotFeedback.proto"
     "State.proto"

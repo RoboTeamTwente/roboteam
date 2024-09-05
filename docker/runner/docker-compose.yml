@@ -1,5 +1,3 @@
-version: '3'
-
 services:
 
   roboteam_primary_ai:
@@ -167,41 +165,33 @@ services:
     profiles: ["simulator","diff","game","autoref"]
 
   erforce_autoref_sim:
-    image: roboteamtwente/roboteam:development
+    image: roboticserlangen/autoref:latest
     container_name: RTT_erforce_autoref_sim
     restart: always
-    working_dir: "/home/roboteamtwente/external/autoref/build/bin/"
-    command: sh -c "./autoref-cli --vision-port 10020 --tracker-port 10010 --gc-port 10003"
+    command: ./autoref-cli --vision-port 10020 --tracker-port 10010 --gc-port 10003
     network_mode: "host" # Workaround to connect from interface on host to AI websocket, please fix
     expose:
       - 10020:10020 # Vision port simulator
       - 10003:10003 # GC port
       - 10010:10010 # Tracker port
-    volumes:
-      - ../../:/home/roboteamtwente/
     profiles: ["simulator","diff"]
 
   erforce_autoref_game:
-    image: roboteamtwente/roboteam:development
+    image: roboticserlangen/autoref:latest
     container_name: RTT_erforce_autoref_game
     restart: always
-    working_dir: "/home/roboteamtwente/external/autoref/build/bin/"
-    command: sh -c "./autoref-cli --vision-port 10006 --tracker-port 10010 --gc-port 10003"
+    command: ./autoref-cli --vision-port 10006 --tracker-port 10010 --gc-port 10003
     network_mode: "host" # Workaround to connect from interface on host to AI websocket, please fix
     expose:
       - 10006:10006 #Vision port
       - 10003:10003 #Ref port
       - 10010:10010 #Tracker port
-    volumes:
-      - ../../:/home/roboteamtwente/
     profiles: ["game"]
 
   erforce_simulator:
-    image: roboteamtwente/roboteam:development
+    image: roboticserlangen/simulatorcli:latest
     container_name: RTT_erforce_simulator
     restart: always
-    working_dir: "/home/roboteamtwente/external/framework/build/bin/"
-    command: sh -c "./simulator-cli"
     network_mode: "host" # Workaround to connect from interface on host to AI websocket, please fix
     expose:
       - 10301:10301 #Blue Control Port
@@ -210,8 +200,6 @@ services:
       - 30012:30012 #Yellow Feedback Port
       - 10300:10300 #Simulation Control Port
       - 30013:30013 #Simulation Feedback Port
-    volumes:
-      - ../../:/home/roboteamtwente/
     profiles: ["simulator","diff"]
 
   ssl-game-controller:

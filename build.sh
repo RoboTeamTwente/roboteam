@@ -19,7 +19,6 @@ help() {
     echo "Usage: build.sh [-y] [-o / -o <COMMIT>]
                 -y : ignore docker enviroment check
                 -o : build AI from given commit (or origin/main~1 if not specified) and save output in build_old folder
-                -s : skip external
 
     Example: ./build.sh -o origin/main~3
              ./build.sh -o bedd8e7ed
@@ -30,7 +29,6 @@ help() {
 
 OK=0
 OLD=0
-SKIP=0
 COMMIT=origin/main~1
 
 while getopts ":yo:s" opt; do
@@ -39,8 +37,6 @@ while getopts ":yo:s" opt; do
       ;;
     o ) OLD=1
         COMMIT=${OPTARG}
-      ;;
-    s ) SKIP=1
       ;;
     \? ) help
       ;;
@@ -69,28 +65,6 @@ then
             pushd roboteam_interface
                 yarn install
             popd
-            if [ $SKIP == 0 ];
-            then
-                pushd external
-                    echo -e "${GREEN}Building external${RESET}"
-                    pushd framework
-                        echo -e "${GREEN}Building external/framework${RESET}"
-                        mkdir -p build
-                        pushd build
-                        cmake ..
-                        make simulator-cli -j$(nproc)
-                        popd
-                    popd
-                    pushd autoref
-                        echo -e "${GREEN}Building external/autoref${RESET}"
-                        mkdir -p build
-                        pushd build
-                        cmake ..
-                        make autoref-cli -j$(nproc)
-                        popd
-                    popd
-                popd
-            fi
             echo -e "${GREEN}Done, exiting builder..${RESET}"
         else
             echo -e "${GREEN}Checking submodules${RESET}"

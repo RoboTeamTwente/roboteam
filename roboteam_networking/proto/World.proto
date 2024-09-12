@@ -1,7 +1,6 @@
 
-'''
-World.proto file contains the proto structure file of only the world (so literally just world state, no referee stuff)
-'''
+// World.proto file contains the proto structure file of only the world
+// (so literally just world state, no referee stuff)
 
 syntax = "proto3";
 

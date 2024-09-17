@@ -11,7 +11,7 @@ from google.protobuf import symbol_database as _symbol_database
 _sym_db = _symbol_database.Default()
 
 
-import Vector2f_pb2 as Vector2f__pb2
+from . import Vector2f_pb2 as Vector2f__pb2
 
 
 DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0fWorldBall.proto\x12\x05proto\x1a\x0eVector2f.proto\"\x80\x01\n\tWorldBall\x12\x0c\n\x04\x61rea\x18\x01 \x01(\r\x12\x1c\n\x03pos\x18\x02 \x01(\x0b\x32\x0f.proto.Vector2f\x12\t\n\x01z\x18\x03 \x01(\x02\x12\x1c\n\x03vel\x18\x04 \x01(\x0b\x32\x0f.proto.Vector2f\x12\r\n\x05z_vel\x18\x05 \x01(\x02\x12\x0f\n\x07visible\x18\x06 \x01(\x08\x62\x06proto3')

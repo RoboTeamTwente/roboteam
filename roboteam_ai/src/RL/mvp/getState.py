@@ -67,10 +67,12 @@ def get_ball_state():
     return ball_position, ball_quadrant
 
 def get_robot_state():
-
-    # Initialize the grid vector
-    # 4 positions (2x2 grid), each with counts for yellow and blue robots
-    grid_vector = np.zeros(8, dtype=int)
+    # 4 rows (4 grid positions), 2 columns (yellow and blue robot counts)
+    grid_array = np.zeros((4, 2), dtype=int)
+    
+    # Flags to indicate if any robot in each team is dribbling
+    yellow_team_dribbling = False
+    blue_team_dribbling = False
 
     context = zmq.Context()
     socket_world = context.socket(zmq.SUB)
@@ -82,29 +84,38 @@ def get_robot_state():
         state = State.FromString(message)
         
         if not len(state.processed_vision_packets):
-            return grid_vector
+            return grid_array, yellow_team_dribbling, blue_team_dribbling
         
         world = state.last_seen_world
         
         def get_grid_position(x, y):
-            # Assuming the field is centered at (0,0) and extends from -6 to 6 in x and -4.5 to 4.5 in y
-            # Adjust these values if your field dimensions are different
             if x < 0:
-                return 0 if y < 0 else 1
+                return 0 if y > 0 else 2
             else:
-                return 2 if y < 0 else 3
+                return 1 if y > 0 else 3
         
-        # Process yellow robots (excluding keeper)
-        for i in range(1, 11):  # Start from 1 to exclude keeper
-            bot = world.yellow[i]
+        # Process yellow robots
+        for bot in world.yellow:
             grid_pos = get_grid_position(bot.pos.x, bot.pos.y)
-            grid_vector[grid_pos * 2] += 1
+            grid_array[grid_pos, 0] += 1
+            if bot.feedbackInfo.dribbler_sees_ball:
+                yellow_team_dribbling = True
         
-        # Process blue robots (excluding keeper)
-        for i in range(1, 11):  # Start from 1 to exclude keeper
-            bot = world.blue[i]
+        # Process blue robots
+        for bot in world.blue:
             grid_pos = get_grid_position(bot.pos.x, bot.pos.y)
-            grid_vector[grid_pos * 2 + 1] += 1
+            grid_array[grid_pos, 1] += 1
+            if bot.feedbackInfo.dribbler_sees_ball:
+                blue_team_dribbling = True
+        
+        # Process unseen robots
+        for bot in world.yellow_unseen_robots:
+            if bot.feedbackInfo.dribbler_sees_ball:
+                yellow_team_dribbling = True
+        
+        for bot in world.blue_unseen_robots:
+            if bot.feedbackInfo.dribbler_sees_ball:
+                blue_team_dribbling = True
 
     except DecodeError:
         print("Failed to decode protobuf message")
@@ -114,22 +125,17 @@ def get_robot_state():
         socket_world.close()
         context.term()
 
-    return grid_vector
+    return grid_array, yellow_team_dribbling, blue_team_dribbling
 
 if __name__ == "__main__":
-    # vector = get_robot_state()
-    # print("Grid-based Robot Vector:")
-    # print(vector)
-    # print("\nInterpretation:")
-    # quadrants = ["Bottom-Left", "Top-Left", "Bottom-Right", "Top-Right"]
-    # for i in range(4):
-    #     print(f"{quadrants[i]}: {vector[i*2]} yellow robots, {vector[i*2+1]} blue robots")
+    grid_array, yellow_team_dribbling, blue_team_dribbling = get_robot_state()
+    print("Grid-based Robot Array:")
+    print(grid_array)
+    print("\nInterpretation:")
+    quadrants = ["Bottom-Left", "Top-Left", "Bottom-Right", "Top-Right"]
+    for i, quadrant in enumerate(quadrants):
+        print(f"{quadrant}: {grid_array[i, 0]} yellow robots, {grid_array[i, 1]} blue robots")
 
-    position, quadrant = get_ball_state()
-    print(f"Ball position: ({position[0]:.2f}, {position[1]:.2f})")
-    print(f"Ball quadrant: {quadrant}")
-    quadrant_names = ["Bottom-Left", "Top-Left", "Bottom-Right", "Top-Right", "Center"]
-    if 0 <= quadrant < 5:
-        print(f"Ball is in the {quadrant_names[quadrant]}")
-    else:
-        print("Ball position is invalid or not on the field")
+    print("\nDribbler Information:")
+    print(f"Yellow Team: {'Dribbling' if yellow_team_dribbling else 'Not Dribbling'}")
+    print(f"Blue Team: {'Dribbling' if blue_team_dribbling else 'Not Dribbling'}")

@@ -5,7 +5,7 @@ network:
     tracker-address: 224.5.23.2:10010
     skip-interfaces: []
 game:
-    yellow-card-duration: 2m0s
+    yellow-card-duration: 0s # Set yellow card to have no effect
     yellow-card-bot-removal-time: 10s
     default-division: DIV_A
     normal:
@@ -94,6 +94,6 @@ server:
     remote-control:
         address: :10011
         trusted-keys-dir: config/trusted_keys/remote-control
-time-acquisition-mode: system
+time-acquisition-mode: system # Use "ci" if using CI, or "system" for standard
 engine:
     config-filename: config/engine.yaml

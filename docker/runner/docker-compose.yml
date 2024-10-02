@@ -1,5 +1,3 @@
-version: '3'
-
 services:
 
   roboteam_primary_ai:
@@ -36,7 +34,7 @@ services:
       - LD_LIBRARY_PATH=/home/roboteamtwente/lib/
     volumes:
       - ../../build/release/:/home/roboteamtwente/
-    profiles: ["simulator"]
+    profiles: ["simulator", "RL"]
 
   roboteam_prev_ai:
     image: roboteamtwente/roboteam:development
@@ -214,15 +212,33 @@ services:
       - ../../:/home/roboteamtwente/
     profiles: ["simulator","diff", "RL"]
 
-  ssl-game-controller:
+  # ssl-game-controller:
+  #   image: robocupssl/ssl-game-controller:latest
+  #   container_name: RTT_ssl-game-controller
+  #   restart: always
+  #   network_mode: "host"
+  #   ports:
+  #     - "8081:8081/tcp"
+  #   volumes:
+  #     - ./ssl-game-controller-config:/config # adding the volumes means we can use our own config
+  #     - ./ssl-game-controller-data:/data
+  #   command: -address :8081
+  #   profiles: ["simulator","diff","game"]
+
+  ssl-game-controller-ci:
     image: robocupssl/ssl-game-controller:latest
     container_name: RTT_ssl-game-controller
     restart: always
     network_mode: "host"
     ports:
       - "8081:8081/tcp"
+      - "10009:10009/tcp"  # Add this port for CI mode
     volumes:
       - ./ssl-game-controller-config:/config
       - ./ssl-game-controller-data:/data
-    command: -address :8081
-    profiles: ["simulator","diff","game", "RL"]
+    command: 
+      - "-address"
+      - ":8081"
+      - "-ciAddress"
+      - ":10009"
+    profiles: ["diff", "game", "RL"]

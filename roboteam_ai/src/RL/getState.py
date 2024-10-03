@@ -12,7 +12,7 @@ The two functions get_ball_state and get_robot_state get the states of the ball 
 
 # Make sure to go back to the main roboteam directory
 current_dir = os.path.dirname(os.path.abspath(__file__))
-roboteam_path = os.path.abspath(os.path.join(current_dir, "..", "..", "..", ".."))
+roboteam_path = os.path.abspath(os.path.join(current_dir, "..", "..", ".."))
 
 # Add to sys.path
 sys.path.append(roboteam_path)

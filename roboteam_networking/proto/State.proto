@@ -8,9 +8,9 @@ syntax = "proto3";
 import "World.proto";
 import "RobotParameters.proto";
 
-import "messages_robocup_ssl_wrapper.proto";
-import "messages_robocup_ssl_referee.proto";
-import "messages_robocup_ssl_geometry.proto";
+import "ssl_vision_wrapper.proto";
+import "ssl_vision_geometry.proto";
+import "ssl_gc_referee_message.proto";
 
 import "RobotFeedback.proto";
 

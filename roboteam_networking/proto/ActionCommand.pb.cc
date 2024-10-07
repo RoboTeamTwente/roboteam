@@ -22,9 +22,8 @@ namespace _pbi = _pb::internal;
 
 PROTOBUF_CONSTEXPR ActionCommand::ActionCommand(
     ::_pbi::ConstantInitialized)
-  : numdefender_(0)
-  , numattacker_(0)
-  , numwaller_(0){}
+  : numrobots_()
+  , _numrobots_cached_byte_size_(0){}
 struct ActionCommandDefaultTypeInternal {
   PROTOBUF_CONSTEXPR ActionCommandDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -45,9 +44,7 @@ const uint32_t TableStruct_ActionCommand_2eproto::offsets[] PROTOBUF_SECTION_VAR
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::ActionCommand, numdefender_),
-  PROTOBUF_FIELD_OFFSET(::ActionCommand, numattacker_),
-  PROTOBUF_FIELD_OFFSET(::ActionCommand, numwaller_),
+  PROTOBUF_FIELD_OFFSET(::ActionCommand, numrobots_),
 };
 static const ::_pbi::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   { 0, -1, -1, sizeof(::ActionCommand)},
@@ -58,13 +55,12 @@ static const ::_pb::Message* const file_default_instances[] = {
 };
 
 const char descriptor_table_protodef_ActionCommand_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
-  "\n\023ActionCommand.proto\"L\n\rActionCommand\022\023"
-  "\n\013numDefender\030\001 \001(\005\022\023\n\013numAttacker\030\002 \001(\005"
-  "\022\021\n\tnumWaller\030\003 \001(\005b\006proto3"
+  "\n\023ActionCommand.proto\"\"\n\rActionCommand\022\021"
+  "\n\tnumRobots\030\001 \003(\005b\006proto3"
   ;
 static ::_pbi::once_flag descriptor_table_ActionCommand_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_ActionCommand_2eproto = {
-    false, false, 107, descriptor_table_protodef_ActionCommand_2eproto,
+    false, false, 65, descriptor_table_protodef_ActionCommand_2eproto,
     "ActionCommand.proto",
     &descriptor_table_ActionCommand_2eproto_once, nullptr, 0, 1,
     schemas, file_default_instances, TableStruct_ActionCommand_2eproto::offsets,
@@ -86,24 +82,19 @@ class ActionCommand::_Internal {
 
 ActionCommand::ActionCommand(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
-  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned),
+  numrobots_(arena) {
   SharedCtor();
   // @@protoc_insertion_point(arena_constructor:ActionCommand)
 }
 ActionCommand::ActionCommand(const ActionCommand& from)
-  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  : ::PROTOBUF_NAMESPACE_ID::Message(),
+      numrobots_(from.numrobots_) {
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  ::memcpy(&numdefender_, &from.numdefender_,
-    static_cast<size_t>(reinterpret_cast<char*>(&numwaller_) -
-    reinterpret_cast<char*>(&numdefender_)) + sizeof(numwaller_));
   // @@protoc_insertion_point(copy_constructor:ActionCommand)
 }
 
 inline void ActionCommand::SharedCtor() {
-::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
-    reinterpret_cast<char*>(&numdefender_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&numwaller_) -
-    reinterpret_cast<char*>(&numdefender_)) + sizeof(numwaller_));
 }
 
 ActionCommand::~ActionCommand() {
@@ -129,9 +120,7 @@ void ActionCommand::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  ::memset(&numdefender_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&numwaller_) -
-      reinterpret_cast<char*>(&numdefender_)) + sizeof(numwaller_));
+  numrobots_.Clear();
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -141,26 +130,13 @@ const char* ActionCommand::_InternalParse(const char* ptr, ::_pbi::ParseContext*
     uint32_t tag;
     ptr = ::_pbi::ReadTag(ptr, &tag);
     switch (tag >> 3) {
-      // int32 numDefender = 1;
+      // repeated int32 numRobots = 1;
       case 1:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
-          numdefender_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 10)) {
+          ptr = ::PROTOBUF_NAMESPACE_ID::internal::PackedInt32Parser(_internal_mutable_numrobots(), ptr, ctx);
           CHK_(ptr);
-        } else
-          goto handle_unusual;
-        continue;
-      // int32 numAttacker = 2;
-      case 2:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
-          numattacker_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
-          CHK_(ptr);
-        } else
-          goto handle_unusual;
-        continue;
-      // int32 numWaller = 3;
-      case 3:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 24)) {
-          numwaller_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+        } else if (static_cast<uint8_t>(tag) == 8) {
+          _internal_add_numrobots(::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr));
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -194,22 +170,13 @@ uint8_t* ActionCommand::_InternalSerialize(
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // int32 numDefender = 1;
-  if (this->_internal_numdefender() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteInt32ToArray(1, this->_internal_numdefender(), target);
-  }
-
-  // int32 numAttacker = 2;
-  if (this->_internal_numattacker() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteInt32ToArray(2, this->_internal_numattacker(), target);
-  }
-
-  // int32 numWaller = 3;
-  if (this->_internal_numwaller() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteInt32ToArray(3, this->_internal_numwaller(), target);
+  // repeated int32 numRobots = 1;
+  {
+    int byte_size = _numrobots_cached_byte_size_.load(std::memory_order_relaxed);
+    if (byte_size > 0) {
+      target = stream->WriteInt32Packed(
+          1, _internal_numrobots(), byte_size, target);
+    }
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -228,19 +195,18 @@ size_t ActionCommand::ByteSizeLong() const {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  // int32 numDefender = 1;
-  if (this->_internal_numdefender() != 0) {
-    total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_numdefender());
-  }
-
-  // int32 numAttacker = 2;
-  if (this->_internal_numattacker() != 0) {
-    total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_numattacker());
-  }
-
-  // int32 numWaller = 3;
-  if (this->_internal_numwaller() != 0) {
-    total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_numwaller());
+  // repeated int32 numRobots = 1;
+  {
+    size_t data_size = ::_pbi::WireFormatLite::
+      Int32Size(this->numrobots_);
+    if (data_size > 0) {
+      total_size += 1 +
+        ::_pbi::WireFormatLite::Int32Size(static_cast<int32_t>(data_size));
+    }
+    int cached_size = ::_pbi::ToCachedSize(data_size);
+    _numrobots_cached_byte_size_.store(cached_size,
+                                    std::memory_order_relaxed);
+    total_size += data_size;
   }
 
   return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
@@ -265,15 +231,7 @@ void ActionCommand::MergeFrom(const ActionCommand& from) {
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  if (from._internal_numdefender() != 0) {
-    _internal_set_numdefender(from._internal_numdefender());
-  }
-  if (from._internal_numattacker() != 0) {
-    _internal_set_numattacker(from._internal_numattacker());
-  }
-  if (from._internal_numwaller() != 0) {
-    _internal_set_numwaller(from._internal_numwaller());
-  }
+  numrobots_.MergeFrom(from.numrobots_);
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
@@ -291,12 +249,7 @@ bool ActionCommand::IsInitialized() const {
 void ActionCommand::InternalSwap(ActionCommand* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(ActionCommand, numwaller_)
-      + sizeof(ActionCommand::numwaller_)
-      - PROTOBUF_FIELD_OFFSET(ActionCommand, numdefender_)>(
-          reinterpret_cast<char*>(&numdefender_),
-          reinterpret_cast<char*>(&other->numdefender_));
+  numrobots_.InternalSwap(&other->numrobots_);
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata ActionCommand::GetMetadata() const {

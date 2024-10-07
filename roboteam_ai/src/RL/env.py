@@ -3,15 +3,14 @@
 import gymnasium
 from gymnasium import spaces
 import numpy as np
-from google.protobuf.message import DecodeError
-
+import asyncio
 
 # Import our functions
 from sentActionCommand import send_action_command
 from getState import get_ball_state, get_robot_state
-from getRefereeState import get_referee_state
 from teleportBall import teleport_ball
-from resetRefereeState import reset_referee_state
+from getRefereeState import get_referee_state
+from resetRefereeState import reset_and_stop_match
 
 """
 This environment file is in the form of a gymnasium environment.

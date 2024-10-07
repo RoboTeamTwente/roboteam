@@ -172,36 +172,29 @@ class ActionCommand final :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kNumDefenderFieldNumber = 1,
-    kNumAttackerFieldNumber = 2,
-    kNumWallerFieldNumber = 3,
+    kNumRobotsFieldNumber = 1,
   };
-  // int32 numDefender = 1;
-  void clear_numdefender();
-  int32_t numdefender() const;
-  void set_numdefender(int32_t value);
+  // repeated int32 numRobots = 1;
+  int numrobots_size() const;
   private:
-  int32_t _internal_numdefender() const;
-  void _internal_set_numdefender(int32_t value);
+  int _internal_numrobots_size() const;
   public:
-
-  // int32 numAttacker = 2;
-  void clear_numattacker();
-  int32_t numattacker() const;
-  void set_numattacker(int32_t value);
+  void clear_numrobots();
   private:
-  int32_t _internal_numattacker() const;
-  void _internal_set_numattacker(int32_t value);
+  int32_t _internal_numrobots(int index) const;
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedField< int32_t >&
+      _internal_numrobots() const;
+  void _internal_add_numrobots(int32_t value);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedField< int32_t >*
+      _internal_mutable_numrobots();
   public:
-
-  // int32 numWaller = 3;
-  void clear_numwaller();
-  int32_t numwaller() const;
-  void set_numwaller(int32_t value);
-  private:
-  int32_t _internal_numwaller() const;
-  void _internal_set_numwaller(int32_t value);
-  public:
+  int32_t numrobots(int index) const;
+  void set_numrobots(int index, int32_t value);
+  void add_numrobots(int32_t value);
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedField< int32_t >&
+      numrobots() const;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedField< int32_t >*
+      mutable_numrobots();
 
   // @@protoc_insertion_point(class_scope:ActionCommand)
  private:
@@ -210,9 +203,8 @@ class ActionCommand final :
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
-  int32_t numdefender_;
-  int32_t numattacker_;
-  int32_t numwaller_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedField< int32_t > numrobots_;
+  mutable std::atomic<int> _numrobots_cached_byte_size_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_ActionCommand_2eproto;
 };
@@ -227,64 +219,51 @@ class ActionCommand final :
 #endif  // __GNUC__
 // ActionCommand
 
-// int32 numDefender = 1;
-inline void ActionCommand::clear_numdefender() {
-  numdefender_ = 0;
+// repeated int32 numRobots = 1;
+inline int ActionCommand::_internal_numrobots_size() const {
+  return numrobots_.size();
 }
-inline int32_t ActionCommand::_internal_numdefender() const {
-  return numdefender_;
+inline int ActionCommand::numrobots_size() const {
+  return _internal_numrobots_size();
 }
-inline int32_t ActionCommand::numdefender() const {
-  // @@protoc_insertion_point(field_get:ActionCommand.numDefender)
-  return _internal_numdefender();
+inline void ActionCommand::clear_numrobots() {
+  numrobots_.Clear();
 }
-inline void ActionCommand::_internal_set_numdefender(int32_t value) {
-  
-  numdefender_ = value;
+inline int32_t ActionCommand::_internal_numrobots(int index) const {
+  return numrobots_.Get(index);
 }
-inline void ActionCommand::set_numdefender(int32_t value) {
-  _internal_set_numdefender(value);
-  // @@protoc_insertion_point(field_set:ActionCommand.numDefender)
+inline int32_t ActionCommand::numrobots(int index) const {
+  // @@protoc_insertion_point(field_get:ActionCommand.numRobots)
+  return _internal_numrobots(index);
 }
-
-// int32 numAttacker = 2;
-inline void ActionCommand::clear_numattacker() {
-  numattacker_ = 0;
+inline void ActionCommand::set_numrobots(int index, int32_t value) {
+  numrobots_.Set(index, value);
+  // @@protoc_insertion_point(field_set:ActionCommand.numRobots)
 }
-inline int32_t ActionCommand::_internal_numattacker() const {
-  return numattacker_;
+inline void ActionCommand::_internal_add_numrobots(int32_t value) {
+  numrobots_.Add(value);
 }
-inline int32_t ActionCommand::numattacker() const {
-  // @@protoc_insertion_point(field_get:ActionCommand.numAttacker)
-  return _internal_numattacker();
+inline void ActionCommand::add_numrobots(int32_t value) {
+  _internal_add_numrobots(value);
+  // @@protoc_insertion_point(field_add:ActionCommand.numRobots)
 }
-inline void ActionCommand::_internal_set_numattacker(int32_t value) {
-  
-  numattacker_ = value;
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedField< int32_t >&
+ActionCommand::_internal_numrobots() const {
+  return numrobots_;
 }
-inline void ActionCommand::set_numattacker(int32_t value) {
-  _internal_set_numattacker(value);
-  // @@protoc_insertion_point(field_set:ActionCommand.numAttacker)
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedField< int32_t >&
+ActionCommand::numrobots() const {
+  // @@protoc_insertion_point(field_list:ActionCommand.numRobots)
+  return _internal_numrobots();
 }
-
-// int32 numWaller = 3;
-inline void ActionCommand::clear_numwaller() {
-  numwaller_ = 0;
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedField< int32_t >*
+ActionCommand::_internal_mutable_numrobots() {
+  return &numrobots_;
 }
-inline int32_t ActionCommand::_internal_numwaller() const {
-  return numwaller_;
-}
-inline int32_t ActionCommand::numwaller() const {
-  // @@protoc_insertion_point(field_get:ActionCommand.numWaller)
-  return _internal_numwaller();
-}
-inline void ActionCommand::_internal_set_numwaller(int32_t value) {
-  
-  numwaller_ = value;
-}
-inline void ActionCommand::set_numwaller(int32_t value) {
-  _internal_set_numwaller(value);
-  // @@protoc_insertion_point(field_set:ActionCommand.numWaller)
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedField< int32_t >*
+ActionCommand::mutable_numrobots() {
+  // @@protoc_insertion_point(field_mutable_list:ActionCommand.numRobots)
+  return _internal_mutable_numrobots();
 }
 
 #ifdef __GNUC__

@@ -1,0 +1,226 @@
+# ---
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: roboteam-build-pvc
+# spec:
+#   accessModes:
+#     - ReadWriteOnce
+#   resources:
+#     requests:
+#       storage: 1Gi
+
+# ---
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: roboteam-interface-pvc
+# spec:
+#   accessModes:
+#     - ReadWriteOnce
+#   resources:
+#     requests:
+#       storage: 1Gi
+
+# ---
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: roboteam-autoref-pvc
+# spec:
+#   accessModes:
+#     - ReadWriteOnce
+#   resources:
+#     requests:
+#       storage: 1Gi
+
+# ---
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: roboteam-root-pvc
+# spec:
+#   accessModes:
+#     - ReadWriteOnce
+#   resources:
+#     requests:
+#       storage: 5Gi
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: roboteam-simulator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: roboteam-simulator
+  template:
+    metadata:
+      labels:
+        app: roboteam-simulator
+    spec:
+      hostNetwork: true
+      containers:
+      - name: ssl-game-controller
+        image: robocupssl/ssl-game-controller:latest
+        ports:
+        - containerPort: 8081
+        # volumeMounts:
+        # - name: ssl-game-controller-config
+        #   mountPath: /config
+        # - name: ssl-game-controller-data
+        #   mountPath: /data
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+
+      - name: roboteam-primary-ai
+        image: roboteamtwente/roboteam:kubernetes
+        command: ["/bin/sh"]
+        args: ["-c", "/home/roboteamtwente/bin/roboteam_ai --primary-ai"]
+        env:
+        - name: LD_LIBRARY_PATH
+          value: /home/roboteamtwente/lib
+        workingDir: /home/roboteamtwente
+        
+        resources:
+          requests:
+            cpu: 500m
+            memory: 512Mi
+          limits:
+            cpu: 1
+            memory: 1Gi
+
+        # volumeMounts:
+        # - name: roboteam-build
+        #   mountPath: /home/roboteamtwente
+
+      # - name: roboteam-secondary-ai
+      #   image: roboteamtwente/roboteam:kubernetes
+      #   workingDir: "/home/roboteamtwente/"
+      #   command: ["/bin/sh", "-c"]
+      #   args: ["./bin/roboteam_ai --secondary-ai"]
+      #   env:
+      #   - name: LD_LIBRARY_PATH
+      #     value: "/home/roboteamtwente/lib/"
+      #   volumeMounts:
+      #   - name: roboteam-build
+      #     mountPath: /home/roboteamtwente
+
+      - name: roboteam-observer-sim
+        image: roboteamtwente/roboteam:kubernetes
+        command: ["/bin/sh"]
+        args: ["-c", "/home/roboteamtwente/bin/roboteam_observer --vision-ip 224.5.23.2 --referee-ip 224.5.23.1 --vision-port 10020 --referee-port 10003 --log"]
+        env:
+        - name: LD_LIBRARY_PATH
+          value: /home/roboteamtwente/lib
+        workingDir: /home/roboteamtwente
+        
+        resources:
+          requests:
+            cpu: 500m
+            memory: 512Mi
+          limits:
+            cpu: 1
+            memory: 1Gi
+
+      - name: roboteam-robothub-sim
+        image: roboteamtwente/roboteam:kubernetes
+        command: ["/bin/sh"]
+        args: ["-c", "/home/roboteamtwente/bin/roboteam_robothub"]
+        env:
+        - name: LD_LIBRARY_PATH
+          value: "/home/roboteamtwente/lib/"
+        workingDir: /home/roboteamtwente/
+        
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 500mi
+
+      # - name: roboteam-interface
+      #   image: roboteamtwente/roboteam:kubernetes
+      #   workingDir: "/home/roboteamtwente/"
+      #   command: ["/bin/sh", "-c"]
+      #   args: ["yarn serve --host 0.0.0.0"]
+      #   ports:
+      #   - containerPort: 8080
+      #   volumeMounts:
+      #   - name: roboteam-interface
+      #     mountPath: /home/roboteamtwente
+
+      # - name: roboteam-autoref
+      #   image: gradle:8.4.0-jdk17
+      #   workingDir: "/home/roboteamtwente/"
+      #   command: ["/bin/sh", "-c"]
+      #   args: ["./gradlew run --args=\"-cli --world-ip=127.0.0.1 --world-port=5558 --gc-ip=127.0.0.1 --gc-port=10007\""]
+      #   env:
+      #   - name: GRADLE_USER_HOME
+      #     value: "/home/roboteamtwente/.cache"
+      #   volumeMounts:
+      #   - name: roboteam-autoref
+      #     mountPath: /home/roboteamtwente
+
+      # - name: erforce-autoref-sim
+      #   image: roboteamtwente/roboteam:kubernetes
+      #   workingDir: "/home/roboteamtwente/external/autoref/build/bin/"
+      #   command: ["/bin/sh", "-c"]
+      #   args: ["./autoref-cli --vision-port 10020 --tracker-port 10010 --gc-port 10003"]
+      #   volumeMounts:
+      #   - name: roboteam-root
+      #     mountPath: /home/roboteamtwente
+
+      # - name: erforce-simulator
+      #   image: roboteamtwente/roboteam:kubernetes
+      #   workingDir: "/home/roboteamtwente/external/framework/build/bin/"
+      #   command: ["/bin/sh", "-c"]
+      #   args: ["./simulator-cli"]
+      #   volumeMounts:
+      #   - name: roboteam-root
+      #     mountPath: /home/roboteamtwente
+
+      # volumes:
+      # - name: ssl-game-controller-config
+      #   emptyDir: {}
+      # - name: ssl-game-controller-data
+      #   emptyDir: {}
+      # - name: roboteam-build
+      #   persistentVolumeClaim:
+      #     claimName: roboteam-build-pvc
+      # - name: roboteam-interface
+      #   persistentVolumeClaim:
+      #     claimName: roboteam-interface-pvc
+      # - name: roboteam-autoref
+      #   persistentVolumeClaim:
+      #     claimName: roboteam-autoref-pvc
+      # - name: roboteam-root
+      #   persistentVolumeClaim:
+      #     claimName: roboteam-root-pvc
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: roboteam-simulator-service
+spec:
+  type: NodePort
+  selector:
+    app: roboteam-simulator
+  ports:
+    - name: ssl-game-controller
+      port: 8081
+      targetPort: 8081
+      nodePort: 30081
+    - name: roboteam-interface
+      port: 8080
+      targetPort: 8080
+      nodePort: 30080

@@ -3,27 +3,27 @@ syntax = "proto2";
 option go_package = "github.com/RoboCup-SSL/ssl-game-controller/internal/app/state";
 
 import "ssl_gc_common.proto";
-import "ssl_gc_geometry.proto";
-import "ssl_gc_game_event.proto";
-import "ssl_gc_referee_message.proto";
+import "messages_robocup_ssl_game_controller_geometry.proto";
+import "messages_robocup_ssl_game_event.proto";
+import "messages_robocup_ssl_referee.proto";
 
 import "google/protobuf/duration.proto";
 import "google/protobuf/timestamp.proto";
 
 message YellowCard {
     optional uint32 id = 1;
-    optional GameEvent caused_by_game_event = 2;
+    optional proto.GameEvent caused_by_game_event = 2;
     optional google.protobuf.Duration time_remaining = 3;
 }
 
 message RedCard {
     optional uint32 id = 1;
-    optional GameEvent caused_by_game_event = 2;
+    optional proto.GameEvent caused_by_game_event = 2;
 }
 
 message Foul {
     optional uint32 id = 1;
-    optional GameEvent caused_by_game_event = 2;
+    optional proto.GameEvent caused_by_game_event = 2;
     optional google.protobuf.Timestamp timestamp = 3;
 }
 
@@ -67,7 +67,7 @@ message Proposal {
     // The timestamp when the game event proposal occurred
     optional google.protobuf.Timestamp timestamp = 1;
     // The proposed game event.
-    optional GameEvent game_event = 2;
+    optional proto.GameEvent game_event = 2;
 }
 
 message ProposalGroup {
@@ -104,22 +104,22 @@ message TeamInfo {
 }
 
 message State {
-    optional Referee.Stage stage = 1;
+    optional proto.Referee.Stage stage = 1;
     optional Command command = 2;
     optional GameState game_state = 19;
     optional google.protobuf.Duration stage_time_elapsed = 4;
     optional google.protobuf.Duration stage_time_left = 5;
     optional google.protobuf.Timestamp match_time_start = 6;
     map<string, TeamInfo> team_state = 8;
-    optional Vector2 placement_pos = 9;
+    optional proto.Vector2 placement_pos = 9;
     optional Command next_command = 10;
     optional google.protobuf.Duration current_action_time_remaining = 12;
-    repeated GameEvent game_events = 13;
+    repeated proto.GameEvent game_events = 13;
     repeated ProposalGroup proposal_groups = 14;
     optional Division division = 15;
     reserved 16;
     optional Team first_kickoff_team = 17;
-    optional MatchType match_type = 18;
+    optional proto.MatchType match_type = 18;
     optional google.protobuf.Timestamp ready_continue_time = 20;
     optional ShootoutState shootout_state = 21;
     optional string status_message = 22;

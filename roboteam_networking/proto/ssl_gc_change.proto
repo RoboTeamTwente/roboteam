@@ -4,9 +4,9 @@ option go_package = "github.com/RoboCup-SSL/ssl-game-controller/internal/app/sta
 
 import "ssl_gc_state.proto";
 import "ssl_gc_common.proto";
-import "ssl_gc_geometry.proto";
-import "ssl_gc_game_event.proto";
-import "ssl_gc_referee_message.proto";
+import "messages_robocup_ssl_game_controller_geometry.proto";
+import "messages_robocup_ssl_game_event.proto";
+import "messages_robocup_ssl_referee.proto";
 
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/wrappers.proto";
@@ -60,13 +60,13 @@ message Change {
     // Switch to a new stage
     message ChangeStage {
         // The new stage
-        optional Referee.Stage new_stage = 1;
+        optional proto.Referee.Stage new_stage = 1;
     }
 
     // Set the ball placement pos
     message SetBallPlacementPos {
         // The position in [m]
-        optional Vector2 pos = 1;
+        optional proto.Vector2 pos = 1;
     }
 
     // Add a new yellow card
@@ -74,7 +74,7 @@ message Change {
         // The team that the card is for
         optional Team for_team = 1;
         // The game event that caused the card
-        optional GameEvent caused_by_game_event = 2;
+        optional proto.GameEvent caused_by_game_event = 2;
     }
 
     // Add a new red card
@@ -82,7 +82,7 @@ message Change {
         // The team that the card is for
         optional Team for_team = 1;
         // The game event that caused the card
-        optional GameEvent caused_by_game_event = 2;
+        optional proto.GameEvent caused_by_game_event = 2;
     }
 
     // Trigger when a yellow card timed out
@@ -94,13 +94,13 @@ message Change {
     // Add a new game event
     message AddGameEvent {
         // The game event
-        optional GameEvent game_event = 1;
+        optional proto.GameEvent game_event = 1;
     }
 
     // Add a new passive game event (that is only logged, but does not automatically trigger anything)
     message AddPassiveGameEvent {
         // The game event
-        optional GameEvent game_event = 1;
+        optional proto.GameEvent game_event = 1;
     }
 
     // Add a new proposal (i.e. from an auto referee for majority voting)
@@ -125,7 +125,7 @@ message Change {
         optional Team first_kickoff_team = 2;
         reserved 3; // auto_continue moved to gcState
         // The match type
-        optional MatchType match_type = 4;
+        optional proto.MatchType match_type = 4;
         // The number of robots per team
         optional google.protobuf.Int32Value max_robots_per_team = 5;
     }

@@ -4,7 +4,7 @@ option go_package = "github.com/RoboCup-SSL/ssl-game-controller/internal/app/ci"
 
 import "ssl_vision_wrapper_tracked.proto";
 import "ssl_gc_api.proto";
-import "ssl_gc_referee_message.proto";
+import "messages_robocup_ssl_referee.proto";
 import "ssl_vision_geometry.proto";
 
 // The input format to the GC
@@ -22,5 +22,5 @@ message CiInput {
 // The output format of the GC response
 message CiOutput {
     // Latest referee message
-    optional Referee referee_msg = 1;
+    optional proto.Referee referee_msg = 1;
 }

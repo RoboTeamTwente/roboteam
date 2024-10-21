@@ -101,21 +101,20 @@ spec:
             cpu: 500m
             memory: 500Mi
 
-      # - name: roboteam-interface
-      #   image: roboteamtwente/roboteam:kubernetes
-      #   command: ["/bin/sh"]
-      #   args: ["-c", "yarn serve --host 0.0.0.0"]
-      #   ports:
-      #   - containerPort: 8080
-      #   workingDir: /home/roboteamtwente/
+      - name: roboteam-interface
+        image: roboteamtwente/roboteam:kubernetes
+        command: ["/bin/sh"]
+        args: ["-c", "cd /home/roboteamtwente/roboteam/roboteam_interface && yarn serve --host 0.0.0.0"]
+        ports:
+        - containerPort: 8080
 
-      #   resources:
-      #     requests:
-      #       cpu: 100m
-      #       memory: 128Mi
-      #     limits:
-      #       cpu: 500m
-      #       memory: 500Mi
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 500Mi
 
       # - name: roboteam-autoref
       #   image: gradle:8.4.0-jdk17
@@ -140,26 +139,26 @@ spec:
       #   - name: roboteam-root
       #     mountPath: /home/roboteamtwente
 
-      # - name: erforce-simulator
-      #   image: roboteamtwente/roboteam:kubernetes
-      #   workingDir: "/home/roboteamtwente/roboteam/external/framework/build/bin/"
-      #   command: ["/bin/sh"]
-      #   args: ["-c", "./simulator-cli"]
-      #   ports:
-      #   - containerPort: 10301
-      #   - containerPort: 30011
-      #   - containerPort: 10302
-      #   - containerPort: 30012
-      #   - containerPort: 10300
-      #   - containerPort: 30013
-
-      #   resources:
-      #     requests:
-      #       cpu: 100m
-      #       memory: 128Mi
-      #     limits:
-      #       cpu: 500m
-      #       memory: 500Mi
+      - name: erforce-simulator
+        image: roboteamtwente/roboteam:kubernetes
+        command: ["/bin/sh"]
+        args: 
+        - "-c"
+        - "ln -s /home/roboteamtwente/roboteam/external /home/roboteamtwente/external && /home/roboteamtwente/roboteam/external/framework/build/bin/simulator-cli -g 2020 --realism Realistic"
+        ports:
+        - containerPort: 10301
+        - containerPort: 30011
+        - containerPort: 10302
+        - containerPort: 30012
+        - containerPort: 10300
+        - containerPort: 30013
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 500Mi
 
       # volumes:
       # - name: ssl-game-controller-config

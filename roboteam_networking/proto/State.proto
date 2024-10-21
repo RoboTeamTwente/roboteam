@@ -1,3 +1,8 @@
+
+// State.proto file contains the proto structure file of the entire state of the system
+// It is a more comprehensive representation of the world + all referee stuff
+
+
 syntax = "proto3";
 
 import "World.proto";

@@ -1,6 +1,3 @@
-
-#/home/roboteamtwente/roboteam
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -15,17 +12,11 @@ spec:
       labels:
         app: roboteam-simulator
     spec:
-      hostNetwork: true
       containers:
       - name: ssl-game-controller
-        image: robocupssl/ssl-game-controller:latest
         ports:
         - containerPort: 8081
-        # volumeMounts:
-        # - name: ssl-game-controller-config
-        #   mountPath: /config
-        # - name: ssl-game-controller-data
-        #   mountPath: /data
+        image: robocupssl/ssl-game-controller:latest
         resources:
           requests:
             cpu: 100m
@@ -37,12 +28,13 @@ spec:
       - name: roboteam-primary-ai
         image: roboteamtwente/roboteam:kubernetes
         command: ["/bin/sh"]
-        args: ["-c", "/home/roboteamtwente/roboteam/build/release/bin/roboteam_ai --primary-ai"]
+        args: ["-c", "/home/roboteam/build/release/bin/roboteam_ai --primary-ai"]
         env:
-        - name: LD_LIBRARY_PATH
-          value: /home/roboteamtwente/roboteam/build/release/lib
-        workingDir: /home/roboteamtwente/roboteam
-        
+          - name: LD_LIBRARY_PATH
+            value: "/home/roboteam/build/release/lib"
+        workingDir: /home/roboteam
+        ports:
+        - containerPort: 12676
         resources:
           requests:
             cpu: 500m
@@ -51,31 +43,18 @@ spec:
             cpu: 500m
             memory: 1Gi
 
-        # volumeMounts:
-        # - name: roboteam-build
-        #   mountPath: /home/roboteamtwente
-
-      # - name: roboteam-secondary-ai
-      #   image: roboteamtwente/roboteam:kubernetes
-      #   workingDir: "/home/roboteamtwente/"
-      #   command: ["/bin/sh", "-c"]
-      #   args: ["./bin/roboteam_ai --secondary-ai"]
-      #   env:
-      #   - name: LD_LIBRARY_PATH
-      #     value: "/home/roboteamtwente/lib/"
-      #   volumeMounts:
-      #   - name: roboteam-build
-      #     mountPath: /home/roboteamtwente
-
       - name: roboteam-observer-sim
         image: roboteamtwente/roboteam:kubernetes
         command: ["/bin/sh"]
-        args: ["-c", "/home/roboteamtwente/roboteam/build/release/bin/roboteam_observer --vision-ip 224.5.23.2 --referee-ip 224.5.23.1 --vision-port 10020 --referee-port 10003 --log"]
+        args: ["-c", "/home/roboteam/build/release/bin/roboteam_observer --vision-ip 127.0.0.1 --referee-ip 127.0.0.1 --vision-port 10020 --referee-port 10003 --log"]
         env:
           - name: LD_LIBRARY_PATH
-            value: /home/roboteamtwente/roboteam/build/release/lib
-        workingDir: /home/roboteamtwente/roboteam
-        
+            value: /home/roboteam/build/release/lib
+        workingDir: /home/roboteam
+        ports:
+        - containerPort: 10006
+        - containerPort: 10020
+        - containerPort: 10003
         resources:
           requests:
             cpu: 500m
@@ -87,64 +66,11 @@ spec:
       - name: roboteam-robothub-sim
         image: roboteamtwente/roboteam:kubernetes
         command: ["/bin/sh"]
-        args: ["-c", "/home/roboteamtwente/roboteam/build/release/bin/roboteam_robothub"]
+        args: ["-c", "/home/roboteam/build/release/bin/roboteam_robothub"]
         env:
           - name: LD_LIBRARY_PATH
-            value: /home/roboteamtwente/roboteam/build/release/lib
-        workingDir: /home/roboteamtwente/roboteam
-        
-        resources:
-          requests:
-            cpu: 100m
-            memory: 128Mi
-          limits:
-            cpu: 500m
-            memory: 500Mi
-
-      - name: roboteam-interface
-        image: roboteamtwente/roboteam:kubernetes
-        command: ["/bin/sh"]
-        args: ["-c", "cd /home/roboteamtwente/roboteam/roboteam_interface && yarn serve --host 0.0.0.0"]
-        ports:
-        - containerPort: 8080
-
-        resources:
-          requests:
-            cpu: 100m
-            memory: 128Mi
-          limits:
-            cpu: 500m
-            memory: 500Mi
-
-      # - name: roboteam-autoref
-      #   image: gradle:8.4.0-jdk17
-      #   workingDir: "/home/roboteamtwente/"
-      #   command: ["/bin/sh"]
-      #   args: ["-c", "./gradlew run --args=\"-cli --world-ip=127.0.0.1 --world-port=5558 --gc-ip=127.0.0.1 --gc-port=10007\""]
-
-      #   resources:
-      #     requests:
-      #       cpu: 100m
-      #       memory: 128Mi
-      #     limits:
-      #       cpu: 500m
-      #       memory: 500Mi
-
-      # - name: erforce-autoref-sim
-      #   image: roboteamtwente/roboteam:kubernetes
-      #   workingDir: "/home/roboteamtwente/external/autoref/build/bin/"
-      #   command: ["/bin/sh", "-c"]
-      #   args: ["./autoref-cli --vision-port 10020 --tracker-port 10010 --gc-port 10003"]
-      #   volumeMounts:
-      #   - name: roboteam-root
-      #     mountPath: /home/roboteamtwente
-
-      - name: erforce-simulator
-        image: roboteamtwente/roboteam:kubernetes
-        command: ["/bin/sh"]
-        args: 
-        - "-c"
-        - "ln -s /home/roboteamtwente/roboteam/external /home/roboteamtwente/external && /home/roboteamtwente/roboteam/external/framework/build/bin/simulator-cli -g 2020 --realism Realistic"
+            value: /home/roboteam/build/release/lib
+        workingDir: /home/roboteam
         ports:
         - containerPort: 10301
         - containerPort: 30011
@@ -160,70 +86,53 @@ spec:
             cpu: 500m
             memory: 500Mi
 
-      # volumes:
-      # - name: ssl-game-controller-config
-      #   emptyDir: {}
-      # - name: ssl-game-controller-data
-      #   emptyDir: {}
-      # - name: roboteam-build
-      #   persistentVolumeClaim:
-      #     claimName: roboteam-build-pvc
-      # - name: roboteam-interface
-      #   persistentVolumeClaim:
-      #     claimName: roboteam-interface-pvc
-      # - name: roboteam-autoref
-      #   persistentVolumeClaim:
-      #     claimName: roboteam-autoref-pvc
-      # - name: roboteam-root
-      #   persistentVolumeClaim:
-      #     claimName: roboteam-root-pvc
+      - name: roboteam-interface
+        image: roboteamtwente/roboteam:kubernetes
+        command: ["/bin/sh"]
+        args: ["-c", "cd /home/roboteam/roboteam_interface && yarn serve --host 0.0.0.0"]
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 500Mi
 
-# ---
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   name: roboteam-simulator-service
-# spec:
-#   type: NodePort
-#   selector:
-#     app: roboteam-simulator
-#   ports:
-#     - name: ssl-game-controller
-#       port: 8081
-#       targetPort: 8081
-#       nodePort: 30081
-#     - name: roboteam-interface
-#       port: 8080
-#       targetPort: 8080
-#       nodePort: 30080
+      - name: erforce-autoref-sim
+        image: roboteamtwente/roboteam:kubernetes
+        command: ["/bin/sh"]
+        args: ["-c", "cd /home/roboteam/external/autoref/build/bin && ./autoref-cli --vision-port 10020 --tracker-port 10010 --gc-port 10003"]
+        ports:
+        - containerPort: 10020
+        - containerPort: 10003
+        - containerPort: 10010
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 200m
+            memory: 256Mi
 
-
-
-# ---
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   name: erforce-simulator-service
-# spec:
-#   selector:
-#     app: erforce-simulator
-#   type: NodePort
-#   ports:
-#     - name: blue-control
-#       port: 10301
-#       targetPort: 10301
-#     - name: blue-feedback
-#       port: 30011
-#       targetPort: 30011
-#     - name: yellow-control
-#       port: 10302
-#       targetPort: 10302
-#     - name: yellow-feedback
-#       port: 30012
-#       targetPort: 30012
-#     - name: sim-control
-#       port: 10300
-#       targetPort: 10300
-#     - name: sim-feedback
-#       port: 30013
-#       targetPort: 30013
+      - name: erforce-simulator
+        image: roboteamtwente/roboteam:kubernetes
+        command: ["/bin/sh"]
+        args: 
+        - "-c"
+        - "/home/roboteam/external/framework/build/bin/simulator-cli -g 2020 --realism Realistic"
+        ports:
+        - containerPort: 10301
+        - containerPort: 30011
+        - containerPort: 10302
+        - containerPort: 30012
+        - containerPort: 10300
+        - containerPort: 30013
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 500Mi

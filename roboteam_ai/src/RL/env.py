@@ -9,9 +9,9 @@ from google.protobuf.message import DecodeError
 # Import our functions
 from sentActionCommand import send_action_command
 from getState import get_ball_state, get_robot_state
-from getRefereeState import get_referee_state
+# from getRefereeState import get_referee_state
 from teleportBall import teleport_ball
-from resetRefereeState import reset_referee_state
+from resetReferee import send_referee_reset
 
 """
 This environment file is in the form of a gymnasium environment.
@@ -20,7 +20,7 @@ We are yellow and we play against blue.
 Yellow cards do not stop the game, but maybe in the future it is nice to implement a punishment
 """
 
-class RoboTeamEnv(gymnasium.env):
+class RoboTeamEnv(gymnasium.Env):
 
     def __init__(self):
 
@@ -193,7 +193,7 @@ class RoboTeamEnv(gymnasium.env):
         teleport_ball(0,0)
 
         # Reset referee state
-        reset_referee_state() # This resets the cards, goals and initiates a kickoff.
+        send_referee_reset() # This resets the cards, goals and initiates a kickoff.
 
         # Reset shaped_reward_given boolean
         self.shaped_reward_given = False

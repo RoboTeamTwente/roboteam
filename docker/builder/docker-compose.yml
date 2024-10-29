@@ -7,7 +7,7 @@ services:
     container_name: RTT_roboteam_builder
     restart: "no"
     working_dir: "/home/roboteamtwente/"
-    command: sh -c "./build.sh"
+    command: sh -c "git config --global --add safe.directory /home/roboteamtwente && git config --global --add safe.directory /home/roboteamtwente/build/_deps/tracy-src && ./build.sh"
     volumes:
       - ../../:/home/roboteamtwente/
 

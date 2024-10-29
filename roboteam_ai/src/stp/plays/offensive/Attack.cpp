@@ -1,7 +1,7 @@
-#include "stp/plays/offensive/Attack.h"
-
+#include <iostream>
+#include <thread>
+#include "stp/plays/offensive/Attack.h" 
 #include <roboteam_utils/Hungarian.h>
-
 #include "stp/computations/GoalComputations.h"
 #include "stp/computations/PositionScoring.h"
 #include "stp/roles/Keeper.h"
@@ -10,6 +10,58 @@
 #include "stp/roles/passive/Formation.h"
 
 namespace rtt::ai::stp::play {
+
+void Attack::receiveActionCommand() {
+    zmq::context_t context(1); // Create a context
+    zmq::socket_t socket(context, ZMQ_PULL); // Create a PULL socket
+    socket.bind("tcp://*:5555"); // Bind to the same port as the sender
+
+    while (true) {
+        zmq::message_t message; // Create a message to receive
+        socket.recv(&message); // Receive the message
+
+        // Parse the protobuf message
+        ActionCommand action_command;
+        action_command.ParseFromArray(message.data(), message.size()); // Deserialize
+
+        int num_attacker = action_command.numAttacker();
+        int num_defender = action_command.numDefender();
+        int num_waller = action_command.numWaller();
+
+        // Clear existing roles (if any)
+        roles.clear();
+
+        // Create Striker roles
+        for (int i = 0; i < num_attacker; ++i) {
+            std::string name = "striker_" + std::to_string(i);
+            roles.push_back(std::make_unique<role::Striker>(name));
+        }
+
+        // Create Defender roles
+        for (int i = 0; i < num_defender; ++i) {
+            std::string name = "defender_" + std::to_string(i);
+            roles.push_back(std::make_unique<role::Defender>(name));
+        }
+
+        // Create Waller roles
+        for (int i = 0; i < num_waller; ++i) {
+            std::string name = "waller_" + std::to_string(i);
+            roles.push_back(std::make_unique<role::Defender>(name)); // Assuming Waller is also a Defender
+        }
+
+        // Print the received values for debugging
+        std::cout << "Received: numDefender=" << num_defender
+                  << ", numAttacker=" << num_attacker
+                  << ", numWaller=" << num_waller << std::endl;
+
+        // Optionally, print created roles
+        for (const auto& role : roles) {
+            std::cout << "Created role: " << role->getName() << std::endl; // Assuming getName() method exists
+        }
+    }
+}
+
+
 
 Attack::Attack() : Play() {
     // Evaluations that have to be true in order for this play to be considered valid.
@@ -102,3 +154,26 @@ bool Attack::shouldEndPlay() noexcept {
 const char* Attack::getName() const { return "Attack"; }
 
 }  // namespace rtt::ai::stp::play
+
+
+
+
+
+
+int main() {
+    // Create an instance of the Attack class
+    rtt::ai::stp::play::Attack attack;
+
+    // Start receiving action commands in a separate thread
+    std::thread receiver_thread(&rtt::ai::stp::play::Attack::receiveActionCommand, &attack);
+    receiver_thread.detach(); // Detach the thread to allow it to run independently
+
+    // Allow some time for receiving messages
+    std::cout << "Receiving messages. Press Enter to exit..." << std::endl;
+
+    // Wait for user input to exit
+    std::cin.get();  // This will block until you press Enter
+
+    return 0;
+}
+

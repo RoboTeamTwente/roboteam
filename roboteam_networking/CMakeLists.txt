@@ -57,3 +57,7 @@ target_link_libraries(roboteam_networking_syscheck
 
 gtest_discover_tests(roboteam_networking_syscheck)
 
+add_executable(test_attack test_attack.cpp)
+target_link_libraries(test_attack PRIVATE zmq protobuf::libprotobuf)
+
+

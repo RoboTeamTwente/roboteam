@@ -1,0 +1,83 @@
+apiVersion: ray.io/v1alpha1
+kind: RayCluster
+metadata:
+  name: roboteam-ray-cluster
+spec:
+  rayVersion: "2.38.0"  
+  # Head node configuration
+  headGroupSpec:
+    rayStartParams:
+      dashboard-host: "0.0.0.0"
+    template:
+      metadata:
+        labels:
+          app: ray-head
+      spec:
+        containers:
+        - name: ray-head
+          image: rayproject/ray:2.38.0  
+          ports:
+          - containerPort: 8265  # dashboard port
+          - containerPort: 6379  # redis port 
+          - containerPort: 10001  # GCS server port
+          - containerPort: 8000   # Serve port
+          resources:
+            requests:
+              cpu: 300m
+              memory: 256Mi
+            limits:
+              cpu: 600
+              memory: 512Mi
+          command: ["/bin/bash", "-c", "--"]
+          args: ["ray start --head --port=6379 --dashboard-host=0.0.0.0 --block"]
+
+          livenessProbe:
+            exec:
+              command:
+              - bash
+              - -c
+              - "wget -T 2 -q -O- http://localhost:52365/api/local_raylet_healthz | grep success"
+            initialDelaySeconds: 90
+            timeoutSeconds: 10
+            periodSeconds: 30
+            failureThreshold: 5
+
+          readinessProbe:
+            exec:
+              command:
+              - bash
+              - -c
+              - "wget -T 10 -q -O- http://localhost:8265/api/gcs_healthz | grep success"
+            initialDelaySeconds: 90
+            timeoutSeconds: 10
+            periodSeconds: 30
+            failureThreshold: 5
+
+
+  # Worker node configuration
+  workerGroupSpecs:
+    - groupName: worker-group
+      replicas: 1  # Number of worker nodes
+      rayStartParams:
+        num-cpus: "1" 
+      template:
+        metadata:
+          labels:
+            app: ray-worker
+        spec:
+          containers:
+          - name: ray-worker
+            image: rayproject/ray:2.38.0  
+            resources:
+              requests:
+                cpu: 500m
+                memory: 1Gi
+              limits:
+                cpu: 1000m
+                memory: 2Gi
+            env:
+            - name: RAY_HEAD_IP
+              value: "roboteam-ray-cluster-head-svc.default.svc.cluster.local"
+            command: ["/bin/bash", "-c", "--"]
+            args: ["ray start --address='roboteam-ray-cluster-head-svc.default.svc.cluster.local:6379' --block"]
+

@@ -7,8 +7,13 @@ RUN ln -s /home/roboteamtwente /home/roboteam
 # Install Java
 RUN apk add --no-cache openjdk11
 
-# Set up Java environment variables
-ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk
+# Install Java 21
+RUN wget https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.1%2B12/OpenJDK21U-jdk_x64_alpine-linux_hotspot_21.0.1_12.tar.gz \
+    && tar -xzf OpenJDK21U-jdk_x64_alpine-linux_hotspot_21.0.1_12.tar.gz \
+    && mv jdk-21* /usr/lib/jvm/java-21-openjdk
+
+# Set up Java environment variables to point to Java 21
+ENV JAVA_HOME=/usr/lib/jvm/java-21-openjdk
 ENV PATH="${JAVA_HOME}/bin:${PATH}"
 
 WORKDIR /home/roboteam

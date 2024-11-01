@@ -12,12 +12,30 @@ spec:
       labels:
         app: roboteam-simulator
     spec:
+      hostNetwork: true
+      # dnsPolicy: ClusterFirstWithHostNet
+      # affinity:
+      #   podAntiAffinity:
+      #     requiredDuringSchedulingIgnoredDuringExecution:
+      #     - labelSelector:
+      #         matchExpressions:
+      #         - key: app
+      #           operator: In
+      #           values:
+      #           - roboteam-simulator
+      #       topologyKey: "kubernetes.io/hostname"
       containers:
-
       - name: ssl-game-controller
-        ports:
-        - containerPort: 8081
         image: robocupssl/ssl-game-controller:latest
+        args: ["-address", ":8081"]
+        ports:
+          - containerPort: 8081
+            hostPort: 8081
+        env:
+          - name: LD_LIBRARY_PATH
+            value: "/home/roboteam/build/release/lib"
+         # - name: RAY_ADDRESS
+          #  value: "roboteam-ray-cluster-head-svc.default.svc.cluster.local:6379"
         resources:
           requests:
             cpu: 100m
@@ -30,55 +48,48 @@ spec:
         image: roboteamtwente/roboteam:kubernetes
         command: ["/bin/sh"]
         args: ["-c", "/home/roboteam/build/release/bin/roboteam_ai --primary-ai"]
+        workingDir: /home/roboteam
         env:
           - name: LD_LIBRARY_PATH
-            value: "/home/roboteam/build/release/lib"
-        workingDir: /home/roboteam
-        ports:
-        - containerPort: 12676
+            value: /home/roboteam/build/release/lib
+          #- name: RAY_ADDRESS
+          #  value: "roboteam-ray-cluster-head-svc.default.svc.cluster.local:6379" 
         resources:
           requests:
-            cpu: 500m
-            memory: 512Mi
+            cpu: 250m
+            memory: 200Mi
           limits:
             cpu: 500m
-            memory: 1Gi
+            memory: 500Mi
 
       - name: roboteam-observer-sim
         image: roboteamtwente/roboteam:kubernetes
         command: ["/bin/sh"]
-        args: ["-c", "/home/roboteam/build/release/bin/roboteam_observer --vision-ip 127.0.0.1 --referee-ip 127.0.0.1 --vision-port 10020 --referee-port 10003 --log"]
+        args: ["-c", "/home/roboteam/build/release/bin/roboteam_observer --vision-ip 224.5.23.2 --referee-ip 224.5.23.1 --vision-port 10020 --referee-port 10003 --log"]
         env:
           - name: LD_LIBRARY_PATH
             value: /home/roboteam/build/release/lib
         workingDir: /home/roboteam
-        ports:
-        - containerPort: 10006
-        - containerPort: 10020
-        - containerPort: 10003
+          #- name: RAY_ADDRESS
+          #  value: "roboteam-ray-cluster-head-svc.default.svc.cluster.local:6379" 
         resources:
           requests:
-            cpu: 500m
-            memory: 512Mi
+            cpu: 100m
+            memory: 150Mi
           limits:
-            cpu: 500m
-            memory: 1Gi
+            cpu: 200m
+            memory: 400Mi
 
       - name: roboteam-robothub-sim
         image: roboteamtwente/roboteam:kubernetes
         command: ["/bin/sh"]
         args: ["-c", "/home/roboteam/build/release/bin/roboteam_robothub"]
+        workingDir: /home/roboteam
         env:
           - name: LD_LIBRARY_PATH
             value: /home/roboteam/build/release/lib
-        workingDir: /home/roboteam
-        ports:
-        - containerPort: 10301
-        - containerPort: 30011
-        - containerPort: 10302
-        - containerPort: 30012
-        - containerPort: 10300
-        - containerPort: 30013
+          # - name: RAY_ADDRESS
+          #  value: "roboteam-ray-cluster-head-svc.default.svc.cluster.local:6379" 
         resources:
           requests:
             cpu: 100m
@@ -92,7 +103,13 @@ spec:
         command: ["/bin/sh"]
         args: ["-c", "cd /home/roboteam/roboteam_interface && yarn serve --host 0.0.0.0"]
         ports:
-        - containerPort: 8080
+          - containerPort: 8080
+            hostPort: 8080
+        env:
+          - name: LD_LIBRARY_PATH
+            value: /home/roboteam/build/release/lib
+          # - name: RAY_ADDRESS
+          #  value: "roboteam-ray-cluster-head-svc.default.svc.cluster.local:6379" 
         resources:
           requests:
             cpu: 100m
@@ -105,16 +122,17 @@ spec:
         image: roboteamtwente/roboteam:kubernetes
         command: ["/bin/sh"]
         args: ["-c", "cd /home/roboteam/external/autoref/build/bin && ./autoref-cli --vision-port 10020 --tracker-port 10010 --gc-port 10003"]
-        ports:
-        - containerPort: 10020
-        - containerPort: 10003
-        - containerPort: 10010
+        env:
+          - name: LD_LIBRARY_PATH
+            value: /home/roboteam/build/release/lib
+          # - name: RAY_ADDRESS
+          #  value: "roboteam-ray-cluster-head-svc.default.svc.cluster.local:6379" 
         resources:
           requests:
             cpu: 100m
-            memory: 128Mi
+            memory: 20Mi
           limits:
-            cpu: 200m
+            cpu: 120m
             memory: 256Mi
 
       - name: erforce-simulator
@@ -122,14 +140,19 @@ spec:
         command: ["/bin/sh"]
         args: 
         - "-c"
-        - "/home/roboteam/external/framework/build/bin/simulator-cli -g 2020 --realism Realistic"
-        ports:
-        - containerPort: 10301
-        - containerPort: 30011
-        - containerPort: 10302
-        - containerPort: 30012
-        - containerPort: 10300
-        - containerPort: 30013
+        - "/home/roboteam/external/framework/build/bin/simulator-cli"
+        # ports:
+        #   - containerPort: 10301
+        #   - containerPort: 30011
+        #   - containerPort: 10302
+        #   - containerPort: 30012
+        #   - containerPort: 10300
+        #   - containerPort: 30013
+        env:
+          - name: LD_LIBRARY_PATH
+            value: /home/roboteam/build/release/lib
+          # - name: RAY_ADDRESS
+          #  value: "roboteam-ray-cluster-head-svc.default.svc.cluster.local:6379" 
         resources:
           requests:
             cpu: 100m
@@ -142,20 +165,48 @@ spec:
         image: roboteamtwente/roboteam:kubernetes
         imagePullPolicy: Always
         command: ["/bin/sh"]
-        args: ["-c", "cd /home/roboteam/tigers_sumatra && ./gradlew :run --args=\"--headless\""]
+        args: ["-c", "cd /home/roboteam/tigers_sumatra && ./gradlew :run --args=\"--headless --moduli roboteamtwente --aiBlue --visionAddress 224.5.23.2:10020 --refereeAddress 224.5.23.1:10003\""]
         ports:
-        - containerPort: 10006
-        - containerPort: 10003
+          - containerPort: 10020
+            protocol: UDP
+          - containerPort: 10003
+            protocol: UDP
+        env:
+          - name: LD_LIBRARY_PATH
+            value: /home/roboteam/build/release/lib
+          # - name: RAY_ADDRESS
+          #  value: "roboteam-ray-cluster-head-svc.default.svc.cluster.local:6379" 
         resources:
           requests:
             cpu: 100m
             memory: 256Mi
           limits:
             cpu: 500m
-            memory: 1Gi
+            memory: 1.5Gi
         volumeMounts:
         - name: gradle-cache
           mountPath: /home/roboteam/.gradle
+
       volumes:
       - name: gradle-cache
         emptyDir: {}
+      # - name: gc-config
+      #   emptyDir: {}
+      # - name: gc-data
+      #   emptyDir: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: roboteam-simulator-service
+spec:
+  selector:
+    app: roboteam-simulator
+  ports:
+    - name: web-interface
+      port: 8080
+      targetPort: 8080
+    - name: gc
+      port: 8081
+      targetPort: 8081

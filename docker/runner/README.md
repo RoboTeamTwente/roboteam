@@ -21,7 +21,6 @@ After you have both kubernetes and ray, use the following command to create a cl
 'kubectl get pods'-> this is will give you the cluster name
 
 Use to forward the needed port to the ray service: kubectl port-forward svc/<cluster name> 8265:8265
-
 This is the port that will be used inside ray_jobs.py, where we submit the jobs to ray.
 
 

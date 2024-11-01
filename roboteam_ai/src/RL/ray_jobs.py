@@ -12,8 +12,8 @@ import requests
 #result = ray.get(compute_square.remote(4))
 #print(result)
 
-
-
+#result
+#iiii
 job_payload = {
     "entrypoint": "python3 example_ray_job.py"
 }

@@ -1,5 +1,4 @@
 import ray
-
 #Case 1: the function will be distributed across the ray cluster
 @ray.remote
 def compute_square(x):
@@ -24,8 +23,6 @@ print(f"Result: {result}")
 futures = [compute_square.remote(i) for i in range(10)]
 results = ray.get(futures)
 print(f"Results: {results}")
-
-
 #Testing case 2, using the class:
 counter = Counter.remote()
 future_count = counter.increment.remote()

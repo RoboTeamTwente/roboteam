@@ -30,7 +30,6 @@ spec:
               memory: 512Mi
           command: ["/bin/bash", "-c", "--"]
           args: ["ray start --head --port=6379 --dashboard-host=0.0.0.0 --block"]
-
           livenessProbe:
             exec:
               command:

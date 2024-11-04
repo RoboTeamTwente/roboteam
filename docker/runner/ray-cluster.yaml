@@ -15,7 +15,7 @@ spec:
       spec:
         containers:
         - name: ray-head
-          image: rayproject/ray:2.38.0  
+          image: rayproject/ray:latest-py310
           ports:
           - containerPort: 8265  # dashboard port
           - containerPort: 6379  # redis port 
@@ -23,11 +23,11 @@ spec:
           - containerPort: 8000   # Serve port
           resources:
             requests:
-              cpu: 300m
-              memory: 256Mi
+              cpu: "500m"
+              memory: "1Gi"    # Increased from 256Mi
             limits:
-              cpu: 600
-              memory: 512Mi
+              cpu: "1"         # Changed from 600 (which was too high)
+              memory: "2Gi"    # Increased from 512Mi
           command: ["/bin/bash", "-c", "--"]
           args: ["ray start --head --port=6379 --dashboard-host=0.0.0.0 --block"]
           livenessProbe:
@@ -40,7 +40,6 @@ spec:
             timeoutSeconds: 10
             periodSeconds: 30
             failureThreshold: 5
-
           readinessProbe:
             exec:
               command:

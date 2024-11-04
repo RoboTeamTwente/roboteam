@@ -1,27 +1,21 @@
-# The environment
-
 import gymnasium
 from gymnasium import spaces
 import numpy as np
 from google.protobuf.message import DecodeError
+import ray
+from ray.tune.registry import register_env
 
-# Now import the functions
-from src.sentActionCommand import send_action_command
-from src.getState import get_ball_state, get_robot_state
-from src.teleportBall import teleport_ball
-from src.resetReferee import send_referee_reset
+# Import functions
+from ..src.sentActionCommand import send_action_command
+from ..src.getState import get_ball_state, get_robot_state
+from ..src.teleportBall import teleport_ball
+from ..src.resetReferee import send_referee_reset
 
-"""
-This environment file is in the form of a gymnasium environment.
-We are yellow and we play against blue.
-
-Yellow cards do not stop the game, but maybe in the future it is nice to implement a punishment
-"""
-
+@ray.remote
 class RoboTeamEnv(gymnasium.Env):
-
     def __init__(self):
-
+        super().__init__()
+        
         self.MAX_ROBOTS_US = 10
 
         # Define the number of robots that are present in each grid + ball location
@@ -64,7 +58,6 @@ class RoboTeamEnv(gymnasium.Env):
         """
         Function to teleport the ball to the designated position for ball placement if necessary
         """
-
         # If ref gives command BALL_PLACEMENT_US OR BALL_PLACEMENT_THEM
         if (self.ref_command == "BALL_PLACEMENT_US") or ("BALL_PLACEMENT_THEM"):
             teleport_ball(self.x, self.y)   # Teleport the ball to the designated location
@@ -83,9 +76,11 @@ class RoboTeamEnv(gymnasium.Env):
         calculate_reward calculates the reward the agent gets for an action it did.
         Based on if we have the ball and if they scored a goal.
         """
+        # Initialize rewards
+        goal_scored_reward = 0
+        shaped_reward = 0
 
         # When a goal is scored the ref command is HALT
-
         # If we score a goal, give reward. If opponent scores, give negative reward.
         if self.yellow_score == 1:
             goal_scored_reward = 1
@@ -96,22 +91,16 @@ class RoboTeamEnv(gymnasium.Env):
         if not self.shaped_reward_given and self.is_yellow_dribbling and (self.ball_quadrant == 1 or self.ball_quadrant == 3):
             self.shaped_reward_given = True # Set it to true
             shaped_reward = 0.1
-        
-        # # If it gets a yellow card/ three times a foul, punish and reset
-        # if self.yellow_yellow_cards or self.blue_yellow_cards >= 1:
-        #     yellow_card_punishment = 1
 
         # Calculate final reward
         reward = goal_scored_reward + shaped_reward
 
         return reward
 
-
     def get_observation(self):
         """
         get_observation is meant to get the observation space (kinda like the state)
         """
-
         # Get the robot grid representation
         self.robot_grid, self.is_yellow_dribbling, self.is_blue_dribbling = get_robot_state() # Matrix of 4 by 2 + 2 booleans
 
@@ -126,67 +115,62 @@ class RoboTeamEnv(gymnasium.Env):
 
         return observation_space, self.calculate_reward()
 
-
     def step(self, action):
         """
         The step function is called in every loop the RL agent goes through. 
         It receives a state, reward and carries out an action
         """
+        try:
+            # Only carry out "normal" loop if the game state is NORMAL_START
+            if self.ref_command == "RUNNING":
+                attackers, defenders = action
+                wallers = self.MAX_ROBOTS_US - (attackers + defenders)
 
-        # Only carry out "normal" loop if the game state is NORMAL_START (this indicates normal gameplay loop)
-        if self.ref_command == "RUNNING": # Maybe this needs to change to normal_start
+                # Ensure non-negative values and total of 10
+                attackers = max(0, min(attackers, self.MAX_ROBOTS_US))
+                defenders = max(0, min(defenders, self.MAX_ROBOTS_US - attackers))
+                wallers = self.MAX_ROBOTS_US - (attackers + defenders)
 
-            attackers, defenders = action
-            wallers = self.MAX_ROBOTS - (attackers + defenders)
+                # Sends the action command over proto to legacy AI
+                send_action_command(num_attacker=attackers, num_defender=defenders, num_waller=wallers)
 
-            # Ensure non-negative values and total of 10
-            attackers = max(0, min(attackers, self.MAX_ROBOTS))
-            defenders = max(0, min(defenders, self.MAX_ROBOTS - attackers))
-            wallers = self.MAX_ROBOTS - (attackers + defenders)
+            # Logic to TP the ball if there is ball placement of either side
+            self.check_ball_placement()
 
-            # Sends the action command over proto to legacy AI
-            send_action_command(num_attacker=attackers, num_defender=defenders, num_waller= wallers)
+            observation_space, reward = self.get_observation()
+            done = self.is_terminated()
+            truncated = self.is_truncated()
+            info = {}  # Additional info dict required by gymnasium
 
+            return observation_space, reward, done, truncated, info
 
-        # If the game is halted, stopped or ball placement is happening, execute this.
-
-        # Logic to TP the ball if there is ball placement of either side
-        self.check_ball_placement() # Run the function to check if we need to TP the ball
-
-        reward = self.calculate_reward()
-
-        # Update observation_space
-        observation_space = self.get_observation
-
-        done = self.is_terminated()  # If task is completed (a goal was scored)
-        truncated = self.is_truncated()  # Determine if the episode was truncated, too much time or a yellow card
-
-        return observation_space, reward, done, truncated
-
-
+        except Exception as e:
+            print(f"Error in step function: {e}")
+            # Return safe values in case of error
+            observation_space, _ = self.get_observation()
+            return observation_space, 0.0, True, True, {"error": str(e)}
 
     def is_terminated(self):
         """
         Activates when the task has been completed (or it failed because of opponent scoring a goal)
         """
-
         if self.ref_command == "HALT" and (self.yellow_score == 1 or self.blue_score == 1): # HALT command indicates that either team scored
             return True
+        return False
 
     def is_truncated(self):
         """
         is_truncated is meant for ending prematurely. For example when the time is ended (5 min)
         """
-
         # Implement logic to reset the game if no goal is scored
-        pass
+        return False
 
-
-    def reset(self, seed=None):
+    def reset(self, seed=None, options=None):
         """
         The reset function resets the environment when a game is ended
         """
-
+        super().reset(seed=seed)  # Initialize RNG state
+        
         # Teleport ball to middle position
         teleport_ball(0,0)
 
@@ -198,11 +182,11 @@ class RoboTeamEnv(gymnasium.Env):
         self.is_yellow_dribbling = False
         self.is_blue_dribbling = False
 
+        # Get initial observation
+        observation_space, _ = self.get_observation()
+        info = {}  # Required by gymnasium
 
+        return observation_space, info
 
-
-
-
-
-
-
+# Register the environment with Ray
+register_env("RoboTeam-v0", lambda config: RoboTeamEnv())

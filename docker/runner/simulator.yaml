@@ -38,11 +38,11 @@ spec:
           #  value: "roboteam-ray-cluster-head-svc.default.svc.cluster.local:6379"
         resources:
           requests:
-            cpu: 100m
-            memory: 128Mi
+            cpu: 75m
+            memory: 40Mi
           limits:
-            cpu: 500m
-            memory: 512Mi
+            cpu: 120m
+            memory: 60Mi
 
       - name: roboteam-primary-ai
         image: roboteamtwente/roboteam:kubernetes
@@ -56,11 +56,11 @@ spec:
           #  value: "roboteam-ray-cluster-head-svc.default.svc.cluster.local:6379" 
         resources:
           requests:
-            cpu: 250m
-            memory: 200Mi
+            cpu: 60m
+            memory: 10Mi
           limits:
-            cpu: 500m
-            memory: 500Mi
+            cpu: 100m
+            memory: 50Mi
 
       - name: roboteam-observer-sim
         image: roboteamtwente/roboteam:kubernetes
@@ -74,11 +74,11 @@ spec:
           #  value: "roboteam-ray-cluster-head-svc.default.svc.cluster.local:6379" 
         resources:
           requests:
-            cpu: 100m
-            memory: 150Mi
+            cpu: 60m
+            memory: 60Mi
           limits:
-            cpu: 200m
-            memory: 400Mi
+            cpu: 100m
+            memory: 90Mi
 
       - name: roboteam-robothub-sim
         image: roboteamtwente/roboteam:kubernetes
@@ -92,31 +92,31 @@ spec:
           #  value: "roboteam-ray-cluster-head-svc.default.svc.cluster.local:6379" 
         resources:
           requests:
-            cpu: 100m
-            memory: 128Mi
+            cpu: 30m
+            memory: 20Mi
           limits:
-            cpu: 500m
-            memory: 500Mi
+            cpu: 60m
+            memory: 50Mi
 
-      - name: roboteam-interface
-        image: roboteamtwente/roboteam:kubernetes
-        command: ["/bin/sh"]
-        args: ["-c", "cd /home/roboteam/roboteam_interface && yarn serve --host 0.0.0.0"]
-        ports:
-          - containerPort: 8080
-            hostPort: 8080
-        env:
-          - name: LD_LIBRARY_PATH
-            value: /home/roboteam/build/release/lib
-          # - name: RAY_ADDRESS
-          #  value: "roboteam-ray-cluster-head-svc.default.svc.cluster.local:6379" 
-        resources:
-          requests:
-            cpu: 100m
-            memory: 128Mi
-          limits:
-            cpu: 500m
-            memory: 500Mi
+      # - name: roboteam-interface
+      #   image: roboteamtwente/roboteam:kubernetes
+      #   command: ["/bin/sh"]
+      #   args: ["-c", "cd /home/roboteam/roboteam_interface && yarn serve --host 0.0.0.0"]
+      #   ports:
+      #     - containerPort: 8080
+      #       hostPort: 8080
+      #   env:
+      #     - name: LD_LIBRARY_PATH
+      #       value: /home/roboteam/build/release/lib
+      #     # - name: RAY_ADDRESS
+      #     #  value: "roboteam-ray-cluster-head-svc.default.svc.cluster.local:6379" 
+      #   resources:
+      #     requests:
+      #       cpu: 100m
+      #       memory: 128Mi
+      #     limits:
+      #       cpu: 500m
+      #       memory: 500Mi
 
       - name: erforce-autoref-sim
         image: roboteamtwente/roboteam:kubernetes
@@ -129,11 +129,11 @@ spec:
           #  value: "roboteam-ray-cluster-head-svc.default.svc.cluster.local:6379" 
         resources:
           requests:
-            cpu: 100m
+            cpu: 120m
             memory: 20Mi
           limits:
-            cpu: 120m
-            memory: 256Mi
+            cpu: 150m
+            memory: 50Mi
 
       - name: erforce-simulator
         image: roboteamtwente/roboteam:kubernetes
@@ -155,11 +155,11 @@ spec:
           #  value: "roboteam-ray-cluster-head-svc.default.svc.cluster.local:6379" 
         resources:
           requests:
-            cpu: 100m
-            memory: 128Mi
+            cpu: 120m
+            memory: 20Mi
           limits:
-            cpu: 500m
-            memory: 500Mi
+            cpu: 150m
+            memory: 50Mi
 
       - name: tigers-sumatra
         image: roboteamtwente/roboteam:kubernetes
@@ -178,11 +178,11 @@ spec:
           #  value: "roboteam-ray-cluster-head-svc.default.svc.cluster.local:6379" 
         resources:
           requests:
-            cpu: 100m
-            memory: 256Mi
-          limits:
             cpu: 500m
-            memory: 1.5Gi
+            memory: 1400Mi
+          limits:
+            cpu: 700m
+            memory: 1800Mi
         volumeMounts:
         - name: gradle-cache
           mountPath: /home/roboteam/.gradle

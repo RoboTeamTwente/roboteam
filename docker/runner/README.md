@@ -17,6 +17,7 @@ Use 'pip install ray' and then 'pip show ray' to get your version of ray.
 
 ----------------------------------------------------------------------------------
 After you have both kubernetes and ray, use the following command to create a cluster: kubectl apply -f ray-cluster.yaml
+This cluster launches a ray head node and one worker node. Launch the external simulator using kubectl apply -f simulator.yaml
 
 'kubectl get pods'-> this is will give you the cluster name
 
@@ -25,6 +26,9 @@ This is the port that will be used inside ray_jobs.py, where we submit the jobs 
 
 
 
-
-
-
+-----------------------------------------------------
+# Useful commands
+kubectl apply -f ray-cluster.yaml
+kubectl delete -f ray-cluster.yaml
+helm install kuberay-operator ray/kuberay-operator
+helm uninstall kuberay-operator

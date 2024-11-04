@@ -4,7 +4,7 @@ import socket
 import struct
 import time
 from google.protobuf.timestamp_pb2 import Timestamp
-from getState import get_referee_state
+from roboteam_ai.src.RL.src.getState import get_referee_state
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 roboteam_path = os.path.abspath(os.path.join(current_dir, "..", "..", ".."))

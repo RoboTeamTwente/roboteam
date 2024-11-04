@@ -19,7 +19,7 @@ namespace rtt::ai {
  */
 class RuntimeConfig {
    public:
-    static inline std::atomic<bool> useReferee;
+    static inline std::atomic<bool> useReferee = true;
     static inline std::atomic<bool> ignoreInvariants;
     static inline std::atomic<bool> isPaused;
 };

@@ -7,9 +7,10 @@ from google.protobuf.message import DecodeError
 
 # Now import the functions
 from src.sentActionCommand import send_action_command
-from src.getState import get_ball_state, get_robot_state
+from src.getState import get_ball_state, get_robot_state, get_referee_state
 from src.teleportBall import teleport_ball
-from src.resetReferee import send_referee_reset
+from roboteam_ai.src.RL.src.resetRefereeAPI import reset_referee_state
+from src.changeGameState import start_game
 
 """
 This environment file is in the form of a gymnasium environment.
@@ -164,7 +165,6 @@ class RoboTeamEnv(gymnasium.Env):
         return observation_space, reward, done, truncated
 
 
-
     def is_terminated(self):
         """
         Activates when the task has been completed (or it failed because of opponent scoring a goal)
@@ -181,7 +181,6 @@ class RoboTeamEnv(gymnasium.Env):
         # Implement logic to reset the game if no goal is scored
         pass
 
-
     def reset(self, seed=None):
         """
         The reset function resets the environment when a game is ended
@@ -191,7 +190,10 @@ class RoboTeamEnv(gymnasium.Env):
         teleport_ball(0,0)
 
         # Reset referee state
-        send_referee_reset() # This resets the cards, goals and initiates a kickoff.
+        reset_referee_state()
+
+        # Set blue team on right side + initiates kickoff
+        start_game()
 
         # Reset shaped_reward_given boolean
         self.shaped_reward_given = False

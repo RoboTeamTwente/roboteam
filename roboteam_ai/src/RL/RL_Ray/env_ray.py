@@ -9,7 +9,7 @@ from ray.tune.registry import register_env
 from ..src.sentActionCommand import send_action_command
 from ..src.getState import get_ball_state, get_robot_state
 from ..src.teleportBall import teleport_ball
-from ..src.resetReferee import send_referee_reset
+from ..src.resetRefereeAPI import send_referee_reset
 
 @ray.remote
 class RoboTeamEnv(gymnasium.Env):

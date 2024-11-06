@@ -5,7 +5,7 @@ import asyncio
 import json
 import time
 
-async def set_team_state(team, on_positive_half):
+def set_team_state(team, on_positive_half):
     """
     Set team state including which half they play on.
     
@@ -15,33 +15,37 @@ async def set_team_state(team, on_positive_half):
     """
     uri = "ws://localhost:8081/api/control"
     
-    try:
-        async with websockets.connect(uri) as websocket:
-            # Similar structure to first_kickoff_team
-            state_msg = {
-                "change": {
-                    "update_team_state_change": {
-                        "for_team": team,
-                        "on_positive_half": on_positive_half
+    async def _async_set_team():
+        try:
+            async with websockets.connect(uri) as websocket:
+                state_msg = {
+                    "change": {
+                        "update_team_state_change": {
+                            "for_team": team,
+                            "on_positive_half": on_positive_half
+                        }
                     }
                 }
-            }
-            
-            print(f"Setting {team} team to play on {'positive' if on_positive_half else 'negative'} half...")
-            await websocket.send(json.dumps(state_msg))
-            
-            try:
-                response = await asyncio.wait_for(websocket.recv(), timeout=2.0)
-                print("Received response:", json.loads(response))
-            except asyncio.TimeoutError:
-                print("No response received in 2 seconds")
                 
-    except websockets.exceptions.ConnectionClosed as e:
-        print(f"WebSocket connection closed: {e}")
-    except Exception as e:
-        print(f"Error: {e}")
+                print(f"Setting {team} team to play on {'positive' if on_positive_half else 'negative'} half...")
+                await websocket.send(json.dumps(state_msg))
+                
+                try:
+                    response = await asyncio.wait_for(websocket.recv(), timeout=2.0)
+                    #print("Received response:", json.loads(response))
+                except asyncio.TimeoutError:
+                    print("No response received in 2 seconds")
+                    
+        except websockets.exceptions.ConnectionClosed as e:
+            print(f"WebSocket connection closed: {e}")
+        except Exception as e:
+            print(f"Error: {e}")
+    
+    # Run the async function synchronously
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(_async_set_team())
 
-async def send_referee_command(command_type, team=None):
+def send_referee_command(command_type, team=None):
     """
     Send a referee command using websockets.
     
@@ -53,34 +57,38 @@ async def send_referee_command(command_type, team=None):
     """
     uri = "ws://localhost:8081/api/control"
     
-    try:
-        async with websockets.connect(uri) as websocket:
-            command_msg = {
-                "change": {
-                    "new_command_change": {
-                        "command": {
-                            "type": command_type,
-                            "for_team": team if team else "UNKNOWN"
+    async def _async_send_command():
+        try:
+            async with websockets.connect(uri) as websocket:
+                command_msg = {
+                    "change": {
+                        "new_command_change": {
+                            "command": {
+                                "type": command_type,
+                                "for_team": team if team else "UNKNOWN"
+                            }
                         }
                     }
                 }
-            }
-            
-            print(f"Sending referee command: {command_type} {'for ' + team if team else ''}...")
-            await websocket.send(json.dumps(command_msg))
-            
-            try:
-                response = await asyncio.wait_for(websocket.recv(), timeout=2.0)
-                print("Received response:", json.loads(response))
-            except asyncio.TimeoutError:
-                print("No response received in 2 seconds")
                 
-    except websockets.exceptions.ConnectionClosed as e:
-        print(f"WebSocket connection closed: {e}")
-    except Exception as e:
-        print(f"Error: {e}")
+                print(f"Sending referee command: {command_type} {'for ' + team if team else ''}...")
+                await websocket.send(json.dumps(command_msg))
+                
+                try:
+                    response = await asyncio.wait_for(websocket.recv(), timeout=2.0)
+                    #print("Received response:", json.loads(response))
+                except asyncio.TimeoutError:
+                    print("No response received in 2 seconds")
+                    
+        except websockets.exceptions.ConnectionClosed as e:
+            print(f"WebSocket connection closed: {e}")
+        except Exception as e:
+            print(f"Error: {e}")
+    
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(_async_send_command())
 
-async def set_first_kickoff_team(team):
+def set_first_kickoff_team(team):
     """
     Set which team takes the first kickoff.
     
@@ -89,89 +97,88 @@ async def set_first_kickoff_team(team):
     """
     uri = "ws://localhost:8081/api/control"
     
-    try:
-        async with websockets.connect(uri) as websocket:
-            config_msg = {
-                "change": {
-                    "update_config_change": {
-                        "first_kickoff_team": team
+    async def _async_set_kickoff():
+        try:
+            async with websockets.connect(uri) as websocket:
+                config_msg = {
+                    "change": {
+                        "update_config_change": {
+                            "first_kickoff_team": team
+                        }
                     }
                 }
-            }
-            
-            print(f"Setting first kickoff team to {team}...")
-            await websocket.send(json.dumps(config_msg))
-            
-            try:
-                response = await asyncio.wait_for(websocket.recv(), timeout=2.0)
-                print("Received response:", json.loads(response))
-            except asyncio.TimeoutError:
-                print("No response received in 2 seconds")
                 
-    except websockets.exceptions.ConnectionClosed as e:
-        print(f"WebSocket connection closed: {e}")
-    except Exception as e:
-        print(f"Error: {e}")
+                print(f"Setting first kickoff team to {team}...")
+                await websocket.send(json.dumps(config_msg))
+                
+                try:
+                    response = await asyncio.wait_for(websocket.recv(), timeout=2.0)
+                    #print("Received response:", json.loads(response))
+                except asyncio.TimeoutError:
+                    print("No response received in 2 seconds")
+                    
+        except websockets.exceptions.ConnectionClosed as e:
+            print(f"WebSocket connection closed: {e}")
+        except Exception as e:
+            print(f"Error: {e}")
+    
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(_async_set_kickoff())
 
-async def halt():
+# Simple command functions
+def halt():
     """Send HALT referee command - stops all robots immediately"""
-    await send_referee_command("HALT")
+    send_referee_command("HALT")
 
-async def stop():
+def stop():
     """Send STOP referee command - stops game but robots can move"""
-    await send_referee_command("STOP")
+    send_referee_command("STOP")
 
-async def force_start():
+def force_start():
     """Send FORCE_START referee command - starts game immediately"""
-    await send_referee_command("FORCE_START")
+    send_referee_command("FORCE_START")
 
-async def normal_start():
+def normal_start():
     """Send NORMAL_START referee command - starts game normally"""
-    await send_referee_command("NORMAL_START")
+    send_referee_command("NORMAL_START")
 
-async def direct_free_kick(team):
+def direct_free_kick(team):
     """Send DIRECT referee command - awards direct free kick to team"""
-    await send_referee_command("DIRECT", team)
+    send_referee_command("DIRECT", team)
 
-async def kickoff(team):
+def kickoff(team):
     """Send KICKOFF referee command - starts kickoff for team"""
-    await send_referee_command("KICKOFF", team)
+    send_referee_command("KICKOFF", team)
 
-async def penalty(team):
+def penalty(team):
     """Send PENALTY referee command - starts penalty for team"""
-    await send_referee_command("PENALTY", team)
+    send_referee_command("PENALTY", team)
 
-async def ball_placement(team):
+def ball_placement(team):
     """Send BALL_PLACEMENT referee command - starts ball placement for team"""
-    await send_referee_command("BALL_PLACEMENT", team)
+    send_referee_command("BALL_PLACEMENT", team)
 
-async def timeout(team):
+def timeout(team):
     """Send TIMEOUT referee command - starts timeout for team"""
-    await send_referee_command("TIMEOUT", team)
+    send_referee_command("TIMEOUT", team)
 
-async def start_game():
+def start_game():
     """Set Blue team as first kickoff, on positive half, and start the game properly"""
     # Set sides for teams
-    await set_team_state("BLUE", True)  # Blue on positive half
-    await set_team_state("YELLOW", False)  # Yellow on negative half
+    set_team_state("BLUE", True)  # Blue on positive half
+    set_team_state("YELLOW", False)  # Yellow on negative half
     
     # Set Blue for first kickoff
-    await set_first_kickoff_team("BLUE")
+    set_first_kickoff_team("BLUE")
     
     # Start sequence
-    await halt()  # First halt to ensure safe state
-    await stop()  # Then stop to prepare for start
-    await asyncio.sleep(10)
-    await kickoff("BLUE")  # Set up kickoff for Blue team
-    # await normal_start()  # Start the game normally
+    # halt()  # First halt to ensure safe state
+    # stop()  # Then stop to prepare for start
+    # time.sleep(10)  # Regular sleep instead of asyncio.sleep
+    kickoff("BLUE")  # Set up kickoff for Blue team
+    # normal_start()  # Start the game normally
 
 if __name__ == "__main__":
     print("Connecting to game controller...")
     
-    # To set up and start a game with Blue kickoff and on positive half:
-    asyncio.get_event_loop().run_until_complete(start_game())
-    
-    # Or use individual commands as needed:
-    # asyncio.get_event_loop().run_until_complete(set_team_state("BLUE", True))
-    # asyncio.get_event_loop().run_until_complete(halt())
-    # asyncio.get_event_loop().run_until_complete(normal_start())
+    start_game()

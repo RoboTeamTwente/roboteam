@@ -4,6 +4,7 @@ import gymnasium
 from gymnasium import spaces
 import numpy as np
 from google.protobuf.message import DecodeError
+import time
 
 # Now import the functions
 from src.sentActionCommand import send_action_command
@@ -72,6 +73,7 @@ class RoboTeamEnv(gymnasium.Env):
         # If ref gives command BALL_PLACEMENT_US OR BALL_PLACEMENT_THEM
         if (self.ref_command == "BALL_PLACEMENT_US") or ("BALL_PLACEMENT_THEM"):
             teleport_ball(self.x, self.y)   # Teleport the ball to the designated location
+            
 
     def get_referee_state(self):
         """
@@ -161,7 +163,7 @@ class RoboTeamEnv(gymnasium.Env):
         # If the game is halted, stopped or ball placement is happening, execute this.
 
         # Logic to TP the ball if there is ball placement of either side
-        #self.check_ball_placement() # Run the function to check if we need to TP the ball
+        self.check_ball_placement() # Run the function to check if we need to TP the ball
 
         reward = self.calculate_reward()
 

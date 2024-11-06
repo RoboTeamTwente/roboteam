@@ -30,6 +30,9 @@ class RoboTeamEnv(gymnasium.Env):
         self.ball_position = np.zeros((1,2)) # Single row with 2 columns
         self.ball_quadrant = 4 # This refers to the center
 
+        self.yellow_score = 0  # Initialize score to zero
+        self.blue_score = 0  # Initialize blue score to zero
+
         # Initialize the observation space
         self.observation_space = spaces.Dict({
             'robot_positions': spaces.Box(
@@ -84,6 +87,7 @@ class RoboTeamEnv(gymnasium.Env):
         calculate_reward calculates the reward the agent gets for an action it did.
         Based on if we have the ball and if they scored a goal.
         """
+        goal_scored_reward = 0
 
         # When a goal is scored the ref command is HALT
 
@@ -94,6 +98,7 @@ class RoboTeamEnv(gymnasium.Env):
             goal_scored_reward = -1
 
         # Reward shaping
+        shaped_reward = 0
         if not self.shaped_reward_given and self.is_yellow_dribbling and (self.ball_quadrant == 1 or self.ball_quadrant == 3):
             self.shaped_reward_given = True # Set it to true
             shaped_reward = 0.1
@@ -115,9 +120,13 @@ class RoboTeamEnv(gymnasium.Env):
 
         # Get the robot grid representation
         self.robot_grid, self.is_yellow_dribbling, self.is_blue_dribbling = get_robot_state() # Matrix of 4 by 2 + 2 booleans
+        print(f"Robot grid: {self.robot_grid}")
+        print(f"Yellow dribbling: {self.is_yellow_dribbling}, Blue dribbling: {self.is_blue_dribbling}")
 
         # Get the ball location
         self.ball_position, self.ball_quadrant = get_ball_state() # x,y coordinates, quadrant
+
+        print(f"Ball position: {self.ball_position}, Ball quadrant: {self.ball_quadrant}")
 
         observation_space = {
             'robot_positions': self.robot_grid,
@@ -152,17 +161,17 @@ class RoboTeamEnv(gymnasium.Env):
         # If the game is halted, stopped or ball placement is happening, execute this.
 
         # Logic to TP the ball if there is ball placement of either side
-        self.check_ball_placement() # Run the function to check if we need to TP the ball
+        #self.check_ball_placement() # Run the function to check if we need to TP the ball
 
         reward = self.calculate_reward()
 
         # Update observation_space
-        observation_space = self.get_observation
+        observation_space,_ = self.get_observation()
 
         done = self.is_terminated()  # If task is completed (a goal was scored)
         truncated = self.is_truncated()  # Determine if the episode was truncated, too much time or a yellow card
 
-        return observation_space, reward, done, truncated
+        return observation_space, reward, done, truncated, {}
 
 
     def is_terminated(self):
@@ -199,6 +208,9 @@ class RoboTeamEnv(gymnasium.Env):
         self.shaped_reward_given = False
         self.is_yellow_dribbling = False
         self.is_blue_dribbling = False
+
+        observation, _ = self.get_observation()
+        return observation,{}
 
 
 

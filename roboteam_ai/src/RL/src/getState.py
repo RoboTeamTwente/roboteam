@@ -23,7 +23,8 @@ from roboteam_networking.proto.messages_robocup_ssl_referee_pb2 import * # Alias
 # Function to get the ball state
 def get_ball_state():
     ball_position = np.zeros(2)  # [x, y]
-    ball_quadrant = -1
+    # Instead of -1, quadrant 4 if ball is in the center
+    ball_quadrant = 4
 
     CENTER_THRESHOLD = 0.01  # Define the center threshold
 
@@ -45,6 +46,9 @@ def get_ball_state():
             ball_position[0] = world.ball.pos.x
             ball_position[1] = world.ball.pos.y
             
+            print("x",ball_position[0])
+            print("y",ball_position[1])
+
             if abs(ball_position[0]) <= CENTER_THRESHOLD and abs(ball_position[1]) <= CENTER_THRESHOLD:
                 ball_quadrant = 4  # Center
             elif ball_position[0] < 0:
@@ -199,3 +203,5 @@ if __name__ == "__main__":
     print(f"Name: {blue_team['name']}")
     print(f"Score: {blue_team['score']}, Red Cards: {blue_team['red_cards']}, Yellow Cards: {blue_team['yellow_cards']}")
     print(f"Fouls: {blue_team['fouls']}, Ball Placement Failures: {blue_team['ball_placement_failures']}")
+
+    get_ball_state()

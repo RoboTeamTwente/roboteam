@@ -65,7 +65,7 @@ spec:
         spec:
           containers:
           - name: ray-worker
-            image: rayproject/ray:2.38.0  
+            image: rayproject/ray:latest-py310
             resources:
               requests:
                 cpu: 500m

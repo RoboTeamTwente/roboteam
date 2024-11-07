@@ -159,11 +159,21 @@ def get_referee_state():
         }
 
         # Return both the raw referee_state object and a dictionary of extracted details
+        if referee_state.HasField('designated_position'):
+            designated_position = {
+                "x": referee_state.designated_position.x,
+                "y": referee_state.designated_position.y
+            }
+        else:
+            designated_position = None
+
+        # Return both the raw referee_state object and a dictionary of extracted details
         return referee_state, {
             "yellow_team": yellow_team_data,
             "blue_team": blue_team_data,
             "stage": referee_state.stage,
-            "command": referee_state.command
+            "command": referee_state.command,
+            "designated_position": designated_position
         }
 
     except DecodeError:
@@ -204,4 +214,4 @@ if __name__ == "__main__":
     print(f"Score: {blue_team['score']}, Red Cards: {blue_team['red_cards']}, Yellow Cards: {blue_team['yellow_cards']}")
     print(f"Fouls: {blue_team['fouls']}, Ball Placement Failures: {blue_team['ball_placement_failures']}")
 
-    get_ball_state()
+    print(get_referee_state())

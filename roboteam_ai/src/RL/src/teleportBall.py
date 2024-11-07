@@ -13,7 +13,7 @@ Returns: teleport ball action
 
 # Make sure to go back to the main roboteam directory
 current_dir = os.path.dirname(os.path.abspath(__file__))
-roboteam_path = os.path.abspath(os.path.join(current_dir, "..", "..", ".."))
+roboteam_path = os.path.abspath(os.path.join(current_dir, "..","..", "..", ".."))
 
 # Add to sys.path
 sys.path.append(roboteam_path)
@@ -50,5 +50,5 @@ def teleport_ball(x, y, z=0.0):
 
 if __name__ == "__main__":
 
-    teleport_ball(400, 4000)
+    teleport_ball(5.000, 4.300, 0.0)
     print("Script execution completed")

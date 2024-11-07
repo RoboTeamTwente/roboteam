@@ -67,13 +67,28 @@ class RoboTeamEnv(gymnasium.Env):
 
     def check_ball_placement(self):
         """
-        Function to teleport the ball to the designated position for ball placement if necessary
+        Function to teleport the ball to the designated position for ball placement if necessary.
         """
+        # Get the current referee state
+        referee_state, referee_info = get_referee_state()  # Assuming get_referee_state() is in scope
+
+        # Extract the command from the referee state
+        self.ref_command = referee_info['command']
+        print("ref command", self.ref_command)
+ 
 
         # If ref gives command BALL_PLACEMENT_US OR BALL_PLACEMENT_THEM
-        if (self.ref_command == "BALL_PLACEMENT_US") or ("BALL_PLACEMENT_THEM"):
-            teleport_ball(self.x, self.y)   # Teleport the ball to the designated location
-            
+        if (self.ref_command == 16 or self.ref_command == 17):
+            referee_state, referee_data = get_referee_state()
+
+            if referee_data["designated_position"]is not None:
+                self.x, self.y = referee_data["designated_position"]["x"]/1000, referee_data["designated_position"]["y"]/1000
+
+                # Teleport the ball to the designated location
+                teleport_ball(self.x, self.y)
+            else:
+                print("No designated position provided in referee state.")
+
 
     def get_referee_state(self):
         """
@@ -171,7 +186,11 @@ class RoboTeamEnv(gymnasium.Env):
         observation_space,_ = self.get_observation()
 
         done = self.is_terminated()  # If task is completed (a goal was scored)
+        if(done):
+            reset()
         truncated = self.is_truncated()  # Determine if the episode was truncated, too much time or a yellow card
+
+        time.sleep(0.25)  # DELAY FOR STEPS (ADJUST LATER)
 
         return observation_space, reward, done, truncated, {}
 

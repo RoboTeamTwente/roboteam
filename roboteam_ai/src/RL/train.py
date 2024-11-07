@@ -27,7 +27,6 @@ class CustomEvalCallback(BaseCallback):
                 deterministic=True
             )
 
-            train_env_value = self.training_env.get_attr("reconstructed_surface_coverage")
 
             if mean_reward > self.best_mean_reward:
                 self.best_mean_reward = mean_reward
@@ -39,7 +38,6 @@ class CustomEvalCallback(BaseCallback):
 
             print(f"Evaluation at step {self.n_calls}: Mean reward = {mean_reward:.2f} +/- {std_reward:.2f}")
             print(f"Evaluation highest env value = {self.highest_env_value}")
-            print(f"Training reconstruction value = {train_env_value}")
 
         return True
 

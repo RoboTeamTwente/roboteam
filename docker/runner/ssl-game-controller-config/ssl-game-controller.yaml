@@ -48,8 +48,8 @@ game:
             placement-offset-goal-line: 0.2
             placement-offset-goal-line-goal-kick: 1
             placement-offset-defense-area: 1
-    multiple-card-step: 2
-    multiple-foul-step: 3
+    multiple-card-step: 100
+    multiple-foul-step: 100
     multiple-placement-failures: 5
     max-bots:
         DIV_A: 11

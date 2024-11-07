@@ -23,7 +23,6 @@ Yellow cards do not stop the game, but maybe in the future it is nice to impleme
 class RoboTeamEnv(gymnasium.Env):
 
     def __init__(self):
-
         self.MAX_ROBOTS_US = 10
 
         # Define the number of robots that are present in each grid + ball location
@@ -185,9 +184,10 @@ class RoboTeamEnv(gymnasium.Env):
         # Update observation_space
         observation_space,_ = self.get_observation()
 
-        done = self.is_terminated()  # If task is completed (a goal was scored)
-        if(done):
-            reset()
+        done = self.is_terminated()
+        print("isDone",done)  # If task is completed (a goal was scored)
+        if done:
+            observation_space, _ = self.reset()
         truncated = self.is_truncated()  # Determine if the episode was truncated, too much time or a yellow card
 
         time.sleep(0.25)  # DELAY FOR STEPS (ADJUST LATER)
@@ -199,8 +199,17 @@ class RoboTeamEnv(gymnasium.Env):
         """
         Activates when the task has been completed (or it failed because of opponent scoring a goal)
         """
+        referee_state, referee_info = get_referee_state()  # Assuming get_referee_state() is in scope
 
-        if self.ref_command == "HALT" and (self.yellow_score == 1 or self.blue_score == 1): # HALT command indicates that either team scored
+        self.ref_command = referee_info['command']
+        self.yellow_score = referee_state.yellow.score
+        self.blue_score = referee_state.blue.score
+        
+        print("refcommand", self.ref_command)
+        print("blue", self.blue_score)
+        print("yellow", self.yellow_score)
+
+        if self.ref_command == 0 and (self.yellow_score == 1 or self.blue_score == 1): # HALT command indicates that either team scored
             return True
 
     def is_truncated(self):

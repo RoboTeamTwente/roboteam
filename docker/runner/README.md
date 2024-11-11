@@ -2,7 +2,7 @@
 In a ray or distributed computing cluster, the terms "head node" and "worker nodes" refer to different roles that containers play in the cluster. The head node is the master node in a Ray cluster. You typically have one head node. Worker nodes are the containers that execute the jobs, in parallel. You can have as many worker nodes as you want.
 
 -----------------------------------------------------------
-To install KubeRay:
+## Installing Kuberay:
 curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 helm repo add kuberay https://ray-project.github.io/kuberay-helm/
 helm repo update
@@ -25,10 +25,10 @@ Use to forward the needed port to the ray service: kubectl port-forward svc/<clu
 This is the port that will be used inside ray_jobs.py, where we submit the jobs to ray.
 
 
-
 -----------------------------------------------------
-# Useful commands
+## Useful commands
 kubectl apply -f ray-cluster.yaml
 kubectl delete -f ray-cluster.yaml
 helm install kuberay-operator ray/kuberay-operator
 helm uninstall kuberay-operator
+kubectl port-forward svc/roboteam-ray-cluster-head-nodeport 8265:8265 6379:6379 10001:10001 8000:8000 &

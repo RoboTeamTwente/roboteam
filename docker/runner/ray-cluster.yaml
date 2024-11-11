@@ -13,9 +13,10 @@ spec:
         labels:
           app: ray-head
       spec:
+        hostNetwork: false
         containers:
         - name: ray-head
-          image: rayproject/ray:latest-py310
+          image: roboteamtwente/ray:development
           ports:
           - containerPort: 8265  # dashboard port
           - containerPort: 6379  # redis port 
@@ -28,6 +29,15 @@ spec:
             limits:
               cpu: "1"         # Changed from 600 (which was too high)
               memory: "2Gi"    # Increased from 512Mi
+
+          env:
+          - name: SIMULATION_HOST
+            value: "127.0.0.1"  # Using localhost since we're on host network
+          - name: VISION_PORT
+            value: "10020"      # Match your simulator's vision port
+          - name: REFEREE_PORT
+            value: "10003"      # Match your simulator's referee port
+
           command: ["/bin/bash", "-c", "--"]
           args: ["ray start --head --port=6379 --dashboard-host=0.0.0.0 --block"]
           livenessProbe:
@@ -63,9 +73,10 @@ spec:
           labels:
             app: ray-worker
         spec:
+          hostNetwork: false
           containers:
           - name: ray-worker
-            image: rayproject/ray:latest-py310
+            image: roboteamtwente/ray:development
             resources:
               requests:
                 cpu: 500m
@@ -78,3 +89,31 @@ spec:
               value: "roboteam-ray-cluster-head-svc.default.svc.cluster.local"
             command: ["/bin/bash", "-c", "--"]
             args: ["ray start --address='roboteam-ray-cluster-head-svc.default.svc.cluster.local:6379' --block"]
+
+#Add service for port forwarding
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: roboteam-ray-cluster-head-nodeport  # Changed name to avoid conflict
+spec:
+  type: NodePort
+  selector:
+    app: ray-head
+  ports:
+  - name: dashboard
+    port: 8265
+    targetPort: 8265
+    nodePort: 30265  # Ray dashboard
+  - name: redis
+    port: 6379
+    targetPort: 6379
+    nodePort: 30679  # Redis
+  - name: gcs
+    port: 10001
+    targetPort: 10001
+    nodePort: 31001  # GCS server
+  - name: serve
+    port: 8000
+    targetPort: 8000
+    nodePort: 30800  # Serve

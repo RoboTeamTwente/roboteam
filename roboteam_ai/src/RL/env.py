@@ -10,7 +10,7 @@ import time
 from src.sentActionCommand import send_action_command
 from src.getState import get_ball_state, get_robot_state, get_referee_state
 from src.teleportBall import teleport_ball
-from roboteam_ai.src.RL.src.resetRefereeAPI import reset_referee_state
+from src.resetRefereeAPI import reset_referee_state
 from src.changeGameState import start_game
 
 """

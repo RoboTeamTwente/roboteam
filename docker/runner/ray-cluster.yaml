@@ -78,4 +78,3 @@ spec:
               value: "roboteam-ray-cluster-head-svc.default.svc.cluster.local"
             command: ["/bin/bash", "-c", "--"]
             args: ["ray start --address='roboteam-ray-cluster-head-svc.default.svc.cluster.local:6379' --block"]
-

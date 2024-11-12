@@ -10,7 +10,7 @@ import time
 from src.sentActionCommand import send_action_command
 from src.getState import get_ball_state, get_robot_state, get_referee_state
 from src.teleportBall import teleport_ball
-from src.resetRefereeAPI import reset_referee_state
+from roboteam_ai.src.RL.src.resetRefereeAPI import reset_referee_state
 from src.changeGameState import start_game
 
 """
@@ -22,9 +22,10 @@ Yellow cards do not stop the game, but maybe in the future it is nice to impleme
 
 class RoboTeamEnv(gymnasium.Env):
 
-    def __init__(self):
-
+    def __init__(self,env_config):
+        # super().__init__()
         self.MAX_ROBOTS_US = 10
+        self.env_config = env_config
 
         # Define the number of robots that are present in each grid + ball location
         self.robot_grid = np.zeros((4, 2), dtype=int) # left up, right up, left down, right down
@@ -35,16 +36,8 @@ class RoboTeamEnv(gymnasium.Env):
         self.blue_score = 0  # Initialize blue score to zero
 
         # Initialize the observation space
-        self.observation_space = spaces.Dict({
-            'robot_positions': spaces.Box(
-                low=0,
-                high=self.MAX_ROBOTS_US,
-                shape=(4, 2),
-                dtype=np.int32
-            ),
-            'ball_position': spaces.Discrete(5),  # 0-3 for quadrants, 4 for center
-            'is_yellow_dribbling' : spaces.Discrete(2) # 0 for false, 1 for true
-        })
+        self.observation_space = spaces.Box(low=0, high=self.MAX_ROBOTS_US, shape=(15,), dtype=np.int32)
+
         
         # Action space: [attackers, defenders]
         # Wallers will be automatically calculated
@@ -130,6 +123,41 @@ class RoboTeamEnv(gymnasium.Env):
         return reward
 
 
+    # def get_observation(self):
+    #     """
+    #     get_observation is meant to get the observation space (kinda like the state)
+    #     """
+
+    #     # Get the robot grid representation
+    #     self.robot_grid, self.is_yellow_dribbling, self.is_blue_dribbling = get_robot_state() # Matrix of 4 by 2 + 2 booleans
+    #     print(f"Robot grid: {self.robot_grid}")
+    #     print(f"Yellow dribbling: {self.is_yellow_dribbling}, Blue dribbling: {self.is_blue_dribbling}")
+
+    #     # Get the ball location
+    #     self.ball_position, self.ball_quadrant = get_ball_state() # x,y coordinates, quadrant
+
+    #     print(f"Ball position: {self.ball_position}, Ball quadrant: {self.ball_quadrant}")
+
+    #     observation_space = {
+    #         'robot_positions': self.robot_grid,
+    #         'ball_position': self.ball_quadrant,
+    #         'is_yellow_dribbling' : self.is_yellow_dribbling
+    #     }
+
+    #     robot_positions_flat = self.robot_grid.flatten()  # Shape (8,)
+    #     ball_position_flat = np.array([self.ball_quadrant])  # Shape (1,)
+    #     dribbling_flat = np.array([self.is_yellow_dribbling])  # Shape (1,)
+
+    #     # Combine all parts into a single flat array
+    #     full_observation = np.concatenate([robot_positions_flat, ball_position_flat, dribbling_flat])
+
+    #     # Pad or reshape `full_observation` to shape [32, 10]
+    #     padded_observation = np.zeros(32 * 10)  # Initialize a zero-padded observation
+    #     padded_observation[:full_observation.size] = full_observation  # Fill with actual data
+    #     observation_2d = padded_observation.reshape(32, 10)  # Reshape to [32, 10]
+
+    #     return observation_2d, self.calculate_reward()
+    
     def get_observation(self):
         """
         get_observation is meant to get the observation space (kinda like the state)
@@ -145,15 +173,17 @@ class RoboTeamEnv(gymnasium.Env):
 
         print(f"Ball position: {self.ball_position}, Ball quadrant: {self.ball_quadrant}")
 
-        observation_space = {
-            'robot_positions': self.robot_grid,
-            'ball_position': self.ball_quadrant,
-            'is_yellow_dribbling' : self.is_yellow_dribbling
-        }
-        print("obs: ", observation_space)
-
-        return observation_space, self.calculate_reward()
-
+        robot_positions_flat = self.robot_grid.flatten()
+        
+        # Convert `ball_position` (scalar) and `is_yellow_dribbling` (boolean) to compatible formats
+        ball_position = np.array([self.ball_quadrant])  # 1 element
+        is_yellow_dribbling = np.array([int(self.is_yellow_dribbling)])  # Convert boolean to int (0 or 1)
+        
+        # Combine all parts into a single 15-element observation array
+        # Pad with zeros if you need additional elements
+        observation = np.concatenate([robot_positions_flat, ball_position, is_yellow_dribbling, np.zeros(5)])
+        
+        return observation, self.calculate_reward()
 
     def step(self, action):
         """
@@ -185,7 +215,7 @@ class RoboTeamEnv(gymnasium.Env):
 
         # Update observation_space
         observation_space,_ = self.get_observation()
-
+        
         done = self.is_terminated()
         print("isDone",done)  # If task is completed (a goal was scored)
         if done:
@@ -222,7 +252,7 @@ class RoboTeamEnv(gymnasium.Env):
         # Implement logic to reset the game if no goal is scored
         pass
 
-    def reset(self, seed=None):
+    def reset(self, seed=None,**kwargs):
         """
         The reset function resets the environment when a game is ended
         """

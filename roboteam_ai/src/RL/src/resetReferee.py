@@ -4,15 +4,15 @@ import socket
 import struct
 import time
 from google.protobuf.timestamp_pb2 import Timestamp
-from roboteam_ai.src.RL.src.getState import get_referee_state
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
-roboteam_path = os.path.abspath(os.path.join(current_dir, "..", "..", ".."))
+roboteam_path = os.path.abspath(os.path.join(current_dir, "..", "..", "..", ".."))
 
 # Add to sys.path
 sys.path.append(roboteam_path)
 
 from roboteam_networking.proto.messages_robocup_ssl_referee_pb2 import Referee
+from roboteam_ai.src.RL.src.getState import get_referee_state
 
 REFEREE_CONTROL_PORT = 10003
 MULTICAST_GROUP = '224.5.23.1'
@@ -41,7 +41,6 @@ def send_halt_command():
         print(f"Sent HALT command to referee on multicast group {MULTICAST_GROUP}, port {REFEREE_CONTROL_PORT}")
     finally:
         sock.close()
-
 
 def reset_referee_state():
     # Step 1: Retrieve the current referee state

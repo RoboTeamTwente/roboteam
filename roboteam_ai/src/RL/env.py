@@ -5,13 +5,22 @@ from gymnasium import spaces
 import numpy as np
 from google.protobuf.message import DecodeError
 import time
+import os
+import sys
+
+# Make root folder /roboteam
+current_dir = os.path.dirname(os.path.abspath(__file__))
+roboteam_path = os.path.abspath(os.path.join(current_dir, "../../.."))
+
+# Add to sys.path
+sys.path.append(roboteam_path)
 
 # Now import the functions
-from src.sentActionCommand import send_action_command
-from src.getState import get_ball_state, get_robot_state, get_referee_state
-from src.teleportBall import teleport_ball
-from src.resetRefereeAPI import reset_referee_state
-from src.changeGameState import start_game
+from roboteam_ai.src.RL.src.sentActionCommand import send_action_command
+from roboteam_ai.src.RL.src.getState import get_ball_state, get_robot_state, get_referee_state
+from roboteam_ai.src.RL.src.teleportBall import teleport_ball
+from roboteam_ai.src.RL.src.resetRefereeAPI import reset_referee_state
+from roboteam_ai.src.RL.src.changeGameState import start_game
 
 """
 This environment file is in the form of a gymnasium environment.
@@ -22,7 +31,9 @@ Yellow cards do not stop the game, but maybe in the future it is nice to impleme
 
 class RoboTeamEnv(gymnasium.Env):
 
-    def __init__(self):
+    def __init__(self, config=None):
+        self.config = config or {} # Config placeholder
+
 
         self.MAX_ROBOTS_US = 10
 
@@ -242,6 +253,8 @@ class RoboTeamEnv(gymnasium.Env):
         self.is_blue_dribbling = False
 
         observation, _ = self.get_observation()
+
+        print("Reset completed")
         return observation,{}
 
 

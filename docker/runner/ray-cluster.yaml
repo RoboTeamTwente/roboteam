@@ -17,6 +17,7 @@ spec:
         containers:
         - name: ray-head
           image: roboteamtwente/ray:development
+          imagePullPolicy: Always # Always pull the latest image
           ports:
           - containerPort: 8265  # dashboard port
           - containerPort: 6379  # redis port 
@@ -73,10 +74,11 @@ spec:
           labels:
             app: ray-worker
         spec:
-          hostNetwork: false
+          hostNetwork: true
           containers:
           - name: ray-worker
             image: roboteamtwente/ray:development
+            imagePullPolicy: Always # Always pull the latest image
             resources:
               requests:
                 cpu: 500m
@@ -87,6 +89,18 @@ spec:
             env:
             - name: RAY_HEAD_IP
               value: "roboteam-ray-cluster-head-svc.default.svc.cluster.local"
+            - name: LD_LIBRARY_PATH
+              value: /home/roboteam/build/release/lib
+            - name: VISION_ADDRESS
+              value: "224.5.23.2"
+            - name: VISION_PORT
+              value: "10020"
+            - name: REFEREE_ADDRESS
+              value: "224.5.23.1"
+            - name: REFEREE_PORT
+              value: "10003"
+            - name: GC_PORT
+              value: "8081"
             command: ["/bin/bash", "-c", "--"]
             args: ["ray start --address='roboteam-ray-cluster-head-svc.default.svc.cluster.local:6379' --block"]
 

@@ -5,13 +5,22 @@ from gymnasium import spaces
 import numpy as np
 from google.protobuf.message import DecodeError
 import time
+import os
+import sys
+
+# Make root folder /roboteam
+current_dir = os.path.dirname(os.path.abspath(__file__))
+roboteam_path = os.path.abspath(os.path.join(current_dir, "../../.."))
+
+# Add to sys.path
+sys.path.append(roboteam_path)
 
 # Now import the functions
-from src.sentActionCommand import send_action_command
-from src.getState import get_ball_state, get_robot_state, get_referee_state
-from src.teleportBall import teleport_ball
+from roboteam_ai.src.RL.src.sentActionCommand import send_action_command
+from roboteam_ai.src.RL.src.getState import get_ball_state, get_robot_state, get_referee_state
+from roboteam_ai.src.RL.src.teleportBall import teleport_ball
 from roboteam_ai.src.RL.src.resetRefereeAPI import reset_referee_state
-from src.changeGameState import start_game
+from roboteam_ai.src.RL.src.changeGameState import start_game
 
 """
 This environment file is in the form of a gymnasium environment.
@@ -22,10 +31,9 @@ Yellow cards do not stop the game, but maybe in the future it is nice to impleme
 
 class RoboTeamEnv(gymnasium.Env):
 
-    def __init__(self,env_config):
-        # super().__init__()
+    def __init__(self, config=None):
+        self.config = config or {} # Config placeholder
         self.MAX_ROBOTS_US = 10
-        self.env_config = env_config
 
         # Define the number of robots that are present in each grid + ball location
         self.robot_grid = np.zeros((4, 2), dtype=int) # left up, right up, left down, right down

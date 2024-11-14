@@ -17,8 +17,8 @@ std::string kickTypeToString(KickType type) {
 }
 
 bool RobotCommand::operator==(const RobotCommand &other) const {
-    return this->id == other.id && this->velocity == other.velocity && this->yaw == other.yaw && this->targetAngularVelocity == other.targetAngularVelocity &&
-           this->useAngularVelocity == other.useAngularVelocity && this->cameraYawOfRobot == other.cameraYawOfRobot && this->cameraYawOfRobotIsSet == other.cameraYawOfRobotIsSet &&
+    return this->id == other.id && this->position == other.position && this->yaw == other.yaw  &&
+           this->cameraYawOfRobot == other.cameraYawOfRobot && this->cameraYawOfRobotIsSet == other.cameraYawOfRobotIsSet &&
            this->kickSpeed == other.kickSpeed && this->waitForBall == other.waitForBall && this->kickType == other.kickType && this->kickAtYaw == other.kickAtYaw &&
            this->dribblerOn == other.dribblerOn && this->wheelsOff == other.wheelsOff;
 }
@@ -26,10 +26,11 @@ bool RobotCommand::operator==(const RobotCommand &other) const {
 std::ostream &RobotCommand::write(std::ostream &os) const {
     return os << "{"
               << "id: " << formatString("%2i", this->id) << ", "
-              << "velocity: " << this->velocity << ", "
+              << ", position: " << position
+            //  << "velocity: " << this->velocity << ", "
               << "yaw: " << this->yaw << ", "
-              << "targetAngularVel: " << formatString("%5f", this->targetAngularVelocity) << ", "
-              << "useAngularVel: " << (this->useAngularVelocity ? " true" : "false") << ", "
+            //  << "targetAngularVel: " << formatString("%5f", this->targetAngularVelocity) << ", "
+            //  << "useAngularVel: " << (this->useAngularVelocity ? " true" : "false") << ", "
               << "cameraYaw: " << this->cameraYawOfRobot << ", "
               << "cameraYawIsSet: " << (this->cameraYawOfRobotIsSet ? " true" : "false") << ", "
               << "kickSpeed: " << formatString("%5f", this->kickSpeed) << ", "

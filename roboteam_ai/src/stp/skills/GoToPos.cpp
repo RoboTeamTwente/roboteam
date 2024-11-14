@@ -10,7 +10,7 @@ Status GoToPos::onUpdate(const StpInfo &info) noexcept {
     auto field = info.getField().value();
     auto avoidObj = info.getObjectsToAvoid();
     auto targetPos = info.getPositionToMoveTo().value();
-    auto targetVel = info.getTargetVelocity();
+   // auto targetVel = info.getTargetVelocity();
     auto roleName = info.getRoleName();
     auto ballLocation = info.getBall()->get()->position;
     RefCommand currentGameState = GameStateManager::getCurrentGameState().getCommandId();
@@ -29,9 +29,10 @@ Status GoToPos::onUpdate(const StpInfo &info) noexcept {
     }
     auto [vel, acc] = info.getCurrentWorld()->getRobotPositionController()->computeAndTrackTrajectory(
         info.getCurrentWorld(), field, robot->getId(), robot->getPos(), robot->getVel(), targetPos, targetVel, info.getMaxRobotVelocity(), info.getMaxJerk(), avoidObj);
-    command.velocity = vel;
-    command.acceleration = acc;
-
+    // command.velocity = vel;
+    // command.acceleration = acc;
+     // Set command position and orientation
+    command.position = targetPos;
     command.yaw = info.getYaw();
 
     command.dribblerOn = info.getDribblerOn();

@@ -2,7 +2,7 @@
 
 #include <roboteam_utils/Angle.h>
 #include <roboteam_utils/Vector2.h>
-
+#include <string>
 #include <vector>
 
 namespace rtt {
@@ -19,10 +19,11 @@ typedef struct RobotCommand {
     int id = 0;  // [0,15] The id of robot
 
     // Positioning related variables
-    Vector2 velocity;                    // (m/s) Target velocity of the robot
-    Vector2 acceleration;                // (m/s^2) Target acceleration of the robot
+    // Vector2 velocity;                    // (m/s) Target velocity of the robot
+    // Vector2 acceleration;                // (m/s^2) Target acceleration of the robot
+    Vector2 position;                    // Vector for desired poosition (x,y)
     Angle yaw;                           // (rad) [-PI, PI] The target yaw of the robot
-    double targetAngularVelocity = 0.0;  // (rad/s) The target angular velocity of the robot
+    // double targetAngularVelocity = 0.0;  // (rad/s) The target angular velocity of the robot
     bool useAngularVelocity = 0.0;       // True if angular velocity should be used instead of yaw
 
     Angle cameraYawOfRobot;              // (rad) The current yaw of the robot according to the camera

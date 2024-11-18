@@ -13,9 +13,10 @@ roboteam_ai_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.
 print(f"Adding to PYTHONPATH: {roboteam_ai_root}")  # Debug print
 sys.path.append(roboteam_ai_root)
 
-from roboteam_ai.src.RL.env import RoboTeamEnv
+from roboteam_ai.src.RL.env2 import RoboTeamEnv
 
-os.environ["PYTHONWARNINGS"] = "ignore::DeprecationWarning"
+import warnings
+warnings.filterwarnings('ignore', category=DeprecationWarning)
 
 def verify_imports():
     import numpy
@@ -26,21 +27,23 @@ def verify_imports():
 def main():
     verify_imports()
 
-    if not ray.is_initialized():
-        ray.init(
-            address="ray://localhost:10001",
-            ignore_reinit_error=True,
-            runtime_env={
-                "env_vars": {
-                    "NUMPY_EXPERIMENTAL_ARRAY_FUNCTION": "0",
+    # if not ray.is_initialized():
+    #     ray.init(
+    #         address="ray://192.168.49.2:31001",
+    #         ignore_reinit_error=True,
+    #         runtime_env={
+    #             "env_vars": {
+    #                 "NUMPY_EXPERIMENTAL_ARRAY_FUNCTION": "0",
 
-                },
-                "pip": [
-                    #"numpy==1.24.3",
-                    #"pyzmq==26.2.0"
-                ]
-            }
-        )
+    #             },
+    #             # "pip": [
+    #             #     "numpy==1.24.3",
+    #             #     "pyzmq==26.2.0"
+    #             # ]
+    #         }
+    #     )
+
+    ray.init()
 
     # We can set env_config here
     def env_creator(env_config):
@@ -48,7 +51,6 @@ def main():
     
     # Register the environment
     register_env("RoboTeamEnv", env_creator)
-
 
     # Create list of callbacks
     callbacks = [

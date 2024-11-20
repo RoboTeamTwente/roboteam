@@ -44,9 +44,8 @@ class RoboTeamEnv(gymnasium.Env):
         self.blue_score = 0  # Initialize blue score to zero
 
         # Initialize the observation space
-        self.observation_space = spaces.Box(low=0, high=self.MAX_ROBOTS_US, shape=(15,), dtype=np.int32)
+        self.observation_space = spaces.Box(low=float('-inf'), high=float('inf'), shape=(1,15), dtype=np.float64)
 
-        
         # Action space: [attackers, defenders]
         # Wallers will be automatically calculated
         self.action_space = spaces.MultiDiscrete([self.MAX_ROBOTS_US + 1, self.MAX_ROBOTS_US + 1])
@@ -170,26 +169,38 @@ class RoboTeamEnv(gymnasium.Env):
         """
         get_observation is meant to get the observation space (kinda like the state)
         """
-
         # Get the robot grid representation
-        self.robot_grid, self.is_yellow_dribbling, self.is_blue_dribbling = get_robot_state() # Matrix of 4 by 2 + 2 booleans
+        self.robot_grid, self.is_yellow_dribbling, self.is_blue_dribbling = get_robot_state()
         print(f"Robot grid: {self.robot_grid}")
         print(f"Yellow dribbling: {self.is_yellow_dribbling}, Blue dribbling: {self.is_blue_dribbling}")
 
         # Get the ball location
-        self.ball_position, self.ball_quadrant = get_ball_state() # x,y coordinates, quadrant
-
+        self.ball_position, self.ball_quadrant = get_ball_state()
         print(f"Ball position: {self.ball_position}, Ball quadrant: {self.ball_quadrant}")
 
-        robot_positions_flat = self.robot_grid.flatten()
+        # Convert and flatten robot positions to float64
+        robot_positions_flat = self.robot_grid.astype(np.float64).flatten()  # 8 elements
         
-        # Convert `ball_position` (scalar) and `is_yellow_dribbling` (boolean) to compatible formats
-        ball_position = np.array([self.ball_quadrant])  # 1 element
-        is_yellow_dribbling = np.array([int(self.is_yellow_dribbling)])  # Convert boolean to int (0 or 1)
+        # Use ball quadrant for observation
+        ball_quadrant = np.array([float(self.ball_quadrant)], dtype=np.float64)  # 1 element
         
-        # Combine all parts into a single 15-element observation array
-        # Pad with zeros if you need additional elements
-        observation = np.concatenate([robot_positions_flat, ball_position, is_yellow_dribbling, np.zeros(5)])
+        # Convert dribbling status to float64
+        is_yellow_dribbling = np.array([float(self.is_yellow_dribbling)], dtype=np.float64)  # 1 element
+        
+        # Combine all parts into the observation array with padding
+        observation = np.concatenate([
+            robot_positions_flat,    # 8 elements
+            ball_quadrant,          # 1 element
+            is_yellow_dribbling,    # 1 element
+            np.zeros(5, dtype=np.float64)  # 5 elements to reach total of 15
+        ])
+        
+        # Reshape to match expected shape (1, 15)
+        observation = observation.reshape(1, 15)
+        
+        # Verify shape and dtype
+        assert observation.shape == (1, 15), f"Observation shape {observation.shape} != (1, 15)"
+        assert observation.dtype == np.float64, f"Observation dtype {observation.dtype} != float64"
         
         return observation, self.calculate_reward()
 
@@ -230,7 +241,7 @@ class RoboTeamEnv(gymnasium.Env):
             observation_space, _ = self.reset()
         truncated = self.is_truncated()  # Determine if the episode was truncated, too much time or a yellow card
 
-        time.sleep(0.25)  # DELAY FOR STEPS (ADJUST LATER)
+        time.sleep(0.1)  # DELAY FOR STEPS (ADJUST LATER)
 
         return observation_space, reward, done, truncated, {}
 
@@ -266,20 +277,26 @@ class RoboTeamEnv(gymnasium.Env):
         """
 
         # Teleport ball to middle position
+        print("Teleporting ball...")
         teleport_ball(0,0)
 
         # Reset referee state
+        print("Resetting referee state...")
         reset_referee_state()
 
         # Set blue team on right side + initiates kickoff
+        print("Starting game...")
         start_game()
+
+        print("Getting observation...")
+        observation, _ = self.get_observation()
 
         # Reset shaped_reward_given boolean
         self.shaped_reward_given = False
         self.is_yellow_dribbling = False
         self.is_blue_dribbling = False
 
-        observation, _ = self.get_observation()
+        print("Reset complete!")
         return observation,{}
 
 

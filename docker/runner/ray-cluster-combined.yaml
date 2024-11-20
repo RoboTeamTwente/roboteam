@@ -22,7 +22,7 @@ spec:
                 - key: kubernetes.io/hostname
                   operator: In
                   values:
-                  - multinode-demo  # Schedule on control-plane
+                  - ray  # Schedule on control-plane
         containers:
         - name: ray-head
           image: roboteamtwente/ray:development
@@ -78,6 +78,8 @@ spec:
           labels:
             app: ray-worker
         spec:
+          hostNetwork: true
+          dnsPolicy: ClusterFirstWithHostNet
           affinity:
             nodeAffinity:
               requiredDuringSchedulingIgnoredDuringExecution:
@@ -86,7 +88,13 @@ spec:
                   - key: kubernetes.io/hostname
                     operator: In
                     values:
-                    - multinode-demo-m02  # Schedule on worker node
+                    - ray-m02  # Schedule on worker node
+            podAntiAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+              - labelSelector:
+                  matchLabels:
+                    app: ray-worker
+                topologyKey: "kubernetes.io/hostname"
           volumes:
           - name: gradle-cache
             emptyDir: {}
@@ -101,8 +109,8 @@ spec:
                 cpu: 500m
                 memory: 1Gi
               limits:
-                cpu: 1000m
-                memory: 2Gi
+                cpu: 2000m
+                memory: 4Gi
             env:
             - name: LD_LIBRARY_PATH
               value: /home/roboteam/build/release/lib
@@ -112,10 +120,10 @@ spec:
           # Game Controller
           - name: ssl-game-controller
             image: robocupssl/ssl-game-controller:latest
-            args: ["-address", "0.0.0.0:8081"]  # Changed from :8081 to explicitly bind to all interfaces
+            args: ["-address", "0.0.0.0:8081"]
             ports:
               - containerPort: 8081
-                protocol: TCP    # Explicitly set protocol
+                protocol: TCP
 
           # Primary AI
           - name: roboteam-primary-ai
@@ -193,11 +201,11 @@ spec:
             - "/home/roboteam/external/framework/build/bin/simulator-cli"
             ports:
               - containerPort: 10300
-                protocol: UDP    # Simulator control port
+                protocol: UDP
               - containerPort: 10301
-                protocol: TCP    # Presumably TCP ports
+                protocol: TCP
               - containerPort: 5558
-                protocol: TCP    # ZMQ port
+                protocol: TCP
             env:
               - name: LD_LIBRARY_PATH
                 value: /home/roboteam/build/release/lib
@@ -245,3 +253,46 @@ spec:
     port: 8081
     targetPort: 8081
     nodePort: 30081  # Game controller interface
+  - name: redis
+    port: 6379  
+    targetPort: 6379
+    nodePort: 30679  # Choose an available port
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: roboteam-ray-cluster-head-svc
+spec:
+  type: ClusterIP
+  selector:
+    app: ray-head
+  ports:
+  - name: redis
+    port: 6379
+    targetPort: 6379
+  - name: gcs
+    port: 10001
+    targetPort: 10001
+  - name: dashboard
+    port: 8265
+    targetPort: 8265
+  - name: serve
+    port: 8000
+    targetPort: 8000
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: roboteam-ray-worker-svc
+spec:
+  selector:
+    app: ray-worker
+  ports:
+  - name: game-controller
+    port: 8081
+    targetPort: 8081
+  - name: simulator
+    port: 5558
+    targetPort: 5558

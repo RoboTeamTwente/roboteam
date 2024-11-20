@@ -27,23 +27,23 @@ def verify_imports():
 def main():
     verify_imports()
 
-    # if not ray.is_initialized():
-    #     ray.init(
-    #         address="ray://192.168.49.2:31001",
-    #         ignore_reinit_error=True,
-    #         runtime_env={
-    #             "env_vars": {
-    #                 "NUMPY_EXPERIMENTAL_ARRAY_FUNCTION": "0",
+    if not ray.is_initialized():
+        ray.init(
+            address=f"ray://192.168.49.2:31001",
+            ignore_reinit_error=True,
+            runtime_env={
+                "env_vars": {
+                    "NUMPY_EXPERIMENTAL_ARRAY_FUNCTION": "0",
 
-    #             },
-    #             # "pip": [
-    #             #     "numpy==1.24.3",
-    #             #     "pyzmq==26.2.0"
-    #             # ]
-    #         }
-    #     )
+                },
+                # "pip": [
+                #     "numpy==1.24.3",
+                #     "pyzmq==26.2.0"
+                # ]
+            }
+        )
 
-    ray.init()
+    # ray.init()
 
     # We can set env_config here
     def env_creator(env_config):
@@ -65,7 +65,13 @@ def main():
         .resources(num_gpus=0)
         .env_runners(
             num_env_runners=1,
+            num_envs_per_env_runner=1,
+            sample_timeout_s=None
         )
+#         .api_stack(
+#             enable_rl_module_and_learner=True,
+#             enable_env_runner_and_connector_v2=True
+# )
         .debugging(
             log_level="DEBUG",
             seed=42
@@ -78,16 +84,14 @@ def main():
     algo = config.build()
 
     for i in range(10):
+        print(f"\nStarting iteration {i}")
         result = algo.train()
         result.pop("config")
+        print("\nTraining metrics:")
+        print(f"Episode Reward Mean: {result.get('episode_reward_mean', 'N/A')}")
+        print(f"Episode Length Mean: {result.get('episode_len_mean', 'N/A')}")
+        print(f"Total Timesteps: {result.get('timesteps_total', 'N/A')}")
         pprint(result)
-
-        if i % 5 == 0:
-            # Use save instead of save_to_path
-            checkpoint_dir = f"checkpoint_{i}"
-            os.makedirs(checkpoint_dir, exist_ok=True)
-            algo.save(checkpoint_dir)
-            print(f"Checkpoint saved in directory {checkpoint_dir}")
 
 if __name__ == "__main__":
     main()

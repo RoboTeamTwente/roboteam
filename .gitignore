@@ -37,3 +37,9 @@ ENV/
 env.bak/
 venv.bak/
 __pycache__/
+tigers_sumatra
+docker/runner/ssl-game-controller-config/20*
+roboteam_ai/src/RL/src/ppo_*
+roboteam_ai/src/RL/src/best_model_PPO.zip
+roboteam_ai/src/RL/src/tmp/eval_monitor.monitor.csv
+roboteam_ai/src/RL/src/tmp/monitor.monitor.csv

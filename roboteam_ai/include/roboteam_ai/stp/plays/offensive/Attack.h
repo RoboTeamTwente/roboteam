@@ -2,11 +2,12 @@
 #define RTT_ATTACK_H
 
 #include "stp/Play.hpp"
+#include <vector>  // For std::vector
 
 namespace rtt::ai::stp::play {
 
 /**
- * @brief The attack play is executed when there is a chance to shoot at the enemey goal
+ * @brief The attack play is executed when there is a chance to shoot at the enemy goal
  */
 class Attack : public Play {
    public:
@@ -14,6 +15,14 @@ class Attack : public Play {
      * @brief Constructor that initializes roles with roles that are necessary for this play
      */
     Attack();
+
+    ~Attack() override;
+
+
+    /**
+     * @brief Receives action commands dynamically to modify roles
+     */
+    void receiveActionCommand();
 
     /**
      * @brief Calculates the score of this play to determine which play is best in this situation
@@ -34,7 +43,7 @@ class Attack : public Play {
     void calculateInfoForRoles() noexcept override;
 
     /**
-     * @brief Check if play should end. True when stri role is finished.
+     * @brief Check if play should end. True when striker role is finished.
      */
     bool shouldEndPlay() noexcept override;
 
@@ -43,6 +52,9 @@ class Attack : public Play {
      * @return The name of the play as string
      */
     const char* getName() const override;
+
+   private:
+    std::vector<std::unique_ptr<Role>> roles;  // Updated to std::vector
 };
 
 }  // namespace rtt::ai::stp::play

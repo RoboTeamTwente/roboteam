@@ -1,102 +1,92 @@
 #include <iostream>
 #include <thread>
-#include "stp/plays/offensive/Attack.h" 
-#include <roboteam_utils/Hungarian.h>
+#include <fstream>
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <vector>
+#include <array>
+#include "stp/plays/offensive/Attack.h"
 #include "stp/computations/GoalComputations.h"
 #include "stp/computations/PositionScoring.h"
 #include "stp/roles/Keeper.h"
 #include "stp/roles/active/Striker.h"
 #include "stp/roles/passive/Defender.h"
 #include "stp/roles/passive/Formation.h"
+#include "../../../roboteam_networking/proto/ActionCommand.pb.h"
 
 namespace rtt::ai::stp::play {
 
-void Attack::receiveActionCommand() {
-    zmq::context_t context(1); // Create a context
-    zmq::socket_t socket(context, ZMQ_PULL); // Create a PULL socket
-    socket.bind("tcp://*:5555"); // Bind to the same port as the sender
-
-    while (true) {
-        zmq::message_t message; // Create a message to receive
-        socket.recv(&message); // Receive the message
-
-        // Parse the protobuf message
-        ActionCommand action_command;
-        action_command.ParseFromArray(message.data(), message.size()); // Deserialize
-
-        int num_attacker = action_command.numAttacker();
-        int num_defender = action_command.numDefender();
-        int num_waller = action_command.numWaller();
-
-        // Clear existing roles (if any)
-        roles.clear();
-
-        // Create Striker roles
-        for (int i = 0; i < num_attacker; ++i) {
-            std::string name = "striker_" + std::to_string(i);
-            roles.push_back(std::make_unique<role::Striker>(name));
-        }
-
-        // Create Defender roles
-        for (int i = 0; i < num_defender; ++i) {
-            std::string name = "defender_" + std::to_string(i);
-            roles.push_back(std::make_unique<role::Defender>(name));
-        }
-
-        // Create Waller roles
-        for (int i = 0; i < num_waller; ++i) {
-            std::string name = "waller_" + std::to_string(i);
-            roles.push_back(std::make_unique<role::Defender>(name)); // Assuming Waller is also a Defender
-        }
-
-        // Print the received values for debugging
-        std::cout << "Received: numDefender=" << num_defender
-                  << ", numAttacker=" << num_attacker
-                  << ", numWaller=" << num_waller << std::endl;
-
-        // Optionally, print created roles
-        for (const auto& role : roles) {
-            std::cout << "Created role: " << role->getName() << std::endl; // Assuming getName() method exists
-        }
-    }
-}
-
-
-
 Attack::Attack() : Play() {
-    // Evaluations that have to be true in order for this play to be considered valid.
     startPlayEvaluation.clear();
     startPlayEvaluation.emplace_back(GlobalEvaluation::NormalPlayGameState);
     startPlayEvaluation.emplace_back(GlobalEvaluation::WeWillHaveBall);
     startPlayEvaluation.emplace_back(GlobalEvaluation::BallNotInOurDefenseAreaAndStill);
 
-    // Evaluations that have to be true to allow the play to continue, otherwise the play will change. Plays can also end using the shouldEndPlay().
     keepPlayEvaluation.clear();
     keepPlayEvaluation.emplace_back(GlobalEvaluation::NormalPlayGameState);
     keepPlayEvaluation.emplace_back(GlobalEvaluation::WeWillHaveBall);
     keepPlayEvaluation.emplace_back(GlobalEvaluation::BallNotInOurDefenseAreaAndStill);
 
-    // Role creation, the names should be unique. The names are used in the stpInfos-map.
-    roles = std::array<std::unique_ptr<Role>, rtt::ai::constants::MAX_ROBOT_COUNT>{
-        // Roles is we play 6v6
-        std::make_unique<role::Keeper>("keeper"),
-        std::make_unique<role::Striker>("striker"),
-        std::make_unique<role::Defender>("defender_0"),
-        std::make_unique<role::Formation>("attacker_0"),
-        std::make_unique<role::Defender>("defender_1"),
-        std::make_unique<role::Defender>("defender_2"),
-        // Additional roles if we play 11v11
-        std::make_unique<role::Defender>("waller_0"),
-        std::make_unique<role::Defender>("waller_1"),
-        std::make_unique<role::Formation>("attacker_1"),
-        std::make_unique<role::Defender>("defender_3"),
-        std::make_unique<role::Formation>("attacker_2"),
-    };
+    roles.push_back(std::make_unique<role::Keeper>("keeper"));
+    roles.push_back(std::make_unique<role::Striker>("striker"));
+    roles.push_back(std::make_unique<role::Defender>("defender_0"));
+    roles.push_back(std::make_unique<role::Formation>("attacker_0"));
+    roles.push_back(std::make_unique<role::Defender>("defender_1"));
+    roles.push_back(std::make_unique<role::Defender>("defender_2"));
+}
+
+Attack::~Attack() = default;
+
+void Attack::receiveActionCommand() {
+    const char* fifo_path = "/tmp/action_pipe";
+    mkfifo(fifo_path, 0666);  // Create the FIFO
+
+    while (true) {
+        int fifo_fd = open(fifo_path, O_RDONLY);
+        if (fifo_fd == -1) {
+            perror("Error opening FIFO");
+            return;
+        }
+
+        char buffer[1024];
+        ssize_t bytes_read = read(fifo_fd, buffer, sizeof(buffer));
+        close(fifo_fd);
+
+        if (bytes_read > 0) {
+            ActionCommand action_command;
+            if (action_command.ParseFromArray(buffer, bytes_read)) {
+                int num_attacker = action_command.numattacker();
+                int num_defender = action_command.numdefender();
+                int num_waller = action_command.numwaller();
+
+                roles.clear();  // Clear existing roles
+
+                for (int i = 0; i < num_attacker; ++i) {
+                    roles.push_back(std::make_unique<role::Striker>("striker_" + std::to_string(i)));
+                }
+                for (int i = 0; i < num_defender; ++i) {
+                    roles.push_back(std::make_unique<role::Defender>("defender_" + std::to_string(i)));
+                }
+                for (int i = 0; i < num_waller; ++i) {
+                    roles.push_back(std::make_unique<role::Defender>("waller_" + std::to_string(i)));
+                }
+
+                std::cout << "Received: numDefender=" << num_defender
+                          << ", numAttacker=" << num_attacker
+                          << ", numWaller=" << num_waller << std::endl;
+            } else {
+                std::cerr << "Failed to parse protobuf message" << std::endl;
+            }
+        }
+    }
 }
 
 uint8_t Attack::score(const rtt::Field& field) noexcept {
-    // Score the position of the ball based on the odds of scoring
-    return PositionScoring::scorePosition(world->getWorld()->getBall().value()->position, gen::GoalShot, field, world).score * (rand() % (2) + 1);
+    return PositionScoring::scorePosition(
+               world->getWorld()->getBall().value()->position, gen::GoalShot, field, world)
+               .score *
+           (rand() % 2 + 1);
 }
 
 Dealer::FlagMap Attack::decideRoleFlags() const noexcept {
@@ -121,25 +111,20 @@ Dealer::FlagMap Attack::decideRoleFlags() const noexcept {
 }
 
 void Attack::calculateInfoForRoles() noexcept {
-    PositionComputations::calculateInfoForDefendersAndWallers(stpInfos, roles, field, world, true);
-    PositionComputations::calculateInfoForAttackers(stpInfos, roles, field, world);
+    std::array<std::unique_ptr<Role>, constants::MAX_ROBOT_COUNT> roles_array{};
+    std::move(roles.begin(), roles.end(), roles_array.begin());
 
-    // Striker
-    auto goalTarget = computations::GoalComputations::calculateGoalTarget(world, field);
-    goalTarget.y = std::clamp(goalTarget.y, field.rightGoalArea.bottom() + 0.2, field.rightGoalArea.top() - 0.2);
-    stpInfos["striker"].setPositionToShootAt(goalTarget);
-    stpInfos["striker"].setKickOrChip(KickType::KICK);
-    stpInfos["striker"].setShotPower(ShotPower::MAX);
-    PositionComputations::recalculateInfoForNonPassers(stpInfos, field, world, goalTarget);
+    PositionComputations::calculateInfoForDefendersAndWallers(stpInfos, roles_array, field, world, true);
+    PositionComputations::calculateInfoForAttackers(stpInfos, roles_array, field, world);
 }
 
 bool Attack::shouldEndPlay() noexcept {
-    // If the striker has finished, the play finished successfully
-    if (std::any_of(roles.begin(), roles.end(), [](const auto& role) { return role != nullptr && role->getName() == "striker" && role->finished(); })) {
+    if (std::any_of(roles.begin(), roles.end(), [](const auto& role) {
+            return role != nullptr && role->getName() == "striker" && role->finished();
+        })) {
         return true;
     }
 
-    // Find id of robot with name striker
     auto strikerId = stpInfos.at("striker");
     if (strikerId.getRobot() && strikerId.getRobot().value()) {
         auto strikerRobotId = strikerId.getRobot().value()->getId();
@@ -154,26 +139,3 @@ bool Attack::shouldEndPlay() noexcept {
 const char* Attack::getName() const { return "Attack"; }
 
 }  // namespace rtt::ai::stp::play
-
-
-
-
-
-
-int main() {
-    // Create an instance of the Attack class
-    rtt::ai::stp::play::Attack attack;
-
-    // Start receiving action commands in a separate thread
-    std::thread receiver_thread(&rtt::ai::stp::play::Attack::receiveActionCommand, &attack);
-    receiver_thread.detach(); // Detach the thread to allow it to run independently
-
-    // Allow some time for receiving messages
-    std::cout << "Receiving messages. Press Enter to exit..." << std::endl;
-
-    // Wait for user input to exit
-    std::cin.get();  // This will block until you press Enter
-
-    return 0;
-}
-

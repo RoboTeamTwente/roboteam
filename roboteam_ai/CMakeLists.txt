@@ -300,3 +300,11 @@ gtest_discover_tests(roboteam_ai_tests)
 #         PRIVATE roboteam_utils
 #         PRIVATE testHelpers
 # )
+# Add the protobuf generated source files
+set(PROTO_SRCS 
+    ${CMAKE_SOURCE_DIR}/roboteam_networking/proto/ActionCommand.pb.cc
+)
+target_sources(roboteam_ai PRIVATE ${PROTO_SRCS})
+find_package(Protobuf REQUIRED)
+
+target_link_libraries(roboteam_ai PRIVATE protobuf::libprotobuf)

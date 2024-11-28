@@ -10,19 +10,19 @@
 namespace rtt::ai::control {
 
 void ControlModule::rotateRobotCommand(rtt::RobotCommand& command) {
-    command.velocity.x = -command.velocity.x;
-    command.velocity.y = -command.velocity.y;
-    command.acceleration.x = -command.acceleration.x;
-    command.acceleration.y = -command.acceleration.y;
+  //  command.velocity.x = -command.velocity.x;
+  // command.velocity.y = -command.velocity.y;
+  //   command.acceleration.x = -command.acceleration.x;
+  //   command.acceleration.y = -command.acceleration.y;
     command.yaw += M_PI;
 }
 
 void ControlModule::limitRobotCommand(rtt::RobotCommand& command, rtt::world::view::RobotView robot) {
-    limitVel(command);
+   // limitVel(command);
     limitAngularVel(command, robot);
 }
 
-void ControlModule::limitVel(rtt::RobotCommand& command) { command.velocity = command.velocity.stretchToLength(std::clamp(command.velocity.length(), 0.0, constants::MAX_VEL)); }
+ // void ControlModule::limitVel(rtt::RobotCommand& command) { command.velocity = command.velocity.stretchToLength(std::clamp(command.velocity.length(), 0.0, constants::MAX_VEL)); }
 
 void ControlModule::limitAngularVel(rtt::RobotCommand& command, rtt::world::view::RobotView robot) {
     // Limit the angular velocity when the robot has the ball by setting the target yaw in small steps
@@ -91,9 +91,9 @@ void ControlModule::simulator_angular_control(const std::optional<::rtt::world::
             simulatorYawPIDmap.insert({robot->get()->getId(), pid});
         }
     }
-    robot_command.useAngularVelocity = true;
+    // robot_command.useAngularVelocity = true;
     ang_velocity_out = std::clamp(ang_velocity_out, -8.0 * M_PI, 8.0 * M_PI);
-    robot_command.targetAngularVelocity = static_cast<float>(ang_velocity_out);
+    // robot_command.targetAngularVelocity = static_cast<float>(ang_velocity_out);
 }
 
 void ControlModule::sendAllCommands() {

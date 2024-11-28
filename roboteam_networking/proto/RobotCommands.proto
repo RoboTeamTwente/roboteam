@@ -2,35 +2,47 @@ syntax = "proto3";
 
 package proto;
 
-message RobotCommand {
-    int32 id = 1;   // [0, 15] Id of robot
-
-    double velocity_x = 2;          // (m/s) Target x velocity of the robot
-    double velocity_y = 3;          // (m/s) Target y velocity of the robot
-    double yaw = 4;               // (rad) [-PI, PI] Target yaw
-    double angular_velocity = 5;    // (rad/s) Target angular velocity
-    bool use_angular_velocity = 6;  // If true, the angular velocity has priority over yaw
-
-    double camera_yaw_of_robot = 7;       // (rad) Angle of robot according to camera
-    bool camera_yaw_of_robot_is_set = 8;  // If true, the camera yaw can be used
-
-    double kick_speed = 9;          // (m/s) Target speed of the ball after kicking
-    bool wait_for_ball = 10;        // If true, the robot will wait with kicking until it has the ball
-    bool kick_at_yaw = 11;        // Makes robot kick once it arrives at the specified yaw, used in combination with angular velocity
-
-    enum KickType {
-        NO_KICK = 0;
-        KICK = 1;
-        CHIP = 2;
-    }
-    KickType kick_type = 12;        // Decides if and how the ball should be kicked
-
-    bool dribbler_on = 13; // If true, the robot will turn on its dribbler
-    bool wheels_off = 14;    // If true, the robot will not move its wheels
-    double acceleration_x = 15;     // (m/s^2) Target x acceleration of the robot
-    double acceleration_y = 16;     // (m/s^2) Target y acceleration of the robot
+// Message to represent a position
+message Position {
+    double x = 1; // X-coordinate
+    double y = 2; // Y-coordinate
 }
 
+// Single robot command message
+message RobotCommand {
+    int32 id = 1;                  // [0, 15] Id of the robot
+
+    double x = 2;
+    double y = 3;        // Target position of the robot
+
+  //  double velocity_x = 4;         // (m/s) Target x velocity of the robot
+  // double velocity_y = 5;         // (m/s) Target y velocity of the robot
+    double yaw = 4;                // (rad) [-PI, PI] Target yaw
+    double angular_velocity = 5;   // (rad/s) Target angular velocity
+    bool use_angular_velocity = 6; // If true, the angular velocity has priority over yaw
+
+    double camera_yaw_of_robot = 7;       // (rad) Angle of robot according to the camera
+    bool camera_yaw_of_robot_is_set = 8;  // If true, the camera yaw can be used
+
+    double kick_speed = 9;        // (m/s) Target speed of the ball after kicking
+    bool wait_for_ball = 10;       // If true, the robot will wait with kicking until it has the ball
+    bool kick_at_yaw = 11;         // Makes robot kick once it arrives at the specified yaw
+
+    enum KickType {
+        NO_KICK = 0;               // No kick
+        KICK = 1;                  // Direct kick
+        CHIP = 2;                  // Chip kick
+    }
+    KickType kick_type = 12;       // Decides if and how the ball should be kicked
+
+    bool dribbler_on = 13;         // If true, the robot will turn on its dribbler
+    bool wheels_off = 14;          // If true, the robot will not move its wheels
+
+    double acceleration_x = 15;    // (m/s^2) Target x acceleration of the robot
+    double acceleration_y = 16;    // (m/s^2) Target y acceleration of the robot
+}
+
+// Command for multiple robots
 message RobotCommands {
-    repeated RobotCommand robot_commands = 1;
+    repeated RobotCommand robot_commands = 1; // List of robot commands
 }

@@ -80,7 +80,7 @@ void rotate(proto::SSL_GeometryFieldSize *field) {
 // rotate robotcommands
 void rotate(rtt::RobotCommand *command) {
     assert(command && "Invalid pointer for command");
-    command->velocity = command->velocity * -1;
+    // command->velocity = command->velocity * -1;
     command->yaw += M_PI;
 }
 void rotate(proto::SSL_WrapperPacket *packet) {

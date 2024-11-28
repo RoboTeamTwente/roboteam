@@ -92,17 +92,17 @@ void RobotHub::sendCommandsToSimulator(const rtt::RobotCommands &commands, rtt::
         auto kickSpeed = static_cast<float>(robotCommand.kickSpeed);
         float kickAngle = robotCommand.kickType == rtt::KickType::CHIP ? SIM_CHIPPER_ANGLE_DEGREES : 0.0f;
         float dribblerSpeed = static_cast<float>(robotCommand.dribblerOn) * SIM_MAX_DRIBBLER_SPEED_RPM;  // dribblerOn is range of 0 to 1
-        auto angularVelocity = static_cast<float>(robotCommand.targetAngularVelocity);
+     //   auto angularVelocity = static_cast<float>(robotCommand.targetAngularVelocity);
 
         if (!robotCommand.useAngularVelocity) {
             RTT_WARNING("Robot command used absolute yaw, but simulator requires angular velocity")
         }
 
         /* addRobotControlWithLocalSpeeds works with both grSim and ER-Force sim, while addRobotControlWithGlobalSpeeds only works with grSim*/
-        auto relativeVelocity = robotCommand.velocity.rotate(-robotCommand.cameraYawOfRobot);
-        auto forward = relativeVelocity.x;
-        auto left = relativeVelocity.y;
-        simCommand.addRobotControlWithLocalSpeeds(id, kickSpeed, kickAngle, dribblerSpeed, forward, left, angularVelocity);
+       // auto relativeVelocity = robotCommand.velocity.rotate(-robotCommand.cameraYawOfRobot);
+       //  auto forward = relativeVelocity.x;
+        // auto left = relativeVelocity.y;
+       //  simCommand.addRobotControlWithLocalSpeeds(id, kickSpeed, kickAngle, dribblerSpeed, forward, left, angularVelocity);
 
         // Update received commands stats
         this->statistics.incrementCommandsReceivedCounter(id, color);
@@ -151,15 +151,15 @@ void RobotHub::sendCommandsToBasestation(const rtt::RobotCommands &commands, rtt
         command.kickChipPower = static_cast<float>(robotCommand.kickSpeed);
         command.dribblerOn = robotCommand.dribblerOn;
 
-        command.rho = static_cast<float>(robotCommand.velocity.length());
-        command.theta = static_cast<float>(robotCommand.velocity.angle());
+        //command.rho = static_cast<float>(robotCommand.velocity.length());
+        //command.theta = static_cast<float>(robotCommand.velocity.angle());
 
-        command.acceleration_angle = static_cast<float>(robotCommand.acceleration.angle());
-        command.acceleration_magnitude = static_cast<float>(robotCommand.acceleration.length());
+        //command.acceleration_angle = static_cast<float>(robotCommand.acceleration.angle());
+        //command.acceleration_magnitude = static_cast<float>(robotCommand.acceleration.length());
 
         command.useYaw = !robotCommand.useAngularVelocity;
         command.yaw = static_cast<float>(robotCommand.yaw.getValue());
-        command.angularVelocity = static_cast<float>(robotCommand.targetAngularVelocity);
+       //  command.angularVelocity = static_cast<float>(robotCommand.targetAngularVelocity);
 
         command.useCameraYaw = robotCommand.cameraYawOfRobotIsSet;
         command.cameraYaw = command.useCameraYaw ? static_cast<float>(robotCommand.cameraYawOfRobot) : 0.0f;

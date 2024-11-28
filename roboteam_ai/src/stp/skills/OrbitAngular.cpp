@@ -26,7 +26,7 @@ Status OrbitAngular::onUpdate(const StpInfo &info) noexcept {
 
     // Construct the robot command
     command.id = robot->getId();
-    command.velocity = targetVelocity;
+    // command.velocity = targetVelocity;
 
     // target yaw is angular velocity times the time step (1/60th of a second) in basestation
     // in simulator, we multiple by 1/2.5 because of how the simulator works and the pid controller is tuned

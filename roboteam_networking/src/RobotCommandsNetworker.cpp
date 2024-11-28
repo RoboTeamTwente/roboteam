@@ -30,6 +30,7 @@ rtt::KickType protoToKickType(proto::RobotCommand::KickType kickType) {
     }
 }
 
+
 proto::RobotCommands robotCommandsToProto(const rtt::RobotCommands& commands) {
     proto::RobotCommands protoCommands;
 
@@ -37,11 +38,9 @@ proto::RobotCommands robotCommandsToProto(const rtt::RobotCommands& commands) {
         auto protoCommand = protoCommands.add_robot_commands();
 
         protoCommand->set_id(command.id);
-        protoCommand->set_velocity_x(command.velocity.x);
-        protoCommand->set_velocity_y(command.velocity.y);
+        protoCommand->set_x(command.x);
+        protoCommand->set_y(command.y);
         protoCommand->set_yaw(command.yaw.getValue());
-        protoCommand->set_angular_velocity(command.targetAngularVelocity);
-        protoCommand->set_use_angular_velocity(command.useAngularVelocity);
 
         protoCommand->set_camera_yaw_of_robot(command.cameraYawOfRobot.getValue());
         protoCommand->set_camera_yaw_of_robot_is_set(command.cameraYawOfRobotIsSet);
@@ -53,8 +52,6 @@ proto::RobotCommands robotCommandsToProto(const rtt::RobotCommands& commands) {
 
         protoCommand->set_dribbler_on(command.dribblerOn);
         protoCommand->set_wheels_off(command.wheelsOff);
-        protoCommand->set_acceleration_x(command.acceleration.x);
-        protoCommand->set_acceleration_y(command.acceleration.y);
     }
 
     return protoCommands;
@@ -64,28 +61,26 @@ rtt::RobotCommands protoToRobotCommands(const proto::RobotCommands& protoCommand
     rtt::RobotCommands robotCommands;
 
     for (const auto& protoCommand : protoCommands.robot_commands()) {
-        rtt::RobotCommand robotCommand = {.id = protoCommand.id(),
-                                          .velocity = Vector2(protoCommand.velocity_x(), protoCommand.velocity_y()),
-                                          .acceleration = Vector2(protoCommand.acceleration_x(), protoCommand.acceleration_y()),
-                                          .yaw = protoCommand.yaw(),
-                                          .targetAngularVelocity = protoCommand.angular_velocity(),
-                                          .useAngularVelocity = protoCommand.use_angular_velocity(),
-
-                                          .cameraYawOfRobot = protoCommand.camera_yaw_of_robot(),
-                                          .cameraYawOfRobotIsSet = protoCommand.camera_yaw_of_robot_is_set(),
-
-                                          .kickSpeed = protoCommand.kick_speed(),
-                                          .waitForBall = protoCommand.wait_for_ball(),
-                                          .kickType = protoToKickType(protoCommand.kick_type()),
-                                          .kickAtYaw = protoCommand.kick_at_yaw(),
-
-                                          .dribblerOn = protoCommand.dribbler_on(),
-                                          .wheelsOff = protoCommand.wheels_off()};
+        rtt::RobotCommand robotCommand = {
+            .id = protoCommand.id(),
+            .x = protoCommand.x(),  
+            .y = protoCommand.y(),  
+            .yaw = protoCommand.yaw(),
+            .cameraYawOfRobot = protoCommand.camera_yaw_of_robot(),
+            .cameraYawOfRobotIsSet = protoCommand.camera_yaw_of_robot_is_set(),
+            .kickSpeed = protoCommand.kick_speed(),
+            .waitForBall = protoCommand.wait_for_ball(),
+            .kickType = protoToKickType(protoCommand.kick_type()),
+            .kickAtYaw = protoCommand.kick_at_yaw(),
+            .dribblerOn = protoCommand.dribbler_on(),
+            .wheelsOff = protoCommand.wheels_off()
+        };
         robotCommands.push_back(robotCommand);
     }
 
     return robotCommands;
 }
+
 
 // Blue commands publisher
 RobotCommandsBluePublisher::RobotCommandsBluePublisher() : utils::Publisher(utils::ChannelType::ROBOT_COMMANDS_BLUE_CHANNEL) {}

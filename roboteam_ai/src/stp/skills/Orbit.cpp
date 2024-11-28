@@ -33,7 +33,7 @@ Status Orbit::onUpdate(const StpInfo &info) noexcept {
     maxVel = std::max(maxVel, 0.65);
     if (targetVelocity.length() > maxVel) targetVelocity = targetVelocity.stretchToLength(maxVel);
 
-    command.velocity = targetVelocity;
+   // command.velocity = targetVelocity;
     command.yaw = yaw;
     command.id = robot->getId();
 

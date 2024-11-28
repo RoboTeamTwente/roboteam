@@ -29,8 +29,8 @@ Status GoToPos::onUpdate(const StpInfo &info) noexcept {
     }
     auto [vel, acc] = info.getCurrentWorld()->getRobotPositionController()->computeAndTrackTrajectory(
         info.getCurrentWorld(), field, robot->getId(), robot->getPos(), robot->getVel(), targetPos, targetVel, info.getMaxRobotVelocity(), info.getMaxJerk(), avoidObj);
-    command.velocity = vel;
-    command.acceleration = acc;
+    
+  
 
     command.yaw = info.getYaw();
 

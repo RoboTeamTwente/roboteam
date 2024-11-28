@@ -32,7 +32,7 @@ class ControlModule {
      * @brief Limits the velocity with a constants value
      * @param command Robot command that needs to be checked
      */
-    static void limitVel(rtt::RobotCommand& command);
+  //  static void limitVel(rtt::RobotCommand& command);
 
     /**
      * @brief Limits the angular velocity with a constants value

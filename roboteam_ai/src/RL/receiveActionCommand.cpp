@@ -3,6 +3,7 @@
 #include <string>
 
 int main() {
+    
     std::string input;
 
     // Read each line from stdin

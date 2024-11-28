@@ -34,7 +34,6 @@ class RoboTeamEnv(gymnasium.Env):
     def __init__(self, config=None):
         self.config = config or {} # Config placeholder
 
-
         self.MAX_ROBOTS_US = 10
 
         # Define the number of robots that are present in each grid + ball location
@@ -161,7 +160,6 @@ class RoboTeamEnv(gymnasium.Env):
             'ball_position': self.ball_quadrant,
             'is_yellow_dribbling' : self.is_yellow_dribbling
         }
-        print("obs: ", observation_space)
 
         return observation_space, self.calculate_reward()
 

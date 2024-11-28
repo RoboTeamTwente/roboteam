@@ -37,12 +37,14 @@ To enable Tracy
   - Information is in the tracy [docs](https://github.com/wolfpld/tracy)
 - Run AI
 
-
 ### Use of Ray
+
 The dockerimage Dockerfile.ray is used to build a docker image with the ray project's official ray image as a base. It also adds the necessary libraries to the image and the roboteam RL code to the image. Only build it if you want to deploy it to a cluster.
 
 Build the docker image using the following command from the root folder:
+
 - docker build -t roboteamtwente/ray:development -f Dockerfile.ray .
 
 Push it using the following command:
+
 - docker push roboteamtwente/ray:development

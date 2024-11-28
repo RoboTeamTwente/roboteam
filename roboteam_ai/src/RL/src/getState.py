@@ -21,16 +21,18 @@ from roboteam_networking.proto.State_pb2 import State as RoboState  # Alias to a
 # from roboteam_networking.proto.ssl_gc_api_pb2 import Output as RefereeState  # Alias for referee state
 from roboteam_networking.proto.messages_robocup_ssl_referee_pb2 import * # Alias for referee state
 
-IS_IN_K8S = True
+def is_kubernetes():
+    """Detect if running in Kubernetes environment"""
+    return os.getenv('KUBERNETES_SERVICE_HOST') is not None
 
 def get_zmq_address():
     """Get the appropriate ZMQ address based on environment"""
-    if IS_IN_K8S:
+    if is_kubernetes():
         host = "roboteam-ray-worker-svc"
-        print("Running in Kubernetes, using service DNS")
+        #print("Running in Kubernetes, using service DNS")
     else:
         host = "localhost"
-        print("Running locally")
+        #print("Running locally")
     return f"tcp://{host}:5558"
 
 # Function to get the ball state
@@ -46,13 +48,13 @@ def get_ball_state():
    socket_world.setsockopt_string(zmq.SUBSCRIBE, "")
    
    zmq_address = get_zmq_address()
-   print(f"Connecting to ZMQ at: {zmq_address}")
+   #print(f"Connecting to ZMQ at: {zmq_address}")
    socket_world.connect(zmq_address)
 
    try:
-       print("Waiting for ZMQ message...")
+       #print("Waiting for ZMQ message...")
        message = socket_world.recv()
-       print("Received ZMQ message")
+       #print("Received ZMQ message")
        state = RoboState.FromString(message)
        
        if not len(state.processed_vision_packets):
@@ -64,8 +66,8 @@ def get_ball_state():
            ball_position[0] = world.ball.pos.x
            ball_position[1] = world.ball.pos.y
            
-           print("x",ball_position[0])
-           print("y",ball_position[1])
+           #print("x",ball_position[0])
+           #print("y",ball_position[1])
 
            if abs(ball_position[0]) <= CENTER_THRESHOLD and abs(ball_position[1]) <= CENTER_THRESHOLD:
                ball_quadrant = 4  # Center
@@ -94,7 +96,7 @@ def get_robot_state():
     socket_world.setsockopt_string(zmq.SUBSCRIBE, "")
 
     zmq_address = get_zmq_address()
-    print(f"Connecting to ZMQ at: {zmq_address}")
+    #print(f"Connecting to ZMQ at: {zmq_address}")
     socket_world.connect(zmq_address)
 
     try:
@@ -150,59 +152,33 @@ def get_referee_state():
     sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
 
     try:
-        # Receive the data
+        sock.settimeout(5)
         message, _ = sock.recvfrom(4096)
         referee_state = Referee.FromString(message)
 
-        # Extract information from TeamInfo for Yellow and Blue teams
-        yellow_team_info = referee_state.yellow
-        blue_team_info = referee_state.blue
-
-        # Get details from Yellow TeamInfo
-        yellow_team_data = {
-            "name": yellow_team_info.name,
-            "score": yellow_team_info.score,
-            "red_cards": yellow_team_info.red_cards,
-            "yellow_cards": yellow_team_info.yellow_cards,
-            "fouls": yellow_team_info.foul_counter,
-            "ball_placement_failures": yellow_team_info.ball_placement_failures
-        }
-
-        # Get details from Blue TeamInfo
-        blue_team_data = {
-            "name": blue_team_info.name,
-            "score": blue_team_info.score,
-            "red_cards": blue_team_info.red_cards,
-            "yellow_cards": blue_team_info.yellow_cards,
-            "fouls": blue_team_info.foul_counter,
-            "ball_placement_failures": blue_team_info.ball_placement_failures
-        }
-
-        # Return both the raw referee_state object and a dictionary of extracted details
+        # Get x,y values directly
+        x, y = 0, 0  # Default values
         if referee_state.HasField('designated_position'):
-            designated_position = {
-                "x": referee_state.designated_position.x,
-                "y": referee_state.designated_position.y
-            }
-        else:
-            designated_position = None
+            x = referee_state.designated_position.x
+            y = referee_state.designated_position.y
 
-        # Return both the raw referee_state object and a dictionary of extracted details
-        return referee_state, {
-            "yellow_team": yellow_team_data,
-            "blue_team": blue_team_data,
-            "stage": referee_state.stage,
-            "command": referee_state.command,
-            "designated_position": designated_position
-        }
-
-    except DecodeError:
-        print("Failed to decode referee state message")
+        return (
+            referee_state.yellow.score,
+            referee_state.blue.score,
+            referee_state.stage,
+            referee_state.command,
+            x,
+            y
+        )
+    except socket.timeout:
+        print("Referee state timeout, returning defaults")
+        return 0, 0, 0, 0, 0, 0  # Default values
     except Exception as e:
-        print(f"Error: {e}")
+        print(f"Error getting referee state: {e}")
+        return 0, 0, 0, 0, 0, 0  # Default values
     finally:
         sock.close()
-
+        
 if __name__ == "__main__":
     # Get robot state
     grid_array, yellow_team_dribbling, blue_team_dribbling = get_robot_state()

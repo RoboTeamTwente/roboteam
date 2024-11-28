@@ -34,11 +34,11 @@ spec:
           - containerPort: 8000  # Serve
           resources:
             requests:
-              cpu: "500m"
-              memory: "1Gi"
-            limits:
               cpu: "1"
               memory: "2Gi"
+            limits:
+              cpu: "2"
+              memory: "4Gi"
           env:
           - name: POD_IP
             valueFrom:
@@ -70,7 +70,9 @@ spec:
   # Worker node configuration with integrated simulator
   workerGroupSpecs:
     - groupName: worker-group
-      replicas: 1
+      replicas: 1      
+      minReplicas: 1  # Specify minimum number of worker replicas
+      maxReplicas: 1  # Optional: specify maximum number of replicas
       rayStartParams:
         num-cpus: "1"
       template:
@@ -78,7 +80,7 @@ spec:
           labels:
             app: ray-worker
         spec:
-          hostNetwork: true
+          hostNetwork: False
           dnsPolicy: ClusterFirstWithHostNet
           affinity:
             nodeAffinity:
@@ -109,8 +111,8 @@ spec:
                 cpu: 500m
                 memory: 1Gi
               limits:
-                cpu: 2000m
-                memory: 4Gi
+                cpu: 1500m
+                memory: 3Gi
             env:
             - name: LD_LIBRARY_PATH
               value: /home/roboteam/build/release/lib
@@ -187,10 +189,10 @@ spec:
             resources:
               requests:
                 cpu: 120m
-                memory: 20Mi
+                memory: 40Mi
               limits:
                 cpu: 150m
-                memory: 50Mi
+                memory: 100Mi
 
           # Simulator
           - name: erforce-simulator

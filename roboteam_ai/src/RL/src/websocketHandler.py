@@ -3,16 +3,18 @@ import websockets
 import asyncio
 import json
 
-IS_IN_K8S = True # We run it locally.
+def is_kubernetes():
+    """Detect if running in Kubernetes environment"""
+    return os.getenv('KUBERNETES_SERVICE_HOST') is not None
 
 def get_websocket_uri():
     """Get the appropriate URI based on the environment"""
-    if IS_IN_K8S:
+    if is_kubernetes():
         host = "roboteam-ray-worker-svc"
-        print("Running in Kubernetes, using service DNS")
+        #print("Running in Kubernetes, using service DNS")
     else:
         host = "localhost"
-        print("Running locally")
+        #print("Running locally")
     
     return f"ws://{host}:8081/api/control"
 

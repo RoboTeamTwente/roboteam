@@ -18,14 +18,7 @@ from roboteam_ai.src.RL.env2 import RoboTeamEnv
 import warnings
 warnings.filterwarnings('ignore', category=DeprecationWarning)
 
-def verify_imports():
-    import numpy
-    import torch
-    print(f"Local NumPy version: {numpy.__version__}")
-    print(f"Local PyTorch version: {torch.__version__}")
-
 def main():
-    verify_imports()
 
     if not ray.is_initialized():
         ray.init(
@@ -34,29 +27,21 @@ def main():
             runtime_env={
                 "env_vars": {
                     "NUMPY_EXPERIMENTAL_ARRAY_FUNCTION": "0",
-
                 },
-                # "pip": [
-                #     "numpy==1.24.3",
-                #     "pyzmq==26.2.0"
-                # ]
+                "py_modules": [
+                        os.path.join(roboteam_ai_root, "roboteam_ai"),
+                        os.path.join(roboteam_ai_root, "roboteam_networking")
+                    ]
             }
         )
 
     # ray.init()
 
-    # We can set env_config here
     def env_creator(env_config):
         return RoboTeamEnv(env_config)  # This passes the config to your env
     
     # Register the environment
     register_env("RoboTeamEnv", env_creator)
-
-    # Create list of callbacks
-    callbacks = [
-        JsonLoggerCallback(),
-        CSVLoggerCallback(),
-    ]
 
     config = (
         PPOConfig()
@@ -65,32 +50,25 @@ def main():
         .resources(num_gpus=0)
         .env_runners(
             num_env_runners=1,
-            num_envs_per_env_runner=1,
-            sample_timeout_s=None
-        )
-#         .api_stack(
-#             enable_rl_module_and_learner=True,
-#             enable_env_runner_and_connector_v2=True
-# )
+            num_envs_per_env_runner=1, # If you use vectorized env, otherwise set to 1
+            rollout_fragment_length=16,
+            sample_timeout_s=30,
+            create_env_on_local_worker=False) # This makes sure that we don't run a local environment
+        .api_stack(
+            enable_rl_module_and_learner=True,
+            enable_env_runner_and_connector_v2=True)
         .debugging(
             log_level="DEBUG",
             seed=42
         )
-        #.callbacks(callbacks)
-        .evaluation(evaluation_interval=10)
     )
 
     print("Starting training...")
     algo = config.build()
 
     for i in range(10):
-        print(f"\nStarting iteration {i}")
         result = algo.train()
         result.pop("config")
-        print("\nTraining metrics:")
-        print(f"Episode Reward Mean: {result.get('episode_reward_mean', 'N/A')}")
-        print(f"Episode Length Mean: {result.get('episode_len_mean', 'N/A')}")
-        print(f"Total Timesteps: {result.get('timesteps_total', 'N/A')}")
         pprint(result)
 
 if __name__ == "__main__":

@@ -5,7 +5,7 @@
 FROM rayproject/ray:latest-py310
 
 # Install dependencies in a single layer to keep it cached
-RUN pip install torch==2.5.1 gymnasium numpy==1.24.3 ray[rllib]==2.38.0 pyzmq
+RUN pip install torch==2.5.1 gymnasium numpy==1.24.3 ray[rllib]==2.38.0 pyzmq protobuf websockets
 
 # Copy the entire roboteam root folder (including the roboteam_ai and roboteam_networking folders)
 COPY roboteam_ai /roboteam/roboteam_ai

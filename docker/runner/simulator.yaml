@@ -210,3 +210,19 @@ spec:
     - name: gc
       port: 8081
       targetPort: 8081
+    - name: zmq
+      port: 5558
+      targetPort: 5558
+      protocol: TCP
+    - name: sim-control
+      port: 10300
+      targetPort: 10300
+      protocol: UDP
+    - name: vision
+      port: 10020
+      targetPort: 10020
+      protocol: UDP
+    - name: referee
+      port: 10003
+      targetPort: 10003
+      protocol: UDP

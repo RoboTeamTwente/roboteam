@@ -5,6 +5,10 @@ import struct
 import time
 from google.protobuf.timestamp_pb2 import Timestamp
 
+"""
+NOT USED
+"""
+
 current_dir = os.path.dirname(os.path.abspath(__file__))
 roboteam_path = os.path.abspath(os.path.join(current_dir, "..", "..", "..", ".."))
 

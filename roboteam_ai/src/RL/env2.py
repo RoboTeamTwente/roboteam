@@ -44,7 +44,7 @@ class RoboTeamEnv(gymnasium.Env):
         self.blue_score = 0  # Initialize blue score to zero
 
         # Initialize the observation space
-        self.observation_space = spaces.Box(low=float('-inf'), high=float('inf'), shape=(1,15), dtype=np.float64)
+        self.observation_space = spaces.Box(low=float('-inf'), high=float('inf'), shape=(15,), dtype=np.float64)
 
         # Action space: [attackers, defenders]
         # Wallers will be automatically calculated
@@ -70,34 +70,25 @@ class RoboTeamEnv(gymnasium.Env):
         Function to teleport the ball to the designated position for ball placement if necessary.
         """
         # Get the current referee state
-        referee_state, referee_info = get_referee_state()  # Assuming get_referee_state() is in scope
-
-        # Extract the command from the referee state
-        self.ref_command = referee_info['command']
-        print("ref command", self.ref_command)
+        get_referee_state()
  
-
         # If ref gives command BALL_PLACEMENT_US OR BALL_PLACEMENT_THEM
         if (self.ref_command == 16 or self.ref_command == 17):
-            referee_state, referee_data = get_referee_state()
 
-            if referee_data["designated_position"]is not None:
-                self.x, self.y = referee_data["designated_position"]["x"]/1000, referee_data["designated_position"]["y"]/1000
+            if self.x and self.y is not None:
 
                 # Teleport the ball to the designated location
                 teleport_ball(self.x, self.y)
             else:
                 print("No designated position provided in referee state.")
 
-
     def get_referee_state(self):
         """
-        Function to globally import the referee state
+        Function to get referee state values
         """
-        self.x,self.y,  # Designated pos
-        self.yellow_yellow_cards, self.blue_yellow_cards, # yellow cards
-        self.ref_command, # Ref command, such as HALT, STOP
-        self.yellow_score, self.blue_score = get_referee_state() # Scores
+        self.yellow_score, self.blue_score, self.stage, self.ref_command, self.x, self.y = get_referee_state()
+        self.x = self.x/1000
+        self.y = self.y/1000
 
     def calculate_reward(self):
         """
@@ -171,13 +162,10 @@ class RoboTeamEnv(gymnasium.Env):
         """
         # Get the robot grid representation
         self.robot_grid, self.is_yellow_dribbling, self.is_blue_dribbling = get_robot_state()
-        print(f"Robot grid: {self.robot_grid}")
-        print(f"Yellow dribbling: {self.is_yellow_dribbling}, Blue dribbling: {self.is_blue_dribbling}")
-
+        
         # Get the ball location
         self.ball_position, self.ball_quadrant = get_ball_state()
-        print(f"Ball position: {self.ball_position}, Ball quadrant: {self.ball_quadrant}")
-
+        
         # Convert and flatten robot positions to float64
         robot_positions_flat = self.robot_grid.astype(np.float64).flatten()  # 8 elements
         
@@ -195,14 +183,10 @@ class RoboTeamEnv(gymnasium.Env):
             np.zeros(5, dtype=np.float64)  # 5 elements to reach total of 15
         ])
         
-        # Reshape to match expected shape (1, 15)
-        observation = observation.reshape(1, 15)
+        # Make sure it's flat
+        observation = observation.reshape(15,)
         
-        # Verify shape and dtype
-        assert observation.shape == (1, 15), f"Observation shape {observation.shape} != (1, 15)"
-        assert observation.dtype == np.float64, f"Observation dtype {observation.dtype} != float64"
-        
-        return observation, self.calculate_reward()
+        return observation
 
     def step(self, action):
         """
@@ -211,37 +195,38 @@ class RoboTeamEnv(gymnasium.Env):
         """
 
         # Only carry out "normal" loop if the game state is NORMAL_START (this indicates normal gameplay loop)
-        if self.ref_command == "RUNNING": # Maybe this needs to change to normal_start
+        print(f"Step called with action: {action}")
+        
+        # Get current referee state at start of step
+        #referee_state, referee_info = get_referee_state()
+        #print(f"Step - Current referee state: {referee_state}")
 
-            attackers, defenders = action
-            wallers = self.MAX_ROBOTS - (attackers + defenders)
-
-            # Ensure non-negative values and total of 10
-            attackers = max(0, min(attackers, self.MAX_ROBOTS))
-            defenders = max(0, min(defenders, self.MAX_ROBOTS - attackers))
-            wallers = self.MAX_ROBOTS - (attackers + defenders)
-
-            # Sends the action command over proto to legacy AI
-            send_action_command(num_attacker=attackers, num_defender=defenders, num_waller= wallers)
-
+        # if self.ref_command == "RUNNING":
+        #     print("Game is RUNNING, executing action")
+        #     attackers, defenders = action
+        #     wallers = self.MAX_ROBOTS_US - (attackers + defenders)
+        #     send_action_command(num_attacker=attackers, num_defender=defenders, num_waller=wallers)
+        # else:
+        #     print(f"Game not RUNNING, current command: {self.ref_command}")
 
         # If the game is halted, stopped or ball placement is happening, execute this.
 
         # Logic to TP the ball if there is ball placement of either side
-        self.check_ball_placement() # Run the function to check if we need to TP the ball
-
-        reward = self.calculate_reward()
+        #self.check_ball_placement() # Run the function to check if we need to TP the ball
 
         # Update observation_space
-        observation_space,_ = self.get_observation()
+        observation_space = self.get_observation()
+
+        # Get reward
+        reward = self.calculate_reward()
         
         done = self.is_terminated()
-        print("isDone",done)  # If task is completed (a goal was scored)
+        #print("isDone",done)  # If task is completed (a goal was scored)
         if done:
             observation_space, _ = self.reset()
         truncated = self.is_truncated()  # Determine if the episode was truncated, too much time or a yellow card
 
-        time.sleep(0.1)  # DELAY FOR STEPS (ADJUST LATER)
+        #time.sleep(0.1)  # DELAY FOR STEPS (ADJUST LATER)
 
         return observation_space, reward, done, truncated, {}
 
@@ -250,18 +235,11 @@ class RoboTeamEnv(gymnasium.Env):
         """
         Activates when the task has been completed (or it failed because of opponent scoring a goal)
         """
-        referee_state, referee_info = get_referee_state()  # Assuming get_referee_state() is in scope
-
-        self.ref_command = referee_info['command']
-        self.yellow_score = referee_state.yellow.score
-        self.blue_score = referee_state.blue.score
-        
-        print("refcommand", self.ref_command)
-        print("blue", self.blue_score)
-        print("yellow", self.yellow_score)
 
         if self.ref_command == 0 and (self.yellow_score == 1 or self.blue_score == 1): # HALT command indicates that either team scored
             return True
+        else:
+            return False
 
     def is_truncated(self):
         """
@@ -269,12 +247,14 @@ class RoboTeamEnv(gymnasium.Env):
         """
 
         # Implement logic to reset the game if no goal is scored
-        pass
+        return False
 
     def reset(self, seed=None,**kwargs):
         """
         The reset function resets the environment when a game is ended
         """
+
+        print("Testing...")
 
         # Teleport ball to middle position
         print("Teleporting ball...")
@@ -289,7 +269,7 @@ class RoboTeamEnv(gymnasium.Env):
         start_game()
 
         print("Getting observation...")
-        observation, _ = self.get_observation()
+        observation = self.get_observation()
 
         # Reset shaped_reward_given boolean
         self.shaped_reward_given = False
@@ -297,7 +277,7 @@ class RoboTeamEnv(gymnasium.Env):
         self.is_blue_dribbling = False
 
         print("Reset complete!")
-        return observation,{}
+        return observation, {}
 
 
 

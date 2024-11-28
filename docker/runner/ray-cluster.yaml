@@ -8,39 +8,46 @@ spec:
   headGroupSpec:
     rayStartParams:
       dashboard-host: "0.0.0.0"
+      node-ip-address: "$(HOST_IP)"
     template:
       metadata:
         labels:
           app: ray-head
       spec:
         hostNetwork: false
+        # Add node affinity for head node
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+              - matchExpressions:
+                - key: kubernetes.io/hostname
+                  operator: In
+                  values:
+                  - multinode-demo
         containers:
         - name: ray-head
           image: roboteamtwente/ray:development
-          imagePullPolicy: Always # Always pull the latest image
+          imagePullPolicy: Always
           ports:
-          - containerPort: 8265  # dashboard port
-          - containerPort: 6379  # redis port 
-          - containerPort: 10001  # GCS server port
-          - containerPort: 8000   # Serve port
+          - containerPort: 8265
+          - containerPort: 6379
+          - containerPort: 10001
+          - containerPort: 8000
           resources:
             requests:
               cpu: "500m"
-              memory: "1Gi"    # Increased from 256Mi
+              memory: "1Gi"
             limits:
-              cpu: "1"         # Changed from 600 (which was too high)
-              memory: "2Gi"    # Increased from 512Mi
-
+              cpu: "1"
+              memory: "2Gi"
           env:
-          - name: SIMULATION_HOST
-            value: "127.0.0.1"  # Using localhost since we're on host network
-          - name: VISION_PORT
-            value: "10020"      # Match your simulator's vision port
-          - name: REFEREE_PORT
-            value: "10003"      # Match your simulator's referee port
-
+          - name: HOST_IP
+            valueFrom:
+              fieldRef:
+                fieldPath: status.hostIP
           command: ["/bin/bash", "-c", "--"]
-          args: ["ray start --head --port=6379 --dashboard-host=0.0.0.0 --block"]
+          args: ["ray start --head --port=6379 --bind-address=0.0.0.0 --dashboard-host=0.0.0.0 --node-ip-address=$(HOST_IP) --block"]
           livenessProbe:
             exec:
               command:
@@ -66,7 +73,7 @@ spec:
   # Worker node configuration
   workerGroupSpecs:
     - groupName: worker-group
-      replicas: 1  # Number of worker nodes
+      replicas: 1
       rayStartParams:
         num-cpus: "1" 
       template:
@@ -75,10 +82,20 @@ spec:
             app: ray-worker
         spec:
           hostNetwork: true
+          # Replace pod anti-affinity with node affinity
+          affinity:
+            nodeAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                nodeSelectorTerms:
+                - matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: In
+                    values:
+                    - multinode-demo-m02
           containers:
           - name: ray-worker
             image: roboteamtwente/ray:development
-            imagePullPolicy: Always # Always pull the latest image
+            imagePullPolicy: Always
             resources:
               requests:
                 cpu: 500m
@@ -131,3 +148,26 @@ spec:
     port: 8000
     targetPort: 8000
     nodePort: 30800  # Serve
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: roboteam-ray-cluster-head-svc
+spec:
+  type: ClusterIP
+  selector:
+    app: ray-head
+  ports:
+  - name: redis
+    port: 6379
+    targetPort: 6379
+  - name: gcs
+    port: 10001
+    targetPort: 10001
+  - name: dashboard
+    port: 8265
+    targetPort: 8265
+  - name: serve
+    port: 8000
+    targetPort: 8000

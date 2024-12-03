@@ -77,7 +77,7 @@ class RoboTeamEnv(gymnasium.Env):
         Returns:
             bool: True if teleport succeeded, False otherwise
         """
-        max_attempts = 15
+        max_attempts = 25
         for i in range(max_attempts):
             try:
                 teleport_ball(x, y) # Teleports ball to input of the function

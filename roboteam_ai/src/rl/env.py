@@ -16,14 +16,14 @@ roboteam_path = os.path.abspath(os.path.join(current_dir, "../../.."))
 sys.path.append(roboteam_path)
 
 # Now import the functions
-from roboteam_ai.src.RL.src.sentActionCommand import send_action_command
-from roboteam_ai.src.RL.src.getState import get_ball_state, get_robot_state, get_referee_state
-from roboteam_ai.src.RL.src.teleportBall import teleport_ball
-from roboteam_ai.src.RL.src.resetRefereeAPI import reset_referee_state
-from roboteam_ai.src.RL.src.changeGameState import start_game
+from roboteam_ai.src.rl.src.sentActionCommand import send_action_command
+from roboteam_ai.src.rl.src.getState import get_ball_state, get_robot_state, get_referee_state
+from roboteam_ai.src.rl.src.teleportBall import teleport_ball
+from roboteam_ai.src.rl.src.resetRefereeAPI import reset_referee_state
+from roboteam_ai.src.rl.src.changeGameState import start_game
 
 """
-This environment file is in the form of a gymnasium environment.
+This environment file is in the form of a gymnasium environment. It is used for SB3
 We are yellow and we play against blue.
 
 Yellow cards do not stop the game, but maybe in the future it is nice to implement a punishment

@@ -9,11 +9,11 @@ import sys
 from ray.tune.registry import register_env
 
 # Add roboteam_ai to Python path
-roboteam_ai_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../.."))
+roboteam_ai_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../.."))
 print(f"Adding to PYTHONPATH: {roboteam_ai_root}")  # Debug print
 sys.path.append(roboteam_ai_root)
 
-from roboteam_ai.src.RL.env2 import RoboTeamEnv
+from roboteam_ai.src.rl.env_ray import RoboTeamEnv
 
 import warnings
 warnings.filterwarnings('ignore', category=DeprecationWarning)

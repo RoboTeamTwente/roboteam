@@ -16,11 +16,11 @@ roboteam_path = os.path.abspath(os.path.join(current_dir, "../../.."))
 sys.path.append(roboteam_path)
 
 # Now import the functions
-from roboteam_ai.src.RL.src.sentActionCommand import send_action_command
-from roboteam_ai.src.RL.src.getState import get_ball_state, get_robot_state, get_referee_state
-from roboteam_ai.src.RL.src.teleportBall import teleport_ball
-from roboteam_ai.src.RL.src.resetRefereeAPI import reset_referee_state
-from roboteam_ai.src.RL.src.changeGameState import start_game
+from roboteam_ai.src.rl.src.sentActionCommand import send_action_command
+from roboteam_ai.src.rl.src.getState import get_ball_state, get_robot_state, get_referee_state
+from roboteam_ai.src.rl.src.teleportBall import teleport_ball
+from roboteam_ai.src.rl.src.resetRefereeAPI import reset_referee_state
+from roboteam_ai.src.rl.src.changeGameState import start_game
 
 """
 This environment file is in the form of a gymnasium environment.
@@ -218,11 +218,7 @@ class RoboTeamEnv(gymnasium.Env):
             # If STOP, we truncate
 
             elif self.ref_command in (0, 1):  # HALT or STOP
-                if self.ref_command == 0 and (self.yellow_score > 0 or self.blue_score > 0):
-                    print('Goal is scored, resetting game state')
-                    break
-                print("Game truncated due to false goal or random STOP")
-                break
+                break # Code will break if it hits HALT or STOP, then it checks if it truncated or a goal was scored.
 
             elif self.ref_command in (16, 17):  # Ball placement
                 self.teleport_ball_with_check(self.x, self.y)
@@ -244,6 +240,10 @@ class RoboTeamEnv(gymnasium.Env):
         """
 
         if self.ref_command == 0 and (self.yellow_score == 1 or self.blue_score == 1): # HALT command indicates that either team scored
+            if self.yellow_score == 1:
+                print("Yellow team scored")
+            elif self.blue_score == 1:
+                print("Blue team scored")
             return True
         else:
             return False
@@ -251,13 +251,15 @@ class RoboTeamEnv(gymnasium.Env):
     def is_truncated(self):
         """
         is_truncated checks if game should end prematurely:
-        - On HALT command with no goals scored
+        - On HALT command with no goals scored 
         - On STOP command
         """
         if self.ref_command == 0:  # HALT
             if (self.yellow_score == 0 and self.blue_score == 0):
+                print("Game truncated, goal wasn't accepted")
                 return True
         if self.ref_command == 1:  # STOP
+            print("Game truncated, random STOP called") 
             return True
         return False
 

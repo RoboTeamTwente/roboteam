@@ -5,7 +5,7 @@ from google.protobuf.message import DecodeError
 import numpy as np
 import socket
 import struct
-from . websocketHandler import run_websocket_command
+# from . websocketHandler import run_websocket_command
 
 
 # Make sure to go back to the main roboteam directory
@@ -140,24 +140,26 @@ def get_robot_state():
     return grid_array, yellow_team_dribbling, blue_team_dribbling
 
 def get_referee_state():
+    """
+    Returns tuple of (yellow_score, blue_score, stage, command, x, y)
+    """
     multicast_group = '224.5.23.1'
     multicast_port = 10003
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    sock.bind(('', multicast_port))
-
-    # Join the multicast group
-    mreq = struct.pack("4sl", socket.inet_aton(multicast_group), socket.INADDR_ANY)
-    sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
 
     try:
+        sock.bind(('', multicast_port))
+        mreq = struct.pack("4sl", socket.inet_aton(multicast_group), socket.INADDR_ANY)
+        sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
         sock.settimeout(5)
-        message, _ = sock.recvfrom(4096)
-        referee_state = Referee.FromString(message)
 
-        # Get x,y values directly
-        x, y = 0, 0  # Default values
+        message, _ = sock.recvfrom(4096)
+        referee_state = Referee()
+        referee_state.ParseFromString(message)
+
+        x = y = 0
         if referee_state.HasField('designated_position'):
             x = referee_state.designated_position.x
             y = referee_state.designated_position.y
@@ -167,15 +169,14 @@ def get_referee_state():
             referee_state.blue.score,
             referee_state.stage,
             referee_state.command,
-            x,
-            y
+            x/1000,
+            y/1000
         )
-    except socket.timeout:
-        print("Referee state timeout, returning defaults")
-        return 0, 0, 0, 0, 0, 0  # Default values
-    except Exception as e:
-        print(f"Error getting referee state: {e}")
-        return 0, 0, 0, 0, 0, 0  # Default values
+
+    except (socket.timeout, DecodeError) as e:
+        print(f"Referee state error: {e}")
+        return 0, 0, 0, 0, 0, 0
+
     finally:
         sock.close()
         
@@ -188,26 +189,11 @@ if __name__ == "__main__":
     for i, quadrant in enumerate(quadrants):
         print(f"{quadrant}: {grid_array[i, 0]} yellow robots, {grid_array[i, 1]} blue robots")
 
-    # Get both the raw referee_state object and the extracted details
-    referee_state, details = get_referee_state()
-    
-    # Print general referee state information
-    print("Referee State Information:")
-    print(f"Stage: {details['stage']}")
-    print(f"Command: {details['command']}\n")
-
-    # Print Yellow team details
-    yellow_team = details["yellow_team"]
-    print("Yellow Team:")
-    print(f"Name: {yellow_team['name']}")
-    print(f"Score: {yellow_team['score']}, Red Cards: {yellow_team['red_cards']}, Yellow Cards: {yellow_team['yellow_cards']}")
-    print(f"Fouls: {yellow_team['fouls']}, Ball Placement Failures: {yellow_team['ball_placement_failures']}\n")
-
-    # Print Blue team details
-    blue_team = details["blue_team"]
-    print("Blue Team:")
-    print(f"Name: {blue_team['name']}")
-    print(f"Score: {blue_team['score']}, Red Cards: {blue_team['red_cards']}, Yellow Cards: {blue_team['yellow_cards']}")
-    print(f"Fouls: {blue_team['fouls']}, Ball Placement Failures: {blue_team['ball_placement_failures']}")
-
-    print(get_referee_state())
+    result = get_referee_state()
+    print("\nReturned Values:")
+    print(f"Yellow Score: {result[0]}")
+    print(f"Blue Score: {result[1]}")
+    print(f"Stage: {result[2]}")
+    print(f"Command: {result[3]}")
+    print(f"X Position: {result[4]}")
+    print(f"Y Position: {result[5]}")

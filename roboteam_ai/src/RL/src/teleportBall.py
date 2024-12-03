@@ -43,7 +43,7 @@ def teleport_ball(x, y, z=0.0):
     serialized_command = command.SerializeToString()
     sock.sendto(serialized_command, ("localhost", SIMULATION_CONTROL_PORT))
 
-    print(f"Sent command to teleport ball to ({x}, {y}, {z})")
+    #print(f"Sent command to teleport ball to ({x}, {y}, {z})")
 
     # Close the socket
     sock.close()

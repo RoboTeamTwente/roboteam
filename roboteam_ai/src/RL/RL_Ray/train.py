@@ -20,20 +20,20 @@ warnings.filterwarnings('ignore', category=DeprecationWarning)
 
 def main():
 
-    if not ray.is_initialized():
-        ray.init(
-            address=f"ray://192.168.49.2:31001",
-            ignore_reinit_error=True,
-            runtime_env={
-                "env_vars": {
-                    "NUMPY_EXPERIMENTAL_ARRAY_FUNCTION": "0",
-                },
-                "py_modules": [
-                        os.path.join(roboteam_ai_root, "roboteam_ai"),
-                        os.path.join(roboteam_ai_root, "roboteam_networking")
-                    ]
-            }
-        )
+    # if not ray.is_initialized():
+    #     ray.init(
+    #         address=f"ray://185.4.148.70:31001",
+    #         ignore_reinit_error=True,
+    #         runtime_env={
+    #             "env_vars": {
+    #                 "NUMPY_EXPERIMENTAL_ARRAY_FUNCTION": "0",
+    #             },
+    #             "py_modules": [
+    #                     os.path.join(roboteam_ai_root, "roboteam_ai"),
+    #                     os.path.join(roboteam_ai_root, "roboteam_networking")
+    #                 ]
+    #         }
+    #     )
 
     # ray.init()
 
@@ -51,9 +51,9 @@ def main():
         .env_runners(
             num_env_runners=1,
             num_envs_per_env_runner=1, # If you use vectorized env, otherwise set to 1
-            rollout_fragment_length=16,
-            sample_timeout_s=30,
-            create_env_on_local_worker=False) # This makes sure that we don't run a local environment
+            # rollout_fragment_length=16,
+            # sample_timeout_s=30,
+            create_env_on_local_worker=True) # This makes sure that we don't run a local environment
         .api_stack(
             enable_rl_module_and_learner=True,
             enable_env_runner_and_connector_v2=True)

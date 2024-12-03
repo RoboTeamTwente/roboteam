@@ -5,11 +5,11 @@ network:
     tracker-address: 224.5.23.2:10010
     skip-interfaces: []
 game:
-    yellow-card-duration: 2m0s
+    yellow-card-duration: 0s
     yellow-card-bot-removal-time: 10s
     default-division: DIV_A
     normal:
-        half-duration: 5m0s
+        half-duration: 20m0s
         half-time-duration: 5m0s
         timeout-duration: 5m0s
         timeouts: 4

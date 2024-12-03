@@ -198,7 +198,7 @@ class RoboTeamEnv(gymnasium.Env):
         The step function is called in every loop the RL agent goes through. 
         It receives a state, reward and carries out an action
         """
-        truncated = False
+
         while True:
             self.yellow_score, self.blue_score, self.stage, self.ref_command, self.x, self.y = get_referee_state()
 
@@ -222,7 +222,6 @@ class RoboTeamEnv(gymnasium.Env):
                     print('Goal is scored, resetting game state')
                     break
                 print("Game truncated due to false goal or random STOP")
-                truncated = True
                 break
 
             elif self.ref_command in (16, 17):  # Ball placement
@@ -231,6 +230,8 @@ class RoboTeamEnv(gymnasium.Env):
         self.is_first_step = False
         observation_space = self.get_observation()
         reward = self.calculate_reward()
+
+        truncated = self.is_truncated()
         done = self.is_terminated()
 
         time.sleep(0.5)
@@ -249,9 +250,14 @@ class RoboTeamEnv(gymnasium.Env):
 
     def is_truncated(self):
         """
-        is_truncated is meant for ending prematurely, like when HALT occurs with no goals
+        is_truncated checks if game should end prematurely:
+        - On HALT command with no goals scored
+        - On STOP command
         """
-        if self.ref_command == 0 and not (self.yellow_score > 0 or self.blue_score > 0):
+        if self.ref_command == 0:  # HALT
+            if (self.yellow_score == 0 and self.blue_score == 0):
+                return True
+        if self.ref_command == 1:  # STOP
             return True
         return False
 

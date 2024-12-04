@@ -9,6 +9,12 @@
 #include "stp/roles/passive/Defender.h"
 #include "stp/roles/passive/Formation.h"
 
+// New
+#include <zmqpp/zmqpp.hpp>
+#include <string>
+#include <chrono>
+#include <thread>
+
 namespace rtt::ai::stp::play {
 
 Attack::Attack() : Play() {

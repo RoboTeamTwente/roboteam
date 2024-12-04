@@ -89,6 +89,7 @@ target_link_libraries(roboteam_ai_plays
         PRIVATE roboteam_ai_control
         PRIVATE roboteam_ai_computation
         PRIVATE roboteam_ai_roles
+        PRIVATE zmqpp
 )
 target_compile_options(roboteam_ai_plays PRIVATE "${COMPILER_FLAGS}")
 

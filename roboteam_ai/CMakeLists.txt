@@ -82,7 +82,7 @@ target_include_directories(roboteam_ai_plays
 )
 target_link_libraries(roboteam_ai_plays
         PRIVATE roboteam_networking
-        PRIVATE roboteam_utils
+        PUBLIC roboteam_utils
         PRIVATE roboteam_ai_utils
         PRIVATE roboteam_ai_world
         PRIVATE roboteam_ai_evaluation
@@ -90,8 +90,28 @@ target_link_libraries(roboteam_ai_plays
         PRIVATE roboteam_ai_computation
         PRIVATE roboteam_ai_roles
         PRIVATE zmqpp
+        PRIVATE roboteam_ai_gui
+        PRIVATE ixwebsocket 
+        
 )
 target_compile_options(roboteam_ai_plays PRIVATE "${COMPILER_FLAGS}")
+
+###### Reinforcement learning #######
+file(GLOB_RECURSE RL_SRC
+     "${PROJECT_SOURCE_DIR}/src/rl/*.cpp"
+)
+add_library(roboteam_ai_rl ${RL_SRC})
+
+target_include_directories(roboteam_ai_rl
+        PRIVATE include/roboteam_ai
+)
+target_link_libraries(roboteam_ai_rl
+        PRIVATE roboteam_networking
+        PRIVATE roboteam_utils
+        PRIVATE zmqpp
+)
+target_compile_options(roboteam_ai_rl PRIVATE "${COMPILER_FLAGS}")
+
 
 ###### EVALUATION #######
 file(GLOB_RECURSE EVALUATIONS_SRC
@@ -207,6 +227,7 @@ target_link_libraries(roboteam_ai
         PRIVATE roboteam_ai_world
         PRIVATE roboteam_networking
         PRIVATE roboteam_utils
+        PRIVATE roboteam_ai_rl
 )
 target_compile_options(roboteam_ai PRIVATE "${COMPILER_FLAGS}")
 
@@ -268,6 +289,7 @@ target_link_libraries(roboteam_ai_tests
         PRIVATE roboteam_networking
         PRIVATE roboteam_utils
         PRIVATE testHelpers
+        PRIVATE roboteam_ai_rl
 )
 
 target_compile_options(roboteam_ai_tests PRIVATE "${COMPILER_FLAGS}")

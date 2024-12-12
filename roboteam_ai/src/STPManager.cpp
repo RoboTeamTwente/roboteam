@@ -1,4 +1,5 @@
 #include "STPManager.h"
+#include <roboteam_utils/Print.h>
 
 #include <roboteam_utils/Timer.h>
 #include <utilities/normalize.h>
@@ -46,14 +47,14 @@ namespace plays = rtt::ai::stp::play;
 
 namespace rtt {
 
+// Create the STPManager instance pointer
+STPManager* STPManager::instance = nullptr;
+
 /// Initialize all plays here (since play vector is static, it's better to do it here to make sure it's initialized before use)
-const STPManager::PlaysVec STPManager::plays = ([] {
+STPManager::PlaysVec STPManager::plays = ([] {
     auto plays = std::vector<std::unique_ptr<ai::stp::Play>>();
 
-    plays.emplace_back(std::make_unique<plays::AttackingPass>());
-    plays.emplace_back(std::make_unique<plays::Attack>());
     plays.emplace_back(std::make_unique<plays::Halt>());
-    plays.emplace_back(std::make_unique<plays::Defend>());
     plays.emplace_back(std::make_unique<plays::KeeperKickBall>());
     plays.emplace_back(std::make_unique<plays::PrepareForcedStart>());
     plays.emplace_back(std::make_unique<plays::StopFormation>());
@@ -72,6 +73,12 @@ const STPManager::PlaysVec STPManager::plays = ([] {
     plays.emplace_back(std::make_unique<plays::FreeKickUsPass>());
     plays.emplace_back(std::make_unique<plays::KickOffUs>());
     plays.emplace_back(std::make_unique<plays::KickOffThem>());
+
+    // Dynamic plays (these will be recreated each tick)
+    plays.emplace_back(std::make_unique<plays::AttackingPass>());
+    plays.emplace_back(std::make_unique<plays::Attack>());
+    plays.emplace_back(std::make_unique<plays::Defend>());
+
     return plays;
 })();
 
@@ -79,7 +86,7 @@ const STPManager::PlaysVec STPManager::plays = ([] {
 void STPManager::start(std::atomic_flag &exitApplication) {
     // make sure we start in halt state for safety
     ai::GameStateManager::forceNewGameState(RefCommand::HALT);
-    RTT_INFO("Start looping")
+    RTT_INFO("Starting STPManager")
     RTT_INFO("Waiting for field_data and robots...")
 
     {
@@ -188,6 +195,9 @@ void STPManager::decidePlay(world::World *_world, bool ignoreWorldAge) {
         }
     }
 
+    // Update the dynamic plays (AttackingPass, Attack, Defend)
+    STPManager::updateDynamicPlays(_world);
+
     if (!currentPlay || !currentPlay->isValidPlayToKeep() || ai::stp::PlayDecider::didLockPlay()) {
         // Decide the best play (ignoring the interface play value)
         currentPlay = ai::stp::PlayDecider::decideBestPlay(_world, plays);
@@ -199,5 +209,42 @@ void STPManager::decidePlay(world::World *_world, bool ignoreWorldAge) {
     currentPlay->update();
 }
 
-STPManager::STPManager(std::shared_ptr<ai::gui::net::InterfaceGateway> interfaceGateway) : interfaceGateway(std::move(interfaceGateway)) {}
+void STPManager::updateDynamicPlays(world::World* _world) {
+
+    // Create the new plays (attackingPass, attack, defend) and set their world immediately
+    auto attackingPass = std::make_unique<plays::AttackingPass>();
+    auto attack = std::make_unique<plays::Attack>();
+    auto defend = std::make_unique<plays::Defend>();
+
+    attackingPass->setWorld(_world);
+    attack->setWorld(_world);
+    defend->setWorld(_world);
+
+    // Check if currentPlay is one of the dynamic plays that we're about to delete
+    if (currentPlay) {
+        for (int i = plays.size() - 3; i < plays.size(); ++i) {
+            if (currentPlay == plays[i].get()) {
+                currentPlay = nullptr; // If it is, set to nullptr. Otherwise currentPlay will point to deleted memory
+                break;
+            }
+        }
+    }
+    
+    // Remove old plays
+    for (int i = 0; i < 3; i++) {
+        plays.pop_back();
+    }
+
+    // Add new plays
+    plays.emplace_back(std::move(attackingPass));
+    plays.emplace_back(std::move(attack));
+    plays.emplace_back(std::move(defend));
+}
+
+STPManager::STPManager(std::shared_ptr<ai::gui::net::InterfaceGateway> interfaceGateway) : 
+    interfaceGateway(std::move(interfaceGateway)),
+    rlInterface() {
+        instance = this;
+    }
+    
 }  // namespace rtt

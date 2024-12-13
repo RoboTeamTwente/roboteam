@@ -141,6 +141,7 @@ target_link_libraries(roboteam_ai_computation
         PRIVATE roboteam_networking
         PRIVATE roboteam_utils
         PRIVATE roboteam_ai_evaluation
+        PRIVATE ixwebsocket 
 )
 target_compile_options(roboteam_ai_computation PRIVATE "${COMPILER_FLAGS}")
 

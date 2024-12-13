@@ -245,6 +245,17 @@ STPManager::STPManager(std::shared_ptr<ai::gui::net::InterfaceGateway> interface
     interfaceGateway(std::move(interfaceGateway)),
     rlInterface() {
         instance = this;
+
+        // Set initial grid positions
+        std::array<bool, 9> defaultGrid = {
+            false,  false, true,   // top row
+            false, true, true,  // middle row
+            false,  false, true    // bottom row
+        };
+        rlInterface.setBinaryOccupancyGrid(defaultGrid);
+
+        // Set initial attacker number
+        rlInterface.setNumAttackers(2);
     }
     
 }  // namespace rtt

@@ -13,6 +13,8 @@
 #include "stp/computations/PositionScoring.h"
 #include "utilities/Constants.h"
 #include "world/World.hpp"
+#include "rl/RLInterface.hpp"
+#include "STPManager.h"
 
 namespace rtt::ai::stp {
 int PositionComputations::amountOfWallers = 4;
@@ -473,34 +475,79 @@ void PositionComputations::calculateInfoForDefendersAndWallers(std::unordered_ma
 
 void PositionComputations::calculateInfoForAttackers(std::unordered_map<std::string, StpInfo> &stpInfos, std::array<std::unique_ptr<Role>, constants::MAX_ROBOT_COUNT> &roles,
                                                      const Field &field, world::World *world) noexcept {
-    // List of all active attackers
+    // Get list of attackers
     auto attackerNames = std::vector<std::string>{};
     for (size_t i = 0; i < world->getWorld()->getUs().size(); i++) {
         if (roles[i]->getName().find("attacker") != std::string::npos) {
             attackerNames.emplace_back(roles[i]->getName());
         }
     }
-    if (attackerNames.size() == 0)
-        ;  // Do nothing
-    else if (attackerNames.size() == 1) {
-        stpInfos["attacker_0"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.middleRightGrid, gen::AttackingPass, field, world));
-    } else if (attackerNames.size() == 2) {
-        stpInfos["attacker_0"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.topRightGrid, gen::AttackingPass, field, world));
-        stpInfos["attacker_1"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.bottomRightGrid, gen::AttackingPass, field, world));
-    } else if (attackerNames.size() >= 3) {
-        stpInfos["attacker_0"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.topRightGrid, gen::SafePass, field, world));
-        stpInfos["attacker_1"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.middleRightGrid, gen::AttackingPass, field, world));
-        stpInfos["attacker_2"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.bottomRightGrid, gen::SafePass, field, world));
+    
+    // If no attackers, nothing to do
+    if (attackerNames.empty()) return;
+
+    // Get grid array
+    std::array<bool,9> gridArray = STPManager::getRLInterface().getBinaryOccupancyGrid();
+
+    // Just print first 9 values directly
+    RTT_INFO("First 9 grid values:");
+    RTT_INFO("0: " + std::to_string(gridArray[0]));
+    RTT_INFO("1: " + std::to_string(gridArray[1]));
+    RTT_INFO("2: " + std::to_string(gridArray[2]));
+    RTT_INFO("3: " + std::to_string(gridArray[3]));
+    RTT_INFO("4: " + std::to_string(gridArray[4]));
+    RTT_INFO("5: " + std::to_string(gridArray[5]));
+    RTT_INFO("6: " + std::to_string(gridArray[6]));
+    RTT_INFO("7: " + std::to_string(gridArray[7]));
+    RTT_INFO("8: " + std::to_string(gridArray[8]));
+
+    // Number of attackers
+    //RTT_INFO("Number of attackers: " + std::to_string(attackerNames.size()));
+    
+    // Assign attackers to positions where gridArray is true
+    size_t currentAttacker = 0;
+    for (int i = 0; i < 9 && currentAttacker < attackerNames.size(); i++) {
+        if (gridArray[i]) {
+            if (auto grid = PositionComputations::getGridFromNumber(field, i + 1)) {
+                stpInfos[attackerNames[currentAttacker]].setPositionToMoveTo(
+                    PositionComputations::getPosition(std::nullopt, *grid, gen::SafePass, field, world));
+                currentAttacker++;
+            }
+        }
     }
-    if (attackerNames.size() == 4) {
-        stpInfos["attacker_3"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.middleMidGrid, gen::AttackingPass, field, world));
-    } else if (attackerNames.size() == 5) {
-        stpInfos["attacker_3"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.topMidGrid, gen::AttackingPass, field, world));
-        stpInfos["attacker_4"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.bottomMidGrid, gen::AttackingPass, field, world));
-    } else if (attackerNames.size() >= 6) {
-        stpInfos["attacker_3"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.topMidGrid, gen::AttackingPass, field, world));
-        stpInfos["attacker_4"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.middleMidGrid, gen::SafePass, field, world));
-        stpInfos["attacker_5"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.bottomMidGrid, gen::AttackingPass, field, world));
+}
+
+std::optional<Grid> PositionComputations::getGridFromNumber(const Field& field, int gridNumber){
+    if (gridNumber == 1){
+        return field.topLeftGrid;
+    }
+    if (gridNumber == 2){
+        return field.topMidGrid;
+    }
+    if (gridNumber == 3){
+        return field.topRightGrid;
+    }
+    if (gridNumber == 4){
+        return field.middleLeftGrid;
+    }
+    if (gridNumber == 5){
+        return field.middleMidGrid;
+    }
+    if (gridNumber == 6){
+        return field.middleRightGrid;
+    }
+    if (gridNumber == 7){
+        return field.bottomLeftGrid;
+    }
+    if (gridNumber == 8){
+        return field.bottomMidGrid;
+    }
+    if (gridNumber == 9){
+        return field.bottomRightGrid;
+    }
+    else{
+        RTT_WARNING("Invalid grid number");
+        return std::nullopt;
     }
 }
 

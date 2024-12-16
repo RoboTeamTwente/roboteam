@@ -88,7 +88,7 @@ uint8_t AttackingPass::score(const rtt::Field& field) noexcept {
 Dealer::FlagMap AttackingPass::decideRoleFlags() const noexcept {
     int numDefenders = 2;
     int numWallers = 4;
-    int numAttackers = 2;
+    int numAttackers = STPManager::getRLInterface().getNumAttackers();
 
     Dealer::FlagMap flagMap;
 

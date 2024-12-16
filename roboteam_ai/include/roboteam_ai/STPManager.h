@@ -58,14 +58,6 @@ class STPManager {
      */
     void decidePlay(world::World* _world, bool ignoreWorldAge = false);
 
-    /**
-     * @brief Updates the dynamic plays (AttackingPass, Attack, Defend) with the current world state
-     * @details Checks if currentPlay points to a dynamic play and sets it to nullptr if it does.
-     *          Then removes old dynamic plays and creates new ones with updated world information.
-     * @param _world Pointer to the current world state
-     */
-    void updateDynamicPlays(world::World* _world);
-
    public:
     /**
      * @brief Starts the AI with a synchronized boolean to ensure that AI exits correctly
@@ -73,7 +65,7 @@ class STPManager {
      */
     void start(std::atomic_flag& exitApplication);
 
-    static PlaysVec plays; /**< The vector that contains all plays */
+    static const PlaysVec plays; /**< The vector that contains all plays */
 
     /**
      * @brief Delete copy constructor of the STPManager class

@@ -6,7 +6,9 @@
 
 namespace rtt::ai::stp::tactic {
 
-OrbitKick::OrbitKick() { skills = rtt::collections::state_machine<Skill, Status, StpInfo>{skill::OrbitAngular(), skill::Kick()}; }
+OrbitKick::OrbitKick() { skills = rtt::collections::state_machine<Skill, Status, StpInfo>{
+    skill::OrbitAngular(), 
+    skill::Kick()}; }
 
 std::optional<StpInfo> OrbitKick::calculateInfoForSkill(const StpInfo &info) noexcept {
     if (!info.getPositionToShootAt() || !info.getRobot() || !info.getBall()) return std::nullopt;

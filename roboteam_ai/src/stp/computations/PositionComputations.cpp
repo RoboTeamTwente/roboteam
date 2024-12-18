@@ -601,4 +601,53 @@ void PositionComputations::calculateInfoForAvoidBallHarasser(std::unordered_map<
     stpInfos["harasser"].setPositionToMoveTo(ballPos - goalToBall.stretchToLength(constants::AVOID_BALL_DISTANCE));
 }
 
+Vector2 PositionComputations::calculatePasserPosition(Vector2 currentPos, world::World* world, int robotId) noexcept {
+    if (!world || !world->getField()) return currentPos;
+    
+    const Field& field = world->getField().value();
+    auto closestEnemy = world->getWorld()->getRobotClosestToPoint(currentPos, world::them);
+    if (!closestEnemy) return currentPos;
+    
+    Vector2 enemyPos = closestEnemy->get()->getPos();
+    double enemyDistance = (enemyPos - currentPos).length();
+
+    AvoidObjects avoidObj;
+    avoidObj.shouldAvoidOurDefenseArea = true;
+    avoidObj.shouldAvoidTheirDefenseArea = true;
+    avoidObj.shouldAvoidOutOfField = true;
+    avoidObj.shouldAvoidOurRobots = true;
+    avoidObj.shouldAvoidTheirRobots = true;
+
+    if (enemyDistance < constants::ROBOT_RADIUS * 1.5) {
+        // Under pressure - escape
+        Vector2 awayFromEnemy = (currentPos - enemyPos).normalize();
+        Vector2 gridCenter = currentPos + awayFromEnemy.stretchToLength(constants::ROBOT_RADIUS * 3);
+        
+        double gridSize = constants::ROBOT_RADIUS * 6;
+        Grid searchGrid(gridCenter.x - gridSize/2, gridCenter.y - gridSize/2, 
+                       gridSize, gridSize, 5, 5);
+        
+        return getPosition(currentPos, searchGrid, gen::AttackingPass, field, world).position;
+    }
+
+    // Not under pressure - look for opportunities
+    Grid searchGrid(currentPos.x - 2.0, currentPos.y - 2.0, 4.0, 4.0, 5, 5);
+    return getPosition(currentPos, searchGrid, gen::AttackingPass, field, world).position;
+}
+
+Angle PositionComputations::calculatePasserAngle(Vector2 currentPos, world::World* world) noexcept {
+    if (!world || !world->getField()) return Angle(0);
+    
+    const Field& field = world->getField().value();
+    auto closestEnemy = world->getWorld()->getRobotClosestToPoint(currentPos, world::them);
+    if (!closestEnemy) return (currentPos - Vector2(field.playArea.right(), 0)).angle();  // Face away from their goal
+    
+    Vector2 enemyPos = closestEnemy->get()->getPos();
+    double enemyDistance = (enemyPos - currentPos).length();
+    
+    // Always face away from enemy, pressure or not
+    return (currentPos - enemyPos).angle();
+}
+
+
 }  // namespace rtt::ai::stp

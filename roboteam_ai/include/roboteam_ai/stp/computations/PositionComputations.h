@@ -160,6 +160,25 @@ class PositionComputations {
 
     static int amountOfWallers;
 
+    /**
+     * @brief Calculates a good position for the passer, considering both escape and opportunities
+     * @param currentPos Current position of the passer
+     * @param world Pointer to the world
+     * @param robotId ID of the passer robot
+     * @return Best position for the passer
+     */
+    static Vector2 calculatePasserPosition(Vector2 currentPos, world::World* world, int robotId) noexcept;
+
+
+    /**
+     * @brief Calculates a good position for the passer, considering both escape and opportunities
+     * @param currentPos Current position of the passer
+     * @param world Pointer to the world
+     * @param robotId ID of the passer robot
+     * @return Best position for the passer
+     */
+    static Angle calculatePasserAngle(Vector2 currentPos, world::World* world) noexcept;
+
    private:
     /**
      * @brief Calculates a position outside of a given shape
@@ -171,5 +190,10 @@ class PositionComputations {
      */
     static Vector2 calculatePositionOutsideOfShape(Vector2 targetPosition, const Field &field, const std::unique_ptr<Shape> &avoidShape, const AvoidObjects &avoidObj);
 };
+
+
+
+
+
 }  // namespace rtt::ai::stp
 #endif  // RTT_POSITIONCOMPUTATIONS_H

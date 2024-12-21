@@ -18,7 +18,7 @@ services:
       - LD_LIBRARY_PATH=/home/roboteamtwente/lib/
     volumes:
       - ../../build/release/:/home/roboteamtwente/
-    profiles: ["simulator","diff","game", "robocup"]
+    profiles: ["simulator","diff","game", "robocup", "RL"]
   
   roboteam_secondary_ai:
     image: roboteamtwente/roboteam:development
@@ -72,7 +72,7 @@ services:
       - LD_LIBRARY_PATH=/home/roboteamtwente/lib/
     volumes:
       - ../../build/release/:/home/roboteamtwente/
-    profiles: ["simulator","diff"]
+    profiles: ["simulator","diff", "RL"]
 
   roboteam_observer_game:
     image: roboteamtwente/roboteam:development
@@ -111,7 +111,7 @@ services:
       - LD_LIBRARY_PATH=/home/roboteamtwente/lib/
     volumes:
       - ../../build/release/:/home/roboteamtwente/
-    profiles: ["simulator","diff"]
+    profiles: ["simulator","diff", "RL"]
 
   roboteam_robothub_game:
     image: roboteamtwente/roboteam:development
@@ -147,7 +147,7 @@ services:
       - 8080:8080
     volumes:
       - ../../roboteam_interface/:/home/roboteamtwente/
-    profiles: ["simulator","diff","game", "robocup"]
+    profiles: ["simulator","diff","game", "robocup", "RL"]
 
   roboteam_autoref:
     image: gradle:8.4.0-jdk17
@@ -164,7 +164,7 @@ services:
       - GRADLE_USER_HOME=/home/roboteamtwente/.cache # Cache gradle dependencies
     volumes:
       - ../../roboteam_autoref/:/home/roboteamtwente/
-    profiles: ["simulator","diff","game","autoref"]
+    profiles: ["simulator","diff","game","autoref", "RL"]
 
   erforce_autoref_sim:
     image: roboteamtwente/roboteam:development
@@ -179,7 +179,7 @@ services:
       - 10010:10010 # Tracker port
     volumes:
       - ../../:/home/roboteamtwente/
-    profiles: ["simulator","diff"]
+    profiles: ["simulator","diff", "RL"]
 
   erforce_autoref_game:
     image: roboteamtwente/roboteam:development
@@ -201,7 +201,7 @@ services:
     container_name: RTT_erforce_simulator
     restart: always
     working_dir: "/home/roboteamtwente/external/framework/build/bin/"
-    command: sh -c "./simulator-cli"
+    command: sh -c "./simulator-cli --realism RC2021"
     network_mode: "host" # Workaround to connect from interface on host to AI websocket, please fix
     expose:
       - 10301:10301 #Blue Control Port
@@ -212,7 +212,7 @@ services:
       - 30013:30013 #Simulation Feedback Port
     volumes:
       - ../../:/home/roboteamtwente/
-    profiles: ["simulator","diff"]
+    profiles: ["simulator","diff", "RL"]
 
   ssl-game-controller:
     image: robocupssl/ssl-game-controller:latest
@@ -221,4 +221,4 @@ services:
     network_mode: "host" # Workaround to connect from interface on host to AI websocket, please fix
     ports:
       - "8081:8081/tcp" # UI port
-    profiles: ["simulator","diff","game"]
+    profiles: ["simulator","diff","game", "RL"]

@@ -167,7 +167,7 @@ class PositionComputations {
      * @param robotId ID of the passer robot
      * @return Best position for the passer
      */
-    static Vector2 calculatePasserPosition(Vector2 currentPos, world::World* world, int robotId) noexcept;
+    static Vector2 calculatePasserPosition(Vector2 currentPos, world::World* world, int robotId, Vector2 initialBallPos) noexcept;
 
 
     /**

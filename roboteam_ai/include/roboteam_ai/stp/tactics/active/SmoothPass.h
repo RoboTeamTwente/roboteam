@@ -5,6 +5,11 @@
 namespace rtt::ai::stp::tactic {
 
 class SmoothPass : public Tactic {
+
+    private:
+        Vector2 initialBallPos;  // Store initial ball position
+        bool initialized{false};
+
    public:
     /**
      * @brief Constructor for the tactic, initializes skills state machine

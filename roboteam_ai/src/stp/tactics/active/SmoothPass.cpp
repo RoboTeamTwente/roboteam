@@ -23,32 +23,48 @@ std::optional<StpInfo> SmoothPass::calculateInfoForSkill(const StpInfo &info) no
         return skillStpInfo;
     }
 
+    // Store initial ball position when tactic first starts
+    if (!initialized) {
+        initialBallPos = info.getBall().value()->position;
+        initialized = true;
+    }
+
     auto currentPos = info.getRobot().value()->getPos();
     auto world = info.getCurrentWorld();
     
     if (world) {
-        // Use our new computation functions
-        Vector2 newPos = PositionComputations::calculatePasserPosition(currentPos, world, info.getRobot().value()->getId());
-        Angle newAngle = PositionComputations::calculatePasserAngle(currentPos, world);
+        Vector2 newPos = PositionComputations::calculatePasserPosition(currentPos, world, info.getRobot().value()->getId(), initialBallPos);
+        double angleToTarget = (info.getPositionToShootAt().value() - info.getRobot().value()->getPos()).angle();
         
         skillStpInfo.setPositionToMoveTo(newPos);
-        skillStpInfo.setYaw(newAngle);
+        skillStpInfo.setYaw(angleToTarget);
     }
 
     return skillStpInfo;
 }
 
 bool SmoothPass::isTacticFailing(const StpInfo &info) noexcept { 
-    return !info.getPositionToShootAt() || !info.getBall(); 
+    return !info.getPositionToShootAt() || 
+           !info.getBall() || 
+           !info.getRobot().value()->hasBall();  // Add this check
 }
 
 bool SmoothPass::shouldTacticReset(const StpInfo &info) noexcept {
-    // Reset if we've deviated too much from desired angle during orbit
-    if (skills.current_num() == 0) {  // During OrbitAndDrive
-        const auto errorMargin = constants::GO_TO_POS_ANGLE_ERROR_MARGIN * M_PI;
-        return info.getRobot().value()->getYaw().shortestAngleDiff(info.getYaw()) > errorMargin;
-    }
-    return false;
+    if (skills.current_num() != 0) return false;  // Only check during OrbitAndDrive
+    
+    // Get current robot position and target position
+    auto robot = info.getRobot().value();
+    auto currentPos = robot->getPos();
+    auto targetPos = info.getPositionToMoveTo().value();
+    
+    // Check angle deviation
+    const auto angleErrorMargin = constants::GO_TO_POS_ANGLE_ERROR_MARGIN * M_PI;
+    bool angleDeviated = robot->getYaw().shortestAngleDiff(info.getYaw()) > angleErrorMargin;
+    
+    // Check position deviation
+    bool positionDeviated = (currentPos - targetPos).length() > constants::GO_TO_POS_ERROR_MARGIN;
+    
+    return angleDeviated || positionDeviated;
 }
 
 bool SmoothPass::isEndTactic() noexcept {

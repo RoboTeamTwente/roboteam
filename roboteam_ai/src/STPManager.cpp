@@ -174,6 +174,16 @@ void STPManager::runOneLoopCycle() {
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
+
+    // if (STPManager::isInitialized()) {
+    //     int numAttackers = STPManager::getRLInterface().getNumAttackers();
+    //     int numDefenders = STPManager::getRLInterface().getNumDefenders();
+    //     int numWallers = STPManager::getRLInterface().getNumWallers();
+    //     RTT_WARNING("Number of attackers: " + std::to_string(numAttackers));
+    //     RTT_WARNING("Number of defenders: " + std::to_string(numDefenders));
+    //     RTT_WARNING("Number of walls: " + std::to_string(numWallers));  
+    // }
+
     rtt::ai::control::ControlModule::sendAllCommands();
 }
 
@@ -207,16 +217,13 @@ STPManager::STPManager(std::shared_ptr<ai::gui::net::InterfaceGateway> interface
     rlInterface() {
         instance = this;
 
-        // Set initial grid positions
-        std::array<bool, 9> defaultGrid = {
-            false,  false, true,   // top row
-            false, false, false,  // middle row
-            false,  false, true    // bottom row
-        };
-        rlInterface.setBinaryOccupancyGrid(defaultGrid);
-
-        // Set initial attacker number
-        rlInterface.setNumAttackers(2);
+    //     // Set initial grid positions
+    //     std::array<bool, 9> defaultGrid = {
+    //         false,  false, true,   // top row
+    //         false, false, false,  // middle row
+    //         false,  false, true    // bottom row
+    //     };
+    //     rlInterface.setBinaryOccupancyGrid(defaultGrid);
     }
     
 }  // namespace rtt

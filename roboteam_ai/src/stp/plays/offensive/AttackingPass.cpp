@@ -18,16 +18,19 @@
 
 namespace rtt::ai::stp::play {
 AttackingPass::AttackingPass() : Play() {
-
-    if (STPManager::isInitialized()) {
-        int numAttackers = STPManager::getRLInterface().getNumAttackers();
-        RTT_INFO("Number of attackers: " + std::to_string(STPManager::getRLInterface().getNumAttackers()));
-    }
     
-    int numDefenders = 2;
-    int numWallers = 4;
+    int numDefenders = 4;
+    int numWallers = 2;
     int numAttackers = 2;
+    
+    updateRoleConfiguration();
 
+    // if (STPManager::isInitialized()) {
+    //     numAttackers = STPManager::getRLInterface().getNumAttackers();
+    //     numWallers = STPManager::getRLInterface().getNumWallers();
+    //     numDefenders = STPManager::getRLInterface().getNumDefenders();
+    // }
+    
     // Evaluations that have to be true in order for this play to be considered valid.
     startPlayEvaluation.clear();
     startPlayEvaluation.emplace_back(GlobalEvaluation::NormalPlayGameState);
@@ -86,9 +89,18 @@ uint8_t AttackingPass::score(const rtt::Field& field) noexcept {
 }
 
 Dealer::FlagMap AttackingPass::decideRoleFlags() const noexcept {
-    int numDefenders = 2;
-    int numWallers = 4;
-    int numAttackers = STPManager::getRLInterface().getNumAttackers();
+
+    const_cast<AttackingPass*>(this)->updateRoleConfiguration();
+
+    // int numDefenders = 4;
+    // int numWallers = 2;
+    // int numAttackers = 2;
+
+    if (STPManager::isInitialized()) {
+        numAttackers = STPManager::getRLInterface().getNumAttackers();
+        numWallers = STPManager::getRLInterface().getNumWallers();
+        numDefenders = STPManager::getRLInterface().getNumDefenders();
+    }
 
     Dealer::FlagMap flagMap;
 
@@ -174,6 +186,54 @@ bool AttackingPass::shouldEndPlay() noexcept {
     }
 
     return false;
+}
+
+void AttackingPass::updateRoleConfiguration() {
+    if (STPManager::isInitialized()) {
+        int newNumDefenders = STPManager::getRLInterface().getNumDefenders();
+        int newNumWallers = STPManager::getRLInterface().getNumWallers();
+        int newNumAttackers = STPManager::getRLInterface().getNumAttackers();
+
+        // Only recreate roles if numbers have changed
+        if (newNumDefenders != numDefenders || 
+            newNumWallers != numWallers || 
+            newNumAttackers != numAttackers) {
+            
+            RTT_INFO("Updating role configuration - "
+                     "Defenders: " + std::to_string(numDefenders) + " -> " + std::to_string(newNumDefenders) + 
+                     ", Wallers: " + std::to_string(numWallers) + " -> " + std::to_string(newNumWallers) + 
+                     ", Attackers: " + std::to_string(numAttackers) + " -> " + std::to_string(newNumAttackers));
+
+            numDefenders = newNumDefenders;
+            numWallers = newNumWallers;
+            numAttackers = newNumAttackers;
+
+            // Create mandatory roles first
+            roles[0] = std::make_unique<role::Keeper>("keeper");
+            roles[1] = std::make_unique<role::Passer>("passer");
+            roles[2] = std::make_unique<role::PassReceiver>("receiver");
+
+            int currentIndex = 3;
+
+            // Add wallers
+            for (int i = 0; i < numWallers && currentIndex < rtt::ai::constants::MAX_ROBOT_COUNT; i++) {
+                auto waller = std::make_unique<role::Defender>("waller_" + std::to_string(i));
+                roles[currentIndex++] = std::move(waller);
+            }
+
+            // Add defenders
+            for (int i = 0; i < numDefenders && currentIndex < rtt::ai::constants::MAX_ROBOT_COUNT; i++) {
+                auto defender = std::make_unique<role::Defender>("defender_" + std::to_string(i));
+                roles[currentIndex++] = std::move(defender);
+            }
+
+            // Add attackers
+            for (int i = 0; i < numAttackers && currentIndex < rtt::ai::constants::MAX_ROBOT_COUNT; i++) {
+                auto attacker = std::make_unique<role::Formation>("attacker_" + std::to_string(i));
+                roles[currentIndex++] = std::move(attacker);
+            }
+        }
+    }
 }
 
 const char* AttackingPass::getName() const { return "Attacking Pass"; }

@@ -1,8 +1,8 @@
 #include "rl/RLInterface.hpp"
+#include "stp/computations/PositionComputations.h"
 #include <iostream>
 #include <string>
 #include <sstream>
-#include <optional>
 #include <array>
 #include <thread>
 #include <roboteam_utils/Print.h>
@@ -12,8 +12,12 @@ namespace rtt::ai::stp::rl {
 RLInterface::RLInterface() :
     context(),
     socket(context, zmqpp::socket_type::subscribe),
-    running(false)
+    running(false),
+    numAttackers(2),
+    numDefenders(4),
+    numWallers(2)
 {
+//     allocateRoles(numAttackers);                  
     RTT_INFO("Starting zmq client...");
     try {
         socket.subscribe("");
@@ -30,8 +34,8 @@ void RLInterface::start() {
     receiver_thread = std::thread([this]() {
         while(running) {
             try {
-                receiveRLDecision();
-                // std::this_thread::sleep_for(std::chrono::milliseconds(100));
+                receiveAttackersOnly();
+                allocateRoles(getNumAttackers());
             } catch (const std::exception& e) {
                 RTT_WARNING("Error in receiver thread: " + std::string(e.what()));
             }
@@ -53,11 +57,11 @@ int RLInterface::getNumAttackers() const {
     return numAttackers;
 }
 
-std::optional<int> RLInterface::getNumDefenders() const {
+int RLInterface::getNumDefenders() const {
     return numDefenders;
 }
 
-std::optional<int> RLInterface::getNumWallers() const {
+int RLInterface::getNumWallers() const {
     return numWallers;
 }
 
@@ -78,7 +82,7 @@ void RLInterface::setNumWallers(int wallers) {
 }
 
 void RLInterface::clearNumWallers() {
-    numWallers = std::nullopt;
+    numWallers = 0;
 }
 
 void RLInterface::setBinaryOccupancyGrid(std::array<bool, 9> grid) {
@@ -113,6 +117,40 @@ void RLInterface::process_string(const std::string& input_string) {
 
     setNumAttackers(numAttackers);
     setBinaryOccupancyGrid(gridPositions);
+}
+
+void RLInterface::receiveAttackersOnly() {
+    zmqpp::message message;
+    socket.receive(message);
+    std::string msg_str;
+    message >> msg_str;  // Extract string from message
+    
+    process_attackers_string(msg_str);
+}
+
+void RLInterface::process_attackers_string(const std::string& input_string) {
+    std::istringstream stream(input_string);
+    stream >> numAttackers;
+    numAttackers = std::max(0, numAttackers);
+    setNumAttackers(numAttackers);
+}
+
+void RLInterface::allocateRoles(int requestedAttackers) {
+    int availableSlots = MAX_ROBOTS - MANDATORY_ROLES;
+
+    // Set attackers (cap at 6 and available slots)
+    numAttackers = std::min(requestedAttackers, 6);
+    numAttackers = std::min(numAttackers, availableSlots);
+    availableSlots = availableSlots - numAttackers;
+
+    // Set wallers (between 2-4, capped by available slots)
+    int requestedWallers = std::max(2, rtt::ai::stp::PositionComputations::amountOfWallers);
+    numWallers = std::min(requestedWallers, 4);
+    numWallers = std::min(numWallers, availableSlots);
+    availableSlots = availableSlots - numWallers;
+
+    // Remaining slots become defenders
+    numDefenders = availableSlots;
 }
 
 }  // namespace rtt::ai::stp::rl

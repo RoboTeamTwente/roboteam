@@ -1,30 +1,81 @@
 import zmq
 import sys
 import os
+import numpy as np
+import time
 
-current_dir = os.path.dirname(os.path.abspath(__file__))
-roboteam_path = os.path.abspath(os.path.join(current_dir, "../../../.."))
+def send_action_command(action_array):
+    """
+    Takes a MultiDiscrete array of 6 numbers (0-9 each) and sends it via ZMQ.
+    
+    Args:
+        action_array: numpy array of 6 integers where:
+            0 = defender (not included in message)
+            1-9 = attacker in that grid position
+    
+    Format sent: "N P1 P2 ... PN" where:
+        N = number of attackers
+        P1...PN = positions of attackers (1-9)
+    """
+    try:
+        # Initialize ZMQ context and socket
+        context = zmq.Context()
+        socket = context.socket(zmq.PUB)
+        socket.bind("tcp://*:5555")
+        
+        # Count attackers (non-zero values)
+        attacker_positions = [pos for pos in action_array if pos != 0]
+        num_attackers = len(attacker_positions)
+        
+        # Create message string: "N P1 P2 ... PN"
+        message = f"{num_attackers}"
+        if num_attackers > 0:
+            positions_str = " ".join(map(str, attacker_positions))
+            message += f" {positions_str}"
+            
+        # Send message
+        socket.send_string(message)
+        time.sleep(0.1)  # Small delay to ensure message is sent
+        
+        # Clean up
+        socket.close()
+        context.term()
+        
+    except Exception as e:
+        print(f"Error in send_action_command: {e}")
 
-# Add to sys.path
-sys.path.append(roboteam_path)
+def send_num_attackers(num_attackers):
+    """
+    Takes a single number representing number of attackers and sends via ZMQ.
+    
+    Args:
+        num_attackers: integer between 0 and 6 representing number of attackers
+    """
+    try:
+        # Initialize ZMQ context and socket
+        context = zmq.Context()
+        socket = context.socket(zmq.PUB)
+        socket.bind("tcp://*:5555")
+        
+        # Ensure number is within valid range
+        num_attackers = max(0, min(num_attackers, 6))
+        
+        # Send message
+        message = str(num_attackers)
+        socket.send_string(message)
+        time.sleep(0.1)  # Small delay to ensure message is sent
+        
+        # Clean up
+        socket.close()
+        context.term()
+        
+    except Exception as e:
+        print(f"Error in send_num_attackers: {e}")
 
-# Now import the generated protobuf classes
-from roboteam_networking.proto import ActionCommand_pb2
+# Example usage:
+# Full action array:
+# action = [0, 3, 0, 7, 1, 0]  # 3 attackers in positions 3, 7, and 1
+# send_action_command(action)  # Sends: "3 3 7 1"
 
-def send_action_command(num_attacker, num_defender, num_waller):
-    context = zmq.Context()
-    socket = context.socket(zmq.PUB)
-    socket.bind("tcp://*:5555") # Send data over this port.
-
-    action_command = ActionCommand_pb2.ActionCommand()
-    action_command.numDefender = num_defender
-    action_command.numAttacker = num_attacker
-    action_command.numWaller = num_waller
-
-    message = action_command.SerializeToString()
-    socket.send(message)
-    #print(f"Sent: numDefender={num_defender}, numAttacker={num_attacker}, numWaller={num_waller}")
-
-if __name__ == "__main__":
-    # Example usage
-    send_action_command(2, 3, 1)
+# Just number of attackers:
+# send_num_attackers(3)  # Sends: "3"

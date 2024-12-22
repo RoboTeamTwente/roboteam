@@ -21,7 +21,7 @@ def create_publisher():
 
 def publish_messages(socket, topic="updates"):
     # Array of integers to send
-    numbers = [2, 3,6]
+    numbers = [6]
 
     while True:
         # Convert numbers to strings

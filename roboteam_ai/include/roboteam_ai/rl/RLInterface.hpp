@@ -2,28 +2,33 @@
 
 #include <zmqpp/zmqpp.hpp>
 #include <array>
-#include <optional>
 #include <string>
+#include <thread>
+#include "utilities/Constants.h"
 
 namespace rtt::ai::stp::rl {
 
 /**
  * @brief Interface class for Reinforcement Learning communication
- * @details Handles ZMQ socket communication and manages game state information
+ * @details Handles ZMQ socket communication and manages game state information.
+ *          This class is used to receive RL decisions from the RL model and update the role allocation.
+ *          The role allocation for defenders and walls is determined based on the number of attackers.
  */
 
 class RLInterface {
-private:
-
+   private:
     // Thread members
     std::thread receiver_thread;
     bool running;
 
     // Game state members
     int numAttackers;
-    std::optional<int> numDefenders;
-    std::optional<int> numWallers;
-    std::array<bool, 9> gridPositions; // Array of 9 positions, boolean
+    int numDefenders;
+    int numWallers;
+    std::array<bool, 9> gridPositions;  // Array of 9 positions, boolean
+
+    const int MANDATORY_ROLES = 3;  // keeper, passer, receiver
+    const int MAX_ROBOTS = static_cast<int>(rtt::ai::constants::MAX_ROBOT_COUNT);
 
     // ZMQ members
     zmqpp::context_t context;
@@ -34,34 +39,33 @@ private:
      * @param input_string Format: "N P1 P2 ... P_N" where:
      *                    - N is the number of attackers
      *                    - P1 through PN are positions (1-9) where attackers are located
-     * @details Parses the input string to:
-     *          1. Extract number of attackers (first number)
-     *          2. Reset the 3x3 grid to empty
-     *          3. Mark grid positions as occupied based on subsequent numbers
-     *          4. Updates both numAttackers and gridPositions class members
-     * @example "2 1 9" results in:
-     *          - numAttackers = 2
-     *          - grid positions: [true, false, false,
-     *                            false, false, false,
-     *                            false, false, true]
      */
     void process_string(const std::string& input_string);
 
-
+    /**
+     * @brief Processes string containing only number of attackers
+     */
+    void process_attackers_string(const std::string& input_string);
+    
+    /**
+     * @brief Starts the receiver thread
+     */
     void start();
 
+    /**
+     * @brief Allocates roles based on current game state
+     * @param requestedAttackers Number of attackers requested
+     */
+    void allocateRoles(int requestedAttackers);
 
-public:
-    // Constructor
+   public:
     RLInterface();
-
-    // Destructor
     ~RLInterface();
 
     // Getters
     int getNumAttackers() const;
-    std::optional<int> getNumDefenders() const;
-    std::optional<int> getNumWallers() const;
+    int getNumDefenders() const;
+    int getNumWallers() const;
     std::array<bool, 9> getBinaryOccupancyGrid() const;
     
     // Setters
@@ -69,19 +73,24 @@ public:
     void clearNumAttackers();
     void setNumWallers(int wallers);
     void clearNumWallers();
+    void setNumDefenders(int defenders);
+    void clearNumDefenders();
     void setBinaryOccupancyGrid(std::array<bool, 9> grid);
 
-
     /**
-     * @brief This function is used to receive the RL decision, it internally parses it and updates the game state
-     * by calling the other functions such as process_string. It also sets the member variables.
+     * @brief Receives and processes full RL decision including grid positions
      */
     void receiveRLDecision();
 
     /**
-     * @brief Not used, only for debugging
+     * @brief Receives and processes attacker count only
+     */
+    void receiveAttackersOnly();
+
+    /**
+     * @brief Prints the binary occupancy grid (debug only)
      */
     void printBinaryOccupancyGrid() const;
 };
 
-} // namespace rtt::ai::stp::rl
+}  // namespace rtt::ai::stp::rl

@@ -13,9 +13,11 @@
 #include "stp/computations/PositionScoring.h"
 #include "utilities/Constants.h"
 #include "world/World.hpp"
+#include "rl/RLInterface.hpp"
+#include "STPManager.h"
 
 namespace rtt::ai::stp {
-int PositionComputations::amountOfWallers = 4;
+int PositionComputations::amountOfWallers = 2;
 
 gen::ScoredPosition PositionComputations::getPosition(std::optional<rtt::Vector2> currentPosition, const Grid &searchGrid, gen::ScoreProfile profile, const Field &field,
                                                       const world::World *world) {
@@ -473,34 +475,124 @@ void PositionComputations::calculateInfoForDefendersAndWallers(std::unordered_ma
 
 void PositionComputations::calculateInfoForAttackers(std::unordered_map<std::string, StpInfo> &stpInfos, std::array<std::unique_ptr<Role>, constants::MAX_ROBOT_COUNT> &roles,
                                                      const Field &field, world::World *world) noexcept {
-    // List of all active attackers
+    // Get list of attackers
     auto attackerNames = std::vector<std::string>{};
     for (size_t i = 0; i < world->getWorld()->getUs().size(); i++) {
         if (roles[i]->getName().find("attacker") != std::string::npos) {
             attackerNames.emplace_back(roles[i]->getName());
         }
     }
-    if (attackerNames.size() == 0)
-        ;  // Do nothing
-    else if (attackerNames.size() == 1) {
-        stpInfos["attacker_0"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.middleRightGrid, gen::AttackingPass, field, world));
-    } else if (attackerNames.size() == 2) {
-        stpInfos["attacker_0"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.topRightGrid, gen::AttackingPass, field, world));
-        stpInfos["attacker_1"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.bottomRightGrid, gen::AttackingPass, field, world));
-    } else if (attackerNames.size() >= 3) {
-        stpInfos["attacker_0"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.topRightGrid, gen::SafePass, field, world));
-        stpInfos["attacker_1"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.middleRightGrid, gen::AttackingPass, field, world));
-        stpInfos["attacker_2"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.bottomRightGrid, gen::SafePass, field, world));
+    
+    // If no attackers, nothing to do
+    if (attackerNames.empty()) return;
+
+    // Get ball position
+    Vector2 ballPos = world->getWorld()->getBall()->get()->position;
+
+    struct GridEvaluation {
+        int gridNumber;
+        double averageScore;
+        bool hasBall;
+        gen::ScoredPosition bestPos;
+    };
+
+    GridEvaluation gridEvaluation;
+
+    // Evaluate all grids
+    std::vector<GridEvaluation> gridEvaluations;
+    for (int i = 0; i < 9; i++) {
+        if (auto grid = PositionComputations::getGridFromNumber(field, i + 1)) {
+
+            if ((i + 1) % 3 == 1) {  // Grid numbers that leave remainder 1 when divided by 3
+                continue;  // Skip these grids entirely
+            }
+
+            gridEvaluation.gridNumber = i;
+            
+            // Check if ball is in this grid
+            gridEvaluation.hasBall = grid->contains(ballPos);
+            
+            // Get position score based on grid location
+            // Use AttackingPass for rightmost grids (3,6,9), SafePass for others
+            bool isRightSideGrid = (i + 1) % 3 == 0;
+            auto profileType = isRightSideGrid ? gen::AttackingPass : gen::SafePass;
+            
+            // Calculate best position in grid
+            gridEvaluation.bestPos = PositionComputations::getPosition(std::nullopt, *grid, profileType, field, world);
+            
+            // Apply ball presence penalty if ball is in this grid (reduce score by 40%)
+            gridEvaluation.averageScore = gridEvaluation.bestPos.score * (gridEvaluation.hasBall ? 0.6 : 1.0);
+            
+            gridEvaluations.push_back(gridEvaluation);
+        }
     }
-    if (attackerNames.size() == 4) {
-        stpInfos["attacker_3"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.middleMidGrid, gen::AttackingPass, field, world));
-    } else if (attackerNames.size() == 5) {
-        stpInfos["attacker_3"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.topMidGrid, gen::AttackingPass, field, world));
-        stpInfos["attacker_4"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.bottomMidGrid, gen::AttackingPass, field, world));
-    } else if (attackerNames.size() >= 6) {
-        stpInfos["attacker_3"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.topMidGrid, gen::AttackingPass, field, world));
-        stpInfos["attacker_4"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.middleMidGrid, gen::SafePass, field, world));
-        stpInfos["attacker_5"].setPositionToMoveTo(PositionComputations::getPosition(std::nullopt, field.bottomMidGrid, gen::AttackingPass, field, world));
+
+    // Sort grids by average score
+    std::sort(gridEvaluations.begin(), gridEvaluations.end(),
+              [](const GridEvaluation& a, const GridEvaluation& b) {
+                  return a.averageScore > b.averageScore;
+              });
+
+    // Create binary grid array based on best scoring positions
+    std::array<bool, 9> gridArray{};
+    size_t numPositionsNeeded = attackerNames.size();
+    
+    // Fill the grid array based on best scoring positions
+    for (size_t i = 0; i < numPositionsNeeded; i++) {
+        gridArray[gridEvaluations[i].gridNumber] = true;
+    }
+
+    // Number of attackers
+    //RTT_INFO("Number of attackers: " + std::to_string(attackerNames.size()));
+    
+    // Assign attackers to positions where gridArray is true
+    size_t currentAttacker = 0;
+    for (int i = 0; i < 9 && currentAttacker < attackerNames.size(); i++) {
+        if (gridArray[i]) {
+            if (auto grid = PositionComputations::getGridFromNumber(field, i + 1)) {
+
+                bool isRightSideGrid = (i + 1) % 3 == 0;
+                auto profileType = isRightSideGrid ? gen::AttackingPass : gen::SafePass;
+
+                stpInfos[attackerNames[currentAttacker]].setPositionToMoveTo(
+                    PositionComputations::getPosition(std::nullopt, *grid, profileType, field, world));
+                currentAttacker++;
+            }
+        }
+    }
+}
+
+std::optional<Grid> PositionComputations::getGridFromNumber(const Field& field, int gridNumber){
+    if (gridNumber == 1){
+        return field.topLeftGrid;
+    }
+    if (gridNumber == 2){
+        return field.topMidGrid;
+    }
+    if (gridNumber == 3){
+        return field.topRightGrid;
+    }
+    if (gridNumber == 4){
+        return field.middleLeftGrid;
+    }
+    if (gridNumber == 5){
+        return field.middleMidGrid;
+    }
+    if (gridNumber == 6){
+        return field.middleRightGrid;
+    }
+    if (gridNumber == 7){
+        return field.bottomLeftGrid;
+    }
+    if (gridNumber == 8){
+        return field.bottomMidGrid;
+    }
+    if (gridNumber == 9){
+        return field.bottomRightGrid;
+    }
+    else{
+        RTT_WARNING("Invalid grid number");
+        return std::nullopt;
     }
 }
 

@@ -47,3 +47,4 @@ roboteam_ai/src/RL/src/tmp/eval_monitor.monitor.csv
 roboteam_ai/src/RL/src/tmp/monitor.monitor.csv
 roboteam_ai/src/RL/src/ppo_tensorboard_main
 roboteam_ai/src/RL/src/best_model_PPO.zip
+docker/runner/ssl-game-controller-config/state-store.json.stream

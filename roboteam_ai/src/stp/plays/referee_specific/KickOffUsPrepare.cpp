@@ -77,7 +77,6 @@ void KickOffUsPrepare::calculateInfoForRoles() noexcept {
     stpInfos["rightback"].setPositionToMoveTo(Vector2(-3.0, -1.5));
     stpInfos["centerback"].setPositionToMoveTo(Vector2(-4.2, 0));
 
-
     stpInfos["winger_1"].setPositionToMoveTo(Vector2(-2.3, 3.5));
     stpInfos["winger_2"].setPositionToMoveTo(Vector2(-2.3, -3.5));
 }

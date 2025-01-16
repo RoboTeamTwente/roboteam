@@ -486,6 +486,25 @@ void PositionComputations::calculateInfoForAttackers(std::unordered_map<std::str
     // If no attackers, nothing to do
     if (attackerNames.empty()) return;
 
+    // Store current grid positions
+    std::unordered_map<std::string, int> currentGrids;
+    for (const std::string& attackerName : attackerNames) {
+        auto positionOptional = stpInfos[attackerName].getPositionToMoveTo();
+        if (positionOptional.has_value()) {  // Check if position exists
+            Vector2 currentPos = positionOptional.value();
+            
+            // Find which grid contains this position
+            for (int i = 0; i < 9; i++) {
+                if (auto grid = PositionComputations::getGridFromNumber(field, i + 1)) {
+                    if (grid->contains(currentPos)) {
+                        currentGrids[attackerName] = i;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
     // Get ball position
     Vector2 ballPos = world->getWorld()->getBall()->get()->position;
 
@@ -500,6 +519,8 @@ void PositionComputations::calculateInfoForAttackers(std::unordered_map<std::str
 
     // Evaluate all grids
     std::vector<GridEvaluation> gridEvaluations;
+    const double POSITION_STICKINESS = 1.5;  // 30% bonus for current positions
+
     for (int i = 0; i < 9; i++) {
         if (auto grid = PositionComputations::getGridFromNumber(field, i + 1)) {
 
@@ -522,6 +543,19 @@ void PositionComputations::calculateInfoForAttackers(std::unordered_map<std::str
             
             // Apply ball presence penalty if ball is in this grid (reduce score by 40%)
             gridEvaluation.averageScore = gridEvaluation.bestPos.score * (gridEvaluation.hasBall ? 0.6 : 1.0);
+
+            // Check if this grid is occupied by checking all current positions
+            bool robotInThisGrid = false;
+            for (const auto& it : currentGrids) {
+                if (it.second == i) {
+                    robotInThisGrid = true;
+                    break;
+                }
+            }
+
+            if (robotInThisGrid) {
+                gridEvaluation.averageScore *= POSITION_STICKINESS;
+            }
             
             gridEvaluations.push_back(gridEvaluation);
         }

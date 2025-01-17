@@ -5,12 +5,15 @@ import math
 from dataclasses import dataclass
 from typing import List, Tuple
 
-# Import the required protobuf messages
-from roboteam_networking.proto.ssl_simulation_control_pb2 import (
-    SimulatorCommand, 
-    SimulatorControl,
-    TeleportRobot
-)
+# Make sure to go back to the main roboteam directory
+current_dir = os.path.dirname(os.path.abspath(__file__))
+roboteam_path = os.path.abspath(os.path.join(current_dir, "..","..", "..", ".."))
+
+# Add to sys.path
+sys.path.append(roboteam_path)
+
+# Import the generated protobuf classes
+from roboteam_networking.proto.ssl_simulation_control_pb2 import SimulatorCommand, SimulatorControl, TeleportRobot
 from roboteam_networking.proto.ssl_gc_common_pb2 import Team
 
 SIMULATION_CONTROL_PORT = 10300
@@ -25,53 +28,36 @@ class FormationManager:
     def __init__(self, field: FieldDimensions):
         self.field = field
         
-    def calculate_defensive_formation_positions(self, num_back: int, num_mid: int, num_front: int,
-                                             team_yellow: bool) -> List[Tuple[int, float, float, float]]:
-        """Calculate defensive formation positions (closer to our goal)"""
-        positions = []
-        robot_id = 1
-        mirror = 1 if team_yellow else -1
-        
-        width = self.field.width
-        height = self.field.height
-        
-        # Back line positions (closer together near goal)
-        for i in range(num_back):
-            x = mirror * (-width / 3)
-            y = -height / 8 + height / (num_back + 1) * (i + 1) / 4
-            positions.append((robot_id, x, y, math.pi if mirror > 0 else 0))
-            robot_id += 1
-            
-        # Mid line positions
-        for i in range(num_mid):
-            x = mirror * (-width / 5)
-            y = -height / 2 + height / (num_mid + 1) * (i + 1)
-            positions.append((robot_id, x, y, math.pi if mirror > 0 else 0))
-            robot_id += 1
-            
-        # Front line positions (closer to our side)
-        for i in range(num_front):
-            x = mirror * (-ROBOT_RADIUS * 1.5)
-            y = -height / 2 + height / (num_front + 1) * (i + 1)
-            positions.append((robot_id, x, y, math.pi if mirror > 0 else 0))
-            robot_id += 1
-            
-        return positions
-
-    def calculate_specific_positions(self, team_yellow: bool) -> List[Tuple[int, float, float, float]]:
-        """Calculate specific positions for robots with fixed coordinates"""
+    def calculate_formation_positions(self, team_yellow: bool) -> List[Tuple[int, float, float, float]]:
+        """Calculate positions for all robots based on their roles"""
         positions = []
         mirror = 1 if team_yellow else -1
         
-        specific_positions = [
-            (0, -6.0, 0.0),    # Seventh robot
-            (9, -3.0, 0.1),    # Eighth robot
-            (10, -3.0, -0.1)   # Ninth robot
+        # Define position mappings (robot_id, x, y)
+        role_positions = [
+            # Front formation
+            (1, -0.5, 3.0),    # formation_front_0
+            (2, -0.5, 2.0),    # formation_front_1
+            (3, -0.6, -0.7),   # formation_front_2
+            (4, -0.5, -3.0),   # formation_front_3
+            (10, -0.5, -2.0),   # formation_front_4
+            
+            # Back positions
+            (5, -3.0, 1.5),    # leftback
+            (6, -3.0, -1.5),   # rightback
+            (7, -4.2, 0),      # centerback
+            
+            # Wingers
+            (8, -2.3, 3.5),    # winger_1
+            (9, -2.3, -3.5),   # winger_2
         ]
         
-        for robot_id, x, y in specific_positions:
+        # Create mirrored positions based on team
+        for robot_id, x, y in role_positions:
             mirrored_x = mirror * x
-            positions.append((robot_id, mirrored_x, y, math.pi if mirror > 0 else 0))
+            # For blue team (mirror==-1), flip orientation to face the other way
+            orientation = math.pi if mirror > 0 else 0
+            positions.append((robot_id, mirrored_x, y, orientation))
             
         return positions
 
@@ -102,68 +88,20 @@ def teleport_robots_to_positions(positions: List[Tuple[int, float, float, float]
     sock.sendto(serialized_command, ("localhost", SIMULATION_CONTROL_PORT))
     sock.close()
 
-def setup_formations():
-    """Combined function to setup all formations for both teams"""
+def teleport_robots():
+    """Setup formations for both teams"""
     field = FieldDimensions()
     formation_manager = FormationManager(field)
     
-    # Yellow team defensive formation (8 front robots)
-    yellow_defensive = formation_manager.calculate_defensive_formation_positions(
-        num_back=0,
-        num_mid=0,
-        num_front=8,
-        team_yellow=True
-    )
-    teleport_robots_to_positions(yellow_defensive, team_yellow=True)
+    # Yellow team formation
+    yellow_positions = formation_manager.calculate_formation_positions(team_yellow=True)
+    teleport_robots_to_positions(yellow_positions, team_yellow=True)
     
-    # Yellow team specific additional positions
-    yellow_specific = formation_manager.calculate_specific_positions(team_yellow=True)
-    teleport_robots_to_positions(yellow_specific, team_yellow=True)
-    
-    # Blue team defensive formation (8 front robots)
-    blue_defensive = formation_manager.calculate_defensive_formation_positions(
-        num_back=0,
-        num_mid=0,
-        num_front=8,
-        team_yellow=False
-    )
-    teleport_robots_to_positions(blue_defensive, team_yellow=False)
-    
-    # Blue team specific additional positions
-    blue_specific = formation_manager.calculate_specific_positions(team_yellow=False)
-    teleport_robots_to_positions(blue_specific, team_yellow=False)
+    # Blue team formation (mirrored)
+    blue_positions = formation_manager.calculate_formation_positions(team_yellow=False)
+    teleport_robots_to_positions(blue_positions, team_yellow=False)
 
 if __name__ == "__main__":
-    # Initialize field dimensions
-    field = FieldDimensions()
-    formation_manager = FormationManager(field)
-    
-    print("Setting up combined formations for both teams...")
-    
-    # Yellow team defensive formation (6 robots)
-    yellow_defensive = formation_manager.calculate_defensive_formation_positions(
-        num_back=0,
-        num_mid=0,
-        num_front=8,
-        team_yellow=True
-    )
-    teleport_robots_to_positions(yellow_defensive, team_yellow=True)
-    
-    # Yellow team specific additional positions (3 robots)
-    yellow_specific = formation_manager.calculate_specific_positions(team_yellow=True)
-    teleport_robots_to_positions(yellow_specific, team_yellow=True)
-    
-    # Blue team defensive formation (6 robots)
-    blue_defensive = formation_manager.calculate_defensive_formation_positions(
-        num_back=0,
-        num_mid=0,
-        num_front=8,
-        team_yellow=False
-    )
-    teleport_robots_to_positions(blue_defensive, team_yellow=False)
-    
-    # Blue team specific additional positions (3 robots)
-    blue_specific = formation_manager.calculate_specific_positions(team_yellow=False)
-    teleport_robots_to_positions(blue_specific, team_yellow=False)
-    
+    print("Setting up formations for both teams...")
+    teleport_robots()
     print("Script execution completed")

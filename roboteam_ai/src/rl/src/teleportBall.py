@@ -26,25 +26,27 @@ SIMULATION_CONTROL_PORT = 10300
 def teleport_ball(x, y, z=0.0):
     # Create a UDP socket
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-
+    
     # Create the TeleportBall message
     teleport = TeleportBall()
     teleport.x = x
     teleport.y = y
     teleport.z = z
-
+    # Set velocities to zero
+    teleport.vx = 0.0
+    teleport.vy = 0.0
+    teleport.vz = 0.0
+    
     # Create the SimulatorCommand
     control = SimulatorControl()
     control.teleport_ball.CopyFrom(teleport)
     command = SimulatorCommand()
     command.control.CopyFrom(control)
-
+    
     # Serialize and send the command
     serialized_command = command.SerializeToString()
     sock.sendto(serialized_command, ("localhost", SIMULATION_CONTROL_PORT))
-
-    #print(f"Sent command to teleport ball to ({x}, {y}, {z})")
-
+    
     # Close the socket
     sock.close()
 

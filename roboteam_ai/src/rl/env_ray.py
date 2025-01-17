@@ -16,11 +16,12 @@ roboteam_path = os.path.abspath(os.path.join(current_dir, "../../.."))
 sys.path.append(roboteam_path)
 
 # Now import the functions
-from roboteam_ai.src.rl.src.sentActionCommand import send_action_command
+from roboteam_ai.src.rl.src.sentActionCommand import send_action_command, send_num_attackers
 from roboteam_ai.src.rl.src.getState import get_ball_state, get_robot_state, get_referee_state
 from roboteam_ai.src.rl.src.teleportBall import teleport_ball
 from roboteam_ai.src.rl.src.resetRefereeAPI import reset_referee_state
 from roboteam_ai.src.rl.src.changeGameState import start_game
+from roboteam_ai.src.rl.src.teleportRobot import teleport_robots
 
 """
 This environment file is in the form of a gymnasium environment.
@@ -35,20 +36,22 @@ class RoboTeamEnv(gymnasium.Env):
         self.config = config or {} # Config placeholder
         self.MAX_ROBOTS_US = 10
 
-        # Define the number of robots that are present in each grid + ball location
-        self.robot_grid = np.zeros((4, 2), dtype=int) # left up, right up, left down, right down
         self.ball_position = np.zeros(2) # Single row with 2 columns
-        self.ball_quadrant = 4 # This refers to the center
 
         self.yellow_score = 0  # Initialize score to zero
         self.blue_score = 0  # Initialize blue score to zero
 
-        # Initialize the observation space
-        self.observation_space = spaces.Box(low=float('-inf'), high=float('inf'), shape=(15,), dtype=np.float64)
+        # Initialize the observation space for:
+        # 44 values (robot positions) + 1 (is_yellow_dribbling) + 2 (ball x,y)
+        self.observation_space = spaces.Box(
+            low=float('-inf'), 
+            high=float('inf'), 
+            shape=(47,),  # 44 + 1 + 2
+            dtype=np.float64
+        )
 
-        # Action space: [attackers, defenders]
-        # Wallers will be automatically calculated
-        self.action_space = spaces.MultiDiscrete([self.MAX_ROBOTS_US + 1, self.MAX_ROBOTS_US + 1])
+        # Action space: single discrete value 0-6 representing number of attackers
+        self.action_space = spaces.Discrete(7)  # 0 to 6 attackers possible
 
         # Define the xy coordinates of the designated ball position
         self.x = 0 
@@ -68,6 +71,13 @@ class RoboTeamEnv(gymnasium.Env):
 
         # Set first_step flag
         self.is_first_step = True
+
+        # Add previous dribbling state
+        self.previous_yellow_dribbling = False
+        self.step_taken = False
+
+        self.last_step_time = 0
+        self.min_step_interval = 1.5  # Minimum time between steps in seconds
 
     def teleport_ball_with_check(self, x, y):
         """
@@ -112,7 +122,7 @@ class RoboTeamEnv(gymnasium.Env):
 
         # Reward shaping
         shaped_reward = 0
-        if not self.shaped_reward_given and self.is_yellow_dribbling and (self.ball_quadrant == 1 or self.ball_quadrant == 3):
+        if not self.shaped_reward_given and self.is_yellow_dribbling:
             self.shaped_reward_given = True # Set it to true
             shaped_reward = 0.1
         
@@ -124,115 +134,94 @@ class RoboTeamEnv(gymnasium.Env):
         reward = goal_scored_reward + shaped_reward
 
         return reward
-
-
-    # def get_observation(self):
-    #     """
-    #     get_observation is meant to get the observation space (kinda like the state)
-    #     """
-
-    #     # Get the robot grid representation
-    #     self.robot_grid, self.is_yellow_dribbling, self.is_blue_dribbling = get_robot_state() # Matrix of 4 by 2 + 2 booleans
-    #     print(f"Robot grid: {self.robot_grid}")
-    #     print(f"Yellow dribbling: {self.is_yellow_dribbling}, Blue dribbling: {self.is_blue_dribbling}")
-
-    #     # Get the ball location
-    #     self.ball_position, self.ball_quadrant = get_ball_state() # x,y coordinates, quadrant
-
-    #     print(f"Ball position: {self.ball_position}, Ball quadrant: {self.ball_quadrant}")
-
-    #     observation_space = {
-    #         'robot_positions': self.robot_grid,
-    #         'ball_position': self.ball_quadrant,
-    #         'is_yellow_dribbling' : self.is_yellow_dribbling
-    #     }
-
-    #     robot_positions_flat = self.robot_grid.flatten()  # Shape (8,)
-    #     ball_position_flat = np.array([self.ball_quadrant])  # Shape (1,)
-    #     dribbling_flat = np.array([self.is_yellow_dribbling])  # Shape (1,)
-
-    #     # Combine all parts into a single flat array
-    #     full_observation = np.concatenate([robot_positions_flat, ball_position_flat, dribbling_flat])
-
-    #     # Pad or reshape `full_observation` to shape [32, 10]
-    #     padded_observation = np.zeros(32 * 10)  # Initialize a zero-padded observation
-    #     padded_observation[:full_observation.size] = full_observation  # Fill with actual data
-    #     observation_2d = padded_observation.reshape(32, 10)  # Reshape to [32, 10]
-
-    #     return observation_2d, self.calculate_reward()
     
     def get_observation(self):
         """
-        get_observation is meant to get the observation space (kinda like the state)
+        Get observation space: robot positions (44) + dribbling (1) + ball position (2)
         """
-        # Get the robot grid representation
-        self.robot_grid, self.is_yellow_dribbling, self.is_blue_dribbling = get_robot_state()
+        # Get the robot positions and dribbling states
+        robot_positions, self.is_yellow_dribbling, self.is_blue_dribbling = get_robot_state()
         
-        # Get the ball location
+        # Get the ball location (continuous x,y values)
         self.ball_position, self.ball_quadrant = get_ball_state()
         
-        # Convert and flatten robot positions to float64
-        robot_positions_flat = self.robot_grid.astype(np.float64).flatten()  # 8 elements
-        
-        # Use ball quadrant for observation
-        ball_quadrant = np.array([float(self.ball_quadrant)], dtype=np.float64)  # 1 element
-        
         # Convert dribbling status to float64
-        is_yellow_dribbling = np.array([float(self.is_yellow_dribbling)], dtype=np.float64)  # 1 element
+        dribbling = np.array([float(self.is_yellow_dribbling)], dtype=np.float64)
         
-        # Combine all parts into the observation array with padding
+        # Combine all parts into the observation array
         observation = np.concatenate([
-            robot_positions_flat,    # 8 elements
-            ball_quadrant,          # 1 element
-            is_yellow_dribbling,    # 1 element
-            np.zeros(5, dtype=np.float64)  # 5 elements to reach total of 15
+            robot_positions,          # 44 elements (x,y for each robot)
+            dribbling,               # 1 element
+            self.ball_position       # 2 elements (x,y)
         ])
-        
-        # Make sure it's flat
-        observation = observation.reshape(15,)
         
         return observation
 
     def step(self, action):
         """
-        The step function is called in every loop the RL agent goes through. 
-        It receives a state, reward and carries out an action
+        The step function waits for either:
+        1. A true possession change (lost ball to opponent or gained from opponent)
+        2. Specific referee commands (8,9)
+        With rate limiting to prevent too frequent steps
         """
-
+        
         while True:
+            # Get current state
+            observation_space = self.get_observation()
+            
+            # Get referee state
             self.yellow_score, self.blue_score, self.stage, self.ref_command, self.x, self.y = get_referee_state()
 
-            if self.ref_command in (2,8,9):  # NORMAL_START, DIRECT_FREE_YELLOW, DIRECT_FREE_BLUE
-                if self.is_first_step:
-                    print("First step after reset - waiting for kickoff to finish...")
-                    time.sleep(5)
-
-                print("Game is RUNNING, executing action")
-                attackers, defenders = action
-                wallers = self.MAX_ROBOTS_US - (attackers + defenders)
-                send_action_command(num_attacker=attackers, num_defender=defenders, num_waller=wallers)
-                break
-
-            # If HALT, but a goal is scored, we need to reset so we break
-            # If HALT, and goal is false, we truncate.
-            # If STOP, we truncate
-
-            elif self.ref_command in (0, 1):  # HALT or STOP
-                break # Code will break if it hits HALT or STOP, then it checks if it truncated or a goal was scored.
-
-            elif self.ref_command in (16, 17):  # Ball placement
+            if self.ref_command in (16,17): # If there is ball placement
                 self.teleport_ball_with_check(self.x, self.y)
 
-        self.is_first_step = False
-        observation_space = self.get_observation()
-        reward = self.calculate_reward()
+            # Reset step_taken flag if ref_command is 2
+            if self.ref_command == 2:
+                self.step_taken = False
 
-        truncated = self.is_truncated()
-        done = self.is_terminated()
+            # Check for true possession change
+            possession_changed = (
+                (self.is_yellow_dribbling != self.previous_yellow_dribbling) and 
+                (self.is_blue_dribbling or self.previous_yellow_dribbling)
+            )
 
-        time.sleep(0.5)
+            # Check if enough time has passed since last step
+            current_time = time.time()
+            time_since_last_step = current_time - self.last_step_time
+            can_take_step = time_since_last_step >= self.min_step_interval
 
-        return observation_space, reward, done, truncated, {}
+            should_take_step = (
+                can_take_step and (
+                    possession_changed or 
+                    (self.ref_command in (8,9) and not self.step_taken)
+                )
+            )
+
+            if should_take_step:
+                print(f"Taking step (time since last: {time_since_last_step:.2f}s)")
+                # Update last step time
+                self.last_step_time = current_time
+                
+                # Execute action
+                send_num_attackers(action)
+                
+                # Mark step as taken for this ref state
+                if self.ref_command in (8,9):
+                    self.step_taken = True
+                    
+                # Update previous possession state
+                self.previous_yellow_dribbling = self.is_yellow_dribbling
+                
+                reward = self.calculate_reward()
+                
+                # Check for termination
+                truncated = self.is_truncated()
+                done = self.is_terminated()
+                
+                return observation_space, reward, done, truncated, {}
+            
+            time.sleep(0.1)
+                
 
     def is_terminated(self):
         """
@@ -268,10 +257,11 @@ class RoboTeamEnv(gymnasium.Env):
         Reset the environment to initial state.
         """
 
+        # Reset rate limiting variables
+        self.last_step_time = time.time()  # Reset the timestamp
+
         # Reset internal state variables
-        self.robot_grid = np.zeros((4, 2), dtype=int)
         self.ball_position = np.zeros(2)
-        self.ball_quadrant = 4
         self.yellow_score = 0
         self.blue_score = 0
         self.yellow_yellow_cards = 0
@@ -281,12 +271,17 @@ class RoboTeamEnv(gymnasium.Env):
         self.shaped_reward_given = False
         self.is_yellow_dribbling = False
         self.is_blue_dribbling = False
+        self.previous_yellow_dribbling = False  # Add this if not already in init
+        self.step_taken = False  # Reset step taken flag
 
         # Reset physical environment
         print("Resetting physical environment...")
         
         # Ensure ball teleport completes
         self.teleport_ball_with_check(0,0)
+
+        # Teleport the robots
+        teleport_robots()
 
         # Reset referee state with verification
         try:
@@ -320,7 +315,7 @@ class RoboTeamEnv(gymnasium.Env):
         except Exception as e:
             print(f"Error getting initial observation: {str(e)}")
             # Provide fallback observation if needed
-            observation = np.zeros(15, dtype=np.float64)
+            observation = np.zeros(47, dtype=np.float64)
 
         # Set first_step flag
         self.is_first_step = True

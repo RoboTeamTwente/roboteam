@@ -85,47 +85,41 @@ def get_ball_state():
 
    return ball_position, ball_quadrant
 
-# Function to get the robot state
 def get_robot_state():
-    grid_array = np.zeros((4, 2), dtype=int)  # 4 quadrants, 2 columns for yellow/blue counts
+    # Initialize array for 22 robots (11 per team) with x,y coordinates
+    robot_positions = np.zeros(44)  # [yellow1_x, yellow1_y, ..., blue1_x, blue1_y, ...]
     yellow_team_dribbling = False
     blue_team_dribbling = False
-
+    
     context = zmq.Context()
     socket_world = context.socket(zmq.SUB)
     socket_world.setsockopt_string(zmq.SUBSCRIBE, "")
 
     zmq_address = get_zmq_address()
-    #print(f"Connecting to ZMQ at: {zmq_address}")
     socket_world.connect(zmq_address)
 
     try:
         message = socket_world.recv()
         state = RoboState.FromString(message)
-        # print(state)
 
         if not len(state.processed_vision_packets):
-            return grid_array, yellow_team_dribbling, blue_team_dribbling
+            return robot_positions, yellow_team_dribbling, blue_team_dribbling
 
         world = state.last_seen_world
 
-        def get_grid_position(x, y):
-            if x < 0:
-                return 0 if y > 0 else 2
-            else:
-                return 1 if y > 0 else 3
-
-        # Process yellow robots
-        for bot in world.yellow:
-            grid_pos = get_grid_position(bot.pos.x, bot.pos.y)
-            grid_array[grid_pos, 0] += 1
+        # Process yellow robots (first 11 robots, indices 0-21)
+        for i, bot in enumerate(world.yellow[:11]):
+            idx = i * 2
+            robot_positions[idx] = bot.pos.x
+            robot_positions[idx + 1] = bot.pos.y
             if bot.feedbackInfo.dribbler_sees_ball:
                 yellow_team_dribbling = True
 
-        # Process blue robots
-        for bot in world.blue:
-            grid_pos = get_grid_position(bot.pos.x, bot.pos.y)
-            grid_array[grid_pos, 1] += 1
+        # Process blue robots (last 11 robots, indices 22-43)
+        for i, bot in enumerate(world.blue[:11]):
+            idx = (i + 11) * 2
+            robot_positions[idx] = bot.pos.x
+            robot_positions[idx + 1] = bot.pos.y
             if bot.feedbackInfo.dribbler_sees_ball:
                 blue_team_dribbling = True
 
@@ -137,7 +131,7 @@ def get_robot_state():
         socket_world.close()
         context.term()
 
-    return grid_array, yellow_team_dribbling, blue_team_dribbling
+    return robot_positions, yellow_team_dribbling, blue_team_dribbling
 
 def get_referee_state():
     """

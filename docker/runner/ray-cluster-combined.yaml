@@ -4,7 +4,6 @@ metadata:
   name: roboteam-ray-cluster
 spec:
   rayVersion: "2.38.0"  
-  # Head node configuration
   headGroupSpec:
     rayStartParams:
       dashboard-host: "0.0.0.0"
@@ -14,15 +13,6 @@ spec:
         labels:
           app: ray-head
       spec:
-        affinity:
-          nodeAffinity:
-            requiredDuringSchedulingIgnoredDuringExecution:
-              nodeSelectorTerms:
-              - matchExpressions:
-                - key: kubernetes.io/hostname
-                  operator: In
-                  values:
-                  - ray  # Schedule on control-plane
         containers:
         - name: ray-head
           image: roboteamtwente/ray:development
@@ -67,12 +57,11 @@ spec:
             periodSeconds: 30
             failureThreshold: 5
 
-  # Worker node configuration with integrated simulator
   workerGroupSpecs:
     - groupName: worker-group
-      replicas: 1      
-      minReplicas: 1  # Specify minimum number of worker replicas
-      maxReplicas: 1  # Optional: specify maximum number of replicas
+      replicas: 20      
+      minReplicas: 0
+      maxReplicas: 40
       rayStartParams:
         num-cpus: "1"
       template:
@@ -80,28 +69,12 @@ spec:
           labels:
             app: ray-worker
         spec:
-          hostNetwork: False
+          hostNetwork: false
           dnsPolicy: ClusterFirstWithHostNet
-          affinity:
-            nodeAffinity:
-              requiredDuringSchedulingIgnoredDuringExecution:
-                nodeSelectorTerms:
-                - matchExpressions:
-                  - key: kubernetes.io/hostname
-                    operator: In
-                    values:
-                    - ray-m02  # Schedule on worker node
-            podAntiAffinity:
-              requiredDuringSchedulingIgnoredDuringExecution:
-              - labelSelector:
-                  matchLabels:
-                    app: ray-worker
-                topologyKey: "kubernetes.io/hostname"
           volumes:
           - name: gradle-cache
             emptyDir: {}
           containers:
-
           # Ray worker container
           - name: ray-worker
             image: roboteamtwente/ray:development
@@ -132,6 +105,23 @@ spec:
             image: roboteamtwente/roboteam:kubernetes
             command: ["/bin/sh"]
             args: ["-c", "/home/roboteam/build/release/bin/roboteam_ai --primary-ai"]
+            workingDir: /home/roboteam
+            env:
+              - name: LD_LIBRARY_PATH
+                value: /home/roboteam/build/release/lib
+            resources:
+              requests:
+                cpu: 60m
+                memory: 10Mi
+              limits:
+                cpu: 100m
+                memory: 50Mi
+          
+          # Secondary ai
+          - name: roboteam-secondary-ai
+            image: roboteamtwente/roboteam:kubernetes
+            command: ["/bin/sh"]
+            args: ["-c", "/home/roboteam/build/release/bin/roboteam_ai --secondary-ai"]
             workingDir: /home/roboteam
             env:
               - name: LD_LIBRARY_PATH
@@ -211,29 +201,16 @@ spec:
             env:
               - name: LD_LIBRARY_PATH
                 value: /home/roboteam/build/release/lib
-
-          # Tigers Sumatra
-          - name: tigers-sumatra
-            image: roboteamtwente/roboteam:kubernetes
-            imagePullPolicy: Always
-            command: ["/bin/sh"]
-            args: ["-c", "cd /home/roboteam/tigers_sumatra && ./gradlew :run --args=\"--headless --moduli roboteamtwente --aiBlue --visionAddress 224.5.23.2:10020 --refereeAddress 224.5.23.1:10003\""]
-            env:
-              - name: LD_LIBRARY_PATH
-                value: /home/roboteam/build/release/lib
             resources:
               requests:
-                cpu: 500m
-                memory: 1400Mi
+                cpu: 200m
+                memory: 200Mi
               limits:
-                cpu: 700m
-                memory: 1800Mi
-            volumeMounts:
-            - name: gradle-cache
-              mountPath: /home/roboteam/.gradle
+                cpu: 500m
+                memory: 500Mi
 
 ---
-# Nodeport service for external access
+# Services
 apiVersion: v1
 kind: Service
 metadata:
@@ -246,19 +223,19 @@ spec:
   - name: dashboard
     port: 8265
     targetPort: 8265
-    nodePort: 30265  # Ray dashboard
+    nodePort: 30265
   - name: gcs
     port: 10001
     targetPort: 10001
-    nodePort: 31001  # GCS server
+    nodePort: 31001
   - name: gc-interface
     port: 8081
     targetPort: 8081
-    nodePort: 30081  # Game controller interface
+    nodePort: 30081
   - name: redis
     port: 6379  
     targetPort: 6379
-    nodePort: 30679  # Choose an available port
+    nodePort: 30679
 
 ---
 apiVersion: v1

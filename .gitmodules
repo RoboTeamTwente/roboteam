@@ -13,4 +13,4 @@
 	url = https://github.com/RoboTeamTwente/roboteam_embedded_messages.git
 [submodule "tigers_sumatra"]
 	path = tigers_sumatra
-	url = git@github.com:RoboTeamTwente/tigers_sumatra.git
+	url = https://github.com/RoboTeamTwente/tigers_sumatra.git

@@ -7,6 +7,7 @@ from google.protobuf.message import DecodeError
 import time
 import os
 import sys
+import subprocess
 
 # Make root folder /roboteam
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -33,6 +34,8 @@ Yellow cards do not stop the game, but maybe in the future it is nice to impleme
 class RoboTeamEnv(gymnasium.Env):
 
     def __init__(self, config=None):
+
+        print(subprocess.check_output(['ip', 'addr', 'show']).decode())
         self.config = config or {} # Config placeholder
         self.MAX_ROBOTS_US = 10
 

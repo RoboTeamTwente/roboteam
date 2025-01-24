@@ -59,7 +59,7 @@ services:
     container_name: RTT_roboteam_observer_sim
     restart: always
     working_dir: "/home/roboteamtwente/"
-    command: sh -c "./bin/roboteam_observer --vision-ip 224.5.23.2 --referee-ip 224.5.23.1 --vision-port 10020 --referee-port 10003 --log"
+    command: sh -c "./bin/roboteam_observer --vision-ip 224.5.23.2 --referee-ip 224.5.23.1 --vision-port 10020 --referee-port 10003"
     network_mode: "host" # Workaround to connect from interface on host to AI websocket, please fix
     expose:
       - 1-65535:1-65535 # For zeromq ports

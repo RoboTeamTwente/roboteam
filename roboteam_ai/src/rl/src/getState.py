@@ -133,7 +133,7 @@ def get_robot_state():
 
     return robot_positions, yellow_team_dribbling, blue_team_dribbling
 
-def get_referee_state():
+def get_referee_state_old():
     """
     Returns tuple of (yellow_score, blue_score, stage, command, x, y)
     """
@@ -173,7 +173,45 @@ def get_referee_state():
 
     finally:
         sock.close()
-        
+
+def get_referee_state():
+    """
+    Returns tuple of (yellow_score, blue_score, stage, command, x, y)
+    """
+
+    context = zmq.Context()
+    sock = context.socket(zmq.SUB)
+    sock.connect("tcp://localhost:5088")
+    sock.subscribe(b"multicast_data")
+    sock.RCVTIMEO = 5000  # 5 second timeout
+
+    try:
+        _, message = sock.recv_multipart()
+        referee_state = Referee()
+        referee_state.ParseFromString(message)
+
+        x = y = 0
+        if referee_state.HasField('designated_position'):
+            x = referee_state.designated_position.x
+            y = referee_state.designated_position.y
+
+        return (
+            referee_state.yellow.score,
+            referee_state.blue.score,
+            referee_state.stage,
+            referee_state.command,
+            x/1000,
+            y/1000
+        )
+
+    except (zmq.error.Again, DecodeError) as e:
+        print(f"Referee state error: {e}")
+        return 0, 0, 0, 0, 0, 0
+
+    finally:
+        sock.close()
+        context.term()
+
 if __name__ == "__main__":
     # Get robot state
     grid_array, yellow_team_dribbling, blue_team_dribbling = get_robot_state()

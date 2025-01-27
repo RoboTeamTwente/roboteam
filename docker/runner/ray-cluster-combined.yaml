@@ -225,6 +225,55 @@ spec:
                 cpu: 500m
                 memory: 500Mi
 
+          - name: multicast-receiver
+            image: python:3.9-slim
+            command:
+              - bash
+              - -c
+              - |
+                apt-get update && \
+                apt-get install -y libzmq3-dev && \
+                pip install pyzmq && \
+                python -c '
+                import socket
+                import struct
+                import sys
+                import zmq
+                import time
+                
+                try:
+                    print("Starting receiver...", file=sys.stderr)
+                    
+                    # Setup ZMQ publisher
+                    context = zmq.Context()
+                    zmq_socket = context.socket(zmq.PUB)
+                    zmq_socket.bind("tcp://*:5088")
+                    print("ZMQ publisher started on port 5088", file=sys.stderr)
+                    
+                    # Setup multicast receiver
+                    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+                    sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+                    sock.bind(("", 10020))
+                    mreq = struct.pack("4sl", socket.inet_aton("224.5.23.2"), socket.INADDR_ANY)
+                    sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
+                    print("Receiver waiting on UDP port 10020...", file=sys.stderr)
+                    
+                    while True:
+                        data = sock.recv(1024)
+                        print(f"Received: {data.hex()}", flush=True)
+                        
+                        # Forward data over ZMQ
+                        zmq_socket.send_multipart([b"multicast_data", data])
+                        time.sleep(0.01)  # Small delay to prevent busy-waiting
+                        
+                except Exception as e:
+                    print(f"Error in receiver: {e}", file=sys.stderr)
+                    raise
+                finally:
+                    sock.close()
+                    zmq_socket.close()
+                    context.term()
+
           # # Multicast Receiver 1
           # - name: multicast-receiver1
           #   image: python:3.9-slim

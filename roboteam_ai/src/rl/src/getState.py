@@ -35,6 +35,16 @@ def get_zmq_address():
         #print("Running locally")
     return f"tcp://{host}:5558"
 
+def get_zmq_address_2():
+    """Get the appropriate ZMQ address based on environment"""
+    if is_kubernetes():
+        host = "roboteam-ray-worker-svc"
+        #print("Running in Kubernetes, using service DNS")
+    else:
+        host = "localhost"
+        #print("Running locally")
+    return f"tcp://{host}:5559"
+
 # Function to get the ball state
 def get_ball_state():
    ball_position = np.zeros(2)  # [x, y]
@@ -178,15 +188,17 @@ def get_referee_state():
     """
     Returns tuple of (yellow_score, blue_score, stage, command, x, y)
     """
-
     context = zmq.Context()
-    sock = context.socket(zmq.SUB)
-    sock.connect("tcp://localhost:5088")
-    sock.subscribe(b"multicast_data")
-    sock.RCVTIMEO = 5000  # 5 second timeout
+    socket_ref = context.socket(zmq.SUB)
+    socket_ref.setsockopt_string(zmq.SUBSCRIBE, "")  # Match the working pattern
+    
+    zmq_address = get_zmq_address_2()
+    print(f"Connecting to ZMQ address: {zmq_address}")
+    socket_ref.connect(zmq_address)
 
     try:
-        _, message = sock.recv_multipart()
+        # Just receive the message directly like in get_robot_state()
+        message = socket_ref.recv()
         referee_state = Referee()
         referee_state.ParseFromString(message)
 
@@ -195,6 +207,7 @@ def get_referee_state():
             x = referee_state.designated_position.x
             y = referee_state.designated_position.y
 
+        print("get_referee_state no error")
         return (
             referee_state.yellow.score,
             referee_state.blue.score,
@@ -204,12 +217,14 @@ def get_referee_state():
             y/1000
         )
 
-    except (zmq.error.Again, DecodeError) as e:
-        print(f"Referee state error: {e}")
+    except DecodeError as e:
+        print(f"Proto decode error: {e}")
         return 0, 0, 0, 0, 0, 0
-
+    except zmq.ZMQError as e:
+        print(f"ZMQ Error: {e}")
+        return 0, 0, 0, 0, 0, 0
     finally:
-        sock.close()
+        socket_ref.close()
         context.term()
 
 if __name__ == "__main__":

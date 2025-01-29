@@ -35,7 +35,6 @@ class RoboTeamEnv(gymnasium.Env):
 
     def __init__(self, config=None):
 
-        print(subprocess.check_output(['ip', 'addr', 'show']).decode())
         self.config = config or {} # Config placeholder
         self.MAX_ROBOTS_US = 10
 
@@ -72,15 +71,14 @@ class RoboTeamEnv(gymnasium.Env):
         self.is_yellow_dribbling = False
         self.is_blue_dribbling = False
 
-        # Set first_step flag
-        self.is_first_step = True
-
         # Add previous dribbling state
         self.previous_yellow_dribbling = False
-        self.step_taken = False
+        
+        # Add previous ref command state
+        self.previous_ref_command = None
 
         self.last_step_time = 0
-        self.min_step_interval = 1.5  # Minimum time between steps in seconds
+        self.min_step_interval = 2  # Minimum time between steps in seconds
 
     def teleport_ball_with_check(self, x, y):
         """
@@ -99,7 +97,7 @@ class RoboTeamEnv(gymnasium.Env):
                 # Verify ball position
                 ball_pos, _ = get_ball_state()
                 if np.allclose(ball_pos, [x, y], atol=0.1): # Checks the real ball position from get_ball_state with the input of the function
-                    print(f"Ball teleport successful on attempt {i+1}")
+                    # print(f"Ball teleport successful on attempt {i+1}")
                     time.sleep(1)
                     return
             except Exception as e:
@@ -129,10 +127,6 @@ class RoboTeamEnv(gymnasium.Env):
             self.shaped_reward_given = True # Set it to true
             shaped_reward = 0.1
         
-        # # If it gets a yellow card/ three times a foul, punish and reset
-        # if self.yellow_yellow_cards or self.blue_yellow_cards >= 1:
-        #     yellow_card_punishment = 1
-
         # Calculate final reward
         reward = goal_scored_reward + shaped_reward
 
@@ -164,7 +158,7 @@ class RoboTeamEnv(gymnasium.Env):
         """
         The step function waits for either:
         1. A true possession change (lost ball to opponent or gained from opponent)
-        2. Specific referee commands (8,9)
+        2. Specific referee commands (16,17)
         With rate limiting to prevent too frequent steps
         """
         
@@ -175,12 +169,16 @@ class RoboTeamEnv(gymnasium.Env):
             # Get referee state
             self.yellow_score, self.blue_score, self.stage, self.ref_command, self.x, self.y = get_referee_state()
 
+            # Check termination conditions first
+            truncated = self.is_truncated()
+            done = self.is_terminated()
+
+            if truncated or done:
+                reward = self.calculate_reward()
+                return observation_space, reward, done, truncated, {}
+
             if self.ref_command in (16,17): # If there is ball placement
                 self.teleport_ball_with_check(self.x, self.y)
-
-            # Reset step_taken flag if ref_command is 2
-            if self.ref_command == 2:
-                self.step_taken = False
 
             # Check for true possession change
             possession_changed = (
@@ -196,35 +194,29 @@ class RoboTeamEnv(gymnasium.Env):
             should_take_step = (
                 can_take_step and (
                     possession_changed or 
-                    (self.ref_command in (8,9) and not self.step_taken)
+                    self.ref_command in (16,17)
                 )
             )
 
             if should_take_step:
-                print(f"Taking step (time since last: {time_since_last_step:.2f}s)")
+                print(f"Taking step: {action} (time since last: {time_since_last_step:.2f}s)")
+                print("ref_command=", self.ref_command)
                 # Update last step time
                 self.last_step_time = current_time
                 
                 # Execute action
                 send_num_attackers(action)
-                
-                # Mark step as taken for this ref state
-                if self.ref_command in (8,9):
-                    self.step_taken = True
                     
-                # Update previous possession state
+                # Update previous states
                 self.previous_yellow_dribbling = self.is_yellow_dribbling
+                self.previous_ref_command = self.ref_command
                 
                 reward = self.calculate_reward()
-                
-                # Check for termination
-                truncated = self.is_truncated()
-                done = self.is_terminated()
-                
                 return observation_space, reward, done, truncated, {}
             
+            # Update previous ref command even when not stepping
+            self.previous_ref_command = self.ref_command
             time.sleep(0.1)
-                
 
     def is_terminated(self):
         """
@@ -245,6 +237,7 @@ class RoboTeamEnv(gymnasium.Env):
         is_truncated checks if game should end prematurely:
         - On HALT command with no goals scored 
         - On STOP command
+        - On FORCE_START command
         """
         if self.ref_command == 0:  # HALT
             if (self.yellow_score == 0 and self.blue_score == 0):
@@ -252,6 +245,9 @@ class RoboTeamEnv(gymnasium.Env):
                 return True
         if self.ref_command == 1:  # STOP
             print("Game truncated, random STOP called") 
+            return True
+        if self.ref_command == 4:  # FORCE_START
+            print("Game truncated, FORCE_START called")
             return True
         return False
 
@@ -274,8 +270,8 @@ class RoboTeamEnv(gymnasium.Env):
         self.shaped_reward_given = False
         self.is_yellow_dribbling = False
         self.is_blue_dribbling = False
-        self.previous_yellow_dribbling = False  # Add this if not already in init
-        self.step_taken = False  # Reset step taken flag
+        self.previous_yellow_dribbling = False
+        self.previous_ref_command = None  # Reset previous ref command
 
         # Reset physical environment
         print("Resetting physical environment...")
@@ -320,16 +316,5 @@ class RoboTeamEnv(gymnasium.Env):
             # Provide fallback observation if needed
             observation = np.zeros(47, dtype=np.float64)
 
-        # Set first_step flag
-        self.is_first_step = True
 
         return observation, {}
-
-
-
-
-
-
-
-
-

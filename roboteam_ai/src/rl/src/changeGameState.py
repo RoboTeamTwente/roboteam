@@ -86,7 +86,7 @@ def start_game():
     # stop()  # Then stop to prepare for start
     # time.sleep(10)  # Regular sleep instead of asyncio.sleep
     kickoff("BLUE")  # Set up kickoff for Blue team
-    # normal_start()  # Start the game normally
+    normal_start()  # Start the game normally
 
 if __name__ == "__main__":
     print("Connecting to game controller...")

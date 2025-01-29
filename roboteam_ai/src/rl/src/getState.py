@@ -43,7 +43,7 @@ def get_zmq_address_2():
     else:
         host = "localhost"
         #print("Running locally")
-    return f"tcp://{host}:5559"
+    return f"tcp://{host}:5551"
 
 # Function to get the ball state
 def get_ball_state():
@@ -75,7 +75,7 @@ def get_ball_state():
        if world.HasField("ball"):
            ball_position[0] = world.ball.pos.x
            ball_position[1] = world.ball.pos.y
-           
+            
            #print("x",ball_position[0])
            #print("y",ball_position[1])
 
@@ -167,6 +167,11 @@ def get_referee_state_old():
         if referee_state.HasField('designated_position'):
             x = referee_state.designated_position.x
             y = referee_state.designated_position.y
+        
+        # print(f"Yellow score: {referee_state.yellow.score}")
+        # print(f"Blue score: {referee_state.blue.score}")
+        # print(f"Stage: {referee_state.stage}")
+        # print(f"Command: {referee_state.command}")
 
         return (
             referee_state.yellow.score,
@@ -187,45 +192,65 @@ def get_referee_state_old():
 def get_referee_state():
     """
     Returns tuple of (yellow_score, blue_score, stage, command, x, y)
+    Uses ZMQ-based implementation in Kubernetes, UDP multicast implementation otherwise
     """
-    context = zmq.Context()
-    socket_ref = context.socket(zmq.SUB)
-    socket_ref.setsockopt_string(zmq.SUBSCRIBE, "")  # Match the working pattern
-    
-    zmq_address = get_zmq_address_2()
-    print(f"Connecting to ZMQ address: {zmq_address}")
-    socket_ref.connect(zmq_address)
-
-    try:
-        # Just receive the message directly like in get_robot_state()
-        message = socket_ref.recv()
-        referee_state = Referee()
-        referee_state.ParseFromString(message)
-
-        x = y = 0
-        if referee_state.HasField('designated_position'):
-            x = referee_state.designated_position.x
-            y = referee_state.designated_position.y
-
-        print("get_referee_state no error")
-        return (
-            referee_state.yellow.score,
-            referee_state.blue.score,
-            referee_state.stage,
-            referee_state.command,
-            x/1000,
-            y/1000
-        )
-
-    except DecodeError as e:
-        print(f"Proto decode error: {e}")
-        return 0, 0, 0, 0, 0, 0
-    except zmq.ZMQError as e:
-        print(f"ZMQ Error: {e}")
-        return 0, 0, 0, 0, 0, 0
-    finally:
-        socket_ref.close()
-        context.term()
+    if is_kubernetes():
+        # Use the new ZMQ-based implementation for Kubernetes
+        context = zmq.Context()
+        socket_ref = context.socket(zmq.SUB)
+        socket_ref.setsockopt_string(zmq.SUBSCRIBE, "")
+        
+        zmq_address = get_zmq_address_2()
+        # print(f"Connecting to ZMQ address: {zmq_address}")
+        socket_ref.connect(zmq_address)
+        
+        try:
+            # print("Waiting to receive message...")
+            message = socket_ref.recv()
+            # print(f"Received message of length: {len(message)}")
+            # print(f"Message first 20 bytes: {message[:20]}")
+            
+            referee_state = Referee()
+            # print("Created Referee object, attempting to parse...")
+            referee_state.ParseFromString(message)
+            # print("Successfully parsed protobuf message")
+            
+            x = y = 0
+            if referee_state.HasField('designated_position'):
+                x = referee_state.designated_position.x
+                y = referee_state.designated_position.y
+                # print(f"Got designated position: ({x/1000}, {y/1000})")
+            else:
+                print("No designated position in message")
+                
+            # print(f"Yellow score: {referee_state.yellow.score}")
+            # print(f"Blue score: {referee_state.blue.score}")
+            # print(f"Stage: {referee_state.stage}")
+            # print(f"Command: {referee_state.command}")
+            
+            return (
+                referee_state.yellow.score,
+                referee_state.blue.score,
+                referee_state.stage,
+                referee_state.command,
+                x/1000,
+                y/1000
+            )
+            
+        except DecodeError as e:
+            print(f"Proto decode error: {e}")
+            # print(f"Failed message content: {message.hex()}")  # Print hex representation
+            return 0, 0, 0, 0, 0, 0
+        except zmq.ZMQError as e:
+            print(f"ZMQ Error: {e}")
+            print(f"Error details: {str(e)}")
+            return 0, 0, 0, 0, 0, 0
+        finally:
+            socket_ref.close()
+            context.term()
+    else:
+        # Use the old UDP multicast implementation for non-Kubernetes environments
+        return get_referee_state_old()
 
 if __name__ == "__main__":
     # Get robot state

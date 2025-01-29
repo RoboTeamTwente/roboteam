@@ -1,7 +1,9 @@
 import sys
 import os
-import socket
+import socket as socket_module
 import math
+import json
+import zmq
 from dataclasses import dataclass
 from typing import List, Tuple
 
@@ -18,6 +20,22 @@ from roboteam_networking.proto.ssl_gc_common_pb2 import Team
 
 SIMULATION_CONTROL_PORT = 10300
 ROBOT_RADIUS = 0.09  # in meters
+ZMQ_PORT = 5557
+
+def is_kubernetes():
+    """Detect if running in Kubernetes environment"""
+    return os.getenv('KUBERNETES_SERVICE_HOST') is not None
+
+def create_zmq_socket():
+    """Create and connect a ZMQ socket"""
+    context = zmq.Context()
+    socket = context.socket(zmq.REQ)
+    # In Kubernetes, use the service name
+    if is_kubernetes():
+        socket.connect(f"tcp://roboteam-ray-worker-svc:5557")
+    else:
+        socket.connect(f"tcp://localhost:5557")
+    return context, socket
 
 @dataclass
 class FieldDimensions:
@@ -40,7 +58,7 @@ class FormationManager:
             (2, -0.5, 2.0),    # formation_front_1
             (3, -0.6, -0.7),   # formation_front_2
             (4, -0.5, -3.0),   # formation_front_3
-            (10, -0.5, -2.0),   # formation_front_4
+            (10, -0.5, -2.0),  # formation_front_4
             
             # Back positions
             (5, -3.0, 1.5),    # leftback
@@ -62,31 +80,55 @@ class FormationManager:
         return positions
 
 def teleport_robots_to_positions(positions: List[Tuple[int, float, float, float]], team_yellow: bool):
-    """Teleport multiple robots to their positions"""
-    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    control = SimulatorControl()
+    if is_kubernetes():
+        context, socket = create_zmq_socket()
+        try:
+            for robot_id, x, y, orientation in positions:
+                command = {
+                    "command_type": "teleport_robot",
+                    "robot_id": robot_id,
+                    "team_yellow": team_yellow,
+                    "x": x,
+                    "y": y,
+                    "orientation": orientation,
+                    "v_x": 0.0,
+                    "v_y": 0.0,
+                    "v_angular": 0.0,
+                    "present": True,
+                    "by_force": False
+                }
+                message = json.dumps(command)
+                socket.send_string(message)
+                reply = socket.recv_string()
+        finally:
+            socket.close()
+            context.term()
+    else:
+        udp_socket = socket_module.socket(socket_module.AF_INET, socket_module.SOCK_DGRAM)  # Using renamed module
+        try:
+            control = SimulatorControl()
+            for robot_id, x, y, orientation in positions:
+                teleport = TeleportRobot()
+                teleport.id.id = robot_id
+                teleport.id.team = Team.YELLOW if team_yellow else Team.BLUE
+                teleport.x = x
+                teleport.y = y
+                teleport.orientation = orientation
+                teleport.v_x = 0.0
+                teleport.v_y = 0.0
+                teleport.v_angular = 0.0
+                teleport.present = True
+                teleport.by_force = False
 
-    for robot_id, x, y, orientation in positions:
-        teleport = TeleportRobot()
-        teleport.id.id = robot_id
-        teleport.id.team = Team.YELLOW if team_yellow else Team.BLUE
-        teleport.x = x
-        teleport.y = y
-        teleport.orientation = orientation
-        teleport.present = True
-        teleport.v_x = 0.0
-        teleport.v_y = 0.0
-        teleport.v_angular = 0.0
-        teleport.by_force = False
+                robot_teleport = control.teleport_robot.add()
+                robot_teleport.CopyFrom(teleport)
 
-        robot_teleport = control.teleport_robot.add()
-        robot_teleport.CopyFrom(teleport)
-
-    command = SimulatorCommand()
-    command.control.CopyFrom(control)
-    serialized_command = command.SerializeToString()
-    sock.sendto(serialized_command, ("localhost", SIMULATION_CONTROL_PORT))
-    sock.close()
+            command = SimulatorCommand()
+            command.control.CopyFrom(control)
+            serialized_command = command.SerializeToString()
+            udp_socket.sendto(serialized_command, ("localhost", SIMULATION_CONTROL_PORT))
+        finally:
+            udp_socket.close()
 
 def teleport_robots():
     """Setup formations for both teams"""

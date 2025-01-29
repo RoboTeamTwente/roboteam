@@ -246,6 +246,27 @@ spec:
                 cpu: 100m
                 memory: 90Mi
 
+          # ZMQ UDP Bridge Server
+          - name: zmq-udp-bridge
+            image: roboteamtwente/roboteam:zmq-server
+            command: ["python"]
+            args: ["/app/zmq_server.py"]
+            ports:
+              - containerPort: 5557
+                protocol: TCP
+              - containerPort: 10300
+                protocol: UDP
+            env:
+              - name: LD_LIBRARY_PATH
+                value: /home/roboteam/build/release/lib
+            resources:
+              requests:
+                cpu: 60m
+                memory: 60Mi
+              limits:
+                cpu: 100m
+                memory: 90Mi
+
           # # Multicast Receiver 1
           # - name: multicast-receiver1
           #   image: python:3.9-slim
@@ -394,6 +415,9 @@ spec:
   - name: zmq
     port: 5559
     targetPort: 5559
+  - name: zmq_server
+    port: 5557
+    targetPort: 5557
   - name: ref
     port: 10003
     targetPort: 10003

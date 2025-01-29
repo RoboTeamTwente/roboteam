@@ -49,7 +49,7 @@ def main():
         .framework("torch")
         .resources(num_gpus=0)
         .env_runners(
-            num_env_runners=1,
+            num_env_runners=0,
             num_envs_per_env_runner=1, # If you use vectorized env, otherwise set to 1
             # rollout_fragment_length=16,
             # sample_timeout_s=30,

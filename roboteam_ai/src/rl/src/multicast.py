@@ -8,8 +8,8 @@ try:
     # Setup ZMQ publisher
     context = zmq.Context()
     zmq_socket = context.socket(zmq.PUB)
-    zmq_socket.bind("tcp://*:5559")
-    print("ZMQ publisher started on port 5559", file=sys.stderr)
+    zmq_socket.bind("tcp://*:5551")
+    print("ZMQ publisher started on port 5551", file=sys.stderr)
     
     # Setup multicast receiver
     multicast_group = '224.5.23.1'

@@ -1,0 +1,423 @@
+apiVersion: ray.io/v1alpha1
+kind: RayCluster
+metadata:
+  name: roboteam-ray-cluster
+spec:
+  rayVersion: "2.38.0"  
+  headGroupSpec:
+    rayStartParams:
+      dashboard-host: "0.0.0.0"
+      node-ip-address: "$(POD_IP)"
+    template:
+      metadata:
+        labels:
+          app: ray-head
+      spec:
+        containers:
+        - name: ray-head
+          image: roboteamtwente/ray:development
+          imagePullPolicy: Always
+          ports:
+          - containerPort: 8265  # dashboard
+          - containerPort: 6379  # redis
+          - containerPort: 10001 # GCS server
+          - containerPort: 8000  # Serve
+          resources:
+            requests:
+              cpu: "1"
+              memory: "2Gi"
+            limits:
+              cpu: "2"
+              memory: "4Gi"
+          env:
+          - name: POD_IP
+            valueFrom:
+              fieldRef:
+                fieldPath: status.podIP
+          command: ["/bin/bash", "-c", "--"]
+          args: ["ray start --head --port=6379 --dashboard-host=0.0.0.0 --node-ip-address=$(POD_IP) --block"]
+          livenessProbe:
+            exec:
+              command:
+              - bash
+              - -c
+              - "wget -T 2 -q -O- http://localhost:52365/api/local_raylet_healthz | grep success"
+            initialDelaySeconds: 15
+            timeoutSeconds: 10
+            periodSeconds: 30
+            failureThreshold: 5
+          readinessProbe:
+            exec:
+              command:
+              - bash
+              - -c
+              - "wget -T 10 -q -O- http://localhost:8265/api/gcs_healthz | grep success"
+            initialDelaySeconds: 15
+            timeoutSeconds: 10
+            periodSeconds: 30
+            failureThreshold: 5
+
+  workerGroupSpecs:
+    - groupName: worker-group
+      replicas: 1      
+      minReplicas: 0
+      maxReplicas: 40
+      rayStartParams:
+        num-cpus: "1"
+      template:
+        metadata:
+          labels:
+            app: ray-worker
+        spec:
+          hostNetwork: false
+          dnsPolicy: ClusterFirstWithHostNet
+          volumes:
+          - name: gradle-cache
+            emptyDir: {}
+          containers:
+          # Ray worker container
+          - name: ray-worker
+            image: roboteamtwente/ray:development
+            imagePullPolicy: Always
+            ports:
+            - containerPort: 6379  # Redis
+            - containerPort: 10001  # GCS server
+            - containerPort: 52365  # Raylet
+            resources:
+              requests:
+                cpu: 500m
+                memory: 1Gi
+              limits:
+                cpu: 1500m
+                memory: 3Gi
+            env:
+            - name: LD_LIBRARY_PATH
+              value: /home/roboteam/build/release/lib
+            command: ["/bin/bash", "-c", "--"]
+            args: ["ray start --address='roboteam-ray-cluster-head-svc.default.svc.cluster.local:6379' --block"]
+
+          # Game Controller
+          - name: ssl-game-controller
+            image: robocupssl/ssl-game-controller:latest
+            args: ["-address", "0.0.0.0:8081"]
+            ports:
+              - containerPort: 8081
+                protocol: TCP
+
+          # Primary AI
+          - name: roboteam-primary-ai
+            image: roboteamtwente/roboteam:kubernetes
+            command: ["/bin/sh"]
+            args: ["-c", "/home/roboteam/build/release/bin/roboteam_ai --primary-ai"]
+            workingDir: /home/roboteam
+            env:
+              - name: LD_LIBRARY_PATH
+                value: /home/roboteam/build/release/lib
+            resources:
+              requests:
+                cpu: 60m
+                memory: 10Mi
+              limits:
+                cpu: 100m
+                memory: 50Mi
+          
+          # Secondary ai
+          - name: roboteam-secondary-ai
+            image: roboteamtwente/roboteam:kubernetes
+            command: ["/bin/sh"]
+            args: ["-c", "/home/roboteam/build/release/bin/roboteam_ai --secondary-ai"]
+            workingDir: /home/roboteam
+            env:
+              - name: LD_LIBRARY_PATH
+                value: /home/roboteam/build/release/lib
+            resources:
+              requests:
+                cpu: 60m
+                memory: 10Mi
+              limits:
+                cpu: 100m
+                memory: 50Mi
+
+          # Observer
+          - name: roboteam-observer-sim
+            image: roboteamtwente/roboteam:kubernetes
+            command: ["/bin/sh"]
+            args: ["-c", "/home/roboteam/build/release/bin/roboteam_observer --vision-ip 224.5.23.2 --referee-ip 224.5.23.1 --vision-port 10020 --referee-port 10003 --log"]
+            env:
+              - name: LD_LIBRARY_PATH
+                value: /home/roboteam/build/release/lib
+            workingDir: /home/roboteam
+            ports:
+              - containerPort: 10020
+                protocol: UDP
+              - containerPort: 10003
+                protocol: UDP
+            resources:
+              requests:
+                cpu: 60m
+                memory: 60Mi
+              limits:
+                cpu: 100m
+                memory: 90Mi
+
+          # Robothub
+          - name: roboteam-robothub-sim
+            image: roboteamtwente/roboteam:kubernetes
+            command: ["/bin/sh"]
+            args: ["-c", "/home/roboteam/build/release/bin/roboteam_robothub"]
+            workingDir: /home/roboteam
+            env:
+              - name: LD_LIBRARY_PATH
+                value: /home/roboteam/build/release/lib
+            resources:
+              requests:
+                cpu: 30m
+                memory: 20Mi
+              limits:
+                cpu: 60m
+                memory: 50Mi
+
+          # Autoref
+          - name: erforce-autoref-sim
+            image: roboteamtwente/roboteam:kubernetes
+            command: ["/bin/sh"]
+            args: ["-c", "cd /home/roboteam/external/autoref/build/bin && ./autoref-cli --vision-port 10020 --tracker-port 10010 --gc-port 10003"]
+            env:
+              - name: LD_LIBRARY_PATH
+                value: /home/roboteam/build/release/lib
+            ports:
+              - containerPort: 10020
+                protocol: UDP
+              - containerPort: 10010
+                protocol: UDP
+              - containerPort: 10003
+                protocol: UDP
+            resources:
+              requests:
+                cpu: 120m
+                memory: 80Mi
+              limits:
+                cpu: 150m
+                memory: 200Mi
+
+          # Simulator
+          - name: erforce-simulator
+            image: roboteamtwente/roboteam:kubernetes
+            command: ["/bin/sh"]
+            args: 
+            - "-c"
+            - "/home/roboteam/external/framework/build/bin/simulator-cli"
+            ports:
+              - containerPort: 10300
+                protocol: UDP
+              - containerPort: 10301
+                protocol: TCP
+              - containerPort: 5558
+                protocol: TCP
+            env:
+              - name: LD_LIBRARY_PATH
+                value: /home/roboteam/build/release/lib
+            resources:
+              requests:
+                cpu: 200m
+                memory: 200Mi
+              limits:
+                cpu: 500m
+                memory: 500Mi
+
+            # ZMQ Multicast Receiver
+          - name: multicast-zmq-receiver
+            image: roboteamtwente/ray:multicast
+            command: ["python"]
+            args: ["/app/multicast.py"]
+            env:
+              - name: LD_LIBRARY_PATH
+                value: /home/roboteam/build/release/lib
+            ports:
+              - containerPort: 10003
+                protocol: UDP
+              - containerPort: 5559
+                protocol: TCP
+            resources:
+              requests:
+                cpu: 60m
+                memory: 60Mi
+              limits:
+                cpu: 100m
+                memory: 90Mi
+
+          # ZMQ UDP Bridge Server
+          - name: zmq-udp-bridge
+            image: roboteamtwente/roboteam:zmq-server
+            command: ["python"]
+            args: ["/app/zmq_server.py"]
+            ports:
+              - containerPort: 5557
+                protocol: TCP
+              - containerPort: 10300
+                protocol: UDP
+            env:
+              - name: LD_LIBRARY_PATH
+                value: /home/roboteam/build/release/lib
+            resources:
+              requests:
+                cpu: 60m
+                memory: 60Mi
+              limits:
+                cpu: 100m
+                memory: 90Mi
+
+          # # Multicast Receiver 1
+          # - name: multicast-receiver1
+          #   image: python:3.9-slim
+          #   command:
+          #     - python
+          #     - -c
+          #     - |
+          #       import socket
+          #       import struct
+          #       import sys
+                
+          #       try:
+          #           print("Starting receiver 1...", file=sys.stderr)
+          #           sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+          #           sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+          #           sock.bind(('', 10020))
+          #           mreq = struct.pack('4sl', socket.inet_aton('224.5.23.2'), socket.INADDR_ANY)
+          #           sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
+          #           print('Receiver 1 waiting...', file=sys.stderr)
+          #           while True:
+          #               data = sock.recv(1024)
+          #               print(f'Receiver 1 got: {data.hex()}', flush=True)
+          #       except Exception as e:
+          #           print(f"Error in receiver 1: {e}", file=sys.stderr)
+          #           raise
+
+          # # Multicast Receiver 2
+          # - name: multicast-receiver2
+          #   image: python:3.9-slim
+          #   command:
+          #     - python
+          #     - -c
+          #     - |
+          #       import socket
+          #       import struct
+          #       import sys
+                
+          #       try:
+          #           print("Starting receiver 2...", file=sys.stderr)
+          #           sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+          #           sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+          #           sock.bind(('', 10020))
+          #           mreq = struct.pack('4sl', socket.inet_aton('224.5.23.2'), socket.INADDR_ANY)
+          #           sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
+          #           print('Receiver 2 waiting...', file=sys.stderr)
+          #           while True:
+          #               data = sock.recv(1024)
+          #               print(f'Receiver 2 got: {data.hex()}', flush=True)
+          #       except Exception as e:
+          #           print(f"Error in receiver 2: {e}", file=sys.stderr)
+          #           raise
+
+          # # Multicast Sender
+          # - name: multicast-sender
+          #   image: python:3.9-slim
+          #   command:
+          #     - python
+          #     - -c
+          #     - |
+          #       import socket
+          #       import time
+          #       import sys
+                
+          #       try:
+          #           print("Starting sender...", file=sys.stderr)
+          #           sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+          #           sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 2)
+          #           counter = 0
+                    
+          #           while True:
+          #               message = f"test-message-{counter}".encode()
+          #               print(f'Sending: {message}', file=sys.stderr)
+          #               sock.sendto(message, ('224.5.23.2', 10020))
+          #               counter += 1
+          #               time.sleep(1)
+          #       except Exception as e:
+          #           print(f"Error in sender: {e}", file=sys.stderr)
+          #           raise
+
+---
+# Services
+apiVersion: v1
+kind: Service
+metadata:
+  name: roboteam-ray-cluster-head-nodeport
+spec:
+  type: NodePort
+  selector:
+    app: ray-head
+  ports:
+  - name: dashboard
+    port: 8265
+    targetPort: 8265
+    nodePort: 30265
+  - name: gcs
+    port: 10001
+    targetPort: 10001
+    nodePort: 31001
+  - name: gc-interface
+    port: 8081
+    targetPort: 8081
+    nodePort: 30081
+  - name: redis
+    port: 6379  
+    targetPort: 6379
+    nodePort: 30679
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: roboteam-ray-cluster-head-svc
+spec:
+  type: ClusterIP
+  selector:
+    app: ray-head
+  ports:
+  - name: redis
+    port: 6379
+    targetPort: 6379
+  - name: gcs
+    port: 10001
+    targetPort: 10001
+  - name: dashboard
+    port: 8265
+    targetPort: 8265
+  - name: serve
+    port: 8000
+    targetPort: 8000
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: roboteam-ray-worker-svc
+spec:
+  selector:
+    app: ray-worker
+  ports:
+  - name: game-controller
+    port: 8081
+    targetPort: 8081
+  - name: simulator
+    port: 5558
+    targetPort: 5558
+  - name: zmq
+    port: 5559
+    targetPort: 5559
+  - name: zmq_server
+    port: 5557
+    targetPort: 5557
+  - name: ref
+    port: 10003
+    targetPort: 10003

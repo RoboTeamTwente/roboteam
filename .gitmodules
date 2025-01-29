@@ -11,3 +11,6 @@
 [submodule "roboteam_robothub/roboteam_embedded_messages"]
 	path = roboteam_robothub/roboteam_embedded_messages
 	url = https://github.com/RoboTeamTwente/roboteam_embedded_messages.git
+[submodule "tigers_sumatra"]
+	path = tigers_sumatra
+	url = https://github.com/RoboTeamTwente/tigers_sumatra.git

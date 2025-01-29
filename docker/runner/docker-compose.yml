@@ -1,5 +1,3 @@
-version: '3'
-
 services:
 
   roboteam_primary_ai:
@@ -18,7 +16,7 @@ services:
       - LD_LIBRARY_PATH=/home/roboteamtwente/lib/
     volumes:
       - ../../build/release/:/home/roboteamtwente/
-    profiles: ["simulator","diff","game", "robocup"]
+    profiles: ["simulator","diff","game", "robocup", "RL"]
   
   roboteam_secondary_ai:
     image: roboteamtwente/roboteam:development
@@ -61,7 +59,7 @@ services:
     container_name: RTT_roboteam_observer_sim
     restart: always
     working_dir: "/home/roboteamtwente/"
-    command: sh -c "./bin/roboteam_observer --vision-ip 224.5.23.2 --referee-ip 224.5.23.1 --vision-port 10020 --referee-port 10003 --log"
+    command: sh -c "./bin/roboteam_observer --vision-ip 224.5.23.2 --referee-ip 224.5.23.1 --vision-port 10020 --referee-port 10003"
     network_mode: "host" # Workaround to connect from interface on host to AI websocket, please fix
     expose:
       - 1-65535:1-65535 # For zeromq ports
@@ -72,7 +70,7 @@ services:
       - LD_LIBRARY_PATH=/home/roboteamtwente/lib/
     volumes:
       - ../../build/release/:/home/roboteamtwente/
-    profiles: ["simulator","diff"]
+    profiles: ["simulator","diff", "RL"]
 
   roboteam_observer_game:
     image: roboteamtwente/roboteam:development
@@ -111,7 +109,7 @@ services:
       - LD_LIBRARY_PATH=/home/roboteamtwente/lib/
     volumes:
       - ../../build/release/:/home/roboteamtwente/
-    profiles: ["simulator","diff"]
+    profiles: ["simulator","diff", "RL"]
 
   roboteam_robothub_game:
     image: roboteamtwente/roboteam:development
@@ -147,7 +145,7 @@ services:
       - 8080:8080
     volumes:
       - ../../roboteam_interface/:/home/roboteamtwente/
-    profiles: ["simulator","diff","game", "robocup"]
+    profiles: ["simulator","diff","game", "robocup", "RL"]
 
   roboteam_autoref:
     image: gradle:8.4.0-jdk17
@@ -164,7 +162,7 @@ services:
       - GRADLE_USER_HOME=/home/roboteamtwente/.cache # Cache gradle dependencies
     volumes:
       - ../../roboteam_autoref/:/home/roboteamtwente/
-    profiles: ["simulator","diff","game","autoref"]
+    profiles: ["simulator","diff","game","autoref", "RL"]
 
   erforce_autoref_sim:
     image: roboteamtwente/roboteam:development
@@ -179,7 +177,7 @@ services:
       - 10010:10010 # Tracker port
     volumes:
       - ../../:/home/roboteamtwente/
-    profiles: ["simulator","diff"]
+    profiles: ["simulator","diff", "RL"]
 
   erforce_autoref_game:
     image: roboteamtwente/roboteam:development
@@ -212,13 +210,17 @@ services:
       - 30013:30013 #Simulation Feedback Port
     volumes:
       - ../../:/home/roboteamtwente/
-    profiles: ["simulator","diff"]
+    profiles: ["simulator","diff", "RL"]
 
   ssl-game-controller:
     image: robocupssl/ssl-game-controller:latest
     container_name: RTT_ssl-game-controller
     restart: always
-    network_mode: "host" # Workaround to connect from interface on host to AI websocket, please fix
+    network_mode: "host"
     ports:
-      - "8081:8081/tcp" # UI port
-    profiles: ["simulator","diff","game"]
+      - "8081:8081/tcp"
+    volumes:
+      - ./ssl-game-controller-config:/config
+      - ./ssl-game-controller-data:/data
+    command: -address :8081
+    profiles: ["simulator","diff","game", "RL"]

@@ -220,8 +220,8 @@ def get_referee_state():
                 x = referee_state.designated_position.x
                 y = referee_state.designated_position.y
                 # print(f"Got designated position: ({x/1000}, {y/1000})")
-            else:
-                print("No designated position in message")
+            # else:
+            #     print("No designated position in message")
                 
             # print(f"Yellow score: {referee_state.yellow.score}")
             # print(f"Blue score: {referee_state.blue.score}")

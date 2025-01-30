@@ -69,9 +69,10 @@ def main():
     for i in range(10):
         result = algo.train()
         print(f"Iteration {i}")
-        print(f"Episodes this iteration: {result['episodes_this_iter']}")
-        print(f"Total episodes so far: {result['episodes_total']}")
-        print(f"Total timesteps so far: {result['timesteps_total']}")
+        print(result)
+        # print(f"Episodes this iteration: {result['episodes_this_iter']}")
+        # print(f"Total episodes so far: {result['episodes_total']}")
+        # print(f"Total timesteps so far: {result['timesteps_total']}")
 
 if __name__ == "__main__":
     main()

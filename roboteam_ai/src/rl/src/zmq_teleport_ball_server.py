@@ -32,23 +32,6 @@ def handle_teleport_ball(data, control):
     
     control.teleport_ball.CopyFrom(teleport)
 
-def handle_teleport_robot(data, control):
-    """Handle teleport robot command"""
-    teleport = TeleportRobot()
-    teleport.id.id = data["robot_id"]
-    teleport.id.team = Team.YELLOW if data["team_yellow"] else Team.BLUE
-    teleport.x = data["x"]
-    teleport.y = data["y"]
-    teleport.orientation = data["orientation"]
-    teleport.v_x = data.get("v_x", 0.0)
-    teleport.v_y = data.get("v_y", 0.0)
-    teleport.v_angular = data.get("v_angular", 0.0)
-    teleport.present = data.get("present", True)
-    teleport.by_force = data.get("by_force", True)  # Changed default to True
-    
-    robot_teleport = control.teleport_robot.add()
-    robot_teleport.CopyFrom(teleport)
-
 def run_server():
     """Run the ZMQ to UDP bridge server"""
     context, zmq_socket, udp_socket, simulation_address = create_sockets()
@@ -63,15 +46,7 @@ def run_server():
                 
                 # Create control message
                 control = SimulatorControl()
-                
-                # Process command based on type
-                if data["command_type"] == "teleport_ball":
-                    handle_teleport_ball(data, control)
-                elif data["command_type"] == "teleport_robot":
-                    handle_teleport_robot(data, control)
-                else:
-                    zmq_socket.send_string("Invalid command type")
-                    continue
+                handle_teleport_ball(data, control)
                 
                 # Create and send command
                 command = SimulatorCommand()

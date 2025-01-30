@@ -13,8 +13,8 @@ RUN pip install pyzmq protobuf
 WORKDIR /app
 
 # Copy the Python script and proto files
-COPY roboteam_ai/src/rl/src/zmq_server.py /app/
+COPY roboteam_ai/src/rl/src/zmq_teleport_ball_server.py /app/
 COPY /roboteam_networking/ /app/roboteam_networking/
 
 # Run the script
-CMD ["python", "zmq_server.py"]
+CMD ["python", "zmq_teleport_ball_server.py"]

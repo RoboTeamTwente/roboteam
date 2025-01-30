@@ -43,7 +43,6 @@ def send_zmq_command(x, y, z):
         
         # Create and send command
         command = {
-            "command_type": "teleport_ball",
             "x": x,
             "y": y,
             "z": z,
@@ -113,7 +112,8 @@ def teleport_ball(x, y, z=0.0):
             success = send_udp_command(x, y, z)
             
         if success:
-            print(f"Ball teleported to position ({x}, {y}, {z})")
+            pass
+            # print(f"Ball teleported to position ({x}, {y}, {z})")
         else:
             print("Ball teleportation failed")
             

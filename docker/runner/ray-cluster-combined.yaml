@@ -118,8 +118,8 @@ spec:
                 cpu: 60m
                 memory: 10Mi
               limits:
-                cpu: 100m
-                memory: 50Mi
+                cpu: 400m
+                memory: 200Mi
           
           # Secondary ai
           - name: roboteam-secondary-ai
@@ -135,8 +135,8 @@ spec:
                 cpu: 60m
                 memory: 10Mi
               limits:
-                cpu: 100m
-                memory: 50Mi
+                cpu: 400m
+                memory: 200Mi
 
           # Observer
           - name: roboteam-observer-sim
@@ -181,7 +181,7 @@ spec:
           - name: erforce-autoref-sim
             image: roboteamtwente/roboteam:kubernetes
             command: ["/bin/sh"]
-            args: ["-c", "cd /home/roboteam/external/autoref/build/bin && ./autoref-cli --vision-port 10020 --tracker-port 10010 --gc-port 10003"]
+            args: ["-c", "cd /home/roboteam/external/autoref/build/bin && ./autoref-cli --vision-port 10020 --tracker-port 10010 --gc-port 10003 > /dev/null 2>&1"]
             env:
               - name: LD_LIBRARY_PATH
                 value: /home/roboteam/build/release/lib
@@ -227,6 +227,7 @@ spec:
 
             # ZMQ Multicast Receiver
           - name: multicast-zmq-receiver
+            imagePullPolicy: Always
             image: roboteamtwente/ray:multicast
             command: ["python"]
             args: ["/app/multicast.py"]
@@ -236,7 +237,7 @@ spec:
             ports:
               - containerPort: 10003
                 protocol: UDP
-              - containerPort: 5559
+              - containerPort: 5551
                 protocol: TCP
             resources:
               requests:
@@ -246,11 +247,12 @@ spec:
                 cpu: 100m
                 memory: 90Mi
 
-          # ZMQ UDP Bridge Server
-          - name: zmq-udp-bridge
-            image: roboteamtwente/roboteam:zmq-server
+          # Ball Teleport Server
+          - name: zmq-teleport-ball-server
+            imagePullPolicy: Always
+            image: roboteamtwente/ray:zmq_teleport_ball_server
             command: ["python"]
-            args: ["/app/zmq_server.py"]
+            args: ["/app/zmq_teleport_ball_server.py"]
             ports:
               - containerPort: 5557
                 protocol: TCP
@@ -267,84 +269,28 @@ spec:
                 cpu: 100m
                 memory: 90Mi
 
-          # # Multicast Receiver 1
-          # - name: multicast-receiver1
-          #   image: python:3.9-slim
-          #   command:
-          #     - python
-          #     - -c
-          #     - |
-          #       import socket
-          #       import struct
-          #       import sys
-                
-          #       try:
-          #           print("Starting receiver 1...", file=sys.stderr)
-          #           sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-          #           sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-          #           sock.bind(('', 10020))
-          #           mreq = struct.pack('4sl', socket.inet_aton('224.5.23.2'), socket.INADDR_ANY)
-          #           sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
-          #           print('Receiver 1 waiting...', file=sys.stderr)
-          #           while True:
-          #               data = sock.recv(1024)
-          #               print(f'Receiver 1 got: {data.hex()}', flush=True)
-          #       except Exception as e:
-          #           print(f"Error in receiver 1: {e}", file=sys.stderr)
-          #           raise
+          # Robot Teleport Server
+          - name: zmq-teleport-robots-server
+            imagePullPolicy: Always
+            image: roboteamtwente/ray:zmq_teleport_robots_server
+            command: ["python"]
+            args: ["/app/zmq_teleport_robots_server.py"]
+            ports:
+              - containerPort: 5552
+                protocol: TCP
+              - containerPort: 10300
+                protocol: UDP
+            env:
+              - name: LD_LIBRARY_PATH
+                value: /home/roboteam/build/release/lib
+            resources:
+              requests:
+                cpu: 60m
+                memory: 60Mi
+              limits:
+                cpu: 100m
+                memory: 90Mi
 
-          # # Multicast Receiver 2
-          # - name: multicast-receiver2
-          #   image: python:3.9-slim
-          #   command:
-          #     - python
-          #     - -c
-          #     - |
-          #       import socket
-          #       import struct
-          #       import sys
-                
-          #       try:
-          #           print("Starting receiver 2...", file=sys.stderr)
-          #           sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-          #           sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-          #           sock.bind(('', 10020))
-          #           mreq = struct.pack('4sl', socket.inet_aton('224.5.23.2'), socket.INADDR_ANY)
-          #           sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
-          #           print('Receiver 2 waiting...', file=sys.stderr)
-          #           while True:
-          #               data = sock.recv(1024)
-          #               print(f'Receiver 2 got: {data.hex()}', flush=True)
-          #       except Exception as e:
-          #           print(f"Error in receiver 2: {e}", file=sys.stderr)
-          #           raise
-
-          # # Multicast Sender
-          # - name: multicast-sender
-          #   image: python:3.9-slim
-          #   command:
-          #     - python
-          #     - -c
-          #     - |
-          #       import socket
-          #       import time
-          #       import sys
-                
-          #       try:
-          #           print("Starting sender...", file=sys.stderr)
-          #           sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-          #           sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 2)
-          #           counter = 0
-                    
-          #           while True:
-          #               message = f"test-message-{counter}".encode()
-          #               print(f'Sending: {message}', file=sys.stderr)
-          #               sock.sendto(message, ('224.5.23.2', 10020))
-          #               counter += 1
-          #               time.sleep(1)
-          #       except Exception as e:
-          #           print(f"Error in sender: {e}", file=sys.stderr)
-          #           raise
 
 ---
 # Services
@@ -415,9 +361,15 @@ spec:
   - name: zmq
     port: 5559
     targetPort: 5559
-  - name: zmq_server
+  - name: zmqserver
     port: 5557
     targetPort: 5557
   - name: ref
     port: 10003
     targetPort: 10003
+  - name: ball-teleport
+    port: 5551
+    targetPort: 5551
+  - name: robot-teleport
+    port: 5552
+    targetPort: 5552

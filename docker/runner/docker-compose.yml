@@ -165,19 +165,19 @@ services:
     profiles: ["simulator","diff","game","autoref", "RL"]
 
   erforce_autoref_sim:
-    image: roboteamtwente/roboteam:development
-    container_name: RTT_erforce_autoref_sim
-    restart: always
-    working_dir: "/home/roboteamtwente/external/autoref/build/bin/"
-    command: sh -c "./autoref-cli --vision-port 10020 --tracker-port 10010 --gc-port 10003"
-    network_mode: "host" # Workaround to connect from interface on host to AI websocket, please fix
-    expose:
-      - 10020:10020 # Vision port simulator
-      - 10003:10003 # GC port
-      - 10010:10010 # Tracker port
-    volumes:
-      - ../../:/home/roboteamtwente/
-    profiles: ["simulator","diff", "RL"]
+      image: roboteamtwente/roboteam:development
+      container_name: RTT_erforce_autoref_sim
+      restart: always
+      working_dir: "/home/roboteamtwente/external/autoref/build/bin/"
+      command: sh -c "./autoref-cli --vision-port 10020 --tracker-port 10010 --gc-port 10003 > /dev/null 2>&1"
+      network_mode: "host" # Workaround to connect from interface on host to AI websocket, please fix
+      expose:
+        - 10020:10020 # Vision port simulator
+        - 10003:10003 # GC port
+        - 10010:10010 # Tracker port
+      volumes:
+        - ../../:/home/roboteamtwente/
+      profiles: ["simulator","diff", "RL"]
 
   erforce_autoref_game:
     image: roboteamtwente/roboteam:development

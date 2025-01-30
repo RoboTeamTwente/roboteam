@@ -32,9 +32,9 @@ def create_zmq_socket():
     socket = context.socket(zmq.REQ)
     # In Kubernetes, use the service name
     if is_kubernetes():
-        socket.connect(f"tcp://roboteam-ray-worker-svc:5557")
+        socket.connect(f"tcp://roboteam-ray-worker-svc:5552")
     else:
-        socket.connect(f"tcp://localhost:5557")
+        socket.connect(f"tcp://localhost:5552")
     return context, socket
 
 @dataclass
@@ -85,7 +85,6 @@ def teleport_robots_to_positions(positions: List[Tuple[int, float, float, float]
         try:
             for robot_id, x, y, orientation in positions:
                 command = {
-                    "command_type": "teleport_robot",
                     "robot_id": robot_id,
                     "team_yellow": team_yellow,
                     "x": x,

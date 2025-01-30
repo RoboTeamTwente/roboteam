@@ -30,7 +30,7 @@ void runStp(std::shared_ptr<rtt::ai::gui::net::InterfaceGateway> interfaceGatewa
 }
 
 int main(int argc, char** argv) {
-    RTT_INFO("Starting RoboTeam AI. Supported flags are: (--primary-ai | --secondary-ai), --basesation")
+    RTT_INFO("Starting RoboTeam AI. Supported flags are: (--primary-ai | --secondary-ai), --basestation")
 
     const std::vector<std::string> args(argv, argv + argc);
     bool isPrimaryFlag = rtt::findFlagValue(args, "--primary-ai", true).has_value();

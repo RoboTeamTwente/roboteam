@@ -16,7 +16,7 @@ Status Role::update(StpInfo const& info) noexcept {
 
     // Success if the tactic returned success and if all tactics are done
     if (status == Status::Success && robotTactics.finished()) {
-        RTT_INFO("ROLE SUCCESSFUL for ", info.getRobot()->get()->getId())
+        // RTT_INFO("ROLE SUCCESSFUL for ", info.getRobot()->get()->getId())
         return Status::Success;
     }
 

@@ -1,0 +1,9 @@
+// ActionCommand is a proto structure to send an action from our RL back into our cpp STP AI.
+
+syntax = "proto3";
+
+message ActionCommand {
+  int32 numDefender = 1;
+  int32 numAttacker = 2;
+  int32 numWaller = 3;
+}

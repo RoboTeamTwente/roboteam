@@ -86,6 +86,15 @@ PassInfo PassComputations::calculatePass(gen::ScoreProfile profile, const rtt::w
             if (pointIsValidReceiverLocation(point, possibleReceiverLocations, possibleReceiverVelocities, possibleReceiverIds, passInfo.passLocation, passerLocation,
                                              passerVelocity, passerId, field, world)) {
                 gen::ScoredPosition scoredPosition = PositionScoring::scorePosition(point, profile, field, world);
+
+                // Add velocity penalty to make sure that if there are multiple robots in the same location, the receiver role will be a bit more stable
+                auto closestRobot = world->getWorld()->getRobotClosestToPoint(point, us);
+                if (closestRobot) {
+                    double velocity = closestRobot.value()->getVel().length();
+                    double velocityPenalty = std::exp(-velocity * 0.8);
+                    scoredPosition.score *= velocityPenalty;
+                }
+
                 rtt::ai::gui::Out::draw(
                     {
                         .label = "pass_location" + std::to_string(numberOfPoints),
@@ -118,7 +127,7 @@ PassInfo PassComputations::calculatePass(gen::ScoreProfile profile, const rtt::w
 Grid PassComputations::getPassGrid(const Field& field) {
     double gridHeight = field.playArea.height();
     double gridWidth = field.playArea.width();
-    int numPoints = 9;
+    int numPoints = 16;
     return Grid(-gridWidth / 2, -gridHeight / 2, gridWidth, gridHeight, numPoints, numPoints);  // 81 points spread over the whole field
 }
 

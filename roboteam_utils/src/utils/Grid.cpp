@@ -60,4 +60,11 @@ bool Grid::operator==(const Grid &other) const {
            this->getRegionHeight() == other.getRegionHeight() && this->getNumPointsX() == other.getNumPointsX() && this->getNumPointsY() == other.getNumPointsY();
 }
 
+bool Grid::contains(const Vector2& point) const {
+    return (point.x >= getOffSetX() && 
+            point.x <= (getOffSetX() + getRegionWidth()) &&
+            point.y >= getOffSetY() && 
+            point.y <= (getOffSetY() + getRegionHeight()));
+}
+
 }  // namespace rtt

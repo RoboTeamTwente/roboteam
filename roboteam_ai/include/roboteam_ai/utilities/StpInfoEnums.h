@@ -6,7 +6,7 @@ namespace rtt::ai::stp {
 /**
  * @brief The type of shot this robot should use. Used for determining kick/chip velocity
  */
-enum class ShotPower { PASS, TARGET, MAX };
+enum class ShotPower { PASS, TARGET, MAX ,KICKOFF};
 
 /**
  * @brief The status that a skill/tactic can return

@@ -1,4 +1,5 @@
 #include "STPManager.h"
+#include <roboteam_utils/Print.h>
 
 #include <roboteam_utils/Timer.h>
 #include <utilities/normalize.h>
@@ -46,6 +47,9 @@ namespace plays = rtt::ai::stp::play;
 
 namespace rtt {
 
+// Create the STPManager instance pointer
+STPManager* STPManager::instance = nullptr;
+
 /// Initialize all plays here (since play vector is static, it's better to do it here to make sure it's initialized before use)
 const STPManager::PlaysVec STPManager::plays = ([] {
     auto plays = std::vector<std::unique_ptr<ai::stp::Play>>();
@@ -79,7 +83,7 @@ const STPManager::PlaysVec STPManager::plays = ([] {
 void STPManager::start(std::atomic_flag &exitApplication) {
     // make sure we start in halt state for safety
     ai::GameStateManager::forceNewGameState(RefCommand::HALT);
-    RTT_INFO("Start looping")
+    RTT_INFO("Starting STPManager")
     RTT_INFO("Waiting for field_data and robots...")
 
     {
@@ -170,6 +174,16 @@ void STPManager::runOneLoopCycle() {
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
+
+    // if (STPManager::isInitialized()) {
+    //     int numAttackers = STPManager::getRLInterface().getNumAttackers();
+    //     int numDefenders = STPManager::getRLInterface().getNumDefenders();
+    //     int numWallers = STPManager::getRLInterface().getNumWallers();
+    //     RTT_WARNING("Number of attackers: " + std::to_string(numAttackers));
+    //     RTT_WARNING("Number of defenders: " + std::to_string(numDefenders));
+    //     RTT_WARNING("Number of walls: " + std::to_string(numWallers));  
+    // }
+
     rtt::ai::control::ControlModule::sendAllCommands();
 }
 
@@ -187,7 +201,6 @@ void STPManager::decidePlay(world::World *_world, bool ignoreWorldAge) {
             return;
         }
     }
-
     if (!currentPlay || !currentPlay->isValidPlayToKeep() || ai::stp::PlayDecider::didLockPlay()) {
         // Decide the best play (ignoring the interface play value)
         currentPlay = ai::stp::PlayDecider::decideBestPlay(_world, plays);
@@ -199,5 +212,18 @@ void STPManager::decidePlay(world::World *_world, bool ignoreWorldAge) {
     currentPlay->update();
 }
 
-STPManager::STPManager(std::shared_ptr<ai::gui::net::InterfaceGateway> interfaceGateway) : interfaceGateway(std::move(interfaceGateway)) {}
+STPManager::STPManager(std::shared_ptr<ai::gui::net::InterfaceGateway> interfaceGateway) : 
+    interfaceGateway(std::move(interfaceGateway)),
+    rlInterface() {
+        instance = this;
+
+    //     // Set initial grid positions
+    //     std::array<bool, 9> defaultGrid = {
+    //         false,  false, true,   // top row
+    //         false, false, false,  // middle row
+    //         false,  false, true    // bottom row
+    //     };
+    //     rlInterface.setBinaryOccupancyGrid(defaultGrid);
+    }
+    
 }  // namespace rtt

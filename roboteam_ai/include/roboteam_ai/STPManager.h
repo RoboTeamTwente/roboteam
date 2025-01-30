@@ -1,8 +1,8 @@
 #pragma once
 
 #include <stp/Play.hpp>
-
 #include "gui/networking/InterfaceGateway.h"
+#include "rl/RLInterface.hpp"
 
 namespace rtt {
 
@@ -19,6 +19,22 @@ class STPManager {
      */
     explicit STPManager(std::shared_ptr<ai::gui::net::InterfaceGateway> interfaceGateway);
 
+    /**
+     * @brief Provides global access to the RLInterface
+     * @return The RLInterface instance
+     */
+    static rtt::ai::stp::rl::RLInterface& getRLInterface() {  
+        return instance->rlInterface; 
+    }
+
+    /**
+     * @brief Checks if the STPManager instance has been initialized
+     * @return true if the instance exists, false otherwise
+     */
+    static bool isInitialized() {
+    return instance != nullptr;
+}
+
    private:
     /**
      * @brief Runs AI for one iteration
@@ -29,6 +45,9 @@ class STPManager {
     bool fieldInitialized = false;                                    /**< Indicates whether the field is initialized successfully */
     bool robotsInitialized = false;                                   /**< Indicates whether the robots are initialized successfully */
     std::shared_ptr<ai::gui::net::InterfaceGateway> interfaceGateway; /**< pointer to the InterfaceGateway */
+
+    static STPManager* instance;                                      /**< Static pointer to track the current STPManager instance */
+    rtt::ai::stp::rl::RLInterface rlInterface;                        /**< Instance of the RLInterface for RL communication */
 
     static inline ai::stp::Play* currentPlay{nullptr}; /**< Current best play as picked by the playDecider */
 

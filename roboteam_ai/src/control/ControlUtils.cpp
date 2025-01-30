@@ -26,6 +26,8 @@ double ControlUtils::determineKickForce(const double distance, stp::ShotPower sh
         kickForce = 1.8;
     } else if (shotPower == stp::ShotPower::TARGET) {
         kickForce = 1.2;
+    } else if (shotPower == stp::ShotPower::KICKOFF) {
+        kickForce = 0.8;
     } else {
         RTT_WARNING("No shotPower set! Setting kickForce to 0")
         kickForce = 0;

@@ -49,6 +49,9 @@ class KickOffUs : public Play {
      * @return Boolean that tells whether the ball has been kicked
      */
     bool ballKicked();
+
+    private:
+        PassInfo passInfo;
 };
 }  // namespace rtt::ai::stp::play
 

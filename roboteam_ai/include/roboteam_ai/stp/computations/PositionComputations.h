@@ -170,6 +170,17 @@ class PositionComputations {
      * @return A position that is outside the given shape
      */
     static Vector2 calculatePositionOutsideOfShape(Vector2 targetPosition, const Field &field, const std::unique_ptr<Shape> &avoidShape, const AvoidObjects &avoidObj);
+
+    /**
+     * @brief Gets a specific grid (the type) from the field based on a grid number we input (1-9)
+     * @param field The field containing the grid positions
+     * @param gridNumber Number identifying which grid to return (1-9):
+     *                   1: top left     2: top middle     3: top right
+     *                   4: middle left  5: middle middle  6: middle right
+     *                   7: bottom left  8: bottom middle  9: bottom right
+     * @return The requested grid if the number is valid (1-9), std::nullopt otherwise
+     */
+    static std::optional<Grid> getGridFromNumber(const Field& field, int gridNumber);
 };
 }  // namespace rtt::ai::stp
 #endif  // RTT_POSITIONCOMPUTATIONS_H

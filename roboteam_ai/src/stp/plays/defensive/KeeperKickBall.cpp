@@ -7,60 +7,68 @@
 #include "stp/roles/passive/Defender.h"
 #include "stp/roles/passive/Formation.h"
 #include "utilities/Constants.h"
+#include "STPManager.h"
+#include "rl/RLInterface.hpp"
 
 namespace rtt::ai::stp::play {
 
 KeeperKickBall::KeeperKickBall() : Play() {
-    // Evaluations that have to be true in order for this play to be considered valid.
     startPlayEvaluation.clear();
     startPlayEvaluation.emplace_back(GlobalEvaluation::NormalPlayGameState);
     startPlayEvaluation.emplace_back(GlobalEvaluation::BallInOurDefenseAreaAndStill);
 
-    // Evaluations that have to be true to allow the play to continue, otherwise the play will change. Plays can also end using the shouldEndPlay().
     keepPlayEvaluation.clear();
     keepPlayEvaluation.emplace_back(GlobalEvaluation::NormalPlayGameState);
     keepPlayEvaluation.emplace_back(GlobalEvaluation::BallInOurDefenseAreaAndStill);
 
     // Role creation, the names should be unique. The names are used in the stpInfos-map.
-    roles = std::array<std::unique_ptr<Role>, rtt::ai::constants::MAX_ROBOT_COUNT>{
-        // Roles is we play 6v6
-        std::make_unique<role::KeeperPasser>("keeper"),
-        std::make_unique<role::PassReceiver>("receiver"),
-        std::make_unique<role::Defender>("defender_0"),
-        std::make_unique<role::Defender>("defender_1"),
-        std::make_unique<role::Formation>("attacker_0"),
-        std::make_unique<role::Defender>("defender_2"),
-        // Additional roles if we play 11v11
-        std::make_unique<role::Defender>("defender_3"),
-        std::make_unique<role::Formation>("attacker_1"),
-        std::make_unique<role::Formation>("attacker_2"),
-        std::make_unique<role::Formation>("attacker_3"),
-        std::make_unique<role::Defender>("defender_4"),
-    };
+    roles = std::array<std::unique_ptr<Role>, rtt::ai::constants::MAX_ROBOT_COUNT>();
+
+    // Create mandatory roles
+    auto keeper = std::make_unique<role::KeeperPasser>("keeper");
+    auto receiver = std::make_unique<role::PassReceiver>("receiver");
+    
+    // Move them into the array
+    roles[0] = std::move(keeper);
+    roles[1] = std::move(receiver);
+
+    int currentIndex = 2;
+
+    // Add defenders
+    for (int i = 0; i < numDefenders && currentIndex < rtt::ai::constants::MAX_ROBOT_COUNT; i++) {
+        auto defender = std::make_unique<role::Defender>("defender_" + std::to_string(i));
+        roles[currentIndex++] = std::move(defender);
+    }
+
+    // Add attackers
+    for (int i = 0; i < numAttackers && currentIndex < rtt::ai::constants::MAX_ROBOT_COUNT; i++) {
+        auto attacker = std::make_unique<role::Formation>("attacker_" + std::to_string(i));
+        roles[currentIndex++] = std::move(attacker);
+    }
 }
 
 uint8_t KeeperKickBall::score(const rtt::Field& field) noexcept {
-    // Calculate passInfo to be used during the play
     passInfo = stp::computations::PassComputations::calculatePass(gen::ChippingPass, world, field, true);
-
-    // If this play is valid, the ball is in the defense area and still, and we always want to execute this play
     return constants::FUZZY_TRUE;
 }
 
 Dealer::FlagMap KeeperKickBall::decideRoleFlags() const noexcept {
+    const_cast<KeeperKickBall*>(this)->updateRoleConfiguration();
+    
     Dealer::FlagMap flagMap;
 
     flagMap.insert({"keeper", {DealerFlagPriority::KEEPER, {}, passInfo.keeperId}});
     flagMap.insert({"receiver", {DealerFlagPriority::REQUIRED, {}, passInfo.receiverId}});
-    flagMap.insert({"defender_0", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
-    flagMap.insert({"defender_1", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
-    flagMap.insert({"defender_2", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
-    flagMap.insert({"defender_3", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
-    flagMap.insert({"defender_4", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
-    flagMap.insert({"attacker_0", {DealerFlagPriority::HIGH_PRIORITY, {}}});
-    flagMap.insert({"attacker_1", {DealerFlagPriority::HIGH_PRIORITY, {}}});
-    flagMap.insert({"attacker_2", {DealerFlagPriority::HIGH_PRIORITY, {}}});
-    flagMap.insert({"attacker_3", {DealerFlagPriority::HIGH_PRIORITY, {}}});
+
+    // Add defenders
+    for (int i = 0; i < numDefenders; i++) {
+        flagMap.insert({"defender_" + std::to_string(i), {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
+    }
+
+    // Add attackers
+    for (int i = 0; i < numAttackers; i++) {
+        flagMap.insert({"attacker_" + std::to_string(i), {DealerFlagPriority::HIGH_PRIORITY, {}}});
+    }
 
     return flagMap;
 }
@@ -89,6 +97,39 @@ void KeeperKickBall::calculateInfoForRoles() noexcept {
     }
 }
 
+void KeeperKickBall::updateRoleConfiguration() {
+    if (STPManager::isInitialized() && STPManager::getRLInterface().getIsActive()) {
+        // Get suggested number of attackers from RL
+        int availableSlots = rtt::ai::constants::MAX_ROBOT_COUNT - MANDATORY_ROLES;
+        
+        // Get and cap number of attackers
+        numAttackers = STPManager::getRLInterface().getNumAttackers();
+        numAttackers = std::min(numAttackers, availableSlots);
+        availableSlots -= numAttackers;
+        
+        numDefenders = availableSlots;  // Use remaining slots for defenders
+    }
+    
+    // Create roles array
+    roles = std::array<std::unique_ptr<Role>, rtt::ai::constants::MAX_ROBOT_COUNT>();
+
+    // Create mandatory roles first
+    roles[0] = std::make_unique<role::KeeperPasser>("keeper");
+    roles[1] = std::make_unique<role::PassReceiver>("receiver");
+
+    int currentIndex = MANDATORY_ROLES;
+
+    // Add defenders
+    for (int i = 0; i < numDefenders && currentIndex < rtt::ai::constants::MAX_ROBOT_COUNT; i++) {
+        roles[currentIndex++] = std::make_unique<role::Defender>("defender_" + std::to_string(i));
+    }
+
+    // Add attackers
+    for (int i = 0; i < numAttackers && currentIndex < rtt::ai::constants::MAX_ROBOT_COUNT; i++) {
+        roles[currentIndex++] = std::make_unique<role::Formation>("attacker_" + std::to_string(i));
+    }
+}
+
 bool KeeperKickBall::ballKicked() {
     return std::any_of(roles.begin(), roles.end(), [](const std::unique_ptr<Role>& role) {
         return role != nullptr && role->getName() == "keeper" && strcmp(role->getCurrentTactic()->getName(), "Keeper Block Ball") == 0;
@@ -107,6 +148,7 @@ bool KeeperKickBall::shouldEndPlay() noexcept {
 
     return false;
 }
+
 const char* KeeperKickBall::getName() const { return "Keeper Kick Ball"; }
 
 }  // namespace rtt::ai::stp::play

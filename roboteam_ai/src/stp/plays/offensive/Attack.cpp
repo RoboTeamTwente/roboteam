@@ -8,12 +8,8 @@
 #include "stp/roles/active/Striker.h"
 #include "stp/roles/passive/Defender.h"
 #include "stp/roles/passive/Formation.h"
-
-// New
-#include <zmqpp/zmqpp.hpp>
-#include <string>
-#include <chrono>
-#include <thread>
+#include "STPManager.h"
+#include "utilities/Constants.h"
 
 namespace rtt::ai::stp::play {
 
@@ -24,28 +20,13 @@ Attack::Attack() : Play() {
     startPlayEvaluation.emplace_back(GlobalEvaluation::WeWillHaveBall);
     startPlayEvaluation.emplace_back(GlobalEvaluation::BallNotInOurDefenseAreaAndStill);
 
-    // Evaluations that have to be true to allow the play to continue, otherwise the play will change. Plays can also end using the shouldEndPlay().
+    // Evaluations that have to be true to allow the play to continue
     keepPlayEvaluation.clear();
     keepPlayEvaluation.emplace_back(GlobalEvaluation::NormalPlayGameState);
     keepPlayEvaluation.emplace_back(GlobalEvaluation::WeWillHaveBall);
     keepPlayEvaluation.emplace_back(GlobalEvaluation::BallNotInOurDefenseAreaAndStill);
 
-    // Role creation, the names should be unique. The names are used in the stpInfos-map.
-    roles = std::array<std::unique_ptr<Role>, rtt::ai::constants::MAX_ROBOT_COUNT>{
-        // Roles is we play 6v6
-        std::make_unique<role::Keeper>("keeper"),
-        std::make_unique<role::Striker>("striker"),
-        std::make_unique<role::Defender>("defender_0"),
-        std::make_unique<role::Formation>("attacker_0"),
-        std::make_unique<role::Defender>("defender_1"),
-        std::make_unique<role::Defender>("defender_2"),
-        // Additional roles if we play 11v11
-        std::make_unique<role::Defender>("waller_0"),
-        std::make_unique<role::Defender>("waller_1"),
-        std::make_unique<role::Formation>("attacker_1"),
-        std::make_unique<role::Defender>("defender_3"),
-        std::make_unique<role::Defender>("defender_4"),
-    };
+    updateRoleConfiguration();
 }
 
 uint8_t Attack::score(const rtt::Field& field) noexcept {
@@ -54,22 +35,35 @@ uint8_t Attack::score(const rtt::Field& field) noexcept {
 }
 
 Dealer::FlagMap Attack::decideRoleFlags() const noexcept {
+    const_cast<Attack*>(this)->updateRoleConfiguration();
+    
     Dealer::FlagMap flagMap;
     Dealer::DealerFlag keeperFlag(DealerFlagTitle::KEEPER);
     Dealer::DealerFlag kickerFlag(DealerFlagTitle::CAN_KICK_BALL);
     Dealer::DealerFlag detectionFlag(DealerFlagTitle::CAN_DETECT_BALL);
 
+    // Required roles with specific priorities
     flagMap.insert({"keeper", {DealerFlagPriority::KEEPER, {keeperFlag}}});
     flagMap.insert({"striker", {DealerFlagPriority::REQUIRED, {kickerFlag, detectionFlag}}});
-    flagMap.insert({"waller_0", {DealerFlagPriority::HIGH_PRIORITY, {}}});
-    flagMap.insert({"waller_1", {DealerFlagPriority::HIGH_PRIORITY, {}}});
-    flagMap.insert({"defender_0", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
-    flagMap.insert({"defender_1", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
-    flagMap.insert({"defender_2", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
-    flagMap.insert({"defender_3", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
-    flagMap.insert({"defender_4", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
-    flagMap.insert({"attacker_0", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"attacker_1", {DealerFlagPriority::LOW_PRIORITY, {}}});
+
+    // Add wallers with dynamic priority
+    for (int i = 0; i < numWallers; i++) {
+        if (i <= PositionComputations::amountOfWallers) {
+            flagMap.insert({"waller_" + std::to_string(i), {DealerFlagPriority::HIGH_PRIORITY, {}}});
+        } else {
+            flagMap.insert({"waller_" + std::to_string(i), {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
+        }
+    }
+
+    // Add defenders
+    for (int i = 0; i < numDefenders; i++) {
+        flagMap.insert({"defender_" + std::to_string(i), {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
+    }
+
+    // Add attackers
+    for (int i = 0; i < numAttackers; i++) {
+        flagMap.insert({"attacker_" + std::to_string(i), {DealerFlagPriority::LOW_PRIORITY, {}}});
+    }
 
     return flagMap;
 }
@@ -85,6 +79,48 @@ void Attack::calculateInfoForRoles() noexcept {
     stpInfos["striker"].setKickOrChip(KickType::KICK);
     stpInfos["striker"].setShotPower(ShotPower::MAX);
     PositionComputations::recalculateInfoForNonPassers(stpInfos, field, world, goalTarget);
+}
+
+void Attack::updateRoleConfiguration() {
+    if (STPManager::isInitialized() && STPManager::getRLInterface().getIsActive()) {
+        // Get suggested number of attackers from RL
+        int availableSlots = rtt::ai::constants::MAX_ROBOT_COUNT - MANDATORY_ROLES;
+        
+        // Get and cap number of attackers
+        numAttackers = STPManager::getRLInterface().getNumAttackers();
+        numAttackers = std::min(numAttackers, availableSlots);
+        availableSlots -= numAttackers;
+        
+        // Distribute remaining slots between wallers and defenders
+        numWallers = std::min(2, availableSlots);  // Always try to have 2 wallers if possible
+        availableSlots -= numWallers;
+        
+        numDefenders = availableSlots;  // Use remaining slots for defenders
+    }
+    
+    // Create roles array
+    roles = std::array<std::unique_ptr<Role>, rtt::ai::constants::MAX_ROBOT_COUNT>();
+
+    // Create mandatory roles first
+    roles[0] = std::make_unique<role::Keeper>("keeper");
+    roles[1] = std::make_unique<role::Striker>("striker");
+
+    int currentIndex = MANDATORY_ROLES;
+
+    // Add wallers
+    for (int i = 0; i < numWallers && currentIndex < rtt::ai::constants::MAX_ROBOT_COUNT; i++) {
+        roles[currentIndex++] = std::make_unique<role::Defender>("waller_" + std::to_string(i));
+    }
+
+    // Add defenders
+    for (int i = 0; i < numDefenders && currentIndex < rtt::ai::constants::MAX_ROBOT_COUNT; i++) {
+        roles[currentIndex++] = std::make_unique<role::Defender>("defender_" + std::to_string(i));
+    }
+
+    // Add attackers
+    for (int i = 0; i < numAttackers && currentIndex < rtt::ai::constants::MAX_ROBOT_COUNT; i++) {
+        roles[currentIndex++] = std::make_unique<role::Formation>("attacker_" + std::to_string(i));
+    }
 }
 
 bool Attack::shouldEndPlay() noexcept {

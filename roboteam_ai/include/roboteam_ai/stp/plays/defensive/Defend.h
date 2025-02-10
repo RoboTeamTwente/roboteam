@@ -42,7 +42,19 @@ class Defend : public Play {
      */
     const char* getName() const override;
 
+    /**
+     * Updates role configuration based on current game state
+     */
+    void updateRoleConfiguration();
+
     InterceptionInfo harasserInfo;
+
+    private:
+        static const int MANDATORY_ROLES = 2;  // keeper, harasser
+        
+        mutable int numDefenders = 4;
+        mutable int numWallers = 4;
+        mutable int numAttackers = 1;
 };
 }  // namespace rtt::ai::stp::play
 

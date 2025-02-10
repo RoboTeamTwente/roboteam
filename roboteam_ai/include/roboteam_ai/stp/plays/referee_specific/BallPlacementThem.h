@@ -43,6 +43,14 @@ class BallPlacementThem : public Play {
      * @return The name of the play as string
      */
     const char* getName() const override;
+
+    void updateRoleConfiguration();
+
+    static const int MANDATORY_ROLES = 2;
+
+    mutable int numDefenders = 4;
+    mutable int numWallers = 4;
+    mutable int numAttackers = 1;
 };
 }  // namespace rtt::ai::stp::play
 

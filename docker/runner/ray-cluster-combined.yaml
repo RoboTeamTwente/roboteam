@@ -125,7 +125,7 @@ spec:
           - name: roboteam-secondary-ai
             image: roboteamtwente/roboteam:kubernetes
             command: ["/bin/sh"]
-            args: ["-c", "/home/roboteam/build/release/bin/roboteam_ai --secondary-ai"]
+            args: ["-c", "/home/roboteam_old/build/release/bin/roboteam_ai --secondary-ai"]
             workingDir: /home/roboteam
             env:
               - name: LD_LIBRARY_PATH

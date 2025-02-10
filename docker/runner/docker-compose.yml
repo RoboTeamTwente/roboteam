@@ -162,6 +162,10 @@ services:
       - GRADLE_USER_HOME=/home/roboteamtwente/.cache # Cache gradle dependencies
     volumes:
       - ../../roboteam_autoref/:/home/roboteamtwente/
+    deploy:
+      resources:
+        limits:
+          memory: 500mb
     profiles: ["simulator","diff","game","autoref", "RL"]
 
   erforce_autoref_sim:
@@ -177,6 +181,10 @@ services:
         - 10010:10010 # Tracker port
       volumes:
         - ../../:/home/roboteamtwente/
+      deploy:
+        resources:
+          limits:
+            memory: 500mb
       profiles: ["simulator","diff", "RL"]
 
   erforce_autoref_game:

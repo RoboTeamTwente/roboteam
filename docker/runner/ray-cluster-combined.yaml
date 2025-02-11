@@ -88,8 +88,8 @@ spec:
                 cpu: 500m
                 memory: 1Gi
               limits:
-                cpu: 1500m
-                memory: 3Gi
+                cpu: "2000m"
+                memory: "3Gi"
             env:
             - name: LD_LIBRARY_PATH
               value: /home/roboteam/build/release/lib
@@ -118,8 +118,8 @@ spec:
                 cpu: 60m
                 memory: 10Mi
               limits:
-                cpu: 400m
-                memory: 200Mi
+                cpu: "1200m"
+                memory: "600Mi"
           
           # Secondary ai
           - name: roboteam-secondary-ai
@@ -135,8 +135,8 @@ spec:
                 cpu: 60m
                 memory: 10Mi
               limits:
-                cpu: 400m
-                memory: 200Mi
+                cpu: "1200m"
+                memory: "600Mi"
 
           # Observer
           - name: roboteam-observer-sim
@@ -157,8 +157,8 @@ spec:
                 cpu: 60m
                 memory: 60Mi
               limits:
-                cpu: 100m
-                memory: 90Mi
+                cpu: "300m"
+                memory: "270Mi"
 
           # Robothub
           - name: roboteam-robothub-sim
@@ -174,8 +174,8 @@ spec:
                 cpu: 30m
                 memory: 20Mi
               limits:
-                cpu: 60m
-                memory: 50Mi
+                cpu: "180m"
+                memory: "150Mi"
 
           # Autoref
           - name: erforce-autoref-sim
@@ -197,8 +197,8 @@ spec:
                 cpu: 120m
                 memory: 80Mi
               limits:
-                cpu: 150m
-                memory: 200Mi
+                cpu: "450m"
+                memory: "600Mi"
 
           # Simulator
           - name: erforce-simulator
@@ -222,10 +222,10 @@ spec:
                 cpu: 200m
                 memory: 200Mi
               limits:
-                cpu: 500m
-                memory: 500Mi
+                cpu: "1500m"
+                memory: "1500Mi"
 
-            # ZMQ Multicast Receiver
+          # ZMQ Multicast Receiver
           - name: multicast-zmq-receiver
             imagePullPolicy: Always
             image: roboteamtwente/ray:multicast
@@ -244,8 +244,8 @@ spec:
                 cpu: 60m
                 memory: 60Mi
               limits:
-                cpu: 100m
-                memory: 90Mi
+                cpu: "300m"
+                memory: "270Mi"
 
           # Ball Teleport Server
           - name: zmq-teleport-ball-server
@@ -266,8 +266,8 @@ spec:
                 cpu: 60m
                 memory: 60Mi
               limits:
-                cpu: 100m
-                memory: 90Mi
+                cpu: "300m"
+                memory: "270Mi"
 
           # Robot Teleport Server
           - name: zmq-teleport-robots-server
@@ -288,9 +288,8 @@ spec:
                 cpu: 60m
                 memory: 60Mi
               limits:
-                cpu: 100m
-                memory: 90Mi
-
+                cpu: "300m"
+                memory: "270Mi"
 
 ---
 # Services

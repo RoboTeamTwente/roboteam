@@ -19,36 +19,7 @@ Defend::Defend() : Play() {
     keepPlayEvaluation.emplace_back(GlobalEvaluation::TheyHaveBall);
     keepPlayEvaluation.emplace_back(GlobalEvaluation::BallNotInOurDefenseAreaAndStill);
 
-    // Role creation, the names should be unique. The names are used in the stpInfos-map.
-    roles = std::array<std::unique_ptr<Role>, rtt::ai::constants::MAX_ROBOT_COUNT>();
-
-    // Create mandatory roles
-    auto keeper = std::make_unique<role::Keeper>("keeper");
-    auto harasser = std::make_unique<role::Harasser>("harasser");
-    
-    // Move them into the array
-    roles[0] = std::move(keeper);
-    roles[1] = std::move(harasser);
-
-    int currentIndex = 2;
-
-    // Add wallers
-    for (int i = 0; i < numWallers && currentIndex < rtt::ai::constants::MAX_ROBOT_COUNT; i++) {
-        auto waller = std::make_unique<role::Defender>("waller_" + std::to_string(i));
-        roles[currentIndex++] = std::move(waller);
-    }
-
-    // Add defenders
-    for (int i = 0; i < numDefenders && currentIndex < rtt::ai::constants::MAX_ROBOT_COUNT; i++) {
-        auto defender = std::make_unique<role::Defender>("defender_" + std::to_string(i));
-        roles[currentIndex++] = std::move(defender);
-    }
-
-    // Add attackers
-    for (int i = 0; i < numAttackers && currentIndex < rtt::ai::constants::MAX_ROBOT_COUNT; i++) {
-        auto attacker = std::make_unique<role::Formation>("attacker_" + std::to_string(i));
-        roles[currentIndex++] = std::move(attacker);
-    }
+    updateRoleConfiguration();
 }
 
 uint8_t Defend::score(const rtt::Field&) noexcept {
@@ -67,16 +38,12 @@ Dealer::FlagMap Defend::decideRoleFlags() const noexcept {
 
     // Add wallers with dynamic priority
     for (int i = 0; i < numWallers; i++) {
-        if (i <= PositionComputations::amountOfWallers) {
             flagMap.insert({"waller_" + std::to_string(i), {DealerFlagPriority::HIGH_PRIORITY, {}}});
-        } else {
-            flagMap.insert({"waller_" + std::to_string(i), {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
-        }
     }
 
     // Add defenders
     for (int i = 0; i < numDefenders; i++) {
-        flagMap.insert({"defender_" + std::to_string(i), {DealerFlagPriority::HIGH_PRIORITY, {}}});
+        flagMap.insert({"defender_" + std::to_string(i), {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
     }
 
     // Add attackers
@@ -95,20 +62,25 @@ void Defend::calculateInfoForRoles() noexcept {
 }
 
 void Defend::updateRoleConfiguration() {
+    
     if (STPManager::isInitialized() && STPManager::getRLInterface().getIsActive()) {
-        // Get suggested number of attackers from RL
+
+        // Calculate required number of wallers based on ball position and angles
+        PositionComputations::setAmountOfWallers(field, world);
+
         int availableSlots = rtt::ai::constants::MAX_ROBOT_COUNT - MANDATORY_ROLES;
         
-        // Get and cap number of attackers
+        // Get number of attackers from RL
         numAttackers = STPManager::getRLInterface().getNumAttackers();
         numAttackers = std::min(numAttackers, availableSlots);
         availableSlots -= numAttackers;
         
-        // Distribute remaining slots between wallers and defenders
-        numWallers = std::min(2, availableSlots);  // Always try to have 2 wallers if possible
+        // Assign wallers based on the dynamic computation
+        numWallers = std::min(PositionComputations::amountOfWallers, availableSlots);
         availableSlots -= numWallers;
         
-        numDefenders = availableSlots;  // Use remaining slots for defenders
+        // Use remaining slots for defenders
+        numDefenders = availableSlots;
     }
     
     // Create roles array

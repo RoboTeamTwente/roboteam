@@ -88,11 +88,7 @@ Dealer::FlagMap AttackingPass::decideRoleFlags() const noexcept {
 
     // Add wallers with dynamic priority
     for (int i = 0; i < numWallers; i++) {
-        if (i <= PositionComputations::amountOfWallers) {
-            flagMap.insert({"waller_" + std::to_string(i), {DealerFlagPriority::HIGH_PRIORITY, {}}});
-        } else {
-            flagMap.insert({"waller_" + std::to_string(i), {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
-        }
+        flagMap.insert({"waller_" + std::to_string(i), {DealerFlagPriority::HIGH_PRIORITY, {}}});
     }
 
     // Add defenders
@@ -168,6 +164,10 @@ bool AttackingPass::shouldEndPlay() noexcept {
 
 void AttackingPass::updateRoleConfiguration() {
     if (STPManager::isInitialized() && STPManager::getRLInterface().getIsActive()) {
+
+        // Calculate required number of wallers based on ball position and angles
+        PositionComputations::setAmountOfWallers(field, world);
+
         // Get suggested number of attackers from RL
         int availableSlots = rtt::ai::constants::MAX_ROBOT_COUNT - MANDATORY_ROLES;
         
@@ -177,7 +177,7 @@ void AttackingPass::updateRoleConfiguration() {
         availableSlots -= numAttackers;
         
         // Distribute remaining slots between wallers and defenders
-        numWallers = std::min(2, availableSlots);  // Always try to have 2 wallers if possible
+        numWallers = std::min(PositionComputations::amountOfWallers, availableSlots);
         availableSlots -= numWallers;
         
         numDefenders = availableSlots;  // Use remaining slots for defenders

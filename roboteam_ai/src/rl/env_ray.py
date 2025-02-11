@@ -21,7 +21,7 @@ from roboteam_ai.src.rl.src.sentActionCommand import send_action_command, send_n
 from roboteam_ai.src.rl.src.getState import get_ball_state, get_robot_state, get_referee_state
 from roboteam_ai.src.rl.src.teleportBall import teleport_ball
 from roboteam_ai.src.rl.src.resetRefereeAPI import reset_referee_state
-from roboteam_ai.src.rl.src.changeGameState import start_game
+from roboteam_ai.src.rl.src.changeGameState import start_game, halt
 from roboteam_ai.src.rl.src.teleportRobot import teleport_robots
 
 """
@@ -284,7 +284,10 @@ class RoboTeamEnv(gymnasium.Env):
         # Reset physical environment
         print("Resetting physical environment...")
         # print(robot_positions)
-        
+
+        # Halt all robots
+        halt()
+
         # Ensure ball teleport completes
         self.teleport_ball_with_check(0,0)
 

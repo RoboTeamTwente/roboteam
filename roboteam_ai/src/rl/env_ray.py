@@ -80,6 +80,10 @@ class RoboTeamEnv(gymnasium.Env):
         self.last_step_time = 0
         self.min_step_interval = 2  # Minimum time between steps in seconds
 
+        # Add previous ball position tracking
+        self.previous_ball_position = np.zeros(2)
+        self.min_ball_movement = 0.05
+
     def teleport_ball_with_check(self, x, y):
         """
         Verify that ball teleportation completes successfully by attempting multiple times
@@ -128,10 +132,10 @@ class RoboTeamEnv(gymnasium.Env):
 
         # If we score a goal, give reward. If opponent scores, give negative reward.
         if self.yellow_score == 1:
-            print("Scored goal!")
+            print("+1 rew!")
             goal_scored_reward = 1
         elif self.blue_score == 1:
-            print("Goal against :()")
+            print("-1 rew :(")
             goal_scored_reward = -1
 
         # Reward shaping
@@ -185,29 +189,41 @@ class RoboTeamEnv(gymnasium.Env):
             if self.ref_command in (16,17): # If there is ball placement
                 self.teleport_ball_with_check(self.x, self.y)
 
-            # Check for true possession change
+            # Calculate ball movement from last action
+            ball_movement = np.linalg.norm(self.ball_position - self.previous_ball_position)
+
+            # Check for true possession change with ball movement
             possession_changed = (
                 (self.is_yellow_dribbling != self.previous_yellow_dribbling) and 
                 (self.is_blue_dribbling or self.previous_yellow_dribbling)
             )
+            possession_changed_with_movement = possession_changed and ball_movement >= self.min_ball_movement
 
             # Check if enough time has passed since last step
             current_time = time.time()
             time_since_last_step = current_time - self.last_step_time
             can_take_step = time_since_last_step >= self.min_step_interval
 
+            # Take step if minimum time has passed AND either:
+            # 1. There's a relevant referee command OR
+            # 2. There's a possession change WITH sufficient ball movement
             should_take_step = (
                 can_take_step and (
-                    possession_changed or 
-                    self.ref_command in (8, 9, 16, 17)  # Added 8, 9 for additional referee commands
+                    self.ref_command in (16, 17) or
+                    possession_changed_with_movement
                 )
             )
 
             if should_take_step:
                 print(f"Taking action: {action} (time since last: {time_since_last_step:.2f}s)")
+                print(f"Ball movement: {ball_movement:.3f}m")
                 print("ref_command=", self.ref_command)
+                
                 # Update last step time
                 self.last_step_time = current_time
+                
+                # Update previous ball position
+                self.previous_ball_position = self.ball_position.copy()
                 
                 # Execute action
                 send_num_attackers(action)
@@ -336,10 +352,12 @@ class RoboTeamEnv(gymnasium.Env):
         # Get initial observation
         try:
             observation = self.get_observation()
+            self.previous_ball_position = self.ball_position.copy()
         except Exception as e:
             print(f"Error getting initial observation: {str(e)}")
             # Provide fallback observation if needed
             observation = np.zeros(47, dtype=np.float64)
+            self.previous_ball_position = np.zeros(2)
 
         print("Reset complete")
 

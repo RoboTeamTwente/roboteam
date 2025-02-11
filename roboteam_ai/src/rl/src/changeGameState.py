@@ -79,14 +79,12 @@ def start_game():
     set_team_state("YELLOW", False)  # Yellow on negative half
     
     # Set Blue for first kickoff
-    set_first_kickoff_team("BLUE")
+    set_first_kickoff_team("YELLOW")
     
     # Start sequence
-    # halt()  # First halt to ensure safe state
+    halt()  # First halt to ensure safe state
     # stop()  # Then stop to prepare for start
-    # time.sleep(10)  # Regular sleep instead of asyncio.sleep
     kickoff("BLUE")  # Set up kickoff for Blue team
-    # normal_start()  # Start the game normally
 
 if __name__ == "__main__":
     print("Connecting to game controller...")

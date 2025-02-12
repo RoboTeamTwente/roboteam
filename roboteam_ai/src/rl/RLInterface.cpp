@@ -6,6 +6,7 @@
 #include <array>
 #include <thread>
 #include <roboteam_utils/Print.h>
+#include "utilities/GameSettings.h"
 
 namespace rtt::ai::stp::rl {
 
@@ -14,8 +15,14 @@ RLInterface::RLInterface() :
     socket(context, zmqpp::socket_type::subscribe),
     running(false),
     numAttackers(2),  // Default number of attackers
-    isActive(false)
-{
+    isActive(false) {
+    
+    // Only initialize if this is the primary AI
+    if (!GameSettings::isPrimaryAI()) {
+        RTT_INFO("RLInterface disabled - not primary AI");
+        return;
+    }
+
     RTT_INFO("Starting zmq client...");
     try {
         socket.subscribe("");
@@ -44,12 +51,15 @@ void RLInterface::start() {
 }
 
 RLInterface::~RLInterface() {
-    running = false;
-    socket.close();
-    context.terminate();
+    // Only cleanup if we're primary AI and the interface was actually started
+    if (GameSettings::isPrimaryAI() && running) {
+        running = false;
+        socket.close();
+        context.terminate();
 
-    if(receiver_thread.joinable()) {
-        receiver_thread.join();
+        if(receiver_thread.joinable()) {
+            receiver_thread.join();
+        }
     }
 }
 
@@ -77,4 +87,4 @@ void RLInterface::process_attackers_string(const std::string& input_string) {
     setNumAttackers(numAttackers);
 }
 
-}  // namespace rtt::ai::stp::rl
+} // namespace rtt::ai::stp::rl

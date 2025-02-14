@@ -8,6 +8,7 @@ import time
 import os
 import sys
 import subprocess
+import zmq
 
 # Make root folder /roboteam
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -17,7 +18,6 @@ roboteam_path = os.path.abspath(os.path.join(current_dir, "../../.."))
 sys.path.append(roboteam_path)
 
 # Now import the functions
-from roboteam_ai.src.rl.src.sentActionCommand import send_action_command, send_num_attackers
 from roboteam_ai.src.rl.src.getState import get_ball_state, get_robot_state, get_referee_state
 from roboteam_ai.src.rl.src.teleportBall import teleport_ball
 from roboteam_ai.src.rl.src.resetRefereeAPI import reset_referee_state
@@ -34,6 +34,9 @@ Yellow cards do not stop the game, but maybe in the future it is nice to impleme
 class RoboTeamEnv(gymnasium.Env):
 
     def __init__(self, config=None):
+
+        self.max_steps = 30
+        self.current_steps = 0
 
         self.config = config or {} # Config placeholder
         self.MAX_ROBOTS_US = 10
@@ -84,6 +87,16 @@ class RoboTeamEnv(gymnasium.Env):
         self.previous_ball_position = np.zeros(2)
         self.min_ball_movement = 0.05
 
+        # Add counter for consecutive STOP commands
+        self.stop_counter = 0
+        self.max_consecutive_stops = 100
+
+        # Initialize ZMQ publisher
+        self.context = zmq.Context()
+        self.socket = self.context.socket(zmq.PUB)
+        self.socket.bind("tcp://*:5555")
+        time.sleep(1)  # Allow time for subscribers to connect
+
     def teleport_ball_with_check(self, x, y):
         """
         Verify that ball teleportation completes successfully by attempting multiple times
@@ -97,7 +110,7 @@ class RoboTeamEnv(gymnasium.Env):
         # self.ball_position, self.ball_quadrant = get_ball_state()
         # print(f"Ball position before: {self.ball_position}")
 
-        max_attempts = 25
+        max_attempts = 35
         for i in range(max_attempts):
             try:
                 teleport_ball(x, y) # Teleports ball to input of the function
@@ -107,7 +120,7 @@ class RoboTeamEnv(gymnasium.Env):
                 ball_pos, _ = get_ball_state()
                 if np.allclose(ball_pos, [x, y], atol=0.1): # Checks the real ball position from get_ball_state with the input of the function
                     # print(f"Ball teleport successful on attempt {i+1}")
-                    time.sleep(1)
+                    time.sleep(0.5)
                     # # Get the ball location (continuous x,y values)
                     # self.ball_position, self.ball_quadrant = get_ball_state()
                     # print(f"Ball position after: {self.ball_position}")
@@ -119,30 +132,48 @@ class RoboTeamEnv(gymnasium.Env):
             if i == max_attempts - 1:
                 print("Warning: Ball teleport may not have succeeded, big error")
 
-
+    def send_num_attackers(self, num_attackers):
+        """Send number of attackers via ZMQ using persistent connection"""
+        try:
+            # Ensure number is within valid range
+            num_attackers = max(0, min(num_attackers, 6))
+            
+            # Create message
+            message = str(num_attackers)
+            
+            # Send message
+            self.socket.send_string(message)
+            #print(f"Sent number of attackers: {message}")
+            
+        except Exception as e:
+            print(f"Error sending number of attackers: {e}")
 
     def calculate_reward(self):
         """
         calculate_reward calculates the reward the agent gets for an action it did.
-        Based on if we have the ball and if they scored a goal.
+        Based on if we have the ball in enemy half and if they scored a goal.
         """
         goal_scored_reward = 0
 
         # When a goal is scored the ref command is HALT
-
         # If we score a goal, give reward. If opponent scores, give negative reward.
         if self.yellow_score == 1:
-            print("+1 rew!")
+            #print("+1 rew!")
             goal_scored_reward = 1
         elif self.blue_score == 1:
-            print("-1 rew :(")
+            #print("-1 rew :(")
             goal_scored_reward = -1
 
         # Reward shaping
         shaped_reward = 0
+        
+        # Check if yellow is dribbling and in enemy half
         if not self.shaped_reward_given and self.is_yellow_dribbling:
-            self.shaped_reward_given = True # Set it to true
-            shaped_reward = 0.1
+            ball_x = self.ball_position[0]  # Get x coordinate from ball_position
+            if ball_x > 2:  # Enemy half is positive x=2
+                self.shaped_reward_given = True
+                shaped_reward = 0.1
+                #print("Reward for dribbling in enemy half!")
         
         # Calculate final reward
         reward = goal_scored_reward + shaped_reward
@@ -172,12 +203,23 @@ class RoboTeamEnv(gymnasium.Env):
         return observation
 
     def step(self, action):
+        self.current_steps += 1
         while True:
             # Get current state
             observation_space = self.get_observation()
             
             # Get referee state
             self.yellow_score, self.blue_score, self.stage, self.ref_command, self.x, self.y = get_referee_state()
+
+            # Track consecutive STOP commands
+            if self.ref_command == 1:  # STOP
+                self.stop_counter += 1
+                if self.stop_counter >= self.max_consecutive_stops:
+                    print(f"Game truncated: {self.max_consecutive_stops} consecutive STOP commands")
+                    return observation_space, -0.5, False, True, {}
+            else:
+                # Reset counter if we get any other command
+                self.stop_counter = 0
 
             # Check for HALT or game end conditions
             truncated = self.is_truncated()
@@ -215,9 +257,9 @@ class RoboTeamEnv(gymnasium.Env):
             )
 
             if should_take_step:
-                print(f"Taking action: {action} (time since last: {time_since_last_step:.2f}s)")
-                print(f"Ball movement: {ball_movement:.3f}m")
-                print("ref_command=", self.ref_command)
+                # print(f"Taking action: {action} (time since last: {time_since_last_step:.2f}s)")
+                # print(f"Ball movement: {ball_movement:.3f}m")
+                # print("ref_command=", self.ref_command)
                 
                 # Update last step time
                 self.last_step_time = current_time
@@ -226,7 +268,7 @@ class RoboTeamEnv(gymnasium.Env):
                 self.previous_ball_position = self.ball_position.copy()
                 
                 # Execute action
-                send_num_attackers(action)
+                self.send_num_attackers(action)
                     
                 # Update previous states
                 self.previous_yellow_dribbling = self.is_yellow_dribbling
@@ -246,8 +288,10 @@ class RoboTeamEnv(gymnasium.Env):
 
         if self.ref_command == 0 and (self.yellow_score == 1 or self.blue_score == 1): # HALT command indicates that either team scored
             if self.yellow_score == 1:
+                pass
                 print("Yellow team scored")
             elif self.blue_score == 1:
+                pass
                 print("Blue team scored")
             return True
         else:
@@ -257,28 +301,35 @@ class RoboTeamEnv(gymnasium.Env):
         """
         is_truncated checks if game should end prematurely:
         - On HALT command with no goals scored 
-        - On STOP command
-        - On FORCE_START command
+        - When max steps is reached
         """
         if self.ref_command == 0:  # HALT
             if (self.yellow_score == 0 and self.blue_score == 0):
                 print("Game truncated, goal wasn't accepted")
                 return True
-        if self.ref_command == 1:  # STOP
-            print("Game truncated, random STOP called") 
+        if self.current_steps >= self.max_steps:
+            print("Game truncated, max steps reached")
             return True
-        if self.ref_command == 4:  # FORCE_START
-            print("Game truncated, FORCE_START called")
+        if self.ref_command in (6,7):
+            print("Game truncated because of penalty")
             return True
         return False
+    
+    def close(self):
+        """Cleanup method that will be called by gymnasium"""
+        if hasattr(self, 'socket'):
+            self.socket.close(linger=0)  # linger=0 means don't wait for pending messages
+        if hasattr(self, 'context'):
+            self.context.term()
+        super().close()
 
     def reset(self, seed=None, options=None):
         """
         Reset the environment to initial state.
         """
 
-        # Reset rate limiting variables
-        self.last_step_time = time.time()  # Reset the timestamp
+        self.last_step_time = time.time()
+        self.stop_counter = 0
 
         # Reset internal state variables
         self.ball_position = np.zeros(2)
@@ -293,12 +344,13 @@ class RoboTeamEnv(gymnasium.Env):
         self.is_blue_dribbling = False
         self.previous_yellow_dribbling = False
         self.previous_ref_command = None  # Reset previous ref command
+        self.current_steps = 0
 
         # # Get the robot positions and dribbling states
         # robot_positions, self.is_yellow_dribbling, self.is_blue_dribbling = get_robot_state()
 
         # Reset physical environment
-        print("Resetting physical environment...")
+        print("Resetting environment...")
         # print(robot_positions)
 
         # Halt all robots
@@ -308,16 +360,16 @@ class RoboTeamEnv(gymnasium.Env):
         self.teleport_ball_with_check(0,0)
 
         # Get actual positions
-        robot_positions, self.is_yellow_dribbling, self.is_blue_dribbling = get_robot_state()
-        print("Positions before TP:", robot_positions)
+        # robot_positions, self.is_yellow_dribbling, self.is_blue_dribbling = get_robot_state()
+        # print("Positions before TP:", robot_positions)
         
         # Teleport and wait
         teleport_robots()
         time.sleep(1.0)  # Give more time for positions to settle
         
         # Get actual positions
-        robot_positions, self.is_yellow_dribbling, self.is_blue_dribbling = get_robot_state()
-        print("After TP:", robot_positions)
+        # robot_positions, self.is_yellow_dribbling, self.is_blue_dribbling = get_robot_state()
+        # print("After TP:", robot_positions)
 
         # Reset referee state with verification
         try:
@@ -359,6 +411,6 @@ class RoboTeamEnv(gymnasium.Env):
             observation = np.zeros(47, dtype=np.float64)
             self.previous_ball_position = np.zeros(2)
 
-        print("Reset complete")
+        #print("Reset complete")
 
         return observation, {}

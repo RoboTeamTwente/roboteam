@@ -33,6 +33,18 @@ class Grid {
     [[nodiscard]] const std::vector<std::vector<Vector2>>& getPoints() const;
 
     bool operator==(const Grid& other) const;
+    
+    /**
+     * Checks if a given point is within the grid.
+     * 
+     * @param point The Vector2 point to check for containment
+     * @return true if the point is inside the grid's boundaries, false otherwise
+     * 
+     * A point is considered inside the grid if:
+     * - Its x-coordinate is between the grid's offsetX and (offsetX + regionWidth)
+     * - Its y-coordinate is between the grid's offsetY and (offsetY + regionHeight)
+     */
+    bool contains(const Vector2& point) const;
 
    private:
     /**

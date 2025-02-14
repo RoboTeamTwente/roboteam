@@ -39,6 +39,14 @@ class BallPlacementUsForceStart : public Play {
      * @return The name of the play as a string
      */
     const char* getName() const override;
+
+    void updateRoleConfiguration();
+
+    static const int MANDATORY_ROLES = 2;
+
+    mutable int numDefenders = 6;
+    mutable int numWallers = 2;
+    mutable int numAttackers = 1;
 };
 }  // namespace rtt::ai::stp::play
 

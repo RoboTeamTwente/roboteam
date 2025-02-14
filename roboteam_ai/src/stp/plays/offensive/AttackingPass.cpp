@@ -1,4 +1,5 @@
 #include "stp/plays/offensive/AttackingPass.h"
+#include <roboteam_utils/Print.h>
 
 #include <roboteam_utils/Hungarian.h>
 #include <roboteam_utils/LineSegment.h>
@@ -12,9 +13,12 @@
 #include "stp/roles/passive/Formation.h"
 #include "utilities/Constants.h"
 #include "world/views/RobotView.hpp"
+#include "rl/RLInterface.hpp"
+#include "STPManager.h"
 
 namespace rtt::ai::stp::play {
 AttackingPass::AttackingPass() : Play() {
+    
     // Evaluations that have to be true in order for this play to be considered valid.
     startPlayEvaluation.clear();
     startPlayEvaluation.emplace_back(GlobalEvaluation::NormalPlayGameState);
@@ -28,21 +32,37 @@ AttackingPass::AttackingPass() : Play() {
     keepPlayEvaluation.emplace_back(GlobalEvaluation::BallNotInOurDefenseAreaAndStill);
 
     // Role creation, the names should be unique. The names are used in the stpInfos-map.
-    roles = std::array<std::unique_ptr<Role>, rtt::ai::constants::MAX_ROBOT_COUNT>{
-        // Roles is we play 6v6
-        std::make_unique<role::Keeper>("keeper"),
-        std::make_unique<role::Passer>("passer"),
-        std::make_unique<role::PassReceiver>("receiver"),
-        std::make_unique<role::Defender>("waller_0"),
-        std::make_unique<role::Defender>("waller_1"),
-        std::make_unique<role::Formation>("attacker_0"),
-        // Additional roles if we play 11v11
-        std::make_unique<role::Defender>("waller_2"),
-        std::make_unique<role::Defender>("waller_3"),
-        std::make_unique<role::Defender>("defender_0"),
-        std::make_unique<role::Defender>("defender_1"),
-        std::make_unique<role::Formation>("attacker_1"),
-    };
+    roles = std::array<std::unique_ptr<Role>, rtt::ai::constants::MAX_ROBOT_COUNT>();
+
+    // Create mandatory roles
+    auto keeper = std::make_unique<role::Keeper>("keeper");
+    auto passer = std::make_unique<role::Passer>("passer");
+    auto receiver = std::make_unique<role::PassReceiver>("receiver");
+    
+    // Move them into the array
+    roles[0] = std::move(keeper);
+    roles[1] = std::move(passer);
+    roles[2] = std::move(receiver);
+
+    int currentIndex = 3;
+
+    // Add wallers
+    for (int i = 0; i < numWallers && currentIndex < rtt::ai::constants::MAX_ROBOT_COUNT; i++) {
+        auto waller = std::make_unique<role::Defender>("waller_" + std::to_string(i));
+        roles[currentIndex++] = std::move(waller);
+    }
+
+    // Add defenders
+    for (int i = 0; i < numDefenders && currentIndex < rtt::ai::constants::MAX_ROBOT_COUNT; i++) {
+        auto defender = std::make_unique<role::Defender>("defender_" + std::to_string(i));
+        roles[currentIndex++] = std::move(defender);
+    }
+
+    // Add attackers
+    for (int i = 0; i < numAttackers && currentIndex < rtt::ai::constants::MAX_ROBOT_COUNT; i++) {
+        auto attacker = std::make_unique<role::Formation>("attacker_" + std::to_string(i));
+        roles[currentIndex++] = std::move(attacker);
+    }
 }
 
 uint8_t AttackingPass::score(const rtt::Field& field) noexcept {
@@ -57,26 +77,40 @@ uint8_t AttackingPass::score(const rtt::Field& field) noexcept {
 }
 
 Dealer::FlagMap AttackingPass::decideRoleFlags() const noexcept {
+    const_cast<AttackingPass*>(this)->updateRoleConfiguration();
+    
     Dealer::FlagMap flagMap;
 
+    // Required roles with specific priorities
     flagMap.insert({"keeper", {DealerFlagPriority::KEEPER, {}, passInfo.keeperId}});
     flagMap.insert({"passer", {DealerFlagPriority::REQUIRED, {}, passInfo.passerId}});
     flagMap.insert({"receiver", {DealerFlagPriority::REQUIRED, {}, passInfo.receiverId}});
-    for (int i = 0; i < Play::waller_count; i++) {
-        if (i <= PositionComputations::amountOfWallers) {
-            flagMap.insert({"waller_" + std::to_string(i), {DealerFlagPriority::HIGH_PRIORITY, {}}});
-        } else
-            flagMap.insert({"waller_" + std::to_string(i), {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
+
+    // Add wallers with dynamic priority
+    for (int i = 0; i < numWallers; i++) {
+        flagMap.insert({"waller_" + std::to_string(i), {DealerFlagPriority::HIGH_PRIORITY, {}}});
     }
-    flagMap.insert({"defender_0", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
-    flagMap.insert({"defender_1", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
-    flagMap.insert({"attacker_0", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"attacker_1", {DealerFlagPriority::LOW_PRIORITY, {}}});
+
+    // Add defenders
+    for (int i = 0; i < numDefenders; i++) {
+        flagMap.insert({"defender_" + std::to_string(i), {DealerFlagPriority::HIGH_PRIORITY, {}}});
+    }
+
+    // Add attackers
+    for (int i = 0; i < numAttackers; i++) {
+        flagMap.insert({"attacker_" + std::to_string(i), {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
+    }
 
     return flagMap;
 }
 
 void AttackingPass::calculateInfoForRoles() noexcept {
+
+    // for (int tick = 1; tick <= 120; tick++) {
+    // RTT_INFO("Starting AttackingPass play - Tick: " + std::to_string(tick));
+    // RTT_INFO("Number of attackers: " + std::to_string(STPManager::getRLInterface().getNumAttackers()))
+    // }
+
     PositionComputations::calculateInfoForDefendersAndWallers(stpInfos, roles, field, world, true);
     PositionComputations::calculateInfoForAttackers(stpInfos, roles, field, world);
     PositionComputations::recalculateInfoForNonPassers(stpInfos, field, world, passInfo.receiverLocation);
@@ -126,6 +160,53 @@ bool AttackingPass::shouldEndPlay() noexcept {
     }
 
     return false;
+}
+
+void AttackingPass::updateRoleConfiguration() {
+    if (STPManager::isInitialized() && STPManager::getRLInterface().getIsActive()) {
+
+        // Calculate required number of wallers based on ball position and angles
+        PositionComputations::setAmountOfWallers(field, world);
+
+        // Get suggested number of attackers from RL
+        int availableSlots = rtt::ai::constants::MAX_ROBOT_COUNT - MANDATORY_ROLES;
+        
+        // Get and cap number of attackers
+        numAttackers = STPManager::getRLInterface().getNumAttackers();
+        numAttackers = std::min(numAttackers, availableSlots);
+        availableSlots -= numAttackers;
+        
+        // Distribute remaining slots between wallers and defenders
+        numWallers = std::min(PositionComputations::amountOfWallers, availableSlots);
+        availableSlots -= numWallers;
+        
+        numDefenders = availableSlots;  // Use remaining slots for defenders
+    }
+    
+    // Create roles array
+    roles = std::array<std::unique_ptr<Role>, rtt::ai::constants::MAX_ROBOT_COUNT>();
+
+    // Create mandatory roles first
+    roles[0] = std::make_unique<role::Keeper>("keeper");
+    roles[1] = std::make_unique<role::Passer>("passer");
+    roles[2] = std::make_unique<role::PassReceiver>("receiver");
+
+    int currentIndex = MANDATORY_ROLES;
+
+    // Add wallers
+    for (int i = 0; i < numWallers && currentIndex < rtt::ai::constants::MAX_ROBOT_COUNT; i++) {
+        roles[currentIndex++] = std::make_unique<role::Defender>("waller_" + std::to_string(i));
+    }
+
+    // Add defenders
+    for (int i = 0; i < numDefenders && currentIndex < rtt::ai::constants::MAX_ROBOT_COUNT; i++) {
+        roles[currentIndex++] = std::make_unique<role::Defender>("defender_" + std::to_string(i));
+    }
+
+    // Add attackers
+    for (int i = 0; i < numAttackers && currentIndex < rtt::ai::constants::MAX_ROBOT_COUNT; i++) {
+        roles[currentIndex++] = std::make_unique<role::Formation>("attacker_" + std::to_string(i));
+    }
 }
 
 const char* AttackingPass::getName() const { return "Attacking Pass"; }

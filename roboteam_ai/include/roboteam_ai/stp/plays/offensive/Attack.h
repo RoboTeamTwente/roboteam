@@ -43,6 +43,14 @@ class Attack : public Play {
      * @return The name of the play as string
      */
     const char* getName() const override;
+
+    void updateRoleConfiguration();
+
+    private:
+        static const int MANDATORY_ROLES = 2;
+        mutable int numDefenders = 5;
+        mutable int numWallers = 2;
+        mutable int numAttackers = 2; 
 };
 
 }  // namespace rtt::ai::stp::play

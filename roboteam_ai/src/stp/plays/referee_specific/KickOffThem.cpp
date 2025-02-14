@@ -57,7 +57,15 @@ Dealer::FlagMap KickOffThem::decideRoleFlags() const noexcept {
     return flagMap;
 }
 
-void KickOffThem::calculateInfoForRoles() noexcept {}
+void KickOffThem::calculateInfoForRoles() noexcept {
+    Vector2 receiver = Vector2(-2.3, 3.5);
+    stpInfos["kick_off_taker"].setPositionToShootAt(receiver);
+    stpInfos["kick_off_taker"].setShotPower(ShotPower::KICKOFF);
+    stpInfos["kick_off_taker"].setKickOrChip(KickType::KICK);
+    stpInfos["kick_off_taker"].setShootOnFirstTouch(true);
+    stpInfos["kick_off_taker"].setShouldAvoidOurRobots(false);
+
+}
 
 bool KickOffThem::shouldEndPlay() noexcept { return false; }
 

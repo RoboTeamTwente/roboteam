@@ -47,6 +47,11 @@ class KeeperKickBall : public Play {
      */
     bool shouldEndPlay() noexcept override;
 
+    /**
+     * Updates role configuration based on current game state
+     */
+    void updateRoleConfiguration();
+
    private:
     /**
      * @brief Check if the ball has been kicked. True if the kick tactic has ended, false if it is still going.
@@ -54,7 +59,12 @@ class KeeperKickBall : public Play {
      */
     bool ballKicked();
 
-    PassInfo passInfo; /**< Struct containing info about the pass. Calculated once for each time this play is run */
+    PassInfo passInfo; /**< Struct containing info about the pass. Calculated once for each time this play is run */\
+
+    static const int MANDATORY_ROLES = 2;
+    
+    mutable int numDefenders = 4;
+    mutable int numAttackers = 5;
 };
 }  // namespace rtt::ai::stp::play
 

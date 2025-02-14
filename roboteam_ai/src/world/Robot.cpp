@@ -63,8 +63,8 @@ void Robot::setWorkingBallSensor(bool _workingBallSensor) noexcept { Robot::work
 void Robot::setBallSensorSeesBall(bool _seesBall) noexcept { ballSensorSeesBall = _seesBall; }
 
 void Robot::setDribblerSeesBall(bool _seesBall) noexcept {
-    if (_seesBall) RTT_INFO("Robot " + std::to_string(id) + " has ball")
-    dribblerSeesBall = _seesBall;
+    // if (_seesBall) RTT_INFO("Robot " + std::to_string(id) + " has ball")
+    // dribblerSeesBall = _seesBall;
 }
 
 void Robot::setHasBall(bool _hasBall) noexcept { Robot::robotHasBall = _hasBall; }

@@ -44,7 +44,7 @@ constexpr double MAX_VEL_WHEN_HAS_BALL = 3.0; /**< Maximum allowed velocity that
 constexpr double MAX_ANGULAR_VELOCITY = 6.0;  /**< Maximum allowed angular velocity that can be send to the robot */
 constexpr double MIN_YAW = -M_PI;             /**< Minimum yaw the robot can have */
 constexpr double MAX_YAW = M_PI;              /**< Maximum yaw the robot can have */
-constexpr double MAX_ACC = 2.0;               /**< Maximum acceleration of the robot */
+constexpr double MAX_ACC = 1.0;               /**< Maximum acceleration of the robot */
 constexpr double MAX_VEL = 2.0;               /**< Maximum allowed velocity of the robot */
 constexpr double MAX_JERK_DEFAULT = 6;        /**< Default jerk limit */
 

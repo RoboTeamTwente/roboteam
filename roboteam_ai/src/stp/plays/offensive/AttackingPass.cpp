@@ -142,9 +142,19 @@ void AttackingPass::calculateInfoForRoles() noexcept {
     PositionComputations::recalculateInfoForNonPassers(stpInfos, field, world, passInfo.receiverLocation);
 
     if (!ballKicked()) {
+        // If the ball is near our side of the field we chip
+        auto ball = world->getWorld()->getBall().value();
+
         stpInfos["passer"].setPositionToShootAt(passInfo.receiverLocation);
         stpInfos["passer"].setShotPower(ShotPower::PASS);
-        stpInfos["passer"].setKickOrChip(KickType::KICK);
+
+        if(ball->position.x < -3.5){
+            stpInfos["passer"].setKickOrChip(KickType::CHIP);
+            RTT_INFO("SET PASSER TO CHIP");
+        }else{
+            stpInfos["passer"].setKickOrChip(KickType::KICK);
+        }
+
         stpInfos["receiver"].setPositionToMoveTo(passInfo.receiverLocation);
     } else {
         // Receiver goes to the receiverLocation projected on the trajectory of the ball

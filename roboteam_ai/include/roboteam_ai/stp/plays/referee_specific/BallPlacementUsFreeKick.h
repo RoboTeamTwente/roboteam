@@ -41,7 +41,7 @@ class BallPlacementUsFreeKick : public Play {
 
     void updateRoleConfiguration();
 
-    static const int MANDATORY_ROLES = 2;
+    static const int MANDATORY_ROLES = 3;
 
     mutable int numDefenders = 3;
     mutable int numWallers = 2;

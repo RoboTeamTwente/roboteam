@@ -42,7 +42,7 @@ class BallPlacementUsForceStart : public Play {
 
     void updateRoleConfiguration();
 
-    static const int MANDATORY_ROLES = 2;
+    static const int MANDATORY_ROLES = 3;
 
     mutable int numDefenders = 6;
     mutable int numWallers = 2;

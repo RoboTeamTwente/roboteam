@@ -37,7 +37,9 @@ Dealer::FlagMap BallPlacementUsFreeKick::decideRoleFlags() const noexcept {
 
     // Required roles with specific priorities
     flagMap.insert({"keeper", {DealerFlagPriority::KEEPER, {keeperFlag}}});
-    flagMap.insert({"ball_placer", {DealerFlagPriority::REQUIRED, {dribblerFlag, detectionFlag}}});
+    flagMap.insert({"ball_placer", {DealerFlagPriority::REQUIRED, {detectionFlag}}});
+    flagMap.insert({"ball_placer_helper", {DealerFlagPriority::REQUIRED, {detectionFlag}}});
+
 
     // Add wallers with dynamic priority
     for (int i = 0; i < numWallers; i++) {
@@ -62,15 +64,34 @@ void BallPlacementUsFreeKick::calculateInfoForRoles() noexcept {
     PositionComputations::calculateInfoForAttackers(stpInfos, roles, field, world);
 
     Vector2 ballTarget;
+    Vector2 helperTarget;
 
+    auto ballPos = world->getWorld()->get()->getBall()->get()->position;
     // Adjust placement position to be one robot radius away in the distance of movement
     if (stpInfos["ball_placer"].getRobot()) {
+        auto placerPos = stpInfos["ball_placer"].getRobot()->get()->getPos();
         ballTarget = rtt::ai::GameStateManager::getRefereeDesignatedPosition();
-        ballTarget -= (world->getWorld()->get()->getBall()->get()->position - stpInfos["ball_placer"].getRobot()->get()->getPos()).stretchToLength(constants::ROBOT_RADIUS);
+        ballTarget -= (ballPos - placerPos).stretchToLength(constants::ROBOT_RADIUS);
     } else {
         // If we don't have a ball placer, set the target location to the ball, such that the dealer will
         // assign the robot closest to the ball to the ball placer role
-        ballTarget = world->getWorld()->get()->getBall()->get()->position;
+        ballTarget = ballPos;
+    }
+
+    if (stpInfos["ball_placer"].getRobot() && stpInfos["ball_placer_helper"].getRobot()) {
+        auto placerPos = stpInfos["ball_placer"].getRobot()->get()->getPos();
+        auto directionToBall = (ballPos - placerPos).normalize();
+        auto helperTarget = ballPos + directionToBall * constants::ROBOT_RADIUS;
+
+        stpInfos["ball_placer_helper"].setPositionToMoveTo(helperTarget);
+        stpInfos["ball_placer_helper"].setOrientation((ballPos - helperTarget).angle());
+        stpInfos["ball_placer_helper"].setShouldAvoidOutOfField(false);
+        stpInfos["ball_placer_helper"].setShouldAvoidBall(false);
+        stpInfos["ball_placer_helper"].setDribblerOn(true);
+    } else if (!stpInfos["ball_placer_helper"].getRobot()) {
+        stpInfos["ball_placer_helper"].setPositionToMoveTo(ballPos);
+        stpInfos["ball_placer_helper"].setShouldAvoidOutOfField(false);
+        stpInfos["ball_placer_helper"].setShouldAvoidBall(false);
     }
 
     for (auto& stpInfo : stpInfos) {
@@ -114,6 +135,8 @@ void BallPlacementUsFreeKick::updateRoleConfiguration() {
     // Create mandatory roles first
     roles[0] = std::make_unique<role::Keeper>("keeper");
     roles[1] = std::make_unique<role::BallPlacer>("ball_placer");
+    roles[2] = std::make_unique<role::BallPlacer>("ball_placer_helper");
+
 
     int currentIndex = MANDATORY_ROLES;
 

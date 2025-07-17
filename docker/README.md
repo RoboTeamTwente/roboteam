@@ -100,6 +100,10 @@ docker run -itd --name rtt-release-env -h rtt-release-env roboteamtwente/robotea
 #### TODO
 https://lemariva.com/blog/2020/10/vscode-c-development-and-debugging-containers
 
+
+### Profile explanation
+If you want to run certain docker containers with a single command, you create a profile. This will run every docker container that has this command.
+
 ### Docker geeks
 We highly discourage executing command under this section unless you know what you are doing and for some reason you need to edit dockerfiles or composes structure.
 

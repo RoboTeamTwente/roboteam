@@ -5,6 +5,8 @@
 #include "stp/roles/passive/Defender.h"
 #include "stp/roles/passive/Formation.h"
 #include "utilities/GameStateManager.hpp"
+#include "STPManager.h"
+#include "utilities/Constants.h"
 
 namespace rtt::ai::stp::play {
 
@@ -13,26 +15,11 @@ BallPlacementUsFreeKick::BallPlacementUsFreeKick() : Play() {
     startPlayEvaluation.clear();
     startPlayEvaluation.emplace_back(GlobalEvaluation::BallPlacementUsDirectGameState);
 
-    // Evaluations that have to be true to allow the play to continue, otherwise the play will change. Plays can also end using the shouldEndPlay().
+    // Evaluations that have to be true to allow the play to continue
     keepPlayEvaluation.clear();
     keepPlayEvaluation.emplace_back(GlobalEvaluation::BallPlacementUsDirectGameState);
 
-    // Role creation, the names should be unique. The names are used in the stpInfos-map.
-    roles = std::array<std::unique_ptr<Role>, rtt::ai::constants::MAX_ROBOT_COUNT>{
-        // Roles is we play 6v6
-        std::make_unique<role::Keeper>("keeper"),
-        std::make_unique<role::BallPlacer>("ball_placer"),
-        std::make_unique<role::Formation>("attacker_0"),
-        std::make_unique<role::Defender>("defender_0"),
-        std::make_unique<role::Defender>("defender_1"),
-        std::make_unique<role::Formation>("attacker_1"),
-        // Additional roles if we play 11v11
-        std::make_unique<role::Defender>("waller_0"),
-        std::make_unique<role::Defender>("waller_1"),
-        std::make_unique<role::Formation>("attacker_2"),
-        std::make_unique<role::Defender>("defender_2"),
-        std::make_unique<role::Formation>("attacker_3"),
-    };
+    updateRoleConfiguration();
 }
 
 uint8_t BallPlacementUsFreeKick::score(const rtt::Field&) noexcept {
@@ -41,22 +28,33 @@ uint8_t BallPlacementUsFreeKick::score(const rtt::Field&) noexcept {
 }
 
 Dealer::FlagMap BallPlacementUsFreeKick::decideRoleFlags() const noexcept {
+    const_cast<BallPlacementUsFreeKick*>(this)->updateRoleConfiguration();
+    
     Dealer::FlagMap flagMap;
     Dealer::DealerFlag detectionFlag(DealerFlagTitle::CAN_DETECT_BALL);
     Dealer::DealerFlag dribblerFlag(DealerFlagTitle::WITH_WORKING_DRIBBLER);
     Dealer::DealerFlag keeperFlag(DealerFlagTitle::KEEPER);
 
+    // Required roles with specific priorities
     flagMap.insert({"keeper", {DealerFlagPriority::KEEPER, {keeperFlag}}});
-    flagMap.insert({"ball_placer", {DealerFlagPriority::REQUIRED, {dribblerFlag, detectionFlag}}});
-    flagMap.insert({"waller_0", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"waller_1", {DealerFlagPriority::LOW_PRIORITY, {}}});
-    flagMap.insert({"defender_0", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
-    flagMap.insert({"defender_1", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
-    flagMap.insert({"defender_2", {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
-    flagMap.insert({"attacker_0", {DealerFlagPriority::HIGH_PRIORITY, {}}});
-    flagMap.insert({"attacker_1", {DealerFlagPriority::HIGH_PRIORITY, {}}});
-    flagMap.insert({"attacker_2", {DealerFlagPriority::HIGH_PRIORITY, {}}});
-    flagMap.insert({"attacker_3", {DealerFlagPriority::HIGH_PRIORITY, {}}});
+    flagMap.insert({"ball_placer", {DealerFlagPriority::REQUIRED, {detectionFlag}}});
+    flagMap.insert({"ball_placer_helper", {DealerFlagPriority::REQUIRED, {detectionFlag}}});
+
+
+    // Add wallers with dynamic priority
+    for (int i = 0; i < numWallers; i++) {
+        flagMap.insert({"waller_" + std::to_string(i), {DealerFlagPriority::LOW_PRIORITY, {}}});
+    }
+
+    // Add defenders
+    for (int i = 0; i < numDefenders; i++) {
+        flagMap.insert({"defender_" + std::to_string(i), {DealerFlagPriority::MEDIUM_PRIORITY, {}}});
+    }
+
+    // Add attackers
+    for (int i = 0; i < numAttackers; i++) {
+        flagMap.insert({"attacker_" + std::to_string(i), {DealerFlagPriority::HIGH_PRIORITY, {}}});
+    }
 
     return flagMap;
 }
@@ -66,15 +64,34 @@ void BallPlacementUsFreeKick::calculateInfoForRoles() noexcept {
     PositionComputations::calculateInfoForAttackers(stpInfos, roles, field, world);
 
     Vector2 ballTarget;
+    Vector2 helperTarget;
 
+    auto ballPos = world->getWorld()->get()->getBall()->get()->position;
     // Adjust placement position to be one robot radius away in the distance of movement
     if (stpInfos["ball_placer"].getRobot()) {
+        auto placerPos = stpInfos["ball_placer"].getRobot()->get()->getPos();
         ballTarget = rtt::ai::GameStateManager::getRefereeDesignatedPosition();
-        ballTarget -= (world->getWorld()->get()->getBall()->get()->position - stpInfos["ball_placer"].getRobot()->get()->getPos()).stretchToLength(constants::ROBOT_RADIUS);
+        ballTarget -= (ballPos - placerPos).stretchToLength(constants::ROBOT_RADIUS);
     } else {
         // If we don't have a ball placer, set the target location to the ball, such that the dealer will
         // assign the robot closest to the ball to the ball placer role
-        ballTarget = world->getWorld()->get()->getBall()->get()->position;
+        ballTarget = ballPos;
+    }
+
+    if (stpInfos["ball_placer"].getRobot() && stpInfos["ball_placer_helper"].getRobot()) {
+        auto placerPos = stpInfos["ball_placer"].getRobot()->get()->getPos();
+        auto directionToBall = (ballPos - placerPos).normalize();
+        auto helperTarget = ballPos + directionToBall * constants::ROBOT_RADIUS;
+
+        stpInfos["ball_placer_helper"].setPositionToMoveTo(helperTarget);
+        stpInfos["ball_placer_helper"].setOrientation((ballPos - helperTarget).angle());
+        stpInfos["ball_placer_helper"].setShouldAvoidOutOfField(false);
+        stpInfos["ball_placer_helper"].setShouldAvoidBall(false);
+        stpInfos["ball_placer_helper"].setDribblerOn(true);
+    } else if (!stpInfos["ball_placer_helper"].getRobot()) {
+        stpInfos["ball_placer_helper"].setPositionToMoveTo(ballPos);
+        stpInfos["ball_placer_helper"].setShouldAvoidOutOfField(false);
+        stpInfos["ball_placer_helper"].setShouldAvoidBall(false);
     }
 
     for (auto& stpInfo : stpInfos) {
@@ -92,5 +109,53 @@ void BallPlacementUsFreeKick::calculateInfoForRoles() noexcept {
     }
 }
 
+void BallPlacementUsFreeKick::updateRoleConfiguration() {
+    if (STPManager::isInitialized() && STPManager::getRLInterface().getIsActive()) {
+        // Calculate required number of wallers based on ball position and angles
+        PositionComputations::setAmountOfWallers(field, world);
+        
+        int availableSlots = rtt::ai::constants::MAX_ROBOT_COUNT - MANDATORY_ROLES;
+        
+        // Get number of attackers from RL
+        numAttackers = STPManager::getRLInterface().getNumAttackers();
+        numAttackers = std::min(numAttackers, availableSlots);
+        availableSlots -= numAttackers;
+        
+        // Assign wallers based on the dynamic computation
+        numWallers = std::min(PositionComputations::amountOfWallers, availableSlots);
+        availableSlots -= numWallers;
+        
+        // Use remaining slots for defenders
+        numDefenders = availableSlots;
+    }
+    
+    // Create roles array
+    roles = std::array<std::unique_ptr<Role>, rtt::ai::constants::MAX_ROBOT_COUNT>();
+
+    // Create mandatory roles first
+    roles[0] = std::make_unique<role::Keeper>("keeper");
+    roles[1] = std::make_unique<role::BallPlacer>("ball_placer");
+    roles[2] = std::make_unique<role::BallPlacer>("ball_placer_helper");
+
+
+    int currentIndex = MANDATORY_ROLES;
+
+    // Add wallers
+    for (int i = 0; i < numWallers && currentIndex < rtt::ai::constants::MAX_ROBOT_COUNT; i++) {
+        roles[currentIndex++] = std::make_unique<role::Defender>("waller_" + std::to_string(i));
+    }
+
+    // Add defenders
+    for (int i = 0; i < numDefenders && currentIndex < rtt::ai::constants::MAX_ROBOT_COUNT; i++) {
+        roles[currentIndex++] = std::make_unique<role::Defender>("defender_" + std::to_string(i));
+    }
+
+    // Add attackers
+    for (int i = 0; i < numAttackers && currentIndex < rtt::ai::constants::MAX_ROBOT_COUNT; i++) {
+        roles[currentIndex++] = std::make_unique<role::Formation>("attacker_" + std::to_string(i));
+    }
+}
+
 const char* BallPlacementUsFreeKick::getName() const { return "Ball Placement Us Free Kick"; }
+
 }  // namespace rtt::ai::stp::play

@@ -116,7 +116,7 @@ std::pair<Vector2, double> KeeperBlockBall::calculateTargetPositionBallShot(cons
     const auto robotPosition = robot->getPos();
     const auto robotVelocity = robot->getVel();
     const auto maxRobotVelocity = info.getMaxRobotVelocity();
-    const auto maxRobotAcceleration = rtt::ai::constants::MAX_ACC;
+    const auto maxRobotAcceleration = rtt::ai::constants::MAX_KEEPER_ACC;
     const auto closestPointToGoal = Line(ballTrajectory).intersect(Line(keepersLineSegment));
 
     // If possible, we intercept the ball at the line
@@ -153,7 +153,7 @@ std::pair<Vector2, double> KeeperBlockBall::calculateTargetPositionBallShot(cons
         if (timeLeftWhenArrived > maxTimeLeftWhenArrived) {
             maxTimeLeftWhenArrived = timeLeftWhenArrived;
             optimalTarget = currentTarget;
-            jerk = (1 - std::min(std::max(timeLeftWhenArrived, 0.0), 0.2) / 0.2) * 160 + ai::constants::MAX_JERK_DEFAULT;
+            jerk = (1 - std::min(std::max(timeLeftWhenArrived, 0.0), 0.2) / 0.2) * 160 + ai::constants::MAX_JERK_KEEPER;
         }
     }
     return {optimalTarget, jerk};

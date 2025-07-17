@@ -48,14 +48,22 @@ class AttackingPass : public Play {
      */
     bool shouldEndPlay() noexcept override;
 
-   private:
-    /**
-     * @brief Check if the ball has been kicked. True if passer is done with kicking, False if it is still ongoing
-     * @return Boolean that tells whether the ball has been kicked
-     */
-    bool ballKicked();
+    void updateRoleConfiguration();
 
-    PassInfo passInfo; /**< Struct containing info about the pass. Calculated once for each time this play is run */
+   private:
+        /**
+         * @brief Check if the ball has been kicked. True if passer is done with kicking, False if it is still ongoing
+         * @return Boolean that tells whether the ball has been kicked
+         */
+        bool ballKicked();
+
+        static const int MANDATORY_ROLES = 3;  // keeper, passer, receiver
+
+        mutable int numDefenders = 4;
+        mutable int numWallers = 2;
+        mutable int numAttackers = 2;
+
+        PassInfo passInfo; /**< Struct containing info about the pass. Calculated once for each time this play is run */
 };
 }  // namespace rtt::ai::stp::play
 

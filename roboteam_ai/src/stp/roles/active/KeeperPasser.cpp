@@ -1,4 +1,5 @@
 #include "stp/roles/active/KeeperPasser.h"
+#include "roboteam_utils/Print.h"
 
 #include "stp/tactics/KeeperBlockBall.h"
 #include "stp/tactics/active/DriveWithBall.h"
@@ -22,18 +23,31 @@ Status KeeperPasser::update(StpInfo const& info) noexcept {
     StpInfo skillStpInfo = info;
     auto shootArea = FieldComputations::getDefenseArea(*info.getField(), true, -0.4, 0.0);
     // Stop Formation tactic when ball is moving, start blocking, getting the ball and pass (normal keeper behavior)
-    if (robotTactics.current_num() == 2 && shootArea.contains(info.getBall().value()->position)) {
-        forceNextTactic();
-    } else if (robotTactics.current_num() == 2) {
-        auto intersections = shootArea.intersections(LineSegment(info.getField().value().leftGoalArea.leftLine().center(), info.getRobot().value()->getPos()));
 
+    auto ballVel = info.getBall().value()->velocity.length();
+    RTT_INFO("BALL VELOCITY", ballVel)
+
+    constexpr double SLOW_SPEED_THRESHOLD = 0.5;
+
+    if (robotTactics.current_num() == 2 ) {
+        if (shootArea.contains(info.getBall().value()->position) && ballVel< SLOW_SPEED_THRESHOLD) {
+                // Ball is in the area and slow enough: kick it
+                forceNextTactic();
+         }
+    else if (robotTactics.current_num() == 2) {
+        auto intersections = shootArea.intersections(
+            LineSegment(info.getField().value().leftGoalArea.leftLine().center(),
+                        info.getRobot().value()->getPos())
+        );
         if (intersections.size() == 2) {
             Vector2 intersection_one = intersections[0];
 
             skillStpInfo.setPositionToMoveTo(intersection_one);
         }
     }
+    }
 
     return Role::update(skillStpInfo);
 }
+
 }  // namespace rtt::ai::stp::role

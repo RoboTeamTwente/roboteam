@@ -4,6 +4,8 @@
 #include "stp/roles/active/FreeKickTaker.h"
 #include "stp/roles/passive/Halt.h"
 #include "utilities/GameStateManager.hpp"
+#include "stp/roles/active/PassReceiver.h"
+
 
 namespace rtt::ai::stp::play {
 
@@ -21,7 +23,7 @@ KickOffUs::KickOffUs() : Play() {
         // Roles is we play 6v6
         std::make_unique<role::Keeper>("keeper"),
         std::make_unique<role::FreeKickTaker>("kick_off_taker"),
-        std::make_unique<role::Halt>("halt_0"),
+        std::make_unique<role::PassReceiver>("receiver"),
         std::make_unique<role::Halt>("halt_1"),
         std::make_unique<role::Halt>("halt_2"),
         std::make_unique<role::Halt>("halt_3"),
@@ -63,11 +65,13 @@ Dealer::FlagMap KickOffUs::decideRoleFlags() const noexcept {
 }
 
 void KickOffUs::calculateInfoForRoles() noexcept {
-    Vector2 theirGoal = Vector2(6, 0);
-    stpInfos["kick_off_taker"].setPositionToShootAt(theirGoal);
-    stpInfos["kick_off_taker"].setShotPower(ShotPower::MAX);
-    stpInfos["kick_off_taker"].setKickOrChip(KickType::CHIP);
+    Vector2 receiver = Vector2(-2.3, 3.5);
+    stpInfos["kick_off_taker"].setPositionToShootAt(receiver);
+    stpInfos["kick_off_taker"].setShotPower(ShotPower::KICKOFF);
+    stpInfos["kick_off_taker"].setKickOrChip(KickType::KICK);
     stpInfos["kick_off_taker"].setShootOnFirstTouch(true);
+    stpInfos["kick_off_taker"].setShouldAvoidOurRobots(false);
+
 }
 
 bool KickOffUs::shouldEndPlay() noexcept {

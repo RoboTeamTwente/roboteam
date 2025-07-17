@@ -44,9 +44,17 @@ constexpr double MAX_VEL_WHEN_HAS_BALL = 3.0; /**< Maximum allowed velocity that
 constexpr double MAX_ANGULAR_VELOCITY = 6.0;  /**< Maximum allowed angular velocity that can be send to the robot */
 constexpr double MIN_YAW = -M_PI;             /**< Minimum yaw the robot can have */
 constexpr double MAX_YAW = M_PI;              /**< Maximum yaw the robot can have */
+<<<<<<< Updated upstream
 constexpr double MAX_ACC = 2.0;               /**< Maximum acceleration of the robot */
 constexpr double MAX_VEL = 2.0;               /**< Maximum allowed velocity of the robot */
+=======
+constexpr double MAX_ACC = 2.5;               /**< Maximum acceleration of the robot */
+constexpr double MAX_VEL = 2.7;               /**< Maximum allowed velocity of the robot */
+constexpr double MAX_KEEPER_ACC = 2.5;               /**< Maximum allowed velocity of the robot */
+>>>>>>> Stashed changes
 constexpr double MAX_JERK_DEFAULT = 6;        /**< Default jerk limit */
+constexpr double MAX_JERK_KEEPER = 12;        /**< Default jerk limit */
+
 
 /// GoToPos Constants
 // Distance margin for 'goToPos'. If the robot is within this margin, goToPos is successful
